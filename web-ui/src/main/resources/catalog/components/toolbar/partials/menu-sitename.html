@@ -4,7 +4,7 @@
       class="gn-logo"
       data-ng-hide="{{gnCfg.mods.header.isLogoInHeader}}"
       alt="{{'siteLogo' | translate}}"
-      data-ng-src="{{gnUrl}}../images/logos/{{info['node/id'] || info['system/site/siteId']}}.png?random{{info['system/site/lastUpdate']}}"
+      data-ng-src="{{gnUrl + 'api/sources/' + info['node/id'] + '/logo?' +info['system/site/lastUpdate']}}"
     />
     <span
       class="gn-name gn-margin-left hidden-sm"

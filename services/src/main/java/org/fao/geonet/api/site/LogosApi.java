@@ -71,10 +71,8 @@ import java.util.stream.Collectors;
     description = "Logos operations")
 @Controller("siteLogos")
 public class LogosApi {
-    private static final String[] iconExt = {".gif", ".png", ".jpg", ".jpeg"};
+    private static final String[] iconExt = {".gif", ".png", ".jpg", ".jpeg", ".svg"};
 
-    @Autowired
-    GeonetworkDataDirectory dataDirectory;
     @Autowired
     SettingManager settingManager;
 

@@ -44,9 +44,11 @@ import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.*;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.LogoUtils;
 import org.fao.geonet.api.OpenApiConfig;
 import org.fao.geonet.api.exception.FeatureNotEnabledException;
 import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.groups.GroupsApi;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -88,16 +90,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -105,6 +106,7 @@ import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 import static org.fao.geonet.constants.Geonet.Path.IMPORT_STYLESHEETS_SCHEMA_PREFIX;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
+import static org.fao.geonet.resources.ResourceFilter.DEFAULT_LOGO;
 
 /**
  *
@@ -852,51 +854,86 @@ public class SiteApi implements ApplicationEventPublisherAware {
 
         String nodeUuid = settingManager.getSiteId();
 
-        Resources.ResourceHolder holder = resources.getImage(serviceContext, file, logoDirectory);
-        final Path resourcesDir =
-            resources.locateResourcesDir(request.getServletContext(), serviceContext.getApplicationContext());
-        if (holder == null || holder.getPath() == null) {
-            holder = resources.getImage(serviceContext, "images/harvesting/" + file, resourcesDir);
+        Optional<Source> siteSourceOpt = sourceRepository.findById(nodeUuid);
+        if (siteSourceOpt.isEmpty()) {
+            throw new Exception("Unable to find main catalog in source table with uuid '" + nodeUuid + "'.");
         }
-        try {
-            try (InputStream inputStream = Files.newInputStream(holder.getPath())) {
-                BufferedImage source = ImageIO.read(inputStream);
+        Source siteSource = siteSourceOpt.get();
+        if (siteSource.getType() != SourceType.portal) {
+            throw new Exception("Source with uuid '" + nodeUuid + "' is not of the type portal (main catalogue).");
+        }
+        boolean isSvg = file.endsWith(".svg");
 
-                if (asFavicon) {
+        if (asFavicon) {
+            if (isSvg) {
+                throw new IllegalArgumentException("SVG logo can not be used to generate favicon.");
+            }
+
+            Resources.ResourceHolder holder = resources.getImage(serviceContext, file, logoDirectory);
+            final Path resourcesDir =
+                resources.locateResourcesDir(request.getServletContext(), serviceContext.getApplicationContext());
+
+            if (holder == null || holder.getPath() == null) {
+                holder = resources.getImage(serviceContext, "images/harvesting/" + file, resourcesDir);
+            }
+
+            if (holder == null || holder.getPath() == null) {
+                throw new FileNotFoundException("Logo file '" + file + "' not found in resources.");
+            }
+
+            try {
+
+                try (InputStream inputStream = Files.newInputStream(holder.getPath())) {
+                    java.awt.image.BufferedImage source = javax.imageio.ImageIO.read(inputStream);
                     try (Resources.ResourceHolder favicon =
                              resources.getWritableImage(serviceContext, "images/logos/favicon.png",
                                  resourcesDir)) {
                         ApiUtils.createFavicon(source, favicon.getPath());
                     }
-                } else {
-                    try (Resources.ResourceHolder logo =
-                             resources.getWritableImage(serviceContext,
-                                 "images/logos/" + nodeUuid + ".png",
-                                 resourcesDir);
-                         Resources.ResourceHolder defaultLogo =
-                             resources.getWritableImage(serviceContext,
-                                 "images/logo.png", resourcesDir)) {
-                        if (!file.endsWith(".png")) {
-                            try (
-                                OutputStream logoOut = Files.newOutputStream(logo.getPath());
-                                OutputStream defLogoOut = Files.newOutputStream(defaultLogo.getPath())
-                            ) {
-                                ImageIO.write(source, "png", logoOut);
-                                ImageIO.write(source, "png", defLogoOut);
-                            }
-                        } else {
-                            Files.copy(holder.getPath(), logo.getPath(), StandardCopyOption.REPLACE_EXISTING);
-                            Files.copy(holder.getPath(), defaultLogo.getPath(),
-                                StandardCopyOption.REPLACE_EXISTING);
-                        }
-                    }
                 }
+            } finally {
+                holder.close();
             }
-        } catch (Exception e) {
-            throw new Exception(
-                "Unable to move uploaded thumbnail to destination directory. Error: " + e.getMessage());
-        } finally {
-            holder.close();
+        } else {
+            String actualLogo = siteSource.getLogo();
+            if (StringUtils.isNotEmpty(actualLogo)) {
+                resources.deleteImageIfExists(actualLogo, dataDirectory.getResourcesDir().resolve("images").resolve("logos"));
+            }
+            String logoFile = resources.copyLogo(serviceContext,
+                "images" + File.separator + "harvesting" + File.separator + file, nodeUuid);
+
+            siteSource.setLogo(logoFile);
+            sourceRepository.save(siteSource);
+        }
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get catalog logo image.",
+        description = LogoUtils.API_GET_LOGO_NOTE)
+    @RequestMapping(
+        path = "/logo",
+        method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void getLogo(
+        @Parameter(hidden = true) WebRequest webRequest,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) {
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        final Resources resources = serviceContext.getBean(Resources.class);
+        final String siteUuid = settingManager.getSiteId();
+        final String logoRef = sourceRepository.findById(siteUuid)
+            .map(Source::getLogo)
+            .filter(StringUtils::isNotBlank)
+            .orElse(siteUuid);
+
+        try (Resources.ResourceHolder image = LogoUtils.getImage(resources, serviceContext, logoRef)) {
+            LogoUtils.writeImageOrTransparentLogo(webRequest, response, image);
+        } catch (IOException e) {
+            Log.error(Geonet.GEONETWORK + ".api.site",
+                String.format("There was an error accessing the logo for site uuid '%s'", siteUuid));
+            throw new RuntimeException(e);
         }
     }
 

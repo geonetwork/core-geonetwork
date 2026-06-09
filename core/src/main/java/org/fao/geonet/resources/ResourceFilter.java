@@ -28,8 +28,11 @@ import com.google.common.collect.Sets;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.SourceRepository;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -40,6 +43,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -52,6 +57,7 @@ import java.util.concurrent.ConcurrentMap;
  * User: jeichar Date: 1/17/12 Time: 4:03 PM
  */
 public class ResourceFilter implements Filter {
+    public static final String DEFAULT_LOGO = "GN3.png";
     private static final int FIVE_DAYS = 60 * 60 * 24 * 5;
     private static final int SIX_HOURS = 60 * 60 * 6;
     private FilterConfig config;
@@ -94,10 +100,14 @@ public class ResourceFilter implements Filter {
             this.siteId = applicationContext.getBean(SettingManager.class).getSiteId();
             this.resourcesDir = resources.locateResourcesDir(servletContext, applicationContext);
             this.schemaPublicationDir = applicationContext.getBean(GeonetworkDataDirectory.class).getSchemaPublicationDir();
-            if (defaultImage == null) {
-                defaultImage = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".png", new byte[0], -1);
-            }
+            SourceRepository sourceRepository =  applicationContext.getBean(SourceRepository.class);
             this.nodeId = applicationContext.getBean(NodeInfo.class).getId();
+            if (defaultImage == null) {
+                Optional<Source> catalogues = sourceRepository.findById(this.nodeId);
+                String defaultImageName = "images/logos/" + (
+                    catalogues.isPresent() ? catalogues.get().getLogo() :  DEFAULT_LOGO);
+                defaultImage = resources.loadResource(resourcesDir, servletContext, appPath, defaultImageName, new byte[0], -1);
+            }
             if (!faviconMap.containsKey(nodeId)) {
                 final byte[] defaultImageBytes = defaultImage.one();
                 addFavIcon(nodeId, resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".ico",
@@ -186,6 +196,8 @@ public class ResourceFilter implements Filter {
             contentType = MediaType.APPLICATION_XML_VALUE;
         } else if(ext.equals("txt")) {
             contentType = MediaType.TEXT_PLAIN_VALUE;
+        } else if (ext.equals("svg")) {
+            contentType = "image/svg+xml";
         } else {
             contentType = "image/" + ext;
         }

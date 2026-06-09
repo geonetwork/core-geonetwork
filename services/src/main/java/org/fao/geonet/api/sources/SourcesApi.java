@@ -37,13 +37,16 @@ import org.fao.geonet.api.ApiError;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.LogoUtils;
 import org.fao.geonet.api.tools.i18n.TranslationPackBuilder;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.guiapi.search.XsltResponseWriter;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.Log;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -53,6 +56,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -73,6 +77,7 @@ import static org.fao.geonet.api.ApiUtils.setHeaderVaryOnAccept;
     description = "Source catalogue operations")
 @Controller("sources")
 public class SourcesApi {
+    private static final String LOGGER = Geonet.GEONETWORK + ".api.sources";
 
     @Autowired
     SourceRepository sourceRepository;
@@ -182,6 +187,50 @@ public class SourcesApi {
                 "Source with uuid '%s' does not exist.",
                 sourceIdentifier
             ));
+        }
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get source logo image.",
+        description = LogoUtils.API_GET_LOGO_NOTE)
+    @RequestMapping(
+        value = "/{sourceIdentifier}/logo",
+        method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Logo returned."),
+        @ApiResponse(responseCode = "404", description = "Source not found.",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
+    @ResponseBody
+    public void getSourceLogo(
+        @Parameter(
+            description = "Source identifier",
+            required = true
+        )
+        @PathVariable
+        String sourceIdentifier,
+        @Parameter(hidden = true) WebRequest webRequest,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws ResourceNotFoundException {
+        Optional<Source> source = sourceRepository.findById(sourceIdentifier);
+        if (source.isEmpty()) {
+            throw new ResourceNotFoundException(String.format(
+                "Source with uuid '%s' does not exist.",
+                sourceIdentifier
+            ));
+        }
+
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        Resources resources = serviceContext.getBean(Resources.class);
+        String logoRef = getLogoReference(source.get());
+        try (Resources.ResourceHolder image = LogoUtils.getImage(resources, serviceContext, logoRef)) {
+            LogoUtils.writeImageOrTransparentLogo(webRequest, response, image);
+        } catch (IOException e) {
+            Log.error(LOGGER, String.format("There was an error accessing the logo of the source with id '%s'",
+                sourceIdentifier));
+            throw new RuntimeException(e);
         }
     }
 
@@ -365,5 +414,14 @@ public class SourcesApi {
             entity.getLabelTranslations().putAll(labelTranslations);
 
         });
+    }
+
+    private String getLogoReference(Source source) {
+        if (source.getType() == SourceType.portal
+            || source.getType() == SourceType.subportal
+            || source.getType() == SourceType.harvester) {
+            return source.getLogo();
+        }
+        return StringUtils.defaultIfBlank(source.getLogo(), source.getUuid());
     }
 }

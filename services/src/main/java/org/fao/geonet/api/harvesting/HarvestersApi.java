@@ -38,6 +38,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.HarvestHistory;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -62,6 +63,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,6 +173,34 @@ public class HarvestersApi {
         historyRepository.save(history);
 
         return new HttpEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get harvester logo image.",
+        description = "Redirect to source logo endpoint."
+    )
+    @RequestMapping(
+        value = "/{harvesterUuid}/logo",
+        method = RequestMethod.GET
+    )
+    @ResponseStatus(value = HttpStatus.FOUND)
+    public void getHarvesterLogo(
+        @Parameter(
+            description = "The harvester UUID"
+        )
+        @PathVariable
+        String harvesterUuid,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws Exception {
+        Source source = sourceRepository.findOneByUuid(harvesterUuid);
+        if (source == null || source.getType() != SourceType.harvester) {
+            throw new ResourceNotFoundException(String.format(
+                "Harvester with UUID '%s' not found.",
+                harvesterUuid));
+        }
+
+        response.sendRedirect(request.getRequestURI().replace("/api/harvesters/", "/api/sources/"));
     }
 
 
