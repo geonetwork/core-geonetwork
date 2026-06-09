@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -24,6 +24,7 @@
 package org.fao.geonet.kernel.harvest.harvester;
 
 import com.google.common.collect.Maps;
+import org.fao.geonet.utils.Env;
 import org.locationtech.jts.util.Assert;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
@@ -84,6 +85,8 @@ public abstract class AbstractParams implements Cloneable {
     private boolean useAccount;
     private String username;
     private String password;
+    private String apiKeyHeader;
+    private String apiKey;
     private String every;
     private boolean oneRunOnly;
     private HarvestValidationEnum validate;
@@ -93,6 +96,10 @@ public abstract class AbstractParams implements Cloneable {
     private String ownerIdGroup;
     private String ownerIdUser;
     private OverrideUuid overrideUuid;
+
+    private boolean translateContent;
+    private String translateContentLangs;
+    private String translateContentFields;
 
     /**
      *  When more than one harvester harvest the same record, then record is usually rejected.
@@ -185,6 +192,9 @@ public abstract class AbstractParams implements Cloneable {
         setUseAccount(Util.getParam(account, "use", false));
         setUsername(Util.getParam(account, "username", ""));
         setPassword(Util.getParam(account, "password", ""));
+        
+        setApiKeyHeader(Util.getParam(site, "apiKeyHeader", ""));
+        setApiKey(Util.getParam(site, "apiKey", ""));
 
         setEvery(Util.getParam(opt, "every", "0 0 0 * * ?"));
 
@@ -199,6 +209,9 @@ public abstract class AbstractParams implements Cloneable {
 
         setImportXslt(Util.getParam(content, "importxslt", "none"));
         setBatchEdits(Util.getParam(content, "batchEdits", ""));
+        setTranslateContent(Util.getParam(content, "translateContent", false));
+        setTranslateContentLangs(Util.getParam(content, "translateContentLangs", ""));
+        setTranslateContentFields(Util.getParam(content, "translateContentFields", ""));
 
         this.setValidate(readValidateFromParams(content));
 
@@ -267,6 +280,9 @@ public abstract class AbstractParams implements Cloneable {
         setUsername(Util.getParam(account, "username", getUsername()));
         setPassword(Util.getParam(account, "password", getPassword()));
 
+        setApiKeyHeader(Util.getParam(site, "apiKeyHeader", getApiKeyHeader()));
+        setApiKey(Util.getParam(site, "apiKey", getApiKey()));
+
         setEvery(Util.getParam(opt, "every", getEvery()));
         setOneRunOnly(Util.getParam(opt, "oneRunOnly", isOneRunOnly()));
 
@@ -279,6 +295,9 @@ public abstract class AbstractParams implements Cloneable {
 
         setImportXslt(Util.getParam(content, "importxslt", "none"));
         setBatchEdits(Util.getParam(content, "batchEdits", getBatchEdits()));
+        setTranslateContent(Util.getParam(content, "translateContent", false));
+        setTranslateContentLangs(Util.getParam(content, "translateContentLangs", ""));
+        setTranslateContentFields(Util.getParam(content, "translateContentFields", ""));
         this.setValidate(readValidateFromParams(content));
 
         if (privil != null) {
@@ -321,6 +340,8 @@ public abstract class AbstractParams implements Cloneable {
         copy.setUseAccount(isUseAccount());
         copy.setUsername(getUsername());
         copy.setPassword(getPassword());
+        copy.setApiKeyHeader(getApiKeyHeader());
+        copy.setApiKey(getApiKey());
 
         copy.setEvery(getEvery());
         copy.setOneRunOnly(isOneRunOnly());
@@ -329,7 +350,9 @@ public abstract class AbstractParams implements Cloneable {
 
         copy.setImportXslt(getImportXslt());
         copy.setBatchEdits(getBatchEdits());
+        copy.setTranslateContent(isTranslateContent());
         copy.setValidate(getValidate());
+        copy.setTranslateContent(isTranslateContent());
 
         for (Privileges p : alPrivileges) {
             copy.addPrivilege(p.copy());
@@ -365,10 +388,21 @@ public abstract class AbstractParams implements Cloneable {
             } catch (DateTimeException e) {
                 log.error(e);
             }
-
         }
 
-        return QuartzSchedulerUtils.getTrigger(getUuid(), AbstractHarvester.HARVESTER_GROUP_NAME, getEvery(), MAX_EVERY, tz);
+        boolean enableScheduledHarvesters = Env
+            .getPropertyFromEnv("harvester.scheduler.enabled", "true")
+            .equalsIgnoreCase("true");
+        final String schedule;
+        if (enableScheduledHarvesters) {
+            // the configured value for the harvester
+            schedule = getEvery();
+        } else {
+            // override with 'never'
+            schedule = "0 0 0 * * ? 2099";
+        }
+
+        return QuartzSchedulerUtils.getTrigger(getUuid(), AbstractHarvester.HARVESTER_GROUP_NAME, schedule, MAX_EVERY, tz);
     }
 
     /**
@@ -534,6 +568,22 @@ public abstract class AbstractParams implements Cloneable {
         this.password = password;
     }
 
+    public String getApiKeyHeader() {
+        return apiKeyHeader;
+    }
+
+    public void setApiKeyHeader(String apiKeyHeader) {
+        this.apiKeyHeader = apiKeyHeader;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
     public String getEvery() {
         return every;
     }
@@ -630,5 +680,29 @@ public abstract class AbstractParams implements Cloneable {
 
     public void setBatchEdits(String batchEdits) {
         this.batchEdits = batchEdits;
+    }
+
+    public boolean isTranslateContent() {
+        return translateContent;
+    }
+
+    public void setTranslateContent(boolean translateContent) {
+        this.translateContent = translateContent;
+    }
+
+    public String getTranslateContentLangs() {
+        return translateContentLangs;
+    }
+
+    public void setTranslateContentLangs(String translateContentLangs) {
+        this.translateContentLangs = translateContentLangs;
+    }
+
+    public String getTranslateContentFields() {
+        return translateContentFields;
+    }
+
+    public void setTranslateContentFields(String translateContentFields) {
+        this.translateContentFields = translateContentFields;
     }
 }

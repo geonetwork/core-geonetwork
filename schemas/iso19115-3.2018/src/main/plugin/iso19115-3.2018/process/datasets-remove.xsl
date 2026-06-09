@@ -4,7 +4,7 @@ Stylesheet used to update metadata for a service and
 detached it to the metadata for data.
 -->
 <xsl:stylesheet version="2.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 xmlns:gn="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all">

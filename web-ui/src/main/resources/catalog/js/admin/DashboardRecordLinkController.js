@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -61,6 +61,18 @@
       $scope.selectionFilter = "";
       $scope.groupLinkFilter = null;
       $scope.groupOwnerIdFilter = null;
+      $scope.excludeHarvestedMetadataFilter = true;
+      $scope.linkStatusFilter = "";
+      $scope.urlFilter = "";
+      $scope.uuidFilter = "";
+
+      $scope.linkStatusValues = ["ok", "ko", "unknown"];
+      $scope.httpStatusValues = ["-200", "200", "404", "401", "500"];
+      $scope.httpStatusValueFilter = $scope.httpStatusValues[0];
+
+      $scope.processesRunning = false;
+
+      $scope.refreshProcesses = false;
 
       $http.get("../api/selections").then(function (r) {
         Object.keys(r.data).map(function (k) {
@@ -76,15 +88,45 @@
         $scope.selections.push({ id: "", label: "" });
       });
 
+      $scope.processesFinished = function () {
+        $scope.processesRunning = false;
+        $scope.triggerSearch();
+      };
+
+      $scope.resetForm = function () {
+        $scope.selectionFilter = "";
+        $scope.selectedSelection.id = null;
+        $scope.groupLinkFilter = null;
+        $scope.groupOwnerIdFilter = null;
+        $scope.excludeHarvestedMetadataFilter = true;
+        $scope.linkStatusFilter = "";
+        $scope.urlFilter = "";
+        $scope.uuidFilter = "";
+        $scope.httpStatusValueFilter = $scope.httpStatusValues[0];
+
+        $scope.triggerSearch();
+      };
+
       $scope.triggerSearch = function () {
         $("#bstable").bootstrapTable("refresh");
       };
 
       $scope.analyzeLinks = function () {
-        $http.post("../api/records/links?analyze=true");
+        $scope.processesRunning = true;
+        $http.post("../api/records/links/analyze?analyze=true").then(function () {
+          // Force to update the process list
+          $scope.refreshProcesses = true;
+        });
       };
       $scope.testLink = function (url) {
-        $http.post("../api/records/links/analyze?url=" + url);
+        $scope.processesRunning = true;
+
+        $http
+          .post("../api/records/links/analyzeurl?url=" + encodeURIComponent(url))
+          .then(function () {
+            // Force to update the process list
+            $scope.refreshProcesses = true;
+          });
       };
 
       $scope.downloadAsCsv = function () {
@@ -97,6 +139,9 @@
             (!!$scope.groupOwnerIdFilter && $scope.groupOwnerIdFilter != "undefined"
               ? "&groupOwnerIdFilter=" + $scope.groupOwnerIdFilter
               : "") +
+            ($scope.excludeHarvestedMetadataFilter
+              ? "excludeHarvestedMetadataFilter=" + $scope.excludeHarvestedMetadataFilter
+              : "") +
             (!!$scope.filter.filter && $scope.filter.filter != "undefined"
               ? "&filter=" + encodeURIComponent($scope.filter.filter)
               : "") +
@@ -107,7 +152,11 @@
       };
 
       $scope.removeAll = function () {
-        $http.delete("../api/records/links").then($scope.triggerSearch);
+        $http.delete("../api/records/links").then(function () {
+          $scope.triggerSearch();
+          // Force to update the process list
+          $scope.refreshProcesses = true;
+        });
       };
 
       $window.lastState = {
@@ -116,9 +165,6 @@
         unknown: $translate.instant("valid--1")
       };
 
-      $scope.$watch("groupIdFilter", $scope.triggerSearch);
-      $scope.$watch("groupOwnerIdFilter", $scope.triggerSearch);
-      $scope.$watch("selectionFilter", $scope.triggerSearch);
       $scope.$watch("selectedSelection.id", function (n, o) {
         if (angular.isDefined(n) && n !== o) {
           if (n != "") {
@@ -147,7 +193,6 @@
           sidePagination: "server",
           queryParamsType: "page,size",
           contentType: "application/x-www-form-urlencoded",
-          method: "get",
           pagination: true,
           paginationLoop: true,
           paginationHAlign: "right",
@@ -170,21 +215,46 @@
               pageSize: res.size
             };
           },
-
-          queryParams: function (params) {
-            if ($scope.selectionFilter != "") {
-              var filter = {};
-              if (params.filter) {
-                filter = angular.fromJson(params.filter);
-              }
-              filter.records = $scope.selectionFilter;
-              params.filter = angular.toJson(filter);
+          ajaxOptions: {
+            method: "POST",
+            headers: {
+              "X-XSRF-TOKEN": $rootScope.csrf
             }
+          },
+          queryParams: function (params) {
+            var filter = {};
+
+            if ($scope.selectionFilter != "") {
+              filter.records = $scope.selectionFilter;
+            }
+
+            if ($scope.linkStatusFilter != "") {
+              filter.lastState = $scope.linkStatusFilter;
+            }
+
+            if ($scope.urlFilter != "") {
+              filter.url = $scope.urlFilter;
+            }
+
+            if ($scope.uuidFilter != "") {
+              filter.records = $scope.uuidFilter;
+            }
+
+            params.filter = angular.toJson(filter);
+
             $scope.filter = {
               groupIdFilter:
-                $scope.groupIdFilter == "undefined" ? "" : $scope.groupIdFilter,
+                $scope.groupIdFilter == undefined ? "" : $scope.groupIdFilter,
               groupOwnerIdFilter:
-                $scope.groupOwnerIdFilter == "undefined" ? "" : $scope.groupOwnerIdFilter,
+                $scope.groupOwnerIdFilter == undefined ? "" : $scope.groupOwnerIdFilter,
+              httpStatusValueFilter:
+                $scope.httpStatusValueFilter == undefined
+                  ? ""
+                  : $scope.httpStatusValueFilter,
+              excludeHarvestedMetadataFilter:
+                $scope.excludeHarvestedMetadataFilter === false
+                  ? ""
+                  : $scope.excludeHarvestedMetadataFilter,
               filter: params.filter,
               page: params.pageNumber - 1,
               size: params.pageSize,
@@ -195,10 +265,8 @@
           columns: [
             {
               field: "lastState",
-              title: "",
+              title: $translate.instant("linkStatus"),
               titleTooltip: "",
-              filterControl: "select",
-              filterData: "var:lastState",
               formatter: function (val, row) {
                 var _class = "fa-question text-muted";
                 // as I can't upgrade bstable version, defining key so is a very dirty fix for
@@ -226,8 +294,6 @@
               title: $translate.instant("url"),
               titleTooltip: $translate.instant("url"),
               sortable: true,
-              filterControl: "input",
-              filterControlPlaceholder: "",
               formatter: function (val, row) {
                 return "<a href='" + row.url + "' target='_blank'>" + row.url + "</a>";
               }.bind(this)
@@ -252,8 +318,8 @@
             },
             {
               field: "linkStatus.statusValue",
-              title: $translate.instant("status"),
-              titleTooltip: $translate.instant("status"),
+              title: $translate.instant("requestStatus"),
+              titleTooltip: $translate.instant("requestStatus"),
               sortable: true,
               formatter: function (val, row) {
                 if (row.linkStatus && row.linkStatus[0]) {
@@ -273,8 +339,6 @@
               title: $translate.instant("associatedRecords"),
               titleTooltip: $translate.instant("associatedRecords"),
               sortable: false,
-              filterControl: "input",
-              filterControlPlaceholder: "",
               formatter: function (val, row) {
                 var ulElem = "<ul>";
                 for (var i = 0; i < row.records.length; i++) {
@@ -344,18 +408,26 @@
     function ($http, gnConfig) {
       return {
         restrict: "E",
-        scope: {},
+        scope: {
+          refresh: "<",
+          processesFinishedCallback: "&"
+        },
         templateUrl:
           "../../catalog/components/admin/recordlink/partials/recordlinksanalyseprocesscontainer.html",
-        link: function (scope, element, attrs) {},
         controllerAs: "ctrl",
         controller: [
           "$scope",
           "$element",
           "$attrs",
-          function ($scope, $element, $attrs) {
+          function ($scope) {
             this.tasks = [];
             var me = this;
+
+            $scope.$watch("refresh", function (newValue, oldValue) {
+              if (newValue === true) {
+                $scope.ctrl.refresh();
+              }
+            });
 
             this.getStatusCode = function (errors, processed, total) {
               if (total === -1) {
@@ -395,6 +467,9 @@
                   probes.sort(function (a, b) {
                     return b.AnalyseMdDate - a.AnalyseMdDate;
                   });
+
+                  var processesFinished = false;
+
                   probes.forEach(function (probe) {
                     var probeName = probe.ObjectName.objectName;
                     if (probeName && !probeName.includes("empty-slot")) {
@@ -403,44 +478,66 @@
                         probe.MetadataAnalysed,
                         probe.MetadataToAnalyseCount
                       );
-                      var testLinkStatus = me.getStatusCode(
-                        0,
-                        probe.UrlChecked,
-                        probe.UrlToCheckCount
-                      );
-                      me.tasks.push({
-                        id: probeName,
-                        records: {
-                          errors: probe.MetadataNotAnalysedInError,
-                          processed: probe.MetadataAnalysed,
-                          total: probe.MetadataToAnalyseCount,
-                          label: ANALYZE_RECORD_LABEL[analyzeRecordStatus],
-                          class: CLASS[analyzeRecordStatus],
-                          icon: ICON[analyzeRecordStatus],
-                          ratio: me.getProcessRatio(
-                            probe.MetadataNotAnalysedInError + probe.MetadataAnalysed,
-                            probe.MetadataToAnalyseCount
-                          )
-                        },
-                        links: {
-                          errors: 0,
-                          processed: probe.UrlChecked,
-                          total: probe.UrlToCheckCount,
-                          label: TEST_LINK_LABEL[testLinkStatus],
-                          class: CLASS[testLinkStatus],
-                          icon: ICON[testLinkStatus],
-                          ratio: me.getProcessRatio(
-                            probe.UrlChecked,
-                            probe.UrlToCheckCount
-                          )
-                        }
-                      });
+
+                      var addProbe = true;
+
+                      if (probe.ProcessFinished) {
+                        processesFinished = true;
+
+                        var finishDate = moment(new Date(probe.FinishDate));
+                        var now = moment();
+
+                        var diff = now.diff(finishDate, "minutes");
+
+                        addProbe = diff <= 5;
+                      } else {
+                        processesFinished = false;
+                      }
+
+                      if (addProbe) {
+                        var testLinkStatus = me.getStatusCode(
+                          0,
+                          probe.UrlChecked,
+                          probe.UrlToCheckCount
+                        );
+                        me.tasks.push({
+                          id: probeName,
+                          records: {
+                            errors: probe.MetadataNotAnalysedInError,
+                            processed: probe.MetadataAnalysed,
+                            total: probe.MetadataToAnalyseCount,
+                            label: ANALYZE_RECORD_LABEL[analyzeRecordStatus],
+                            class: CLASS[analyzeRecordStatus],
+                            icon: ICON[analyzeRecordStatus],
+                            ratio: me.getProcessRatio(
+                              probe.MetadataNotAnalysedInError + probe.MetadataAnalysed,
+                              probe.MetadataToAnalyseCount
+                            )
+                          },
+                          links: {
+                            errors: 0,
+                            processed: probe.UrlChecked,
+                            total: probe.UrlToCheckCount,
+                            label: TEST_LINK_LABEL[testLinkStatus],
+                            class: CLASS[testLinkStatus],
+                            icon: ICON[testLinkStatus],
+                            ratio: me.getProcessRatio(
+                              probe.UrlChecked,
+                              probe.UrlToCheckCount
+                            )
+                          }
+                        });
+                      }
                     }
                   });
-                  setTimeout(me.refresh, 5000);
+
+                  if (processesFinished) {
+                    $scope.processesFinishedCallback();
+                  } else {
+                    setTimeout(me.refresh, 5000);
+                  }
                 });
             };
-
             this.refresh();
           }
         ]
@@ -454,8 +551,7 @@
         restrict: "E",
         scope: { taskInfo: "<" },
         templateUrl:
-          "../../catalog/components/admin/recordlink/partials/recordlinksanalyseprocessstatus.html",
-        link: function (scope, element, attrs) {}
+          "../../catalog/components/admin/recordlink/partials/recordlinksanalyseprocessstatus.html"
       };
     }
   ]);

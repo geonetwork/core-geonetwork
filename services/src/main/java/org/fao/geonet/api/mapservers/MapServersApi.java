@@ -24,12 +24,13 @@
 package org.fao.geonet.api.mapservers;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -51,6 +52,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,6 +114,7 @@ public class MapServersApi {
     @ResponseStatus(HttpStatus.OK)
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "List of all mapservers."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_EDITOR)
     })
     List<AnonymousMapserver> getMapservers() throws Exception {
@@ -208,7 +214,7 @@ public class MapServersApi {
         })
     @PreAuthorize("hasAuthority('Reviewer')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Mapserver updated."),
+        @ApiResponse(responseCode = "204", description = "Mapserver updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })
@@ -252,12 +258,12 @@ public class MapServersApi {
         })
     @PreAuthorize("hasAuthority('Reviewer')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Mapserver updated."),
+        @ApiResponse(responseCode = "204", description = "Mapserver updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateMapserver(
+    public void updateMapserverAuth(
         @Parameter(
             description = API_PARAM_MAPSERVER_IDENTIFIER,
             required = true,
@@ -322,7 +328,7 @@ public class MapServersApi {
         })
     @PreAuthorize("hasAuthority('Reviewer')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Mapserver removed."),
+        @ApiResponse(responseCode = "204", description = "Mapserver removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
     })
@@ -509,7 +515,7 @@ public class MapServersApi {
 
 
     private String publishResource(String mapserverId, String metadataUuid,
-                                   String resource,
+                                   String resourceId,
                                    String metadataTitle,
                                    String metadataAbstract,
                                    HttpServletRequest request,
@@ -534,8 +540,8 @@ public class MapServersApi {
 //        String access = Util.getParam(params, "access");
 
         //jdbc:postgresql://host:port/user:password@database#table
-        if (resource.startsWith("jdbc:postgresql")) {
-            String[] values = resource.split("/");
+        if (resourceId.startsWith("jdbc:postgresql")) {
+            String[] values = resourceId.split("/");
 
             String[] serverInfo = values[2].split(":");
             String host = serverInfo[0];
@@ -555,15 +561,30 @@ public class MapServersApi {
                 "postgis", host, port, user, password, db, table, "postgis",
                 g.getNamespaceUrl(), metadataUuid, metadataTitle, metadataAbstract);
         } else {
-            if (resource.startsWith("file://") || resource.startsWith("http://")) {
+            if (resourceId.startsWith("file://") || resourceId.startsWith("http://")) {
                 return addExternalFile(action, gs,
-                    resource,
+                    resourceId,
                     metadataUuid, metadataTitle, metadataAbstract);
             } else {
                 // Get ZIP file from data directory
-                try (Store.ResourceHolder f = store.getResource(context, metadataUuid, resource)) {
+                try (Store.ResourceHolder f = store.getResource(context, metadataUuid, resourceId)) {
+                    Path filePath;
+
+                    if (f.getResource().isFile()) {
+                        filePath = f.getResource().getFile().toPath();
+                    } else {
+                        // Create a temporary file
+                        // Preserve filename by putting the files into a temporary folder and using the same filename.
+                        Path tempFolderPath = Files.createTempDirectory("gn-meta-res-" + f.getMetadata().getMetadataId() + "-");
+                        tempFolderPath.toFile().deleteOnExit();
+                        filePath = tempFolderPath.resolve(f.getMetadata().getFilename());
+                        try (InputStream in = f.getResource().getInputStream()) {
+                            Files.copy(in, filePath, StandardCopyOption.REPLACE_EXISTING);
+                        }
+                    }
+
                     return addZipFile(action, gs,
-                        f.getPath(), resource,
+                        filePath, resourceId,
                         metadataUuid, metadataTitle, metadataAbstract);
                 }
             }

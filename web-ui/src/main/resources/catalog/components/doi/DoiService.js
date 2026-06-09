@@ -31,14 +31,78 @@
    */
   module.service("gnDoiService", [
     "$http",
-    function ($http) {
+    "gnConfig",
+    function ($http, gnConfig) {
+      /**
+       * Returns a promise to validate a metadata to be published on a DOI server.
+       *
+       * @param id
+       * @param doiServerId
+       * @returns {*}
+       */
+      function check(id, doiServerId) {
+        return $http.get(
+          "../api/records/" + id + "/doi/" + doiServerId + "/checkPreConditions"
+        );
+      }
+
+      /**
+       * Returns a promise to publish a metadata on a DOI server.
+       *
+       * @param id
+       * @param doiServerId
+       * @returns {*}
+       */
+      function create(id, doiServerId) {
+        return $http.put("../api/records/" + id + "/doi/" + doiServerId);
+      }
+
+      /**
+       * Returns a promise to retrieve the list of DOI servers
+       * where a metadata can be published.
+       *
+       * @param metadataId
+       * @returns {*}
+       */
+      function getDoiServersForMetadata(metadataId) {
+        return $http.get("../api/doiservers/metadata/" + metadataId);
+      }
+
+      function isDoiApplicableForMetadata(md) {
+        return (
+          gnConfig["system.publication.doi.doienabled"] &&
+          md.isTemplate === "n" &&
+          md.isPublished() &&
+          JSON.parse(md.isHarvested) === false
+        );
+      }
+
+      /**
+       * Doi can be published for a resource if:
+       *   - Doi publication is enabled.
+       *   - The resource matches doi.org url
+       *   - The workflow is not enabled for the metadata and
+       *     the metadata is published.
+       *
+       */
+      function canPublishDoiForResource(md, resource) {
+        var doiKey = gnConfig["system.publication.doi.doikey"];
+        var isMdWorkflowEnableForMetadata =
+          gnConfig["metadata.workflow.enable"] && md.draft === "y";
+        return (
+          isDoiApplicableForMetadata(md) &&
+          resource.lUrl !== null &&
+          resource.lUrl.match("doi.org/" + doiKey) !== null &&
+          !isMdWorkflowEnableForMetadata
+        );
+      }
+
       return {
-        check: function (id) {
-          return $http.get("../api/records/" + id + "/doi/checkPreConditions");
-        },
-        create: function (id) {
-          return $http.put("../api/records/" + id + "/doi");
-        }
+        check: check,
+        create: create,
+        isDoiApplicableForMetadata: isDoiApplicableForMetadata,
+        canPublishDoiForResource: canPublishDoiForResource,
+        getDoiServersForMetadata: getDoiServersForMetadata
       };
     }
   ]);

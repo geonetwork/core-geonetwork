@@ -23,6 +23,8 @@
 package org.fao.geonet.services.inspireatom;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -84,25 +86,25 @@ public class AtomGetData {
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Get a data file related to dataset"),
-        @ApiResponse(responseCode = "204", description = "Not authenticated.")
+        @ApiResponse(responseCode = "204", description = "Not authenticated.", content = {@Content(schema = @Schema(hidden = true))})
     })
     @ResponseStatus(OK)
     @ResponseBody
     public Element downloadResource(
         @Parameter(
             description = "spatial_dataset_identifier_code",
-            required = false)
-        @RequestParam(defaultValue = "")
+            required = true)
+        @RequestParam
             String spatial_dataset_identifier_code,
         @Parameter(
             description = "spatial_dataset_identifier_namespace",
-            required = false)
-        @RequestParam(defaultValue = "")
+            required = true)
+        @RequestParam
             String spatial_dataset_identifier_namespace,
         @Parameter(
             description = "crs",
-            required = false)
-        @RequestParam(defaultValue = "")
+            required = true)
+        @RequestParam
             String crs,
         @Parameter(hidden = true)
             HttpServletRequest request,

@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -36,9 +36,7 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -50,16 +48,17 @@ import java.util.Map;
 /**
  * Utility to mimic what Jeeves was doing
  */
-@Component
 public class XsltResponseWriter {
     public static final String TRANSLATIONS = "translations";
-    @Autowired
-    GeonetworkDataDirectory dataDirectory;
     Element xml;
     Path xsl;
     Map<String, Object> xslParams = new HashMap<>();
 
     public XsltResponseWriter(String envTagName, String serviceName) {
+        this(envTagName, serviceName, "eng");
+    }
+
+    public XsltResponseWriter(String envTagName, String serviceName, String lang) {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
         String url = settingManager.getBaseURL();
         Element gui = new Element("gui");
@@ -69,8 +68,8 @@ public class XsltResponseWriter {
         gui.addContent(new Element("nodeUrl").setText(settingManager.getNodeURL()));
         gui.addContent(new Element("baseUrl").setText(settingManager.getBaseURL()));
         gui.addContent(new Element("serverUrl").setText(settingManager.getServerURL()));
-        // TODO: set language based on header
-        gui.addContent(new Element("language").setText("eng"));
+        gui.addContent(new Element("nodeId").setText(settingManager.getNodeId()));
+        gui.addContent(new Element("language").setText(lang));
 
 
         Element settings = settingManager.getAllAsXML(true);
@@ -93,8 +92,7 @@ public class XsltResponseWriter {
     public XsltResponseWriter withXsl(String xsl) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
-        Path xslt = dataDirectory.getWebappDir().resolve(xsl);
-        this.xsl = xslt;
+        this.xsl = dataDirectory.getWebappDir().resolve(xsl);
         return this;
     }
 
@@ -152,7 +150,7 @@ public class XsltResponseWriter {
             });
         } catch (IOException e) {
             Log.warning(Geonet.GEONETWORK, String.format(
-                "Can't find JSON file '%s'.", jsonPath.toString()
+                "Can't find JSON file '%s'.", jsonPath
             ));
         }
 

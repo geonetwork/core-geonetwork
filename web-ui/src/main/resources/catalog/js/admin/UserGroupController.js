@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,12 +27,15 @@
   goog.require("gn_dbtranslation");
   goog.require("gn_multiselect");
   goog.require("gn_mdtypewidget");
+  goog.require("gn_auditable");
 
   var module = angular.module("gn_usergroup_controller", [
     "gn_dbtranslation",
     "gn_multiselect",
+    "gn_auditable",
     "gn_mdtypewidget",
-    "blueimp.fileupload"
+    "blueimp.fileupload",
+    "ngMessages"
   ]);
 
   /**
@@ -46,8 +49,11 @@
     "$rootScope",
     "$translate",
     "$timeout",
+    "$log",
     "gnConfig",
     "gnConfigService",
+    "gnAuditableService",
+    "gnUtilityService",
     function (
       $scope,
       $routeParams,
@@ -55,13 +61,16 @@
       $rootScope,
       $translate,
       $timeout,
+      $log,
       gnConfig,
-      gnConfigService
+      gnConfigService,
+      gnAuditableService,
+      gnUtilityService
     ) {
       $scope.searchObj = {
         params: {
           isTemplate: ["y", "n", "s", "t"],
-          sortBy: "resourceTitleObject.default.keyword"
+          sortBy: "resourceTitleObject.default.sort"
         }
       };
 
@@ -95,6 +104,8 @@
       // List of catalog groups
       $scope.groups = null;
       $scope.groupSelected = { id: $routeParams.userOrGroup };
+      $scope.nonSystemGroups = null;
+      $scope.systemGroups = null;
       // On going changes group ...
       $scope.groupUpdated = false;
       $scope.groupSearch = {};
@@ -116,9 +127,11 @@
 
       $scope.isLoadingUsers = false;
       $scope.isLoadingGroups = false;
+      $scope.auditableEnabled = false;
 
       gnConfigService.load().then(function (c) {
-        $scope.passwordMinLength = Math.min(
+        // take the bigger of the two values
+        $scope.passwordMinLength = Math.max(
           gnConfig["system.security.passwordEnforcement.minLength"],
           6
         );
@@ -133,6 +146,8 @@
             gnConfig["system.security.passwordEnforcement.pattern"]
           );
         }
+
+        $scope.auditableEnabled = gnConfig["system.auditable.enable"];
       });
 
       // This is to force IE11 NOT to cache json requests
@@ -145,8 +160,28 @@
       $http.get("../api/tags").then(function (response) {
         var nullTag = { id: null, name: "", label: {} };
         nullTag.label[$scope.lang] = "";
-        $scope.categories = [nullTag].concat(response.data);
+        var categoriesSorted = gnUtilityService.sortByTranslation(
+          response.data,
+          $scope.lang,
+          "name"
+        );
+
+        $scope.categories = [nullTag].concat(categoriesSorted);
       });
+
+      $scope.groupTypes = [
+        { id: "Workspace", label: "groupTypeWorkspace", hasProfiles: true },
+        { id: "RecordPrivilege", label: "groupTypeRecordPrivilege", hasProfiles: true },
+        { id: "SystemPrivilege", label: "groupTypeSystemPrivilege", hasProfiles: false }
+      ];
+
+      var groupTypesWithoutProfiles = $scope.groupTypes
+        .filter(function (gt) {
+          return !gt.hasProfiles;
+        })
+        .map(function (gt) {
+          return gt.id;
+        });
 
       function loadGroups() {
         $scope.isLoadingGroups = true;
@@ -158,6 +193,15 @@
             $scope.groups = response.data;
             angular.forEach($scope.groups, function (u) {
               u.langlabel = getLabel(u);
+            });
+            $scope.groupsWithProfiles = $scope.groups.filter(function (g) {
+              return !groupTypesWithoutProfiles.includes(g.type);
+            });
+            $scope.groupsWithoutProfiles = $scope.groups.filter(function (g) {
+              return groupTypesWithoutProfiles.includes(g.type);
+            });
+            $scope.systemGroups = $scope.groups.filter(function (g) {
+              return g.type === "SystemPrivilege";
             });
             $scope.isLoadingGroups = false;
 
@@ -259,6 +303,7 @@
         $scope.userIsEnabled = true;
 
         updateGroupsByProfile($scope.userGroups);
+        updateGroupsWithoutProfilesByType($scope.userGroups);
 
         $timeout(function () {
           $scope.setUserProfile();
@@ -276,6 +321,8 @@
         $scope.userUpdated = false;
         $scope.$broadcast("clearResults");
         $scope.userOperation = "editinfo";
+
+        $scope.gnUserEdit.$setPristine();
       };
 
       /**
@@ -294,6 +341,7 @@
             var data = response.data;
 
             $scope.userSelected = data;
+            $scope.gnUserEdit.$setPristine();
             $scope.userIsAdmin = data.profile === "Administrator";
 
             $scope.userIsEnabled = data.enabled;
@@ -307,9 +355,21 @@
                 // TODO
               }
             );
+
+            // Load user changes
+            gnAuditableService.getEntityHistory("user", u.id).then(
+              function (response) {
+                $scope.userHistory = response.data;
+              },
+              function (response) {
+                // TODO
+                $log.error("Error retrieving the audit history of user " + u.id);
+              }
+            );
           },
           function (response) {
             // TODO
+            $log.error("Error retrieving the info of user " + u.id);
           }
         );
 
@@ -317,7 +377,7 @@
         $scope.$broadcast("resetSearch", {
           isTemplate: ["y", "n", "s", "t"],
           owner: u.id,
-          sortBy: "resourceTitleObject.default.keyword"
+          sortBy: "resourceTitleObject.default.sort"
         });
 
         $scope.userUpdated = false;
@@ -407,6 +467,7 @@
       };
 
       $scope.groupsByProfile = [];
+      $scope.groupsWithoutProfilesByType = [];
 
       /**
        * Returns the list of groups inside "groups" with the selected profile
@@ -430,7 +491,11 @@
           res[profile] = [];
           if (groups != null) {
             for (var i = 0; i < groups.length; i++) {
-              if (groups[i].id.profile == profile) {
+              // If group has the profile, and the group has profiles
+              if (
+                groups[i].id.profile == profile &&
+                !groupTypesWithoutProfiles.includes(groups[i].group.type)
+              ) {
                 var g = groups[i].group;
                 g.langlabel = getLabel(g);
                 res[profile].push(g);
@@ -444,8 +509,36 @@
         $scope.groupsByProfile = res;
       };
 
+      var updateGroupsWithoutProfilesByType = function (groups) {
+        var res = [];
+
+        angular.forEach(groupTypesWithoutProfiles, function (type) {
+          res[type] = [];
+          if (groups != null) {
+            for (var i = 0; i < groups.length; i++) {
+              if (groups[i].group.type === type) {
+                var g = groups[i].group;
+                g.langlabel = getLabel(g);
+                res[type].push(g);
+              }
+            }
+          }
+        });
+
+        //We need to change the pointer,
+        // not only the value, so ng-options is aware
+        $scope.groupsWithoutProfilesByType = res;
+      };
+
+      $scope.$watch("groupSelected.type", function (newValue) {
+        if (newValue === "SystemPrivilege") {
+          $scope.groupSelected.minimumProfileForPrivileges = null;
+        }
+      });
+
       $scope.$watch("userGroups", function (groups) {
         updateGroupsByProfile(groups);
+        updateGroupsWithoutProfilesByType(groups);
       });
 
       $scope.sortByLabel = function (group) {
@@ -471,6 +564,9 @@
           $scope.userIsAdmin = !$scope.userIsAdmin;
           angular.forEach(profiles, function (p) {
             $scope.groupsByProfile[p] = [];
+          });
+          angular.forEach(groupTypesWithoutProfiles, function (t) {
+            $scope.groupsWithoutProfilesByType[t] = [];
           });
         }
         $scope.userUpdated = true;
@@ -531,6 +627,15 @@
           selectedReviewerGroups = [],
           selectedUserAdminGroups = [];
 
+        angular.forEach(groupTypesWithoutProfiles, function (groupType) {
+          for (var j = 0; j < $scope.groupsWithoutProfilesByType[groupType].length; j++) {
+            if ($scope.groupsWithoutProfilesByType[groupType][j]) {
+              selectedRegisteredUserGroups.push(
+                $scope.groupsWithoutProfilesByType[groupType][j].id
+              );
+            }
+          }
+        });
         for (var j = 0; j < $scope.groupsByProfile["RegisteredUser"].length; j++) {
           if ($scope.groupsByProfile["RegisteredUser"][j]) {
             selectedRegisteredUserGroups.push(
@@ -647,6 +752,8 @@
           label: {},
           description: "",
           email: "",
+          type: "Workspace",
+          minimumProfileForPrivileges: null,
           enableAllowedCategories: false,
           allowedCategories: [],
           defaultCategory: null,
@@ -690,10 +797,10 @@
         });
       };
 
-      var createOrModifyGroupError = function (data) {
+      var createOrModifyGroupError = function (response) {
         $rootScope.$broadcast("StatusUpdated", {
           title: $translate.instant("groupUpdateError"),
-          error: data,
+          error: response.data,
           timeout: 0,
           type: "danger"
         });
@@ -790,14 +897,16 @@
         // that breaks the group management.
         // TODO: Use custom controllers for groups and users management
         $scope.groupSelected = angular.copy(g);
+        $scope.gnGroupEdit.$setPristine();
+
         $scope.clear($scope.queue);
         delete $scope.groupSelected.langlabel;
 
         // Retrieve records in that group
         $scope.$broadcast("resetSearch", {
           isTemplate: ["y", "n", "s", "t"],
-          group: g.id,
-          sortBy: "resourceTitleObject.default.keyword"
+          groupOwner: g.id,
+          sortBy: "resourceTitleObject.default.sort"
         });
 
         loadGroupUsers($scope.groupSelected.id);
@@ -847,6 +956,27 @@
       });
 
       return filtered;
+    };
+  });
+
+  /**
+   * Directive to check the password confirmation field
+   * and set the form validation status.
+   */
+  module.directive("gnValidPasswordConfirmation", function () {
+    return {
+      require: "ngModel",
+      link: function (scope, elm, attrs, ctrl) {
+        ctrl.$setValidity("noMatch", true);
+
+        attrs.$observe("gnValidPasswordConfirmation", function (newVal) {
+          if (newVal === "true") {
+            ctrl.$setValidity("noMatch", true);
+          } else {
+            ctrl.$setValidity("noMatch", false);
+          }
+        });
+      }
     };
   });
 })();

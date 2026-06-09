@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -31,28 +31,81 @@
    */
   module.directive("gnContactUsForm", [
     "$http",
-    function ($http) {
+    "$translate",
+    "vcRecaptchaService",
+    "gnConfigService",
+    "gnConfig",
+    function ($http, $translate, vcRecaptchaService, gnConfigService, gnConfig) {
       return {
         restrict: "A",
         replace: true,
         scope: {
           user: "="
         },
-        templateUrl: "../../catalog/components/share/" + "partials/contactusform.html",
+        templateUrl:
+          "../../catalog/components/contactus/" + "partials/contactusform.html",
         link: function (scope, element, attrs) {
-          scope.send = function (formId) {
-            $http({
-              url: "contact.send@json",
-              method: "POST",
-              data: $(formId).serialize(),
-              headers: { "Content-Type": "application/x-www-form-urlencoded" }
-            }).then(function (response) {
-              // TODO: report no email sent
-              if (response.status === 200) {
-                scope.success = true;
-              } else {
+          gnConfigService.load().then(function (c) {
+            scope.recaptchaEnabled =
+              gnConfig["system.userSelfRegistration.recaptcha.enable"];
+            scope.recaptchaKey =
+              gnConfig["system.userSelfRegistration.recaptcha.publickey"];
+          });
+
+          scope.resolveRecaptcha = false;
+
+          function initModel() {
+            scope.feedbackModel = {
+              name: scope.user.name,
+              email: scope.user.email,
+              org: "",
+              comments: ""
+            };
+          }
+
+          initModel();
+
+          scope.send = function (form, formId) {
+            if (scope.recaptchaEnabled) {
+              if (vcRecaptchaService.getResponse() === "") {
+                scope.resolveRecaptcha = true;
+
+                var deferred = $q.defer();
+                deferred.resolve("");
+                return deferred.promise;
               }
-            });
+              scope.resolveRecaptcha = false;
+              scope.captcha = vcRecaptchaService.getResponse();
+              $("#recaptcha").val(scope.captcha);
+            }
+
+            if (form.$valid) {
+              $http({
+                url: "../api/site/userfeedback",
+                method: "POST",
+                data: $(formId).serialize(),
+                headers: {
+                  "Content-Type": "application/x-www-form-urlencoded"
+                }
+              }).then(
+                function (response) {
+                  scope.$emit("StatusUpdated", {
+                    msg: $translate.instant("feebackSent"),
+                    timeout: 2,
+                    type: "info"
+                  });
+                  initModel();
+                },
+                function (response) {
+                  scope.success = false;
+                  scope.$emit("StatusUpdated", {
+                    msg: $translate.instant("feebackSentError"),
+                    timeout: 0,
+                    type: "danger"
+                  });
+                }
+              );
+            }
           };
         }
       };

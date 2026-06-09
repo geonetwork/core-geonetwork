@@ -33,12 +33,12 @@ import org.fao.geonet.domain.LDAPUser;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.kernel.security.BaseUserUtils;
 import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
 import org.fao.geonet.kernel.security.WritableUserDetailsContextMapper;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -48,13 +48,15 @@ import org.springframework.util.StringUtils;
 import jeeves.component.ProfileManager;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author ETj (etj at geo-solutions.it)
  * @author María Arias de Reyna (delawen)
  */
-public class ShibbolethUserUtils {
+public class ShibbolethUserUtils extends BaseUserUtils {
     private UserDetailsManager userDetailsManager;
     private WritableUserDetailsContextMapper udetailsmapper;
 
@@ -153,9 +155,6 @@ public class ShibbolethUserUtils {
                 user = (User) authProvider.loadUserByUsername(username);
 
                 if (config.isUpdateGroup()) {
-                    // First we remove all previous groups
-                    userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
-
                     // Now we add the groups
                     assignGroups(groupRepository, userGroupRepository, roleGroups,
                             roleGroupSeparator, user);
@@ -222,6 +221,9 @@ public class ShibbolethUserUtils {
 
     private void assignGroups(GroupRepository groupRepository, UserGroupRepository userGroupRepository,
                               String[] role_groups, String separator, User user) {
+
+        Set<UserGroup> userGroups =  new HashSet<>();
+
         // Assign groups
         int i = 0;
 
@@ -234,13 +236,7 @@ public class ShibbolethUserUtils {
 
             String group = tmp[0];
 
-            Group g = groupRepository.findByName(group);
-
-            if (g == null) {
-                g = new Group();
-                g.setName(group);
-                groupRepository.save(g);
-            }
+            Group g = getOrCreateGroup(group);
 
             UserGroup usergroup = new UserGroup();
             usergroup.setGroup(g);
@@ -258,14 +254,16 @@ public class ShibbolethUserUtils {
                     ug.setGroup(g);
                     ug.setUser(user);
                     ug.setProfile(Profile.Editor);
-                    userGroupRepository.save(ug);
+                    userGroups.add(ug);
                 }
             } else {
                 // Failback if no profile
                 usergroup.setProfile(Profile.Guest);
             }
-            userGroupRepository.save(usergroup);
+            userGroups.add(usergroup);
         }
+
+        userGroupRepository.updateUserGroups(user.getId(), userGroups);
     }
 
     private void assignProfile(String[] role_groups, String roleGroupSeparator, User user) {

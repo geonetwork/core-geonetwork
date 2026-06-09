@@ -203,7 +203,19 @@ public class RegionsApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get geometry as image",
-        description = "A rendering of the geometry as a png.")
+        description = "A rendering of the geometry as a `png`.\n " +
+            "\n " +
+            "The coverage of the image is computed from the geometry envelope and size using scale factor configuration " +
+            "(See `regionGetMapExpandFactors` bean in `config-spring-geonetwork.xml`) " +
+            "to give enough context on where the geometry is. The smaller the geometry, the bigger the expand factor.\n" +
+            "\n " +
+            "If needed, when the factor is high, square image mode can be enabled (instead of proportional geometry size):\n" +
+            "\n " +
+            "```xml\n" +
+            " <util:set id=\"regionGetMapExpandFactors\" set-class=\"java.util.TreeSet\">\n" +
+            "    <bean class=\"org.fao.geonet.api.records.extent.ExpandFactor\"\n" +
+            "          p:proportion=\".00005\" p:factor=\"256\" p:squareImage=\"true\"/>\n" +
+            "```\n")
     @RequestMapping(
         value = "/geom.png",
         produces = {
@@ -226,6 +238,12 @@ public class RegionsApi {
         @RequestParam(value = GEOM_TYPE_PARAM, defaultValue = "WKT") String geomType,
         @Parameter(description = "")
         @RequestParam(value = GEOM_SRS_PARAM, defaultValue = "EPSG:4326") String geomSrs,
+        @Parameter(description = API_PARAM_FILL_DESCRIPTION)
+        @RequestParam(value = "", required = false, defaultValue = "0,0,0,30")
+        String fillColor,
+        @Parameter(description = API_PARAM_STROKE_DESCRIPTION)
+        @RequestParam(value = "", required = false, defaultValue = "0,0,0,255")
+        String strokeColor,
         @Parameter(hidden = true)
             NativeWebRequest nativeWebRequest,
         @Parameter(hidden = true)
@@ -268,7 +286,7 @@ public class RegionsApi {
         }
 
         MapRenderer renderer = new MapRenderer(context);
-        BufferedImage image = renderer.render(regionId, srs, width, height, background, geomParam, geomType, geomSrs, null, null);
+        BufferedImage image = renderer.render(regionId, srs, width, height, background, geomParam, geomType, geomSrs, fillColor, strokeColor);
 
         if (image == null) return null;
 

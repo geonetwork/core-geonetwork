@@ -14,7 +14,7 @@
         data-ng-class="(isFilterTagsDisplayedInSearch === true
             || searchResults.facets.length > 0) ? 'col-md-3': 'hidden'"
       >
-        <div ng-if="showMapInFacet">
+        <div ng-if="searchMapPlacement === 'facets'">
           <div class="panel panel-default">
             <div class="panel-heading" data-gn-slide-toggle="">
               <span translate="" class="ng-scope">map</span>
@@ -118,21 +118,33 @@
               data-template-url="resultTemplate"
               data-map="searchObj.searchMap"
             ></div>
-
+          </div>
+        </div>
+        <div class="row gn-row-tools gn-noborder-bottom hidden-print">
+          <div class="col-sm-3">
             <button
               data-ng-show="searchResults.records.length > 9"
               class="btn btn-link hidden-print"
               onClick="window.scrollTo(0,0);"
               title="{{'scrollTop' | translate}}"
             >
-              <i class="fa fa-fw fa-chevron-up" />
+              <i class="fa fa-fw fa-chevron-up"></i>
             </button>
+          </div>
+          <div class="col-xs-12 col-sm-6 text-center">
+            <div
+              class=""
+              data-gn-pagination="paginationInfo"
+              data-hits-values="searchObj.hitsperpageValues"
+              data-enable-hot-keys=""
+              data-enable-events=""
+            ></div>
           </div>
         </div>
       </div>
     </div>
 
-    <div ng-if="!showMapInFacet" class="hidden-print">
+    <div ng-if="searchMapPlacement === 'results'" class="hidden-print">
       <div
         data-gn-map-field="searchObj.searchMap"
         data-gn-map-field-geom="searchObj.params.geometry"

@@ -35,7 +35,7 @@
         data-ng-repeat="d in mdView.current.record.resolutionScaleDenominator"
         class="gn-scale"
       >
-        {{d}}
+        <span> {{d}} </span>
       </li>
     </ul>
   </div>
@@ -51,7 +51,9 @@
   <div>
     <h3 data-translate="">resolution</h3>
     <ul class="gn-comma-list">
-      <li data-ng-repeat="r in mdView.current.record.resolutionDistance">{{r}}</li>
+      <li data-ng-repeat="r in mdView.current.record.resolutionDistance">
+        <span>{{r}}</span>
+      </li>
     </ul>
   </div>
 </div>

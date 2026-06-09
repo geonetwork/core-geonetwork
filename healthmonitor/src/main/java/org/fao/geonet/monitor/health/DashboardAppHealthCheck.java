@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,7 +29,6 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.fao.geonet.kernel.search.EsSearchManager;
-import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 
@@ -43,7 +42,6 @@ public class DashboardAppHealthCheck implements HealthCheckFactory {
             @Override
             protected Result check() throws Exception {
                 final GeonetHttpRequestFactory httpRequestFactory = context.getBean(GeonetHttpRequestFactory.class);
-                final SettingManager settingManager = context.getBean(SettingManager.class);
                 final EsSearchManager searchMan = context.getBean(EsSearchManager.class);
                 final String dashboardAppUrl = searchMan.getClient().getDashboardAppUrl();
 
@@ -56,9 +54,9 @@ public class DashboardAppHealthCheck implements HealthCheckFactory {
                         if (httpResponse.getRawStatusCode() == 200 // Kibana default config
                             || httpResponse.getRawStatusCode() == 404 // Kibana alive but probably using a custom basePath
                         ) {
-                            return Result.healthy(String.format(
+                            return Result.healthy(
                                 "Dashboard application is running."
-                            ));
+                            );
                             // Could make sense to do some more checks.
                             // Kibana status may be red/yellow ?
                             // String url = settingManager.getBaseURL() + "dashboards/api/status";
@@ -68,7 +66,7 @@ public class DashboardAppHealthCheck implements HealthCheckFactory {
                                 "Dashboard application is not available currently. " +
                                     "This component is only required if you use dashboards.");
                         }
-                    } catch (Throwable e) {
+                    } catch (Exception e) {
                         return Result.unhealthy(e);
                     } finally {
                         if (httpResponse != null) {

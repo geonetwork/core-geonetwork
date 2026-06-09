@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2020 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -168,7 +168,6 @@ public class MetadataStatus extends GeonetEntity {
      * Set the id of the metadata the status is related to.
      *
      * @param metadataId the id of the metadata the status is related to.
-     * @return this id object
      */
     public void setMetadataId(int metadataId) {
         this.metadataId = metadataId;
@@ -188,7 +187,6 @@ public class MetadataStatus extends GeonetEntity {
      * Set the user who changed the status.
      *
      * @param userId the user who changed the status.
-     * @return this id object
      */
     public void setUserId(int userId) {
         this.userId = userId;
@@ -220,12 +218,11 @@ public class MetadataStatus extends GeonetEntity {
      * <p/>
      *
      * This may be null for {@link StatusValueType#workflow} type as usually a list
-     * of user is notified when the status change.
-     *
+     * of user is notified when the status changes.
+     * <p/>
      * This is defined when a task is delegated to someone in particular and the
      * type is {@link StatusValueType#task}.
-     *
-     *
+     * <p/>
      * Note the author of the status is set in {@link#setId(Id)}.
      *
      * @return the user responsible for this task.
@@ -320,7 +317,7 @@ public class MetadataStatus extends GeonetEntity {
     }
 
     /**
-     * Get the uuid of the metadata..
+     * Get the uuid of the metadata.
      *
      * @return the uuid of the metadata.
      */
@@ -339,7 +336,7 @@ public class MetadataStatus extends GeonetEntity {
     }
 
     /**
-     * Get the multilingual titles of the metadata as a json string..
+     * Get the multilingual titles of the metadata as a json string.
      *
      * @return the multilingual titles of the metadata.
      */

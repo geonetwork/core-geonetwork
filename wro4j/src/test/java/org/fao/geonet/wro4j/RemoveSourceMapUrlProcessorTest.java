@@ -18,7 +18,8 @@ public class RemoveSourceMapUrlProcessorTest {
     @Test
     public void removeAnnotation() throws Exception {
         final String sourceMapAnnotation = "//# sourceMappingURL=this-is-a-test.map";
-        final String bundledCode = "goog.provide('id');\ngoog.require('id2');\nconsole.log('hello'); console.log('bye');";
+        final String lineSeparator = System.lineSeparator();
+        final String bundledCode = "goog.provide('id');"+ lineSeparator + "goog.require('id2');" + lineSeparator + "nconsole.log('hello'); console.log('bye');";
         Reader reader = new StringReader(bundledCode + "\n" + sourceMapAnnotation);
         StringWriter writer = new StringWriter();
         final RemoveSourceMapUrlProcessor processor = new RemoveSourceMapUrlProcessor();

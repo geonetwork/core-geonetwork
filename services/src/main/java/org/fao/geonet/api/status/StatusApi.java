@@ -24,6 +24,8 @@
 package org.fao.geonet.api.status;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -79,7 +81,7 @@ public class StatusApi {
     @RequestMapping(method = RequestMethod.DELETE)
     @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Status removed."),
+        @ApiResponse(responseCode = "204", description = "Status removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)

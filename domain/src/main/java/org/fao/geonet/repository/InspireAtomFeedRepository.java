@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -26,6 +26,8 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.InspireAtomFeed;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.List;
+
 
 /**
  * Repository class for InspireAtomFeed. Repository class for InspireAtomFeed.
@@ -41,4 +43,12 @@ public interface InspireAtomFeedRepository extends GeonetRepository<InspireAtomF
      * @return the metadata related to the inspire atom feed
      */
     InspireAtomFeed findByMetadataId(final int metadataId);
+
+    /**
+     * Find the list of all {@link InspireAtomFeed} with the provided {@code atomDatasetid}.
+     *
+     * @param atomDatasetid the atomDatasetid.
+     * @return a list of all the inspire atom feed elements with atomDatasetId.
+     */
+    List<InspireAtomFeed> findAllByAtomDatasetid(final String atomDatasetid);
 }

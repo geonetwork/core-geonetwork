@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.math.BigInteger;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 
 /**
  * <p>Java class for anonymous complex type.
@@ -46,6 +47,8 @@ import java.math.BigInteger;
     "schematronVerificationError"
 })
 @XmlRootElement(name = "report")
+// Use different schema name for report to resolve conflict with org.fao.geonet.api.processing.report.Report
+@Schema(name = "ValidationReport")
 public class Report {
 
     @XmlElement(required = true)

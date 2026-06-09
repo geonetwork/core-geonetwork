@@ -78,16 +78,6 @@
       </cit:party>
     </cit:CI_Responsibility>
   </mdb:contact>
-  <mdb:dateInfo>
-    <cit:CI_Date>
-      <cit:date>
-        <gco:DateTime>2005-03-31T19:13:30</gco:DateTime>
-      </cit:date>
-      <cit:dateType>
-        <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="creation">creation</cit:CI_DateTypeCode>
-      </cit:dateType>
-    </cit:CI_Date>
-  </mdb:dateInfo>
   <mdb:metadataStandard>
     <cit:CI_Citation>
       <cit:title>

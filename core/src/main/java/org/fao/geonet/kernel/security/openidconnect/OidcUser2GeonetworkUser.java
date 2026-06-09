@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,17 +23,12 @@
 package org.fao.geonet.kernel.security.openidconnect;
 
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Language;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.security.BaseUserUtils;
 import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
 import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
-import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -41,8 +36,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
 import org.springframework.util.StringUtils;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Class for handling Oidc User and the Geonetwork User.
@@ -52,27 +49,33 @@ import java.util.Map;
 public class OidcUser2GeonetworkUser {
 
     @Autowired
-    OIDCConfiguration oidcConfiguration;
+    protected OIDCConfiguration oidcConfiguration;
     @Autowired
-    OIDCRoleProcessor oidcRoleProcessor;
+    protected OIDCRoleProcessor oidcRoleProcessor;
     @Autowired
-    SimpleOidcUserFactory simpleOidcUserFactory;
+    protected SimpleOidcUserFactory simpleOidcUserFactory;
     @Autowired
-    private UserRepository userRepository;
+    protected UserRepository userRepository;
     @Autowired
-    private GroupRepository groupRepository;
+    protected GroupRepository groupRepository;
     @Autowired
-    private LanguageRepository langRepository;
+    protected BaseUserUtils baseUserUtils;
     @Autowired
-    private UserGroupRepository userGroupRepository;
+    protected UserGroupRepository userGroupRepository;
     @Autowired
-    private GeonetworkAuthenticationProvider geonetworkAuthenticationProvider;
+    protected GeonetworkAuthenticationProvider geonetworkAuthenticationProvider;
 
 
     public UserDetails getUserDetails(Map attributes, boolean withDbUpdate) throws Exception {
         SimpleOidcUser simpleUser = simpleOidcUserFactory.create(attributes);
         if (!StringUtils.hasText(simpleUser.getUsername()))
             return null;
+
+        if (!oidcConfiguration.isUpdateProfile()) {
+            // SimpleOidcUser.updateUser assigns the user profile to the OpenId user profile, unless
+            // SimpleOidcUser.profile is empty. Force the empty value, to avoid the assignment.
+            simpleUser.setProfile("");
+        }
 
         User user;
         boolean newUserFlag = false;
@@ -88,8 +91,11 @@ public class OidcUser2GeonetworkUser {
         simpleUser.updateUser(user); // copy attributes from the IDToken to the GN user
 
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(attributes);
-        user.setProfile(oidcRoleProcessor.getProfile(attributes));
+        if (newUserFlag || oidcConfiguration.isUpdateProfile()) {
+            user.setProfile(oidcRoleProcessor.getProfile(attributes));
+        }
 
+        List<String> systemGroups = oidcRoleProcessor.getSystemGroups(attributes);
 
         //Apply changes to database is required.
         if (withDbUpdate) {
@@ -97,7 +103,7 @@ public class OidcUser2GeonetworkUser {
                 userRepository.save(user);
             }
             if (newUserFlag || oidcConfiguration.isUpdateGroup()) {
-                updateGroups(profileGroups, user);
+                updateGroups(systemGroups, profileGroups, user);
             }
         }
         return user;
@@ -122,6 +128,12 @@ public class OidcUser2GeonetworkUser {
         if (!StringUtils.hasText(simpleUser.getUsername()))
             return null;
 
+        if (!oidcConfiguration.isUpdateProfile()) {
+            // SimpleOidcUser.updateUser assigns the user profile to the OpenId user profile, unless
+            // SimpleOidcUser.profile is empty. Force the empty value, to avoid the assignment.
+            simpleUser.setProfile("");
+        }
+
         User user;
         boolean newUserFlag = false;
         try {
@@ -136,8 +148,11 @@ public class OidcUser2GeonetworkUser {
         simpleUser.updateUser(user); // copy attributes from the IDToken to the GN user
 
         Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(idToken);
-        user.setProfile(oidcRoleProcessor.getProfile(idToken));
+        if (newUserFlag || oidcConfiguration.isUpdateProfile()) {
+            user.setProfile(oidcRoleProcessor.getProfile(idToken));
+        }
 
+        List<String> systemGroups = oidcRoleProcessor.getSystemGroups(idToken);
 
         //Apply changes to database is required.
         if (withDbUpdate) {
@@ -145,7 +160,7 @@ public class OidcUser2GeonetworkUser {
                 userRepository.save(user);
             }
             if (newUserFlag || oidcConfiguration.isUpdateGroup()) {
-                updateGroups(profileGroups, user);
+                updateGroups(systemGroups, profileGroups, user);
             }
         }
         return user;
@@ -158,28 +173,31 @@ public class OidcUser2GeonetworkUser {
      * @param user          to apply the changes to.
      */
     //from keycloak
-    private void updateGroups(Map<Profile, List<String>> profileGroups, User user) {
-        // First we remove all previous groups
-        userGroupRepository.deleteAll(UserGroupSpecs.hasUserId(user.getId()));
+    protected void updateGroups(List<String> systemGroups, Map<Profile, List<String>> profileGroups, User user) {
+        Set<UserGroup> userGroups = new HashSet<>();
 
-        // Now we add the groups
+        // Now we add the system groups
+        for (String rgGroup : systemGroups) {
+            Group group = baseUserUtils.getOrCreateGroup(rgGroup, GroupType.SystemPrivilege);
+
+            // TODO: What do we do if the returned group is not of type SystemPrivilege?
+
+            UserGroup usergroup = new UserGroup();
+            usergroup.setGroup(group);
+            usergroup.setUser(user);
+            usergroup.setProfile(Profile.RegisteredUser);
+
+            userGroups.add(usergroup);
+        }
+
+        // Now we add the profile groups
         for (Profile p : profileGroups.keySet()) {
-            List<String> groups = profileGroups.get(p);
-            for (String rgGroup : groups) {
+            List<String> currentProfileGroups = profileGroups.get(p);
+            for (String rgGroup : currentProfileGroups) {
 
-                Group group = groupRepository.findByName(rgGroup);
+                Group group = baseUserUtils.getOrCreateGroup(rgGroup);
 
-                if (group == null) {
-                    group = new Group();
-                    group.setName(rgGroup);
-
-                    // Populate languages for the group
-                    for (Language l : langRepository.findAll()) {
-                        group.getLabelTranslations().put(l.getId(), group.getName());
-                    }
-
-                    groupRepository.save(group);
-                }
+                // TODO: What do we do if the returned group is not of type Workspace?
 
                 UserGroup usergroup = new UserGroup();
                 usergroup.setGroup(group);
@@ -201,13 +219,13 @@ public class OidcUser2GeonetworkUser {
                     ug.setGroup(group);
                     ug.setUser(user);
                     ug.setProfile(Profile.Editor);
-                    userGroupRepository.save(ug);
+                    userGroups.add(ug);
                 }
 
-                userGroupRepository.save(usergroup);
+                userGroups.add(usergroup);
             }
         }
+
+        userGroupRepository.updateUserGroups(user.getId(), userGroups);
     }
-
-
 }

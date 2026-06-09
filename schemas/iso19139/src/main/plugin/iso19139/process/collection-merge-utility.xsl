@@ -30,7 +30,6 @@
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
-
   <xsl:template match="*[name() = $elements/@name]" mode="merge" priority="2">
     <xsl:variable name="name"
                   select="name()"/>
@@ -51,6 +50,8 @@
                             select="$existingMembers//*[name() = $current/@name]"/>
               <xsl:variable name="groupBy"
                             select="$current/@groupBy"/>
+              <xsl:variable name="limit"
+                            select="$current/@limit"/>
               <xsl:variable name="groupKey"
                             select="saxon:evaluate(concat('$p1/', $groupBy), $match)"/>
               <xsl:variable name="elementName"
@@ -68,7 +69,9 @@
                 <xsl:copy-of select="string-join(distinct-values($groupKey), ' ,')"/>
               </xsl:message>-->
 
-              <xsl:for-each select="distinct-values($groupKey)">
+              <xsl:for-each select="if ($limit castable as xs:integer)
+                                    then distinct-values($groupKey)[position() &lt;= $limit]
+                                    else distinct-values($groupKey)">
                 <xsl:sort select="." order="ascending"/>
                 <xsl:variable name="groupKey"
                               select="current()"/>
@@ -81,7 +84,8 @@
 
                 <!--
                 <xsl:message>empty: <xsl:value-of select="$emptyKey"/> </xsl:message>
-                <xsl:message> Groups: <xsl:copy-of select="$groupValues"/></xsl:message>-->
+                <xsl:message> Groups: <xsl:copy-of select="$groupValues"/></xsl:message>
+                -->
 
                 <!-- Copy the first instance -->
                 <xsl:for-each select="$groupValues[1]">

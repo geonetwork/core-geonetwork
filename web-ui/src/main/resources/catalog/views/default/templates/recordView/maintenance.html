@@ -1,0 +1,38 @@
+<div data-ng-repeat="maintenance in mdView.current.record.maintenance">
+  <div data-ng-if="maintenance.frequency" class="gn-margin-bottom flex-row">
+    <span class="badge badge-rounded" title="{{'updateFrequency' | translate}}">
+      <i class="fa fa-fw fa-rotate"></i>
+    </span>
+    <div>
+      <h3 data-translate="">updateFrequency</h3>
+      <p>{{maintenance.frequency | translate}}</p>
+    </div>
+  </div>
+  <div data-ng-if="maintenance.noteObject.default" class="gn-margin-bottom flex-row">
+    <span class="badge badge-rounded" title="{{'maintenanceNote' | translate}}">
+      <i class="fa fa-fw fa-rotate"></i>
+    </span>
+    <div>
+      <h3 data-translate="">maintenanceNote</h3>
+      <p>{{maintenance.noteObject.default}}</p>
+    </div>
+  </div>
+  <div data-ng-if="maintenance.nextUpdateDate" class="gn-margin-bottom flex-row">
+    <span class="badge badge-rounded" title="{{'nextUpdateDate' | translate}}">
+      <i class="fa fa-fw fa-calendar-plus"></i>
+    </span>
+    <div>
+      <h3 data-translate="">nextUpdateDate</h3>
+      <p>{{maintenance.nextUpdateDate}}</p>
+    </div>
+  </div>
+  <div data-ng-if="maintenance.userDefinedFrequency" class="gn-margin-bottom flex-row">
+    <span class="badge badge-rounded" title="{{'userDefinedFrequency' | translate}}">
+      <i class="fa fa-fw fa-rotate"></i>
+    </span>
+    <div>
+      <h3 data-translate="">userDefinedFrequency</h3>
+      <p data-gn-field-duration-div="{{maintenance.userDefinedFrequency}}"></p>
+    </div>
+  </div>
+</div>

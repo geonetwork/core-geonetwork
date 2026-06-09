@@ -23,41 +23,17 @@
 
 package org.fao.geonet.kernel;
 
-import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
-import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
-import static org.springframework.data.jpa.domain.Specification.where;
-
-import java.sql.SQLException;
-import java.util.*;
-
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.Operation;
-import org.fao.geonet.domain.OperationAllowed;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.Setting;
-import org.fao.geonet.domain.User;
-import org.fao.geonet.domain.UserGroup;
-import org.fao.geonet.domain.User_;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.security.ViewMdGrantedAuthority;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.GroupRepositoryCustom;
-import org.fao.geonet.repository.OperationAllowedRepository;
-import org.fao.geonet.repository.OperationRepository;
-import org.fao.geonet.repository.SettingRepository;
-import org.fao.geonet.repository.SortUtils;
-import org.fao.geonet.repository.UserGroupRepository;
-import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
@@ -65,10 +41,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 
-import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.stream.Stream;
+
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_INTRANET_IP_SEPARATOR;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasMetadataId;
+import static org.fao.geonet.repository.specification.OperationAllowedSpecs.hasOperation;
+import static org.springframework.data.jpa.domain.Specification.where;
 
 /**
  * Handles the access to a metadata depending on the metadata/group.
@@ -98,6 +81,13 @@ public class AccessManager {
 
     @Autowired
     UserRepository userRepository;
+
+    public static Stream<AnonymousAccessLink> anonymousAccessLinkStreamFromSecurityContext() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .filter(ViewMdGrantedAuthority.class::isInstance)
+                .map(ViewMdGrantedAuthority.class::cast)
+                .map(ViewMdGrantedAuthority::getAnonymousAccessLink);
+    }
 
     /**
      * Given a user(session) a list of groups and a metadata returns all operations that user can
@@ -129,6 +119,8 @@ public class AccessManager {
                 results.add(operationRepository.findReservedOperation(ReservedOperation.view));
             }
         }
+
+        processViewMdGrantedAuthorityIfAny(mdId, results);
 
         return results;
     }
@@ -529,6 +521,37 @@ public class AccessManager {
 
     }
 
+    /**
+     * Checks if the user has the specified profile or any profile with greater permissions within the group.
+     *
+     * @param context The service context containing the user's session.
+     * @param profile The profile to be verified.
+     * @param groupId The ID of the group in which the user's profile is to be verified.
+     * @return true if the user has the specified profile (or greater) within the group; false otherwise.
+     */
+    public boolean isProfileOrMoreOnGroup(final ServiceContext context, Profile profile, final int groupId) {
+        UserSession us = context.getUserSession();
+        if (!isUserAuthenticated(us)) {
+            return false;
+        }
+
+        // Grant access if the user is a global administrator
+        if (Profile.Administrator == us.getProfile()) {
+            return true;
+        }
+
+        // Get the profile and all its parent profiles to consider higher-level permissions
+        Set<Profile> acceptedProfiles = profile.getProfileAndAllParents();
+
+        // Build a specification to fetch any accepted profiles for the user in the specified group
+        Specification<UserGroup> spec = Specification.where(UserGroupSpecs.hasUserId(us.getUserIdAsInt()))
+            .and(UserGroupSpecs.hasGroupId(groupId))
+            .and(UserGroupSpecs.hasProfileIn(acceptedProfiles));
+        List<UserGroup> userGroups = userGroupRepository.findAll(spec);
+
+        return !userGroups.isEmpty();
+    }
+
     public int getPrivilegeId(final String name) {
         final Operation op = operationRepository.findByName(name);
         if (op == null) {
@@ -543,11 +566,29 @@ public class AccessManager {
         return operation.isPresent()?operation.get().getName():"";
     }
 
+    public boolean isLocalhost(String ip) {
+        return ip.startsWith("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1");
+    }
+
+    private boolean isValidIntranetSettings(
+        String[] networkArray,
+        String[] netmaskArray
+    ) {
+        if (networkArray.length != netmaskArray.length) {
+            Log.error(Geonet.ACCESS_MANAGER,
+                String.format(
+                    "Invalid intranet configuration. Define as many network mask (currently %d) as network ip (currently %d). Check Settings > Intranet.",
+                    netmaskArray.length, networkArray.length));
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public boolean isIntranet(String ip) {
         //--- consider IPv4 & IPv6 loopback
         //--- we use 'startsWith' because some addresses can be 0:0:0:0:0:0:0:1%0
-
-        if (ip.startsWith("0:0:0:0:0:0:0:1") || ip.equals("127.0.0.1")) return true;
+        if (isLocalhost(ip)) return true;
 
         // IPv6 link-local
         String ipv6LinkLocalPrefix = "fe80:";
@@ -564,12 +605,26 @@ public class AccessManager {
         Optional<Setting> netmask = settingRepository.findById(Settings.SYSTEM_INTRANET_NETMASK);
 
         try {
-            if (network.isPresent() && netmask.isPresent() &&
-                StringUtils.isNotEmpty(network.get().getValue()) && StringUtils.isNotEmpty(netmask.get().getValue())) {
-                long lIntranetNet = getAddress(network.get().getValue());
-                long lIntranetMask = getAddress(netmask.get().getValue());
+            if (network.isPresent()
+                && netmask.isPresent()
+                && StringUtils.isNotEmpty(network.get().getValue())
+                && StringUtils.isNotEmpty(netmask.get().getValue())) {
                 long lAddress = getAddress(ip.split(",")[0]);
-                return (lAddress & lIntranetMask) == (lIntranetNet & lIntranetMask);
+                String[] networkArray = network
+                    .get().getValue().split(SYSTEM_INTRANET_IP_SEPARATOR);
+                String[] netmaskArray = netmask
+                    .get().getValue().split(SYSTEM_INTRANET_IP_SEPARATOR);
+
+                if (isValidIntranetSettings(networkArray, netmaskArray)) {
+                    for (int i = 0; i < networkArray.length; i++) {
+                        long lIntranetNet = getAddress(networkArray[i]);
+                        long lIntranetMask = getAddress(netmaskArray[i]);
+                        if ((lAddress & lIntranetMask) == (lIntranetNet & lIntranetMask)) {
+                            return true;
+                        }
+                    }
+                }
+                return false;
             }
         } catch (Exception nfe) {
             Log.error(Geonet.ACCESS_MANAGER,"isIntranet error: " + nfe.getMessage(), nfe);
@@ -612,10 +667,15 @@ public class AccessManager {
      * @return      True if there's an uthenticated session, False otherwise.
      */
     private boolean isUserAuthenticated(UserSession us) {
-        if (us == null || !us.isAuthenticated()) {
-            return false;
-        } else {
-            return true;
-        }
+        return us != null && us.isAuthenticated();
     }
+
+    private void processViewMdGrantedAuthorityIfAny(String mdId, Set<Operation> results) {
+        anonymousAccessLinkStreamFromSecurityContext()
+                .map(AnonymousAccessLink::getMetadataId)
+                .map(id -> Integer.toString(id))
+                .filter(mdId::equals)
+                .forEach(grantedAuthority -> results.add(operationRepository.findReservedOperation(ReservedOperation.view)));
+    }
+
 }

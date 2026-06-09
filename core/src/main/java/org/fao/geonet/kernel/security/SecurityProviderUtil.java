@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -44,6 +44,13 @@ public interface SecurityProviderUtil {
      * @return the user details information
      */
     UserDetails getUserDetails(Authentication auth);
+
+    /**
+     * Login the service account.  This is used for job processing where there is no user context.
+     *
+     * @return true if login is successful
+     */
+    boolean loginServiceAccount();
 }
 
 

@@ -31,7 +31,7 @@
    * @name gn_heatmap.directive:gnHeatmap
    *
    * @description
-   * Given a feature type, this directive will query the ElasticSearch backend
+   * Given a feature type, this directive will query the Elasticsearch backend
    * to render a heatmap of features on the map.
    * The heatmap is actually several box features which gives info when
    * hovered (feature count, etc.). These features are redrawn on every map
@@ -135,10 +135,10 @@
 
               // unbind event & remove layer on destroy
               $scope.$on("$destroy", function () {
-                ctrl.map.un(mapEventKey);
+                ol.Observable.unByKey(mapEventKey);
                 ctrl.map.removeLayer(ctrl.layer);
                 ctrl.map.removeInteraction(ctrl.hoverInteration);
-                ctrl.map.removeInteraction(ctrl.overlay);
+                ctrl.map.removeOverlay(ctrl.overlay);
               });
 
               // adjust ES request based on current filters

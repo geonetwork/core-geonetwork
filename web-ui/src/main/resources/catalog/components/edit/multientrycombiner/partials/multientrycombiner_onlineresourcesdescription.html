@@ -1,5 +1,5 @@
 <div class="combiner">
-  <div data-ng-transclude="" />
+  <div data-ng-transclude=""></div>
   <!--  <input type="hidden" data-ng-attr-id="{{config.valueElementId}}" data-ng-value="hiddenFieldValue" />-->
 
   <div style="padding-left: 15px; padding-right: 15px">
@@ -19,6 +19,7 @@
               data-gn-keyword-picker=""
               data-thesaurus-key="{{c.thesaurus}}"
               data-number-of-suggestions="{{c.numberOfSuggestions || 20}}"
+              data-show-hints-on-focus="{{c.showHintsOnFocus || false}}"
               data-faux-multilingual="true"
               data-focus-to-input="false"
               lang="{{lang}}"

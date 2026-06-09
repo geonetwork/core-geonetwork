@@ -30,6 +30,8 @@ import javax.annotation.Nullable;
 
 import org.fao.geonet.domain.MetadataDraft;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 /**
  * Data Access object for the {@link MetadataDraft} entities.
@@ -68,4 +70,51 @@ public interface MetadataDraftRepository
      */
     @Nonnull
     List<MetadataDraft> findAllByHarvestInfo_Uuid(@Nonnull String uuid);
+
+    /**
+     * Get the metadata after preforming a search and replace on it.
+     * @param uuid    The UUID of the metadata to search for.
+     * @param search  The string to search for.
+     * @param replace The string to replace the search string with.
+     * @return The metadata with the search and replace applied.
+     */
+    @Query(value = "SELECT replace(data, :search, :replace) FROM MetadataDraft m " +
+        "WHERE uuid = :uuid",
+        nativeQuery = true)
+    String selectOneWithSearchAndReplace(
+        @Param("uuid") String uuid,
+        @Param("search") String search,
+        @Param("replace") String replace);
+
+    /**
+     * Get the metadata after preforming a regex search and replace on it.
+     * @param uuid    The UUID of the metadata to search for.
+     * @param search  The string to search for.
+     * @param replace The string to replace the search string with.
+     * @return The metadata with the search and replace applied.
+     */
+    @Query(value = "SELECT regexp_replace(data, :pattern, :replace) FROM MetadataDraft m " +
+        "WHERE uuid = :uuid",
+        nativeQuery = true)
+    String selectOneWithRegexSearchAndReplace(
+        @Param("uuid") String uuid,
+        @Param("pattern") String search,
+        @Param("replace") String replace);
+
+    /**
+     * Get the metadata after preforming a regex search and replace on it with regex flags.
+     * @param uuid    The UUID of the metadata to search for.
+     * @param search  The string to search for.
+     * @param replace The string to replace the search string with.
+     * @param flags   The regex flags to use.
+     * @return The metadata with the search and replace applied.
+     */
+    @Query(value = "SELECT regexp_replace(data, :pattern, :replace, :flags) FROM MetadataDraft m " +
+        "WHERE uuid = :uuid",
+        nativeQuery = true)
+    String selectOneWithRegexSearchAndReplaceWithFlags(
+        @Param("uuid") String uuid,
+        @Param("pattern") String search,
+        @Param("replace") String replace,
+        @Param("flags") String flags);
 }

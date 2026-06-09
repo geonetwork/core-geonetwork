@@ -14,7 +14,9 @@
           gn-metadata-open="record"
           data-app-url="catalog.search"
         >
-          <i class="fa {{icon}}" />
+          <i
+            class="fa fa-fw {{icon}} gn-icon-association-{{record.properties.associationType}} gn-icon-initiative-{{record.properties.initiativeType}}"
+          ></i>
           {{record.resourceTitle}}
         </a>
         <a
@@ -22,10 +24,10 @@
           data-ng-href="{{record.remoteUrl}}"
           rel="noopener noreferrer"
           target="_blank"
-          title="{{record.resourceTitle}}"
+          title="{{record.resourceTitle || record.uuid}}"
         >
-          <i class="fa {{icon}}" />
-          {{record.resourceTitle}}
+          <i class="fa {{icon}}"></i>
+          {{record.resourceTitle || record.uuid}}
           <i
             data-ng-if="record.origin === 'remote'"
             class="fa fa-external-link"

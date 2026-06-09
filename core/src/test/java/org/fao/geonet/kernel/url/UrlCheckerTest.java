@@ -12,8 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static junit.framework.TestCase.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyObject;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -24,7 +23,7 @@ public class UrlCheckerTest {
         UrlChecker toTest = new UrlChecker();
         GeonetHttpRequestFactory mockResquetFactory = mock(GeonetHttpRequestFactory.class);
         ClientHttpResponse response = createUnknowStatus();
-        when(mockResquetFactory.execute(any(HttpUriRequest.class), anyObject())).thenReturn(response);
+        when(mockResquetFactory.execute(any(HttpUriRequest.class), any())).thenReturn(response);
         toTest.requestFactory = mockResquetFactory;
 
         LinkStatus linkStatus = toTest.getUrlStatus("dummy");

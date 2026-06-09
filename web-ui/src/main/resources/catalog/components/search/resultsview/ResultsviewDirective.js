@@ -47,11 +47,11 @@
     return {
       require: "^ngSearchForm",
       templateUrl:
-        "../../catalog/components/search/resultsview/partials/" + "templateswitcher.html",
+        "../../catalog/components/search/resultsview/partials/templateswitcher.html",
       restrict: "A",
       link: function ($scope, element, attrs, searchFormCtrl) {
         $scope.setResultTemplate = function (t) {
-          $scope.resultTemplate = t.tplUrl;
+          $scope.resultTemplate = t;
           searchFormCtrl.triggerSearch(true);
         };
       }
@@ -76,6 +76,7 @@
     "gnMetadataActions",
     "gnConfig",
     "gnConfigService",
+    "$http",
     function (
       $compile,
       gnMap,
@@ -83,7 +84,8 @@
       gnSearchSettings,
       gnMetadataActions,
       gnConfig,
-      gnConfigService
+      gnConfigService,
+      $http
     ) {
       return {
         restrict: "A",
@@ -91,18 +93,6 @@
         link: function (scope, element, attrs, controller) {
           scope.mdService = gnMetadataActions;
           scope.map = scope.$eval(attrs.map);
-          //scope.searchResults = scope.$eval(attrs.searchResults);
-
-          /** Display fa icons for categories
-           * TODO: Move to configuration */
-          scope.catIcons = {
-            featureCatalogs: "fa-table",
-            services: "fa-cog",
-            maps: "fa-globe",
-            staticMaps: "fa-globe",
-            datasets: "fa-file",
-            interactiveResources: "fa-rss"
-          };
 
           if (scope.map) {
             scope.hoverOL = new ol.layer.Vector({
@@ -128,6 +118,33 @@
           scope.$watchCollection("searchResults.records", function (rec) {
             //scroll to top
             element.animate({ scrollTop: top });
+
+            // Initialize/reset an empty object to store group names
+            scope.groupNames = {};
+
+            // Check if there are any records
+            if (rec && rec.length) {
+              // Extract unique group owner IDs from the records
+              var groupIds = [];
+              var uniqueIds = {};
+
+              for (var i = 0; i < rec.length; i++) {
+                var groupOwner = rec[i].groupOwner;
+                if (groupOwner && !uniqueIds[groupOwner]) {
+                  uniqueIds[groupOwner] = true;
+                  groupIds.push(groupOwner);
+                }
+              }
+
+              // Fetch and store group names for each group ID
+              for (var j = 0; j < groupIds.length; j++) {
+                (function (groupId) {
+                  gnMetadataActions.getGroupName(groupId).then(function (groupName) {
+                    scope.groupNames[groupId] = groupName;
+                  });
+                })(groupIds[j]);
+              }
+            }
 
             // get md extent boxes
             if (scope.map) {
@@ -177,13 +194,13 @@
             }
           });
 
-          scope.$watch("resultTemplate", function (templateUrl) {
-            if (angular.isUndefined(templateUrl)) {
+          scope.$watch("resultTemplate", function (templateConfig) {
+            if (angular.isUndefined(templateConfig)) {
               return;
             }
             var template = angular.element(document.createElement("div"));
             template.attr({
-              "ng-include": "resultTemplate"
+              "ng-include": "resultTemplate.tplUrl"
             });
             element.empty();
             element.append(template);
@@ -198,6 +215,42 @@
             if (feat) {
               map.getView().fit(feat.getGeometry().getExtent(), map.getSize());
             }
+          };
+
+          scope.abstractBriefMaker = function (resourceAbstract) {
+            if (resourceAbstract) {
+              var abstractParagraphs = resourceAbstract.split("\n");
+              var abstractBrief = "";
+              for (var index = 0; index < abstractParagraphs.length; index++) {
+                var abstractBrief = abstractBrief + abstractParagraphs[index] + "\n";
+                if (abstractBrief.length > 50) {
+                  break;
+                }
+              }
+
+              //remove the last line break character
+              return abstractBrief.substring(0, abstractBrief.length - 1);
+            }
+          };
+
+          /**
+           * @function displayWorkflowStatus
+           * @description Checks if workflow is enabled and the group owner's name matches the workflow group regex.
+           * @param {Object} md - The metadata object.
+           * @returns {boolean} - Returns true if the group owner's name matches the workflow group regex and the workflow is enabled, otherwise false.
+           */
+          scope.displayWorkflowStatus = function (md) {
+            // Return false if any required property is missing or workflow is not enabled
+            if (!md.groupOwner || !scope.groupNames || !scope.isMdWorkflowEnable) {
+              return false;
+            }
+            // Check if the group name matches the workflow group regex
+            return (
+              md.isWorkflowEnabled() ||
+              gnMetadataActions.isGroupWithWorkflowEnabled(
+                scope.groupNames[md.groupOwner]
+              )
+            );
           };
 
           if (scope.map) {

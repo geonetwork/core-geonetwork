@@ -95,19 +95,20 @@ public class GeonetworkWrojManagerFactory extends ConfigurableWroManagerFactory 
     private DiskbackedCache initDiskbackedCache(int lruSize) {
         Properties bundledProperties = readPropertiesFile("/git.properties");
         String bundledGitRevision = bundledProperties.getProperty("git.commit.id", "");
-        Path dataDirPath = null;
+        Path htmlCacheDir = null;
         boolean gitVersionMatch = false;
+
         try {
             if (ApplicationContextHolder.get() != null) {
                 GeonetworkDataDirectory geonetworkDataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
                 if (ApplicationContextHolder.get() instanceof XmlWebApplicationContext) {
                     servletContext = ((XmlWebApplicationContext) ApplicationContextHolder.get()).getServletContext();
                 }
-                dataDirPath = geonetworkDataDirectory.getSystemDataDir();
+                htmlCacheDir = geonetworkDataDirectory.getHtmlCacheDir();
             }
-            if (dataDirPath != null) {
+            if (htmlCacheDir != null) {
                 Properties propInDataDir = new Properties();
-                Path propFileInDataDir = dataDirPath.resolve("git.properties");
+                Path propFileInDataDir = htmlCacheDir.resolve("git.properties");
                 if (Files.exists(propFileInDataDir)) {
                     try (InputStream propertiesInputStream = Files.newInputStream(propFileInDataDir)) {
                         propInDataDir.load(propertiesInputStream);
@@ -126,14 +127,14 @@ public class GeonetworkWrojManagerFactory extends ConfigurableWroManagerFactory 
                     try (InputStream bundledPrebuiltCacheStream = servletContext.getResourceAsStream("/WEB-INF/prebuilt/wro4j-cache.mv.db")) {
                         if (bundledPrebuiltCacheStream != null) {
                             // The prebuilt cache exists
-                            Path dataWroCache = dataDirPath.resolve("wro4j-cache.mv.db");
+                            Path dataWroCache = htmlCacheDir.resolve("wro4j-cache.mv.db");
                             // Copy the prebuilt cache if it doesn't exist in the data directory or if the version in data
                             // directory doesn't match the current GN git version
                             if (!gitVersionMatch || Files.notExists(dataWroCache)) {
                                 Files.copy(bundledPrebuiltCacheStream, dataWroCache, StandardCopyOption.REPLACE_EXISTING);
-                                Path customLessFiles = dataDirPath.resolve(Geonet.Config.NODE_LESS_DIR).resolve("gn_dynamic_style.json");
+                                Path customLessFiles = htmlCacheDir.resolve(Geonet.Config.NODE_LESS_DIR).resolve("gn_dynamic_style.json");
                                 if (Files.exists(customLessFiles)) {
-                                    removeCSSFromCache(dataDirPath);
+                                    removeCSSFromCache(htmlCacheDir);
                                 }
                             }
 

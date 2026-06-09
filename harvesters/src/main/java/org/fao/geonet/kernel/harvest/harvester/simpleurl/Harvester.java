@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -33,7 +33,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.http.client.methods.HttpGet;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
@@ -79,8 +78,8 @@ class Harvester implements IHarvester<HarvestResult> {
 
     private final AtomicBoolean cancelMonitor;
     private Logger log;
-    private SimpleUrlParams params;
-    private ServiceContext context;
+    private final SimpleUrlParams params;
+    private final ServiceContext context;
 
     @Autowired
     GeonetHttpRequestFactory requestFactory;
@@ -88,13 +87,14 @@ class Harvester implements IHarvester<HarvestResult> {
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private List<HarvestError> errors = new LinkedList<>();
+    private final List<HarvestError> errors;
 
-    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, SimpleUrlParams params) {
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, SimpleUrlParams params, List<HarvestError> errors) {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
         this.params = params;
+        this.errors = errors;
     }
 
     public HarvestResult harvest(Logger log) throws Exception {
@@ -106,6 +106,7 @@ class Harvester implements IHarvester<HarvestResult> {
         String[] urlList = params.url.split("\n");
         boolean error = false;
         Aligner aligner = new Aligner(cancelMonitor, context, params, log);
+        Set<String> listOfUuids = new HashSet<>();
 
         for (String url : urlList) {
             log.debug("Loading URL: " + url);
@@ -152,9 +153,7 @@ class Harvester implements IHarvester<HarvestResult> {
                         params.numberOfRecordPath, e.getMessage()));
                 }
             }
-            Map<String, Element> allUuids = new HashMap<>();
             try {
-                Map<String, Element> uuids = new HashMap<>();
                 List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
                 for (int i = 0; i < listOfUrlForPages.size(); i++) {
                     if (i != 0) {
@@ -167,6 +166,7 @@ class Harvester implements IHarvester<HarvestResult> {
                     }
                     if (StringUtils.isNotEmpty(params.loopElement)
                         || type == SimpleUrlResourceType.RDFXML) {
+                        Map<String, Element> uuids = new HashMap<>();
                         try {
                             if (type == SimpleUrlResourceType.XML) {
                                 collectRecordsFromXml(xmlObj, uuids, aligner);
@@ -176,7 +176,7 @@ class Harvester implements IHarvester<HarvestResult> {
                                 collectRecordsFromJson(jsonObj, uuids, aligner);
                             }
                             aligner.align(uuids, errors);
-                            allUuids.putAll(uuids);
+                            listOfUuids.addAll(uuids.keySet());
                         } catch (Exception e) {
                             errors.add(new HarvestError(this.context, e));
                             log.error(String.format("Failed to collect record in response at path %s. Error is: %s",
@@ -184,7 +184,6 @@ class Harvester implements IHarvester<HarvestResult> {
                         }
                     }
                 }
-                aligner.cleanupRemovedRecords(allUuids.keySet());
             } catch (Exception t) {
                 error = true;
                 log.error("Unknown error trying to harvest");
@@ -198,11 +197,12 @@ class Harvester implements IHarvester<HarvestResult> {
                 errors.add(new HarvestError(context, t));
             }
 
-            log.info("Total records processed in all searches :" + allUuids.size());
+            log.info("Total records processed in all searches :" + listOfUuids.size());
             if (error) {
                 log.warning("Due to previous errors the align process has not been called");
             }
         }
+        aligner.cleanupRemovedRecords(listOfUuids);
         return aligner.getResult();
     }
 
@@ -221,9 +221,8 @@ class Harvester implements IHarvester<HarvestResult> {
                     params.recordIdPath, e.getMessage()));
             }
             String apiUrlPath = params.url.split("\\?")[0];
-            URL apiUrl = null;
             try {
-                apiUrl = new URL(apiUrlPath);
+                URL apiUrl = new URL(apiUrlPath);
                 String nodeUrl = new StringBuilder(apiUrl.getProtocol()).append("://").append(apiUrl.getAuthority()).toString();
                 Element xml = convertJsonRecordToXml(jsonRecord, uuid, apiUrlPath, nodeUrl);
                 uuids.put(uuid, xml);
@@ -277,10 +276,8 @@ class Harvester implements IHarvester<HarvestResult> {
             log.debug(String.format("%d records found in XML response.", xmlNodes.size()));
 
             xmlNodes.forEach(element -> {
-                String uuid =
-                    null;
                 try {
-                    uuid = getXmlElementTextValue(Xml.selectSingle(element, params.recordIdPath, element.getAdditionalNamespaces()));
+                    String uuid = getXmlElementTextValue(Xml.selectSingle(element, params.recordIdPath, element.getAdditionalNamespaces()));
                     uuids.put(uuid, applyConversion(element, null));
                 } catch (JDOMException e) {
                     log.error(String.format("Failed to extract UUID for record. Error is %s.",
@@ -333,7 +330,7 @@ class Harvester implements IHarvester<HarvestResult> {
         }
 
         final String pageFromParamValue = params.url.replaceAll(".*[?&]" + params.pageFromParam + "=([0-9]+).*", "$1");
-        boolean startAtZero = false;
+        boolean startAtZero;
         if (StringUtils.isNumeric(pageFromParamValue)) {
             startAtZero = Integer.parseInt(pageFromParamValue) == 0;
         } else {
@@ -370,7 +367,7 @@ class Harvester implements IHarvester<HarvestResult> {
             recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml)
                 .replace("<@", "<")
                 .replace("</@", "</")
-                .replaceAll("(:)(?![^<>]*<)", "_"); // this removes colon from property names
+                .replaceAll("(:|%)(?![^<>]*<)", "_"); // this removes colon and % from property names
             Element recordAsElement = Xml.loadString(recordAsXml, false);
             recordAsElement.addContent(new Element("uuid").setText(uuid));
             recordAsElement.addContent(new Element("apiUrl").setText(apiUrl));
@@ -415,6 +412,13 @@ class Harvester implements IHarvester<HarvestResult> {
 
         try {
             httpMethod = new HttpGet(createUrl(url));
+            if (params.getApiKey() != null && !params.getApiKey().trim().isEmpty()) {
+                String headerName = (params.getApiKeyHeader() != null && !params.getApiKeyHeader().isBlank())
+                    ? params.getApiKeyHeader()
+                    : "Authorization";
+                httpMethod.addHeader(headerName, params.getApiKey());
+            }
+
             httpResponse = requestFactory.execute(httpMethod);
             int status = httpResponse.getRawStatusCode();
             Log.debug(LOGGER_NAME, "Request status code: " + status);
@@ -429,9 +433,5 @@ class Harvester implements IHarvester<HarvestResult> {
 
     private URI createUrl(String jsonUrl) throws URISyntaxException {
         return new URI(jsonUrl);
-    }
-
-    public List<HarvestError> getErrors() {
-        return errors;
     }
 }

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -23,19 +23,26 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyName;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.Annotated;
+import com.fasterxml.jackson.databind.introspect.AnnotatedMember;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.yammer.metrics.core.TimerContext;
 import jeeves.monitor.MonitorManager;
 import jeeves.monitor.timer.IndexingRecordMeter;
 import jeeves.monitor.timer.IndexingRecordTimer;
-import jeeves.monitor.timer.ServiceManagerXslOutputTransformTimer;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
-import org.eclipse.jetty.util.ConcurrentHashSet;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.annotations.IndexIgnore;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -74,6 +81,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -124,10 +132,29 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     private ApplicationEventPublisher publisher;
 
+    private ObjectMapper indexObjectMapper;
+
     @Autowired
     private UserSavedSelectionRepository userSavedSelectionRepository;
 
     public BaseMetadataIndexer() {
+        indexObjectMapper = new ObjectMapper();
+        indexObjectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        indexObjectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+        // Exclude fields with the index ignore annotation
+        indexObjectMapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
+            @Override
+            public boolean hasIgnoreMarker(AnnotatedMember member) {
+                return member.hasAnnotation(IndexIgnore.class) || super.hasIgnoreMarker(member);
+            }
+
+            @Override
+            public PropertyName findNameForSerialization(Annotated annotated) {
+                if (annotated.hasAnnotation(IndexIgnore.class)) return null;
+                return super.findNameForSerialization(annotated);
+            }
+        });
     }
 
     public void init(ServiceContext context, Boolean force) throws Exception {
@@ -146,7 +173,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     Set<String> waitForIndexing = new HashSet<String>();
     Set<String> indexing = new HashSet<String>();
-    Set<IndexMetadataTask> batchIndex = new ConcurrentHashSet<IndexMetadataTask>();
+    Set<IndexMetadataTask> batchIndex = ConcurrentHashMap.newKeySet();
 
     @Override
     public void forceIndexChanges() throws IOException {
@@ -201,31 +228,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         return metadataToDelete.size();
     }
 
-    @Override
-    /**
-     * Search for all records having XLinks (ie. indexed with _hasxlinks flag),
-     * clear the cache and reindex all records found.
-     */
-    public synchronized void rebuildIndexXLinkedMetadata(final ServiceContext context) throws Exception {
-
-        // get all metadata with XLinks
-        Set<Integer> toIndex = searchManager.getDocsWithXLinks();
-
-        if (Log.isDebugEnabled(Geonet.DATA_MANAGER))
-            Log.debug(Geonet.DATA_MANAGER, "Will index " + toIndex.size() + " records with XLinks");
-        if (toIndex.size() > 0) {
-            // clean XLink Cache so that cache and index remain in sync
-            Processor.clearCache();
-
-            ArrayList<String> stringIds = new ArrayList<String>();
-            for (Integer id : toIndex) {
-                stringIds.add(id.toString());
-            }
-            // execute indexing operation
-            batchIndexInThreadPool(context, stringIds);
-        }
-    }
-
     /**
      * Reindex all records in current selection.
      */
@@ -273,12 +275,18 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
      */
     @Override
     public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds) {
+        batchIndexInThreadPool(context, metadataIds, null);
+    }
 
-        TransactionStatus transactionStatus = null;
-        try {
-            transactionStatus = TransactionAspectSupport.currentTransactionStatus();
-        } catch (NoTransactionException e) {
-            // not in a transaction so we can go ahead.
+    @Override
+    public void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds, TransactionStatus pTransactionStatus) {
+        TransactionStatus transactionStatus = pTransactionStatus;
+        if (transactionStatus == null) {
+            try {
+                transactionStatus = TransactionAspectSupport.currentTransactionStatus();
+            } catch (NoTransactionException e) {
+                // not in a transaction so we can go ahead.
+            }
         }
         // split reindexing task according to number of processors we can assign
         int threadCount = ThreadUtils.getNumberOfThreads();
@@ -351,9 +359,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 List<Attribute> xlinks = Processor.getXLinks(md);
                 if (xlinks.size() > 0) {
                     fields.put(Geonet.IndexFieldNames.HASXLINKS, true);
-                    StringBuilder sb = new StringBuilder();
                     for (Attribute xlink : xlinks) {
                         fields.put(Geonet.IndexFieldNames.XLINK, xlink.getValue());
+                        fields.put(Geonet.IndexFieldNames.XLINK, xlink.getValue().replaceAll("local://srv/api/registries/entries/(.*)\\?.*", "$1"));
                     }
                     Processor.detachXLink(md, getServiceContext());
                 } else {
@@ -409,14 +417,14 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             if (!schemaManager.existsSchema(schema)) {
                 fields.put(IndexFields.DRAFT, "n");
                 fields.put(IndexFields.INDEXING_ERROR_FIELD, true);
-                fields.put(IndexFields.INDEXING_ERROR_MSG, String.format(
-                    "Schema '%s' is not registerd in this catalog. Install it or remove those records",
-                    schema
-                ));
+                fields.put(IndexFields.INDEXING_ERROR_MSG,
+                    searchManager.createIndexingErrorMsgObject("indexingErrorMsg-schemaNotRegistered",
+                        "error",
+                        Map.of("record", metadataId, "schema", schema)));
                 searchManager.index(null, md, indexKey, fields, metadataType,
                     forceRefreshReaders, indexingMode);
                 Log.error(Geonet.DATA_MANAGER, String.format(
-                    "Record %s / Schema '%s' is not registerd in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
+                    "Record %s / Schema '%s' is not registered in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
                     metadataId, schema));
             } else {
 
@@ -527,7 +535,11 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
                         // TODO: Check if ignore INSPIRE validation?
                         if (!type.equalsIgnoreCase("inspire")) {
-                            if (status == MetadataValidationStatus.INVALID && vi.isRequired()) {
+                            // If never validated and required then set status to never validated.
+                            if (status == MetadataValidationStatus.NEVER_CALCULATED && vi.isRequired()) {
+                                isValid = "-1";
+                            }
+                            if (status == MetadataValidationStatus.INVALID && vi.isRequired() && isValid != "-1") {
                                 isValid = "0";
                             }
                         } else {
@@ -547,6 +559,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 // index the amount of users that have saved this record in the "Preferred Records" list (id=0)
                 int savedCount = userSavedSelectionRepository.countTimesUserSavedMetadata(uuid, 0);
                 fields.put(Geonet.IndexFieldNames.USER_SAVED_COUNT, savedCount);
+
+                // Add metadata file store information
+                fields.putAll(indexMetadataFileStore(fullMd));
 
                 fields.putAll(addExtraFields(fullMd));
 
@@ -571,6 +586,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             metadataId, indexingMode, System.currentTimeMillis() - start));
     }
 
+
     @Override
     public void indexMetadataPrivileges(String uuid, int id) throws Exception {
         Set<String> operationFields = new HashSet<>();
@@ -585,6 +601,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         List<OperationAllowed> operationsAllowed = operationAllowedRepository.findAllById_MetadataId(recordId);
         Multimap<String, Object> privilegesFields = ArrayListMultimap.create();
         boolean isPublishedToAll = false;
+        boolean isPublishedToIntranet = false;
+        boolean isPublishedToGuest = false;
 
         for (OperationAllowed operationAllowed : operationsAllowed) {
             OperationAllowedId operationAllowedId = operationAllowed.getId();
@@ -601,6 +619,10 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
                     if (g.get().getId() == ReservedGroup.all.getId()) {
                         isPublishedToAll = true;
+                    } else if (g.get().getId() == ReservedGroup.intranet.getId()) {
+                        isPublishedToIntranet = true;
+                    } else if (g.get().getId() == ReservedGroup.guest.getId()) {
+                        isPublishedToGuest = true;
                     }
                 }
             }
@@ -611,6 +633,19 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
         } else {
             privilegesFields.put(Geonet.IndexFieldNames.IS_PUBLISHED_TO_ALL, false);
         }
+
+        if (isPublishedToIntranet) {
+            privilegesFields.put(Geonet.IndexFieldNames.IS_PUBLISHED_TO_INTRANET, true);
+        } else {
+            privilegesFields.put(Geonet.IndexFieldNames.IS_PUBLISHED_TO_INTRANET, false);
+        }
+
+        if (isPublishedToGuest) {
+            privilegesFields.put(Geonet.IndexFieldNames.IS_PUBLISHED_TO_GUEST, true);
+        } else {
+            privilegesFields.put(Geonet.IndexFieldNames.IS_PUBLISHED_TO_GUEST, false);
+        }
+
         return privilegesFields;
     }
 
@@ -655,5 +690,32 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
     public void setApplicationEventPublisher(ApplicationEventPublisher publisher) {
         this.publisher = publisher;
+    }
+
+    /**
+     * Get file store properties to be used in the index.
+     *
+     * @return multimap object representing the file store resources to be added to the index.
+     */
+    public Multimap<String, Object> indexMetadataFileStore(AbstractMetadata fullMd) {
+        Multimap<String, Object> indexMetadataFileStoreFields = ArrayListMultimap.create();
+        try {
+            List<MetadataResource> metadataResources = store.getResources(
+                ServiceContext.get(),
+                fullMd.getUuid(),
+                (org.fao.geonet.api.records.attachments.Sort) null,
+                null,
+                !(fullMd instanceof MetadataDraft));
+
+            if (metadataResources != null && !metadataResources.isEmpty()) {
+                JsonNode jsonNode = indexObjectMapper.valueToTree(metadataResources);
+                indexMetadataFileStoreFields.put(IndexFields.FILESTORE, jsonNode);
+            }
+        } catch (Exception e) {
+            Log.warning(Geonet.INDEX_ENGINE, String.format(
+                "Resource for metadata '%s'(%d) is not accessible or cannot be found. Skipping index. Error is: %s",
+                fullMd.getUuid(), fullMd.getId(), e.getMessage()));
+        }
+        return indexMetadataFileStoreFields;
     }
 }

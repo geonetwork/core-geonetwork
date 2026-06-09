@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2021 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -24,9 +24,6 @@
 package org.fao.geonet.kernel.setting;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.constants.Geonet;
-
-import static org.fao.geonet.kernel.setting.SettingManager.isPortRequired;
 
 public class SettingInfo {
 
@@ -39,45 +36,28 @@ public class SettingInfo {
     //---------------------------------------------------------------------------
 
     /**
-     * Return a string like 'http://HOST[:PORT]'
+     * Despite the method name, returns the server URL. That's why it calls settingManager.getServerURL() instead
+     * of settingManager.getSiteURL().
+     *
+     * @return a string like 'http://HOST[:PORT]'
      */
     public String getSiteUrl() {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        return settingManager.getServerURL();
+    }
 
-        String protocol = settingManager.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
-        Integer port;
-        String host = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
-        Integer configuredPort = toIntOrNull(Settings.SYSTEM_SERVER_PORT);
-        if (configuredPort != null) {
-            port = configuredPort;
-        } else if (protocol.equalsIgnoreCase(Geonet.HttpProtocol.HTTPS)) {
-            port = Geonet.DefaultHttpPort.HTTPS;
-        } else {
-            port = Geonet.DefaultHttpPort.HTTP;
-        }
 
-        StringBuffer sb = new StringBuffer(protocol + "://");
-
-        sb.append(host);
-
-		if (isPortRequired(protocol, port + "")) {
-			sb.append(":");
-			sb.append(port);
-		}
-
-        return sb.toString();
+    /**
+     * Retrieves the server port.
+     *
+     * @return the server port.
+     */
+    public Integer getSitePort() {
+        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
+        return settingManager.getServerPort();
     }
 
     //---------------------------------------------------------------------------
-
-    private Integer toIntOrNull(String key) {
-        try {
-            SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-            return Integer.parseInt(settingManager.getValue(key));
-        } catch (NumberFormatException e) {
-            return null;
-        }
-    }
 
     public String getSelectionMaxRecords() {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
@@ -102,6 +82,6 @@ public class SettingInfo {
 
     public String getFeedbackEmail() {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-        return settingManager.getValue("system/feedback/email");
+        return settingManager.getValue(Settings.SYSTEM_FEEDBACK_EMAIL);
     }
 }

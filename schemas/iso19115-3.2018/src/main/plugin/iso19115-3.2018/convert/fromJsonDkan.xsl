@@ -16,7 +16,7 @@
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
                 xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
@@ -366,9 +366,9 @@
     <xsl:param name="value"></xsl:param>
 
     <!-- Regexps for parsing expected date formats -->
-    <!-- example of localized date: "jeu, 03/06/2021 - 03:00" -->
-    <xsl:variable name="regExLoc">^.*([0-9]{2})/([0-9]{2})/([0-9]{4}) - ([0-9]{2}:[0-9]{2})$</xsl:variable>
-    <!-- example of internationalized date: "2020-12-09 00:00:00" -->
+    <!-- examples of localized date: "jeu, 24/12/2020 - 03:00", "24-12-2020 03:00" -->
+    <xsl:variable name="regExLoc">^.*([0-9]{2})[-/]([0-9]{2})[-/]([0-9]{4})[-\s]+([0-9]{2}:[0-9]{2}).*$</xsl:variable>
+    <!-- example of internationalized date: "2020-12-24 03:00:00" -->
     <xsl:variable name="regExInt">^([0-9]{4})-([0-9]{2})-([0-9]{2}) ([0-9]{2}:[0-9]{2}:[0-9]{2})$</xsl:variable>
 
     <xsl:variable name="dateFormatted">

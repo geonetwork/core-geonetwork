@@ -24,17 +24,20 @@
 package jeeves.config.springutil;
 
 import org.fao.geonet.NodeInfo;
+import org.fao.geonet.kernel.security.RedirectUtil;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationTargetUrlRequestHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.apache.commons.lang3.StringUtils;
+
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -70,33 +73,19 @@ public class JeevesNodeAwareLogoutSuccessHandler extends AbstractAuthenticationT
 
         String urlPatternValue = super.determineTargetUrl(request, response);
 
-        if (urlPatternValue != null) {
+        // Only honour the requested target when it is relative to the current server
+        // or an absolute URL pointing back to this same site. Otherwise fall back to
+        // the configured default target URL. This also rejects protocol-relative URLs
+        // such as "//evil.example.com", which would otherwise resolve to an external host.
+        String siteHost = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
+        String siteProtocol = settingManager.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
+        Integer sitePort = settingManager.getServerPort();
 
-            if (!urlPatternValue.startsWith("/")) {
-                // Check the url to redirect it's from the same site, otherwise use the default target url
-                URL urlPattern = null;
-                try {
-                    urlPattern = new URL(urlPatternValue);
-
-                    String hostName = urlPattern.getHost();
-                    String protocol = urlPattern.getProtocol();
-                    int port = urlPattern.getPort() == -1 ? urlPattern.getDefaultPort() : urlPattern.getPort();
-
-                    String siteHost = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
-                    String siteProtocol = settingManager.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
-                    int sitePort = settingManager.getValueAsInt(Settings.SYSTEM_SERVER_PORT);
-
-
-                    if (!hostName.equalsIgnoreCase(siteHost) ||
-                        !protocol.equalsIgnoreCase(siteProtocol) ||
-                        port != sitePort) {
-                        urlPatternValue = getDefaultTargetUrl();
-                    }
-                } catch (MalformedURLException e) {
-                    urlPatternValue = getDefaultTargetUrl();
-                }
+        if (!RedirectUtil.isSafeRedirect(urlPatternValue, siteHost, siteProtocol, sitePort)) {
+            if (StringUtils.isNotEmpty(urlPatternValue)) {
+                Log.warning(Geonet.SECURITY,
+                    "Refused unsafe logout redirect to '" + urlPatternValue + "'. Redirected to the default target instead.");
             }
-        } else {
             urlPatternValue = getDefaultTargetUrl();
         }
 

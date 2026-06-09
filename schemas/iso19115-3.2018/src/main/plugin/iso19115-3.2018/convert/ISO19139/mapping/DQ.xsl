@@ -41,16 +41,10 @@
             <xsl:for-each select="*">
               <xsl:element name="mdq:report">
                 <!-- DQ_NonQuantitativeAttributeAccuracy changed to DQ_NonQuantitativeAttributeCorrectness -->
-                <xsl:variable name="dataQualityReportType">
-                  <xsl:choose>
-                    <xsl:when test="local-name()='DQ_NonQuantitativeAttributeAccuracy'">
-                      <xsl:value-of select="'DQ_NonQuantitativeAttributeCorrectness'"/>
-                    </xsl:when>
-                    <xsl:otherwise>
-                      <xsl:value-of select="local-name()"/>
-                    </xsl:otherwise>
-                  </xsl:choose>
-                </xsl:variable>
+                <xsl:variable name="dataQualityReportType"
+                                    select="if (local-name()='DQ_NonQuantitativeAttributeAccuracy')
+                                                 then 'DQ_NonQuantitativeAttributeCorrectness' else local-name()"/>
+
                 <xsl:element name="{concat('mdq:',$dataQualityReportType)}">
                   <xsl:if test="gmd:nameOfMeasure or gmd:measureIdentification or gmd:measureDescription">
                     <!-- output quality measure information only if gmd:measureIdentification or gmd:measureDescription exist -->

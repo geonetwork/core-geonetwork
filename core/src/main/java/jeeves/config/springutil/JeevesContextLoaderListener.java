@@ -52,11 +52,6 @@ public class JeevesContextLoaderListener implements ServletContextListener {
             final Pattern nodeNamePattern = Pattern.compile("[a-zA-Z0-9_\\-]+");
             final ServletContext servletContext = sce.getServletContext();
 
-            String javaVersion = System.getProperty("java.version");
-            if(!javaVersion.startsWith("1.8")){
-                // GeoNetwork does not support Java 11 at this time
-                throw new RuntimeException("Java 8 required, cannot start with \""+javaVersion+"\"");
-            }
 
             File node = new File(servletContext.getRealPath("/WEB-INF/config-node/srv.xml"));
 

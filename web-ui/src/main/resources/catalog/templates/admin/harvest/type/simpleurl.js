@@ -18,6 +18,8 @@ var gnHarvestersimpleurl = {
           "password" : []
         },
         "url" : "http://",
+        "apiKeyHeader" : "",
+        "apiKey" : "",
         "loopElement" : "",
         "numberOfRecordPath": "",
         "pageSizeParam": "",
@@ -27,7 +29,10 @@ var gnHarvestersimpleurl = {
       },
       "content" : {
         "validate" : "NOVALIDATION",
-        "batchEdits" : ""
+        "batchEdits" : "",
+        "translateContent": false,
+        "translateContentLangs": "",
+        "translateContentFields": ""
       },
       "options" : {
         "every" : "0 0 0 ? * *",
@@ -84,6 +89,8 @@ var gnHarvestersimpleurl = {
       + '      <username>' + h.site.account.username + '</username>'
       + '      <password>' + h.site.account.password + '</password>'
       + '    </account>'
+      + '    <apiKeyHeader>' + h.site.apiKeyHeader + '</apiKeyHeader>'
+      + '    <apiKey>' + h.site.apiKey + '</apiKey>'
       + '    <loopElement>' + h.site.loopElement + '</loopElement>'
       + '    <numberOfRecordPath>' + h.site.numberOfRecordPath + '</numberOfRecordPath>'
       + '    <recordIdPath>' + h.site.recordIdPath + '</recordIdPath>'
@@ -101,6 +108,9 @@ var gnHarvestersimpleurl = {
       + '  <content>'
       + '    <validate>' + h.content.validate + '</validate>'
       + '    <batchEdits><![CDATA[' + (h.content.batchEdits == '' ? '[]' : h.content.batchEdits) + ']]></batchEdits>'
+      + '    <translateContent>' + _.escape(h.content.translateContent) + '</translateContent>'
+      + '    <translateContentLangs>' + _.escape(h.content.translateContentLangs) + '</translateContentLangs>'
+      + '    <translateContentFields>' + _.escape(h.content.translateContentFields) + '</translateContentFields>'
       + '  </content>'
       + $scope.buildResponseGroup(h)
       + $scope.buildResponseCategory(h) + '</node>';

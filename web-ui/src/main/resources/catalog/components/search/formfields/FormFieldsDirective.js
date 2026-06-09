@@ -176,7 +176,7 @@
               scope.$on("beforeSearchReset", function () {
                 field.typeahead("val", "");
                 stringValues = [];
-                for (i = 0; i < prev.length; i++) {
+                for (var i = 0; i < prev.length; i++) {
                   $(element).tagsinput("remove", prev[i]);
                 }
                 prev = [];
@@ -299,7 +299,8 @@
             groups: "=",
             disabled: "=?",
             optional: "@?",
-            excludeSpecialGroups: "="
+            excludeSpecialGroups: "=",
+            onlyIncludeWorkspaces: "="
           },
 
           link: function (scope, element, attrs) {
@@ -321,19 +322,21 @@
             }
 
             $http.get(url, { cache: true }).then(function (response) {
-              var data = response.data;
+              scope.groups = response.data;
 
               //data-ng-if is not correctly updating groups.
               //So we do the filter here
               if (scope.excludeSpecialGroups) {
-                scope.groups = [];
-                angular.forEach(data, function (g) {
-                  if (g.id > 1) {
-                    scope.groups.push(g);
-                  }
+                scope.groups = scope.groups.filter(function (group) {
+                  return group.id > 1;
                 });
-              } else {
-                scope.groups = data;
+              }
+
+              //Filter out non-workspace groups
+              if (scope.onlyIncludeWorkspaces) {
+                scope.groups = scope.groups.filter(function (group) {
+                  return group.type === "Workspace";
+                });
               }
 
               if (optional) {
@@ -396,14 +399,15 @@
     .directive("sortbyCombo", [
       "$translate",
       "hotkeys",
-      function ($translate, hotkeys) {
+      "gnGlobalSettings",
+      function ($translate, hotkeys, gnGlobalSettings) {
         return {
           restrict: "A",
           require: "^ngSearchForm",
           templateUrl: function (elem, attrs) {
             return (
               attrs.template ||
-              "../../catalog/components/search/formfields/" + "partials/sortByCombo.html"
+              "../../catalog/components/search/formfields/partials/sortByCombo.html"
             );
           },
           scope: {
@@ -415,19 +419,21 @@
               angular.extend(scope.params, v);
               searchFormCtrl.triggerSearch(true);
             };
-            hotkeys.bindTo(scope).add({
-              combo: "s",
-              description: $translate.instant("hotkeySortBy"),
-              callback: function () {
-                for (var i = 0; i < scope.values.length; i++) {
-                  if (scope.values[i].sortBy === scope.params.sortBy) {
-                    var nextOptions = i === scope.values.length - 1 ? 0 : i + 1;
-                    scope.sortBy(scope.values[nextOptions]);
-                    return;
+            if (gnGlobalSettings.gnCfg.mods.global.hotkeys) {
+              hotkeys.bindTo(scope).add({
+                combo: "s",
+                description: $translate.instant("hotkeySortBy"),
+                callback: function () {
+                  for (var i = 0; i < scope.values.length; i++) {
+                    if (scope.values[i].sortBy === scope.params.sortBy) {
+                      var nextOptions = i === scope.values.length - 1 ? 0 : i + 1;
+                      scope.sortBy(scope.values[nextOptions]);
+                      return;
+                    }
                   }
                 }
-              }
-            });
+              });
+            }
           }
         };
       }

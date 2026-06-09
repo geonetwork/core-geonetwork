@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -41,6 +41,7 @@ import org.fao.geonet.api.processing.report.IProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.events.history.RecordUpdatedEvent;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -48,6 +49,7 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.util.UserUtil;
 import org.fao.geonet.utils.Diff;
 import org.fao.geonet.utils.DiffType;
 import org.fao.geonet.utils.Xml;
@@ -59,6 +61,7 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -79,6 +82,13 @@ import java.util.Set;
 public class BatchEditsApi implements ApplicationContextAware {
     @Autowired
     SchemaManager _schemaManager;
+
+    @Autowired
+    SettingManager settingManager;
+
+    @Autowired
+    RoleHierarchy roleHierarchy;
+
     private ApplicationContext context;
 
     public synchronized void setApplicationContext(ApplicationContext context) {
@@ -99,24 +109,21 @@ public class BatchEditsApi implements ApplicationContextAware {
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public Object previewBatchEdit(
-        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
-            required = false)
+        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION)
         @RequestParam(required = false) String[] uuids,
         @Parameter(
-            description = ApiParams.API_PARAM_BUCKET_NAME,
-            required = false)
+            description = ApiParams.API_PARAM_BUCKET_NAME)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(
-            description = "Return differences with diff, diffhtml or patch",
-            required = false
+            description = "Return differences with diff, diffhtml or patch"
         )
         @RequestParam(
             required = false
         )
-            DiffType diffType,
+        DiffType diffType,
         @RequestBody BatchEditParameter[] edits,
         HttpServletRequest request)
         throws Exception {
@@ -142,25 +149,22 @@ public class BatchEditsApi implements ApplicationContextAware {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public IProcessingReport batchEdit(
-        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
-            required = false)
+        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION)
         @RequestParam(required = false) String[] uuids,
         @Parameter(
-            description = ApiParams.API_PARAM_BUCKET_NAME,
-            required = false)
+            description = ApiParams.API_PARAM_BUCKET_NAME)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(
-            description = ApiParams.API_PARAM_UPDATE_DATESTAMP,
-            required = false
+            description = ApiParams.API_PARAM_UPDATE_DATESTAMP
         )
         @RequestParam(
             required = false,
             defaultValue = "false"
         )
-            boolean updateDateStamp,
+        boolean updateDateStamp,
         @RequestBody BatchEditParameter[] edits,
         HttpServletRequest request)
         throws Exception {
@@ -174,12 +178,13 @@ public class BatchEditsApi implements ApplicationContextAware {
         HttpServletRequest request,
         boolean previewOnly, DiffType diffType) throws Exception {
         List<BatchEditParameter> listOfUpdates = Arrays.asList(edits);
-        if (listOfUpdates.size() == 0) {
+        if (listOfUpdates.isEmpty()) {
             throw new IllegalArgumentException("At least one edit must be defined.");
         }
 
 
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        UserUtil.checkUserProfileLevel(serviceContext.getUserSession(), settingManager, roleHierarchy, Settings.METADATA_BATCH_EDITING_ACCESS_LEVEL, Profile.Editor, "batch edit metadata");
         final Set<String> setOfUuidsToEdit;
         if (uuids == null) {
             SelectionManager selectionManager =
@@ -194,7 +199,7 @@ public class BatchEditsApi implements ApplicationContextAware {
             setOfUuidsToEdit = Sets.newHashSet(Arrays.asList(uuids));
         }
 
-        if (setOfUuidsToEdit.size() == 0) {
+        if (setOfUuidsToEdit.isEmpty()) {
             throw new IllegalArgumentException("At least one record should be defined or selected for updates.");
         }
 
@@ -202,9 +207,6 @@ public class BatchEditsApi implements ApplicationContextAware {
         DataManager dataMan = appContext.getBean(DataManager.class);
         SchemaManager _schemaManager = context.getBean(SchemaManager.class);
         AccessManager accessMan = context.getBean(AccessManager.class);
-        final String settingId = Settings.SYSTEM_CSW_TRANSACTION_XPATH_UPDATE_CREATE_NEW_ELEMENTS;
-        boolean createXpathNodeIfNotExists =
-            context.getBean(SettingManager.class).getValueAsBool(settingId);
 
 
         SimpleMetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -238,11 +240,15 @@ public class BatchEditsApi implements ApplicationContextAware {
                         AddElemValue propertyValue =
                             new AddElemValue(batchEditParameter.getValue());
 
+                        // This value is used in replace mode to create the node if it doesn't exist.
+                        // We don't want to create a node in replace mode, just replace the element if it exists, otherwise ignore it.
+                        boolean createXpathNodeIfNotExists = propertyValue.isAddMode();
+
                         boolean applyEdit = true;
                         if (StringUtils.isNotEmpty(batchEditParameter.getCondition())) {
                             applyEdit = false;
                             final Object node = Xml.selectSingle(metadata, batchEditParameter.getCondition(), metadataSchema.getNamespaces());
-                            if (node != null && node instanceof Boolean && (Boolean)node == true) {
+                            if (node != null && node instanceof Boolean && (Boolean) node == true) {
                                 applyEdit = true;
                             }
                         }
@@ -294,4 +300,5 @@ public class BatchEditsApi implements ApplicationContextAware {
         report.close();
         return Pair.write(report, preview);
     }
+
 }

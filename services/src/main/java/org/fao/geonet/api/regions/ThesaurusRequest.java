@@ -41,7 +41,7 @@ import org.fao.geonet.util.LangUtils;
 import org.fao.geonet.utils.Log;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.jdom.JDOMException;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
 
 import java.util.*;
 import java.util.Map.Entry;

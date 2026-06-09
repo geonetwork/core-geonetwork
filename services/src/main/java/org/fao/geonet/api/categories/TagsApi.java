@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,6 +24,8 @@
 package org.fao.geonet.api.categories;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -116,21 +118,30 @@ public class TagsApi {
             throw new IllegalArgumentException(String.format(
                 "A tag with id '%d' already exist", category.getId()
             ));
-        } else {
-            // Populate languages if not already set
-            java.util.List<Language> allLanguages = langRepository.findAll();
-            Map<String, String> labelTranslations = category.getLabelTranslations();
-            for (Language l : allLanguages) {
-                String label = labelTranslations.get(l.getId());
-                category.getLabelTranslations().put(l.getId(),
-                    label == null ? category.getName() : label);
-            }
-            categoryRepository.save(category);
-
-            translationPackBuilder.clearCache();
-
-            return new ResponseEntity(HttpStatus.NO_CONTENT);
         }
+
+        final MetadataCategory existingName = categoryRepository
+            .findOneByName(category.getName());
+        if (existingName != null) {
+            throw new IllegalArgumentException(String.format(
+                "A category with name '%s' already exist.",
+                category.getName()
+            ));
+        }
+
+        // Populate languages if not already set
+        java.util.List<Language> allLanguages = langRepository.findAll();
+        Map<String, String> labelTranslations = category.getLabelTranslations();
+        for (Language l : allLanguages) {
+            String label = labelTranslations.get(l.getId());
+            category.getLabelTranslations().put(l.getId(),
+                label == null ? category.getName() : label);
+        }
+        categoryRepository.save(category);
+
+        translationPackBuilder.clearCache();
+
+        return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -171,7 +182,7 @@ public class TagsApi {
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Tag updated."),
+        @ApiResponse(responseCode = "204", description = "Tag updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
@@ -230,7 +241,7 @@ public class TagsApi {
         method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Tag removed."),
+        @ApiResponse(responseCode = "204", description = "Tag removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @PreAuthorize("hasAuthority('UserAdmin')")

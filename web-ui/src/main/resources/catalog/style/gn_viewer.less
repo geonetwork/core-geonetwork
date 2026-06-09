@@ -6,7 +6,8 @@
 @gn-popup-max-width: 1200px;
 
 [data-gn-layer-styles] {
-  word-break: break-all;
+  word-break: break-word;
+  overflow-wrap: anywhere; // breaks long "unbreakable" strings if necessary
 }
 
 [gn-main-viewer],
@@ -72,6 +73,10 @@
       position: absolute;
       top: 7px;
     }
+  }
+
+  .gn-map-layer-selected {
+    font-weight: bold !important;
   }
 
   .wrapper {
@@ -173,7 +178,7 @@
     right: 1em;
     z-index: 85;
     display: grid;
-    grid-template-columns: 30em 2.8em;
+    grid-template-columns: 34em 2.8em;
     @media (max-width: @screen-xs-max) {
       grid-template-columns: 26em 2.8em;
     }
@@ -261,9 +266,6 @@
     }
     li[gn-layermanager-item] {
       .fa-arrows-alt,
-      .gn-layer-ordering {
-        visibility: hidden;
-      }
       input[type="radio"],
       input[type="checkbox"] {
         margin-top: 6px;
@@ -271,7 +273,19 @@
       label {
         padding: 4px 20px 4px 4px;
         display: block;
-        margin-bottom: 0px;
+        margin-bottom: 0;
+      }
+      .gn-layer-radio {
+        padding-left: 0;
+        padding-right: 0;
+      }
+      .tab-content {
+        background-color: white;
+        padding: 5px;
+        margin: 0;
+      }
+      .text-muted {
+        color: @btn-default-border;
       }
     }
     .gn-layer-outofrange > label {
@@ -294,6 +308,40 @@
         }
       }
     }
+    .dropdown-left {
+      @toggleWidth: 32px;
+      @toggleHeight: 32px;
+
+      .dropdown-toggle {
+        width: @toggleWidth;
+        padding: 5px;
+      }
+      .dropdown-menu {
+        min-width: calc(~"(3 * @{toggleWidth}) + 6px") !important;
+        width: auto;
+        padding: 0;
+        margin: 0;
+        right: @toggleWidth;
+        top: 0;
+        box-shadow: none;
+        border: 0;
+        li {
+          float: left;
+          .btn {
+            width: @toggleWidth;
+            height: @toggleHeight;
+            padding: 5px;
+            margin-right: 2px;
+            border-radius: 3px !important;
+            &[disabled] {
+              color: @btn-link-disabled-color;
+              border-color: @input-bg-disabled;
+            }
+          }
+        }
+      }
+    }
+
     .gn-searchlayer-list {
       margin: 0;
       padding: 0;
@@ -328,11 +376,9 @@
     .list-group-item {
       transition: max-height @transition-params;
       padding: 5px 15px;
-      min-height: 42px;
       &:hover,
       &:focus {
-        .fa-arrows-alt,
-        .gn-layer-ordering {
+        .fa-arrows-alt {
           visibility: visible;
         }
       }
@@ -341,10 +387,18 @@
         margin-bottom: 0;
       }
       &:focus-within {
-        .fa-arrows-alt,
-        .gn-layer-ordering {
+        .fa-arrows-alt {
           visibility: visible;
         }
+      }
+    }
+    //li.list-group-item.list-group-item-warning {
+    //  display: flex;
+    //  flex-wrap: wrap;
+    //}
+    .gn-facet-container {
+      .list-group-item {
+        border: 0;
       }
     }
     .gn-baselayer-switcher-menu {
@@ -405,39 +459,27 @@
       }
     }
     h4 {
-      margin: 1em 0 0.5em 0;
+      font-size: 16px;
     }
     h5 {
-      margin: 0.2em 0;
+      margin: 0.7em 0;
+    }
+    [data-gn-layer-dimensions] {
+      overflow: unset !important;
+      & > div {
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
     }
     [gn-layermanager],
     .gn-layer-tree {
-      .gn-layer-ordering {
-        margin-right: -10px;
-        position: absolute;
-        right: 15px;
-        .fa {
-          padding: 0 8px;
-        }
-        &.btn-group-xs {
-          .btn {
-            white-space: nowrap;
-            padding: 4px;
-            opacity: 1;
-            &[disabled] {
-              color: @btn-link-disabled-color;
-              border-color: @input-bg-disabled;
-            }
-            .caret {
-              margin-right: 3px;
-            }
-          }
-        }
+      .list-group-item.gn-layer-active {
+        background-color: @gray-lighter;
+        border-color: @list-group-border;
       }
       .dropdown {
         .dropdown-menu {
           min-width: 16em;
-          right: 0;
           left: auto;
         }
         .gn-padding-left {
@@ -818,11 +860,49 @@ gn-features-tables,
   .tab-content {
     background: white;
     min-height: 5em;
-    padding: 1em;
+    padding: 0 15px;
   }
   .gn-features-table {
-    padding: 0.25em;
-    box-shadow: 0px 0px 4px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 4px 2px rgba(0, 0, 0, 0.1);
+    .bootstrap-table {
+      display: grid;
+      grid-template-columns: auto 0fr;
+      grid-template-rows: auto;
+      grid-template-areas:
+        "main toolbar"
+        "footer toolbar";
+      .fixed-table-toolbar {
+        grid-area: toolbar;
+        .columns-right {
+          margin: 0 0 0 10px;
+          display: inline-block;
+          vertical-align: middle;
+          .btn,
+          .btn-group {
+            display: block;
+            float: none;
+            width: 100%;
+            max-width: 100%;
+            margin-top: -1px;
+            margin-left: 0;
+            border-radius: 0;
+          }
+          .btn:first-child:not(:last-child) {
+            border-radius: 4px 4px 0 0;
+          }
+          .btn-group:last-child:not(:first-child) > .btn:first-child {
+            border-radius: 0 0 4px 4px;
+          }
+        }
+      }
+      .fixed-table-container {
+        grid-area: main;
+        overflow-x: auto;
+      }
+      .fixed-table-pagination {
+        grid-area: footer;
+      }
+    }
   }
   .layername {
     display: inline-block;
@@ -855,6 +935,11 @@ gn-features-tables,
 }
 
 .gn-md-view {
+  .tab-content {
+    background: white;
+    min-height: 5em;
+    padding: 0 0 15px 0;
+  }
   gn-features-tables {
     position: unset;
     .gn-features-table {
@@ -868,6 +953,32 @@ gn-features-tables,
   [data-gn-wfs-filter-facets] .gn-facet-container {
     overflow: auto;
     max-height: 550px;
+    .list-group {
+      margin-bottom: 0;
+      .list-group-item {
+        border: 0;
+        padding: 8px 15px;
+      }
+    }
+  }
+}
+.gn-editor-sidebar {
+  .gn-related-resources {
+    p {
+      margin-top: 5px;
+    }
+  }
+  .gn-related-item {
+    h4 {
+      font-size: 14px;
+    }
+  }
+  .wfs-filter-group {
+    margin-top: 10px;
+    margin-bottom: 0;
+    .btn {
+      .btn-xs();
+    }
   }
 }
 
@@ -1006,14 +1117,28 @@ gn-geometry-tool .btn-group {
   right: auto;
   left: 4px;
   height: auto;
-  padding: 5px;
+  padding: 3px;
   border-radius: 0;
+  border: 1px solid #ccc;
+  text-align: left;
+  white-space: nowrap;
   ul {
     font-size: 1rem;
     padding-left: 0;
-    padding-right: 10px;
+    padding-right: 0px;
+    max-width: 350px;
+    border: 2px solid white;
     li {
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
+    li:hover {
+      display: inline-block;
+      overflow: inherit;
+      text-overflow: inherit;
+      white-space: normal;
     }
   }
 }

@@ -1,0 +1,488 @@
+<div class="row" data-ng-controller="GnDoiServerController" id="gn-doiservers-container">
+  <div class="col-lg-4">
+    <div class="panel panel-default">
+      <div class="panel-heading" data-translate="">doiservers</div>
+      <div class="panel-body">
+        <input
+          class="form-control"
+          data-ng-model="doiServersSearch.$"
+          autofocus=""
+          placeholder="{{'filter' | translate}}"
+        />
+        <input type="hidden" data-ng-model="doiServerSelected.id" />
+
+        <div class="list-group">
+          <a
+            href=""
+            class="list-group-item"
+            data-ng-repeat="v in doiServers | filter:doiServersSearch | orderBy:'name'"
+            data-ng-click="selectDoiServer(v)"
+            title="{{v.description}}"
+          >
+            {{v.name}}
+          </a>
+        </div>
+
+        <button
+          type="button"
+          class="btn btn-primary btn-block"
+          data-ng-click="addDoiServer()"
+        >
+          <i class="fa fa-plus"></i>
+          <span data-translate="">newDoiServer</span>
+        </button>
+      </div>
+    </div>
+
+    <div data-gn-need-help="doi-server-configuration"></div>
+  </div>
+
+  <div class="col-lg-8" data-ng-hide="doiServerSelected == null">
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <span data-ng-hide="doiServerSelected.id == ''" data-translate=""
+          >updateDoiServer</span
+        >
+        <span data-ng-hide="doiServerSelected.id != ''" data-translate=""
+          >newDoiServer</span
+        >
+        <strong>{{doiServerSelected.name}}</strong>
+        <div class="btn-toolbar pull-right">
+          <button
+            data-ng-hide="doiServerSelected.id == ''"
+            type="button"
+            class="btn btn-default"
+            data-ng-click="resetDoiServerPassword(doiServerSelected.id)"
+          >
+            <i class="fa fa-lock"></i>&nbsp;
+            <span data-translate="">resetPassword</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            data-ng-disabled="!gnDoiServerEdit.$valid || !gnDoiServerEdit.$dirty"
+            data-ng-click="saveDoiServer('#gn-doiserver-edit')"
+          >
+            <i class="fa fa-save"></i>&nbsp;
+            <span data-translate="">save</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary btn-danger"
+            data-ng-hide="doiServerSelected.id == ''"
+            data-ng-click="deleteDoiServerConfig()"
+          >
+            <i class="fa fa-times"></i>&nbsp;
+            <span data-translate="">delete</span>
+          </button>
+        </div>
+      </div>
+      <div class="panel-body">
+        <form
+          id="gn-doiserver-edit"
+          name="gnDoiServerEdit"
+          class="form-horizontal"
+          data-ng-keypress="updatingDoiServer()"
+          data-confirm-message="{{ 'formConfirmExit' | translate}}"
+          data-confirm-on-exit=""
+          novalidate=""
+        >
+          <input type="hidden" name="_csrf" value="{{csrf}}" />
+          <input
+            type="hidden"
+            name="id"
+            data-ng-model="doiServerSelected.id"
+            value="{{doiServerSelected.id}}"
+          />
+
+          <div
+            class="form-group"
+            data-ng-class="gnDoiServerEdit.name.$error.required ||
+                             (gnDoiServerEdit.name.$touched && gnDoiServerEdit.name.$invalid) ? 'has-error' : ''"
+          >
+            <label class="control-label col-sm-3" data-translate="" for="name"
+              >doiserver-name</label
+            >
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                id="name"
+                name="name"
+                class="form-control"
+                required=""
+                data-ng-model="doiServerSelected.name"
+              />
+
+              <div
+                class="help-block"
+                data-ng-messages="gnDoiServerEdit.name.$error"
+                data-ng-if="gnDoiServerEdit.name.$touched"
+              >
+                <p data-ng-message="required" data-translate="">fieldRequired</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate=""
+              >doiserver-description</label
+            >
+
+            <div class="col-sm-9">
+              <textarea
+                name="description"
+                class="form-control"
+                data-ng-model="doiServerSelected.description"
+              ></textarea>
+            </div>
+          </div>
+
+          <div
+            class="form-group"
+            data-ng-class="gnDoiServerEdit.url.$error.required ||
+                             (gnDoiServerEdit.url.$touched && gnDoiServerEdit.url.$invalid) ? 'has-error' : ''"
+          >
+            <label class="control-label col-sm-3" data-translate="" for="url"
+              >doiserver-url</label
+            >
+
+            <div class="col-sm-9">
+              <div class="input-group">
+                <input
+                  type="url"
+                  name="url"
+                  id="url"
+                  class="form-control"
+                  required=""
+                  data-ng-model="doiServerSelected.url"
+                  placeholder="http://"
+                />
+                <div class="input-group-btn">
+                  <button
+                    type="button"
+                    class="btn btn-default dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                  >
+                    <i class="fa fa-fw fa-th-list"></i>
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu dropdown-menu-right">
+                    <li>
+                      <a
+                        data-ng-click="updateDoiServerUrl('https://mds.datacite.org', '')"
+                        title="{{'doiserver-defaultApiText' | translate}}"
+                        data-translate=""
+                        >doiserver-defaultApiText</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        data-ng-click="updateDoiServerUrl('https://mds.test.datacite.org', 'https://mds.test.datacite.org/doi')"
+                        title="{{'doiserver-testApiText' | translate}}"
+                        data-translate=""
+                        >doiserver-testApiText</a
+                      >
+                    </li>
+                    <li>
+                      <a
+                        data-ng-click="updateDoiServerUrl('https://ra.publications.europa.eu/servlet/ws/doidata?api=medra.org', '')"
+                        title="{{'doiserver-euApiText' | translate}}"
+                        data-translate=""
+                        >doiserver-euApiText</a
+                      >
+                    </li>
+                  </ul>
+                </div>
+              </div>
+
+              <div
+                class="help-block"
+                data-ng-messages="gnDoiServerEdit.url.$error"
+                data-ng-if="gnDoiServerEdit.url.$touched"
+              >
+                <p data-ng-message="required" data-translate="">fieldRequired</p>
+              </div>
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3">
+              <p class="help-block" data-translate="">doiserver-url-help</p>
+            </div>
+          </div>
+
+          <div
+            class="form-group"
+            data-ng-class="gnDoiServerEdit.username.$error.required ||
+                           (gnDoiServerEdit.username.$touched && gnDoiServerEdit.username.$invalid) ? 'has-error' : ''"
+          >
+            <label class="control-label col-sm-3" data-translate="" for="username"
+              >doiserver-username</label
+            >
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                class="form-control"
+                required=""
+                id="username"
+                name="username"
+                data-ng-model="doiServerSelected.username"
+              />
+
+              <div
+                class="help-block"
+                data-ng-messages="gnDoiServerEdit.username.$error"
+                data-ng-if="gnDoiServerEdit.username.$touched"
+              >
+                <p data-ng-message="required" data-translate="">fieldRequired</p>
+              </div>
+            </div>
+          </div>
+
+          <div data-ng-show="!isUpdate">
+            <div
+              class="form-group"
+              data-ng-class="gnDoiServerEdit.password.$error.required ||
+                             (gnDoiServerEdit.password.$touched && gnDoiServerEdit.password.$invalid) ? 'has-error' : ''"
+            >
+              <label class="control-label col-sm-3" data-translate="" for="password"
+                >doiserver-password</label
+              >
+
+              <div class="col-sm-9">
+                <input
+                  type="password"
+                  class="form-control"
+                  id="password"
+                  name="password"
+                  required="required"
+                  autocomplete="new-password"
+                  data-ng-model="doiServerSelected.password"
+                />
+
+                <div
+                  class="help-block"
+                  data-ng-messages="gnDoiServerEdit.password.$error"
+                  data-ng-if="gnDoiServerEdit.password.$touched"
+                >
+                  <p data-ng-message="required" data-translate="">fieldRequired</p>
+                </div>
+              </div>
+
+              <div class="col-sm-9 col-sm-offset-3">
+                <p class="help-block" data-translate="">doiserver-password-help</p>
+              </div>
+            </div>
+          </div>
+
+          <div
+            class="form-group"
+            data-ng-class="gnDoiServerEdit.landingPageTemplate.$error.required ||
+                             (gnDoiServerEdit.landingPageTemplate.$touched && gnDoiServerEdit.landingPageTemplate.$invalid) ? 'has-error' : ''"
+          >
+            <label
+              class="control-label col-sm-3"
+              data-translate=""
+              for="landingPageTemplate"
+              >doiserver-landingPageTemplate</label
+            >
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                id="landingPageTemplate"
+                name="landingPageTemplate"
+                class="form-control"
+                required=""
+                data-ng-model="doiServerSelected.landingPageTemplate"
+                placeholder=""
+              />
+
+              <div
+                class="help-block"
+                data-ng-messages="gnDoiServerEdit.landingPageTemplate.$error"
+                data-ng-if="gnDoiServerEdit.landingPageTemplate.$touched"
+              >
+                <p data-ng-message="required" data-translate="">fieldRequired</p>
+              </div>
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3">
+              <p class="help-block" data-translate="">
+                doiserver-landingPageTemplate-help
+              </p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate="" for="publicUrl"
+              >doiserver-publicUrl</label
+            >
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                id="publicUrl"
+                class="form-control"
+                data-ng-model="doiServerSelected.publicUrl"
+                placeholder=""
+              />
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3">
+              <p class="help-block" data-translate="">doiserver-publicUrl-help</p>
+            </div>
+          </div>
+
+          <div
+            class="form-group"
+            data-ng-class="gnDoiServerEdit.pattern.$error.required ||
+                             (gnDoiServerEdit.pattern.$touched && gnDoiServerEdit.pattern.$invalid) ? 'has-error' : ''"
+          >
+            <label class="control-label col-sm-3" data-translate="" for="pattern"
+              >doiserver-pattern</label
+            >
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                id="pattern"
+                name="pattern"
+                class="form-control"
+                required=""
+                data-ng-model="doiServerSelected.pattern"
+                placeholder=""
+              />
+
+              <div
+                class="help-block"
+                data-ng-messages="gnDoiServerEdit.pattern.$error"
+                data-ng-if="gnDoiServerEdit.pattern.$touched"
+              >
+                <p data-ng-message="required" data-translate="">fieldRequired</p>
+              </div>
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3">
+              <p class="help-block" data-translate="">doiserver-pattern-help</p>
+            </div>
+          </div>
+
+          <div
+            class="form-group"
+            data-ng-class="gnDoiServerEdit.prefix.$error.required ||
+                             (gnDoiServerEdit.prefix.$touched && gnDoiServerEdit.pattern.$invalid) ? 'has-error' : ''"
+          >
+            <label class="control-label col-sm-3" data-translate="" for="prefix"
+              >doiserver-prefix</label
+            >
+
+            <div class="col-sm-9">
+              <input
+                type="text"
+                id="prefix"
+                name="prefix"
+                class="form-control"
+                required=""
+                data-ng-model="doiServerSelected.prefix"
+                placeholder=""
+              />
+
+              <div
+                class="help-block"
+                data-ng-messages="gnDoiServerEdit.prefix.$error"
+                data-ng-if="gnDoiServerEdit.prefix.$touched"
+              >
+                <p data-ng-message="required" data-translate="">fieldRequired</p>
+              </div>
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3">
+              <p class="help-block" data-translate="">doiserver-prefix-help</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="control-label col-sm-3" data-translate=""
+              >doiserver-recordGroups</label
+            >
+            <div class="col-sm-9">
+              <div
+                data-gn-multiselect="selectedRecordGroups"
+                data-choices="recordGroups"
+              ></div>
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3">
+              <p class="help-block" data-translate="">doiserver-recordGroups-help</p>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div
+    class="modal fade"
+    id="passwordResetModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="{{'passwordReset' | translate}}"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            &times;
+          </button>
+          <h4
+            class="modal-title"
+            data-translate=""
+            data-translate-values="{ user: '{{doiServerSelected.name}}'}"
+          >
+            resetPasswordTitle
+          </h4>
+        </div>
+        <div class="modal-body">
+          <form id="gn-password-reset" class="form-horizontal" name="gnPasswordReset">
+            <div class="form-group">
+              <input type="hidden" name="_csrf" value="{{csrf}}" />
+              <label class="control-label col-sm-3" data-translate="">password</label>
+
+              <div class="col-sm-9">
+                <input
+                  type="password"
+                  class="form-control"
+                  required="required"
+                  autocomplete="off"
+                  data-ng-model="resetPassword"
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">
+            <i class="fa fa-ban-circle"></i>&nbsp; <span data-translate="">cancel</span>
+          </button>
+          <button type="button" class="btn btn-primary" data-ng-click="saveNewPassword()">
+            <i class="fa fa-lock"></i>&nbsp;
+            <span data-translate="">resetPassword</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div
+    gn-modal
+    class="gn-confirm-delete"
+    gn-popup-options="{title: 'confirmDialogTitle', confirmCallback: confirmDeleteDoiServerConfig}"
+    id="gn-confirm-remove-doiserver"
+  >
+    <p translate>confirmDoiServerDelete</p>
+  </div>
+</div>

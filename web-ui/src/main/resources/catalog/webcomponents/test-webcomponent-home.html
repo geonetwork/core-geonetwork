@@ -1,0 +1,43 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Embedding GeoNetwork / Search box</title>
+  </head>
+  <body style="background-color: lightgrey; padding: 20px; font-family: monospace;">
+    <h1>Full text search box linking to the catalogue</h1>
+
+    <gn-app portal="srv"
+            config='{
+  "mods": {
+    "global": {"hotkeys": false},
+    "cookieWarning": {"enabled": false},
+    "footer": {"enabled": false},
+    "header": {"enabled": false},
+    "search": {
+      "appUrl": "http://localhost:8080/geonetwork/{{node}}/{{lang}}/catalog.search?view=default#/search"
+    },
+    "home": {
+      "facetConfig": {
+        "resourceType": {
+          "terms": {
+            "field": "resourceType",
+            "size": 10
+          },
+          "meta": {
+            "decorator": {
+              "type": "icon",
+              "prefix": "fa fa-2x pull-left gn-icon-"
+            }
+          }
+        }
+      },
+      "showMosaic": false,
+      "showMaps": false,
+      "info": []
+    }
+  }
+}'></gn-app>
+
+    <script src="webcomponents.js"></script>
+  </body>
+</html>

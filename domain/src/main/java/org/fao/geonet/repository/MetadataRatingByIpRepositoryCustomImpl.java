@@ -63,7 +63,10 @@ public class MetadataRatingByIpRepositoryCustomImpl implements MetadataRatingByI
     public int deleteAllById_MetadataId(final int metadataId) {
         String entityType = MetadataRatingByIp.class.getSimpleName();
         String metadataIdPropName = MetadataRatingByIpId_.metadataId.getName();
-        Query query = _entityManager.createQuery("DELETE FROM " + entityType + " WHERE " + metadataIdPropName + " = " + metadataId);
+        String qlString =
+            String.format("DELETE FROM %s WHERE %s = :metadataId", entityType, metadataIdPropName);
+        Query query = _entityManager.createQuery(qlString);
+        query.setParameter("metadataId", + metadataId);
         return query.executeUpdate();
     }
 }

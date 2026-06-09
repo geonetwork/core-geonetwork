@@ -934,17 +934,6 @@ duševného
     <label>Vzdialenosť</label>
     <description>Vzorkovacia vzdialenosť terénu</description>
     <condition>Uveďte vzdialenosť, ak nie je zdokumentovaná žiadna ekvivalentná mierka</condition>
-    <helper relatt="uom">
-      <option value="0.10" title="m">10 cm</option>
-      <option value="0.25" title="m">25 cm</option>
-      <option value="0.50" title="m">50 cm</option>
-      <option value="1" title="m">1 m</option>
-      <!-- To only set unit without changing the value
-			<option title="m">m</option>
-			-->
-      <option value="30" title="m">30 m</option>
-      <option value="100" title="m">100 m</option>
-    </helper>
   </element>
   <element name="gmd:distributionFormat" id="271.0">
     <label>Distribučný formát</label>
@@ -1753,6 +1742,8 @@ presnosť / vertikálna -</option>
       <option value="OGC API - Features">OGC API - Features</option>
       <option value="OGC API - Maps">OGC API - Maps</option>
       <option value="OGC API - Records">OGC API - Records</option>
+      <option value="OGC:3DTILES">OGC-3DTiles Dataset</option>
+      <option value="OGC:COG">OGC-Cloud Optimized GeoTIFF</option>
       <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
       <option value="OGC:GML">OGC-GML Geography Markup Language</option>

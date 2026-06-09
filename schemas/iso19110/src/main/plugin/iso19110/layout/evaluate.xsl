@@ -47,6 +47,22 @@
   <xsl:template name="evaluate-iso19110">
     <xsl:param name="base" as="node()"/>
     <xsl:param name="in"/>
-    <xsl:copy-of select="saxon:evaluate(concat('$p1', $in), $base)"/>
+
+    <xsl:variable name="nodeOrAttribute" select="saxon:evaluate(concat('$p1', $in), $base, $request, $service)"/>
+
+    <xsl:choose>
+      <xsl:when test="$nodeOrAttribute instance of text()+">
+        <xsl:value-of select="$nodeOrAttribute"/>
+      </xsl:when>
+      <xsl:when test="$nodeOrAttribute instance of element()+">
+        <xsl:copy-of select="$nodeOrAttribute"/>
+      </xsl:when>
+      <xsl:when test="$nodeOrAttribute instance of attribute()+">
+        <xsl:value-of select="$nodeOrAttribute"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$nodeOrAttribute"/>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 </xsl:stylesheet>

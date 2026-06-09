@@ -1,0 +1,133 @@
+================================================================================
+===
+=== GeoNetwork 4.4.6-SNAPSHOT: List of changes
+===
+================================================================================
+- Release / 4.4.6 / Changelog. (#8462)
+- update PSC details in user guide
+- Delete date not being copied causing duplicate (#8454)
+- Standard / DCAT (and profiles) export (#7600)
+- Update home page "browse by" to display facet as label if there is only one (#8426)
+- Avoid duplicate validation message when trying to register a user with existing email
+- Add bootstrap datepicker language files for supported UI languages
+- Add better logging when resources are deleted to make it clear what metadata record the resource was deleted from. (#8430)
+- Record view / More like this / Add filter option.
+- Fix saving UI settings without changes
+- Harvester / Simple URL / Fix multiple URL alignement
+- Elasticsearch / Update to 8.14.3. (#8337)
+- Remove empty filename condition (#8436)
+- Elasticsearch / API / Allow ndjson for _msearch endpoint
+- Improve administrator guide UI configuration documentation
+- Harvester / Simple URL / ODS improvement
+- Editor / Geopublication / Misc fix. (#8092)
+- WebDav harvester / Add support for XSLT filter process (#8243)
+- Editor / Associated resource / Remote document / Add content type
+- Fixed description for getIdentifiers in IdentifierApi (#8422)
+- Formatter / Datacite / Default resource type (#8407)
+- Remove spaces from the list of schema list of metadata import restrictions so that "iso19115-3.2018, dublin-core" will also work. (#8408)
+- Thesaurus / OWL format / Mobility theme hierarchy (#8393)
+- Record view / Does not display thesaurus block if no keywords.
+- Map / Save your map improvements (#8155)
+- Editor / Table mode / Fix field using directive (#8261)
+- Thesaurus / Add inScheme property in concept of local thesaurus
+- Standard / ISO19115-3 / Only search for associated record with UUID
+- CSW / Fix parsing date values for filters. Fixes #8034
+- Javascript / HTML formatting fixes related to Prettier
+- Update external management url    Add {objectId} property in external management url (base64 unique identifier for the record)    Change external management type url property {type} so that it is fixed values so that same value can be used in {objectId} CMIS    Fixed property names used for validation fields to be consistent with other names. Jcloud    Updgade from jcloud 2.3.0 to jcloud 2.5.0    Add support for external management named properties similar to cmis    Fix bug with deleting all resources as it was failing to identify folders correctly for azure blob.
+- Harvester / ISO19115-3 / Better support missing metadata date info
+- Metadata indexing / ISO19139 / ISO19115-3.2018 / Escape graphic overview file name for JSON (#8412)
+- Fixed spurious whitespace for gn-comma-list (#8398)
+- Metadata editor / Add required indicator support to the keyword selector directive and fix its display for the field duration directive
+- Fix the width of the projection switcher (#8399)
+- Metadata editor / validation report improvements (#8395)
+- Don't capitalize the labels for the facet filter values (#8133)
+- Support multiple DOI servers (#8098)
+- Thesaurus / Date improvements. (#8392)
+- GeoNetwork harvester - avoid double counting of updated metadata. (#8389)
+- Fix harvester execution logs added to previous logs (#8387)
+- Visual and UX changes for WFS previews (#8284)
+- Metadata detail page - hide history types selector when tasks (DOI) and workflow are disabled
+- Fix the overlapping filter settings and the customize options (#8316)
+- ISO19139 / ISO19115.3 / Index resource date fields as defined in the metadata.
+- Fix the schema artifact name in add schema script
+- Update configuring-faceted-search.md
+- Aggregations / Temporal range / Avoid browser autocomplete on calendar field
+- OpenAPI / Operation returning no content should not advertised a schema.
+- Indexing / DCAT multilingual support (#8377)
+- Xsl utility / Add a function to retrieve thesaurus title with its key (#8378)
+- GIT / .gitignore
+- Map viewer / WMS GetFeatureInfo support for application/json info format (#8372)
+- Add build profile for MacOS ARM
+- Editor / Associated resource / DOI search. (#8363)
+- Standard / ISO19115-3 / Label improvement. (#8364)
+- Harvester / Simple URL / ODS / Improve mapping
+- Don't add file content to the exception when requesting XML documents, if the content is not XML (#8360)
+- Put the image name in the `alt` attribute in the thumbnail on the metadata page. (#8290)
+- CSW Harvester / Avoid increment 2 metrics for a single metadata in certain conditions (#8069)
+- iso19139 - Update thumbnail add/update and remove to support index update/removal (#8348)
+- publish status not refreshing fix (#8344)
+- Editor / Associated resource / Avoid empty label (#8339)
+- Editor / DOI search / Improve label (#8338)
+- API / Improve parameter check for XSL conversion. (#8201)
+- Admin / Source / Improve dirty state (#8222)
+- Standard / ISO19115-3 / Formatters / ISO19139 / Ignore mcc linkage for overview (#8225)
+- Fix Clipboard copy/paste on Firefox - use ES5 (#8332)
+- Indexing / Draft field MUST not be an array (#8242)
+- Editor / Dublin core / Fix extent coordinates (#8258)
+- Workflow / update notification level based on user profile when cancelling a submission (#8264)
+- INSPIRE Atom harvester / process only public datasets by resource identifier
+- Special characters in the cookie causing 400 bad requests from Spring Security. Fixes #8275
+- Do not try to request clipboard permissions
+- Social links in metadata page doesn't have the metadata page permalink. Fixes #8322
+- Repository Citation.cff metadata for DOI registration with Zenodo (#8317)
+- Modify record not found message to only link to signin if user is not logged in (#8312)
+- Modify GnMdViewController to set recordIdentifierRequested using the getUuid function
+- harvesting CSW: changed loglevel for invalid metadata to info (#8303)
+- Standard / ISO19139 / i18n / Missing french translation (#8298)
+- Index / Add maintenance details.
+- Record view / Improve layout of table (eg. quality measures)
+- Update batch PDF export to skip working copies (#8292)
+- Standard / ISO19139 / Fix removal of online source when multiple transfer options block are used. (#8281)
+- Fix a problem with recaptcha not shown sometimes (#8285)
+- Zoom to map popup remains active on non-map pages.  (#8267)
+- Use UI language for metadata selection export to CSV / PDF. Fixes #7969 (#8262)
+- Fixed issue with working copy not being returned from /api/records/{metadataUuid}/formatters/{formatterId:.+} (#8269)
+- Fixed issue with working copy not being returned from getRecordAS api (#8265)
+- Standard / ISO19115-3 / Formatters / ISO19139 / Fix scope code (#8224)
+- Standard / ISO19115-3 / Formatter / Fix namespace declaration (#8223)
+- Editor / Configuration / Improve deletion in forEach section (#8244)
+- Fix infinite "Please wait" message on error (#8249)
+- Broadcasting error when delete record (#8212)
+- ISO19115-3.2018 / Remove duplicated fields for metadata identifier and uuid in CSV export (#8238)
+- Standard / ISO19139 / Formatter / Do not display extent if none available (#8229)
+- Fix wrong HTML self closing tags (#8232)
+- Editor / Polygon not saved (#8230)
+- Add info logs to make transaction of working copy merge more traceable (#8178)
+- API / Client code generation / Avoid reserved word (#8214)
+- Double translation can lead to infinite stack (#8209)
+- Fix canViewRecord function so that it returned the workflow record. (#8152)
+- Automatic formatting
+- Association type / Consistent labels (#8077)
+- Multilingual Emails (#8044)
+- Add support for multilingual thesaurus titles in the index (#8154)
+- Bump actions/setup-java from 4.1.0 to 4.2.1 (#7870)
+- Fix presence of duplicated geonet elements on partial metadata updates
+- Fix user application feedback (#7769)
+- Update SECURITY.md (#8172)
+- Register user / allow to configured allowed email domains (#8186)
+- docs: fix image links in change-log(version-3.8.0.md and 4.0.0-alpha.1 (#7938)
+- Elasticsearch / Update to 8.14.0.
+- Bump org.apache.maven.plugins:maven-dependency-plugin
+- Release script improvement
+- Cleaning / Remove transifex converting tools
+- Indexing / Lower severity of getIndexField
+- Metadata extents API - fix service for metadata with working copy - test (#8197)
+- Register user / allow to select the group where the user wants to register (#8176)
+- Metadata extents API - fix service for metadata with working copy
+- Bump com.jayway.jsonpath:json-path from 2.4.0 to 2.9.0 in /services
+- Bump org.owasp.esapi:esapi from 2.4.0.0 to 2.5.4.0
+- Bump org.postgresql:postgresql from 42.6.0 to 42.7.3
+- Bump org.xmlunit:xmlunit-core from 2.1.1 to 2.10.0
+- Bump com.google.guava:guava from 30.0-jre to 33.2.1-jre
+- Update en-admin.json
+- Update version to 4.4.6-SNAPSHOT

@@ -23,11 +23,9 @@
 
 package org.fao.geonet.component.csw;
 
+import co.elastic.clients.elasticsearch._types.SortOptions;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.search.sort.FieldSortBuilder;
-import org.elasticsearch.search.sort.SortBuilder;
-import org.elasticsearch.search.sort.SortOrder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.csw.common.*;
@@ -244,7 +242,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
 
             response.addContent(echoedRequest);
         } else {
-            List<SortBuilder<FieldSortBuilder>> sort = _sortByParser.parseSortBy(request);
+            List<SortOptions> sort = _sortByParser.parseSortBy(request);
 
             response = new Element(getName() + "Response", Csw.NAMESPACE_CSW);
 
@@ -537,38 +535,21 @@ public class GetRecords extends AbstractOperation implements CatalogService {
             Log.debug(Geonet.CSW_SEARCH, "checktypenames: csw prefix set to " + cswPrefix + ", gmd prefix set to " + gmdPrefix);
         }
 
-        Attribute typeNames = query.getAttribute("typeNames", query.getNamespace());
-        typeNames = query.getAttribute("typeNames");
+        final String cswType = cswPrefix + ":Record";
+        Attribute typeNames = query.getAttribute("typeNames");
         if (typeNames != null) {
             String typeNamesValue = typeNames.getValue();
-            // empty typenames element
-            if (StringUtils.isEmpty(typeNamesValue)) {
-                return cswPrefix + ":Record";
-            }
-            // not empty: scan space-separated string
-            @SuppressWarnings("resource")
-            Scanner spaceScanner = new Scanner(typeNamesValue);
-            spaceScanner.useDelimiter(" ");
-            String result = cswPrefix + ":Record";
-            while (spaceScanner.hasNext()) {
-                String typeName = spaceScanner.next();
-                typeName = typeName.trim();
-                if (Log.isDebugEnabled(Geonet.CSW_SEARCH)) {
-                    Log.debug(Geonet.CSW_SEARCH, "checking typename in query:" + typeName);
-                }
-
+            String REGEX_TO_TRIM_SPACE = "\\s+";
+            String[] typeNamesArray = typeNamesValue.split(REGEX_TO_TRIM_SPACE);
+            for (String typeName: typeNamesArray) {
+                Log.debug(Geonet.CSW_SEARCH, "checking typename in query: {}", typeName);
                 if (!_schemaManager.getListOfTypeNames().contains(typeName)) {
                     throw new InvalidParameterValueEx("typeNames",
-                        String.format("'%s' typename is not valid. Supported values are: %s", typeName, _schemaManager.getListOfTypeNames()));
-                }
-                if (typeName.equals(gmdPrefix + ":MD_Metadata")) {
-                    return typeName;
+                            String.format("'%s' typename is not valid. Supported values are: %s", typeName, _schemaManager.getListOfTypeNames()));
                 }
             }
-            return result;
-        }
-        // missing typeNames element
-        else {
+            return Arrays.asList(typeNamesArray).stream().filter(x -> ! x.equals(cswType)).findFirst().orElse(cswType);
+        } else {
             if (isStrict) {
                 //Mandatory check if strict.
                 throw new MissingParameterValueEx("typeNames",
@@ -576,7 +557,7 @@ public class GetRecords extends AbstractOperation implements CatalogService {
                         _schemaManager.getListOfTypeNames()));
             } else {
                 //Return default value according to OGC 07-045.
-                return cswPrefix + ":Record";
+                return cswType;
             }
         }
     }

@@ -24,8 +24,10 @@
 package org.fao.geonet.kernel.datamanager.draft;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
 import org.eclipse.jetty.io.RuntimeIOException;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -52,6 +54,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import javax.annotation.Nonnull;
 import javax.persistence.EntityNotFoundException;
@@ -88,6 +94,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     IMetadataUtils metadataUtils;
 
     private ServiceContext context;
+    private Set<String> listOfStatusToTriggerDraftCreation = Sets.newHashSet(StatusValue.Status.APPROVED);
 
     public void init(ServiceContext context, Boolean force) throws Exception {
         this.context = context;
@@ -235,7 +242,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
         java.util.Optional<MetadataDraft> md = metadataDraftRepository.findById(id);
 
-        return md.isPresent()?md.get():null;
+        return md.isPresent() ? md.get() : null;
     }
 
     @Override
@@ -407,7 +414,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     /**
      * Start an editing session. This will record the original metadata record in
      * the session under the
-     * {@link org.fao.geonet.constants.Geonet.Session#METADATA_BEFORE_ANY_CHANGES} +
+     * {@link Geonet.Session#METADATA_BEFORE_ANY_CHANGES} +
      * id session property.
      * <p>
      * The record contains geonet:info element.
@@ -417,6 +424,7 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
      * This needs improvements.
      */
     @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public Integer startEditingSession(ServiceContext context, String id) throws Exception {
         // Check id
         AbstractMetadata md = findOne(Integer.valueOf(id));
@@ -433,7 +441,9 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             Log.trace(Geonet.DATA_MANAGER, "Editing draft with id " + id);
         } else if (isMdWorkflowEnable
             && (context.getBean(IMetadataManager.class) instanceof DraftMetadataManager)
-            && metadataStatus.getCurrentStatus(Integer.valueOf(id)).equals(StatusValue.Status.APPROVED)) {
+            && listOfStatusToTriggerDraftCreation.contains(
+                metadataStatus.getCurrentStatus(Integer.parseInt(id)))
+        ) {
             id = createDraft(context, id, md);
 
             Log.trace(Geonet.DATA_MANAGER, "Creating draft with id " + id + " to edit.");
@@ -568,6 +578,10 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             Integer status = Integer.valueOf(StatusValue.Status.DRAFT);
             java.util.Optional<StatusValue> statusValue = statusValueRepository.findById(status);
 
+            String lang = context.getLanguage();
+            ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages",
+                new Locale(lang));
+
             if (statusValue.isPresent()) {
                 for (Integer mdId : metadataIds) {
                     MetadataStatus metadataStatus = new MetadataStatus();
@@ -576,12 +590,12 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
                     metadataStatus.setChangeDate(new ISODate());
                     metadataStatus.setUserId(author);
                     metadataStatus.setStatusValue(statusValue.get());
-                    metadataStatus.setChangeMessage("Editing instance created");
+                    metadataStatus.setChangeMessage(messages.getString("metadata_status_editing_instance_created_text"));
                     metadataStatus.setTitles(metadataUtils.extractTitles(newMetadata.getDataInfo().getSchemaId(), xml));
 
                     List<MetadataStatus> listOfStatusChange = new ArrayList<>(1);
                     listOfStatusChange.add(metadataStatus);
-                    sa.onStatusChange(listOfStatusChange);
+                    sa.onStatusChange(listOfStatusChange, true);
                 }
             }
 
@@ -607,13 +621,13 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
     @Override
     public void replaceFiles(AbstractMetadata original, AbstractMetadata dest) {
         try {
-            boolean oldApproved=true;
-            boolean newApproved=false;
+            boolean oldApproved = true;
+            boolean newApproved = false;
 
             // If destination is approved then this is a working copy so the original will not be approved.
             if (metadataUtils.isMetadataApproved(dest.getId())) {
-                oldApproved=false;
-                newApproved=true;
+                oldApproved = false;
+                newApproved = true;
             }
             StoreUtils.replaceDataDir(context, original.getUuid(), dest.getUuid(), oldApproved, newApproved);
             cloneStoreFileUploadRequests(original, dest);
@@ -627,7 +641,6 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
     @Override
     public void cancelEditingSession(ServiceContext context, String id) throws Exception {
-        super.cancelEditingSession(context, id);
 
         int intId = Integer.parseInt(id);
 
@@ -643,13 +656,34 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
 
                 // --- remove metadata
                 xmlSerializer.delete(id, ServiceContext.get());
-                searchManager.delete(id);
+                searchManager.delete(String.format("+id:%s", id));
 
                 // Unset METADATA_EDITING_CREATED_DRAFT flag
                 context.getUserSession().removeProperty(Geonet.Session.METADATA_EDITING_CREATED_DRAFT);
+
+                // Get the resource store
+                Store store = context.getBean("resourceStore", Store.class);
+
+                // Register synchronization to delete resources after commit
+                TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                    @Override
+                    public void afterCommit() {
+                        try {
+                            // Delete resources from the store
+                            store.delResources(context, intId);
+                        } catch (Exception e) {
+                            Log.error(Geonet.DATA_MANAGER, "Couldn't delete resources for draft " + id, e);
+                        }
+                    }
+                });
+
             } catch (Exception e) {
                 Log.error(Geonet.DATA_MANAGER, "Couldn't cleanup draft " + id, e);
             }
+        } else {
+            // If the draft was not created, then we just restore the state it was in before editing
+            // without deleting the draft.
+            super.cancelEditingSession(context, id);
         }
     }
 
@@ -669,9 +703,44 @@ public class DraftMetadataUtils extends BaseMetadataUtils {
             metadataFileUpload.setFileSize(mfu.getFileSize());
             metadataFileUpload.setUploadDate(mfu.getUploadDate());
             metadataFileUpload.setUserName(mfu.getUserName());
+            metadataFileUpload.setDeletedDate(mfu.getDeletedDate());
 
             repo.save(metadataFileUpload);
         }
     }
 
+    public void setListOfStatusCreatingDraft(Set<String> listOfStatusCreatingDraft) {
+        this.listOfStatusToTriggerDraftCreation = listOfStatusCreatingDraft;
+    }
+
+    public Set<String> getListOfStatusCreatingDraft() {
+        return listOfStatusToTriggerDraftCreation;
+    }
+
+    @Override
+    public String selectOneWithSearchAndReplace(String uuid, String search, String replace) {
+        String updatedXml = metadataDraftRepository.selectOneWithSearchAndReplace(uuid, search, replace);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithSearchAndReplace(uuid, search, replace);
+        }
+        return updatedXml;
+    }
+
+    @Override
+    public String selectOneWithRegexSearchAndReplaceWithFlags(String uuid, String search, String replace, String flags) {
+        String updatedXml = metadataDraftRepository.selectOneWithRegexSearchAndReplaceWithFlags(uuid, search, replace, flags);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithRegexSearchAndReplaceWithFlags(uuid, search, replace, flags);
+        }
+        return updatedXml;
+    }
+
+    @Override
+    public String selectOneWithRegexSearchAndReplace(String uuid, String search, String replace) {
+        String updatedXml = metadataDraftRepository.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+        if (updatedXml == null) {
+            updatedXml = super.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+        }
+        return updatedXml;
+    }
 }

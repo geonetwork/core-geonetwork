@@ -42,10 +42,4 @@ public interface LanguageRepositoryCustom {
      */
     List<Language> findAllByInspireFlag(boolean inspire);
 
-    /**
-     * Find the default language.
-     *
-     * @return the default language.
-     */
-    Language findOneByDefaultLanguage();
 }

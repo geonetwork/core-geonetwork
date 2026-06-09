@@ -27,6 +27,7 @@
                 xmlns:sch="http://www.ascc.net/xml/schematron"
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:gml320="http://www.opengis.net/gml"
+                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
@@ -37,9 +38,7 @@
   <xsl:include href="validate-fn.xsl"/>
   <xsl:param name="rootTag" select="'rules'"/>
 
-  <!-- Retrieve GUI language first 2 letters
-  for multilingual schematron using xml:lang attribute. -->
-  <xsl:variable name="language" select="substring(/root/language, 1, 2)"/>
+  <xsl:variable name="language" select="util:twoCharLangCode(/root/language)"/>
   <xsl:variable name="metadataSchema" select="/root/schema"/>
 
   <xsl:template match="/">

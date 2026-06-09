@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules>
+  <report xmlns:gml320="http://www.opengis.net/gml" xmlns:util="java:org.fao.geonet.util.XslUtil">
+    <id>xsd</id>
+    <displayPriority>0</displayPriority>
+    <error>0</error>
+    <success>?</success>
+    <total>?</total>
+    <requirement>REQUIRED</requirement>
+    <patterns />
+  </report>
+  <report xmlns:gml320="http://www.opengis.net/gml" xmlns:util="java:org.fao.geonet.util.XslUtil">
+    <id />
+    <displayPriority />
+    <label>Règles ISO</label>
+    <error>0</error>
+    <success>1</success>
+    <total>1</total>
+    <requirement />
+    <patterns>
+      <pattern>
+        <title>Eine Person MUSS einen Namen oder eine Funktion haben</title>
+        <rules />
+      </pattern>
+    </patterns>
+  </report>
+</rules>
+

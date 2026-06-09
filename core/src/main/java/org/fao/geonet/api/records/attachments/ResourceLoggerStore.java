@@ -34,7 +34,6 @@ import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataFileDownloadRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.util.ThreadPool;
@@ -90,6 +89,27 @@ public class ResourceLoggerStore extends AbstractStore {
     }
 
     @Override
+    public MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
+        if (decoratedStore != null) {
+            return decoratedStore.getResourceMetadata(context, metadataUuid, visibility, resourceId, approved);
+        }
+        return null;
+    }
+
+    @Override
+    public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved, long start, long end) throws Exception {
+        if (decoratedStore != null) {
+            ResourceHolder holder = decoratedStore.getResourceWithRange(context, metadataUuid, visibility, resourceId, approved, start, end);
+            if (holder != null) {
+                // TODO: Add Requester details which may have been provided by a form ?
+                storeGetRequest(context, metadataUuid, holder.getMetadata().getId(), "", "", "", "", new ISODate().toString(), approved);
+            }
+            return holder;
+        }
+        return null;
+    }
+
+    @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
         throw new UnsupportedOperationException("ResourceLoggerStore does not support getResourceInternal.");
     }
@@ -121,6 +141,13 @@ public class ResourceLoggerStore extends AbstractStore {
     public String delResources(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
         if (decoratedStore != null) {
             return decoratedStore.delResources(context, metadataUuid, approved);
+        }
+        return null;
+    }
+
+    public String delResources(ServiceContext context, int metadataId) throws Exception {
+        if (decoratedStore != null) {
+            return decoratedStore.delResources(context, metadataId);
         }
         return null;
     }

@@ -1,0 +1,411 @@
+@prefix : <http://w3id.org/mobilitydcat-ap#> .
+@prefix mobilitydcatap: <http://w3id.org/mobilitydcat-ap#> .
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dcatap: <http://data.europa.eu/r5r/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dqv: <http://www.w3.org/ns/dqv#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix locn: <http://www.w3.org/ns/locn#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+
+<http://w3id.org/mobilitydcat-ap#> a owl:Ontology , adms:Asset ;
+  owl:imports <https://raw.githubusercontent.com/SEMICeu/DCAT-AP/master/releases/2.0.1/dcat-ap_2.0.1_shacl_shapes.ttl> ;
+  owl:imports <https://raw.githubusercontent.com/SEMICeu/DCAT-AP/master/releases/2.0.1/dcat-ap_2.0.1_shacl_deprecateduris.ttl> ;
+  owl:imports <https://raw.githubusercontent.com/SEMICeu/DCAT-AP/master/releases/2.0.1/dcat-ap_2.0.1_shacl_mdr-vocabularies.shape.ttl> ;
+  owl:imports <https://mobilitydcat-ap.github.io/mobilityDCAT-AP/releases/1.0.0/mobilitydcat-ap.ttl> ;
+  owl:imports <http://www.w3.org/ns/dqv.ttl> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceCategory/SpatialDataServiceCategory.en.rdf> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/ConditionsApplyingToAccessAndUse.en.rdf> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/DegreeOfConformity/DegreeOfConformity.en.rdf> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/PriorityDataset/PriorityDataset.en.rdf> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/ProtocolValue/ProtocolValue.en.rdf> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/LimitationsOnPublicAccess.en.rdf> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/OnLineDescriptionCode/OnLineDescriptionCode.en.rdf> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/QualityOfServiceCriteria/QualityOfServiceCriteria.en.rdf> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/ResourceType/ResourceType.en.rdf> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/ResponsiblePartyRole/ResponsiblePartyRole.en.rdf> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/SpatialDataServiceType/SpatialDataServiceType.en.rdf> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/SpatialScope/SpatialScope.en.rdf> ;
+  owl:imports <http://inspire.ec.europa.eu/metadata-codelist/TopicCategory/TopicCategory.en.rdf> ;
+  owl:versionIRI <http://w3id.org/mobilityDCAT-AP/releases/1.0.0/> ;
+  adms:status <http://publications.europa.eu/resource/dataset/dataset-status/COMPLETED> ;
+  dcatap:availability dcatap:stable ;
+  dct:conformsTo <https://www.w3.org/TR/shacl> ;
+  rdfs:isDefinedBy <https://w3id.org/mobilitydcat-ap/releases/1.0.0/> ;
+  dct:license <https://creativecommons.org/licenses/by/4.0> ;
+  dct:created "2023-08-14"^^xsd:date ;
+  dct:issued "2023-08-14"^^xsd:date ;
+  dct:modified "2023-10-19"^^xsd:date ;
+  dct:dateCopyrighted "2023"^^xsd:gYear ;
+  dct:title "The constraints of mobilityDCAT-AP Application Profile for Data Portals in Europe"@en ;
+  owl:versionInfo "1.0.0" ;
+  dct:description "This document specifies the constraints on properties and classes expressed by mobilityDCAT-AP in SHACL."@en ;
+  bibo:editor [
+    a foaf:Person ;
+    owl:sameAs <https://lina-molinas-comet.name/foaf/#me>;
+    owl:sameAs <https://orcid.org/0000-0001-5446-6947> ;
+    foaf:name "Lina Molinas Comet"
+  ] ;
+  dct:creator [ a foaf:Group ;
+      foaf:name "NAPCORE SWG 4.4" ;
+      foaf:page <https://github.com/mobilityDCAT-AP/mobilityDCAT-AP> ] ;
+  dct:publisher <https://napcore.eu/> ;
+  dct:rightsHolder <https://napcore.eu/> ;
+  dcat:distribution [ a adms:AssetDistribution ;
+    dct:format <http://publications.europa.eu/resource/authority/file-type/RDF_TURTLE>,
+      <http://www.w3.org/ns/formats/data/Turtle> ;
+    dct:title "SHACL (Turtle)"@en ;
+    dcat:downloadURL <http://w3id.org/mobilitydcat-ap/releases/1.0.0/mobilitydcat-ap.shacl.ttl> ;
+    dcat:mediaType "text/turtle"^^dct:IMT 
+  ] ;
+  .
+
+#-------------------------------------------------------------------------
+# The shapes in this file complement the DCAT-AP ones to cover all classes 
+# in mobilityDCAT-AP 1.0.0.
+#-------------------------------------------------------------------------
+
+:Address_Agent_Shape
+  a sh:NodeShape ;
+  sh:name "Address (Agent)"@en ;
+  sh:property [
+    sh:maxCount 1 ;
+    sh:nodeKind sh:Literal ;
+    sh:path locn:adminUnitL2 ;
+	sh:name "administrative area" ;
+	sh:description "The administrative area of an Address of the Agent. Depending on the country, this corresponds to a province, a county, a region, or a state." ;
+    sh:severity sh:Violation
+  ], [
+    sh:maxCount 1 ;
+    sh:nodeKind sh:Literal ;
+    sh:path locn:postName ;
+	sh:name "city" ;
+	sh:description "The city of an Address of the Agent." ;
+    sh:severity sh:Violation
+  ], [
+    sh:maxCount 1 ;
+    sh:nodeKind sh:Literal ;
+    sh:path locn:adminUnitL1 ;
+	sh:name "country" ;
+	sh:description "The country of an Address of the Agent." ;
+    sh:severity sh:Violation
+  ], [
+    sh:maxCount 1 ;
+    sh:nodeKind sh:Literal ;
+    sh:path locn:postCode ;
+	sh:name "postal code" ;
+	sh:description "The postal code of an Address of the Agent." ;
+    sh:severity sh:Violation
+  ], [
+    sh:maxCount 1 ;
+    sh:nodeKind sh:Literal ;
+    sh:path locn:thoroughfare ;
+	sh:name "street address" ;
+	sh:description "In mobilityDCAT-AP, this is a recommended property to be used for Address (Agent)" ;
+    sh:severity sh:Violation
+  ] ;
+  sh:targetClass locn:Address .
+  
+:Agent_Shape
+  a sh:NodeShape ;
+  sh:name "Agent"@en ;
+  sh:property [
+    sh:maxCount 1 ;
+    sh:class owl:Thing ;
+    sh:path foaf:mbox ;
+	sh:name "email" ;
+	sh:description "This property SHOULD be used to provide the email address of the Agent, specified using fully qualified mailto: URI scheme [RFC6068]. The email SHOULD be used to establish a communication channel to the agent." ;
+    sh:severity sh:Violation
+  ], [
+    sh:maxCount 1 ;
+    sh:class rdfs:Resource ;
+    sh:path foaf:workplaceHomepage ;
+	sh:name "URL" ;
+	sh:description "This property MAY be used to specify the Web site of the Agent." ;
+    sh:severity sh:Violation
+  ];
+  sh:targetClass foaf:Agent .
+
+:CatalogRecord_Shape
+  a sh:NodeShape ;
+  sh:name "Catalogue Record"@en ;
+  sh:property [
+    sh:minCount 1 ;
+    sh:maxCount 1 ;
+	sh:path dct:created ;
+            sh:or (
+			[
+				sh:datatype xsd:date ;
+			]
+			[
+				sh:datatype xsd:dateTime ;
+			]
+		);
+	sh:name "creation date" ;
+	sh:description "This property contains the date stamp (date and time) when the metadata entry was created for the first time. It SHOULD be generated by the system, whenever a platform user enters the metadata entry. " ;
+    sh:severity sh:Violation
+  ] ;
+  sh:targetClass dcat:CatalogRecord .
+
+:Dataset_Shape
+  a sh:NodeShape ;
+  sh:name "Dataset"@en ;
+  sh:property [
+    sh:minCount 1 ;
+	sh:class skos:Concept ;
+    sh:path mobilitydcatap:mobilityTheme ;
+	sh:name "mobility theme" ;
+	sh:description "This property refers to the mobility-related theme (i.e., a specific subject, category, or type) of the delivered content. A dataset may be associated with multiple themes. A theme is important for data seekers who are interested in a particular type of data content. " ;
+    sh:severity sh:Violation
+  ], [
+    sh:class skos:Concept ;
+    sh:path mobilitydcatap:georeferencingMethod ;
+	sh:name "georeferencing method" ;
+	sh:description "This property SHOULD be used to specify the georeferencing method used in the dataset." ;
+    sh:severity sh:Violation
+  ], [
+    sh:class skos:Concept ;
+    sh:path mobilitydcatap:networkCoverage ;
+	sh:name "network coverage" ;
+	sh:description "This property describes the part of the transport network that is covered by the delivered content. For road traffic, the property SHOULD refer to the network classification for which the data is provided. As a minimum, an international or higher-level classification, e.g., via functional road classes, is recommended to allow data search across different countries. In addition, national classifications are allowed." ;
+    sh:severity sh:Violation
+  ], [
+    sh:class dct:Standard ;
+    sh:path dct:conformsTo ;
+	sh:name "reference system" ;
+	sh:description "This property SHOULD be used to specify the spatial reference system used in the dataset. Spatial reference systems SHOULD be specified by using the corresponding URIs from the “EPSG coordinate reference systems” register operated by OGC." ;
+    sh:severity sh:Violation
+  ], [
+    sh:class foaf:Agent ;
+    sh:path dct:rightsHolder ;
+	sh:name "rights holder" ;
+	sh:description "This property refers to an entity that legally owns or holds the rights of the data provided in a dataset. This entity is legally responsible for the content of the data. It is also responsible for any statements about the data quality (if applicable, see property dqv:hasQualityAnnotation) and/or the relevance to legal frameworks (if applicable, see property dcatap:applicableLegislation)." ;
+    sh:severity sh:Violation
+  ], [
+    sh:class skos:Concept ;
+    sh:path mobilitydcatap:transportMode ;
+	sh:name "transport mode" ;
+	sh:description "This property describes the transport mode that is covered by the delivered content. Data can be valid for more than one mode, so a multiple choice should be applied. " ;
+    sh:severity sh:Violation
+  ];
+  sh:targetClass dcat:Dataset .
+  
+:Distribution_Shape
+  a sh:NodeShape ;
+  sh:name "Distribution"@en ;
+  sh:property [
+    sh:class skos:Concept ;
+	sh:minCount 1 ;
+    sh:maxCount 1 ;
+    sh:path mobilitydcatap:mobilityDataStandard ;
+	sh:name "mobility data standard" ;
+	sh:description "This property describes the mobility data standard, as applied for the delivered content within the Distribution. A mobility data standard, e.g., DATEX II, combines syntax and semantic definitions of entities in a certain domain (e.g., for DATEX II: road traffic information), and optionally adds technical rules for data exchange. " ;
+    sh:severity sh:Violation
+  ], [
+    sh:class skos:Concept ;
+    sh:path mobilitydcatap:applicationLayerProtocol ;
+	sh:name "application layer protocol" ;
+	sh:description "This property describes the transmitting channel, i.e., the Application Layer Protocol, of the distribution." ;
+    sh:severity sh:Violation
+  ] ;
+  sh:targetClass dcat:Distribution .
+
+:Kind_Shape
+  a sh:NodeShape ;
+  sh:name "Kind"@en ;
+  sh:property [
+    sh:class owl:Thing ;
+	sh:minCount 1 ;
+    sh:path vcard:hasEmail ;
+	sh:name "email" ;
+	sh:description "This property contains an email address of the Kind, specified using fully qualified mailto: URI scheme [RFC6068]. " ;
+    sh:severity sh:Violation
+  ], [
+    sh:nodeKind sh:Literal ;
+    sh:path vcard:fn ;
+	sh:minCount 1 ;
+	sh:name "name" ;
+	sh:description "This property contains a name of the Kind. This property can be repeated for different versions of the name (e.g., the name in different languages) - see § 8. Accessibility and Multilingual Aspects." ;
+    sh:severity sh:Violation
+  ], [
+    sh:class owl:Thing ;
+    sh:path vcard:hasURL ;
+    sh:maxCount 1 ;
+	sh:name "URL" ;
+	sh:description "This property points to a Web site of the Kind." ;
+    sh:severity sh:Violation
+  ];
+  sh:targetClass  vcard:Kind .
+  
+:LicenseDocument_Shape
+  a sh:NodeShape ;
+  sh:name "License Document"@en ;
+  sh:property [
+    sh:class skos:Concept ;
+	sh:maxCount 1 ;
+    sh:path dct:identifier ;
+	sh:name "Standard licence" ;
+	sh:description "This property MAY be be used to link to a concrete standard license. A controlled vocabulary § 5.2 Controlled vocabularies to be used is provided. " ;
+    sh:severity sh:Violation
+  ];
+  sh:targetClass  dct:LicenseDocument .
+  
+:Location_Shape
+  a sh:NodeShape ;
+  sh:name "Location"@en ;
+  sh:property [
+    sh:class skos:ConceptScheme ;
+    sh:path skos:inScheme ;
+	sh:maxCount 1 ;
+	sh:name "gazetteer" ;
+	sh:description "This property MAY be used to specify the gazetteer to which the Location belongs. " ;
+    sh:severity sh:Violation
+  ], [
+    sh:nodeKind sh:Literal ;
+    sh:path dct:identifier ;
+	sh:name "geographic identifier" ;
+	sh:description "This property contains the geographic identifier for the Location, e.g., the URI or other unique identifier in the context of the relevant gazetteer." ;
+    sh:severity sh:Violation
+  ];
+  sh:targetClass  dct:Location .
+  
+:RightsStatement_Shape
+  a sh:NodeShape ;
+  sh:name "Rights Statement"@en ;
+  sh:property [
+    sh:class skos:Concept ;
+    sh:path dct:type ;
+	sh:maxCount 1 ;
+	sh:name "conditions for access and usage" ;
+	sh:description "This property SHOULD be used to indicate the conditions if any contracts, licences and/or are applied for the use of the dataset. The conditions are declared on an aggregated level: whether a free and unrestricted use is possible, a contract has to be concluded and/or a licence has to be agreed on to use a dataset. " ;
+    sh:severity sh:Violation
+  ], [
+    sh:nodeKind sh:Literal ;
+    sh:path rdfs:label ;
+	sh:name "Additional information for access and usage" ;
+	sh:description "This property MAY describes in a textual form any additional access, usage or licensing information, besides other information under classes dct:RightsStatement and dct:LicenseDocument. " ;
+    sh:severity sh:Violation
+  ];
+  sh:targetClass dct:RightsStatement .
+
+#-------------------------------------------------------------------------
+# Concepts from controlled vocabularies defined and used in mobilityDCAT-AP.
+#-------------------------------------------------------------------------
+
+<https://w3id.org/mobilitydcat-ap/data-model> a skos:ConceptScheme ;
+  skos:prefLabel "Data model"@en ;
+.
+
+<https://w3id.org/mobilitydcat-ap/data-content-category> a skos:ConceptScheme ;
+  skos:prefLabel "Data content category"@en ;
+.
+
+<https://w3id.org/mobilitydcat-ap/update-frequency> a skos:ConceptScheme ;
+  skos:prefLabel "Update frequency"@en ;
+.
+
+<https://w3id.org/mobilitydcat-ap/georeferencing-method/> a skos:ConceptScheme ;
+  skos:prefLabel "Georeferencing method"@en ;
+.
+
+<https://w3id.org/mobilitydcat-ap/network-coverage> a skos:ConceptScheme ;
+  skos:prefLabel "Network coverage"@en ;
+.
+
+<https://w3id.org/mobilitydcat-ap/transport-mode> a skos:ConceptScheme ;
+  skos:prefLabel "Transport mode"@en ;
+.
+
+<https://w3id.org/mobilitydcat-ap/service-category> a skos:ConceptScheme ;
+  skos:prefLabel "Service category"@en ;
+.
+
+<https://w3id.org/mobilitydcat-ap/grammar> a skos:ConceptScheme ;
+  skos:prefLabel "Grammar"@en ;
+.
+
+<https://w3id.org/mobilitydcat-ap/application-layer-protocol> a skos:ConceptScheme ;
+  skos:prefLabel "Application layer protocol"@en ;
+.
+
+<https://w3id.org/mobilitydcat-ap/communication-method> a skos:ConceptScheme ;
+  skos:prefLabel "Communication method"@en ;
+.
+
+<https://w3id.org/mobilitydcat-ap/conditions-for-access-and-usage> a skos:ConceptScheme ;
+  skos:prefLabel "Conditions for access and usage"@en ;
+.
+
+#-------------------------------------------------------------------------
+# Concepts from additional controlled vocabularies used in mobilityDCAT-AP.
+#-------------------------------------------------------------------------
+
+<http://publications.europa.eu/resource/authority/data-theme> a skos:ConceptScheme ;
+  skos:prefLabel "Data Themes"@en ;
+.
+
+<http://publications.europa.eu/resource/authority/data-theme> a skos:ConceptScheme ;
+  skos:prefLabel "Dataset Theme Vocabulary"@en ;
+.
+
+<http://publications.europa.eu/resource/authority/access-right> a skos:ConceptScheme ;
+  skos:prefLabel "Access right"@en ;
+.
+
+<http://publications.europa.eu/resource/authority/frequency> a skos:ConceptScheme ;
+  skos:prefLabel "Frequency"@en ;
+.
+
+<http://www.opengis.net/def/crs/EPSG/0/> a skos:ConceptScheme ;
+  skos:prefLabel "OGC EPSG Coordinate Reference Systems Register"@en ;
+.
+
+<http://publications.europa.eu/resource/authority/file-type> a skos:ConceptScheme ;
+  skos:prefLabel "File Type"@en ;
+.
+
+<http://publications.europa.eu/resource/authority/language> a skos:ConceptScheme ;
+  skos:prefLabel "Language"@en ;
+.
+
+<http://publications.europa.eu/resource/authority/corporate-body> a skos:ConceptScheme ;
+  skos:prefLabel "Corporate body"@en ;
+.
+
+<http://publications.europa.eu/resource/authority/continent> a skos:ConceptScheme ;
+  skos:prefLabel "Continents"@en ;
+.
+
+<http://publications.europa.eu/resource/authority/country> a skos:ConceptScheme ;
+  skos:prefLabel "Countries"@en ;
+.
+
+<http://publications.europa.eu/resource/authority/place> a skos:ConceptScheme ;
+  skos:prefLabel "Places"@en ;
+.
+
+<http://sws.geonames.org/> a skos:ConceptScheme ;
+  skos:prefLabel "GeoNames"@en ;
+.
+
+<http://nuts.geovocab.org/> a skos:ConceptScheme;
+  skos:prefLabel "NUTS (Nomenclature of Territorial Units for Statistics)"@en ;
+.
+
+<http://purl.org/adms/publishertype/> a skos:ConceptScheme ;
+  skos:prefLabel "ADMS publisher type"@en ;
+.
+
+<https://eur-lex.europa.eu/eli-register/eu_publications_office.html> a skos:ConceptScheme ;
+  skos:prefLabel "European Legislation Identifier (ELI)"@en ;
+.

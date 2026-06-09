@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -59,6 +59,7 @@
     "$rootScope",
     "$filter",
     "gnUtilityService",
+    "$window",
     function (
       $scope,
       $http,
@@ -77,13 +78,14 @@
       gnConfigService,
       $rootScope,
       $filter,
-      gnUtilityService
+      gnUtilityService,
+      $window
     ) {
       $scope.formatter = gnSearchSettings.formatter;
       $scope.gnMetadataActions = gnMetadataActions;
       $scope.url = location.href;
       $scope.compileScope = $scope.$new();
-      $scope.recordIdentifierRequested = gnSearchLocation.uuid;
+      $scope.recordIdentifierRequested = gnSearchLocation.getUuid();
       $scope.isUserFeedbackEnabled = false;
       $scope.isRatingEnabled = false;
       $scope.showCitation = false;
@@ -103,8 +105,9 @@
         gnGlobalSettings.gnCfg.mods.recordview.showStatusTopBarFor;
 
       gnConfigService.load().then(function (c) {
-        $scope.isRecordHistoryEnabled = gnConfig["system.metadata.history.enabled"];
+        $scope.isRecordHistoryEnabled = gnConfig["metadata.history.enabled"];
         $scope.isPreferGroupLogo = gnConfig["system.metadata.prefergrouplogo"];
+        $scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
 
         var statusSystemRating = gnConfig["system.localrating.enable"];
 
@@ -165,6 +168,49 @@
         return list;
       }
 
+      /**
+       * Ask for confirmation to delete a metadata.
+       */
+      $scope.removeMetadata = function () {
+        $("#gn-confirm-remove-metadata").modal("show");
+      };
+
+      /**
+       * Remove the metadata and refresh the list when done.
+       */
+      $scope.confirmRemoveMetadata = function () {
+        // Close the confirm dialog properly before redirecting to the search page
+        $scope.deleteRecord($scope.mdView.current.record).then(function () {
+          $("#gn-confirm-remove-metadata").modal("hide");
+          $scope.closeRecord(md);
+        });
+      };
+
+      $scope.getMetadataDeleteConfirmMessage = function () {
+        if (!$scope.mdView.current.record) {
+          $("#gn-confirm-remove-metadata").modal("hide");
+          return "";
+        }
+
+        var translation = $translate.instant("metadataDeleteConfirm", {
+          title: $scope.mdView.current.record.resourceTitle
+        });
+
+        var translationMetadataResourceTypeKey =
+          "metadataDelete-" + $scope.mdView.current.record.resourceType;
+
+        var translationResourceType = $translate.instant(
+          translationMetadataResourceTypeKey
+        );
+
+        // If there is a message for the specific metadata resource type, append it to the generic message.
+        if (translationResourceType !== translationMetadataResourceTypeKey) {
+          translation += "<br/>" + translationResourceType;
+        }
+
+        return translation;
+      };
+
       $scope.recordFormatterList = gnMdFormatter.getFormatterForRecord(
         $scope.mdView.current.record
       );
@@ -190,7 +236,36 @@
               msg: $translate.instant("metadataRemoved", { title: md.resourceTitle }),
               type: "success"
             });
-            $scope.closeRecord(md);
+          },
+          function (reason) {
+            // Data needs improvements
+            // See https://github.com/geonetwork/core-geonetwork/issues/723
+            gnAlertService.addAlert({
+              msg: reason.data.message || reason.data.description,
+              type: "danger"
+            });
+            throw reason;
+          }
+        );
+      };
+
+      $scope.cancelWorkingCopy = function (md) {
+        return gnMetadataActions.cancelWorkingCopy(md).then(
+          function (data) {
+            gnAlertService.addAlert({
+              msg: $translate.instant("metadataRemoved", {
+                title: md.resourceTitle
+              }),
+              type: "success"
+            });
+
+            // Set a timeout to reload the page, to display the alert
+            $window.setTimeout(function () {
+              $window.location.href = $location
+                .absUrl()
+                .replace("/metadraf/", "/metadata/");
+              $window.location.reload();
+            }, 500);
           },
           function (reason) {
             // Data needs improvements
@@ -314,21 +389,33 @@
       // in default mode.
       function loadFormatter(n, o) {
         if (n === true) {
-          $scope.recordFormatterList = gnMdFormatter.getFormatterForRecord(
-            $scope.mdView.current.record
-          );
+          gnMdFormatter
+            .getAvailableFormattersForRecord($scope.mdView.current.record)
+            .then(function (availableFormatters) {
+              var formattersForRecord = gnMdFormatter.getFormatterForRecord(
+                $scope.mdView.current.record
+              );
 
-          checkIfCitationIsDisplayed($scope.mdView.current.record);
+              $scope.recordFormatterList =
+                gnMdFormatter.calculateValidFormattersForRecord(
+                  formattersForRecord,
+                  availableFormatters
+                );
 
-          var f = gnSearchLocation.getFormatterPath($scope.recordFormatterList[0].url);
-          $scope.currentFormatter = "";
+              checkIfCitationIsDisplayed($scope.mdView.current.record);
 
-          gnMdViewObj.usingFormatter = f !== undefined;
+              var f = gnSearchLocation.getFormatterPath(
+                $scope.recordFormatterList[0].url
+              );
+              $scope.currentFormatter = "";
 
-          if (f != undefined) {
-            $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, "$1");
-            $scope.loadFormatter(f);
-          }
+              gnMdViewObj.usingFormatter = f !== undefined;
+
+              if (f != undefined) {
+                $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, "$1");
+                $scope.loadFormatter(f);
+              }
+            });
         }
       }
       $scope.$watch("mdView.recordsLoaded", loadFormatter);

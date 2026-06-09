@@ -1,0 +1,151 @@
+================================================================================
+===
+=== GeoNetwork 4.2.4: List of changes
+===
+================================================================================
+- Merge pull request #7059 from tkohr/xsl-fixes
+- Add migration for static pages (#7005)
+- Map / WPS / Fixes and improvements
+- Translations / Updates from transifex.
+- Admin / Link analysis / Use POST / Fix test
+- Standard / Associated resources / Add check for duplicated references.
+- Standard / ISO19115-3 / Add link fails if record has no language.
+- Editor / Display attributes when an element only have attributes eg. metadataReference.
+- Standard / ISO19115-3 / Remove parentIdentifier linking which is not used. Users use associated resources for this type of links.
+- Maps library / Fix home page link to display the map.
+- Record view / Break keywords with long values
+- Fix display of user selections panel for logged users (#7001)
+- disable link to parent button to use ng-disabled (#7045)
+- gn - fix(ods): copy ods themes to topicCategory instead of keywords
+- gn - fix(dkan): accept optional - separator and seconds
+- gn - fix(dkan): make regExLoc for date conversion more permissive
+- Admin / Link analysis / Use POST. (#7022)
+- gn - fix(ods): fix mapping of ods metadata and ressource dates
+- i18n / Fix loading of languages for ICE, KOR and CZE (#7055)
+- Indexing / More robust on invalid thesaurus type (#7052)
+- Indexing / More robust on vertical range. (#7054)
+- Indexing / Add timeout when retrieving overview. (#6905)
+- Editing / dateStamp = changeDate on update (#7012)
+- Standard / ISO19115-3 / Add same mechanism as ISO19139 for parentIdentifier (#6976)
+- Editor / Suggestions / Suggest to add a date depending on the status. (#6967)
+- i18n / Add Danish language (#6933)
+- Import metadata / If workflow is enable hide publish option (#7008)
+- Sharing / Batch mode / Fix +/- icon on Firefox.
+- Download xml in new tab (#6975)
+- PDF / Report image URL in case of error (#7032)
+- Library update / WRO4J / Remove unused extensions with CVE reported.
+- Library update.
+- Quick fix for missing comma in #7034
+- Automatic formatting
+- Prevent breaking of topic titles in middle of title (#7036)
+- Add pagination to the footer of the search page (#7035)
+- Verify the portal requested exists - configure servlet names to exclude (#7034)
+- CSW / Transactions are not in history. (#7016)
+- Portal redirection / Search portal by uuid not by name. (#7030)
+- Test / API / Page label null trigger error (#6989)
+- Dependency / Rever camel update triggerring issue on Tomcat
+- ISO19139 / Editor / Fieldset on processor
+- CSW / Transaction / Consistently apply update-fixed-info (#7004)
+- fix: upgrade com.google.code.findbugs:jsr305 from 2.0.1 to 2.0.3
+- Bump camel.version from 2.25.1 to 2.25.4
+- Update publish link so that it is disabled if the metadata has not been approved. (#7009)
+- Pass created, modified, issued date from thesaurus to the schemas (#6972)
+- Revert empty properties format
+- fix: pom.xml to reduce vulnerabilities
+- Harvester / Simple URL / Total harvested records when using pagination is incorrect
+- Fix admin setting error with duplicate id="metadata/workflow/draftWhenInGroup" (#6980)
+- Metadata publication mail - support additional fields: (#6906)
+- Map viewer / make configurable to display the metadata bboxes using geodesic extents for local projections (#6982)
+- Fix related to #6946, scope.config is not ready when the metadata editor is being loaded
+- Metadata editor / normalize the values provided to AngularJs directives
+- Editor / Thesaurus / Add option to display or not the SKOS browser.
+- Editor / Tooltip / Add onhover mode.
+- Editor / Improve default tab configuration.
+- Test / Fixes (#6932)
+- Admin / Page / Styling.
+- UI configuration for static pages, to allow customise the order of the pages in the sections
+- Add page label property to use for the links text instead of using the page identifier
+- Respond with JSON
+- Return 201 when creating pages
+- Remove unreacheable if statement
+- Remove code smells
+- Add help text for page sections
+- Additional formatting updates
+- Use translations page statuses
+- Updates: - Use format translations. - Don't show page link when creating a new page. - Fix layout of the HTML editor
+- Admin / Page / Avoid :baddata] Data must be a valid JSON.
+- Admin / Page manager / Add translations.
+- API / Pages / Clear queue after upload.
+- API / Pages / Fix warning on POST.
+- API / Pages / Fix update content.
+- API / Pages / Fix test.
+- Page API improvement
+- API / Pages / Set HTML content type if page is an upload HTML.
+- API / Pages - Initial support to upload page files
+- API / Pages - Update check file type check and when uploading a file, store the file name in the link field
+- API / Pages - add message translations and fix delete request
+- API / Pages - unify sections parameter name, support multiple sections per page and show in the list the page id and the language
+- API / Pages - update gnStaticPagesListViewer directive to use the new API
+- API / Pages - add a service to return the static pages and update UI to use the new API services
+- API / Pages / Keep it simple and test.
+- Prettier and AngularJS update.
+- Static pages UI configuration
+- ISO19139 / Editor / Fieldset on resource usage and userContactInfo
+- Metadata file downloads report - fix check to retrieve user related information (#6971)
+- Configure the users profile allowed to publish / un-publish metadata (#6956)
+- ISO19139 / ISO19115-3.2008 / use also xlink:href element to identify related datasets  (#6973)
+- Map / Feature table improvement. (#6969)
+- Filter to verify the portal requested exists, otherwise redirects to the default portal
+- Map / Context / Style may or may not declare namespace.
+- Standard / ISO19115-3 / Do not alter creation date and allow editing of metadata identifier descriptors (#6968)
+- Standard / ISO19115-3 / Editor / Reference system from EPSG database
+- Editor / Configuration / Add for each support. (#6907)
+- Map / Layer / Styling tab for better legend readability.
+- Map / Layer / Use caret icon instead of radio.
+- Map / Layer / Improve layout and add server URL and layer name to easily copy value (eg. to add layer in GIS).
+- Map / Layer / Better alignment.
+- Map / WMS Time / Add slider control.
+- Map / Group layer tools and avoid to have too many buttons in layer row.
+- Map / WMS Time and elevation / Animation interval.
+- Map / WMS Time and elevation.
+- Prettier formatting
+- Users management - disable save button if password check doesn't match the password (#6890)
+- Search results / List / Associated resource group by title / Styling.
+- Search results / List / Associated resource group by title.
+- Release / Cleanup folder.
+- Doc / Fix warning.
+- Add online resources from WMS layers with the 'resourcename' mode:
+- Implement a more extendable openid connect security
+- Network / Intranet configuration / Add support for multiple ip ranges (#6894)
+- Merge branch 'Informatievlaanderen-dv/pr/root-context'
+- Make local jetty run plugin context path configurable / doc.
+- Make local jetty run plugin context path configurable thought JVM options
+- Remove duplicate and run Prettier
+- Add a setting to make the map accessible. The setting is off by default.
+- Fix issue with initial db creation not having language list when @PostConstruct was called. (#6870)
+- Search / Use scripted field for more like this and isSuperseded directive.
+- Use scripted field to retrieve associated resources first overview url. Sonarlint code improvements.
+- Update EsFacet.js
+- Search / Review _source to contains only necessary fields. Fixed some field names for category and topic.
+- Search / Use scripted field to only load the first overview.
+- Changed the messages about existing users or emails to be identical, to make it harder to enumerate through users
+- Remove requirement for gmd:fileDescription so that thumbnail urls are transformed when migrating records.
+- change the method for the password's minLength to be max, so if a bigger value than 6 is retrieved from "system.security.passwordEnforcement.minLength" this is taken into account (#6953)
+- UI / Add a read more directive
+- Avoid retrieve metadata associated records aggregations when the metadata have no associated records
+- Doc / Editor configuration / Spelling improvements (#6944)
+- Extend date range filter directive to configure the date field to use.
+- Feature catalogue / Index producer
+- Record view / don't call records history when not authorised
+- Update validation report to include more information in the report. (#6900)
+- Update CSW GetRecords samples. Fixes #6935
+- Bump httpclient from 4.5.9 to 4.5.14 (#6928)
+- OutOfMemory exception on tomcat / Change logging bridge dependency. (#6904)
+- Update Geotools to v28.2 (#6925)
+- Create mvn-dep-tree.yml (#6923)
+- Update CSW queryable mappings for contacts
+- Build / git.properties file not created (#6915)
+- Avoid index empty values of online resources protocols. If the ES field is used for facet filter, it displays the empty value
+- Search / allow to configure additional fields to exclude from searches (#6911)
+- Cmis performance enhancements (#6893)
+- Update version to 4.2.4-SNAPSHOT

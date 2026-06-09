@@ -29,6 +29,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Env;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.exceptions.EncryptionInitializationException;
 import org.jasypt.hibernate5.encryptor.HibernatePBEEncryptorRegistry;
@@ -95,12 +96,12 @@ public class EncryptorInitializer {
         boolean updateConfiguration;
 
         if (StringUtils.isEmpty(encryptorAlgorithmPropFile)) {
-            encryptorAlgorithmPropFile = getPropertyFromEnv(ALGORITHM_KEY, DEFAULT_ALGORITHM);
+            encryptorAlgorithmPropFile = Env.getPropertyFromEnv(ALGORITHM_KEY, DEFAULT_ALGORITHM);
             encryptorAlgorithm = encryptorAlgorithmPropFile;
             // No algorithm configured yet
             updateConfiguration = true;
         } else {
-            String encryptorAlgorithmFromEnv = getPropertyFromEnv(ALGORITHM_KEY, "");
+            String encryptorAlgorithmFromEnv = Env.getPropertyFromEnv(ALGORITHM_KEY, "");
             if (StringUtils.isNotEmpty(encryptorAlgorithmFromEnv)) {
                 encryptorAlgorithm = encryptorAlgorithmFromEnv;
             } else {
@@ -113,7 +114,7 @@ public class EncryptorInitializer {
 
 
         if (StringUtils.isEmpty(encryptorPasswordPropFile)) {
-            encryptorPasswordPropFile = getPropertyFromEnv(PASSWORD_KEY, "");
+            encryptorPasswordPropFile = Env.getPropertyFromEnv(PASSWORD_KEY, "");
             // Creates a random encryptor password if the password is empty
             if (StringUtils.isEmpty(encryptorPasswordPropFile)) {
                 if (!firstInitialSetupFlag) {
@@ -131,7 +132,7 @@ public class EncryptorInitializer {
             // No password configured yet
             updateConfiguration = true;
         } else {
-            String encryptorPasswordFromEnv = getPropertyFromEnv(PASSWORD_KEY, "");
+            String encryptorPasswordFromEnv = Env.getPropertyFromEnv(PASSWORD_KEY, "");
             if (StringUtils.isNotEmpty(encryptorPasswordFromEnv)) {
                 encryptorPassword = encryptorPasswordFromEnv;
             } else {
@@ -335,31 +336,5 @@ public class EncryptorInitializer {
         }
 
         return new PropertiesConfiguration(securityPropsPath.toFile());
-    }
-
-    /**
-     * Retrieves an environment variable with this priority:
-     * - Java environment variable.
-     * - System environment variable.
-     * - Default value provided as parameter.
-     *
-     * @param propertyName
-     * @param defaultValue
-     * @return
-     */
-    private String getPropertyFromEnv(String propertyName, String defaultValue) {
-        // Check if provided in Java environment variable
-        String propertyValue = System.getProperty(propertyName);
-
-        if (StringUtils.isEmpty(propertyValue)) {
-            // System environment variable
-            propertyValue = System.getenv(propertyName.toUpperCase().replace('.', '_'));
-        }
-
-        if (StringUtils.isEmpty(propertyValue)) {
-            propertyValue = defaultValue;
-        }
-
-        return propertyValue;
     }
 }

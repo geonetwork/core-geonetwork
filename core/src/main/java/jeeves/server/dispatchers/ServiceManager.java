@@ -84,7 +84,7 @@ public class ServiceManager {
     private List<ErrorPage> vErrorPipe = new ArrayList<ErrorPage>();
     private List<GuiService> vDefaultGui = new ArrayList<GuiService>();
     private String baseUrl;
-    private int maxUploadSize;
+    private long maxUploadSize;
     private String defaultLang;
     private String defaultContType;
     private boolean defaultLocal;
@@ -118,7 +118,7 @@ public class ServiceManager {
         defaultContType = type;
     }
 
-    public void setMaxUploadSize(int size) {
+    public void setMaxUploadSize(long size) {
         maxUploadSize = size;
     }
 
@@ -356,16 +356,25 @@ public class ServiceManager {
         return context;
     }
 
+    /**
+     * If we do have the optional x-forwarded-for request header then
+     * use whatever is in it to record ip address of client
+     */
+    public static String getRequestIpAddress(HttpServletRequest request) {
+        String xForwardedForHeader = request.getHeader("x-forwarded-for");
+        return StringUtils.isNotEmpty(xForwardedForHeader)
+            ? xForwardedForHeader : request.getRemoteAddr();
+    }
+
+
     public ServiceContext createServiceContext(String name, String lang, HttpServletRequest request) {
         ServiceContext context = new ServiceContext(name, ApplicationContextHolder.get(), htContexts, entityManager);
 
         context.setBaseUrl(baseUrl);
         context.setLanguage(lang);
-        context.setIpAddress(request.getRemoteAddr());
+        context.setIpAddress(getRequestIpAddress(request));
         context.setMaxUploadSize(maxUploadSize);
         context.setServlet(servlet);
-
-        String ip = request.getRemoteAddr();
 
         // Session is created by ApiInterceptor when needed
         // Save the session here in the ServiceContext (not used in the API package).

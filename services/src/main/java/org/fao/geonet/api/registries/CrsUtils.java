@@ -28,11 +28,11 @@ import org.fao.geonet.api.registries.model.CrsType;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.geotools.referencing.ReferencingFactoryFinder;
-import org.opengis.metadata.Identifier;
-import org.opengis.referencing.FactoryException;
-import org.opengis.referencing.IdentifiedObject;
-import org.opengis.referencing.crs.CRSAuthorityFactory;
-import org.opengis.referencing.crs.CoordinateReferenceSystem;
+import org.geotools.api.metadata.Identifier;
+import org.geotools.api.referencing.FactoryException;
+import org.geotools.api.referencing.IdentifiedObject;
+import org.geotools.api.referencing.crs.CRSAuthorityFactory;
+import org.geotools.api.referencing.crs.CoordinateReferenceSystem;
 
 import java.util.ArrayList;
 import java.util.Collection;

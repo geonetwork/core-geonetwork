@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2024 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -24,43 +24,6 @@
 
 <geonet>
   <services package="org.fao.geonet">
-    <!-- Search services -->
-    <service name="q">
-      <documentation><![CDATA[
-        Main search services.
-
-        Parameters:
-        * All Lucene search field
-        * fast: (optional) if "index" the index is used to return the results
-        (see dumpfields for output format configuration). if "false", the database
-        is used to return the results in their original formats.
-        * hitsperpage: (optional) The number of hits to return
-        * summaryOnly: (optional) if "true", only the facets are retruned
-        * sortBy: (optional) Default relevance.
-        * sortOrder: (optional) reverse or empty.
-
-        // TODO : improve
-        ]]></documentation>
-      <class name=".services.main.XmlSearch">
-        <!-- Note: this parameter will affect the server's response,
-             the parameter client-side is not related to this one. -->
-        <param name="maxRecords" value="100" />
-      </class>
-    </service>
-
-    <service name="qi">
-      <documentation>
-        <![CDATA[
-      Same as q service but used internally by the application
-      in order to make distinction between user search and
-      application search in statistics.
-      ]]>
-      </documentation>
-      <class name=".services.main.XmlSearch">
-        <param name="maxRecords" value="100" />
-      </class>
-    </service>
-
     <service name="lang">
       <documentation><![CDATA[
         Return all ISO languages.

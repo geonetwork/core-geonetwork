@@ -68,27 +68,39 @@
                 >
               </label>
 
-              <!-- Date time -->
-              <div ng-if="isDateTime(input)">
+              <div ng-if="isDateFormat(input)">
+                <input
+                  ng-repeat="field in getInputsByName(input.identifier.value)"
+                  ng-model="field.value"
+                  data-ng-click="desactivateGeometryTool()"
+                  type="{{getHtmlInputType(input)}}"
+                  min="{{getDateBounds(input, true)}}"
+                  max="{{getDateBounds(input, false)}}"
+                  ng-blur="onBlur($event)"
+                  class="input-sm form-control"
+                />
+              </div>
+
+              <div ng-if="isBoolean(input)">
                 <div
                   ng-repeat="field in getInputsByName(input.identifier.value)"
-                  class="input-daterange input-group input-group-sm"
-                  gn-bootstrap-datepicker="pickerValues"
-                  config="{dateMin: getDateBounds(input, true), dateMax: getDateBounds(input, false)}"
-                  data-date-format="dd-mm-yyyy"
+                  class="input-checkbox checkbox"
                 >
-                  <input
-                    ng-model="field.value"
-                    type="text"
-                    ng-blur="onBlur($event)"
-                    class="input-sm form-control"
-                  />
-                  <span class="input-group-addon" translate>date</span>
+                  <label>
+                    <input
+                      type="checkbox"
+                      id="field.value"
+                      data-ng-click="desactivateGeometryTool()"
+                      ng-model="field.value"
+                    />
+                  </label>
                 </div>
               </div>
 
               <!-- Basic form field (combo box or text field) -->
-              <div ng-if="::input.literalData && !isDateTime(input)">
+              <div
+                ng-if="::input.literalData && !isDateFormat(input) && !isBoolean(input)"
+              >
                 <div
                   class="input-group"
                   ng-repeat="field in getInputsByName(input.identifier.value)"
@@ -97,6 +109,7 @@
                     class="form-control input-sm"
                     ng-if="::input.literalData.allowedValues && !getIsAllowedValuesRange(input.literalData.allowedValues)"
                     ng-model="field.value"
+                    data-ng-click="desactivateGeometryTool()"
                     ng-required="$index < input.minOccurs"
                     ng-disabled="inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)"
                   >
@@ -114,6 +127,7 @@
                     min="{{::getMinValueFromAllowedValues(input.literalData.allowedValues) || ''}}"
                     max="{{::getMaxValueFromAllowedValues(input.literalData.allowedValues) || ''}}"
                     ng-model="field.value"
+                    data-ng-click="desactivateGeometryTool()"
                     ng-required="$index < input.minOccurs"
                     ng-disabled="inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)"
                   />
@@ -144,13 +158,20 @@
                   value="field.value"
                   map="::map"
                   read-only="::inputWfsOverride[input.identifier.value] || isInputDisabled(input.identifier.value)"
+                  data-ng-click="desactivateGeometryTool()"
                   ng-required="$index < input.minOccurs"
                   watch-value-change="true"
-                />
+                ></gn-bbox-input>
               </div>
 
               <!-- Complex input (geometry on map) -->
               <div ng-if="::input.complexData">
+                <select
+                  class="form-control"
+                  data-ng-if="::input.geometryType === null"
+                  data-ng-options="type for type in ['Point', 'LineString', 'Polygon']"
+                  data-ng-model="input.geometryType"
+                ></select>
                 <gn-geometry-tool
                   ng-repeat="field in getInputsByName(input.identifier.value)"
                   allow-reset
@@ -158,11 +179,13 @@
                   output="field.value"
                   output-format="{{ input.outputFormat }}"
                   output-crs="{{ map.getView().getProjection().getCode() }}"
-                  geometry-type="{{ input.geometryType }}"
+                  name-type="input.geometryType"
+                  geometry-type="input.geometryType"
                   output-crs="{{ map.getView().getProjection().getCode() }}"
                   output-as-features="true"
                   map="map"
-                />
+                  active-geometry-tool="activeGeometryTool"
+                ></gn-geometry-tool>
               </div>
 
               <!-- add a new value -->
@@ -171,7 +194,7 @@
                 href
                 ng-click="addInputValueByName(input.identifier.value)"
               >
-                <i class="fa fa-plus" />
+                <i class="fa fa-plus"></i>
                 {{::'insertNewInputValue'|translate}}
               </a>
 
@@ -213,11 +236,11 @@
                       <i
                         class="fa fa-dot-circle-o fa-fw"
                         ng-show="wpsLink.output.identifier == output.identifier.value && wpsLink.output.mimeType == format.mimeType"
-                      />
+                      ></i>
                       <i
                         class="fa fa-circle-o fa-fw"
                         ng-show="wpsLink.output.identifier != output.identifier.value || wpsLink.output.mimeType != format.mimeType"
-                      />
+                      ></i>
                       {{::format.mimeType}}
                     </a>
                   </li>
@@ -227,7 +250,7 @@
               <button
                 type="submit"
                 class="btn btn-primary"
-                ng-click="submit()"
+                ng-click="executeWPSProcess()"
                 ng-class="{disabled: running}"
                 ng-show="!hideExecuteButton"
               >
@@ -262,7 +285,7 @@
                         target="_blank"
                         href="{{::output.reference.href}}"
                       >
-                        <icon class="fa fa-fw fa-download" />
+                        <icon class="fa fa-fw fa-download"></icon>
                         <span data-translate="">Download</span>
                       </a>
                       <a
@@ -271,7 +294,7 @@
                         data-ng-show="wpsLink.output.loadReferenceInMap"
                         data-ng-click="clearGeometry()"
                       >
-                        <icon class="fa fa-fw fa-times" />
+                        <icon class="fa fa-fw fa-times"></icon>
                         <span data-translate="">Clear</span>
                       </a>
                     </div>

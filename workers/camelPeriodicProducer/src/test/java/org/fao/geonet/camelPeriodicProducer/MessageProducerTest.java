@@ -27,6 +27,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.component.quartz2.QuartzComponent;
 import org.apache.camel.component.quartz2.QuartzEndpoint;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,12 +39,14 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -72,19 +75,10 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
     @Autowired
     MessageProducerFactory toTest;
 
-    private QuartzComponent quartzComponent;
-
-    @Before
-    public void init() throws Exception {
-        quartzComponent = new QuartzComponent(testCamelNetwork.getContext());
-        quartzComponent.start();
-    }
-
     @Test
     public void registerAndStart() throws Exception {
         testCamelNetwork.getContext().start();
         toTest.routeBuilder = testCamelNetwork;
-        toTest.quartzComponent = quartzComponent;
 
         TestMessage testMessage = new TestMessage("testMsg1");
         MessageProducer<TestMessage> messageProducer1 = new MessageProducer<>();
@@ -139,11 +133,10 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
     public void registerAndStartWithoutCronExpression() throws Exception {
         testCamelNetwork.getContext().start();
         toTest.routeBuilder = testCamelNetwork;
-        toTest.quartzComponent = quartzComponent;
 
         TestMessage testMessage = new TestMessage("testMsg1");
         MessageProducer<TestMessage> messageProducer = new MessageProducer<>();
-        messageProducer.setId(1L);
+        messageProducer.setId(3L);
         messageProducer.setTarget(testCamelNetwork.getMessageConsumer().getUri());
         messageProducer.setMessage(testMessage);
         messageProducer.setCronExpession(null);
@@ -153,16 +146,16 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
             .filter(x -> x.getEndpointKey().compareTo(
                 "quartz2://" + settingManager.getSiteId() + "-" + messageProducer.getId()) == 0).findFirst().get();
 
-        CronTrigger trigger = (CronTrigger) quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
+        CronTrigger trigger = (CronTrigger) toTest.quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
         assertEquals(NEVER, trigger.getCronExpression());
 
         messageProducer.setCronExpession(EVERY_SECOND);
         toTest.changeMessageAndReschedule(messageProducer);
 
-        trigger = (CronTrigger) quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
+        trigger = (CronTrigger) toTest.quartzComponent.getScheduler().getTrigger(endpoint.getTriggerKey());
         assertEquals(EVERY_SECOND, trigger.getCronExpression());
 
-        toTest.destroy(1L);
+        toTest.destroy(3L);
     }
 
 
@@ -179,16 +172,16 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
         }
     }
 
-    static public class MessageConsumer {
+    public static class MessageConsumer {
 
-        private Integer count = 0;
-        private CompletableFuture<List<String>> future = new CompletableFuture();
-        private String uri;
-
-        private List<String> receivedContent = new ArrayList();
+        private final String uri;
+        private AtomicInteger count;
+        private CompletableFuture<List<String>> future;
+        private List<String> receivedContent;
 
         public MessageConsumer(String uri) {
             this.uri = uri;
+            reset();
         }
 
         public String getUri() {
@@ -198,9 +191,8 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
         public void consume(Exchange exchange) {
             TestMessage msg = (TestMessage) exchange.getProperty("configuration");
             receivedContent.add(msg.getContent());
-            count++;
-            if (count > 4) {
-                future.complete(receivedContent);
+            if (count.incrementAndGet() > 4) {
+                future.complete(new ArrayList<>(receivedContent));
             }
         }
 
@@ -209,9 +201,9 @@ public class MessageProducerTest extends AbstractJUnit4SpringContextTests {
         }
 
         public void reset() {
-            count = 0;
-            receivedContent = new ArrayList();
-            future = new CompletableFuture();
+            count = new AtomicInteger(0);
+            receivedContent = Collections.synchronizedList(new ArrayList<>());
+            future = new CompletableFuture<>();
         }
     }
 }

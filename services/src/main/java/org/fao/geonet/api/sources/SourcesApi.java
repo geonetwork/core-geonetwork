@@ -24,11 +24,16 @@
 package org.fao.geonet.api.sources;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.fao.geonet.api.ApiError;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -41,6 +46,7 @@ import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -81,14 +87,21 @@ public class SourcesApi {
         summary = "Get all sources",
         description = "Sources are the local catalogue, subportal, external catalogue (when importing MEF files) or harvesters.")
     @RequestMapping(
-        produces = MediaType.APPLICATION_JSON_VALUE,
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE,
+            MediaType.TEXT_HTML_VALUE
+        },
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of source catalogues.")
+        @ApiResponse(responseCode = "200", description = "List of source catalogues.",
+            content = {
+                @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, array = @ArraySchema(schema = @Schema(implementation = Source.class))),
+                @Content(mediaType = MediaType.TEXT_HTML_VALUE, schema = @Schema(type = "string"))
+            })
     })
     @ResponseBody
-    public List<Source> getSources(
+    public ResponseEntity<?> getSources(
         @Parameter(
             description = "Group owner of the source (only applies to subportal)."
         )
@@ -96,58 +109,80 @@ public class SourcesApi {
             value = "group",
             required = false)
         Integer group,
+        @RequestParam(
+            value = "type",
+            required = false)
+        SourceType type,
         @Parameter(hidden = true)
-        HttpServletResponse response
+        HttpServletResponse response,
+        @Parameter(hidden = true)
+        HttpServletRequest request
     ) throws Exception {
         setHeaderVaryOnAccept(response);
-        if (group != null) {
-            return sourceRepository.findByGroupOwner(group);
+        List<Source> sources;
+        if (group != null && type != null) {
+            sources = sourceRepository.findByGroupOwnerAndType(group, type, SortUtils.createSort(Source_.name));
+        } else if (group != null) {
+            sources = sourceRepository.findByGroupOwner(group, SortUtils.createSort(Source_.name));
+        } else if (type != null) {
+            sources = sourceRepository.findByType(type, SortUtils.createSort(Source_.name));
         } else {
-            return sourceRepository.findAll(SortUtils.createSort(Source_.name));
+            sources = sourceRepository.findAll(SortUtils.createSort(Source_.name));
+        }
+
+        if (sources == null) {
+            return ResponseEntity.notFound().build();
+        }
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?MediaType.APPLICATION_JSON_VALUE:request.getHeader(HttpHeaders.ACCEPT);
+        if (acceptHeader.contains(MediaType.TEXT_HTML_VALUE)) {
+            return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(getSourcesAsHtml(sources));
+        } else {
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(sources);
         }
     }
 
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get portal list",
-        description = "List all subportal available.")
-    @RequestMapping(
-        produces = MediaType.TEXT_HTML_VALUE,
-        method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "List of portals.")
-    })
-    @ResponseBody
-    public void getSubPortals(
-        @Parameter(hidden = true)
-        HttpServletResponse response
-    ) throws Exception {
-        final List<Source> sources = sourceRepository.findAll(SortUtils.createSort(Source_.name));
+    private String getSourcesAsHtml(List<Source> sources) throws Exception {
         Element sourcesList = new Element("sources");
         sources.stream().map(GeonetEntity::asXml).forEach(sourcesList::addContent);
-        response.setContentType(MediaType.TEXT_HTML_VALUE);
-        setHeaderVaryOnAccept(response);
-        response.getWriter().write(
-            new XsltResponseWriter(null, "portal")
+        return new XsltResponseWriter(null, "portal")
                 .withJson("catalog/locales/en-core.json")
                 .withJson("catalog/locales/en-search.json")
                 .withXml(sourcesList)
                 .withParam("cssClass", "gn-portal")
                 .withXsl("xslt/ui-search/portal-list.xsl")
-                .asHtml());
+                .asHtml();
     }
 
-
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get all sources by type",
-        description = "Sources are the local catalogue, subportal, external catalogue (when importing MEF files) or harvesters.")
+        summary = "Get a source",
+        description = "")
     @RequestMapping(
-        value = "/{type}",
+        value = "/{sourceIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Source found."),
+        @ApiResponse(responseCode = "404", description = "Source not found.",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
     @ResponseBody
-    public List<Source> getSourcesByType(@PathVariable SourceType type) throws Exception {
-        return sourceRepository.findByType(type, SortUtils.createSort(Source_.name));
+    public Source getSource(
+        @Parameter(
+            description = "Source identifier",
+            required = true
+        )
+        @PathVariable
+        String sourceIdentifier) throws Exception {
+        Optional<Source> existingSource = sourceRepository.findById(sourceIdentifier);
+        if (existingSource.isPresent()) {
+            return existingSource.get();
+        } else {
+            throw new ResourceNotFoundException(String.format(
+                "Source with uuid '%s' does not exist.",
+                sourceIdentifier
+            ));
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -221,7 +256,7 @@ public class SourcesApi {
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Source updated."),
+        @ApiResponse(responseCode = "204", description = "Source updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = "Source not found."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
@@ -272,7 +307,7 @@ public class SourcesApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Source deleted."),
+        @ApiResponse(responseCode = "204", description = "Source deleted.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @ResponseBody
@@ -321,6 +356,8 @@ public class SourcesApi {
             entity.setGroupOwner(source.getGroupOwner());
             entity.setServiceRecord(source.getServiceRecord());
             entity.setUiConfig(source.getUiConfig());
+            entity.setDatahubEnabled(source.getDatahubEnabled());
+            entity.setDatahubConfiguration(source.getDatahubConfiguration());
             entity.setLogo(source.getLogo());
             entity.setListableInHeaderSelector(source.isListableInHeaderSelector());
             Map<String, String> labelTranslations = source.getLabelTranslations();

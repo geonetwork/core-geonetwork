@@ -23,7 +23,7 @@
 package org.fao.geonet.harvester.wfsfeatures.worker;
 
 import org.apache.commons.lang.StringUtils;
-import org.opengis.feature.simple.SimpleFeature;
+import org.geotools.api.feature.simple.SimpleFeature;
 
 import java.util.Map;
 import java.util.Set;

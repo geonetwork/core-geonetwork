@@ -1,4 +1,4 @@
-INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('vie','Tiếng Việt', 'n', 'n');
+INSERT INTO Languages (id, name, isinspire) VALUES ('vie','Tiếng Việt', 'n');
 
 -- Take care to table ID (related to other loc files)
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'vie','Maps & graphics');

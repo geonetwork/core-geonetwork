@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -117,6 +117,23 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     }
 
     /**
+     * Removes all operations stored for a metadata except for the operations of the groups in the exclude list.
+     * Used for preventing deletion of operations for reserved and restricted groups.
+     * If groupIdsToExclude is null or empty, all operations are deleted.
+     *
+     * @param metadataId        Metadata identifier
+     * @param groupIdsToExclude List of group ids to exclude from deletion
+     */
+    @Override
+    public void deleteMetadataOper(String metadataId, List<Integer> groupIdsToExclude) {
+        if (groupIdsToExclude == null || groupIdsToExclude.isEmpty()) {
+            opAllowedRepo.deleteAllByMetadataId(Integer.parseInt(metadataId));
+        } else {
+            opAllowedRepo.deleteAllByMetadataIdExceptGroupId(Integer.parseInt(metadataId), groupIdsToExclude);
+        }
+    }
+
+    /**
      * Adds a permission to a group. Metadata is not reindexed.
      */
     @Override
@@ -167,7 +184,7 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
      */
     @Override
     public boolean forceSetOperation(ServiceContext context, int mdId, int grpId, int opId) throws Exception {
-        Optional<OperationAllowed> opAllowed = _getOperationAllowedToAdd(context, mdId, grpId, opId, false);
+        Optional<OperationAllowed> opAllowed = getOperationAllowedToAddInternal(context, mdId, grpId, opId, false);
 
         if (opAllowed.isPresent()) {
             Log.trace(Geonet.DATA_MANAGER, "Operation is allowed");
@@ -199,11 +216,11 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
     @Override
     public Optional<OperationAllowed> getOperationAllowedToAdd(final ServiceContext context, final int mdId, final int grpId,
                                                                final int opId) {
-        return _getOperationAllowedToAdd(context, mdId, grpId, opId, true);
+        return getOperationAllowedToAddInternal(context, mdId, grpId, opId, true);
     }
 
-    private Optional<OperationAllowed> _getOperationAllowedToAdd(final ServiceContext context, final int mdId, final int grpId,
-                                                                 final int opId, boolean shouldCheckPermission) {
+    private Optional<OperationAllowed> getOperationAllowedToAddInternal(final ServiceContext context, final int mdId, final int grpId,
+                                                                        final int opId, boolean shouldCheckPermission) {
         Log.trace(Geonet.DATA_MANAGER, "_getOperationAllowedToAdd(" + mdId + ", "
             + grpId + ", " + opId + ", " + shouldCheckPermission + ")");
         final OperationAllowed operationAllowed = opAllowedRepo.findOneById_GroupIdAndId_MetadataIdAndId_OperationId(grpId, mdId, opId);
@@ -340,14 +357,12 @@ public class BaseMetadataOperations implements IMetadataOperations, ApplicationE
 
         setOperation(context, id, groupId, ReservedOperation.view);
         setOperation(context, id, groupId, ReservedOperation.notify);
+        setOperation(context, id, groupId, ReservedOperation.download);
+        setOperation(context, id, groupId, ReservedOperation.dynamic);
         //
-        // Restrictive: new and inserted records should not be editable,
-        // their resources can't be downloaded and any interactive maps can't be
-        // displayed by users in the same group
+        // Restrictive: new and inserted records should not be editable by users in the same group,
         if (fullRightsForGroup) {
             setOperation(context, id, groupId, ReservedOperation.editing);
-            setOperation(context, id, groupId, ReservedOperation.download);
-            setOperation(context, id, groupId, ReservedOperation.dynamic);
         }
         // Ultimately this should be configurable elsewhere
     }

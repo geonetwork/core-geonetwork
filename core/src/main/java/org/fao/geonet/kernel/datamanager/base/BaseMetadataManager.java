@@ -23,6 +23,10 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -33,22 +37,28 @@ import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.events.history.RecordDeletedEvent;
+import org.fao.geonet.events.md.MetadataPreRemove;
+import org.fao.geonet.exceptions.TooManyMDsForThisSubTemplateException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.*;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.search.MetaSearcher;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
@@ -84,6 +94,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -103,8 +114,6 @@ public class BaseMetadataManager implements IMetadataManager {
     private IMetadataSchemaUtils metadataSchemaUtils;
     @Autowired
     private GroupRepository groupRepository;
-    @Autowired
-    private MetadataStatusRepository metadataStatusRepository;
     @Autowired
     private MetadataValidationRepository metadataValidationRepository;
     @Autowired
@@ -141,6 +150,10 @@ public class BaseMetadataManager implements IMetadataManager {
 
     @Autowired
     private ApplicationContext _applicationContext;
+
+    @VisibleForTesting
+    public int maxMdsReferencingSubTemplate = 10000;
+
     @PersistenceContext
     private EntityManager _entityManager;
 
@@ -346,6 +359,36 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     /**
+     * Delete the record with the id metadataId and additionally take care of cleaning up resources, send events, ...
+     */
+    @Override
+    public void purgeMetadata(ServiceContext context, String metadataId, boolean withBackup) throws Exception {
+        AbstractMetadata metadata = metadataUtils.findOne(metadataId);
+        Store store = context.getBean("resourceStore", Store.class);
+
+        MetadataPreRemove preRemoveEvent = new MetadataPreRemove(metadata);
+        ApplicationContextHolder.get().publishEvent(preRemoveEvent);
+
+        if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
+            && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
+            MEFLib.backupRecord(metadata, context);
+        }
+
+        boolean approved = true;
+        if (metadata instanceof MetadataDraft) {
+            approved = false;
+        }
+
+        store.delResources(context, metadata.getUuid(), approved);
+
+        RecordDeletedEvent recordDeletedEvent = new RecordDeletedEvent(
+            metadata.getId(), metadata.getUuid(), new LinkedHashMap<>(),
+            context.getUserSession().getUserIdAsInt(), metadata.getData());
+        deleteMetadata(context, metadataId);
+        recordDeletedEvent.publish(ApplicationContextHolder.get());
+    }
+
+    /**
      * @param context
      * @param metadataId
      * @throws Exception
@@ -372,8 +415,7 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     /**
-     * Creates a new metadata duplicating an existing template with an specified
-     * uuid.
+     * Creates a new metadata duplicating an existing template with a specified uuid.
      *
      * @param isTemplate
      * @param fullRightsForGroup
@@ -395,13 +437,12 @@ public class BaseMetadataManager implements IMetadataManager {
         boolean isMetadata = templateMetadata.getDataInfo().getType() == MetadataType.METADATA;
         MetadataType type = MetadataType.lookup(isTemplate);
         setMetadataTitle(schema, xml, context.getLanguage(), !isMetadata);
-        if (isMetadata) {
-            xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
-
-            xml = duplicateMetadata(schema, xml, context);
-        } else if (type == MetadataType.SUB_TEMPLATE
-                   || type == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
+        if (type == MetadataType.SUB_TEMPLATE
+            || type == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             xml.setAttribute("uuid", uuid);
+        } else {
+            xml = duplicateMetadata(schema, xml, context);
+            xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
         }
 
         final Metadata newMetadata = new Metadata();
@@ -494,7 +535,7 @@ public class BaseMetadataManager implements IMetadataManager {
      * @param createDate   date of creation
      * @param changeDate   date of modification
      * @param ufo          whether to apply automatic changes
-     * @param indexingMode        whether to index this metadata
+     * @param indexingMode whether to index this metadata
      * @return id, as a string
      * @throws Exception hmm
      */
@@ -549,7 +590,11 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // Check if the schema is allowed by settings
         String mdImportSetting = settingManager.getValue(Settings.METADATA_IMPORT_RESTRICT);
-        if (mdImportSetting != null && !mdImportSetting.equals("")) {
+        if (mdImportSetting != null) {
+            // Remove spaces from the list so that "iso19115-3.2018, dublin-core" will also work
+            mdImportSetting = mdImportSetting.replace(" ", "");
+        }
+        if (!StringUtils.isBlank(mdImportSetting)) {
             if (!newMetadata.getHarvestInfo().isHarvested() && !Arrays.asList(mdImportSetting.split(",")).contains(schema)) {
                 throw new IllegalArgumentException("The system setting '" + Settings.METADATA_IMPORT_RESTRICT
                     + "' doesn't allow to import " + schema
@@ -614,19 +659,7 @@ public class BaseMetadataManager implements IMetadataManager {
             String schema = metadataSchemaUtils.getMetadataSchema(id);
 
             // Inflate metadata
-            Path inflateStyleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.INFLATE_METADATA);
-            if (Files.exists(inflateStyleSheet)) {
-                // --- setup environment
-                Element env = new Element("env");
-                env.addContent(new Element("lang").setText(srvContext.getLanguage()));
-
-                // add original metadata to result
-                Element result = new Element("root");
-                result.addContent(metadataXml);
-                result.addContent(env);
-
-                metadataXml = Xml.transform(result, inflateStyleSheet);
-            }
+            metadataXml = inflateMetadata(metadataXml, schema, srvContext.getLanguage());
 
             if (withEditorValidationErrors) {
                 final Pair<Element, String> versionAndReport = metadataValidator
@@ -696,7 +729,7 @@ public class BaseMetadataManager implements IMetadataManager {
      */
     @Override
     public synchronized AbstractMetadata updateMetadata(final ServiceContext context, final String metadataId, final Element md,
-                                                        final boolean validate, final boolean ufo, final String lang, final String changeDate,
+                                                        final boolean validate, final boolean ufo, final String lang, String changeDate,
                                                         final boolean updateDateStamp, final IndexingMode indexingMode) throws Exception {
         Log.trace(Geonet.DATA_MANAGER, "Update record with id " + metadataId);
 
@@ -705,16 +738,24 @@ public class BaseMetadataManager implements IMetadataManager {
         // when invoked from harvesters, session is null?
         UserSession session = context.getUserSession();
         if (session != null) {
-            session.removeProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         }
         String schema = metadataSchemaUtils.getMetadataSchema(metadataId);
+
+        final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
+
+        if (updateDateStamp) {
+            if (StringUtils.isEmpty(changeDate)) {
+                changeDate = new ISODate().toString();
+                metadata.getDataInfo().setChangeDate(new ISODate());
+            } else {
+                metadata.getDataInfo().setChangeDate(new ISODate(changeDate));
+            }
+        }
 
         String uuidBeforeUfo = null;
         if (ufo) {
             String parentUuid = null;
             Integer intId = Integer.valueOf(metadataId);
-
-            final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
 
             uuidBeforeUfo = findUuid(metadataXml, schema, metadata);
 
@@ -724,9 +765,6 @@ public class BaseMetadataManager implements IMetadataManager {
 
         // --- force namespace prefix for iso19139 metadata
         setNamespacePrefixUsingSchemas(schema, metadataXml);
-
-        // Notifies the metadata change to metatada notifier service
-        final AbstractMetadata metadata = metadataUtils.findOne(metadataId);
 
         String uuid = findUuid(metadataXml, schema, metadata);
 
@@ -747,18 +785,11 @@ public class BaseMetadataManager implements IMetadataManager {
                     getSearchManager().delete(String.format("+uuid:\"%s\"", uuidBeforeUfo));
                 }
                 metadataIndexer.indexMetadata(metadataId, true, indexingMode);
+                if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+                    indexMdsReferencingSubTemplate(context, metadata);
+                }
             }
         }
-
-//		  TODO: TODOES Searhc for related records with an XLink pointing to this subtemplate
-//        if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
-//            MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
-//            Map<Integer, AbstractMetadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 500);
-//            for (Integer id : result.keySet()) {
-//                IndexingList list = context.getBean(IndexingList.class);
-//                list.add(id);
-//            }
-//        }
 
         Log.trace(Geonet.DATA_MANAGER, "Finishing update of record with id " + metadataId);
         // Return an up to date metadata record
@@ -828,6 +859,7 @@ public class BaseMetadataManager implements IMetadataManager {
         // add owner name
         java.util.Optional<User> user = userRepository.findById(Integer.parseInt(owner));
         if (user.isPresent()) {
+            addElement(info, Edit.Info.Elem.OWNERID, user.get().getId());
             String ownerName = user.get().getName();
             addElement(info, Edit.Info.Elem.OWNERNAME, ownerName);
         }
@@ -875,15 +907,8 @@ public class BaseMetadataManager implements IMetadataManager {
         }
 
         // add baseUrl of this site (from settings)
-        String protocol = settingManager.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
-        String host = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
-        String port = settingManager.getValue(Settings.SYSTEM_SERVER_PORT);
-        if (port.equals("80")) {
-            port = "";
-        } else {
-            port = ":" + port;
-        }
-        addElement(info, Edit.Info.Elem.BASEURL, protocol + "://" + host + port + context.getBaseUrl());
+        SettingInfo si = new SettingInfo();
+        addElement(info, Edit.Info.Elem.BASEURL, si.getSiteUrl() + context.getBaseUrl());
         addElement(info, Edit.Info.Elem.LOCSERV, "/srv/en");
         return info;
     }
@@ -930,8 +955,7 @@ public class BaseMetadataManager implements IMetadataManager {
                 if (metadata != null) {
                     changeDate = metadata.getDataInfo().getChangeDate().getDateAndTime();
                     createDate = metadata.getDataInfo().getCreateDate().getDateAndTime();
-                }
-                else {
+                } else {
                     createDate = new ISODate().toString();
                 }
                 env.addContent(new Element("changeDate").setText(changeDate));
@@ -986,8 +1010,8 @@ public class BaseMetadataManager implements IMetadataManager {
             Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(
                 metadata != null
                     && (
-                        metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE
-                        || metadata.getDataInfo().getType() == MetadataType.TEMPLATE_OF_SUB_TEMPLATE)?
+                    metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE
+                        || metadata.getDataInfo().getType() == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) ?
                     Geonet.File.UPDATE_FIXED_INFO_SUBTEMPLATE :
                     Geonet.File.UPDATE_FIXED_INFO);
             result = Xml.transform(result, styleSheet);
@@ -1201,13 +1225,13 @@ public class BaseMetadataManager implements IMetadataManager {
      * Applies a xslt process when duplicating a metadata, typically to remove identifiers
      * or other information like DOI (Digital Object Identifiers) and returns the updated metadata.
      *
-     * @param schema        Metadata schema.
-     * @param md            Metadata to duplicate.
+     * @param schema     Metadata schema.
+     * @param md         Metadata to duplicate.
      * @param srvContext
-     * @return              If the xslt process exists, the metadata processed, otherwise the original metadata.
+     * @return If the xslt process exists, the metadata processed, otherwise the original metadata.
      * @throws Exception
      */
-    private Element duplicateMetadata(String schema,  Element md, ServiceContext srvContext) throws Exception {
+    private Element duplicateMetadata(String schema, Element md, ServiceContext srvContext) throws Exception {
         Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(
             Geonet.File.DUPLICATE_METADATA);
 
@@ -1310,8 +1334,53 @@ public class BaseMetadataManager implements IMetadataManager {
     }
 
     boolean hasReferencingMetadata(ServiceContext context, AbstractMetadata metadata) throws Exception {
-        StringBuilder query = new StringBuilder(String.format("xlink:*%s*", metadata.getUuid()));
-        return this.searchManager.query(query.toString(), null, 0, 0).getHits().getTotalHits().value > 0;
+        StringBuilder query = new StringBuilder(String.format("xlink:\"%s\"", metadata.getUuid()));
+        return this.searchManager.query(query.toString(), null, 0, 0).hits().total().value() > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Element inflateMetadata(Element metadataXml, String schema, String lang) throws Exception {
+        // Resolve the path to the XSLT stylesheet based on the schema.
+        Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.INFLATE_METADATA);
+
+        // If the stylesheet does not exist, return the original metadata.
+        if (!Files.exists(styleSheet)) {
+            return metadataXml; // No stylesheet to apply, return original metadata
+        }
+
+        // Create an environment element to pass additional parameters to the transformation.
+        Element env = new Element("env");
+        env.addContent(new Element("lang").setText(lang)); // Add the language parameter.
+
+        // Prepare the root element containing the metadata and the environment.
+        Element result = new Element("root");
+        result.addContent(metadataXml); // Add the original metadata.
+        result.addContent(env); // Add the environment.
+
+        // Apply the XSLT transformation and return the transformed metadata.
+        return Xml.transform(result, styleSheet);
+    }
+
+    private void indexMdsReferencingSubTemplate(ServiceContext context, AbstractMetadata subTemplate) throws Exception {
+        String query = String.format("xlink:*%s*", subTemplate.getUuid());
+        SearchResponse response = this.searchManager.query(query, null, Set.of("id"),0, maxMdsReferencingSubTemplate);
+        if (response.hits().total().value() > maxMdsReferencingSubTemplate) {
+            LOGGER_DATA_MANAGER.warn("Too many mds referencing subtemplate {}. Max allowed is {}.", subTemplate.getUuid(), maxMdsReferencingSubTemplate);
+            throw new TooManyMDsForThisSubTemplateException("To avoid running out of resources, this exception is thrown when the maximum number of subtemplates referencing a metadata record has been reached (" + maxMdsReferencingSubTemplate + ").");
+        }
+        Stream<Hit<?>> hits = response.hits().hits().stream();
+        List<String> toIndex = hits
+            .map(Hit::source)
+            .filter(ObjectNode.class::isInstance)
+            .map(ObjectNode.class::cast)
+            .map(x -> x.get("id"))
+            .filter(Objects::nonNull)
+            .map(JsonNode::asText)
+            .collect(Collectors.toList());
+
+        metadataIndexer.batchIndexInThreadPool(context, toIndex, TransactionManager.transactionInitiatedByJeeves.get());
+    }
 }

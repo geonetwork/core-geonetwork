@@ -56,7 +56,7 @@
 
           <os:Url type="text/html" rel="results">
             <xsl:attribute name="template"
-                           select="concat(/root/gui/url,'/srv/', /root/gui/language,'/opensearch/htmlsearch?q={searchTerms?}')"/>
+                           select="concat(/root/gui/url,'/opensearch/', /root/gui/language,'/search?q={searchTerms?}')"/>
           </os:Url>
         </xsl:when>
         <xsl:otherwise>

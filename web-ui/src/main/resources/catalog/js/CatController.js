@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -31,6 +31,7 @@
   goog.require("gn_search_manager");
   goog.require("gn_session_service");
   goog.require("gn_alert");
+  goog.require("gn_es");
 
   var module = angular.module("gn_cat_controller", [
     "gn_search_manager",
@@ -39,7 +40,8 @@
     "gn_saved_selections",
     "gn_external_viewer",
     "gn_history",
-    "gn_alert"
+    "gn_alert",
+    "gn_es"
   ]);
 
   module.constant("gnSearchSettings", {});
@@ -67,6 +69,7 @@
         },
         mods: {
           global: {
+            hotkeys: true,
             humanizeDates: true,
             dateFormat: "DD-MM-YYYY",
             timezone: "Browser" // Default to browser timezone
@@ -74,35 +77,55 @@
           footer: {
             enabled: true,
             showSocialBarInFooter: true,
-            showApplicationInfoAndLinksInFooter: true
+            showApplicationInfoAndLinksInFooter: true,
+            footerCustomMenu: [], // List of static pages identifiers to display
+            rssFeeds: [
+              {
+                // List of rss feeds links to display when the OGC API Records service is enabled
+                url: "f=rss&sortby=-createDate&limit=30",
+                label: "lastCreatedRecords"
+              }
+              // , {
+              //   url: "f=rss&sortby=-publicationDateForResource&limit=30",
+              //   label: "lastPublishedRecords"
+              // }
+            ]
           },
           header: {
             enabled: true,
             languages: {
+              arm: "hy",
+              aze: "az",
               eng: "en",
-              dut: "nl",
-              fre: "fr",
-              ger: "de",
-              kor: "ko",
-              spa: "es",
-              cze: "cs",
               cat: "ca",
-              fin: "fi",
+              chi: "zh",
+              cze: "cs",
+              dan: "da",
+              geo: "ka",
+              ger: "de",
+              fre: "fr",
+              spa: "es",
               ice: "is",
               ita: "it",
+              dut: "nl",
+              kor: "ko",
+              pol: "pl",
               por: "pt",
+              rum: "ro",
               rus: "ru",
-              chi: "zh",
               slo: "sk",
-              swe: "sv"
+              fin: "fi",
+              ukr: "uk",
+              swe: "sv",
+              wel: "cy"
             },
             isLogoInHeader: false,
             logoInHeaderPosition: "left",
             fluidHeaderLayout: true,
             showGNName: true,
             isHeaderFixed: false,
-            isMenubarAccessible: true,
-            showPortalSwitcher: true
+            showPortalSwitcher: true,
+            topCustomMenu: [] // List of static pages identifiers to display
           },
           cookieWarning: {
             enabled: true,
@@ -112,6 +135,7 @@
           home: {
             enabled: true,
             appUrl: "../../{{node}}/{{lang}}/catalog.search#/home",
+            showSearch: true,
             showSocialBarInFooter: true,
             showMosaic: true,
             showMaps: true,
@@ -127,7 +151,8 @@
                     type: "icon",
                     prefix: "fa fa-2x pull-left gn-icon iti-",
                     expression: "http://inspire.ec.europa.eu/theme/(.*)"
-                  }
+                  },
+                  orderByTranslation: true
                 }
               },
               "cl_topic.key": {
@@ -139,7 +164,8 @@
                   decorator: {
                     type: "icon",
                     prefix: "fa fa-2x pull-left gn-icon-"
-                  }
+                  },
+                  orderByTranslation: true
                 }
               },
               // 'OrgForResource': {
@@ -163,6 +189,37 @@
                 }
               }
             },
+            info: [
+              {
+                type: "search",
+                title: "lastRecords",
+                active: true,
+                params: {
+                  isTemplate: "n",
+                  sortBy: "createDate",
+                  sortOrder: "desc",
+                  from: 1,
+                  to: 12
+                }
+              },
+              {
+                type: "search",
+                title: "preferredRecords",
+                params: {
+                  isTemplate: "n",
+                  sortBy: "popularity",
+                  sortOrder: "desc",
+                  from: 1,
+                  to: 12
+                }
+              },
+              {
+                type: "featuredUserSearches"
+              },
+              {
+                type: "Comments"
+              }
+            ],
             fluidLayout: true
           },
           search: {
@@ -277,7 +334,7 @@
                 // Start boosting down records more than 3 months old
                 {
                   gauss: {
-                    dateStamp: {
+                    changeDate: {
                       scale: "365d",
                       offset: "90d",
                       decay: 0.5
@@ -314,6 +371,8 @@
               size: 20
             },
             moreLikeThisSameType: true,
+            moreLikeThisFilter:
+              "-cl_status.key:(obsolete OR historicalArchive OR superseded)",
             moreLikeThisConfig: {
               more_like_this: {
                 fields: [
@@ -385,6 +444,14 @@
                     }
                   }
                 },
+                aggs: {
+                  keep_nonzero: {
+                    bucket_selector: {
+                      buckets_path: { count: "_count" },
+                      script: "params.count > 0"
+                    }
+                  }
+                },
                 meta: {
                   decorator: {
                     type: "icon",
@@ -397,9 +464,9 @@
                 }
               },
               // GEMET configuration for non multilingual catalog
-              "th_gemet_tree.default": {
+              "th_gemet_tree.key": {
                 terms: {
-                  field: "th_gemet_tree.default",
+                  field: "th_gemet_tree.key",
                   size: 100,
                   order: { _key: "asc" },
                   include: "[^^]+^?[^^]+"
@@ -611,7 +678,7 @@
                 sortOrder: ""
               },
               {
-                sortBy: "dateStamp",
+                sortBy: "changeDate",
                 sortOrder: "desc"
               },
               {
@@ -619,8 +686,12 @@
                 sortOrder: "desc"
               },
               {
-                sortBy: "resourceTitleObject.default.keyword",
+                sortBy: "resourceTitleObject.default.sort",
                 sortOrder: ""
+              },
+              {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
               },
               {
                 sortBy: "rating",
@@ -638,23 +709,30 @@
                   "../../catalog/components/" +
                   "search/resultsview/partials/viewtemplates/grid.html",
                 tooltip: "Grid",
-                icon: "fa-th"
+                icon: "fa-th",
+                related: []
               },
               {
                 tplUrl:
                   "../../catalog/components/" +
                   "search/resultsview/partials/viewtemplates/list.html",
                 tooltip: "List",
-                icon: "fa-bars"
+                icon: "fa-bars",
+                related: ["parent", "children", "services", "datasets"]
               },
               {
                 tplUrl:
                   "../../catalog/components/" +
                   "search/resultsview/partials/viewtemplates/table.html",
                 tooltip: "Table",
-                icon: "fa-table"
+                icon: "fa-table",
+                related: [],
+                source: {
+                  exclude: ["resourceAbstract*", "Org*", "contact*"]
+                }
               }
             ],
+            // Optional. If not set, the first resultViewTpls is used.
             resultTemplate:
               "../../catalog/components/" +
               "search/resultsview/partials/viewtemplates/grid.html",
@@ -694,6 +772,11 @@
                 class: "fa-file-zip-o"
               },
               {
+                label: "exportMEF-excludeAttachments",
+                url: "/formatters/zip?withRelated=false&includeAttachments=false",
+                class: "fa-file-zip-o"
+              },
+              {
                 label: "exportPDF",
                 url: "/formatters/xsl-view?output=pdf&language=${lang}",
                 class: "fa-file-pdf-o"
@@ -710,6 +793,7 @@
                 class: "fa-file-code-o"
               }*/
             ],
+            // Deprecated (use configuration on resultViewTpls)
             grid: {
               related: ["parent", "children", "services", "datasets"]
             },
@@ -730,7 +814,7 @@
               maps: ["ows"]
             },
             isFilterTagsDisplayedInSearch: true,
-            showMapInFacet: false,
+            searchMapPlacement: "results", // results, facets or none
             showStatusFooterFor: "historicalArchive,obsolete,superseded",
             showBatchDropdown: true,
             usersearches: {
@@ -758,14 +842,19 @@
               valuesSeparator: ","
             },
             is3DModeAllowed: false,
+            singleTileWMS: true,
             isSaveMapInCatalogAllowed: true,
-            isExportMapAsImageEnabled: false,
+            isExportMapAsImageEnabled: true,
+            isAccessible: false,
             storage: "sessionStorage",
             bingKey: "",
             listOfServices: {
               wms: [],
-              wmts: []
+              wmts: [],
+              wps: []
             },
+            // wpsSource: ["list", "url", "recent"],
+            wpsSource: ["url", "recent"],
             projection: "EPSG:3857",
             projectionList: [
               {
@@ -796,8 +885,11 @@
               graticule: false,
               mousePosition: true,
               syncAllLayers: false,
-              drawVector: false
+              drawVector: false,
+              scaleLine: false
             },
+            defaultTool: "layers",
+            defaultToolAfterMapLoad: "layers",
             graticuleOgcService: {},
             "map-viewer": {
               context: "../../map/config-viewer.xml",
@@ -807,12 +899,13 @@
             "map-search": {
               context: "../../map/config-viewer.xml",
               extent: [0, 0, 0, 0],
-              layers: []
+              layers: [],
+              geodesicExtents: false
             },
             "map-editor": {
-              context: "",
+              context: "../../map/config-viewer.xml",
               extent: [0, 0, 0, 0],
-              layers: [{ type: "osm" }]
+              layers: []
             },
             "map-thumbnail": {
               context: "../../map/config-viewer.xml",
@@ -826,9 +919,15 @@
             appUrl: "https://secure.geonames.org/searchJSON"
           },
           recordview: {
+            // To use to redirect to another application for rendering record
+            // eg. when embedding simple search results using a web component
+            // and redirecting to the catalogue to view metadata record
+            // appUrl: "https://sextant.ifremer.fr/Donnees/Catalogue",
             isSocialbarEnabled: true,
+            isDefaultContactViewEnabled: false,
             showStatusWatermarkFor: "",
             showStatusTopBarFor: "",
+            recordviewCustomMenu: [], // List of static pages identifiers to display
             showCitation: {
               enabled: false,
               // if: {'documentStandard': ['iso19115-3.2018']}
@@ -850,32 +949,29 @@
               // 'layout': 'tabset',
               layout: "",
               sections: [
-                // {'types': 'services', 'title': 'Services', 'layout': 'card'},
                 {
-                  types: "onlines",
-                  filter: "protocol:OGC:.*|ESRI:.*|atom.*",
+                  filter:
+                    "protocol:OGC:WMS|OGC:WMTS|ESRI:.*|atom.*|REST|OGC API Maps|OGC API Records",
                   title: "API"
                 },
                 {
-                  types: "onlines",
-                  filter: "protocol:.*DOWNLOAD.*|DB:.*|FILE:.*",
+                  filter:
+                    "protocol:OGC:WFS|OGC:WCS|.*DOWNLOAD.*|DB:.*|FILE:.*|OGC API Features|OGC API Coverages",
                   title: "download"
                 },
-                { types: "onlines", filter: "function:legend", title: "mapLegend" },
+                { filter: "protocol:OGC:OWS-C", title: "map" },
+                { filter: "function:legend", title: "mapLegend" },
                 {
-                  types: "onlines",
                   filter: "function:featureCatalogue",
                   title: "featureCatalog"
                 },
                 {
-                  types: "onlines",
                   filter: "function:dataQualityReport",
                   title: "quality"
                 },
                 {
-                  types: "onlines",
                   filter:
-                    "-protocol:OGC:.*|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport",
+                    "-protocol:OGC.*|REST|ESRI:.*|atom.*|.*DOWNLOAD.*|DB:.*|FILE:.* AND -function:legend|featureCatalogue|dataQualityReport",
                   title: "links"
                 }
               ]
@@ -918,6 +1014,7 @@
             createPageTpl: "../../catalog/templates/editor/new-metadata-horizontal.html",
             editorIndentType: "",
             allowRemoteRecordLink: true,
+            workflowSearchRecordTypes: ["n", "e"],
             facetConfig: {
               resourceType: {
                 terms: {
@@ -958,6 +1055,23 @@
                 },
                 meta: {
                   collapsed: true
+                }
+              },
+              "indexingErrorMsg.type": {
+                terms: {
+                  field: "indexingErrorMsg.type",
+                  size: 2
+                },
+                meta: {
+                  collapsed: true,
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      error: "fa-exclamation-circle",
+                      warning: "fa-exclamation-triangle"
+                    }
+                  }
                 }
               },
               sourceCatalogue: {
@@ -1011,7 +1125,7 @@
                     prefix: "fa fa-fw ",
                     map: {
                       false: "fa-lock",
-                      true: "fa-unlock"
+                      true: "fa-lock-open"
                     }
                   }
                 }
@@ -1081,12 +1195,16 @@
                 sortOrder: ""
               },
               {
-                sortBy: "dateStamp",
+                sortBy: "changeDate",
                 sortOrder: "desc"
               },
               {
-                sortBy: "resourceTitleObject.default.keyword",
+                sortBy: "resourceTitleObject.default.sort",
                 sortOrder: ""
+              },
+              {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
               },
               {
                 sortBy: "recordOwner",
@@ -1155,6 +1273,14 @@
                       }
                     }
                   }
+                },
+                aggs: {
+                  keep_nonzero: {
+                    bucket_selector: {
+                      buckets_path: { count: "_count" },
+                      script: "params.count > 0"
+                    }
+                  }
                 }
               },
               resourceType: {
@@ -1185,7 +1311,11 @@
           authentication: {
             enabled: true,
             signinUrl: "../../{{node}}/{{lang}}/catalog.signin",
+            signinAPI: "../../signin",
             signoutUrl: "../../signout"
+            // GN5 configuration
+            // signinAPI: "../../api/user/signin",
+            // signoutUrl: "../../api/user/signout"
           },
           page: {
             enabled: true,
@@ -1205,7 +1335,7 @@
         requireProxy: [],
         gnCfg: angular.copy(defaultConfig),
         gnUrl: "",
-        docUrl: "https://geonetwork-opensource.org/manuals/4.0.x/{lang}",
+        docUrl: "https://docs.geonetwork-opensource.org/latest/{lang}",
         //docUrl: '../../doc/',
         modelOptions: {
           updateOn: "default blur",
@@ -1223,6 +1353,7 @@
           "languageWhitelist",
           "hitsperpageValues",
           "sortbyValues",
+          "wpsSource",
           "resultViewTpls",
           "formatter",
           "downloadFormatter",
@@ -1246,6 +1377,7 @@
           "geocoder",
           "disabledTools",
           "filters",
+          "info",
           "scoreConfig",
           "autocompleteConfig",
           "moreLikeThisConfig",
@@ -1256,6 +1388,7 @@
           "distributionConfig",
           "collectionTableConfig",
           "queryBaseOptions",
+          "workflowSearchRecordTypes",
           "workflowAssistApps"
         ],
         current: null,
@@ -1290,6 +1423,8 @@
           gnSearchSettings.mapProtocols = {
             layers: [
               "OGC:WMS",
+              "OGC:3DTILES",
+              "OGC:COG",
               "OGC:WMTS",
               "OGC:WMS-1.1.1-http-get-map",
               "OGC:WMS-1.3.0-http-get-map",
@@ -1348,7 +1483,7 @@
               _.set(this.gnCfg, p, o);
             }
             if (runAllChecks) {
-              optionInDefaultConfig = _.get(defaultConfig, p);
+              var optionInDefaultConfig = _.get(defaultConfig, p);
               if (optionInDefaultConfig === undefined) {
                 console.warn(
                   "Path " +
@@ -1384,7 +1519,7 @@
               option = _.get(config, p);
             if (angular.isObject(option) && Object.keys(option).length === 0) {
               var key = pathToken.pop();
-              parent = _.get(config, pathToken.join("."));
+              var parent = _.get(config, pathToken.join("."));
               delete parent[key];
             }
           }
@@ -1395,6 +1530,19 @@
         },
         getProxyUrl: function () {
           return this.proxyUrl;
+        },
+        getDefaultResultTemplate: function () {
+          if (this.gnCfg.mods.search.resultTemplate) {
+            for (var i = 0; i < this.gnCfg.mods.search.resultViewTpls.length; i++) {
+              if (
+                this.gnCfg.mods.search.resultViewTpls[i].tplUrl ==
+                this.gnCfg.mods.search.resultTemplate
+              ) {
+                return this.gnCfg.mods.search.resultViewTpls[i];
+              }
+            }
+          }
+          return this.gnCfg.mods.search.resultViewTpls[0];
         },
         // Removes the proxy path and decodes the layer url,
         // so the layer can be printed with MapFish.
@@ -1463,7 +1611,7 @@
       return angular.isDefined(this.langs[lang]);
     },
     isValidIso2Lang: function (lang) {
-      for (p in this.langs) {
+      for (var p in this.langs) {
         if (this.langs[p] === lang) {
           return true;
         }
@@ -1474,7 +1622,7 @@
       return this.langs[iso3lang] || "en";
     },
     getIso3Lang: function (iso2lang) {
-      for (p in this.langs) {
+      for (var p in this.langs) {
         if (this.langs[p] === iso2lang) {
           return p;
         }
@@ -1512,6 +1660,8 @@
     "$cookies",
     "gnExternalViewer",
     "gnAlertService",
+    "gnESFacet",
+    "gnFacetMetaLabel",
     function (
       $scope,
       $http,
@@ -1531,19 +1681,20 @@
       gnSearchSettings,
       $cookies,
       gnExternalViewer,
-      gnAlertService
+      gnAlertService,
+      gnESFacet,
+      gnFacetMetaLabel
     ) {
       $scope.version = "0.0.1";
       var defaultNode = "srv";
 
       // Links for social media
       $scope.socialMediaLink = $location.absUrl();
-      $scope.getPermalink = gnUtilityService.getPermalink;
+      $scope.getPermalink = gnUtilityService.displayPermalink;
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;
       $scope.isHeaderFixed = gnGlobalSettings.gnCfg.mods.header.isHeaderFixed;
-      $scope.isMenubarAccessible = gnGlobalSettings.gnCfg.mods.header.isMenubarAccessible;
       $scope.isLogoInHeader = gnGlobalSettings.gnCfg.mods.header.isLogoInHeader;
       $scope.isFooterEnabled = gnGlobalSettings.gnCfg.mods.footer.enabled;
 
@@ -1552,6 +1703,8 @@
       $scope.lang = gnLangs.detectLang(null, gnGlobalSettings);
       $scope.iso2lang = gnLangs.getIso2Lang($scope.lang);
 
+      $scope.rssFeeds = gnGlobalSettings.gnCfg.mods.footer.rssFeeds;
+
       $scope.getSocialLinksVisible = function () {
         var onMdView = $location.absUrl().indexOf("/metadata/") > -1;
         return !onMdView && gnGlobalSettings.gnCfg.mods.footer.showSocialBarInFooter;
@@ -1559,6 +1712,10 @@
 
       $scope.getApplicationInfoVisible = function () {
         return gnGlobalSettings.gnCfg.mods.footer.showApplicationInfoAndLinksInFooter;
+      };
+
+      $scope.getContactusVisible = function () {
+        return gnConfig[gnConfig.key.isFeedbackEnabled];
       };
 
       function detectNode(detector) {
@@ -1601,6 +1758,7 @@
       gnConfig.env.node = $scope.nodeId;
       gnConfig.env.defaultNode = defaultNode;
       gnConfig.env.baseURL = detectBaseURL(gnGlobalSettings.gnCfg.baseURLDetector);
+      gnConfig.env.url = location.origin + gnConfig.env.baseURL;
 
       $scope.signoutUrl =
         gnGlobalSettings.gnCfg.mods.authentication.signoutUrl +
@@ -1612,9 +1770,12 @@
 
       // Lang names to be displayed in language selector
       $scope.langLabels = {
+        arm: "հայերեն",
+        aze: "Azərbaycan dili",
         eng: "English",
         dut: "Nederlands",
         fre: "Français",
+        geo: "ქართული",
         ger: "Deutsch",
         kor: "한국의",
         spa: "Español",
@@ -1624,10 +1785,15 @@
         ita: "Italiano",
         fin: "Suomeksi",
         ice: "Íslenska",
+        rum: "Română",
         rus: "русский",
         chi: "中文",
         slo: "Slovenčina",
-        swe: "Svenska"
+        swe: "Svenska",
+        ukr: "українська",
+        dan: "Dansk",
+        wel: "Cymraeg",
+        pol: "Polski"
       };
       $scope.url = "";
       $scope.gnUrl = gnGlobalSettings.gnUrl;
@@ -1642,6 +1808,12 @@
       $scope.isUserGroupUpdateEnabled = gnGlobalSettings.isUserGroupUpdateEnabled;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
+      $scope.publicationOptions = [];
+      $scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
+
+      $http.get("../api/records/sharing/options").then(function (response) {
+        $scope.publicationOptions = response.data;
+      });
 
       $scope.isSelfRegisterPossible = function () {
         return gnConfig["system.userSelfRegistration.enable"];
@@ -1716,8 +1888,11 @@
         }
       });
 
-      // login url for inline signin form in top toolbar
-      $scope.signInFormAction = "../../signin#" + $location.url();
+      // login url and form action with hash reference to the current page
+      $scope.signInFormLinkWithHash =
+        $scope.gnCfg.mods.authentication.signinUrl + "#" + $location.url();
+      $scope.signInFormActionWithHash =
+        $scope.gnCfg.mods.authentication.signinAPI + "#" + $location.url();
 
       // when the login input have focus, do not close the dropdown/popup
       $scope.focusLoginPopup = function () {
@@ -1802,6 +1977,25 @@
                   : "";
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
+          canBatchEditMetadata: function () {
+            var profile = gnConfig["metadata.batchediting.accesslevel"] || "Editor",
+              fnName =
+                profile !== ""
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  : "";
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
+          canViewMetadataHistory: function () {
+            var profile = gnConfig["metadata.history.accesslevel"] || "Editor",
+              fnName =
+                profile !== ""
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  : "";
+            if (profile === "RegisteredUser") {
+              return true;
+            }
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
           canDeletePublishedMetadata: function () {
             var profile =
                 gnConfig["metadata.delete.profilePublishedMetadata"] || "Editor",
@@ -1811,7 +2005,24 @@
                   : "";
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
-
+          canPublishMetadata: function () {
+            var profile =
+                gnConfig["metadata.publication.profilePublishMetadata"] || "Reviewer",
+              fnName =
+                profile !== ""
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  : "";
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
+          canUnpublishMetadata: function () {
+            var profile =
+                gnConfig["metadata.publication.profileUnpublishMetadata"] || "Reviewer",
+              fnName =
+                profile !== ""
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  : "";
+            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+          },
           // The md provide the information about
           // if the current user can edit records or not
           // based on record operation allowed. See edit property.
@@ -1884,6 +2095,17 @@
                     }
                     return false;
                   };
+                  me["is" + profile + "OrMoreForGroup"] = function (groupId) {
+                    if ("Administrator" == profile) {
+                      return me.admin;
+                    }
+                    var allowedProfiles = $scope.profiles.slice(
+                      $scope.profiles.indexOf(profile)
+                    );
+                    return allowedProfiles.some(function (p) {
+                      return me["is" + p + "ForGroup"](groupId);
+                    });
+                  };
                 });
                 angular.extend($scope.user, me);
                 angular.extend($scope.user, userFn);
@@ -1893,6 +2115,15 @@
                 $scope.user = undefined;
               }
             });
+        });
+
+        // Retrieve the publication options
+        userLogin.then(function (value) {
+          if ($scope.user && $scope.user.isReviewerOrMore()) {
+            $http.get("../api/records/sharing/options").then(function (response) {
+              $scope.publicationOptions = response.data;
+            });
+          }
         });
 
         // Retrieve main search information
@@ -1928,7 +2159,8 @@
                 .then(function (r) {
                   $scope.searchInfo = r.data;
                   var keys = Object.keys(gnGlobalSettings.gnCfg.mods.home.facetConfig);
-                  selectedFacet = keys[0];
+                  var selectedFacet = keys[0];
+
                   for (var i = 0; i < keys.length; i++) {
                     if (
                       $scope.searchInfo.aggregations[keys[i]].buckets.length > 0 ||
@@ -1942,7 +2174,13 @@
                     list: keys,
                     key: selectedFacet,
                     lastKey: keys.length > 1 ? keys[keys.length - 1] : undefined,
-                    config: gnGlobalSettings.gnCfg.mods.home.facetConfig
+                    config: gnGlobalSettings.gnCfg.mods.home.facetConfig,
+                    facets: gnESFacet.createFacetModel(
+                      gnGlobalSettings.gnCfg.mods.home.facetConfig,
+                      r.data.aggregations,
+                      undefined,
+                      undefined
+                    )
                   };
                 });
             }
@@ -1957,6 +2195,74 @@
 
       $scope.allowPublishInvalidMd = function () {
         return gnConfig["metadata.workflow.allowPublishInvalidMd"];
+      };
+
+      $scope.allowPublishNonApprovedMd = function () {
+        return gnConfig["metadata.workflow.allowPublishNonApprovedMd"];
+      };
+
+      $scope.getPublicationOptionClass = function (
+        md,
+        user,
+        isMdWorkflowEnable,
+        pubOption
+      ) {
+        var publicationOptionTitle = $scope.getPublicationOptionTitle(
+          md,
+          user,
+          isMdWorkflowEnable,
+          pubOption
+        );
+        switch (publicationOptionTitle) {
+          case "mdnonapprovedcantpublish":
+          case "mdinvalidcantpublish":
+            return "disabled";
+            break;
+          default:
+            return "";
+        }
+      };
+
+      // Function to get the title name to be used when displaying the publish item in the menu
+      $scope.getPublicationOptionTitle = function (
+        md,
+        user,
+        isMdWorkflowEnable,
+        pubOption
+      ) {
+        var publicationOptionTitle = "";
+        if (!md.isPublished(pubOption)) {
+          if (md.isValid()) {
+            publicationOptionTitle = "mdvalid";
+          } else {
+            if (
+              isMdWorkflowEnable &&
+              md.isWorkflowEnabled() &&
+              $scope.allowPublishInvalidMd() === false &&
+              pubOption.name === "default"
+            ) {
+              publicationOptionTitle = "mdinvalidcantpublish";
+            } else {
+              if (!md.hasValidation()) {
+                publicationOptionTitle = "mdnovalidation";
+              } else {
+                publicationOptionTitle = "mdinvalid";
+              }
+            }
+          }
+          // if we are not using a disabled option like mdinvalidcantpublish then check if there is an approval
+          if (
+            publicationOptionTitle != "mdinvalidcantpublish" &&
+            isMdWorkflowEnable &&
+            md.isWorkflowEnabled() &&
+            md.mdStatus != 2 &&
+            $scope.allowPublishNonApprovedMd() === false &&
+            pubOption.name === "default"
+          ) {
+            publicationOptionTitle = "mdnonapprovedcantpublish";
+          }
+        }
+        return publicationOptionTitle;
       };
 
       $scope.$on("StatusUpdated", function (event, status) {

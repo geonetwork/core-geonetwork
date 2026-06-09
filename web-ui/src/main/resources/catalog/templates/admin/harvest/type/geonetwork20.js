@@ -47,7 +47,6 @@ var gnHarvestergeonetwork20 = {
                 {"@name": "dynamic"}
               ]
             }],
-            "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
               "running": false
@@ -58,7 +57,7 @@ var gnHarvestergeonetwork20 = {
         var body = '<node id="' + h['@id'] + '" '
                 + '    type="' + h['@type'] + '">'
                 + '  <ownerGroup><id>' + h.ownerGroup[0] + '</id></ownerGroup>'
-                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>' 
+                + '  <ownerUser><id>' + h.ownerUser[0] + '</id></ownerUser>'
                 + '  <site>'
                 + '    <name>' + h.site.name + '</name>'
                 + '    <host>' + h.site.host.replace(/&/g, '&amp;') + '</host>'

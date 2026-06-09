@@ -730,14 +730,6 @@
     <label>Distancia</label>
     <description>Distância da amostra do solo</description>
     <condition>condicional</condition>
-    <helper>
-      <option value="0.10">10 cm</option>
-      <option value="0.25">25 cm</option>
-      <option value="0.50">50 cm</option>
-      <option value="1">1 m</option>
-      <option value="30">30 m</option>
-      <option value="100">100 m</option>
-    </helper>
   </element>
   <!-- ==================================================== -->
   <element name="gmd:distributionFormat">
@@ -2128,6 +2120,8 @@
       <option value="OGC API - Features">OGC API - Features</option>
       <option value="OGC API - Maps">OGC API - Maps</option>
       <option value="OGC API - Records">OGC API - Records</option>
+      <option value="OGC:3DTILES">OGC-3DTiles Dataset</option>
+      <option value="OGC:COG">OGC-Cloud Optimized GeoTIFF</option>
       <option show="-" value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option show="-" value="OGC:KML">OGC-KML Keyhole Markup Language</option>
       <option show="-" value="OGC:GML">OGC-GML Geography Markup Language</option>

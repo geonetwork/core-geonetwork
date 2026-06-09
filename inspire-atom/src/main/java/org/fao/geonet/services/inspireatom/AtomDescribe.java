@@ -24,6 +24,8 @@ package org.fao.geonet.services.inspireatom;
 
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -50,6 +52,7 @@ import org.fao.geonet.lib.Lib;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -106,7 +109,7 @@ public class AtomDescribe {
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Feeds."),
-        @ApiResponse(responseCode = "204", description = "Not authenticated.")
+        @ApiResponse(responseCode = "204", description = "Not authenticated.", content = {@Content(schema = @Schema(hidden = true))})
     })
     @ResponseStatus(OK)
     @ResponseBody
@@ -136,6 +139,16 @@ public class AtomDescribe {
         if (!inspireEnable) {
             Log.info(Geonet.ATOM, "Inspire is disabled");
             throw new Exception("Inspire is disabled");
+        }
+
+        if (StringUtils.isEmpty(fileIdentifier)) {
+            if (StringUtils.isEmpty(spatial_dataset_identifier_code)) {
+                throw new MissingServletRequestParameterException("spatial_dataset_identifier_code", "String");
+            }
+
+            if (StringUtils.isEmpty(spatial_dataset_identifier_namespace)) {
+                throw new MissingServletRequestParameterException("spatial_dataset_identifier_namespace", "String");
+            }
         }
 
         Element response =

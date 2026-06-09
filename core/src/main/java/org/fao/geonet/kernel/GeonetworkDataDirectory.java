@@ -25,15 +25,13 @@ package org.fao.geonet.kernel;
 
 import jeeves.server.ServiceConfig;
 import jeeves.server.sources.http.JeevesServlet;
-import org.apache.log4j.Appender;
-import org.apache.log4j.Logger;
-import org.apache.log4j.bridge.AppenderWrapper;
-import org.apache.logging.log4j.core.appender.FileAppender;
-import org.apache.logging.log4j.core.appender.RollingFileAppender;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -68,6 +66,9 @@ public class GeonetworkDataDirectory {
      */
     public static final String GEONETWORK_BEAN_KEY = "GeonetworkDataDirectory";
 
+    @Autowired
+    SchemaManager schemaManager;
+
     private Path webappDir;
     private Path systemDataDir;
     private Path indexConfigDir;
@@ -79,6 +80,7 @@ public class GeonetworkDataDirectory {
     private Path metadataRevisionDir;
     private Path resourcesDir;
     private Path htmlCacheDir;
+    private Path schemaPublicationDir;
     private Path uploadDir;
     private Path formatterDir;
     private Path nodeLessFiles;
@@ -124,15 +126,6 @@ public class GeonetworkDataDirectory {
         this.init(webappName, webappDir, handlerConfig, jeevesServlet);
     }
 
-
-    /**
-     * This is the name of the RollingFileAppender in your log4j2.xml configuration file.
-     * <p>
-     * LogConfig uses this name to lookup RollingFileAppender to check configuration in
-     * case a custom log file location has been used.
-     */
-    private static final String FILE_APPENDER_NAME = "File";
-
     /**
      * Logfile location as determined from appender, or system property, or default.
      * <p>
@@ -141,62 +134,7 @@ public class GeonetworkDataDirectory {
      * @return logfile location, or {@code null} if unable to determine
      */
     public static File getLogfile() {
-        // Appender is supplied by LogUtils based on parsing log4j2.xml file indicated
-        // by database settings
-
-        // First, try the fileappender from the logger named "geonetwork"
-        Appender appender = Logger.getLogger(Geonet.GEONETWORK).getAppender(FILE_APPENDER_NAME);
-        // If still not found, try the one from the logger named "jeeves"
-        if (appender == null) {
-            appender = Logger.getLogger(Log.JEEVES).getAppender(FILE_APPENDER_NAME);
-        }
-        if (appender != null) {
-            if (appender instanceof AppenderWrapper) {
-                AppenderWrapper wrapper = (AppenderWrapper) appender;
-                org.apache.logging.log4j.core.Appender appender2 = wrapper.getAppender();
-
-                if (appender2 instanceof FileAppender) {
-                    FileAppender fileAppender = (FileAppender) appender2;
-                    String logFileName = fileAppender.getFileName();
-                    if (logFileName != null) {
-                        File logFile = new File(logFileName);
-                        if (logFile.exists()) {
-                            return logFile;
-                        }
-                    }
-                }
-                if (appender2 instanceof RollingFileAppender) {
-                    RollingFileAppender fileAppender = (RollingFileAppender) appender2;
-                    String logFileName = fileAppender.getFileName();
-                    if (logFileName != null) {
-                        File logFile = new File(logFileName);
-                        if (logFile.exists()) {
-                            return logFile;
-                        }
-                    }
-                }
-            }
-        }
-        Log.warning(Geonet.GEONETWORK, "Error when getting logger file for the " + "appender named '" + FILE_APPENDER_NAME + "'. "
-            + "Check your log configuration file. "
-            + "A FileAppender or RollingFileAppender is required to return last activity to the user interface."
-            + "Appender file not found.");
-
-        if (System.getProperties().containsKey("log_dir")) {
-            File logDir = new File(System.getProperty("log_dir"));
-            if (logDir.exists() && logDir.isDirectory()) {
-                File logFile = new File(logDir, "logs/geonetwork.log");
-                if (logFile.exists()) {
-                    return logFile;
-                }
-            }
-        } else {
-            File logFile = new File("logs/geonetwork.log");
-            if (logFile.exists()) {
-                return logFile;
-            }
-        }
-        return null; // unavailable
+        return Log.getLogfile();
     }
 
     /**
@@ -371,9 +309,11 @@ public class GeonetworkDataDirectory {
         );
         formatterDir = setDir(jeevesServlet, webappName, handlerConfig, formatterDir,
             ".formatter" + KEY_SUFFIX, Geonet.Config.FORMATTER_PATH, "data", "formatter");
-
         htmlCacheDir = setDir(jeevesServlet, webappName, handlerConfig, htmlCacheDir,
             ".htmlcache" + KEY_SUFFIX, Geonet.Config.HTMLCACHE_DIR, handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "htmlcache"
+        );
+        schemaPublicationDir = setDir(jeevesServlet, webappName, handlerConfig, schemaPublicationDir,
+            ".schemapublication" + KEY_SUFFIX, Geonet.Config.SCHEMAPUBLICATION_DIR, handlerConfig.getValue(Geonet.Config.RESOURCES_DIR), "schemapublication"
         );
         backupDir = setDir(jeevesServlet, webappName, handlerConfig, backupDir,
             ".backup" + KEY_SUFFIX, Geonet.Config.BACKUP_DIR, "data", "backup"
@@ -455,6 +395,29 @@ public class GeonetworkDataDirectory {
                     Geonet.DATA_DIRECTORY,
                     "      - Error creating images/logos folder: "
                         + e.getMessage());
+            }
+        }
+
+        Path resourcesConfigDir = this.resourcesDir.resolve("config");
+        if (!Files.exists(resourcesConfigDir) || IO.isEmptyDir(resourcesConfigDir)) {
+            Log.info(Geonet.DATA_DIRECTORY, "     - Copying config ...");
+            try {
+                Files.createDirectories(resourcesConfigDir);
+                final Path fromDir = getDefaultDataDir(webappDir).resolve("data").resolve("resources").resolve("config");
+
+                if (Files.exists(fromDir)) {
+                    try (DirectoryStream<Path> paths = Files.newDirectoryStream(fromDir)) {
+                        for (Path path : paths) {
+                            final Path relativePath = fromDir.relativize(path);
+                            final Path dest = resourcesConfigDir.resolve(relativePath.toString());
+                            if (!Files.exists(dest)) {
+                                IO.copyDirectoryOrFile(path, dest, false);
+                            }
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                Log.error(Geonet.DATA_DIRECTORY, "     - Config copy failed: " + e.getMessage(), e);
             }
         }
 
@@ -766,6 +729,23 @@ public class GeonetworkDataDirectory {
     }
 
     /**
+     * Get directory for publishing schemas and making them publicly available.
+     *
+     * @return directory for publishing schemas and making them publicly available.
+     */
+    public Path getSchemaPublicationDir() {
+        return schemaPublicationDir;
+    }
+
+    /**
+     * Set directory for publishing schemas and making them publicly available.
+      * @param schemaPublicationDir
+     */
+    public void setSchemaPublicationDir(Path schemaPublicationDir) {
+        this.schemaPublicationDir = schemaPublicationDir;
+    }
+
+    /**
      * Get directory for caching where uploaded files go.
      *
      * @return directory for caching html data.
@@ -823,11 +803,18 @@ public class GeonetworkDataDirectory {
         if (conversionId.startsWith(IMPORT_STYLESHEETS_SCHEMA_PREFIX)) {
             String[] pathToken = conversionId.split(":");
             if (pathToken.length == 3) {
+                String schema = pathToken[1];
+                if (!schemaManager.existsSchema(schema)) {
+                    throw new BadParameterEx(String.format(
+                        "Conversion not found. Schema '%s' is not registered in this catalog.", schema));
+                }
+                FilePathChecker.verify(pathToken[2]);
                 return this.getSchemaPluginsDir()
                     .resolve(pathToken[1])
                     .resolve(pathToken[2] + ".xsl");
             }
         } else {
+            FilePathChecker.verify(conversionId);
             return this.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS).
                 resolve(conversionId + ".xsl");
         }

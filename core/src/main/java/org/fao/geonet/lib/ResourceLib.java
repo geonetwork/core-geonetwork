@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -34,7 +34,6 @@ import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Component;
@@ -113,7 +112,7 @@ public class ResourceLib {
         denyAccess(context);
     }
 
-    public void denyAccess(ServiceContext context) throws Exception {
+    public void denyAccess(ServiceContext context) throws AccessDeniedException, OperationNotAllowedEx {
         if (context.getUserSession().isAuthenticated()) {
             throw new AccessDeniedException("User is not permitted to access this resource");
         } else {
@@ -134,21 +133,6 @@ public class ResourceLib {
     /**
      * @return the absolute path of the folder choosen to store all deleted metadata
      */
-    @Deprecated
-    public Path getRemovedDir(ServiceContext context) {
-        GeonetContext gc = (GeonetContext) context
-            .getHandlerContext(Geonet.CONTEXT_NAME);
-        return gc.getBean(GeonetworkDataDirectory.class).getBackupDir();
-    }
-
-    /**
-     * See {@link #getRemovedDir(Path, String)}
-     */
-    @Deprecated
-    public Path getRemovedDir(ServiceContext context, String id) {
-        return getRemovedDir(getRemovedDir(context), id);
-    }
-
     public Path getRemovedDir(int id) {
         ApplicationContext appContext = ApplicationContextHolder.get();
         GeonetworkDataDirectory dataDirectory = appContext.getBean(GeonetworkDataDirectory.class);
@@ -172,10 +156,10 @@ public class ResourceLib {
     // ---
     // -----------------------------------------------------------------------------
 
-    private String pad(int group, int lenght) {
+    private String pad(int group, int length) {
         String text = Integer.toString(group);
 
-        while (text.length() < lenght)
+        while (text.length() < length)
             text = "0" + text;
 
         return text;

@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <restrict>
-
     <commands>
         <command>read</command>
-        <command>list</command>
-        <command>version</command>
-        <command>search</command>
     </commands>
-
 </restrict>

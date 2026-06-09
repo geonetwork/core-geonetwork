@@ -165,8 +165,8 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.parent", hasSize(2)))
-            .andExpect(jsonPath("$.parent[0].origin").value("catalog"))
-            .andExpect(jsonPath("$.parent[0]._source.resourceTitleObject.default").value("TESTASSOCIATED - parent FR"));
+            .andExpect(jsonPath("$.parent[?(@._id == '54d0d235-fa85-4b8a-9ce6-8246b430a810')].origin").value("catalog"))
+            .andExpect(jsonPath("$.parent[?(@._id == '54d0d235-fa85-4b8a-9ce6-8246b430a810')]._source.resourceTitleObject.default").value("TESTASSOCIATED - parent FR"));
 
 
         // Siblings have association and initiative type properties

@@ -3,7 +3,7 @@
 //=== EditLib
 //===
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -33,23 +33,15 @@ import static org.fao.geonet.constants.Edit.RootChild.CHILD;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.jxpath.ri.parser.Token;
 import org.apache.commons.jxpath.ri.parser.XPathParser;
 import org.apache.commons.jxpath.ri.parser.XPathParserConstants;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
@@ -57,6 +49,7 @@ import org.fao.geonet.kernel.schema.ISOPlugin;
 import org.fao.geonet.kernel.schema.MetadataAttribute;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataType;
+import org.fao.geonet.kernel.schema.MultilingualSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.utils.Xml;
 import org.jaxen.JaxenException;
@@ -231,6 +224,47 @@ public class EditLib {
     }
 
     /**
+     * Creates an element with a name (qname) as child of an element (el).
+     *
+     * If the element to create is multilingual and the related metadata schemas requires to duplicate it,
+     * one child per metadata language is added.
+     *
+     * See {@link org.fao.geonet.kernel.schema.MultilingualSchemaPlugin#duplicateElementsForMultilingual()}
+     *
+     * @param mdSchema  Metadata schema
+     * @param el        Parent element to add the new element.
+     * @param qname     Name of the new element to add.
+     * @param languages Languages to add to the new elements.
+     * @return          List of child elements added. For non-multilingual, contains 1 element.
+     * @throws Exception
+     */
+    public List<Element> addElements(MetadataSchema mdSchema, Element el,
+                                     String qname, List<String> languages) throws Exception {
+
+        List<Element> result = new ArrayList<>();
+
+        if (mdSchema.getSchemaPlugin() instanceof MultilingualSchemaPlugin) {
+            MultilingualSchemaPlugin multilingualSchemaPlugin = (MultilingualSchemaPlugin) mdSchema.getSchemaPlugin();
+
+            if (!languages.isEmpty() &&
+                multilingualSchemaPlugin.duplicateElementsForMultilingual() &&
+                multilingualSchemaPlugin.isMultilingualElementType(mdSchema.getElementType(qname, el.getName()))) {
+                for(String language : languages) {
+                    Element child = addElement(mdSchema, el, qname);
+                    ((MultilingualSchemaPlugin) mdSchema.getSchemaPlugin()).addTranslationToElement(child, language, "");
+                    result.add(child);
+                }
+                return result;
+            }
+        }
+
+        // If no multilingual management is required, process the single element.
+        result.add(addElement(mdSchema, el, qname));
+
+        return result;
+    }
+
+    /**
      * Adds XML fragment to the metadata record in the last element of the type of the element in
      * its parent.
      *
@@ -271,7 +305,7 @@ public class EditLib {
         // remove everything and then, depending on removeExisting
         // readd all children to the element and assure a correct position for the new one: at the end of the others
         // or just add the new one
-        List existingAllType = new ArrayList(targetElement.getChildren());
+        List<Element> existingAllType = new ArrayList(targetElement.getChildren());
         targetElement.removeContent();
         for (String singleType: type.getAlElements()) {
             List<Element> existingForThisType = filterOnQname(existingAllType, singleType);
@@ -282,9 +316,22 @@ public class EditLib {
                     LOGGER_ADD_ELEMENT.debug("####		- add child {}", existingChild.toString());
                 }
             }
-            if (qname.equals(singleType))
+            if (qname.equals(singleType)) {
                 targetElement.addContent(childToAdd);
+            }
+
+            filterOnQname(existingAllType, "geonet:child")
+                .stream()
+                .filter(gnChild -> (gnChild.getAttributeValue("prefix") + ":" + gnChild.getAttributeValue("name")).equals(singleType))
+                .findFirst()
+                .ifPresent(targetElement::addContent);
         }
+
+        Stream.concat(
+            filterOnQname(existingAllType, "geonet:element").stream(),
+            filterOnQname(existingAllType, "geonet:attribute").stream()
+        ).forEach(targetElement::addContent);
+
     }
 
     public void addXMLFragments(String schema, Element md, Map<String, String> xmlInputs) throws Exception {
@@ -543,11 +590,19 @@ public class EditLib {
                                 value);
                         } else if (elem instanceof Element) {
                             Element element = (Element) elem;
+                            final String predicateAndSuffix = xpathProperty.substring(indexOfRequiredPortion);
 
-                            isUpdated = createAndAddFromXPath(element,
-                                metadataSchema,
-                                xpathProperty.substring(indexOfRequiredPortion),
-                                value);
+                            if (containsOnlyPredicates(predicateAndSuffix)) {
+                                isUpdated = createAndAddFromXPath(metadataRecord,
+                                    metadataSchema,
+                                    requiredXPath,
+                                    value);
+                            } else {
+                                isUpdated = createAndAddFromXPath(element,
+                                    metadataSchema,
+                                    predicateAndSuffix,
+                                    value);
+                            }
                         } else {
                             isUpdated = false;
                         }
@@ -583,7 +638,10 @@ public class EditLib {
                                 }
                             } else if (propNode instanceof Attribute) {
                                 Element parent = ((Attribute) propNode).getParent();
-                                parent.removeAttribute(((Attribute) propNode).getName());
+                                Attribute targetAttribute = (Attribute) propNode;
+                                parent.removeAttribute(
+                                    targetAttribute.getName(),
+                                    targetAttribute.getNamespace());
                             }
                         } else {
                             // Update element content with node
@@ -736,6 +794,7 @@ public class EditLib {
         boolean isAttribute = false;
         String currentElementName = "";
         String currentElementNamespacePrefix = "";
+        String currentAttributeNamespacePrefix = "";
 
         // Stop when token is null, start of an expression is found ie. "["
         //
@@ -758,10 +817,15 @@ public class EditLib {
                 isAttribute = true;
             }
             // Match namespace prefix
-            if (currentToken.kind == XPathParserLocalConstants.TEXT && previousToken.kind == XPathParserConstants.SLASH) {
+            if (currentToken.kind == XPathParserLocalConstants.TEXT &&
+                    previousToken.kind == XPathParserConstants.SLASH) {
                 // get element namespace if element is text and previous was /
                 // means qualified name only is supported
                 currentElementNamespacePrefix = currentToken.image;
+            } else if (isAttribute &&
+                        previousToken.kind == XPathParserLocalConstants.TEXT &&
+                        currentToken.kind == XPathParserLocalConstants.NAMESPACE_SEP) {
+                currentAttributeNamespacePrefix = previousToken.image;
             } else if (currentToken.kind == XPathParserLocalConstants.TEXT &&
                 previousToken.kind == XPathParserLocalConstants.NAMESPACE_SEP) {
                 // get element name if element is text and previous was /
@@ -788,7 +852,9 @@ public class EditLib {
                     } else {
                         LOGGER_ADD_ELEMENT.debug(" > add new node {} inserted in {}", qualifiedName, currentNode.getName());
 
-                        if (metadataSchema.getElementValues(qualifiedName, currentNode.getQualifiedName()) != null) {
+                        if (isAttribute) {
+                            existingElement = false; // Attribute is created and set after.
+                        } else if (metadataSchema.getElementValues(qualifiedName, currentNode.getQualifiedName()) != null) {
                             currentNode = addElement(metadataSchema, currentNode, qualifiedName);
                             existingElement = false;
                         } else {
@@ -833,7 +899,15 @@ public class EditLib {
             doAddFragmentFromXpath(metadataSchema, value.getNodeValue(), currentNode);
         } else {
             if (isAttribute) {
-                currentNode.setAttribute(previousToken.image, value.getStringValue());
+                if (StringUtils.isNotEmpty(currentAttributeNamespacePrefix)) {
+                    currentNode.setAttribute(previousToken.image,
+                        value.getStringValue(),
+                        Namespace.getNamespace(currentAttributeNamespacePrefix,
+                            metadataSchema.getNS(currentAttributeNamespacePrefix)));
+                } else {
+                    currentNode.setAttribute(previousToken.image, value.getStringValue());
+                }
+
             } else {
                 currentNode.setText(value.getStringValue());
             }
@@ -943,7 +1017,7 @@ public class EditLib {
     //--------------------------------------------------------------------------
 
     private List<Element> filterOnQname(List<Element> children, String qname) {
-        Vector<Element> result = new Vector<Element>();
+        Vector<Element> result = new Vector<>();
         for (Element child : children) {
             if (child.getQualifiedName().equals(qname)) {
                 result.add(child);
@@ -1141,7 +1215,7 @@ public class EditLib {
         //
 
         boolean hasContent = false;
-        Vector<Element> holder = new Vector<Element>();
+        Vector<Element> holder = new Vector<>();
 
         MetadataSchema mdSchema = scm.getSchema(schema);
         String chUQname = getUnqualifiedName(chName);
@@ -1197,12 +1271,12 @@ public class EditLib {
         MetadataType thisType = mdSchema.getTypeInfo(typeName);
 
         if (thisType.hasContainers) {
-            Vector<Content> holder = new Vector<Content>();
+            Vector<Content> holder = new Vector<>();
 
             for (String chName: thisType.getAlElements()) {
                 if (edit_CHOICE_GROUP_SEQUENCE_in(chName)) {
                     List<Element> elems = searchChildren(chName, md, schema);
-                    if (elems.size() > 0) {
+                    if (!elems.isEmpty()) {
                         holder.addAll(elems);
                     }
                 } else {
@@ -1221,7 +1295,7 @@ public class EditLib {
      * For each container element - descend and collect children.
      */
     private Vector<Object> getContainerChildren(Element md) {
-        Vector<Object> result = new Vector<Object>();
+        Vector<Object> result = new Vector<>();
 
         @SuppressWarnings("unchecked")
         List<Element> chChilds = md.getChildren();
@@ -1243,7 +1317,7 @@ public class EditLib {
     public void contractElements(Element md) {
         //--- contract container children at each level in the XML tree
 
-        Vector<Object> children = new Vector<Object>();
+        Vector<Object> children = new Vector<>();
         @SuppressWarnings("unchecked")
         List<Content> childs = md.getContent();
         for (Content obj : childs) {
@@ -1251,9 +1325,9 @@ public class EditLib {
                 Element mdCh = (Element) obj;
                 String mdName = mdCh.getName();
                 if (edit_CHOICE_GROUP_SEQUENCE_in(mdName)) {
-                    if (mdCh.getChildren().size() > 0) {
+                    if (!mdCh.getChildren().isEmpty()) {
                         Vector<Object> chChilds = getContainerChildren(mdCh);
-                        if (chChilds.size() > 0) {
+                        if (!chChilds.isEmpty()) {
                             children.addAll(chChilds);
                         }
                     }
@@ -1500,7 +1574,7 @@ public class EditLib {
         @SuppressWarnings("unchecked")
         List<Element> list = md.getChildren();
 
-        List<Element> v = new ArrayList<Element>();
+        List<Element> v = new ArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {
             Element el = list.get(i);
@@ -1581,7 +1655,8 @@ public class EditLib {
         MetadataSchema mds = scm.getSchema(schema);
         MetadataType mdt = getType(mds, parent);
 
-        int min = -1, max = -1;
+        int min = -1;
+        int max = -1;
 
         for (int i = 0; i < mdt.getElementCount(); i++) {
             if (childQName.equals(mdt.getElementAt(i))) {
@@ -1752,6 +1827,33 @@ public class EditLib {
         }
     }
 
+    private boolean containsOnlyPredicates(String xpath) {
+        if (xpath == null) {
+            return false;
+        }
+        String trimmed = xpath.trim();
+        if (trimmed.isEmpty() || trimmed.charAt(0) != '[') {
+            return false;
+        }
+        boolean seenPredicate = false;
+        int depth = 0;
+        for (int i = 0; i < trimmed.length(); i++) {
+            char c = trimmed.charAt(i);
+            if (c == '[') {
+                depth++;
+                seenPredicate = true;
+            } else if (c == ']') {
+                if (depth == 0) {
+                    return false;
+                }
+                depth--;
+            } else if (depth == 0 && !Character.isWhitespace(c)) {
+                return false;
+            }
+        }
+        return seenPredicate && depth == 0;
+    }
+
     /**
      * If the xpath starts with the metadata root element, it's removed. Used to apply the Xpath
      * filters as the root element should not be included.
@@ -1807,7 +1909,17 @@ public class EditLib {
         String DELETE = "gn_delete";
 
         /**
-         * Multiple target updates
+         * Multiple target updates.
+         *
+         * <p>
+         * When using this mode, a gn_delete operation is applied first,
+         * then gn_create is applied for each element.
+         * </p>
+         *
+         * <p>
+         * If a predicate is used, the predicate is applied to the gn_delete operation.
+         * Therefor the gn_create will only create the element targeting the xpath without the predicate.
+         * </p>
          */
         String REPLACE_ALL = "gn_replace_all";
     }

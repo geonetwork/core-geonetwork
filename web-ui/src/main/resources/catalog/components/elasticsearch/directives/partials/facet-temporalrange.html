@@ -12,16 +12,18 @@
       class="input-sm form-control"
       data-ng-model="range.from"
       data-ng-model-options="{debounce: 500}"
+      autocomplete="off"
       name="start"
     />
     <span class="input-group-addon">
-      <icon class="fa fa-fw fa-chevron-right" />
+      <icon class="fa fa-fw fa-chevron-right"></icon>
     </span>
     <input
       type="text"
       class="input-sm form-control"
       data-ng-model="range.to"
       data-ng-model-options="{debounce: 500}"
+      autocomplete="off"
       name="end"
     />
     <span class="input-group-btn">
@@ -30,14 +32,14 @@
         data-ng-click="reset()"
         title="{{'reset' | translate}}"
       >
-        <icon class="fa fa-fw fa-times" />
+        <icon class="fa fa-fw fa-times"></icon>
       </button>
       <button
         class="btn btn-default"
         data-ng-click="filter()"
         title="{{'apply' | translate}}"
       >
-        <icon class="fa fa-fw fa-filter" />
+        <icon class="fa fa-fw fa-filter"></icon>
       </button>
     </span>
   </div>

@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -63,11 +64,11 @@ public class WFSHarvesterApi {
                     produces = MediaType.APPLICATION_JSON_VALUE,
                     method = RequestMethod.PUT)
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public JSONObject indexWfs(
             @RequestBody WFSHarvesterParameter config) throws Exception {
 
-        // TODO: Check user is authenticated ?
         JSONObject result = new JSONObject();
         result.put("success", true);
         result.put("indexedFeatures",
@@ -85,6 +86,7 @@ public class WFSHarvesterApi {
         produces = MediaType.ALL_VALUE,
         method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.OK)
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public JSONObject deleteWfs(
         @RequestParam
@@ -95,12 +97,9 @@ public class WFSHarvesterApi {
         EsWFSFeatureIndexer indexer = ApplicationContextHolder.get().getBean(EsWFSFeatureIndexer.class);
         indexer.deleteFeatures(serviceUrl, typeName, client);
 
-        // TODO: Check user is authenticated ?
         JSONObject result = new JSONObject();
         result.put("success", true);
-//        result.put("indexedFeatures",
-//            sendMessage(config));
-
+        
         return result;
     }
 

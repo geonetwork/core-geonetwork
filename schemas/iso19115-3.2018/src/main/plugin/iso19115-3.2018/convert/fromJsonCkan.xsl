@@ -16,7 +16,7 @@
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
                 xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
@@ -42,6 +42,7 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
 
     <xsl:output method="xml" indent="yes"/>
@@ -185,7 +186,7 @@
             </mri:citation>
             <mri:abstract>
               <gco:CharacterString>
-                <xsl:value-of select="notes"/>
+                <xsl:value-of select="java:html2text(notes, boolean(1))"/>
               </gco:CharacterString>
             </mri:abstract>
             <mri:purpose>

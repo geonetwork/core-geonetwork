@@ -1,0 +1,257 @@
+<form name="harvesterForm" data-ng-keypress="updatingHarvester()">
+  <input type="hidden" name="_csrf" value="{{csrf}}" />
+
+  <div class="row">
+    <div
+      id="gn-harvest-settings-selected-id"
+      class="col-lg-6 gn-nopadding-left"
+      data-gn-harvester-identification="harvesterSelected"
+    ></div>
+    <div
+      id="gn-harvest-settings-selected-schedule"
+      class="col-lg-6 gn-nopadding-right"
+      data-gn-harvester-schedule="harvesterSelected"
+    ></div>
+  </div>
+
+  <fieldset id="gn-harvest-settings-database-basic-row">
+    <legend id="gn-harvest-settings-database-basic-title">
+      <i class="fa fa-fw fa-plug"></i
+      ><span data-translate="">harvesterConnectionConfiguration</span> {{('harvester-' +
+      harvesterSelected['@type']) | translate}}
+    </legend>
+    <div
+      id="gn-harvest-settings-database-basic-server-row"
+      data-ng-class="harvesterSelected.site.server == '' ? 'has-error' : ''"
+    >
+      <label
+        id="gn-harvest-settings-database-basic-server-label"
+        class="control-label"
+        data-translate=""
+        >database-server</label
+      >
+      <input
+        id="gn-harvest-settings-database-basic-server-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.site.server"
+      />
+      <p class="help-block" data-translate="">database-serverHelp</p>
+    </div>
+    <div
+      id="gn-harvest-settings-database-basic-port-row"
+      data-ng-class="harvesterSelected.site.port == '' ? 'has-error' : ''"
+    >
+      <label
+        id="gn-harvest-settings-database-basic-port-label"
+        class="control-label"
+        data-translate=""
+        >database-port</label
+      >
+      <input
+        id="gn-harvest-settings-database-basic-port-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.site.port"
+      />
+      <p class="help-block" data-translate="">database-portHelp</p>
+    </div>
+    <div
+      id="gn-harvest-settings-database-basic-database-row"
+      data-ng-class="harvesterSelected.site.database == '' ? 'has-error' : ''"
+    >
+      <label
+        id="gn-harvest-settings-database-basic-database-label"
+        class="control-label"
+        data-translate=""
+        >database-database</label
+      >
+      <input
+        id="gn-harvest-settings-database-basic-database-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.site.database"
+      />
+      <p class="help-block" data-translate="">database-databaseHelp</p>
+    </div>
+
+    <div
+      id="gn-harvest-settings-database-basic-table-row"
+      data-ng-class="harvesterSelected.site.tableName == '' ? 'has-error' : ''"
+    >
+      <label
+        id="gn-harvest-settings-database-basic-table-label"
+        class="control-label"
+        data-translate=""
+        >database-tableName</label
+      >
+      <input
+        id="gn-harvest-settings-database-basic-table-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.site.tableName"
+      />
+      <p class="help-block" data-translate="">database-tableNameHelp</p>
+    </div>
+
+    <div
+      id="gn-harvest-settings-database-basic-field-row"
+      data-ng-class="harvesterSelected.site.metadataField == '' ? 'has-error' : ''"
+    >
+      <label
+        id="gn-harvest-settings-database-basic-field-label"
+        class="control-label"
+        data-translate=""
+        >database-metadataField</label
+      >
+      <input
+        id="gn-harvest-settings-database-basic-field-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.site.metadataField"
+      />
+      <p class="help-block" data-translate="">database-metadataFieldHelp</p>
+    </div>
+
+    <div
+      id="gn-harvest-settings-database-basic-connection-row"
+      data-ng-class="harvesterSelected.site.databaseType == '' ? 'has-error' : ''"
+    >
+      <label
+        id="gn-harvest-settings-database-basic-connection-label"
+        class="control-label"
+        data-translate=""
+        >database-connection</label
+      >
+      <p class="help-block" data-translate="">database-connectionHelp</p>
+
+      <select
+        id="gn-harvest-settings-database-basic-connection-database-list"
+        class="form-control"
+        data-ng-model="harvesterSelected.site.databaseType"
+      >
+        <option value="oracle">{{'database-oracle' | translate}}</option>
+        <option value="postgresql">{{'database-postgres' | translate}}</option>
+      </select>
+    </div>
+
+    <div data-gn-harvester-account="harvesterSelected"></div>
+  </fieldset>
+
+  <fieldset id="gn-harvest-settings-database-criteria-row" class="form-horizontal">
+    <legend id="gn-harvest-settings-database-criteria-title" data-translate="">
+      harvesterFilter
+    </legend>
+
+    <label
+      id="gn-harvest-settings-database-basic-filter-field-label"
+      class="control-label"
+      data-translate=""
+      >database-filterField</label
+    >
+    <input
+      id="gn-harvest-settings-database-basic-filter-field-input"
+      type="text"
+      class="form-control"
+      data-ng-model="harvesterSelected.filter.field"
+    />
+    <p class="help-block" data-translate="">database-filterFieldHelp</p>
+
+    <label
+      id="gn-harvest-settings-database-basic-filter-value-label"
+      class="control-label"
+      data-translate=""
+      >database-filterValue</label
+    >
+    <input
+      id="gn-harvest-settings-database-basic-filter-value-input"
+      type="text"
+      class="form-control"
+      data-ng-model="harvesterSelected.filter.value"
+    />
+    <p class="help-block" data-translate="">database-filterValueHelp</p>
+
+    <label
+      id="gn-harvest-settings-database-basic-filter-operator-label"
+      class="control-label"
+      data-translate=""
+      >database-filterOperator</label
+    >
+    <select
+      id="gn-harvest-settings-database-basic-filter-operator-input"
+      class="form-control"
+      data-ng-model="harvesterSelected.filter.operator"
+    >
+      <option value="LIKE">{{'database-like' | translate}}</option>
+      <option value="NOTLIKE">{{'database-notlike' | translate}}</option>
+    </select>
+    <p class="help-block" data-translate="">database-filterOperatorHelp</p>
+  </fieldset>
+
+  <fieldset id="gn-harvest-settings-database-advanced-row">
+    <legend id="gn-harvest-settings-database-advanced-title">
+      <i class="fa fa-fw fa-cogs"></i
+      ><span data-translate="">harvesterResponseProcessing</span>
+      {{harvesterSelected['@type'] | translate}}
+    </legend>
+
+    <div data-gn-harvester-extras="harvesterSelected"></div>
+
+    <div id="gn-harvest-settings-database-advanced-validate-row">
+      <label
+        id="gn-harvest-settings-database-advanced-validate-label"
+        class="control-label"
+      >
+        <span data-translate="">harvesterValidate</span>
+      </label>
+      <div
+        id="gn-harvest-settings-database-advanced-validate-list"
+        data-gn-harvester-validation="harvesterSelected.content.validate"
+      ></div>
+      <p class="help-block" data-translate="">harvesterValidateHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-database-advanced-xsl-row">
+      <label
+        id="gn-harvest-settings-database-advanced-xsl-label"
+        class="control-label"
+        data-translate=""
+        >database-xslfilter</label
+      >
+      <input
+        id="gn-harvest-settings-database-advanced-xsl-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.site.xslfilter"
+      />
+      <p class="help-block" data-translate="">database-xslfilterHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-database-advanced-batchEdits-row">
+      <label
+        id="gn-harvest-settings-database-advanced-batchEdits-label"
+        class="control-label"
+      >
+        <span data-translate="">harvesterBatchEdits</span>
+      </label>
+
+      <div gn-batch-edit-examples-selector="addBatchEdits"></div>
+
+      <div
+        id="gn-harvest-settings-database-advanced-batchEdits-list"
+        style="height: 300px"
+        ui-ace="{useWrapMode:true, showGutter:true, mode:'json'}"
+        data-ng-model="harvesterSelected.content.batchEdits"
+      ></div>
+      <p class="help-block" data-translate="">harvesterBatchEditsHelp</p>
+    </div>
+  </fieldset>
+
+  <div data-gn-harvester-translate-content-configurator="harvesterSelected.content"></div>
+
+  <div
+    id="gn-harvest-settings-sde-privileges-row"
+    data-gn-harvester-privileges="harvesterSelected"
+    data-lang="{{lang}}"
+  ></div>
+</form>

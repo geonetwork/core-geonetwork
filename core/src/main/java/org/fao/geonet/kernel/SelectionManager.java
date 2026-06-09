@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,13 +23,14 @@
 
 package org.fao.geonet.kernel;
 
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
 import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.search.SearchHit;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
@@ -50,9 +51,9 @@ import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
  * Manage objects selection for a user session.
  */
 public class SelectionManager {
-
     public static final String SELECTION_METADATA = "metadata";
-    public static final String SELECTION_BUCKET = "bucket";
+    // Bucket name used in the search UI to store the selected the metadata
+    public static final String SELECTION_BUCKET = "s101";
     // used to limit select all if get system setting maxrecords fails or contains value we can't parse
     public static final int DEFAULT_MAXHITS = 1000;
     public static final String ADD_ALL_SELECTED = "add-all";
@@ -60,20 +61,20 @@ public class SelectionManager {
     public static final String ADD_SELECTED = "add";
     public static final String REMOVE_SELECTED = "remove";
     public static final String CLEAR_ADD_SELECTED = "clear-add";
-    private Hashtable<String, Set<String>> selections = null;
+    private Hashtable<String, Set<String>> selections;
 
     private SelectionManager() {
-        selections = new Hashtable<String, Set<String>>(0);
+        selections = new Hashtable<>(0);
 
         Set<String> MDSelection = Collections
-            .synchronizedSet(new HashSet<String>(0));
+            .synchronizedSet(new HashSet<>(0));
         selections.put(SELECTION_METADATA, MDSelection);
     }
 
 
     public Map<String, Integer> getSelectionsAndSize() {
         return selections.entrySet().stream().collect(Collectors.toMap(
-            e -> e.getKey(),
+            Map.Entry::getKey,
             e -> e.getValue().size()
         ));
     }
@@ -182,7 +183,7 @@ public class SelectionManager {
         // Get the selection manager or create it
         Set<String> selection = this.getSelection(type);
         if (selection == null) {
-            selection = Collections.synchronizedSet(new HashSet<String>());
+            selection = Collections.synchronizedSet(new HashSet<>());
             this.selections.put(type, selection);
         }
 
@@ -191,30 +192,21 @@ public class SelectionManager {
                 this.selectAll(type, context, session);
             else if (selected.equals(REMOVE_ALL_SELECTED))
                 this.close(type);
-            else if (selected.equals(ADD_SELECTED) && listOfIdentifiers.size() > 0) {
+            else if (selected.equals(ADD_SELECTED) && !listOfIdentifiers.isEmpty()) {
                 // TODO ? Should we check that the element exist first ?
-                for (String paramid : listOfIdentifiers) {
-                    selection.add(paramid);
-                }
-            } else if (selected.equals(REMOVE_SELECTED) && listOfIdentifiers.size() > 0) {
+                selection.addAll(listOfIdentifiers);
+            } else if (selected.equals(REMOVE_SELECTED) && !listOfIdentifiers.isEmpty()) {
                 for (String paramid : listOfIdentifiers) {
                     selection.remove(paramid);
                 }
-            } else if (selected.equals(CLEAR_ADD_SELECTED) && listOfIdentifiers.size() > 0) {
+            } else if (selected.equals(CLEAR_ADD_SELECTED) && !listOfIdentifiers.isEmpty()) {
                 this.close(type);
-                for (String paramid : listOfIdentifiers) {
-                    selection.add(paramid);
-                }
+                selection.addAll(listOfIdentifiers);
             }
         }
 
         // Remove empty/null element from the selection
-        Iterator<String> iter = selection.iterator();
-        while (iter.hasNext()) {
-            Object element = iter.next();
-            if (element == null)
-                iter.remove();
-        }
+        selection.removeIf(Objects::isNull);
 
         return selection.size();
     }
@@ -240,16 +232,15 @@ public class SelectionManager {
 
         if (StringUtils.isNotEmpty(type)) {
             JsonNode request = (JsonNode) session.getProperty(Geonet.Session.SEARCH_REQUEST + type);
-            if (request == null) {
-                return;
-            } else {
+            if (request != null) {
                 final SearchResponse searchResponse;
                 try {
                     EsSearchManager searchManager = context.getBean(EsSearchManager.class);
                     searchResponse = searchManager.query(request.get("query"), FIELDLIST_UUID, 0, maxhits);
-                    List<String> uuidList = new ArrayList();
-                    for (SearchHit h : Arrays.asList(searchResponse.getHits().getHits())) {
-                        uuidList.add((String) h.getSourceAsMap().get(Geonet.IndexFieldNames.UUID));
+                    List<String> uuidList = new ArrayList<>();
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    for (Hit h : (List<Hit>) searchResponse.hits().hits()) {
+                        uuidList.add((String) objectMapper.convertValue(h.source(), Map.class).get(Geonet.IndexFieldNames.UUID));
                     }
 
                     if (selection != null) {
@@ -291,7 +282,7 @@ public class SelectionManager {
         Set<String> sel = selections.get(type);
         if (sel == null) {
             Set<String> MDSelection = Collections
-                .synchronizedSet(new HashSet<String>(0));
+                .synchronizedSet(new HashSet<>(0));
             selections.put(type, MDSelection);
         }
         return selections.get(type);

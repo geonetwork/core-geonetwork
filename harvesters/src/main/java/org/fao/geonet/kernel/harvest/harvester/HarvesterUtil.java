@@ -23,17 +23,18 @@
 
 package org.fao.geonet.kernel.harvest.harvester;
 
-import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.kernel.schema.MetadataSchema;
-import org.fao.geonet.utils.Xml;
-import org.jdom.Element;
-import org.slf4j.LoggerFactory;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by francois on 3/7/14.
@@ -74,8 +75,7 @@ public class HarvesterUtil {
                                           Element md,
                                           String processName,
                                           Map<String, Object> processParams) {
-
-        Path filePath = metadataSchema.getSchemaDir().resolve("process").resolve(processName + ".xsl");
+        Path filePath = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class).getXsltConversion(processName);
         if (!Files.exists(filePath)) {
             LOGGER.info("     processing instruction not found for {} schema. metadata not filtered.",  metadataSchema.getName());
         } else {

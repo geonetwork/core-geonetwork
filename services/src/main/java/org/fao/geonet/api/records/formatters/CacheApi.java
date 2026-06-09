@@ -23,6 +23,11 @@
 
 package org.fao.geonet.api.records.formatters;
 
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import static org.fao.geonet.api.ApiParams.API_CLASS_FORMATTERS_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_FORMATTERS_TAG;
+
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,8 +45,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @RequestMapping(value = {
     "/{portal}/api/formatters"
 })
-@Tag(name = "formatters",
-    description = "Formatter operations")
+@Tag(name = API_CLASS_FORMATTERS_TAG,
+    description = API_CLASS_FORMATTERS_OPS)
 @Controller("formatters")
 @ReadWriteController
 public class CacheApi {
@@ -64,7 +69,7 @@ public class CacheApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('Administrator')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Cache cleared."),
+        @ApiResponse(responseCode = "204", description = "Cache cleared.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = "Operation not allowed. Only Administrator can access it.")
     })
     public void clearFormatterCache() throws Exception {

@@ -44,14 +44,16 @@
 
             $http({
               method: "GET",
-              url: "../api/pages/" + $scope.language + "/" + page + "/content"
+              url: "../api/pages/" + $scope.language + "/" + page + "/content",
+              transformResponse: angular.identity
             }).then(
-              function mySuccess(response) {
+              function (response) {
+                $sce.trustAsJs(response.data);
+                // $sce.trustAsHtml(response.data);
                 $scope.content = $sce.trustAsHtml(response.data);
               },
-              function myError(response) {
+              function (response) {
                 $scope.content = "Page not available";
-                console.log(response.statusText);
               }
             );
           };
@@ -69,40 +71,107 @@
   ]);
 
   module.directive("gnStaticPagesListViewer", [
-    "$http",
-    "$location",
-    function ($http, $location) {
+    "gnGlobalSettings",
+    "gnStaticPagesService",
+    function (gnGlobalSettings, gnStaticPagesService) {
       return {
         restrict: "AEC",
-        replace: true,
+        replace: false,
         scope: {
           language: "@language",
           section: "@section"
         },
         templateUrl: function (elem, attr) {
-          return "../../catalog/components/pages/partials/" + attr.section + ".html";
+          return "../../catalog/components/pages/partials/top.html";
         },
         link: function ($scope) {
-          $scope.loadPages = function () {
-            $http({
-              method: "GET",
-              url:
-                "../api/pages/list?language=" +
-                $scope.language +
-                "&section=" +
-                $scope.section.toUpperCase()
-            }).then(
-              function mySuccess(response) {
-                $scope.pagesList = response.data;
+          $scope.pagesMenu = [];
+
+          if ($scope.section === "header" || $scope.section === "footer") {
+            $scope.pagesConfig =
+              gnGlobalSettings.gnCfg.mods[$scope.section][$scope.section + "CustomMenu"];
+            if ($scope.pagesConfig && $scope.pagesConfig.length === 0) {
+              gnStaticPagesService
+                .loadPages($scope.language, $scope.section)
+                .then(function (response) {
+                  $scope.pagesConfig = response.data.map(function (p) {
+                    return p.pageId;
+                  });
+                });
+            }
+          } else {
+            gnStaticPagesService
+              .loadPages($scope.language, $scope.section)
+              .then(function (response) {
+                $scope.pagesConfig = response.data.map(function (p) {
+                  return p.pageId;
+                });
+              });
+          }
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnStaticPageMenu", [
+    "gnStaticPagesService",
+    "gnGlobalSettings",
+    function (gnStaticPagesService, gnGlobalSettings) {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          pageId: "=gnStaticPageMenu",
+          language: "@language",
+          section: "@section",
+          renderAsButton: "@?",
+          context: "=?"
+        },
+        templateUrl: function (elem, attr) {
+          return "../../catalog/components/pages/partials/menu-page.html";
+        },
+        link: function ($scope) {
+          $scope.pagesMenu = [];
+          $scope.gnCfg = gnGlobalSettings.gnCfg;
+          $scope.pagesConfig = angular.isArray($scope.pageId)
+            ? $scope.pageId
+            : [$scope.pageId];
+
+          // Set button style based on explicit parameter (defaults to false)
+          $scope.renderAsButton = $scope.renderAsButton === "true";
+
+          if ($scope.pagesConfig.length > 0) {
+            gnStaticPagesService.loadPages($scope.language, $scope.section).then(
+              function (response) {
+                $scope.pagesMenu = [];
+                $scope.pages = {};
+                response.data.forEach(function (page) {
+                  $scope.pages[page.pageId] = page;
+                });
+
+                gnStaticPagesService.buildMenu(
+                  $scope.pagesMenu,
+                  $scope.pages,
+                  $scope.pagesConfig
+                );
+                if ($scope.pagesMenu.length === 1) {
+                  $scope.page = $scope.pagesMenu[0];
+                  $scope.isSubmenu = $scope.page.type === "submenu";
+                  $scope.isExternalLink =
+                    $scope.page.format === "LINK" ||
+                    $scope.page.format === "EMAILLINK" ||
+                    $scope.page.format === "HTMLPAGE";
+
+                  if ($scope.page.format === "EMAILLINK") {
+                    $scope.page.link = "mailto:" + $scope.page.link;
+                  }
+                }
               },
-              function myError(response) {
+              function (response) {
                 $scope.pagesList = null;
-                console.log(response.statusText);
               }
             );
-          };
-
-          $scope.loadPages();
+          }
         }
       };
     }

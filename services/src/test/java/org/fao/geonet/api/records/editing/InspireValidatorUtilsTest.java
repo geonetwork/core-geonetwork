@@ -3,6 +3,7 @@ package org.fao.geonet.api.records.editing;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.MetadataValidationStatus;
+import org.fao.geonet.inspire.validator.InspireValidatorUtils;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
 import org.junit.Ignore;

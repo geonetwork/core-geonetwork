@@ -250,6 +250,7 @@
 
               <xsl:copy-of select="geonet:add-thesaurus-info(
                                               $thesaurusKey,
+                                              $mainLanguage,
                                               false(),
                                               true(),
                                               $root/root/env/thesauri,

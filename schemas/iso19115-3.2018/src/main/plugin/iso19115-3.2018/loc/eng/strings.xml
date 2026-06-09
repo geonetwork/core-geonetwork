@@ -15,6 +15,9 @@
   <enum1>Value </enum1>
   <enum2> is not valid for the field </enum2>
   <enum3>Potential values are: </enum3>
+  <selectFeaturetype>Select a feature type</selectFeaturetype>
+  <missingFeatureTypeName>New feature type</missingFeatureTypeName>
+
 
 
   <understandResource>Information about the dataset</understandResource>
@@ -59,7 +62,7 @@
   <providedBy>Provided by</providedBy>
   <shareOnSocialSite>Share on social sites</shareOnSocialSite>
   <viewMode>Views</viewMode>
-  <linkToPortal>Access to the portal</linkToPortal>
+  <linkToPortal>Access to the catalogue</linkToPortal>
   <linkToPortal-help>Read here the full details and access to the data.</linkToPortal-help>
   <citationProposal>Citation proposal</citationProposal>
   <citationProposal-help>This proposal was automatically generated, check if the metadata authors did not specified custom citation requirements.</citationProposal-help>

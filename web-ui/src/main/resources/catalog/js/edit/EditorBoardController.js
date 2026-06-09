@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -71,6 +71,7 @@
       $scope.isFilterTagsDisplayed =
         gnGlobalSettings.gnCfg.mods.editor.isFilterTagsDisplayed;
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
+
       $scope.defaultSearchObj = {
         permalink: true,
         sortbyValues: gnSearchSettings.sortbyValues,
@@ -79,17 +80,25 @@
         filters: gnSearchSettings.filters,
         configId: "editor",
         params: {
-          sortBy: "dateStamp",
+          sortBy: "changeDate",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
+          draft: gnGlobalSettings.gnCfg.mods.editor.workflowSearchRecordTypes || [
+            "n",
+            "e"
+          ],
           resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
         },
         defaultParams: {
-          sortBy: "dateStamp",
+          sortBy: "changeDate",
           sortOrder: "desc",
           isTemplate: ["y", "n"],
+          draft: gnGlobalSettings.gnCfg.mods.editor.workflowSearchRecordTypes || [
+            "n",
+            "e"
+          ],
           resultType: $scope.facetsSummaryType,
           from: 1,
           to: 20
@@ -113,6 +122,50 @@
         return $scope;
       };
 
+      /**
+       * Ask for confirmation to delete a metadata.
+       */
+      $scope.removeMetadata = function (md) {
+        $scope.metadataToDelete = md;
+        $("#gn-confirm-remove-metadata").modal("show");
+      };
+
+      /**
+       * Remove the metadata and refresh the list when done.
+       */
+      $scope.confirmRemoveMetadata = function () {
+        $scope.deleteRecord($scope.metadataToDelete).then(function () {
+          $scope.metadataToDelete = null;
+          $("#gn-confirm-remove-metadata").modal("hide");
+          $rootScope.$broadcast("search");
+        });
+      };
+
+      $scope.getMetadataDeleteConfirmMessage = function () {
+        if (!$scope.metadataToDelete) {
+          $("#gn-confirm-remove-metadata").modal("hide");
+          return "";
+        }
+
+        var translation = $translate.instant("metadataDeleteConfirm", {
+          title: $scope.metadataToDelete.resourceTitle
+        });
+
+        var translationMetadataResourceTypeKey =
+          "metadataDelete-" + $scope.metadataToDelete.resourceType;
+
+        var translationResourceType = $translate.instant(
+          translationMetadataResourceTypeKey
+        );
+
+        // If there is a message for the specific metadata resource type, append it to the generic message.
+        if (translationResourceType !== translationMetadataResourceTypeKey) {
+          translation += "<br/>" + translationResourceType;
+        }
+
+        return translation;
+      };
+
       $scope.deleteRecord = function (md) {
         var deferred = $q.defer();
 
@@ -126,7 +179,8 @@
           },
           function (reason) {
             $rootScope.$broadcast("StatusUpdated", {
-              title: reason.data.description, //returned error JSON obj
+              title: reason.data.message, //returned error JSON obj
+              error: reason.data.description,
               timeout: 0,
               type: "danger"
             });
@@ -144,9 +198,23 @@
     "$rootScope",
     "$route",
     "$location",
+    "$translate",
+    "$timeout",
     "gnSearchSettings",
     "gnGlobalSettings",
-    function ($scope, $rootScope, $route, $location, gnSearchSettings, gnGlobalSettings) {
+    function (
+      $scope,
+      $rootScope,
+      $route,
+      $location,
+      $translate,
+      $timeout,
+      gnSearchSettings,
+      gnGlobalSettings
+    ) {
+      // Cleanup onbeforeunload event
+      window.onbeforeunload = null;
+
       // https://github.com/angular/angular.js/issues/1699#issuecomment-11496428
       var lastRoute = $route.current;
       $scope.$on("$locationChangeSuccess", function (event) {
@@ -184,7 +252,7 @@
         }
       ];
 
-      gnSearchSettings.resultTemplate = gnSearchSettings.resultViewTpls[0].tplUrl;
+      gnSearchSettings.resultTemplate = gnSearchSettings.resultViewTpls[0];
 
       $scope.facetsSummaryType = gnSearchSettings.facetsSummaryType = "manager";
       $scope.facetConfig = gnGlobalSettings.gnCfg.mods.editor.facetConfig;
@@ -203,6 +271,7 @@
     "$scope",
     "$location",
     "gnSearchSettings",
+    "gnGlobalSettings",
     "gnUtilityService",
     "$timeout",
     "hotkeys",
@@ -211,11 +280,15 @@
       $scope,
       $location,
       gnSearchSettings,
+      gnGlobalSettings,
       gnUtilityService,
       $timeout,
       hotkeys,
       $translate
     ) {
+      if (!!gnGlobalSettings.gnCfg.mods.global.hotkeys) {
+        return;
+      }
       $timeout(function () {
         hotkeys
           .bindTo($scope)

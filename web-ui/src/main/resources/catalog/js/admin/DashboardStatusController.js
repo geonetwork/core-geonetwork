@@ -67,6 +67,7 @@
       $scope.threadSortReverse = false;
       $scope.threadInfoLoading = false;
       $scope.hasIndexingError = false;
+      $scope.hasIndexingWarning = false;
 
       $scope.indexStatus = null;
       function getIndexStatus() {
@@ -76,19 +77,75 @@
       }
       getIndexStatus();
 
-      function getRecordsWithIndexingErrors() {
+      function getRecords(queryFilter) {
         return $http.post("../api/search/records/_search?bucket=ie", {
-          query: {
-            bool: {
-              must: { terms: { indexingError: [true] } }
-            }
-          },
+          query: queryFilter,
           from: 0,
           size: 0
         });
       }
-      getRecordsWithIndexingErrors().then(function (r) {
+
+      /**
+       * Get the metadata that have indexing errors (including warnings).
+       *
+       * @returns {*}
+       */
+      function getRecordsWithIndexingErrors() {
+        return getRecords({
+          bool: {
+            must: { terms: { indexingError: [true] } }
+          }
+        });
+      }
+
+      /**
+       * Get the metadata that have indexing errors (excluding warnings)
+       *
+       * @returns {*}
+       */
+      function getRecordsWithIndexingErrorsNoWarnings() {
+        return getRecords({
+          bool: {
+            must: [
+              {
+                query_string: {
+                  query: "(-indexingErrorMsg.type:warning)",
+                  default_operator: "AND"
+                }
+              },
+              { terms: { indexingError: [true] } }
+            ]
+          }
+        });
+      }
+
+      getRecordsWithIndexingErrorsNoWarnings().then(function (r) {
         $scope.hasIndexingError = r.data.hits.total.value > 0;
+      });
+
+      /**
+       * Get the metadata that have indexing warnings.
+       *
+       * @returns {*}
+       */
+      function getRecordsWithIndexingWarnings() {
+        return getRecords({
+          bool: {
+            must: [
+              {
+                query_string: {
+                  query: "(+indexingErrorMsg.type:warning)",
+                  default_operator: "AND"
+                }
+              },
+              { terms: { indexingError: [true] } }
+            ]
+          }
+        });
+      }
+
+      getRecordsWithIndexingWarnings().then(function (r) {
+        $scope.hasIndexingWarning = r.data.hits.total.value > 0;
       });
 
       $scope.setThreadSortField = function (field) {
@@ -266,65 +323,11 @@
 
         return [md.indexingErrorMsg];
       };
-      $scope.indexMessageTitle = function (errorMsg) {
-        if (errorMsg === undefined) {
-          return "Empty error message";
-        }
-        return errorMsg.split("|")[0];
-      };
-      $scope.indexMessageReason = function (errorMsg) {
-        if (errorMsg === undefined) {
-          return "Empty error message";
-        }
-        return errorMsg.split("|")[1];
-      };
-      $scope.rawIndexMessageDetail = function (errorMsg) {
-        if (errorMsg === undefined) {
-          return "Empty error message";
-        }
-        return errorMsg.split("|")[2];
-      };
-      $scope.restrictMessageWidth = function (detail) {
-        var maxLine = 80,
-          indentPattern = /(\s*).*/;
-
-        if (!detail || detail.trim() == "") {
-          return "";
-        }
-
-        var lines = detail.split("\n");
-
-        detail = "";
-
-        var nextSpace = function (line) {
-          for (var j = maxLine; j < line.length; j++) {
-            if (" " === line.charAt(j)) {
-              return j;
-            }
-          }
-          return line.length;
-        };
-
-        for (var i = 0; i < lines.length; i++) {
-          var line = lines[i];
-          var indent = indentPattern.exec(line)[1] + "    ";
-          while (line.length > maxLine) {
-            var ns = nextSpace(line);
-            detail += line.substring(0, ns) + "\n";
-            line = indent + line.substring(ns);
-          }
-          detail += line + "\n";
-        }
-        return detail;
-      };
-      $scope.indexMessageDetail = function (errorMsg) {
-        return $scope.restrictMessageWidth($scope.rawIndexMessageDetail(errorMsg));
-      };
       $scope.searchObj = {
         configId: "recordsWithErrors",
         selectionBucket: "ies",
         defaultParams: {
-          indexingErrorMsg: "*",
+          "indexingErrorMsg.type": ["warning", "error"],
           sortBy: "changeDate",
           sortOrder: "desc"
         }

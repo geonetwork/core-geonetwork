@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+  <skos:ConceptScheme rdf:about="https://en.wikipedia.org/wiki/Time">
+    <dc:title xml:lang="en">Units of measurements / Time</dc:title>
+    <dc:title xml:lang="fr">Unités de mesure / Temps</dc:title>
+    <dcterms:type>theme</dcterms:type>
+    <dcterms:identifier>codelist_unit_time</dcterms:identifier>
+  </skos:ConceptScheme>
+
+  <skos:Concept rdf:about="https://en.wikipedia.org/wiki/Year">
+    <skos:prefLabel xml:lang="en">y</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">y</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Année</skos:scopeNote>
+    <skos:scopeNote xml:lang="en">Year</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://en.wikipedia.org/wiki/Time"/>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://en.wikipedia.org/wiki/Month">
+    <skos:prefLabel xml:lang="en">M</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">M</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Month</skos:scopeNote>
+    <skos:scopeNote xml:lang="fr">Mois</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://en.wikipedia.org/wiki/Time"/>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://en.wikipedia.org/wiki/Day">
+    <skos:prefLabel xml:lang="en">d</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">d</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Day</skos:scopeNote>
+    <skos:scopeNote xml:lang="fr">Jour</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://en.wikipedia.org/wiki/Time"/>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://en.wikipedia.org/wiki/Hour">
+    <skos:prefLabel xml:lang="en">h</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">h</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Hour</skos:scopeNote>
+    <skos:scopeNote xml:lang="fr">Heure</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://en.wikipedia.org/wiki/Time"/>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://en.wikipedia.org/wiki/Minute">
+    <skos:prefLabel xml:lang="en">min</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">min</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Minute</skos:scopeNote>
+    <skos:scopeNote xml:lang="fr">Minute</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://en.wikipedia.org/wiki/Time"/>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://en.wikipedia.org/wiki/Second">
+    <skos:prefLabel xml:lang="en">s</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">s</skos:prefLabel>
+    <skos:scopeNote xml:lang="en">Second</skos:scopeNote>
+    <skos:scopeNote xml:lang="fr">Seconde</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://en.wikipedia.org/wiki/Time"/>
+  </skos:Concept>
+</rdf:RDF>
+

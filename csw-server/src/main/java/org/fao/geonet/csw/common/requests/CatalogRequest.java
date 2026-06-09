@@ -186,6 +186,12 @@ public abstract class CatalogRequest {
 
     public void setCredentials(String username, String password) {
         client.setCredentials(username, password);
+        client.setPreemptiveBasicAuth(true);
+    }
+
+    public void setApiKey(String apiKeyHeader, String apiKey) {
+        client.setApiKeyHeader(apiKeyHeader);
+        client.setApiKey(apiKey);
     }
 
     //---------------------------------------------------------------------------

@@ -26,6 +26,7 @@ package org.fao.geonet.services.main;
 import jeeves.constants.Jeeves;
 import jeeves.server.JeevesEngine;
 import jeeves.server.UserSession;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
 import org.apache.commons.io.FileUtils;
@@ -70,12 +71,7 @@ public class GenericController {
         throws Exception {
         HttpSession httpSession = request.getSession(false);
 
-        String ip = request.getRemoteAddr();
-        // if we do have the optional x-forwarded-for request header then
-        // use whatever is in it to record ip address of client
-        String forwardedFor = request.getHeader("x-forwarded-for");
-        if (forwardedFor != null)
-            ip = forwardedFor;
+        String ip = ServiceManager.getRequestIpAddress(request);
 
         Log.info(Log.REQUEST, "==========================================================");
 

@@ -1,0 +1,5 @@
+server.basePath: "/geonetwork/dashboards"
+server.rewriteBasePath: false
+kibana.index: ".dashboards"
+elasticsearch.hosts: ["http://elasticsearch:9200"]
+

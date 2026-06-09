@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2023 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,17 +27,18 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.nio.file.Path;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpStatus;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.api.records.editing.InspireValidatorUtils;
+import org.fao.geonet.inspire.validator.InspireValidationRunnable;
+import org.fao.geonet.inspire.validator.InspireValidatorUtils;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterApi;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
@@ -52,7 +53,6 @@ import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.util.ThreadPool;
@@ -63,6 +63,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -83,6 +84,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 
@@ -90,7 +92,8 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 @RequestMapping(value = {
     "/{portal}/api/records"
 })
-@Tag(name = API_CLASS_RECORD_TAG)
+@Tag(name = API_CLASS_RECORD_TAG,
+    description = API_CLASS_RECORD_OPS)
 @Controller("inspire")
 @PreAuthorize("hasAuthority('Editor')")
 @ReadWriteController
@@ -101,7 +104,8 @@ public class InspireValidationApi {
         + "ISO19115-3 are converted to ISO19139."
         + "If mode = csw, a GetRecordById request is used."
         + "If mode = any portal id, then a GetRecordById request is used on this portal "
-        + "CSW entry point which may define custom CSW post processing. "
+        + "CSW can only be used on public records as the remote validator request the CSW endpoint."
+        + "CSW entry point can define additional CSW post processing (if encoding need adjustments to cope with INSPIRE requirements). "
         + "See https://github.com/geonetwork/core-geonetwork/pull/4493.";
     @Autowired
     SettingManager settingManager;
@@ -123,11 +127,13 @@ public class InspireValidationApi {
     @Autowired
     private ThreadPool threadPool;
 
+    @Value("#{validatorAdditionalConfig['processing']}")
+    public String processing;
+
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get test suites available.",
         description = "TG13, TG2, ...")
-    @RequestMapping(value = "/{metadataUuid}/validate/inspire/testsuites",
-        method = RequestMethod.GET,
+    @GetMapping(value = "/{metadataUuid}/validate/inspire/testsuites",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         })
@@ -152,10 +158,9 @@ public class InspireValidationApi {
         summary = "Submit a record to the INSPIRE service for validation.",
         description = "User MUST be able to edit the record to validate it. "
             + "An INSPIRE endpoint must be configured in Settings. "
-            + "This activates an asyncronous process, this method does not return any report. "
+            + "This activates an asynchronous process, this method does not return any report. "
             + "This method returns an id to be used to get the report.")
-    @RequestMapping(value = "/{metadataUuid}/validate/inspire",
-        method = RequestMethod.PUT,
+    @PutMapping(value = "/{metadataUuid}/validate/inspire",
         produces = {
             MediaType.TEXT_PLAIN_VALUE
         })
@@ -205,16 +210,16 @@ public class InspireValidationApi {
         String schema = metadata.getDataInfo().getSchemaId();
         if (!schema.matches(supportedSchemaRegex)) {
             response.setStatus(HttpStatus.SC_NOT_ACCEPTABLE);
-            return String.format("INSPIRE validator does not support records in schema '%'. Schema must match expression '%' and have an ISO19139 formatter.",
+            return String.format("INSPIRE validator does not support records in schema '%s'. Schema must match expression '%s' and have an ISO19139 formatter.",
                 schema, supportedSchemaRegex);
         }
 
         String id = String.valueOf(metadata.getId());
 
-        String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
-        String URL_QUERY = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL_QUERY);
-        if (StringUtils.isEmpty(URL_QUERY)) {
-            URL_QUERY = URL;
+        String inspireValidatorUrl = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
+        String inspireValidatorQueryUrl = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL_QUERY);
+        if (StringUtils.isEmpty(inspireValidatorQueryUrl)) {
+            inspireValidatorQueryUrl = inspireValidatorUrl;
         }
 
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -250,6 +255,11 @@ public class InspireValidationApi {
             }
 
 
+            if (StringUtils.isNotEmpty(processing)) {
+                Path xslProcessing = schemaManager.getSchemaDir(schema).resolve(processing);
+                md = Xml.transform(md, xslProcessing);
+            }
+
             md.detach();
             Attribute schemaLocAtt = schemaManager.getSchemaLocation(
                 "iso19139", context);
@@ -268,7 +278,7 @@ public class InspireValidationApi {
 
 
             InputStream metadataToTest = convertElement2InputStream(md);
-            testId = inspireValidatorUtils.submitFile(context, URL, URL_QUERY, metadataToTest, testsuite, metadata.getUuid());
+            testId = inspireValidatorUtils.submitFile(context, inspireValidatorUrl, inspireValidatorQueryUrl, metadataToTest, testsuite, metadata.getUuid());
         } else {
             String portal = NodeInfo.DEFAULT_NODE;
             if (!NodeInfo.DEFAULT_NODE.equals(mode)) {
@@ -288,10 +298,10 @@ public class InspireValidationApi {
                 portal,
                 ISO19139Namespaces.GMD.getURI(),
                 metadataUuid);
-            testId = inspireValidatorUtils.submitUrl(context, URL, URL_QUERY, getRecordByIdUrl, testsuite, metadata.getUuid());
+            testId = inspireValidatorUtils.submitUrl(context, inspireValidatorUrl, inspireValidatorQueryUrl, getRecordByIdUrl, testsuite, metadata.getUuid());
         }
 
-        threadPool.runTask(new InspireValidationRunnable(context, URL, testId, metadata.getId()));
+        threadPool.runTask(new InspireValidationRunnable(context, inspireValidatorUrl, testId, metadata.getId()));
 
         return testId;
     }
@@ -313,8 +323,7 @@ public class InspireValidationApi {
         description = "User MUST be able to edit the record to validate it. "
             + "An INSPIRE endpoint must be configured in Settings. "
             + "If the process is complete an object with status is returned. ")
-    @RequestMapping(value = "/{testId}/validate/inspire",
-        method = RequestMethod.GET,
+    @GetMapping(value = "/{testId}/validate/inspire",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
         }
@@ -341,15 +350,15 @@ public class InspireValidationApi {
             HttpSession session
     ) throws Exception {
 
-        String URL = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
+        String inspireValidatorUrl = settingManager.getValue(Settings.SYSTEM_INSPIRE_REMOTE_VALIDATION_URL);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         try {
-            if (inspireValidatorUtils.isReady(context, URL, testId)) {
+            if (inspireValidatorUtils.isReady(context, inspireValidatorUrl, testId)) {
                 Map<String, String> values = new HashMap<>();
 
-                values.put("status", inspireValidatorUtils.isPassed(context, URL, testId));
-                values.put("report", inspireValidatorUtils.getReportUrl(URL, testId));
+                values.put("status", inspireValidatorUtils.isPassed(context, inspireValidatorUrl, testId));
+                values.put("report", inspireValidatorUtils.getReportUrl(inspireValidatorUrl, testId));
                 response.setStatus(HttpStatus.SC_OK);
 
                 return values;

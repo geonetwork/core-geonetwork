@@ -155,7 +155,7 @@ public abstract class ArcSDEJdbcConnection implements ArcSDEConnection {
                                 rs.getMetaData().getColumnTypeName(colId));
                     }
 
-                    String uuid =  rs.getString(colIdUuid);;
+                    String uuid =  rs.getString(colIdUuid);
                     results.put(uuid, document);
                 }
 

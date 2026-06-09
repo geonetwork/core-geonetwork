@@ -99,7 +99,7 @@
        *  requests are cancelled
        */
       this.describeProcess = function (uri, processId, options) {
-        url = gnOwsCapabilities.mergeDefaultParams(uri, {
+        var url = gnOwsCapabilities.mergeDefaultParams(uri, {
           service: "WPS",
           version: "1.0.0",
           request: "DescribeProcess",
@@ -157,6 +157,7 @@
         // create a promise (will be used to cancel request)
         this.getCapCanceller = $q.defer();
 
+        var that = this;
         // send request and decode result
         return $http
           .get(url, {
@@ -164,7 +165,7 @@
             timeout: this.getCapCanceller.promise
           })
           .then(function (response) {
-            this.getCapCanceller = null;
+            that.getCapCanceller = null;
             if (!response.data) {
               return;
             }
@@ -224,7 +225,7 @@
             });
           }
           if (input.complexData && data) {
-            var mimeType = input.complexData._default.format.mimeType;
+            var mimeType = input.mimeType || input.complexData._default.format.mimeType;
             request.value.dataInputs.input.push({
               identifier: {
                 value: input.identifier.value
@@ -240,6 +241,23 @@
           // when bbox is cleared value is still set to ',,,'
           if (input.boundingBoxData && data && data != ",,,") {
             var bbox = data.split(",");
+
+            var geomCrs = "EPSG:4326";
+            if (
+              input.boundingBoxData._default &&
+              input.boundingBoxData._default.crs &&
+              input.boundingBoxData._default.crs !== geomCrs
+            ) {
+              geomCrs = input.boundingBoxData._default.crs;
+              try {
+                bbox = ol.proj.transformExtent(bbox, "EPSG:4326", geomCrs);
+              } catch (e) {
+                console.warn(
+                  "WPS | Failed to convert boundingBoxData to requested CRS " + geomCrs
+                );
+              }
+            }
+
             request.value.dataInputs.input.push({
               identifier: {
                 value: input.identifier.value
@@ -247,7 +265,7 @@
               data: {
                 boundingBoxData: {
                   dimensions: 2,
-                  crs: "EPSG:4326",
+                  crs: geomCrs,
                   lowerCorner: [bbox[1], bbox[0]],
                   upperCorner: [bbox[3], bbox[2]]
                 }
@@ -317,18 +335,25 @@
        * @param {string} uri of the wps service
        * @param {string} processId of the process
        * @param {Object} inputs of the process
-       * @param {Object} output of the process
-       * @param {Object} options such as storeExecuteResponse,
-       * lineage and status
+       * @param {Object} responseDocument of the process
+       * @param {Object} formDescription Optional initial describe process processDescription (which contains form inputs and extra properties eg. preferred mimetype)
        * @return {defer} promise
        */
-      this.execute = function (uri, processId, inputs, responseDocument) {
+      this.execute = function (
+        uri,
+        processId,
+        inputs,
+        responseDocument,
+        formDescription
+      ) {
         var defer = $q.defer();
         var me = this;
 
+        // Not really sure why a describe process is required here
+        // as it was done already for creating the form.
         this.describeProcess(uri, processId).then(function (data) {
           // generate the XML message from the description
-          var description = data.processDescription[0];
+          var description = formDescription || data.processDescription[0];
           var message = me.printExecuteMessage(description, inputs, responseDocument);
 
           // do the post request

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,18 +27,23 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.regex.Pattern;
 import jeeves.server.UserSession;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.users.model.PasswordResetDto;
 import org.fao.geonet.api.users.model.UserDto;
 import org.fao.geonet.api.users.validation.PasswordResetDtoValidator;
 import org.fao.geonet.api.users.validation.UserDtoValidator;
+import org.fao.geonet.auditable.UserAuditableService;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.domain.auditable.UserAuditable;
 import org.fao.geonet.exceptions.UserNotFoundEx;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -51,6 +56,8 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -88,6 +95,12 @@ import static org.springframework.data.jpa.domain.Specification.where;
     description = "User operations")
 @Controller("users")
 public class UsersApi {
+    /**
+     * Username pattern with allowed chars: Username may only contain alphanumeric characters or hyphens,
+     * dots or colons or at-arrow (not consecutive). Cannot begin or end with an hyphen, colon or at-arrow.
+     */
+    private static final Pattern USERNAME_PATTERN_REGEX = Pattern.compile("^[a-zA-Z0-9]+([_\\-:.@]{1}[a-zA-Z0-9]+)*$");
+    public static final int MAX_USERNAME_LENGTH = 255;
 
     @Autowired
     SettingManager settingManager;
@@ -113,8 +126,18 @@ public class UsersApi {
     @Autowired
     LanguageUtils languageUtils;
 
+    /**
+     * Message source.
+     */
+    @Autowired
+    @Qualifier("apiMessages")
+    private ResourceBundleMessageSource messages;
+
     @Autowired(required=false)
     SecurityProviderConfiguration securityProviderConfiguration;
+
+    @Autowired
+    UserAuditableService userAuditableService;
 
     private BufferedImage pixel;
 
@@ -197,7 +220,7 @@ public class UsersApi {
             myUserId.equals(Integer.toString(userIdentifier))) {
             Optional<User> user = userRepository.findById(userIdentifier);
 
-            if (!user.isPresent()) {
+            if (user.isEmpty()) {
                 throw new UserNotFoundEx(Integer.toString(userIdentifier));
             }
 
@@ -246,7 +269,7 @@ public class UsersApi {
             try {
                 Optional<User> user = userRepository.findById(userIdentifier);
 
-                if (!user.isPresent()) {
+                if (user.isEmpty()) {
                     throw new UserNotFoundEx(Integer.toString(userIdentifier));
                 }
 
@@ -341,16 +364,27 @@ public class UsersApi {
             }
         }
 
+        Optional<User> userToDelete = userRepository.findById(userIdentifier);
+        List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(userIdentifier));
+
         userGroupRepository.deleteAllByIdAttribute(UserGroupId_.userId,
-            Arrays.asList(userIdentifier));
+            List.of(userIdentifier));
 
         userSavedSelectionRepository.deleteAllByUser(userIdentifier);
+
+
 
         try {
             userRepository.deleteById(userIdentifier);
         } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
             throw new UserNotFoundEx(Integer.toString(userIdentifier));
         }
+
+        if (userToDelete.isPresent()) {
+            UserAuditable userAuditable = UserAuditable.build(userToDelete.get(), userGroups);
+            userAuditableService.auditDelete(userAuditable);
+        }
+
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -393,7 +427,7 @@ public class UsersApi {
                 return new ResponseEntity<>(HttpStatus.OK);
             }
         } else {
-            throw new IllegalArgumentException(String.format("Property '%s' is not supported. You can only check username and email"));
+            throw new IllegalArgumentException("Property is not supported. You can only check username and email");
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
@@ -442,7 +476,7 @@ public class UsersApi {
 
         // TODO: CheckAccessRights
 
-        if (!myProfile.getAll().contains(profile)) {
+        if (!myProfile.getProfileAndAllChildren().contains(profile)) {
             throw new IllegalArgumentException(
                 "Trying to set profile to " + profile
                     + " max profile permitted is: " + myProfile);
@@ -456,11 +490,18 @@ public class UsersApi {
             throw new IllegalArgumentException(errorMessage);
         }
 
-        // If userProfileUpdateEnabled is not enabled, the user password are managed by the security provider so allow null passwords.
-        // Otherwise the password cannot be null.
+        // If userProfileUpdateEnabled is not enabled, the user password is managed by the security provider so allow null passwords.
+        // Otherwise, the password cannot be null.
         if (userDto.getPassword() == null
             && (securityProviderConfiguration == null || securityProviderConfiguration.isUserProfileUpdateEnabled())) {
             throw new IllegalArgumentException("Users password must be supplied");
+        }
+
+        if (!USERNAME_PATTERN_REGEX.matcher(userDto.getUsername()).matches()) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single colons, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, colon, at sign or dot."
+            );
         }
 
         List<User> existingUsers = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
@@ -486,7 +527,13 @@ public class UsersApi {
         fillUserFromParams(user, userDto);
 
         user = userRepository.save(user);
-        setUserGroups(user, groups);
+        setUserGroups(user, groups, locale);
+
+        List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs
+            .hasUserId(user.getId()));
+
+        UserAuditable userAuditable = UserAuditable.build(user, userGroups);
+        userAuditableService.auditSave(userAuditable);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -517,7 +564,6 @@ public class UsersApi {
             HttpSession httpSession
     ) throws Exception {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
-        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
 
@@ -535,16 +581,16 @@ public class UsersApi {
 
         // TODO: CheckAccessRights
 
-        User user = userRepository.findById(userIdentifier).get();
-        if (user == null) {
-            throw new IllegalArgumentException("No user found with id: "
-                + userDto.getId());
+        Optional<User> userOptional = userRepository.findById(userIdentifier);
+        if (userOptional.isEmpty()) {
+            throw new IllegalArgumentException(String.format("No user found with id: %s", userDto.getId()));
         }
+        User user = userOptional.get();
 
         // Check no duplicated username and if we are adding a duplicate existing name with other case combination
         List<User> usersWithUsernameIgnoreCase = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
-        if (usersWithUsernameIgnoreCase.size() != 0 &&
-            (!usersWithUsernameIgnoreCase.stream().anyMatch(u -> u.getId() == userIdentifier)
+        if (!usersWithUsernameIgnoreCase.isEmpty() &&
+            (usersWithUsernameIgnoreCase.stream().noneMatch(u -> u.getId() == userIdentifier)
                 || usersWithUsernameIgnoreCase.stream().anyMatch(u ->
                 u.getUsername().equals(userDto.getUsername()) && u.getId() != userIdentifier)
             )) {
@@ -552,8 +598,18 @@ public class UsersApi {
                 "Another user with username '%s' ignore case already exists", user.getUsername()));
         }
 
+        if (userDto.getUsername().length() > MAX_USERNAME_LENGTH) {
+            throw new IllegalArgumentException(
+                String.format("username must be less or equals than %d characters length", MAX_USERNAME_LENGTH));
+        }
+        if (!USERNAME_PATTERN_REGEX.matcher(userDto.getUsername()).matches()) {
+            throw new IllegalArgumentException(Params.USERNAME
+                + " may only contain alphanumeric characters or single hyphens, single colons, single at signs or single dots. "
+                + "Cannot begin or end with a hyphen, colon, at sign or dot."
+            );
+        }
 
-        if (!myProfile.getAll().contains(profile)) {
+        if (!myProfile.getProfileAndAllChildren().contains(profile)) {
             throw new IllegalArgumentException(
                 "Trying to set profile to " + profile
                     + " max profile permitted is: " + myProfile);
@@ -566,7 +622,7 @@ public class UsersApi {
         groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
         groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
 
-        //If it is a useradmin updating,
+        //If it is an useradmin updating,
         //maybe we don't know all the groups the user is part of
         if (!Profile.Administrator.equals(myProfile)) {
             List<Integer> myUserAdminGroups = userGroupRepository.findGroupIds(Specification.where(
@@ -612,8 +668,14 @@ public class UsersApi {
         user = userRepository.save(user);
 
         if (securityProviderConfiguration == null || securityProviderConfiguration.isUserGroupUpdateEnabled()) {
-            setUserGroups(user, groups);
+            setUserGroups(user, groups, locale);
         }
+
+        List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs
+            .hasUserId(user.getId()));
+
+        UserAuditable userAuditable = UserAuditable.build(user, userGroups);
+        userAuditableService.auditSave(userAuditable);
 
         return new ResponseEntity(HttpStatus.NO_CONTENT);
     }
@@ -667,14 +729,14 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        if (!Profile.Administrator.equals(myProfile) 
-            && !Profile.UserAdmin.equals(myProfile) 
+        if (!Profile.Administrator.equals(myProfile)
+            && !Profile.UserAdmin.equals(myProfile)
             && !myUserId.equals(Integer.toString(userIdentifier))) {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
 
         Optional<User> user = userRepository.findById(userIdentifier);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             throw new UserNotFoundEx(Integer.toString(userIdentifier));
         }
 
@@ -724,10 +786,12 @@ public class UsersApi {
 
         if (Profile.Administrator.equals(myProfile) || Profile.UserAdmin.equals(myProfile) || myUserId.equals(Integer.toString(userIdentifier))) {
             // -- get the profile of the user id supplied
-            User user = userRepository.findById(userIdentifier).get();
-            if (user == null) {
+            Optional<User> userOptional = userRepository.findById(userIdentifier);
+
+            if (userOptional.isEmpty()) {
                 throw new IllegalArgumentException("user " + userIdentifier + " doesn't exist");
             }
+            User user = userOptional.get();
 
             String userProfile = user.getProfile().name();
 
@@ -786,14 +850,14 @@ public class UsersApi {
     }
 
 
-    private void setUserGroups(final User user, List<GroupElem> userGroups)
+    private void setUserGroups(final User user, List<GroupElem> userGroups, Locale locale)
         throws Exception {
 
         Collection<UserGroup> all = userGroupRepository.findAll(UserGroupSpecs
             .hasUserId(user.getId()));
 
         // Have a quick reference of existing groups and profiles for this user
-        Set<String> listOfAddedProfiles = new HashSet<String>();
+        Set<String> listOfAddedProfiles = new HashSet<>();
         for (UserGroup ug : all) {
             String key = ug.getProfile().name() + ug.getGroup().getId();
             listOfAddedProfiles.add(key);
@@ -801,11 +865,10 @@ public class UsersApi {
 
         // We start removing all old usergroup objects. We will remove the
         // explicitly defined for this call
-        Collection<UserGroup> toRemove = new ArrayList<UserGroup>();
-        toRemove.addAll(all);
+        Collection<UserGroup> toRemove = new ArrayList<>(all);
 
         // New pairs of group-profile we need to add
-        Collection<UserGroup> toAdd = new ArrayList<UserGroup>();
+        Collection<UserGroup> toAdd = new ArrayList<>();
 
         // For each of the parameters on the request, make sure the group is
         // updated.
@@ -814,6 +877,11 @@ public class UsersApi {
             Group group = groupRepository.findById(groupId).get();
             String profile = element.getProfile();
             // The user has a new group and profile
+
+            if (group.getType() == GroupType.SystemPrivilege && !Profile.RegisteredUser.name().equals(profile)) {
+                throw new NotAllowedException(messages.getMessage("api.users.invalid_profile_for_system_group", new
+                    Object[]{group.getName()}, locale));
+            }
 
             // Combine all groups editor and reviewer groups
             if (profile.equals(Profile.Reviewer.name())) {
@@ -865,7 +933,7 @@ public class UsersApi {
 
 
     private List<GroupElem> processGroups(List<String> groupsToProcessList, Profile profile) {
-        List<GroupElem> groups = new LinkedList<GroupElem>();
+        List<GroupElem> groups = new LinkedList<>();
         for (String g : groupsToProcessList) {
             groups.add(new GroupElem(profile.name(), Integer.parseInt(g)));
         }

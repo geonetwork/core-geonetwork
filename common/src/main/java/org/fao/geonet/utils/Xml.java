@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -26,32 +26,21 @@ package org.fao.geonet.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import net.sf.json.JSON;
 import net.sf.json.xml.XMLSerializer;
 import net.sf.saxon.Configuration;
 import net.sf.saxon.Controller;
 import net.sf.saxon.FeatureKeys;
-import org.apache.commons.io.IOUtils;
 import org.apache.fop.apps.Fop;
 import org.apache.fop.apps.FopFactory;
 import org.apache.fop.apps.MimeConstants;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.xml.resolver.tools.CatalogResolver;
 import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.utils.nio.NioPathAwareEntityResolver;
 import org.fao.geonet.utils.nio.NioPathHolder;
 import org.fao.geonet.utils.nio.PathStreamSource;
-import org.jdom.Attribute;
-import org.jdom.Content;
-import org.jdom.DocType;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.Namespace;
-import org.jdom.Text;
+import org.jdom.*;
 import org.jdom.filter.ElementFilter;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
@@ -60,36 +49,27 @@ import org.jdom.output.XMLOutputter;
 import org.jdom.transform.JDOMResult;
 import org.jdom.transform.JDOMSource;
 import org.jdom.xpath.XPath;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 import org.mozilla.universalchardet.UniversalDetector;
+import org.springframework.util.StringUtils;
+import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import javax.xml.XMLConstants;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
-import javax.xml.transform.Result;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.URIResolver;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.sax.SAXResult;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.ValidatorHandler;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.io.StringReader;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -100,19 +80,11 @@ import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CharsetEncoder;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -127,6 +99,7 @@ public final class Xml {
 
     public static final Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
     public static final NioPathAwareEntityResolver PATH_RESOLVER = new NioPathAwareEntityResolver();
+    private static final byte[] BOM_MARKER_TEMPLATE = { (byte) 0xEF, (byte) 0xBB, (byte) 0xBF };
 
     // http://www.w3.org/TR/REC-xml/#charsets
     public static final String XML10_ILLEGAL_CHAR_PATTERN = "[^"
@@ -136,6 +109,12 @@ public final class Xml {
         + "\ud800\udc00-\udbff\udfff"
         + "]";
     public static final String XML_VERSION_HEADER = "<\\?xml version=['\"]1.0['\"] encoding=['\"].*['\"]\\?>\\s*";
+
+    // see documentation, advanced-configuration.md.
+    // switching from tiny (1) to tinyc (2) saxon tree model
+    // (when saxon version does not support tinyc, asking for 2 will default to linked (0))
+    // default being tiny, but tinyc (or linked) is faster
+    public static final int SAXON_TREE_MODEL = Integer.parseInt(System.getProperty("saxon.treeModel", "2"));
 
     public static SAXBuilder getSAXBuilder(boolean validate) {
         SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, null);
@@ -252,8 +231,8 @@ public final class Xml {
 
                 // no charset detection and conversion allowed
             } else {
-                try (InputStream in = IO.newInputStream(file)) {
-                    Document jdoc = builder.build(in);
+                try (InputStream in = IO.newInputStream(file); PushbackInputStream f = processBOMMarker(in, file.getFileName().toString())) {
+                    Document jdoc = builder.build(f);
                     return (Element) jdoc.getRootElement().detach();
                 }
             }
@@ -362,12 +341,44 @@ public final class Xml {
      * Loads xml from an input stream and returns its root node.
      */
     public static Element loadStream(InputStream input) throws IOException, JDOMException {
+        try (PushbackInputStream f = processBOMMarker(input, "")) {
         SAXBuilder builder = getSAXBuilderWithPathXMLResolver(false, null); //new SAXBuilder();
         builder.setFeature("http://apache.org/xml/features/validation/schema", false);
         builder.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd", false);
-        Document jdoc = builder.build(input);
+            Document jdoc = builder.build(f);
 
         return (Element) jdoc.getRootElement().detach();
+    }
+    }
+
+    /**
+     * Removes UTF-8 BOM marker if it exists.
+     *
+     * @param input InputStream to process.
+     * @param file  File name (for logging purposes).
+     * @return PushbackInputStream without the BOM marker.
+     *
+     * @throws IOException
+     */
+    @VisibleForTesting
+    protected static PushbackInputStream processBOMMarker(InputStream input, String file) throws IOException {
+        PushbackInputStream f = new PushbackInputStream(input, 3);
+
+        byte[] bomMarkerToCheck = new byte[3];
+
+        int c = f.read(bomMarkerToCheck, 0, bomMarkerToCheck.length);
+
+        if (Arrays.equals(bomMarkerToCheck, BOM_MARKER_TEMPLATE)) {
+            if (StringUtils.hasLength(file)) {
+                Log.debug(Log.ENGINE, "Found UTF-8 BOM marker in XML file " + file + ", skipping");
+            } else {
+                Log.debug(Log.ENGINE, "Found UTF-8 BOM marker in XML document, skipping");
+                }
+        } else {
+            f.unread(bomMarkerToCheck, 0, c);
+        }
+
+        return f;
     }
 
     //--------------------------------------------------------------------------
@@ -399,6 +410,9 @@ public final class Xml {
     public static Element transform(Element xml, Path styleSheetPath, Map<String, Object> params) throws Exception {
         JDOMResult resXml = new JDOMResult();
         transform(xml, styleSheetPath, resXml, params);
+        if (resXml.getDocument() == null) {
+            throw new NullPointerException("Failed to create a Document for " + resXml.getResult());
+        }
         return (Element) resXml.getDocument().getRootElement().detach();
     }
     //--------------------------------------------------------------------------
@@ -406,22 +420,16 @@ public final class Xml {
     /**
      * Transforms an xml tree putting the result to a stream (uses a stylesheet on disk).
      */
+    public static void transform(Element xml, Path styleSheetPath, Map<String, Object> params, OutputStream out) throws Exception {
+        StreamResult resStream = new StreamResult(out);
+        transform(xml, styleSheetPath, resStream, params);
+        out.flush();
+    }
+
     public static void transform(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
-        StreamResult resStream = new StreamResult(out);
-        transform(xml, styleSheetPath, resStream, null);
-        out.flush();
+        transform(xml, styleSheetPath, new HashMap<>(), out);
     }
 
-
-    public static void transformXml(Element xml, Path styleSheetPath, OutputStream out) throws Exception {
-        StreamResult resStream = new StreamResult(out);
-        Map<String, Object> map = new HashMap<>();
-        map.put("geonet-force-xml", "xml");
-        transform(xml, styleSheetPath, resStream, map);
-        out.flush();
-    }
-
-    //--------------------------------------------------------------------------
 
     /**
      * Transforms an xml tree putting the result to a stream  - no parameters.
@@ -459,6 +467,7 @@ public final class Xml {
             transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
             transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, true);
             transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
+            transFact.setAttribute(FeatureKeys.TREE_MODEL, SAXON_TREE_MODEL);
             // Add the following to get timing info on xslt transformations
             //transFact.setAttribute(FeatureKeys.TIMING,true);
         } catch (IllegalArgumentException e) {
@@ -487,6 +496,9 @@ public final class Xml {
 
     /**
      * Transforms an xml tree putting the result to a stream with optional parameters.
+     * <p>
+     * Add a geonet-force-xml parameter to force the formatting to be xml.
+     * The preferred method is to define it using xsl:output.
      */
     public static void
     transform(Element xml, Path styleSheetPath, Result result, Map<String, Object> params) throws Exception {
@@ -505,6 +517,7 @@ public final class Xml {
                 transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
                 transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, false);
                 transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
+                transFact.setAttribute(FeatureKeys.TREE_MODEL, SAXON_TREE_MODEL);
 
                 // Add the following to get timing info on xslt transformations
                 //transFact.setAttribute(FeatureKeys.TIMING,true);
@@ -518,13 +531,13 @@ public final class Xml {
                         t.setParameter(param.getKey(), param.getValue());
                     }
 
-                if (params.containsKey("geonet-force-xml")) {
-                    ((Controller) t).setOutputProperty("indent", "yes");
-                    ((Controller) t).setOutputProperty("method", "xml");
-                    ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "3");
+                    if (params.containsKey("geonet-force-xml")) {
+                        ((Controller) t).setOutputProperty("indent", "yes");
+                        ((Controller) t).setOutputProperty("method", "xml");
+                        ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "2");
+                    }
                 }
 
-                }
                 t.transform(srcXml, result);
             }
         }
@@ -653,14 +666,26 @@ public final class Xml {
     }
 
     public static Element getXmlFromJSON(String jsonAsString) {
+        if (!StringUtils.hasLength(jsonAsString)) {
+            return null;
+        }
         ObjectMapper objectMapper = new ObjectMapper();
         try {
-            JsonNode json = objectMapper.readTree(jsonAsString);
-            String recordAsXml = XML.toString(
-                new JSONObject(
-                    objectMapper.writeValueAsString(json)), "root");
+            JsonNode jsonNode = objectMapper.readTree(jsonAsString);
+
+            String recordAsXml;
+            String jsonString = objectMapper.writeValueAsString(jsonNode);
+            if (jsonAsString.trim().startsWith("[")) {
+                recordAsXml = "<root>" + XML.toString(new JSONArray(jsonString)) + "</root>";
+            } else {
+                recordAsXml = XML.toString(new JSONObject(jsonString), "root");
+            }
             recordAsXml = Xml.stripNonValidXMLCharacters(recordAsXml);
-            return Xml.loadString(recordAsXml, false);
+            if (StringUtils.hasLength(recordAsXml)) {
+                Element xml = Xml.loadString(recordAsXml, false);
+                xml.detach();
+                return xml;
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (JsonProcessingException e) {
@@ -713,6 +738,24 @@ public final class Xml {
         XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
 
         return outputter.outputString(data);
+    }
+
+    /**
+     *
+     * @param data
+     * @return
+     */
+    public static String getString(Node data) {
+        try {
+            TransformerFactory tf = TransformerFactoryFactory.getTransformerFactory();
+            Transformer transformer = tf.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            StringWriter writer = new StringWriter();
+            transformer.transform(new DOMSource(data), new StreamResult(writer));
+            return writer.toString();
+        } catch (TransformerException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     //---------------------------------------------------------------------------

@@ -16,7 +16,7 @@
             title="{{'ui-getProj' | translate:epsgHelpers.getServiceName()}}"
             data-ng-click="populateProjSettings(mCfg[key][$index])"
           >
-            <i class="fa fa-globe" />
+            <i class="fa fa-globe"></i>
           </button>
         </span>
       </div>
@@ -133,7 +133,7 @@
                 title="{{'remove' | translate}}"
                 data-ng-click="removeItem(mCfg[key][parentIndex].resolutions, $index)"
               >
-                <i class="fa fa-times text-danger" />
+                <i class="fa fa-times text-danger"></i>
               </a>
             </td>
           </tr>
@@ -144,7 +144,7 @@
                 title="{{'add' | translate}}"
                 data-ng-click="addItem(mCfg[key][$index].resolutions, '')"
               >
-                <i class="fa fa-fw fa-plus" />
+                <i class="fa fa-fw fa-plus"></i>
                 <span translate="add"></span>
               </a>
             </td>
@@ -161,7 +161,7 @@
         title="{{'remove' | translate}}"
         data-ng-click="removeItem(mCfg[key], $index)"
       >
-        <i class="fa fa-times text-danger" />
+        <i class="fa fa-times text-danger"></i>
       </a>
     </td>
   </tr>
@@ -172,7 +172,7 @@
         title="{{'add' | translate}}"
         data-ng-click="addItem(mCfg[key], {'label': '', 'code': 'EPSG:', 'extent': [], worldExtent: [], resolutions: []})"
       >
-        <i class="fa fa-fw fa-plus" />
+        <i class="fa fa-fw fa-plus"></i>
         <span translate="add"></span>
       </a>
     </td>

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn" dest="out">
   <Properties>
-    <Property name="log_dir">.</Property>
+    <Property name="logs_dir">logs</Property>
   </Properties>
   <Appenders>
     <Console name="Console" target="SYSTEM_OUT">
       <PatternLayout pattern="%date{ISO8601} %-5level [%logger] - %message%n"/>
     </Console>
     <RollingFile name="File">
-      <filename>${sys:log_dir:-log_dir}/logs/geonetwork.log</filename>
-      <filePattern>${sys:log_dir:-log_dir}/logs/geonetwork.log-%i.log</filePattern>
+      <filename>${sys:log_dir:-${logs_dir}}/geonetwork.log</filename>
+      <filePattern>${sys:log_dir:-${logs_dir}}/geonetwork.log-%i.log</filePattern>
       <PatternLayout pattern="%date{ISO8601} %-5level [%logger] - %message%n"/>
       <Policies>
         <SizeBasedTriggeringPolicy size="10 MB" />

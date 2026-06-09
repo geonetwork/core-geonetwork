@@ -13,7 +13,7 @@
                 xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
                 xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
                 xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
-                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.1"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:mac="http://standards.iso.org/iso/19115/-3/mac/2.0"
                 xmlns:mas="http://standards.iso.org/iso/19115/-3/mas/1.0"
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
@@ -43,10 +43,6 @@
   <xsl:template match="/" priority="999">
     <xsl:variable name="iso19115Record">
       <xsl:for-each select="//(gmd:MD_Metadata|gmi:MI_Metadata)">
-        <xsl:variable name="nameSpacePrefix">
-          <xsl:call-template name="getNamespacePrefix"/>
-        </xsl:variable>
-
         <xsl:element name="mdb:MD_Metadata">
           <xsl:call-template name="add-iso19115-3.2018-namespaces"/>
 

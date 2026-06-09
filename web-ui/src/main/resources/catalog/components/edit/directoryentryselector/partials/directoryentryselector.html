@@ -23,7 +23,7 @@
 
     <!-- spinner while searching -->
     <div ng-show="searching" class="list-group tt-menu gn-autocomplete-list text-center">
-      <i class="fa fa-spinner fa-spin" />
+      <i class="fa fa-spinner fa-spin"></i>
     </div>
 
     <!-- The autocomplete list -->
@@ -36,7 +36,7 @@
           <!-- Add action for simple subtemplates -->
           <gn-md-type-widget metadata="r"></gn-md-type-widget>
 
-          <div class="flex-spacer" />
+          <div class="flex-spacer"></div>
 
           <div class="text flex-grow">{{r.resourceTitle}}</div>
 
@@ -129,7 +129,7 @@
         data-ng-show="popupAction"
         data-ng-click="openSelector()"
       >
-        <i class="fa fa-search" />&nbsp;
+        <i class="fa fa-search"></i>&nbsp;
         <span data-ng-hide="searchAction">
           {{('searchA' + templateType) | translate}}
         </span>
@@ -142,7 +142,7 @@
         class="btn btn-default"
         data-ng-click="addEntry(templateAddSnippet, undefined, false, true)"
       >
-        <i class="fa fa-fw fa-plus" />
+        <i class="fa fa-fw fa-plus"></i>
       </button>
     </div>
 

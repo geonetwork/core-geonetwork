@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -46,7 +46,7 @@ public class ElementLib {
     //-----------------------------------------------------------------------------
 
     public Set<String> getIds(Element elem) {
-        HashSet<String> hs = new HashSet<String>();
+        HashSet<String> hs = new HashSet<>();
 
         for (Object child : elem.getChildren())
             hs.add(((Element) child).getChildText("id"));
@@ -57,7 +57,7 @@ public class ElementLib {
     //-----------------------------------------------------------------------------
 
     public Element pruneChildren(Element elem, Set<Integer> ids) {
-        ArrayList<Element> alToPrune = new ArrayList<Element>();
+        ArrayList<Element> alToPrune = new ArrayList<>();
 
         //--- collect elements to prune
 

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -26,12 +26,14 @@ package org.fao.geonet.guiservices.util;
 import jeeves.interfaces.Service;
 import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
 
+import javax.servlet.ServletRegistration;
 import java.nio.file.Path;
 
 /**
@@ -50,9 +52,6 @@ public class Env implements Service {
     //--------------------------------------------------------------------------
 
     public Element exec(Element params, ServiceContext context) throws Exception {
-        // reset the thread local
-        XmlSerializer.clearThreadLocal();
-
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
 
         Element response = gc.getBean(SettingManager.class).getAllAsXML(true);
@@ -67,6 +66,14 @@ public class Env implements Service {
         if (response.getChild("map") != null) {
             system.addContent(response.getChild("map").detach());
         }
+
+        // Setting for OGC API Records service enabled
+        String microservicesTargetUri = (String) context.getServlet().getServletContext().getAttribute("MicroServicesProxy.targetUri");
+
+        Element microservicesEnabled = new Element("microservicesEnabled");
+        microservicesEnabled.setText(Boolean.toString(StringUtils.isNotBlank(microservicesTargetUri)));
+        system.addContent(microservicesEnabled);
+
         return (Element) system.clone();
     }
 }

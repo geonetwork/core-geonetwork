@@ -30,6 +30,7 @@ import org.geotools.data.wfs.internal.WFSConfig;
 import org.geotools.data.wfs.internal.WFSGetCapabilities;
 import org.geotools.data.wfs.internal.WFSStrategy;
 import org.geotools.data.wfs.internal.v1_x.MapServerWFSStrategy;
+import org.geotools.data.wfs.internal.v2_0.StrictWFS_2_0_Strategy;
 import org.geotools.http.HTTPClient;
 import org.geotools.http.HTTPResponse;
 import org.geotools.ows.ServiceException;
@@ -38,6 +39,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import static org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterExchangeState.MAPSERVER_STRATEGY;
 import static org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterExchangeState.QGIS_STRATEGY;
@@ -84,12 +86,16 @@ public class WFSClientWithStrategyInvestigator extends WFSClient {
             while ((readCount = inputStream.read(buff)) != -1) {
                 out.write(buff, 0, readCount);
             }
-            String responsePayload = out.toString("UTF-8");
+            String responsePayload = out.toString(StandardCharsets.UTF_8);
             if (responsePayload.contains("targetNamespace=\"http://www.qgis.org/gml\"")) {
                 strategy = new QgisStrategy();
                 strategyId = QGIS_STRATEGY;
             } else if (responsePayload.contains("targetNamespace=\"http://mapserver.gis.umn.edu/mapserver\"")) {
-                strategy = new MapServerWFSStrategy(capabilities.getRawDocument());
+                if (capabilities.getVersion().equals("2.0.0")) {
+                    strategy = new StrictWFS_2_0_Strategy();
+                } else {
+                    strategy = new MapServerWFSStrategy(capabilities.getRawDocument());
+                }
                 strategyId = MAPSERVER_STRATEGY;
             }
         } catch (Exception e) {

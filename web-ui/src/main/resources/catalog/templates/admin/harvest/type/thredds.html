@@ -2,9 +2,13 @@
   <input type="hidden" name="_csrf" value="{{csrf}}" />
 
   <div class="row">
-    <div class="col-lg-6" data-gn-harvester-identification="harvesterSelected" lang="" />
+    <div
+      class="col-lg-6"
+      data-gn-harvester-identification="harvesterSelected"
+      lang=""
+    ></div>
 
-    <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected" />
+    <div class="col-lg-6" data-gn-harvester-schedule="harvesterSelected"></div>
   </div>
 
   <fieldset>
@@ -30,8 +34,6 @@
       ><span data-translate="">harvesterResponseProcessing</span>
       {{harvesterSelected['@type'] | translate}}
     </legend>
-
-    <!-- <div data-gn-harvester-account="harvesterSelected"/> -->
 
     <!-- TODO: Could be nicer to have a list of languages -->
     <div>
@@ -97,14 +99,14 @@
       data-gn-category="harvesterSelected.options.serviceCategory"
       data-lang="{{lang}}"
       data-label="thredds-serviceCategory"
-    />
+    ></div>
 
     <div
       data-gn-category="harvesterSelected.options.datasetCategory"
       data-lang="{{lang}}"
       data-label="thredds-datasetCategory"
-    />
+    ></div>
   </fieldset>
 
-  <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}" />
+  <div data-gn-harvester-privileges="harvesterSelected" data-lang="{{lang}}"></div>
 </form>

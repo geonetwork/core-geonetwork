@@ -29,7 +29,8 @@
   module.directive("gnPagination", [
     "hotkeys",
     "$translate",
-    function (hotkeys, $translate) {
+    "gnGlobalSettings",
+    function (hotkeys, $translate, gnGlobalSettings) {
       return {
         restrict: "A",
         replace: true,
@@ -107,7 +108,10 @@
           }
           controller.activatePagination();
 
-          if (angular.isDefined(attrs.enableHotKeys)) {
+          if (
+            angular.isDefined(attrs.enableHotKeys) &&
+            gnGlobalSettings.gnCfg.mods.global.hotkeys
+          ) {
             hotkeys
               .bindTo(scope)
               .add({

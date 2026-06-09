@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,7 +27,8 @@
   var module = angular.module("gn_md_feedback_directive", []);
 
   /**
-   * Send email to metadata contact or catalog administrator.
+   * Send email to metadata contact or catalog administrator
+   * with feedback about a metadata record.
    */
   module.directive("gnMdFeedback", [
     "$http",
@@ -46,19 +47,17 @@
         link: function postLink(scope, element, attrs) {
           scope.showLabel = attrs.showLabel;
 
-          scope.isUserFeedbackEnabled = false;
+          scope.isUserMetadataFeedbackEnabled = false;
 
           gnConfigService.load().then(function (c) {
-            var statusSystemRating = gnConfig[gnConfig.key.isRatingUserFeedbackEnabled];
-            if (statusSystemRating == "advanced") {
-              scope.isUserFeedbackEnabled = true;
-            }
+            scope.isUserMetadataFeedbackEnabled =
+              gnConfig[gnConfig.key.isMetadataFeedbackEnabled];
+            scope.recaptchaEnabled =
+              gnConfig["system.userSelfRegistration.recaptcha.enable"];
+            scope.recaptchaKey =
+              gnConfig["system.userSelfRegistration.recaptcha.publickey"];
           });
 
-          scope.recaptchaEnabled =
-            gnConfig["system.userSelfRegistration.recaptcha.enable"];
-          scope.recaptchaKey =
-            gnConfig["system.userSelfRegistration.recaptcha.publickey"];
           scope.resolveRecaptcha = false;
 
           scope.mdFeedbackOpen = false;
@@ -140,6 +139,9 @@
                   scope.mdFeedbackOpen = false;
                 } else {
                   scope.success = false;
+                  if (scope.recaptchaEnabled) {
+                    vcRecaptchaService.reload();
+                  }
                 }
               });
             }

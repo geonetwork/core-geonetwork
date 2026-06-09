@@ -39,6 +39,7 @@ import org.fao.geonet.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -51,6 +52,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.groupingBy;
+import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_OPS;
+import static org.fao.geonet.api.ApiParams.API_CLASS_TOOLS_TAG;
 import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
@@ -60,7 +63,8 @@ import static org.springframework.http.HttpStatus.OK;
 @RequestMapping(value = {
     "/{portal}/api/i18n"
 })
-@Tag(name = "tools")
+@Tag(name = API_CLASS_TOOLS_TAG,
+    description = API_CLASS_TOOLS_OPS)
 @RestController
 public class TranslationApi {
 
@@ -107,7 +111,9 @@ public class TranslationApi {
         @RequestParam(required = false) final List<String> type,
         ServletRequest request
     ) throws Exception {
-        return translationsRepository.findAll();
+        final Sort sort = SortUtils.createSort(Translations_.fieldName);
+
+        return translationsRepository.findAll(sort);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -269,7 +275,6 @@ public class TranslationApi {
         }
     }
 
-
     @io.swagger.v3.oas.annotations.Operation(
         summary = "List database translations (used to overrides client application translations).")
     @GetMapping(value = "/db/translations",
@@ -283,10 +288,11 @@ public class TranslationApi {
                 "{" +
                     "  \"translationKey1\": \"Translated Key One\",\n" +
                     "  \"translationKey2\": \"Translated Key Two\",\n" +
-                    "  \"translationKey3\": \"Translated Key Two\"\n" +
+                    "  \"translationKey3\": \"Translated Key Three\"\n" +
                     "}")
-        }, schema = @Schema(type = "{ < * >: string }"))
+        }, schema = @Schema(type = "object", additionalPropertiesSchema = String.class))
     )
+    @ResponseStatus(OK)
     @ResponseBody
     public Map<String, String> getDbTranslations(
         ServletRequest request
@@ -310,7 +316,7 @@ public class TranslationApi {
             MediaType.APPLICATION_JSON_VALUE
         })
     @ResponseBody
-    public Map<String, List<String>> getTranslationsPackage() {
+    public Map<String, List<String>> getTranslationsPackages() {
         return translationPackBuilder.getPackages();
     }
 

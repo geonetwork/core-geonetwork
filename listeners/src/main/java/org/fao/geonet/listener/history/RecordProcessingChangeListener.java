@@ -32,7 +32,7 @@ public class RecordProcessingChangeListener extends GenericMetadataEventListener
         implements ApplicationListener<RecordProcessingChangeEvent> {
 
     private String changeMessage = "";
-    private String eventType = StatusValue.Events.RECORDPROCESSINGCHANGE;
+    private final StatusValue.Events eventType = StatusValue.Events.RECORDPROCESSINGCHANGE;
 
     @Override
     public String getChangeMessage() {
@@ -41,7 +41,7 @@ public class RecordProcessingChangeListener extends GenericMetadataEventListener
 
     @Override
     public String getEventType() {
-        return eventType;
+        return eventType.getCode();
     }
 
     @Override

@@ -2,7 +2,9 @@
   <!-- common -->
   <tab heading="{{'mdTabCommon' | translate}}" role="tab" active="infoTabs.common.active">
     <h2 data-translate="">aboutThisResource</h2>
-    <div ng-include="'../../catalog/views/default/templates/recordView/common.html'" />
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/common.html'"
+    ></div>
   </tab>
   <!-- /common -->
 
@@ -12,7 +14,9 @@
     role="tab"
     active="infoTabs.technical.active"
   >
-    <div ng-include="'../../catalog/views/default/templates/recordView/metadata.html'" />
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/metadata.html'"
+    ></div>
   </tab>
   <!-- /technical & metadata -->
 
@@ -21,9 +25,12 @@
     heading="{{'mdTabContact' | translate}}"
     role="tab"
     active="infoTabs.contact.active"
+    data-ng-if="mdView.current.record.contactForResource || mdView.current.record.resourceCredit"
   >
     <h2 data-translate="">resourceContact</h2>
-    <div ng-include="'../../catalog/views/default/templates/recordView/contact.html'" />
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/contact.html'"
+    ></div>
   </tab>
   <!-- /contact -->
 
@@ -33,7 +40,9 @@
     role="tab"
     active="infoTabs.relations.active"
   >
-    <div ng-include="'../../catalog/views/default/templates/recordView/downloads.html'" />
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/downloads.html'"
+    ></div>
   </tab>
   <!-- /downloads & links -->
 
@@ -43,7 +52,9 @@
     role="tab"
     active="infoTabs.resources.active"
   >
-    <div ng-include="'../../catalog/views/default/templates/recordView/related.html'" />
+    <div
+      ng-include="'../../catalog/views/default/templates/recordView/related.html'"
+    ></div>
   </tab>
   <!-- /(associated) resources -->
 </tabset>

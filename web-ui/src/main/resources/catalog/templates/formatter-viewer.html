@@ -1,9 +1,15 @@
 <div class="container formatter-container">
   <div class="btn-toolbar pull-right">
     <div
-      class="gn-md-actions-btn pull-right btn-group md-actions"
-      data-gn-md-actions-menu="md"
-    />
+      data-ng-if="md && user.isEditorOrMore()"
+      class="gn-md-actions-btn pull-right"
+      gn-manage-record-menu="md"
+    ></div>
+    <div
+      data-ng-if="md"
+      class="gn-md-actions-btn pull-right"
+      gn-download-record-menu="md"
+    ></div>
     <a
       class="btn btn-primary gn-md-edit-btn"
       data-ng-show="user.canEditRecord(md)"

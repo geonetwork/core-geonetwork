@@ -259,7 +259,10 @@ public class MapServersUtils {
                 if (!g.deleteLayer(dsName))
                     report += "Layer: " + g.getStatus();
                 if (isRaster) {
-
+                    if (!g.deleteCoverage(dsName, dsName))
+                        report += "Coverage: " + g.getStatus();
+                    if (!g.deleteCoverageStore(dsName))
+                        report += "Coveragestore: " + g.getStatus();
                 } else {
                     if (!g.deleteFeatureType(dsName, dsName))
                         report += "Feature type: " + g.getStatus();

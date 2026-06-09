@@ -62,12 +62,26 @@ public interface IMetadataManager {
 
     /**
      * Removes the record with the id metadataId
+     * from the database and index without sending events.
+     *
+     * This is useful for harvesting tasks.
      *
      * @param context
      * @param metadataId
      * @throws Exception
      */
     void deleteMetadata(ServiceContext context, String metadataId) throws Exception;
+
+    /**
+     * Delete the record with the id metadataId
+     * from the database and index
+     * and additionally take care of cleaning up resources, send events, ...
+     *
+     * @param context
+     * @param metadataId
+     * @throws Exception
+     */
+    void purgeMetadata(ServiceContext context, String metadataId, boolean withBackup) throws Exception;
 
     /**
      * Removes a record without notifying.
@@ -271,4 +285,16 @@ public interface IMetadataManager {
 
 
 	public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> specs);
+
+    /**
+     * Inflates a metadata XML document by applying a transformation using a specified XSLT stylesheet.
+     * If the stylesheet does not exist, the original metadata is returned unchanged.
+     *
+     * @param metadataXml The metadata XML document to be inflated.
+     * @param schema The schema associated with the metadata, used to locate the XSLT stylesheet.
+     * @param lang The language to be used in the transformation environment.
+     * @return The transformed metadata XML document, or the original metadata if no stylesheet is found.
+     * @throws Exception If an error occurs during the transformation process.
+     */
+    public Element inflateMetadata(Element metadataXml, String schema, String lang) throws Exception;
 }

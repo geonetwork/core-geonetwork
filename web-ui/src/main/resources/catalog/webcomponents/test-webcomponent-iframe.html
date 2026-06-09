@@ -1,0 +1,22 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Embedding GeoNetwork / Iframe mode</title>
+  </head>
+  <body style="background-color: lightgrey; padding: 20px; font-family: monospace;">
+    <h1>Search app (as iframe)</h1>
+
+    <i>The web component creates an iframe to embed the application.</i>
+
+    <gn-app-frame
+      portal="srv"
+      config='{"mods": {
+                  "home": {"enabled": false},
+                  "footer": {"enabled": false},
+                  "header": {"enabled": false}
+                  }}'
+    ></gn-app-frame>
+
+    <script src="webcomponents.js"></script>
+  </body>
+</html>

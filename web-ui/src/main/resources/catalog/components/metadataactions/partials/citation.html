@@ -15,10 +15,16 @@
   </div>
   <div>
     <div
+      class="gn-copy-to-clipboard-button-floatright gn-margin-left-sm"
+      gn-save-text-button=""
+      data-file-name="{{ getCitationFilename() }}"
+    ></div>
+
+    <div
       class="gn-copy-to-clipboard-button-floatright"
       gn-copy-to-clipboard-button=""
       timeout="1000"
-    />
+    ></div>
     <div data-ng-if="!isCode" ng-bind-html="citationText"></div>
     <pre data-ng-if="isCode">{{citationText}}</pre>
   </div>

@@ -1,0 +1,24 @@
+<table class="table table-striped table-bordered gn-margin-left-lg gn-margin-top-lg">
+  <thead>
+    <tr>
+      <td data-ng-if="columnVisibility['type']" data-translate="">measureType</td>
+      <td data-ng-if="columnVisibility['name']" data-translate="">measureName</td>
+      <td data-ng-if="columnVisibility['description']">
+        {{(columnVisibility['name'] ? 'measureDescription' : 'measureName') | translate}}
+      </td>
+      <td data-ng-if="columnVisibility['value']" data-translate="">measureValue</td>
+      <td data-ng-if="columnVisibility['date']" data-translate="">measureDate</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr data-ng-repeat="m in measures">
+      <td data-ng-if="columnVisibility['type']">{{m.type | translate}}</td>
+      <td data-ng-if="columnVisibility['name']">{{m.name}}</td>
+      <td data-ng-if="columnVisibility['description']">{{m.description}}</td>
+      <td data-ng-if="columnVisibility['value']">
+        {{m.value}} <span data-ng-if="m.unit"> {{m.unit}}</span>
+      </td>
+      <td data-ng-if="columnVisibility['date']">{{m.date}}</td>
+    </tr>
+  </tbody>
+</table>

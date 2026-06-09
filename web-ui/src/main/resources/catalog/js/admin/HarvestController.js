@@ -98,6 +98,14 @@
             if (data != "null") {
               $scope.harvesters = data;
               gnUtilityService.parseBoolean($scope.harvesters);
+
+              angular.forEach($scope.harvesters, function (harvester) {
+                // The backend returns an empty array in json serialization if the field is empty, instead of a string
+                if (angular.isArray(harvester.content.translateContentLangs)) {
+                  harvester.content.translateContentLangs = "";
+                }
+              });
+
               pollHarvesterStatus();
             }
             $scope.isLoadingHarvester = false;

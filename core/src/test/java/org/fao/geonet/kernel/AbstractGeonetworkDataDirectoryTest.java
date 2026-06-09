@@ -26,6 +26,8 @@ package org.fao.geonet.kernel;
 import jeeves.server.ServiceConfig;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +36,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 /**
  * Abstract class for GeonetworkDataDirectory tests where the data directory layout is a default
@@ -64,6 +66,7 @@ public abstract class AbstractGeonetworkDataDirectoryTest extends AbstractCoreIn
         dataDirectory.setHtmlCacheDir(null);
         dataDirectory.setSchemaPluginsDir(null);
         dataDirectory.setThesauriDir(null);
+        dataDirectory.setSchemaPublicationDir(null);
         final ArrayList<Element> serviceConfigParameterElements = getServiceConfigParameterElements();
         final ServiceConfig handlerConfig = new ServiceConfig(serviceConfigParameterElements);
         final Path webappDir = getWebappDir(getClass());
@@ -75,6 +78,29 @@ public abstract class AbstractGeonetworkDataDirectoryTest extends AbstractCoreIn
         assertSystemDirSubFolders(expectedDataDir);
     }
 
+    @Test
+    public void testGetXsltConversion() {
+        Path xsltConversion = dataDirectory.getXsltConversion("conversion");
+        assertEquals(dataDirectory.getWebappDir().resolve(Geonet.Path.IMPORT_STYLESHEETS).resolve("conversion.xsl"), xsltConversion);
+        try {
+            dataDirectory.getXsltConversion("../conversion");
+        } catch (BadParameterEx e) {
+            assertEquals("../conversion is not a valid value for: Invalid character found in path.", e.getMessage());
+        }
+
+        xsltConversion = dataDirectory.getXsltConversion("schema:iso19115-3.2018:convert/fromISO19115-3.2014");
+        assertNotNull(xsltConversion);
+        try {
+            dataDirectory.getXsltConversion("schema:notExistingSchema:convert/fromISO19115-3.2014");
+        } catch (BadParameterEx e) {
+            assertEquals("Conversion not found. Schema 'notExistingSchema' is not registered in this catalog.", e.getMessage());
+        }
+        try {
+            dataDirectory.getXsltConversion("schema:iso19115-3.2018:../../custom/path");
+        } catch (BadParameterEx e) {
+            assertEquals("../../custom/path is not a valid value for: Invalid character found in path.", e.getMessage());
+        }
+    }
     private void assertSystemDirSubFolders(Path expectedDataDir) {
         final Path expectedConfigDir = expectedDataDir.resolve("config");
         assertEquals(expectedConfigDir, dataDirectory.getConfigDir());
@@ -83,6 +109,7 @@ public abstract class AbstractGeonetworkDataDirectoryTest extends AbstractCoreIn
         final Path expectedResourcesDir = expectedDataDir.resolve("data").resolve("resources");
         assertEquals(expectedResourcesDir, dataDirectory.getResourcesDir());
         assertEquals(expectedResourcesDir.resolve("htmlcache"), dataDirectory.getHtmlCacheDir());
+        assertEquals(expectedResourcesDir.resolve("schemapublication"), dataDirectory.getSchemaPublicationDir());
         assertEquals(expectedConfigDir.resolve("schema_plugins"), dataDirectory.getSchemaPluginsDir());
         assertEquals(expectedConfigDir.resolve("codelist"), dataDirectory.getThesauriDir());
     }

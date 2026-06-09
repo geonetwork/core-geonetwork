@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -26,17 +26,19 @@ import com.google.common.collect.Lists;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiParams;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
-import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
+import org.jdom.Attribute;
 import org.jdom.Element;
 import org.junit.Assert;
 import org.junit.Before;
@@ -55,12 +57,9 @@ import java.util.*;
 
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GCO;
-import static org.fao.geonet.schema.iso19139.ISO19139Namespaces.GMD;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -70,25 +69,26 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author juanluisrp
  **/
 public class MetadataApiTest extends AbstractServiceIntegrationTest {
+
     @Autowired
     private WebApplicationContext wac;
-    @Autowired
-    private SchemaManager schemaManager;
-    @Autowired
-    private DataManager dataManager;
-    @Autowired
-    private SourceRepository sourceRepository;
-
     @PersistenceContext
     private EntityManager _entityManager;
-
     @Autowired
     private MetadataRepository metadataRepository;
+    @Autowired
+    private IMetadataIndexer metadataIndexer;
+    @Autowired
+    private SourceRepository sourceRepository;
+    @Autowired
+    private NodeInfo nodeInfo;
+    @Autowired
+    private SettingManager settingManager;
 
-    private String uuid;
     private int id;
+    private String uuid;
+    private String mdWithSubtemplateUuid;
     private ServiceContext context;
-
 
     @Before
     public void setUp() throws Exception {
@@ -98,37 +98,27 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
     private void createTestData() throws Exception {
         loginAsAdmin(context);
+        AbstractMetadata metadata = injectMetadataInDb(getSampleMetadataXml(), context, true);
+        id = metadata.getId();
+        uuid = metadata.getUuid();
 
-        final Element sampleMetadataXml = getSampleMetadataXml();
-        this.uuid = UUID.randomUUID().toString();
-        Xml.selectElement(sampleMetadataXml, "gmd:fileIdentifier/gco:CharacterString", Arrays.asList(GMD, GCO)).setText(this.uuid);
-
-        String source = sourceRepository.findAll().get(0).getUuid();
-        String schema = schemaManager.autodetectSchema(sampleMetadataXml);
-        final Metadata metadata = new Metadata();
-        metadata
-            .setDataAndFixCR(sampleMetadataXml)
-            .setUuid(uuid);
-        metadata.getDataInfo()
-            .setRoot(sampleMetadataXml.getQualifiedName())
-            .setSchemaId(schema)
-            .setType(MetadataType.METADATA)
-            .setPopularity(1000);
-        metadata.getSourceInfo()
-            .setOwner(1)
-            .setSourceId(source);
-        metadata.getHarvestInfo()
-            .setHarvested(false);
+        AbstractMetadata subtemplate = insertTemplateResourceInDb(getSample("kernel/babarContact.xml"), context);
+        Element metadataWithSubtemplate = getSample("kernel/vicinityMap.xml");
+        Attribute href = (Attribute) Xml.selectElement(metadataWithSubtemplate, "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact").getAttributes().get(0);
+        href.setValue(href.getValue().replace("@contact_uuid@", subtemplate.getUuid()));
+        mdWithSubtemplateUuid = injectMetadataInDb(metadataWithSubtemplate, context, true).getUuid();
 
 
-        this.id = dataManager.insertMetadata(context, metadata, sampleMetadataXml, IndexingMode.none, false, UpdateDatestamp.NO,
-            false, false).getId();
 
+        metadataIndexer.indexMetadata(String.valueOf(id), true, IndexingMode.full);
 
-        dataManager.indexMetadata(Lists.newArrayList("" + this.id));
-        this.id = metadataRepository.findById(this.id).get().getId();
+        Source subportal = new Source();
+        subportal.setName("external");
+        subportal.setType(SourceType.subportal);
+        subportal.setFilter("-uuid:" + uuid);
+        subportal.setUuid(UUID.randomUUID().toString());
+        sourceRepository.save(subportal);
     }
-
 
     @Test
     public void getNonExistentRecordRecord() throws Exception {
@@ -181,7 +171,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             MEF_V2_ACCEPT_TYPE
         );
 
-
         mockMvc.perform(get("/srv/api/records/" + this.uuid)
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
@@ -226,7 +215,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         contentTypes.put(MediaType.APPLICATION_XHTML_XML_VALUE, this.uuid + "/formatters/xsl-view");
         contentTypes.put("application/pdf", this.uuid + "/formatters/xsl-view");
         contentTypes.put(MediaType.APPLICATION_XML_VALUE, this.uuid + "/formatters/xml");
-        contentTypes.put(MediaType.APPLICATION_JSON_VALUE, this.uuid + "/formatters/xml");
+        contentTypes.put(MediaType.APPLICATION_JSON_VALUE, this.uuid + "/formatters/json");
         contentTypes.put("application/zip", this.uuid + "/formatters/zip");
         contentTypes.put(MEF_V1_ACCEPT_TYPE, this.uuid + "/formatters/zip");
         contentTypes.put(MEF_V2_ACCEPT_TYPE, this.uuid + "/formatters/zip");
@@ -235,7 +224,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             mockMvc.perform(get("/srv/api/records/" + this.uuid)
                     .session(mockHttpSession)
                     .accept(entry.getKey()))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(forwardedUrl(entry.getValue()));
         }
@@ -262,7 +250,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_XML))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -273,7 +260,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/json")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_JSON))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -291,7 +277,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("addSchemaLocation", "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_XML))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -303,7 +288,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("addSchemaLocation", "false")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_XML))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -311,6 +295,27 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().string(containsString(this.uuid)))
             .andExpect(content().string(not(containsString(".xsd"))))
             .andExpect(xpath("/MD_Metadata/fileIdentifier/CharacterString").string(this.uuid));
+    }
+
+    @Test
+    public void getRecordWithSubtemplateFullViewIta() throws Exception {
+        try {
+            settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, true);
+
+            MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+            MockHttpSession mockHttpSession = loginAsAdmin();
+
+            mockMvc.perform(get("/srv/api/records/" + this.mdWithSubtemplateUuid + "/formatters/xsl-view")
+                    .param("view", "advanced")
+                    .param("root", "div")
+                    .session(mockHttpSession)
+                    .accept(MediaType.APPLICATION_XHTML_XML)
+                    .locale(Locale.ITALY))
+                .andExpect(content().string(containsString("Identificatore del file di metadati")))
+                .andExpect(status().isOk());
+        } finally {
+            settingManager.setValue(Settings.SYSTEM_XLINKRESOLVER_ENABLE, false);
+        }
     }
 
     @Test
@@ -323,7 +328,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("increasePopularity", "true")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_XML))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -344,7 +348,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/xml").param("increasePopularity", "false")
                 .session(mockHttpSession)
                 .accept(MediaType.APPLICATION_XML))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -384,6 +387,35 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void getNonAvailableRecordInSubportalAsXml() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+
+        // Set the current node to the subportal
+        Source subportal = sourceRepository.findOneByName("external");
+        Assert.assertNotNull(subportal);
+        nodeInfo.setId(subportal.getUuid());
+        nodeInfo.setDefaultNode(false);
+
+        mockMvc.perform(get("/external/api/records/" + this.uuid + "/formatters/json")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
+            .andExpect(jsonPath("$.code").value(equalTo("resource_not_found")))
+            .andExpect(jsonPath("$.message").value(equalTo("Metadata not found")));
+
+        mockMvc.perform(get("/external/api/records/" + this.uuid + "/formatters/xml")
+                .session(mockHttpSession)
+                .accept(MediaType.APPLICATION_XML))
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentType(MediaType.APPLICATION_XML))
+            .andExpect(xpath("/apiError/code").string(equalTo("resource_not_found")))
+            .andExpect(xpath("/apiError/message").string(equalTo("Metadata not found")));
+    }
+
+
+    @Test
     public void getNonExistentRecordAsXml() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAnonymous();
@@ -406,7 +438,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getRecordAsZip() throws Exception {
-
         final String zipMagicNumber = "PK\u0003\u0004";
 
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -416,7 +447,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 //        mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
 //            .session(mockHttpSession)
 //            .accept("application/zip"))
-//            .andDo(print())
 //            .andExpect(status().isOk())
 //            .andExpect(content().contentType(MEF_V2_ACCEPT_TYPE))
 //            .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -426,7 +456,6 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
                 .session(mockHttpSession)
                 .accept(MEF_V1_ACCEPT_TYPE))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MEF_V1_ACCEPT_TYPE))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
@@ -436,13 +465,11 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
                 .session(mockHttpSession)
                 .accept(MEF_V1_ACCEPT_TYPE))
-            .andDo(print())
             .andExpect(status().isOk())
             .andExpect(content().contentType(MEF_V1_ACCEPT_TYPE))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
                 equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "zip"))))
             .andExpect(content().string(startsWith(zipMagicNumber)));
-
     }
 
     @Test
@@ -493,5 +520,4 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
             .andExpect(header().doesNotExist(HttpHeaders.CONTENT_TYPE))
             .andExpect(content().string(isEmptyOrNullString()));
     }
-
 }

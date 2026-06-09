@@ -1,4 +1,6 @@
 @import "../../../lib/style/bootstrap/less/variables.less";
+@import "../../../lib/style/bootstrap/less/mixins/grid.less";
+@import "gn_view.less";
 
 // special print classes
 .gn-new-page {
@@ -104,6 +106,26 @@ a[href]:after {
     }
     svg {
       max-width: 100px;
+    }
+    [gn-popover-content] {
+      .make-md-column-offset(3);
+      padding: 0 @gn-spacing-lg;
+      display: block !important;
+      label,
+      a {
+        display: block;
+        margin-bottom: @gn-spacing;
+      }
+      [data-label="focusOnFrom"] {
+        display: none;
+      }
+      .fa {
+        display: none;
+      }
+      [data-ng-href] {
+        margin-bottom: @gn-spacing;
+        display: inline-block;
+      }
     }
   }
   .gn-md-side-crs {

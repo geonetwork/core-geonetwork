@@ -183,14 +183,6 @@
 
   <rule>
     <note>
-      INSPIRE HTML search
-    </note>
-    <from>^/(.*)/(.*)/opensearch/htmlsearch\?.*q=(.*)</from>
-    <to type="permanent-redirect">%{context-path}/$1/$2/catalog.search#/search?any=$3</to>
-  </rule>
-
-  <rule>
-    <note>
       INSPIRE Atom Describe (service)
     </note>
     <from>^/opensearch/(.*)/(.*)/describe?(.*)$</from>

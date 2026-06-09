@@ -37,7 +37,16 @@
     "$rootScope",
     "$translate",
     "$timeout",
-    function ($scope, $routeParams, $http, $rootScope, $translate, $timeout) {
+    "gnUtilityService",
+    function (
+      $scope,
+      $routeParams,
+      $http,
+      $rootScope,
+      $translate,
+      $timeout,
+      gnUtilityService
+    ) {
       $scope.categories = null;
       $scope.categorySelected = { id: $routeParams.categoryId };
 
@@ -46,6 +55,9 @@
       $scope.selectCategory = function (c) {
         $scope.cateroryUpdated = false;
         $scope.categorySelected = c;
+
+        $scope.gnCategoryFrom.$setPristine();
+
         $timeout(function () {
           $("#categoryname").focus();
         }, 100);
@@ -135,7 +147,11 @@
 
       function loadCategories() {
         $http.get("../api/tags").then(function (response) {
-          $scope.categories = response.data;
+          $scope.categories = gnUtilityService.sortByTranslation(
+            response.data,
+            $scope.lang,
+            "name"
+          );
         });
       }
       loadCategories();

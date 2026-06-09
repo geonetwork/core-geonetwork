@@ -31,13 +31,13 @@
         data-ng-class="{disabled: disabled}"
         data-ng-show="hasToDisplayFileChooser()"
       >
-        <i class="fa fa-fw fa-plus-circle" data-ng-class="{hidden: active()}" />
+        <i class="fa fa-fw fa-plus-circle" data-ng-class="{hidden: active()}"></i>
         <i
           class="fa fa-fw fa-spinner fa-spin"
           data-ng-class="{hidden: !active()}"
           data-file-upload-progress="progress()"
           data-file-upload-done="updateContent()"
-        />
+        ></i>
         <span data-translate="">chooseOnlinesrc</span>
         <input type="file" name="file" data-ng-disabled="disabled" />
       </span>

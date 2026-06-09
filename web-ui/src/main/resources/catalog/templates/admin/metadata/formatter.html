@@ -42,7 +42,7 @@
             class="btn btn-success btn-block fileinput-button"
             ng-class="{disabled: disabled}"
           >
-            <i class="fa fa-plus fa-white" />
+            <i class="fa fa-plus fa-white"></i>
             <span data-translate="">chooseFormatter</span>
             <input
               type="file"
@@ -61,7 +61,7 @@
               <div
                 class="progress-bar progress-bar-success"
                 data-ng-style="{width: num + '%'}"
-              />
+              ></div>
             </div>
             <div class="progress-extended">&nbsp;</div>
           </div>
@@ -107,7 +107,7 @@
                 class="form-control"
                 data-ng-model="selectedFile"
                 data-ng-options="file['@name'] group by file.dir for file in formatterFiles"
-              />
+              ></select>
             </div>
           </div>
           <div class="form-group">
@@ -117,7 +117,7 @@
                 name="data"
                 data-gn-autogrow=""
                 data-ng-model="formatterFile"
-              />
+              ></textarea>
             </div>
           </div>
           <button
@@ -125,7 +125,7 @@
             class="btn btn-primary pull-right"
             data-ng-click="saveFormatterFile('#gn-formatter-file-edit')"
           >
-            <i class="fa fa-save" />&nbsp; <span data-translate="">saveFile</span>
+            <i class="fa fa-save"></i>&nbsp; <span data-translate="">saveFile</span>
           </button>
         </form>
       </div>
@@ -148,7 +148,7 @@
             <div class="col-sm-9">
               <div class="input-group" id="siblingdd">
                 <span class="input-group-addon">
-                  <i class="fa fa-search" />
+                  <i class="fa fa-search"></i>
                 </span>
                 <input
                   class="form-control"
@@ -204,7 +204,7 @@
               data-ng-disabled="metadataId == ''"
               data-ng-click="testFormatter('XML')"
             >
-              <i class="fa fa-cog" />&nbsp; <span data-translate="">viewXML</span>
+              <i class="fa fa-cog"></i>&nbsp; <span data-translate="">viewXML</span>
             </button>
             <button
               type="button"
@@ -212,7 +212,7 @@
               data-ng-disabled="metadataId == ''"
               data-ng-click="testFormatter('HTML')"
             >
-              <i class="fa fa-cog" />&nbsp; <span data-translate="">viewHTML</span>
+              <i class="fa fa-cog"></i>&nbsp; <span data-translate="">viewHTML</span>
             </button>
           </div>
         </form>

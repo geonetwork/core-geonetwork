@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,13 +29,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
-import net.sf.json.JSONObject;
+import jeeves.xlink.Processor;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +65,9 @@ public class MetadataIndexApi {
     @Autowired
     SettingManager settingManager;
 
+    @Autowired
+    IMetadataUtils metadataUtils;
+
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Index a set of records",
         description = "Index a set of records provided either by a bucket or a list of uuids")
@@ -74,15 +76,15 @@ public class MetadataIndexApi {
         method = RequestMethod.GET,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
-    @PreAuthorize("hasAuthority('Administrator')")
+    @PreAuthorize("hasAuthority('Editor')")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Record indexed."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
     })
     public
     @ResponseBody
-    JSONObject index(
+    IndexResponse index(
         @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
             required = false,
             example = "")
@@ -96,28 +98,21 @@ public class MetadataIndexApi {
         )
             String bucket,
         @Parameter(hidden = true)
-            HttpSession httpSession,
+            HttpServletRequest request,
         @Parameter(hidden = true)
-            HttpServletRequest request
+            HttpSession httpSession
     )
         throws Exception {
 
-        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession session = ApiUtils.getUserSession(httpSession);
-
-        SelectionManager selectionManager =
-            SelectionManager.getManager(serviceContext.getUserSession());
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, session);
         Set<Integer> ids = Sets.newHashSet();
-        int index = 0;
 
         for (String uuid : records) {
+            ApiUtils.canEditRecord(uuid, request);
             try {
-                final String metadataId = dataManager.getMetadataId(uuid);
-                if (metadataId != null) {
-                    ids.add(Integer.valueOf(metadataId));
-                }
+                metadataUtils.findAllByUuid(uuid).forEach(m -> ids.add(m.getId()));
             } catch (Exception e) {
                 try {
                     ids.add(Integer.valueOf(uuid));
@@ -126,15 +121,40 @@ public class MetadataIndexApi {
                 }
             }
         }
-        index = ids.size();
-        new BatchOpsMetadataReindexer(dataManager, ids)
-            .process(settingManager.getSiteId(), false);
+        int index = ids.size();
 
-        JSONObject res = new JSONObject();
-        res.put("success", true);
-        res.put("count", index);
+        if (index > 0) {
+            // clean XLink Cache so that cache and index remain in sync
+            Processor.clearCache();
 
-        return res;
+            new BatchOpsMetadataReindexer(dataManager, ids)
+                .process(settingManager.getSiteId(), false);
+        }
+
+        IndexResponse indexResponse = new IndexResponse();
+        indexResponse.setSuccess(true);
+        indexResponse.setCount(index);
+        return indexResponse;
     }
 
+    private static class IndexResponse {
+        private boolean success;
+        private int count;
+
+        public boolean isSuccess() {
+            return success;
+        }
+
+        public void setSuccess(boolean success) {
+            this.success = success;
+        }
+
+        public int getCount() {
+            return count;
+        }
+
+        public void setCount(int count) {
+            this.count = count;
+        }
+    }
 }

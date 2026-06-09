@@ -23,10 +23,13 @@
 package org.fao.geonet.domain.page;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -35,10 +38,15 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.fao.geonet.domain.GeonetEntity;
+import org.fao.geonet.domain.Group;
+import org.hibernate.annotations.Type;
 
 /**
  * A page with content and properties
@@ -55,12 +63,16 @@ public class Page extends GeonetEntity implements Serializable {
     private PageFormat format;
     private List<PageSection> sections;
     private PageStatus status;
+    private Set<Group> groups = new LinkedHashSet<>();
+
+    private String label;
+    private String icon;
 
     public Page() {
 
     }
 
-    public Page(PageIdentity pageIdentity, byte[] data, String link, PageFormat format, List<PageSection> sections, PageStatus status) {
+    public Page(PageIdentity pageIdentity, byte[] data, String link, PageFormat format, List<PageSection> sections, PageStatus status, String label, String icon, Set<Group> groups) {
         super();
         this.pageIdentity = pageIdentity;
         this.data = data;
@@ -68,19 +80,28 @@ public class Page extends GeonetEntity implements Serializable {
         this.format = format;
         this.sections = sections;
         this.status = status;
+        this.label = label;
+        this.icon = icon;
+        this.groups = groups;
     }
 
     public enum PageStatus {
-        PUBLIC, PUBLIC_ONLY, PRIVATE, HIDDEN;
+        PUBLIC, PUBLIC_ONLY, GROUPS, GROUPS_AND_ADMIN, PRIVATE, HIDDEN;
     }
 
     public enum PageFormat {
-        LINK, HTML, TEXT, MARKDOWN, WIKI;
+        LINK, HTML, HTMLPAGE, TEXT, EMAILLINK;
     }
 
     // These are the sections where is shown the link to the Page object
     public enum PageSection {
-        ALL, TOP, FOOTER, MENU, SUBMENU, CUSTOM_MENU1, CUSTOM_MENU2, CUSTOM_MENU3, DRAFT;
+        TOP, FOOTER, MENU, SUBMENU, RECORD_VIEW_MENU, CUSTOM_MENU1, CUSTOM_MENU2, CUSTOM_MENU3;
+    }
+
+    public enum PageExtension {
+        HTML,
+        TXT,
+        MD
     }
 
     @EmbeddedId
@@ -96,9 +117,10 @@ public class Page extends GeonetEntity implements Serializable {
         return data;
     }
 
-    @Column
-    @Nullable
+    @Lob
     @Basic(fetch = FetchType.LAZY)
+    @Type(type = "org.hibernate.type.TextType")
+    @Column(unique = true)
     public String getLink() {
         return link;
     }
@@ -123,6 +145,38 @@ public class Page extends GeonetEntity implements Serializable {
         return status;
     }
 
+    @Column(nullable = false)
+    public String getLabel() {
+        return label;
+    }
+
+    @Column
+    public String getIcon() {
+        return icon;
+    }
+
+    /**
+     * Get all the page's groups.
+     *
+     * @return all the page's groups.
+     */
+    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinTable(name = "spg_page_group", joinColumns = {@JoinColumn(name = "language"), @JoinColumn(name = "linktext")},
+        inverseJoinColumns = {@JoinColumn(name = "groupid", referencedColumnName = "id", unique = false)})
+    public Set<Group> getGroups() {
+        return groups;
+    }
+
+    /**
+     * Set all the page's groups.
+     *
+     * @param groups all the page's groups.
+     * @return this group object
+     */
+    public void setGroups(Set<Group> groups) {
+        this.groups = groups;
+    }
+
     public void setPageIdentity(PageIdentity pageIdentity) {
         this.pageIdentity = pageIdentity;
     }
@@ -145,6 +199,14 @@ public class Page extends GeonetEntity implements Serializable {
 
     public void setStatus(PageStatus status) {
         this.status = status;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
     }
 
     @Override

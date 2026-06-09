@@ -93,12 +93,12 @@
    *
    * @description
    * Component to edit a measure type field composed
-   * of a numberic value and a unit.
+   * of a numeric value and a unit.
    */
   module.directive("gnMeasure", function () {
     return {
       restrict: "A",
-      templateUrl: "../../catalog/components/edit/partials/" + "measure.html",
+      templateUrl: "../../catalog/components/edit/partials/measure.html",
       scope: {
         uom: "@",
         ref: "@"
@@ -182,7 +182,7 @@
             element.is("input") || element.is("textarea") || element.is("select");
           var isDiv = element.is("div");
           var tooltipTarget = element;
-          var iconMode = gnCurrentEdit.displayTooltipsMode === "icon";
+          var tooltipsMode = gnCurrentEdit.displayTooltipsMode;
           var isDatePicker = "gnDatePicker" in attrs;
 
           var createTooltipForDatePicker = function (el, tooltip) {
@@ -193,7 +193,7 @@
           };
 
           // use a icon to click on for a tooltip
-          if (iconMode) {
+          if (tooltipsMode === "icon") {
             var tooltipAfterLabel = false;
             var tooltipIconCompiled = $compile(iconTemplate)(scope);
             var asideCol;
@@ -294,6 +294,7 @@
             $(".popover").hide();
           };
 
+          var mouseLeft = false;
           var initTooltip = function (event) {
             if (!isInitialized && gnCurrentEdit.displayTooltips) {
               // Retrieve field information (there is a cache)
@@ -322,7 +323,7 @@
                     }
 
                     // Only one tooltip visible at a time
-                    if (iconMode) {
+                    if (tooltipsMode === "icon") {
                       closeTooltips();
                     }
 
@@ -341,7 +342,7 @@
                       0.95;
 
                     var closeBtn =
-                      '<a class="fa fa-times btn btn-link pull-right close-popover"></a>';
+                      '<a class="btn btn-link pull-right close-popover"><i class="fa fa-times"></i></a>';
 
                     tooltipTarget.popover({
                       title: info.label,
@@ -363,24 +364,27 @@
                         closeBtn +
                         '<h3 class="popover-title"></h3>' +
                         '<div class="popover-content"><p></p></div></div></div>',
-                      trigger: isField ? "focus" : "click"
+                      trigger:
+                        tooltipsMode === "onhover" ? "hover" : isField ? "focus" : "click"
                     });
 
-                    // Remove first the event, to avoid ending with multiple events
-                    // every time a new popup is displayed.
-                    $(document)
-                      .off("click", ".popover .close-popover")
-                      .on("click", ".popover .close-popover", function () {
-                        $(this).closest("div.popover").remove();
-                      });
+                    if (tooltipsMode !== "onhover") {
+                      // Remove first the event, to avoid ending with multiple events
+                      // every time a new popup is displayed.
+                      $(document)
+                        .off("click", ".popover .close-popover")
+                        .on("click", ".popover .close-popover", function () {
+                          $(this).closest("div.popover").remove();
+                        });
 
-                    if (event === "click" && !isField) {
-                      tooltipTarget.click("show");
-                    } else {
-                      tooltipTarget.focus();
+                      if (event === "click" && !isField) {
+                        tooltipTarget.click("show");
+                      } else {
+                        tooltipTarget.focus();
+                      }
                     }
 
-                    if (iconMode) {
+                    if (tooltipsMode === "icon") {
                       tooltipTarget.mouseleave(function () {
                         isInitialized = false;
                       });
@@ -405,7 +409,9 @@
                       }
                     });
 
-                    tooltipTarget.popover("show");
+                    if (!mouseLeft) {
+                      tooltipTarget.popover("show");
+                    }
                     isInitialized = true;
                   }
                 });
@@ -413,7 +419,16 @@
           };
 
           // On hover trigger the tooltip init
-          if (iconMode) {
+          if (tooltipsMode === "onhover") {
+            tooltipTarget.hover(function () {
+              initTooltip("hover");
+            });
+            tooltipTarget.mouseleave(function () {
+              mouseLeft = true;
+              tooltipTarget.popover("hide");
+              isInitialized = false;
+            });
+          } else if (tooltipsMode === "icon") {
             tooltipTarget.hover(function (event) {
               event.stopPropagation;
             });
@@ -459,7 +474,8 @@
             element.off();
           });
 
-          $(element).click(function () {
+          $(element).click(function (event) {
+            event.stopPropagation();
             gnEditor.move(scope.ref, scope.direction || "down", scope.domelementToMove);
           });
         }
@@ -522,6 +538,108 @@
             element.removeClass("field-bg");
             btns.css("visibility", "hidden");
           });
+        }
+      };
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_fields.directive:gnDuplicatedMetadataValueChecker
+   *
+   * @description
+   * Checks if the associated control value exists in another metadata record.
+   * Valid field keys:
+   *   - title: Metadata title.
+   *   - altTitle: Metadata alternative title.
+   *   - identifier: Metadata resource identifier.
+   * Configure in your metadata schema config-editor.xml the usage of this directive
+   * for the title element. For example, for iso19139:
+   * <fields>
+   *   ...
+   *  <for name="gmd:alternateTitle" use="data-gn-duplicated-metadata-value-checker">
+   *       <directiveAttributes
+   *         data-field-name="ResourceName"
+   *         data-field-key="altTitle" />
+   */
+  module.directive("gnDuplicatedMetadataValueChecker", [
+    "gnCurrentEdit",
+    "$http",
+    "$compile",
+    "$translate",
+    function (gnCurrentEdit, $http, $compile, $translate) {
+      return {
+        restrict: "A",
+        scope: {
+          fieldKey: "@" // Elasticsearch field name. Allowed values: title (Metadata title), altTitle (Metadata alternate title), identifier (Resource identifier)
+        },
+        link: function (scope, element, attrs) {
+          var duplicatedFieldNameMessage = $translate.instant(
+            "metadataDuplicatedField-" + scope.fieldKey
+          );
+
+          var messageTemplate =
+            "<p class='help-block' " +
+            "style='color: #d9534f' " +
+            "data-ng-show='duplicatedValue && !hiddenControl' " +
+            "data-translate>" +
+            duplicatedFieldNameMessage +
+            "</p>";
+          var messageTemplateCompiled = $compile(messageTemplate)(scope);
+
+          var messageTarget = document.getElementById(element[0].id);
+          element.blur(function () {
+            if (messageTarget.value !== scope.metadataFieldValue) {
+              scope.metadataFieldValue = messageTarget.value;
+              scope.checkField(scope.metadataFieldValue, scope.metadataUuid);
+            }
+          });
+
+          scope.metadataUuid = gnCurrentEdit.uuid;
+          scope.metadataFieldValue = messageTarget.value;
+          scope.duplicatedValue = false;
+          scope.hiddenControl = false;
+
+          element.after(messageTemplateCompiled);
+
+          // For multilingual title directive to hide the messages when displaying each language individually
+          var observer = new MutationObserver(function (event) {
+            if (event.length > 0) {
+              scope.hiddenControl = event[0].target.className.indexOf("hidden") > -1;
+              // Force a refresh, otherwise takes a delay to show / hide the message
+              scope.$apply();
+            }
+          });
+
+          observer.observe(messageTarget, {
+            attributes: true,
+            attributeFilter: ["class"],
+            childList: false,
+            characterData: false
+          });
+
+          scope.checkField = function (fieldValue, metadataUuid) {
+            if (fieldValue === "") {
+              scope.duplicatedValue = false;
+              return;
+            }
+
+            var postBody = {
+              field: scope.fieldKey,
+              value: fieldValue
+            };
+
+            $http
+              .post(
+                "../api/records/" + metadataUuid + "/checkDuplicatedFieldValue",
+                postBody
+              )
+              .then(function (response) {
+                scope.duplicatedValue = response.data === true;
+              });
+          };
+
+          scope.checkField(scope.metadataFieldValue, scope.metadataUuid);
         }
       };
     }

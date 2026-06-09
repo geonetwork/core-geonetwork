@@ -21,16 +21,6 @@
   ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
   ~ Rome - Italy. email: geonetwork@osgeo.org
   -->
-
-<!--
-==============================================================================
-=== This Ant build file is used to create the GeoNetwork opensource distro's
-===
-=== Authors : Jeroen Ticheler <ticheler@users.sourceforge.net>
-===           Andrea Carboni <acarboni@users.sourceforge.net>
-==============================================================================
--->
-
 <project name="geonetwork" default="distributions" basedir=".">
 
   <condition property="osys" value="macosx">
@@ -96,6 +86,7 @@
     <replace file="${propsdir}/readme.html" token="@subVersion@" value="${subVersion}"/>
     <replace file="${propsdir}/readme.html" token="@day@" value="${buildDate}" />
     <replace file="${propsdir}/readme.html" token="@jreUrl@" value="${jreUrl}"/>
+    <replace file="${propsdir}/readme.html" token="@jreName@" value="${jreName}"/>
     <replace file="${propsdir}/readme.html" token="@javaVersion@" value="${javaVersion}"/>
     <replace file="${propsdir}/readme.html" token="@appName@" value="${appName}"/>
     <replace file="${propsdir}/readme.html" token="@displayName@" value="${displayName}"/>
@@ -115,15 +106,13 @@
 
     <echo message="Creating ZIP file for ${appName} ${version}..."/>
 
-    <zip destfile="target/${appName}-${version}/${bundleName}-${version}-${subVersion}.zip">
+    <zip destfile="target/${appName}-${version}/${bundleName}-${version}-${subVersion}.zip" update="yes">
       <zipfileset dir="./bin" excludes="**.sh" prefix="bin" />
       <zipfileset dir="./bin" includes="**.sh" prefix="bin" filemode="774"/>
       <zipfileset dir="${propsdir}" includes="readme.html, license.html" />
-      <zipfileset dir="./jetty" prefix="jetty" excludes="logs/*.log, logs/archive/*.log" />
-      <!-- Use war to include META-INF/MANIFEST.MF file -->
-      <zipfileset src="../web/target/geonetwork.war" prefix="web/geonetwork" />
-      <zipfileset dir="./data" prefix="web/geonetwork/data" />
-      <zipfileset dir="./schemaPlugins" prefix="web/geonetwork/WEB-INF/data/config/schema_plugins" />
+      <zipfileset dir="./jetty" prefix="jetty" excludes="lib/mail/**, logs/*.log, logs/archive/*.log" />
+      <zipfileset src="../web/target/geonetwork.war" prefix="apps/geonetwork" />
+      <zipfileset dir="." includes="geonetwork.xml" prefix="web" />
     </zip>
 
     <checksum
@@ -134,13 +123,9 @@
 
   <!-- Copy and rename WAR file and calculate checksum -->
   <target name="war" depends="zip">
-
     <copy file="../web/target/geonetwork.war"
           tofile="target/${appName}-${version}/${appName}-${version}-${subVersion}.war" />
-
     <checksum file="target/${appName}-${version}/${appName}-${version}-${subVersion}.war"
               forceOverwrite="yes"/>
-
   </target>
-
 </project>

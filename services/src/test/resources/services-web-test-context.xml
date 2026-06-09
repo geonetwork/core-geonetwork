@@ -2,9 +2,11 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://www.springframework.org/schema/mvc  http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+       http://www.springframework.org/schema/mvc  http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
 
+  <context:component-scan base-package="org.fao.geonet.listener"/>
 
   <bean id="cnManager"
         class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
@@ -24,10 +26,30 @@
     </property>
   </bean>
 
+  <bean id="roleHierarchy"
+        class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+    <property name="hierarchy">
+      <value>
+        Administrator > UserAdmin
+        UserAdmin > Reviewer
+        Reviewer > Editor
+        Editor > RegisteredUser
+        RegisteredUser > Guest
+      </value>
+    </property>
+  </bean>
+
   <bean name="statusActionFactory"
         class="org.fao.geonet.kernel.metadata.StatusActionsFactory">
     <constructor-arg name="className" value="org.fao.geonet.kernel.metadata.DefaultStatusActions"/>
   </bean>
+
+
+  <!--
+  Bean with the default publication configuration.
+  The default publication options publishes the metadata to the ALL group and the INTRANET group.
+  -->
+  <bean class="org.fao.geonet.config.DefaultPublicationConfig" name="publicationConfig" />
 
   <mvc:annotation-driven content-negotiation-manager="cnManager">
     <mvc:message-converters>

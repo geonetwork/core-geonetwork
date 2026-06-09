@@ -194,16 +194,16 @@
               gnMap
                 .addWmsFromScratch(map, scope.gsNode.wmsurl, scope.layerName, false)
                 .then(
-                  function (o) {
-                    if (o.layer) {
-                      gnMap.zoomLayerToExtent(o.layer, map);
-                      scope.layer = o.layer;
+                  function (layer) {
+                    if (layer) {
+                      gnMap.zoomLayerToExtent(layer, map);
+                      scope.layer = layer;
                     }
                   },
-                  function (o) {
-                    if (o.layer) {
-                      gnMap.zoomLayerToExtent(o.layer, map);
-                      scope.layer = o.layer;
+                  function (layer) {
+                    if (layer) {
+                      gnMap.zoomLayerToExtent(layer, map);
+                      scope.layer = layer;
                     }
                   }
                 );
@@ -218,7 +218,12 @@
             scope.$watch("gsNode", function (n, o) {
               if (n != o) {
                 scope.checkNode(scope.gsNode.id);
-                scope.hasStyler = !angular.isArray(scope.gsNode.stylerurl);
+                scope.hasStyler = scope.gsNode.stylerurl !== "";
+              }
+            });
+            scope.$watch("layerName", function (n, o) {
+              if (n != o) {
+                scope.checkNode(scope.gsNode.id);
               }
             });
 
@@ -307,7 +312,6 @@
                 scope.hidden = false;
               }
               scope.mapId = "map-geopublisher";
-              // FIXME: only one publisher in a page ?
               scope.ref = r.ref;
               scope.refParent = r.refParent;
               scope.name = r.name;
@@ -323,14 +327,17 @@
               }
 
               // Build layer name based on file name
-              scope.layerName = r.name.replace(/.zip$|.gpkg$|.tif$|.tiff$|.ecw$/, "");
-              scope.wmsLayerName = scope.layerName;
+              scope.layerName = r.name
+                .split("/")
+                .pop()
+                .replace(/.zip$|.gpkg$|.tif$|.tiff$|.ecw$/, "");
               if (scope.layerName.match("^jdbc")) {
                 scope.wmsLayerName = scope.layerName.split("#")[1];
-              } else if (scope.layerName.match("^file")) {
-                scope.wmsLayerName = scope.layerName
-                  .replace(/.*\//, "")
-                  .replace(/.zip$|.gpkg$|.tif$|.tiff$|.ecw$/, "");
+              } else {
+                scope.wmsLayerName =
+                  (scope.gsNode.namespacePrefix !== ""
+                    ? scope.gsNode.namespacePrefix + ":"
+                    : "") + scope.layerName;
               }
             };
           }

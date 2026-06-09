@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.fao.geonet.GeonetContext;
+import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
@@ -72,7 +73,7 @@ public class ExportFormat implements GeonetworkExtension {
                 String outputFileName = entry.getValue();
                 Path path = metadataSchema.getSchemaDir().resolve(xslFileName);
                 if (Files.isRegularFile(path)) {
-                    String outputData = formatData(metadata, true, path);
+                    String outputData = formatData(context, metadata, true, path);
                     allExports.add(Pair.read(outputFileName, outputData));
                 } else {
                     // A conversion that does not exist
@@ -96,10 +97,9 @@ public class ExportFormat implements GeonetworkExtension {
      *
      * @return ByteArrayInputStream
      */
-    public static String formatData(AbstractMetadata metadata, boolean transform, Path stylePath) throws Exception {
-        String xmlData = metadata.getData();
-
-        Element md = Xml.loadString(xmlData, false);
+    public static String formatData(ServiceContext context, AbstractMetadata metadata, boolean transform, Path stylePath) throws Exception {
+        Element md = context.getBean(DataManager.class).getMetadata(context, metadata.getId() + "", false, false, true);
+        md.removeChild("info", Edit.NAMESPACE);
 
         // Apply a stylesheet transformation when schema is ISO profil
         if (transform) {

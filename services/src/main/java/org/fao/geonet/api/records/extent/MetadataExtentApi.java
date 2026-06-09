@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -45,7 +45,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -65,7 +64,7 @@ import static org.fao.geonet.api.ApiParams.*;
 })
 @Tag(name = API_CLASS_RECORD_TAG,
     description = API_CLASS_RECORD_OPS)
-@Controller("recordExtent")
+@RestController("recordExtent")
 @ReadWriteController
 public class MetadataExtentApi {
 
@@ -99,8 +98,8 @@ public class MetadataExtentApi {
     private static final String API_PARAM_WIDTH_DESCRIPTION = "(optional) width of the image that is created. Only one of width and height are permitted";
     private static final String API_PARAM_HEIGHT_DESCRIPTION = "(optional) height of the image that is created. Only one of width and height are permitted";
     private static final String API_PARAM_BG_DESCRIPTION = "(optional) URL for loading a background image for regions or a key that references the namedBackgrounds (configured in config-spring-geonetwork.xml). A WMS GetMap request is the typical example. The URL must be parameterized with the following parameters: minx, maxx, miny, maxy, width, height";
-    private static final String API_PARAM_FILL_DESCRIPTION = "(optional) Fill color with format RED,GREEN,BLUE,ALPHA";
-    private static final String API_PARAM_STROKE_DESCRIPTION = "(optional) Stroke color with format RED,GREEN,BLUE,ALPHA";
+    public static final String API_PARAM_FILL_DESCRIPTION = "(optional) Fill color with format RED,GREEN,BLUE,ALPHA";
+    public static final String API_PARAM_STROKE_DESCRIPTION = "(optional) Stroke color with format RED,GREEN,BLUE,ALPHA";
 
     private static final String EXTENT_XPATH = ".//*[local-name() ='extent']/*/*[local-name() = 'geographicElement']/*";
     private static final String EXTENT_DESCRIPTION_XPATH = "ancestor::*[local-name() = 'EX_Extent']/*[local-name() = 'description']/*/text()";
@@ -118,12 +117,11 @@ public class MetadataExtentApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get record extents as image",
         description = API_EXTENT_DESCRIPTION)
-    @RequestMapping(
+    @GetMapping(
         value = "/{metadataUuid}/extents.png",
         produces = {
             MediaType.IMAGE_PNG_VALUE
-        },
-        method = RequestMethod.GET)
+        })
     public HttpEntity<byte[]> getAllRecordExtentAsImage(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
@@ -139,11 +137,13 @@ public class MetadataExtentApi {
         @Parameter(description = API_PARAM_BG_DESCRIPTION)
         @RequestParam(value = BACKGROUND_PARAM, required = false, defaultValue = "settings") String background,
         @Parameter(description = API_PARAM_FILL_DESCRIPTION)
-        @RequestParam(value = "", required = false, defaultValue = "0,0,0,50")
+        @RequestParam(value = "", required = false, defaultValue = "0,0,0,30")
         String fillColor,
         @Parameter(description = API_PARAM_STROKE_DESCRIPTION)
         @RequestParam(value = "", required = false, defaultValue = "0,0,0,255")
         String strokeColor,
+        @RequestParam(required = false, defaultValue = "true")
+        Boolean approved,
         @Parameter(hidden = true)
             NativeWebRequest nativeWebRequest,
         @Parameter(hidden = true)
@@ -157,7 +157,7 @@ public class MetadataExtentApi {
                 "EPSG:4326");
         }
 
-        return getExtent(metadataUuid, srs, width, height, background, fillColor, strokeColor, null, nativeWebRequest, request);
+        return getExtent(metadataUuid, srs, width, height, background, fillColor, strokeColor, null, approved, nativeWebRequest, request);
     }
 
 
@@ -165,13 +165,11 @@ public class MetadataExtentApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get list of record extents",
         description = API_EXTENT_DESCRIPTION)
-    @RequestMapping(
+    @GetMapping(
         value = "/{metadataUuid}/extents.json",
         produces = {
             MediaType.APPLICATION_JSON_VALUE
-        },
-        method = RequestMethod.GET)
-    @ResponseBody
+        })
     public List<ExtentDto> getAllRecordExtentAsJson(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
@@ -215,7 +213,7 @@ public class MetadataExtentApi {
                     String.format("%sapi/records/%s/extents/%d.png",
                         settingManager.getNodeURL(), metadataUuid, index),
                     extentElement.getName(),
-                    XPath.getXPath(xmlData, (Element) extent),
+                    XPath.getXPath(xmlData, extent),
                     description));
                 index ++;
             }
@@ -227,12 +225,11 @@ public class MetadataExtentApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get one record extent as image",
         description = API_EXTENT_DESCRIPTION)
-    @RequestMapping(
+    @GetMapping(
         value = "/{metadataUuid}/extents/{geometryIndex}.png",
         produces = {
             MediaType.IMAGE_PNG_VALUE
-        },
-        method = RequestMethod.GET)
+        })
     public HttpEntity<byte[]> getOneRecordExtentAsImage(
         @Parameter(
             description = API_PARAM_RECORD_UUID,
@@ -251,11 +248,13 @@ public class MetadataExtentApi {
         @Parameter(description = API_PARAM_BG_DESCRIPTION)
         @RequestParam(value = BACKGROUND_PARAM, required = false, defaultValue = "settings") String background,
         @Parameter(description = API_PARAM_FILL_DESCRIPTION)
-        @RequestParam(value = "", required = false, defaultValue = "0,0,0,50")
+        @RequestParam(value = "", required = false, defaultValue = "0,0,0,30")
             String fillColor,
         @Parameter(description = API_PARAM_STROKE_DESCRIPTION)
         @RequestParam(value = "", required = false, defaultValue = "0,0,0,255")
             String strokeColor,
+        @RequestParam(required = false, defaultValue = "true")
+        Boolean approved,
         @Parameter(hidden = true)
             NativeWebRequest nativeWebRequest,
         @Parameter(hidden = true)
@@ -269,11 +268,13 @@ public class MetadataExtentApi {
                 "EPSG:4326");
         }
 
-        return getExtent(metadataUuid, srs, width, height, background, fillColor, strokeColor, geometryIndex, nativeWebRequest, request);
+        return getExtent(metadataUuid, srs, width, height, background, fillColor, strokeColor, geometryIndex, approved, nativeWebRequest, request);
     }
 
-    private HttpEntity<byte[]> getExtent(String metadataUuid, String srs, Integer width, Integer height, String background, String fillColor, String strokeColor, Integer extentOrderOfAppearance, NativeWebRequest nativeWebRequest, HttpServletRequest request) throws Exception {
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
+    private HttpEntity<byte[]> getExtent(String metadataUuid, String srs, Integer width, Integer height, String background, String fillColor, String strokeColor,
+                                         Integer extentOrderOfAppearance, Boolean approved,
+                                         NativeWebRequest nativeWebRequest, HttpServletRequest request) throws Exception {
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, approved, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
 
         if (width != null && height != null) {

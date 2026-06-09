@@ -2,8 +2,8 @@
 <xs:schema targetNamespace="http://standards.iso.org/iso/19115/-3/mdb/2.0"
         elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:include schemaLocation="schema/standards.iso.org/19115/-3/mdb/2.0/mdb.xsd"/>
-  <xs:import namespace="http://standards.iso.org/iso/19115/-3/srv/2.1"
-             schemaLocation="schema/standards.iso.org/19115/-3/srv/2.1/srv.xsd"/>
+  <xs:import namespace="http://standards.iso.org/iso/19115/-3/srv/2.0"
+             schemaLocation="schema/standards.iso.org/19115/-3/srv/2.0/srv.xsd"/>
   <xs:import namespace="http://standards.iso.org/iso/19115/-3/mco/1.0"
              schemaLocation="schema/standards.iso.org/19115/-3/mco/1.0/mco.xsd"/>
   <xs:import namespace="http://standards.iso.org/iso/19115/-3/mcc/1.0"

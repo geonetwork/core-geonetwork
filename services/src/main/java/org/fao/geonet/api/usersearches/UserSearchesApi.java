@@ -24,6 +24,8 @@
 package org.fao.geonet.api.usersearches;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -290,7 +292,7 @@ public class UserSearchesApi {
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.PUT)
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
     @PreAuthorize("isAuthenticated()")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "User search created.")
@@ -350,7 +352,7 @@ public class UserSearchesApi {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "User search  updated."),
+        @ApiResponse(responseCode = "204", description = "User search  updated.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
     @ResponseBody

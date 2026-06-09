@@ -37,8 +37,8 @@ import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
@@ -78,9 +78,6 @@ import static org.fao.geonet.api.ApiParams.*;
 @Controller("samplesAndTemplates")
 @ReadWriteController
 public class MetadataSampleApi {
-
-    @Autowired
-    LanguageUtils languageUtils;
 
     @Autowired
     DataManager dataManager;
@@ -123,8 +120,8 @@ public class MetadataSampleApi {
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
 
         Element params = new Element("params");
-        params.addContent(new Element("file_type").setText("mef"));
-        params.addContent(new Element("uuidAction").setText("overwrite"));
+        params.addContent(new Element(Params.FILE_TYPE).setText("mef"));
+        params.addContent(new Element(Params.UUID_ACTION).setText(MEFLib.UuidAction.NOTHING.toString()));
         for (String schemaName : schema) {
             Log.info(Geonet.DATA_MANAGER, "Loading sample data for schema "
                 + schemaName);

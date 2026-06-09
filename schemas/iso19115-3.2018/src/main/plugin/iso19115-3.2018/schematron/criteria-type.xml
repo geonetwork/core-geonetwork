@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<criteriaTypes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:noNamespaceSchemaLocation="../../criteria-type.xsd">
+  <type>
+    <value>*//mri:keyword/gco:CharacterString/text() =
+      '@@value@@'__OR__*//mri:keyword/lan:PT_FreeText/lan:textGroup/lan:LocalisedCharacterString/text()
+      = '@@value@@'
+    </value>
+    <type>XPATH</type>
+    <name>Keyword</name>
+    <allowArbitraryValue>false</allowArbitraryValue>
+    <remote>
+      <cacheTime>0</cacheTime> <!-- Don't cache -->
+      <url>xml.search.keywords@json?pNewSearch=true&amp;maxResults=100&amp;pKeyword=@@search@@&amp;pTypeSearch=CONTAINS</url>
+
+      <!-- The following 3 elements are functions (paramName) {function body} and will be converted to a javascript function
+           in the UI by pre-pending function to the body text -->
+      <selectRecordArray>(data, scope) { return data[0] }</selectRecordArray>
+      <selectLabelFunction>(record, scope) { return record.value['#text'] + ' (' +
+        record.thesaurus.title + ')' }
+      </selectLabelFunction>
+      <selectValueFunction>(record, scope) { return record.value['#text'] }</selectValueFunction>
+    </remote>
+  </type>
+  <type>
+    <value>@@value@@</value>
+    <type>USER_MAIN_PROFILE</type>
+    <name>UserMainProfile</name>
+    <allowArbitraryValue>true</allowArbitraryValue>
+  </type>
+  <type>
+    <value>@@value@@</value>
+    <type>GROUP</type>
+    <name>Group</name>
+    <allowArbitraryValue>true</allowArbitraryValue>
+    <remote>
+      <!--
+          cacheTime > 0 indicates that the typeahead should download all values and cache them
+          If cacheTime is < 0 then either the "values" element will be used or a remote search will be used for each completion.
+      -->
+      <cacheTime>60000</cacheTime> <!-- Cache for 1 minute -->
+      <url>xml.group.list@json</url>
+
+      <!-- The following 3 elements are functions (paramName) {function body} and will be converted to a javascript function
+           in the UI by pre-pending function to the body text
+           -->
+      <selectRecordArray>(data, scope) { return data }</selectRecordArray>
+      <selectLabelFunction>(record, scope) {
+        var label = record.label[scope.lang] ? record.label[scope.lang] : record.name;
+        return label +" ("+record.id +")";
+        }
+      </selectLabelFunction>
+      <!-- selectTokensFunction is optional -->
+      <selectTokensFunction>(record, scope) {
+        var regex = /\s+/g;
+        var tokenHash = {};
+        var tokens = [];
+        var addUniqueTokens = function (string) {
+        var parts = string.split(regex);
+        for (var i = 0; i &lt; parts.length; i++) {
+        var token = angular.lowercase(parts[i]);
+        if (!tokenHash[token]) {
+        tokens.push(token);
+        tokenHash[token] = true;
+        }
+        }
+        }
+        addUniqueTokens(record.name);
+        for (var p in record.label) {
+        if (record.label.hasOwnProperty(p) &amp;&amp; typeof record.label === 'string') {
+        addUniqueTokens(record.label[p]);
+        }
+        }
+
+        return tokens;
+        }
+      </selectTokensFunction>
+      <selectValueFunction>(record, scope) { return record.id }</selectValueFunction>
+    </remote>
+  </type>
+</criteriaTypes>

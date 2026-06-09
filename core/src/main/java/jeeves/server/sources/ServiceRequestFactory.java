@@ -24,6 +24,7 @@
 package jeeves.server.sources;
 
 import jeeves.constants.Jeeves;
+import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
@@ -73,7 +74,7 @@ public final class ServiceRequestFactory {
                                         String portal,
                                         String lang,
                                         String service,
-                                        Path uploadDir, int maxUploadSize) throws Exception {
+                                        Path uploadDir, long maxUploadSize) throws Exception {
         String url = req.getPathInfo();
 
         // FIXME: if request character encoding is undefined set it to UTF-8
@@ -102,9 +103,7 @@ public final class ServiceRequestFactory {
         srvReq.setLanguage(lang);
         srvReq.setService(service);
         srvReq.setJSONOutput(extractJSONFlag(req.getQueryString()));
-        String ip = req.getRemoteAddr();
-        String forwardedFor = req.getHeader("x-forwarded-for");
-        if (forwardedFor != null) ip = forwardedFor;
+        String ip = ServiceManager.getRequestIpAddress(req);
         srvReq.setAddress(ip);
         srvReq.setOutputStream(res.getOutputStream());
 
@@ -237,7 +236,7 @@ public final class ServiceRequestFactory {
     //---------------------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
-    private static Element extractParameters(HttpServletRequest req, Path uploadDir, int maxUploadSize) throws Exception {
+    private static Element extractParameters(HttpServletRequest req, Path uploadDir, long maxUploadSize) throws Exception {
         //--- set parameters from multipart request
         if (req instanceof MultipartRequest) {
             AbstractMultipartHttpServletRequest request = (AbstractMultipartHttpServletRequest) req;
@@ -270,7 +269,7 @@ public final class ServiceRequestFactory {
 
     //---------------------------------------------------------------------------
 
-    private static Element getMultipartParams(AbstractMultipartHttpServletRequest req, Path uploadDir, int maxUploadSize) throws Exception {
+    private static Element getMultipartParams(AbstractMultipartHttpServletRequest req, Path uploadDir, long maxUploadSize) throws Exception {
         Element params = new Element("params");
 
         long maxSizeInBytes = maxUploadSize * 1024L * 1024L;

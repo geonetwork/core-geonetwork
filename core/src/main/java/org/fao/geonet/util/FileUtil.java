@@ -80,4 +80,21 @@ public class FileUtil {
                 }
         }
     }
+
+    /**
+     * Similar to https://commons.apache.org/proper/commons-io/apidocs/org/apache/commons/io/FileUtils.html#byteCountToDisplaySize(long)
+     * however the format is returned in 2 decimal precision.
+     *
+     * @param bytes to be converted into human-readable format.
+     * @return human-readable formated bytes.
+     */
+    public static String humanizeFileSize(long bytes) {
+        if (bytes == 0) return "0 Bytes";
+
+        String[] sizes = {"Bytes", "KB", "MB", "GB", "TB"};
+        int i = (int) Math.floor(Math.log(bytes) / Math.log(1024)); // Determine the index for sizes
+        double humanizedSize = bytes / Math.pow(1024, i);
+
+        return String.format("%.2f %s", humanizedSize, sizes[i]);
+    }
 }

@@ -35,14 +35,10 @@
   <!-- i18n information -->
   <xsl:variable name="wms-info-loc">
     <msg id="a" xml:lang="eng">WMS service </msg>
-    <msg id="b" xml:lang="eng">is described in online resource section. Run to update extent, CRS or
-      graphic overview
-      for this WMS service for the layer named:
+    <msg id="b" xml:lang="eng">is described in online resource section. Run to update extent, CRS or graphic overview for this WMS service for the layer named:
     </msg>
     <msg id="a" xml:lang="fre">Le service de visualisation</msg>
-    <msg id="b" xml:lang="fre">est décrit dans la section resource en ligne. Exécuter cette action
-      pour mettre à jour l'étendue, les systèmes de projection
-      ou les aperçus pour ce service et la couche nommée :
+    <msg id="b" xml:lang="fre">est décrit dans la section resource en ligne. Exécuter cette action pour mettre à jour l'étendue, les systèmes de projection ou les aperçus pour ce service et la couche nommée :
     </msg>
     <msg id="a" xml:lang="dut">Er is een verwijzing gevonden naar de WMS service </msg>
     <msg id="b" xml:lang="dut">. Gebruik deze functie om de dekking, de projectie of thumbnail af te leiden of bij te werken vanuit deze WMS-service voor de laag met de naam: </msg>
@@ -60,6 +56,7 @@
   <xsl:param name="setDynamicGraphicOverview" select="'0'"/>
   <xsl:param name="setServiceConnectPoint" select="'0'"/>
   <xsl:param name="wmsServiceUrl"/>
+  <xsl:param name="wmsLayerName"/>
 
   <xsl:variable name="maxSrs" select="21"/>
 
@@ -74,7 +71,7 @@
   -->
   <xsl:variable name="onlineNodes"
                 select="//gmd:CI_OnlineResource[contains(gmd:protocol/gco:CharacterString, 'OGC:WMS') and normalize-space(gmd:linkage/gmd:URL)=$wmsServiceUrl]"/>
-  <xsl:variable name="layerName" select="$onlineNodes/gmd:name/gco:CharacterString"/>
+
   <xsl:variable name="capabilitiesDoc">
     <xsl:if test="$onlineNodes">
       <xsl:copy-of select="geonet:get-wms-capabilities($wmsServiceUrl, '1.1.1')"/>
@@ -105,13 +102,15 @@
     <xsl:for-each select="$onlineResources">
       <xsl:variable name="url"
                     select="normalize-space(gmd:linkage/gmd:URL)"/>
+      <xsl:variable name="layerName"
+                    select="normalize-space(gmd:name/gco:CharacterString)"/>
       <suggestion process="add-info-from-wms" id="{generate-id()}" category="onlineSrc"
-                  target="gmd:extent">
+                  target="link#{gmd:protocol/gco:CharacterString}#{$url}#{$layerName}">
         <name>
           <xsl:value-of select="geonet:i18n($wms-info-loc, 'a', $guiLang)"/><xsl:value-of
-          select="./gmd:linkage/gmd:URL"
+          select="$url"
         /><xsl:value-of select="geonet:i18n($wms-info-loc, 'b', $guiLang)"/><xsl:value-of
-          select="./gmd:name/gco:CharacterString"/>.
+          select="$layerName"/>.
         </name>
         <operational>true</operational>
         <params>{"setExtent":{"type":"boolean", "defaultValue":"<xsl:value-of select="$setExtent"/>"},
@@ -128,7 +127,9 @@
             "defaultValue":"<xsl:value-of select="$setServiceConnectPoint"/>"},
           </xsl:if>
           "wmsServiceUrl":{"type":"string", "defaultValue":"<xsl:value-of
-            select="$url"/>"}
+            select="$url"/>"},
+          "wmsLayerName":{"type":"string", "defaultValue":"<xsl:value-of
+            select="$layerName"/>"}
           }
         </params>
       </suggestion>
@@ -173,26 +174,21 @@
         gmd:graphicOverview
         "/>
       <!-- graphic overview-->
-      <xsl:if test="$setDynamicGraphicOverviewMode and $wmsServiceUrl!='' and $layerName!=''">
+      <xsl:if test="$setDynamicGraphicOverviewMode and $wmsServiceUrl!='' and $wmsLayerName!=''">
         <xsl:variable name="wmsBbox"
-                      select="$capabilitiesDoc//Layer[Name=$layerName]/LatLonBoundingBox"/>
+                      select="$capabilitiesDoc//Layer[Name=$wmsLayerName]/LatLonBoundingBox"/>
+
         <xsl:if test="$wmsBbox/@minx!=''">
           <gmd:graphicOverview>
             <gmd:MD_BrowseGraphic>
               <gmd:fileName>
                 <gco:CharacterString>
-
                   <xsl:value-of
-                    select="geonet:get-wms-thumbnail-url($wmsServiceUrl, '1.1.1', $layerName,
+                    select="geonet:get-wms-thumbnail-url($wmsServiceUrl, '1.1.1', $wmsLayerName,
                                 concat($wmsBbox/@minx, ',', $wmsBbox/@miny, ',', $wmsBbox/@maxx, ',', $wmsBbox/@maxy))"
                   />
                 </gco:CharacterString>
               </gmd:fileName>
-              <gmd:fileDescription>
-                <gco:CharacterString>
-                  <xsl:value-of select="$layerName"/>
-                </gco:CharacterString>
-              </gmd:fileDescription>
             </gmd:MD_BrowseGraphic>
           </gmd:graphicOverview>
         </xsl:if>
@@ -415,8 +411,6 @@
     <xsl:param name="srv" select="false()"/>
     <xsl:param name="status" select="false()"/>
 
-    <xsl:variable name="layerName" select="gmd:name/gco:CharacterString/text()"/>
-
     <xsl:choose>
       <xsl:when test="$srv">
         <xsl:variable name="minx" select="math:min($capabilitiesDoc//LatLonBoundingBox/@minx)"/>
@@ -429,7 +423,7 @@
         </srv:extent>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:apply-templates select="$capabilitiesDoc//Layer[Name=$layerName]"
+        <xsl:apply-templates select="$capabilitiesDoc//Layer[Name=$wmsLayerName]"
                              mode="create-bbox-for-wms"/>
       </xsl:otherwise>
     </xsl:choose>

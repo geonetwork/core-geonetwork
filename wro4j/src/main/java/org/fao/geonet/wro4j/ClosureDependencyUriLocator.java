@@ -27,7 +27,8 @@ public class ClosureDependencyUriLocator implements UriLocator {
         resource.setMinimize(false);
         resource.setType(ResourceType.JS);
 
-        if (Files.exists(IO.toPath(dep.path.replace("file:/D:", "/D")))) {
+        // If not a URI, but an actual path, set the URI accordingly
+        if (!dep.path.startsWith("file:/") && Files.exists(IO.toPath(dep.path))) {
             resource.setUri(IO.toPath(dep.path).toUri().toString());
         } else {
             StringBuilder path = new StringBuilder();

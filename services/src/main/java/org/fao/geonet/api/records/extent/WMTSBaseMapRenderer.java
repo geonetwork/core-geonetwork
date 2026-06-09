@@ -193,7 +193,7 @@ public class WMTSBaseMapRenderer implements BaseMapRenderingEngine {
         BufferedImage image = wmtsClient.createImage(
             bbox.getMinX(), bbox.getMinY(), bbox.getMaxX(), bbox.getMaxY(),
             (int) imageDimensions.getWidth(), (int) imageDimensions.getHeight(),
-            matrixSet);
+            this.srs);
 
         return image;
     }

@@ -39,7 +39,6 @@ var gnHarvestergeoPREST = {
                 {"@name": "dynamic"}
               ]
             }],
-            "groupsCopyPolicy": [],
             "info":   {
               "lastRun": [],
               "running": false

@@ -20,6 +20,7 @@
   <xsl:param name="atomDescribeServiceUrlSuffix" />
   <xsl:param name="atomDescribeDatasetUrlSuffix" />
   <xsl:param name="atomDownloadDatasetUrlSuffix" />
+  <xsl:param name="baseUrl" />
   <xsl:param name="nodeName" />
   <xsl:output method="xml" indent="no" encoding="utf-8"/>
 
@@ -53,7 +54,7 @@
       <Url type="text/html" rel="results">
         <xsl:attribute name="template">
           <xsl:value-of
-            select="concat($nodeUrl, $requestedLanguage, '/', $opensearchUrlSuffix, '/htmlsearch?q={searchTerms?}')"/>
+            select="concat($baseUrl, $opensearchUrlSuffix, '/', $requestedLanguage, '/search?q={searchTerms?}')"/>
         </xsl:attribute>
       </Url>
 

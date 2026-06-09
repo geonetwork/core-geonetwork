@@ -218,7 +218,9 @@ ul.pager {
 #gn-uiconfig-container,
 #gn-mapservers-container,
 #gn-sources-container,
-#gn-metadatatemplates-container {
+#gn-metadatatemplates-container,
+#gn-static-pages-container,
+#gn-doiservers-container {
   // Fixes gn-modal windows; TODO: fix this globally in gn-popup style
   [gn-modal] {
     max-width: none;
@@ -257,4 +259,34 @@ ul > li > a.privilege-check-order {
 ul > li.list-group-item > input {
   margin-right: 40px;
   margin-left: 30px;
+}
+
+.gn-env {
+  table tr td:first-child {
+    width: 33%;
+  }
+}
+
+#gn-anonymous-access-list {
+  .table.gn-results-anonymous-access td {
+    padding: 6px 3px;
+    .btn-group {
+      margin-top: 3px;
+      .btn-single {
+        border-radius: 4px;
+      }
+    }
+    .col-lg-8,
+    .col-md-8,
+    .col-lg-4,
+    .col-md-4 {
+      padding-left: 0;
+      padding-right: 0;
+    }
+    @media (min-width: @screen-md-min) {
+      .btn-group {
+        float: right;
+      }
+    }
+  }
 }

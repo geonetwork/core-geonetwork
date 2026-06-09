@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -42,7 +42,7 @@ import java.util.Map;
  * <p>
  * parts taken from BaselUser (GN keycloak plugin)
  */
-class SimpleOidcUser {
+public class SimpleOidcUser {
 
 
     private String username;
@@ -61,7 +61,7 @@ class SimpleOidcUser {
      * @param idToken  The User's ID token
      * @param attributes All the user's claims (ID Token claims + USERINFO claims)
      */
-    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, OidcIdToken idToken, Map userAttributes) throws Exception {
+    public SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, OidcIdToken idToken, Map userAttributes) throws Exception {
         Map attributes = (userAttributes == null) ? new HashMap() : userAttributes;
 
         username = (String) idToken.getClaims().get(oidcConfiguration.getUserNameAttribute());
@@ -103,21 +103,18 @@ class SimpleOidcUser {
             }
 
 
-            if (idToken.getClaims() != null && idToken.getClaims().containsKey(oidcConfiguration.organizationProperty)) {
-                organisation = (String) idToken.getClaims().get(oidcConfiguration.organizationProperty);
+            if (idToken.getClaims() != null && idToken.getClaims().containsKey(oidcConfiguration.getOrganizationProperty())) {
+                organisation = (String) idToken.getClaims().get(oidcConfiguration.getOrganizationProperty());
             }
-            if ( (organisation == null) && attributes.containsKey(oidcConfiguration.organizationProperty) ) {
-                organisation = (String) attributes.get(oidcConfiguration.organizationProperty);
+            if ( (organisation == null) && attributes.containsKey(oidcConfiguration.getOrganizationProperty()) ) {
+                organisation = (String) attributes.get(oidcConfiguration.getOrganizationProperty());
             }
 
 
             if (idToken.getAddress() != null) {
+                //https://openid.net/specs/openid-connect-core-1_0.html#AddressClaim
                 address = new Address();
                 address.setAddress(idToken.getAddress().getStreetAddress());
-                if ( (address.getAddress() == null) && attributes.containsKey(StandardClaimNames.ADDRESS)) {
-                    address.setAddress((String) attributes.get(StandardClaimNames.ADDRESS));
-
-                }
                 address.setCity(idToken.getAddress().getLocality());
                 address.setState(idToken.getAddress().getRegion());
                 address.setZip(idToken.getAddress().getPostalCode());
@@ -132,7 +129,7 @@ class SimpleOidcUser {
         }
     }
 
-    SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, Map attributes) throws Exception {
+    public SimpleOidcUser(OIDCConfiguration oidcConfiguration, OIDCRoleProcessor oidcRoleProcessor, Map attributes) throws Exception {
         username = (String) attributes.get(oidcConfiguration.getUserNameAttribute());
         if (username == null) {
             username = (String) attributes.get(StandardClaimNames.PREFERRED_USERNAME);
@@ -158,8 +155,8 @@ class SimpleOidcUser {
 
             email = (String) attributes.get(StandardClaimNames.EMAIL);
 
-            if (attributes.containsKey(oidcConfiguration.organizationProperty)) {
-                organisation = (String) attributes.get(oidcConfiguration.organizationProperty);
+            if (attributes.containsKey(oidcConfiguration.getOrganizationProperty())) {
+                organisation = (String) attributes.get(oidcConfiguration.getOrganizationProperty());
             }
 
             Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(attributes);

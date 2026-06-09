@@ -26,9 +26,17 @@
 
   goog.require("gn_contactus_directive");
 
-  var module = angular.module("gn_contact_us_controller", ["gn_contactus_directive"]);
+  var module = angular.module("gn_contact_us_controller", [
+    "gn_contactus_directive",
+    "vcRecaptcha"
+  ]);
 
-  module.constant("$LOCALES", ["core"]);
+  module.config([
+    "$LOCALES",
+    function ($LOCALES) {
+      $LOCALES.push("/../api/i18n/packages/search");
+    }
+  ]);
 
   /**
    *

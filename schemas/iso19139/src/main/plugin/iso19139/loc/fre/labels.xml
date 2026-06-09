@@ -359,7 +359,10 @@
       n’est pas respectée.
     </help>
     <condition/>
-
+  </element>
+  <element name="gmd:DQ_EvaluationMethodTypeCode">
+    <label>Code du type de méthode d'évaluation</label>
+    <description>Type de méthode d'évaluation d'une mesure de qualité de données identifiée</description>
   </element>
   <element name="gmd:DQ_FormatConsistency" id="114.0">
     <label>Cohérence du format</label>
@@ -2489,14 +2492,6 @@ version en tant que mot-clé complémentaire(s). Le numéro de version doit comp
     <description>Distance de référence, mesurée au sol</description>
     <help>Résolution au sol</help>
     <condition>Saisir une distance si pas d'échelle</condition>
-    <helper relAtt="uom">
-      <option value="0.10" title="m">10 cm</option>
-      <option value="0.25" title="m">25 cm</option>
-      <option value="0.50" title="m">50 cm</option>
-      <option value="1" title="m">1 m</option>
-      <option value="30" title="m">30 m</option>
-      <option value="100" title="m">100 m</option>
-    </helper>
   </element>
 
   <element name="gmd:distributionFormat" id="271.0">
@@ -4356,6 +4351,8 @@ la non-évaluation</b>, dans le cadre de métadonnées INSPIRE
       <option value="OGC API - Features">OGC API - Features</option>
       <option value="OGC API - Maps">OGC API - Maps</option>
       <option value="OGC API - Records">OGC API - Records</option>
+      <option value="OGC:3DTILES">OGC-3DTiles Dataset</option>
+      <option value="OGC:COG">OGC-Cloud Optimized GeoTIFF</option>
       <option value="OGC:CSW">OGC-CSW Catalogue Service for the Web</option>
       <option value="OGC:KML">OGC-KML Keyhole Markup Language</option>
       <option value="OGC:GML">OGC-GML Geography Markup Language</option>

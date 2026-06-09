@@ -101,7 +101,7 @@
             title="{{'removeThumbnail' | translate}}"
             aria-label="{{'removeThumbnail' | translate}}"
           >
-            <i class="btn fa fa-times text-danger"></i>
+            <i class="fa fa-times text-danger"></i>
           </a>
           <a
             href=""
@@ -111,7 +111,7 @@
             title="{{'edit' | translate}}"
             data-ng-click="onlinesrcService.onOpenPopup('onlinesrc', thumb)"
           >
-            <i class="btn fa fa-pencil"></i>
+            <i class="fa fa-pencil"></i>
           </a>
         </li>
       </ul>
@@ -179,11 +179,11 @@
                 <br data-ng-if="resource.locTitle" />
                 {{resource.locDescription}}
                 <br data-ng-if="resource.locDescription" />
-                <span data-gn-link-label="resource" />
+                <span data-gn-link-label="resource"></span>
                 <br />
 
                 <div
-                  data-ng-if="canPublishDoiForResource(resource)"
+                  data-ng-if="canPublishDoiForResource(gnCurrentEdit.metadata, resource)"
                   data-gn-doi-wizard="gnCurrentEdit.uuid"
                   data-gn-doi-url="resource.lUrl"
                   data-xs-mode="true"

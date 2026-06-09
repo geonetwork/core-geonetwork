@@ -88,11 +88,18 @@
                     select="(dct:references|dc:relation)[
                               normalize-space(.) != ''
                               and matches(., '.*(.gif|.png|.jpeg|.jpg)$', 'i')]"/>
+
+      <xsl:variable name="imgOnError" as="xs:string?"
+                    select="if (count($overviews) > 1)
+                            then 'this.onerror=null; this.style.display=''none'';'
+                            else 'this.onerror=null; $(''.gn-md-side-overview'').hide();'"/>
+
       <xsl:for-each select="$overviews">
         <img data-gn-img-modal="md"
              class="gn-img-thumbnail"
              alt="{$schemaStrings/overview}"
-             src="{.}"/>
+             src="{.}"
+             onerror="{$imgOnError}"/>
       </xsl:for-each>
     </section>
   </xsl:template>

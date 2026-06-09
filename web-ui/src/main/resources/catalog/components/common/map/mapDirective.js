@@ -24,12 +24,7 @@
 (function () {
   goog.provide("gn_map_directive");
 
-  var METRIC_DECIMALS = 4;
-  var DEGREE_DECIMALS = 8;
-
-  var getDigitNumber = function (proj) {
-    return proj == "EPSG:4326" ? DEGREE_DECIMALS : METRIC_DECIMALS;
-  };
+  var COORDS_NUM_DECIMALS = 8;
 
   angular.module("gn_map_directive", []).directive("gnDrawBbox", [
     "gnMap",
@@ -197,9 +192,8 @@
               scope.projs[to]
             );
             if (extent && extent.map) {
-              var decimals = getDigitNumber(scope.projs.form);
               scope.extent[to] = extent.map(function (coord) {
-                return coord === null ? null : coord.toFixed(decimals) / 1;
+                return coord === null ? null : coord.toFixed(COORDS_NUM_DECIMALS) / 1;
               });
             }
           };
@@ -227,10 +221,8 @@
           scope.$watch("projs.form", function (newValue, oldValue) {
             var extent = gnMap.reprojExtent(scope.extent.form, oldValue, newValue);
             if (extent && extent.map) {
-              var decimals = getDigitNumber(scope.projs.form);
-
               scope.extent.form = extent.map(function (coord) {
-                return coord.toFixed(decimals) / 1;
+                return coord.toFixed(COORDS_NUM_DECIMALS) / 1;
               });
             }
           });

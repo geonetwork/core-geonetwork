@@ -30,7 +30,6 @@ import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.jdom.Element;
 import org.quartz.SchedulerException;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import java.sql.SQLException;
@@ -51,6 +50,18 @@ public interface HarvestManager {
      * @param isReadOnly indicator if system is readonly
      */
     void init(@Nonnull ServiceContext context, boolean isReadOnly) throws Exception;
+
+    /**
+     * Refresh the harvesters.
+     * - Stops the existing scheduled jobs.
+     * - Reloads the harvester definitions from the database.
+     * - Schedule the jobs again.
+     * <p>
+     * Useful when running multiple instances as one instance is not aware of new harvesters added on the other one.
+     * <p>
+     * TODO when a durable solution for running highly available is implemented this scheduled task could be deleted, e.g., when created harvesters are notified through a shared message queue.
+     */
+    void refreshHarvesters();
 
     /**
      * Shutdown all harvesters and thread pools and jobs.

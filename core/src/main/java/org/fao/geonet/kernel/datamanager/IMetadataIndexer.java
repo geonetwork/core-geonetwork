@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -24,16 +24,15 @@
 package org.fao.geonet.kernel.datamanager;
 
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
 import jeeves.server.context.ServiceContext;
+import org.springframework.transaction.TransactionStatus;
 
 /**
  * Interface to handle all indexing operations
@@ -66,11 +65,6 @@ public interface IMetadataIndexer {
     int batchDeleteMetadataAndUpdateIndex(Specification<? extends AbstractMetadata> specification) throws Exception;
 
     /**
-     * Search for all records having XLinks (ie. indexed with _hasxlinks flag), clear the cache and reindex all records found.
-     */
-    void rebuildIndexXLinkedMetadata(ServiceContext context) throws Exception;
-
-    /**
      * Reindex all records in current selection.
      */
     void rebuildIndexForSelection(ServiceContext context, String bucket, boolean clearXlink) throws Exception;
@@ -83,6 +77,16 @@ public interface IMetadataIndexer {
      * @param metadataIds the metadata ids to index
      */
     void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds);
+
+    /**
+     * Index multiple metadata in a separate thread. Wait until the current transaction commits before starting threads (to make sure that
+     * all metadata are committed).
+     *
+     * @param context context object
+     * @param metadataIds the metadata ids to index
+     * @param transactionStatus status of transaction which must complete before indexation take place
+     */
+    void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds, TransactionStatus transactionStatus);
 
     /**
      * Is the platform currently indexing?

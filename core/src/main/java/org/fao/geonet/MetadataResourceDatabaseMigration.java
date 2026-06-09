@@ -78,7 +78,7 @@ public class MetadataResourceDatabaseMigration extends DatabaseMigrationTask {
                     "gmd:fileDescription/gco:CharacterString = 'large_thumbnail']/gmd:fileName/" +
                     "gco:CharacterString[not(starts-with(normalize-space(text()), 'http'))]";
     private static final String XPATH_THUMBNAIL_WITH_URL =
-            "*//gmd:graphicOverview/gmd:MD_BrowseGraphic[gmd:fileDescription/gco:CharacterString]/gmd:fileName/gco:CharacterString[starts-with(normalize-space(text()), 'http')]";
+            "*//gmd:graphicOverview/gmd:MD_BrowseGraphic/gmd:fileName/gco:CharacterString[starts-with(normalize-space(text()), 'http')]";
 
     private static final String XPATH_ATTACHMENTS_WITH_URL =
             "*//gmd:CI_OnlineResource/gmd:linkage/gmd:URL";

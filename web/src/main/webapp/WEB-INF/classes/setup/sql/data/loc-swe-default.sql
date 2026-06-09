@@ -1,4 +1,4 @@
-INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('swe','swedish', 'y', 'n');
+INSERT INTO Languages (id, name, isinspire) VALUES ('swe','swedish', 'y');
 
 -- Take care to table ID (related to other loc files)
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'swe','Kartor och grafik');

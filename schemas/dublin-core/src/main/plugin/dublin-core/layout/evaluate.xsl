@@ -42,6 +42,6 @@
   <xsl:template name="evaluate-dublin-core">
     <xsl:param name="base" as="node()"/>
     <xsl:param name="in"/>
-    <xsl:copy-of select="saxon:evaluate(concat('$p1', $in), $base)"/>
+    <xsl:copy-of select="saxon:evaluate(concat('$p1', $in), $base, $request, $service)"/>
   </xsl:template>
 </xsl:stylesheet>

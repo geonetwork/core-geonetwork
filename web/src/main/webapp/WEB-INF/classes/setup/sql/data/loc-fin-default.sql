@@ -1,4 +1,4 @@
-INSERT INTO Languages (id, name, isinspire, isdefault) VALUES ('fin','suomi', 'y', 'n');
+INSERT INTO Languages (id, name, isinspire) VALUES ('fin','suomi', 'y');
 
 -- Take care to table ID (related to other loc files)
 INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'fin','Kartat & kuvat');
@@ -512,10 +512,10 @@ INSERT INTO OperationsDes  (iddes, langid, label) VALUES (5,'fin','Interactive M
 INSERT INTO OperationsDes  (iddes, langid, label) VALUES (6,'fin','Featured');
 
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (0,'fin','Unknown');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (1,'fin','Draft');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'fin','Approved');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'fin','Retired');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'fin','Submitted');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (1,'fin','Luonnos');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (2,'fin','Hyväksytty');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (3,'fin','Poistettu');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (4,'fin','Lähetetty');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (5,'fin','Rejected');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (50,'fin','Record created.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (51,'fin','Record updated.');

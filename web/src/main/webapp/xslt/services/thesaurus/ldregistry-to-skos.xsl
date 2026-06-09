@@ -71,7 +71,6 @@
 
 
         <dcterms:issued><xsl:value-of select="if ($thesaurusDate != '') then $thesaurusDate else $now"/></dcterms:issued>
-        <dcterms:modified><xsl:value-of select="if ($thesaurusDate != '') then $thesaurusDate else $now"/></dcterms:modified>
 
         <xsl:for-each select="distinct-values($concepts/*[skos:narrower and not(skos:broader)]/@rdf:about)">
           <skos:hasTopConcept rdf:resource="{.}"/>

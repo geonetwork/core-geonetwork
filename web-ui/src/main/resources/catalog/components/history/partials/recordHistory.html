@@ -1,10 +1,10 @@
 <div data-ng-show="history.length > 0" class="panel panel-default">
   <div class="panel-heading" data-gn-slide-toggle="{{collapsed}}">
-    <i class="fa fa-fw fa-history" />
+    <i class="fa fa-fw fa-history"></i>
     <span data-translate="">recordHistory</span>
   </div>
   <div class="panel-body">
-    <div class="btn-group">
+    <div class="btn-group" data-ng-if="getNumberOfTypes() > 1">
       <label
         data-ng-repeat="(k, v) in filter.types"
         class="btn btn-default"
@@ -27,7 +27,7 @@
         data-ng-repeat="h in history"
         data-gn-record-history-step="h"
         data-no-title="true"
-      />
+      ></li>
       <li class="timeline-inverted" data-ng-show="hasMoreRecords">
         <a data-ng-click="more()">
           <i class="fa fa-fw fa-plus"></i>

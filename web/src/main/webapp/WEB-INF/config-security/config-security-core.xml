@@ -38,7 +38,8 @@
       <list>
         <!-- TODO: This needs to be secured to not access private info -->
         <sec:filter-chain pattern="/index/**" filters=""/>
-        <sec:filter-chain pattern="/jolokia/**" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
+        <sec:filter-chain pattern="/jolokia" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
+        <sec:filter-chain pattern="/jolokia/read/geonetwork-**" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/dashboards/**" filters="securityContextPersistenceFilter, basicAuthenticationFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/doc/**" filters=""/>
         <sec:filter-chain pattern="/api/**" filters=""/>
@@ -64,8 +65,14 @@
         <ref bean="coreFilterChain"/>
       </list>
     </constructor-arg>
+
+    <property name="firewall" ref="httpFirewall"/>
   </bean>
 
+  <!-- HttpFirewall that parses UTF8 header values -->
+  <bean id="httpFirewall"
+         class="org.fao.geonet.web.GeoNetworkStrictHttpFirewall">
+  </bean>
 
   <bean id="coreFilterChain"
         class="org.springframework.security.web.DefaultSecurityFilterChain">
@@ -94,6 +101,7 @@
         <ref bean="formLoginFilter"/>
         <ref bean="requestCacheFilter"/>
         <ref bean="anonymousFilter"/>
+        <ref bean="grantViewMdAuthorityFilter"/>
         <ref bean="sessionMgmtFilter"/>
         <ref bean="exceptionTranslationFilter"/>
         <ref bean="filterSecurityInterceptor"/>
@@ -106,6 +114,10 @@
   <bean id="securityContextPersistenceFilter"
         class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
     <!-- repo -->
+    <constructor-arg ref="securityContextRepository"/>
+  </bean>
+
+  <bean id="grantViewMdAuthorityFilter" class="org.fao.geonet.security.GrantViewMdAuthorityFilter">
     <constructor-arg ref="securityContextRepository"/>
   </bean>
 
@@ -159,7 +171,7 @@
     </property>
     <property name="authenticationSuccessHandler">
       <bean
-        class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+        class="org.fao.geonet.kernel.security.GeonetworkSavedRequestAwareAuthenticationSuccessHandler">
         <property name="defaultTargetUrl" value="/"/>
         <property name="targetUrlParameter" value="redirectUrl"/>
         <property name="requestCache" ref="requestCache"/>
@@ -374,9 +386,10 @@
         <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw!?.*</value>
         <value>/[a-zA-Z0-9_\-]+/api/search/.*</value>
         <value>/[a-zA-Z0-9_\-]+/api/site</value>
+        <value>/signout</value>
       </set>
     </constructor-arg>
   </bean>
 
-  <bean id="authenticatedUserFilter" class="org.fao.geonet.security.AuthenticathedUserFilter"/>
+  <bean id="authenticatedUserFilter" class="org.fao.geonet.security.AuthenticatedUserFilter"/>
 </beans>

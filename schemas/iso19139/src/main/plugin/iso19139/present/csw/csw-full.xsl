@@ -28,6 +28,7 @@
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                xmlns:gmx="http://www.isotc211.org/2005/gmx"
                 xmlns:srv="http://www.isotc211.org/2005/srv"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:ows="http://www.opengis.net/ows"
@@ -278,10 +279,9 @@
             <dc:URI>
               <xsl:if test="gmd:protocol">
                 <xsl:attribute name="protocol">
-                  <xsl:value-of select="gmd:protocol/gco:CharacterString"/>
+                  <xsl:value-of select="gmd:protocol/(gco:CharacterString|gmx:Anchor)" />
                 </xsl:attribute>
               </xsl:if>
-
               <xsl:if test="gmd:name">
                 <xsl:attribute name="name">
                   <xsl:for-each select="gmd:name">

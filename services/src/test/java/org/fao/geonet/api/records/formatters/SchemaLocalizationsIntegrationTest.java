@@ -23,7 +23,7 @@
 
 package org.fao.geonet.api.records.formatters;
 
-import org.fao.geonet.api.records.formatters.groovy.CurrentLanguageHolder;
+import org.fao.geonet.api.records.formatters.CurrentLanguageHolder;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Test;
@@ -43,11 +43,11 @@ public class SchemaLocalizationsIntegrationTest extends AbstractServiceIntegrati
         CurrentLanguageHolder currentLanguageHolder = new TestLanguageHolder("fre");
         final SchemaLocalizations freIso19139 = new SchemaLocalizations(context, currentLanguageHolder, "iso19139", null);
 
-        final String keywordLabel = freIso19139.nodeTranslation("gmd:descriptiveKeywords", "srv:SV_ServiceIdentification", "label");
+        final String keywordLabel = freIso19139.nodeTranslation("gmd:descriptiveKeywords", "srv:SV_ServiceIdentification", null, "label");
         assertTrue("'" + keywordLabel + "' should contain 'mots'", keywordLabel.toLowerCase().contains("mots"));
         assertTrue("'" + keywordLabel + "' should contain 'clés'", keywordLabel.toLowerCase().contains("clés"));
 
-        String identifierLabel = freIso19139.nodeTranslation("gmd:identifier", "gmd:CI_Citation", "label");
+        String identifierLabel = freIso19139.nodeTranslation("gmd:identifier", "gmd:CI_Citation", null, "label");
         assertTrue("'" + identifierLabel + "' should contain 'identificateur'", identifierLabel.toLowerCase().contains("identificateur"));
     }
 

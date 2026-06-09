@@ -1,10 +1,12 @@
-# Introduction
+# GeoNetwork CAS Test Environment
 
 This composition is meant to make runtime testing the CAS integration of
 GeoNetwork easier.
 
 This composition also integrates a LDAP, so that testing the
 config-spring-cas-ldap configuration is also possible.
+
+These docker images are intended for development and debugging. For production we recommend the official GeoNetwork docker images at https://github.com/geonetwork/docker-geonetwork.git repository.
 
 # Prerequisites
 
@@ -18,7 +20,6 @@ Then it can be launched:
 
 ```
 $ docker-compose up
-
 ```
 
 # Accessing the CAS login page from GeoNetwork

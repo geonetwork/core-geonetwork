@@ -1,5 +1,5 @@
 //==============================================================================
-//===	Copyright (C) 2001-2008 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -38,11 +38,8 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.api.records.extent.MapRenderer;
 import org.fao.geonet.api.records.formatters.cache.*;
-import org.fao.geonet.api.records.formatters.groovy.ParamValue;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -55,10 +52,8 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.OperationAllowedSpecs;
-import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.IO;
-import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -79,7 +74,6 @@ import org.springframework.util.Assert;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.WebRequest;
-import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -90,6 +84,8 @@ import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 import java.util.concurrent.Callable;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.google.common.io.Files.getNameWithoutExtension;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
@@ -115,6 +111,12 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     @Autowired
     IsoLanguagesMapper isoLanguagesMapper;
+
+    @Autowired
+    PdfOrHtmlResponseWriter writer;
+
+    @Autowired
+    SchemaManager schemaManager;
 
     /**
      * Map (canonical path to formatter dir -> Element containing all xml files in Formatter
@@ -155,7 +157,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
     public void copyNewerFilesToDataDir(final Path fromDir, final Path toDir) throws IOException {
         if (Files.exists(fromDir)) {
-            Files.walkFileTree(fromDir, new SimpleFileVisitor<Path>() {
+            Files.walkFileTree(fromDir, new SimpleFileVisitor<>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     final Path path = IO.relativeFile(fromDir, file, toDir);
@@ -168,6 +170,41 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                 }
             });
         }
+    }
+
+    @GetMapping(value =
+        "/{portal}/api/records/{metadataUuid}/formatters",
+        produces = MediaType.APPLICATION_JSON_VALUE)
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get the list of formatters available for a metadata record"
+    )
+    @ResponseBody
+    public Set<String> getRecordFormatters(
+        @Parameter(
+            description = API_PARAM_RECORD_UUID,
+            required = true)
+        @PathVariable
+        String metadataUuid,
+        final HttpServletRequest servletRequest) throws Exception {
+
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, true, servletRequest);
+
+        Path styleSheetPath = schemaManager.getSchemaDir(metadata.getDataInfo().getSchemaId()).resolve("formatter");
+
+        Set<String> formatters = new HashSet<>();
+        // Add the default formatters
+        formatters.add("xml");
+        formatters.add("zip");
+
+        try (Stream<Path> paths = Files.list(styleSheetPath)) {
+            formatters.addAll(paths
+                .filter(Files::isDirectory)
+                .map(Path::getFileName)
+                .map(Path::toString)
+                .collect(Collectors.toSet()));
+        }
+
+        return formatters;
     }
 
     @RequestMapping(value = {
@@ -189,11 +226,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @Parameter(
             description = "Formatter type to use."
         )
-        @RequestHeader(
-            value = HttpHeaders.ACCEPT,
-            defaultValue = MediaType.TEXT_HTML_VALUE
-        )
-            String acceptHeader,
         @PathVariable(
             value = "formatterId"
         ) final String formatterId,
@@ -215,6 +247,14 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @RequestParam(
             value = "language",
             required = false) final String iso3lang,
+        @Parameter(
+            description = "Output parameter is optional. If not defined, the output format is computed based on the HTTP accept header.\n\n" +
+                "Some specific cases:\n" +
+                "* Use `xsl-view?output=pdf` to convert the HTML output to PDF\n" +
+                "* Use `dcat?output=turtle` to convert the RDF/XML output to turtle\n" +
+                "* Use `dcat?output=jsonld` to convert the RDF/XML output to JSON-LD",
+            required = false
+        )
         @RequestParam(
             value = "output",
             required = false)
@@ -228,15 +268,20 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         Locale locale = languageUtils.parseAcceptLanguage(servletRequest.getLocales());
 
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.TEXT_HTML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
+
         // TODO :
         // if text/html > xsl_view
         // if application/pdf > xsl_view and PDF output
         // if application/x-gn-<formatterId>+(xml|html|pdf|text)
-        // Force PDF ouutput when URL parameter is set.
+        // Force PDF output when URL parameter is set.
         // This is useful when making GET link to PDF which
         // can not use headers.
         if (MediaType.ALL_VALUE.equals(acceptHeader)) {
             acceptHeader = MediaType.TEXT_HTML_VALUE;
+        }
+        if (formatType == null) {
+            formatType = FormatType.findByFormatterKey(formatterId);
         }
         if (formatType == null) {
             formatType = FormatType.find(acceptHeader);
@@ -258,16 +303,19 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             language = isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language());
         }
 
-        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, servletRequest);
+        AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, approved, servletRequest);
 
         if (approved) {
             metadata = ApplicationContextHolder.get().getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
         }
 
 
-        Boolean hideWithheld = true;
-//        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
-//            !context.getBean(AccessManager.class).canEdit(context, resolvedId);
+        final ServiceContext context = createServiceContext(
+            language,
+            formatType,
+            request.getNativeRequest(HttpServletRequest.class));
+
+        boolean hideWithheld = !context.getBean(AccessManager.class).canEdit(context, String.valueOf(metadata.getId()));
         Key key = new Key(metadata.getId(), language, formatType, formatterId, hideWithheld, width);
         final boolean skipPopularityBool = false;
 
@@ -275,17 +323,12 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
         Validator validator;
 
-        final ServiceContext context = createServiceContext(
-            language,
-            formatType,
-            request.getNativeRequest(HttpServletRequest.class));
-
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
             long roundedChangeDate = changeDateAsTime / 1000 * 1000;
             if (request.checkNotModified(language, roundedChangeDate) &&
                 context.getBean(CacheConfig.class).allowCaching(key)) {
-                if (!skipPopularityBool) {
+                if (!skipPopularityBool && approved) {
                     context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
                 }
                 return;
@@ -310,10 +353,10 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             bytes = context.getBean(FormatterCache.class).get(key, validator, formatMetadata, false);
         }
         if (bytes != null) {
-            if (!skipPopularityBool) {
+            if (!skipPopularityBool && approved) {
                 context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
             }
-            writeOutResponse(context, metadataUuid,
+            writer.writeOutResponse(context, metadataUuid,
                 isoLanguagesMapper.iso639_2T_to_iso639_2B(locale.getISO3Language()),
                 request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
@@ -377,7 +420,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final String formattedMetadata = result.one().format(result.two());
         byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
 
-        writeOutResponse(context, "", lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
+        writer.writeOutResponse(context, "", lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
     }
 
     /**
@@ -417,8 +460,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * @param id             the id, uuid or fileIdentifier of the metadata
      * @param xslid          the id of the formatter
      * @param skipPopularity if true then don't increment popularity
-     * @param hide_withheld  if true hideWithheld (private) elements even if the current user would
-     *                       normally have access to them.
      * @param width          the approximate size of the element that the formatter output will be
      *                       embedded in compared to the full device width.  Allowed options are the
      *                       enum values: {@link org.fao.geonet.api.records.formatters.FormatterWidth}
@@ -434,7 +475,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         @RequestParam(value = "uuid", required = false) final String uuid,
         @RequestParam(value = "xsl", required = false) final String xslid,
         @RequestParam(defaultValue = "n") final String skipPopularity,
-        @RequestParam(value = "hide_withheld", required = false) final Boolean hide_withheld,
         @RequestParam(value = "width", defaultValue = "_100") final FormatterWidth width,
         final NativeWebRequest request) throws Exception {
         final FormatType formatType = FormatType.valueOf(type.toLowerCase());
@@ -443,10 +483,9 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         ServiceContext context = createServiceContext(lang, formatType, request.getNativeRequest(HttpServletRequest.class));
         Lib.resource.checkPrivilege(context, resolvedId, ReservedOperation.view);
 
-        final boolean hideWithheld = Boolean.TRUE.equals(hide_withheld) ||
-            !context.getBean(AccessManager.class).canEdit(context, resolvedId);
+        final boolean hideWithheld = !context.getBean(AccessManager.class).canEdit(context, resolvedId);
         Key key = new Key(Integer.parseInt(resolvedId), lang, formatType, xslid, hideWithheld, width);
-        final boolean skipPopularityBool = new ParamValue(skipPopularity).toBool();
+        final boolean skipPopularityBool = skipPopularity.equals("y");
 
         ISODate changeDate = context.getBean(EsSearchManager.class).getDocChangeDate(resolvedId);
 
@@ -477,23 +516,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
                 context.getBean(DataManager.class).increasePopularity(context, resolvedId);
             }
 
-            writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
-        }
-    }
-
-    private void writeOutResponse(ServiceContext context, String metadataUuid, String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
-        response.setContentType(formatType.contentType);
-        String filename = "metadata-" + metadataUuid + "." + formatType;
-        response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
-        response.setStatus(HttpServletResponse.SC_OK);
-        if (formatType == FormatType.pdf) {
-            writerAsPDF(context, response, formattedMetadata, lang);
-        } else {
-            response.setCharacterEncoding(Constants.ENCODING);
-            response.setContentType(formatType.contentType);
-            response.setContentLength(formattedMetadata.length);
-            response.setHeader("Cache-Control", "no-cache");
-            response.getOutputStream().write(formattedMetadata);
+            writer.writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
     }
 
@@ -507,7 +530,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         }
         return false;
     }
-
 
     private String getXmlFromUrl(ServiceContext context, String lang, String url, WebRequest request) throws IOException, URISyntaxException {
         String adjustedUrl = url;
@@ -537,24 +559,6 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         return new String(ByteStreams.toByteArray(execute.getBody()), Constants.CHARSET);
     }
 
-    private void writerAsPDF(ServiceContext context, HttpServletResponse response, byte[] bytes, String lang) throws IOException, com.lowagie.text.DocumentException {
-        final String htmlContent = new String(bytes, Constants.CHARSET);
-        try {
-            XslUtil.setNoScript();
-            ITextRenderer renderer = new ITextRenderer();
-            String siteUrl = context.getBean(SettingManager.class).getSiteURL(lang);
-            MapRenderer mapRenderer = new MapRenderer(context);
-            renderer.getSharedContext().setReplacedElementFactory(new ImageReplacedElementFactory(siteUrl.replace("/" + lang + "/", "/eng/"), renderer.getSharedContext()
-                .getReplacedElementFactory(), mapRenderer));
-            renderer.getSharedContext().setDotsPerPixel(13);
-            renderer.setDocumentFromString(htmlContent, siteUrl);
-            renderer.layout();
-            renderer.createPDF(response.getOutputStream());
-        } catch (final Exception e) {
-            Log.error(Geonet.FORMATTER, "Error converting formatter output to a file: " + htmlContent, e);
-            throw e;
-        }
-    }
 
     @VisibleForTesting
     Pair<FormatterImpl, FormatterParams> loadMetadataAndCreateFormatterAndParams(ServiceContext context, Key key, final NativeWebRequest request) throws Exception {
@@ -607,17 +611,8 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         fparams.formatterInSchemaPlugin = isFormatterInSchemaPlugin(formatDir, schemaDir);
 
         Path viewXslFile = formatDir.resolve(FormatterConstants.VIEW_XSL_FILENAME);
-        Path viewGroovyFile = formatDir.resolve(FormatterConstants.VIEW_GROOVY_FILENAME);
-        FormatterImpl formatter;
-        if (Files.exists(viewXslFile)) {
-            fparams.viewFile = viewXslFile.toRealPath();
-            formatter = context.getBean(XsltFormatter.class);
-        } else if (Files.exists(viewGroovyFile)) {
-            fparams.viewFile = viewGroovyFile.toRealPath();
-            formatter = context.getBean(GroovyFormatter.class);
-        } else {
-            throw new IllegalArgumentException("The 'xsl' parameter must be a valid id of a formatter");
-        }
+        FormatterImpl formatter = FormatterFactory.getFormatter(context, viewXslFile, xslid);
+        fparams.viewFile = viewXslFile.toRealPath();
 
         return Pair.read(formatter, fparams);
     }
@@ -652,17 +647,11 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         Element metadata = serializer.removeHiddenElements(false, md, true);
         if (doXLinks) Processor.processXLink(metadata, context);
 
-        boolean withholdWithheldElements = hide_withheld != null && hide_withheld;
-        if (XmlSerializer.getThreadLocal(false) != null || withholdWithheldElements) {
-            XmlSerializer.getThreadLocal(true).setForceFilterEditOperation(withholdWithheldElements);
-        }
-
         return Pair.read(metadata, md);
 
     }
 
-    private boolean isCompatibleMetadata(String schemaName, ConfigFile config) throws Exception {
-
+    private boolean isCompatibleMetadata(String schemaName, ConfigFile config) {
         List<String> applicable = config.listOfApplicableSchemas();
         return applicable.contains(schemaName) || applicable.contains("all");
     }
@@ -794,6 +783,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             FormatterParams fparams = result.two();
             final String formattedMetadata = formatter.format(fparams);
             byte[] bytes = formattedMetadata.getBytes(Constants.CHARSET);
+
             long changeDate = fparams.metadataInfo.getDataInfo().getChangeDate().toDate().getTime();
             final Specification<OperationAllowed> isPublished = OperationAllowedSpecs.isPublic(ReservedOperation.view);
             final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(key.mdId);

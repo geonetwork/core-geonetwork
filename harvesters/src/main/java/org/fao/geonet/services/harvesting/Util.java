@@ -54,6 +54,9 @@ public class Util {
         Element response = new Element(Jeeves.Elem.RESPONSE);
 
         for (Element el : paramList) {
+            if (!el.getName().equals("id")) {
+                continue;
+            }
             String id = el.getText();
             String res = job.execute(hm, id).toString();
 

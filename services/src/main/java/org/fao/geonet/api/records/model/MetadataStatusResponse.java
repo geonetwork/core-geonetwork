@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2024 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,11 +23,9 @@
 
 package org.fao.geonet.api.records.model;
 
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
 
-public class MetadataStatusResponse extends MetadataStatus {
-
+public class MetadataStatusResponse extends MetadataStatusDto {
 
     private String authorName;
     private String authorEmail;
@@ -48,20 +46,7 @@ public class MetadataStatusResponse extends MetadataStatus {
     private boolean loadFull = false;
 
     public MetadataStatusResponse(MetadataStatus metadataStatus) {
-        setUuid(metadataStatus.getUuid());
-        setId(metadataStatus.getId());
-        setUserId(metadataStatus.getUserId());
-        setChangeDate(metadataStatus.getChangeDate());
-        setChangeMessage(metadataStatus.getChangeMessage());
-        setOwner(metadataStatus.getOwner());
-        setDueDate(metadataStatus.getDueDate());
-        setCloseDate(metadataStatus.getCloseDate());
-        setStatusValue(metadataStatus.getStatusValue());
-        setTitles(metadataStatus.getTitles());
-        setRelatedMetadataStatus(metadataStatus.getRelatedMetadataStatus());
-        setMetadataId(metadataStatus.getMetadataId());
-        setCurrentState(metadataStatus.getCurrentState());
-        setPreviousState(metadataStatus.getPreviousState());
+        super(metadataStatus);
     }
 
     public MetadataStatusResponse(MetadataStatus metadataStatus, boolean loadFull) {
@@ -73,54 +58,48 @@ public class MetadataStatusResponse extends MetadataStatus {
         return authorEmail;
     }
 
-    public MetadataStatusResponse setAuthorEmail(String authorEmail) {
+    public void setAuthorEmail(String authorEmail) {
         this.authorEmail = authorEmail;
-        return this;
     }
 
     public String getOwnerEmail() {
         return ownerEmail;
     }
 
-    public MetadataStatusResponse setOwnerEmail(String ownerEmail) {
+    public void setOwnerEmail(String ownerEmail) {
         this.ownerEmail = ownerEmail;
-        return this;
     }
 
     public String getOwnerName() {
         return ownerName;
     }
 
-    public MetadataStatusResponse setOwnerName(String ownerName) {
+    public void setOwnerName(String ownerName) {
         this.ownerName = ownerName;
-        return this;
     }
 
     public String getOwnerProfile() {
         return ownerProfile;
     }
 
-    public MetadataStatusResponse setOwnerProfile(String ownerProfile) {
+    public void setOwnerProfile(String ownerProfile) {
         this.ownerProfile = ownerProfile;
-        return this;
     }
 
     public String getAuthorName() {
         return authorName;
     }
 
-    public MetadataStatusResponse setAuthorName(String authorName) {
+    public void setAuthorName(String authorName) {
         this.authorName = authorName;
-        return this;
     }
 
     public String getAuthorProfile() {
         return authorProfile;
     }
 
-    public MetadataStatusResponse setAuthorProfile(String authorProfile) {
+    public void setAuthorProfile(String authorProfile) {
         this.authorProfile = authorProfile;
-        return this;
     }
 
     public String getCurrentStatus() {
@@ -128,19 +107,11 @@ public class MetadataStatusResponse extends MetadataStatus {
     }
 
     public boolean isCurrentStateEmpty() {
-        if (super.getCurrentState() == null || super.getCurrentState().length() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return super.getCurrentState() == null || super.getCurrentState().isEmpty();
     }
 
     public boolean isPreviousStateEmpty() {
-        if (super.getPreviousState() == null || super.getPreviousState().length() == 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return super.getPreviousState() == null || super.getPreviousState().isEmpty();
     }
 
     @Override
@@ -165,22 +136,19 @@ public class MetadataStatusResponse extends MetadataStatus {
         }
     }
 
-    public MetadataStatusResponse setCurrentStatus(String currentStatus) {
+    public void setCurrentStatus(String currentStatus) {
         this.currentStatus = currentStatus;
-        return this;
     }
 
-    public MetadataStatusResponse setPreviousStatus(String previousStatus) {
+    public void setPreviousStatus(String previousStatus) {
         this.previousStatus = previousStatus;
-        return this;
     }
     public String getTitle() {
         return title;
     }
 
-    public MetadataStatusResponse setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
-        return this;
     }
 
     public int getStatusId() {

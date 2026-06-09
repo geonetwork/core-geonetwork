@@ -47,6 +47,9 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -78,24 +81,23 @@ class Harvester implements IHarvester<HarvestResult> {
     //--- API methods
     //---
     //---------------------------------------------------------------------------
-    private GeoPRESTParams params;
+    private final GeoPRESTParams params;
 
     //---------------------------------------------------------------------------
-    private ServiceContext context;
+    private final ServiceContext context;
 
     //---------------------------------------------------------------------------
     /**
      * Contains a list of accumulated errors during the executing of this harvest.
      */
-    private List<HarvestError> errors = new LinkedList<HarvestError>();
+    private final List<HarvestError> errors;
 
-    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeoPRESTParams params) {
-
+    public Harvester(AtomicBoolean cancelMonitor, Logger log, ServiceContext context, GeoPRESTParams params, List<HarvestError> errors) {
         this.cancelMonitor = cancelMonitor;
         this.log = log;
         this.context = context;
         this.params = params;
-
+        this.errors = errors;
     }
 
     public HarvestResult harvest(Logger log) throws Exception {
@@ -278,34 +280,31 @@ class Harvester implements IHarvester<HarvestResult> {
      * @return
      */
     protected Date parseDate(String pubDate) throws ParseException {
-
-        // try some well known locales.
-        // TODO: this should be improved
-        Locale wellKnownLocales[] = {Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN, Locale.ITALIAN};
+        Locale[] wellKnownLocales = {Locale.ENGLISH, Locale.FRENCH, Locale.GERMAN, Locale.ITALIAN};
 
         for (Locale locale : wellKnownLocales) {
-            SimpleDateFormat sdf = new SimpleDateFormat("EEE, d MMM yyyy HH:mm:ss Z", locale);
-            try {
-                return sdf.parse(pubDate);
-            } catch (ParseException e) {
-                // workaround for https://bugs.openjdk.java.net/browse/JDK-8136539
-                if(locale == Locale.GERMAN && pubDate.toLowerCase(Locale.GERMAN).contains("mrz")) {
-                    try {
-                        log.info("Applying MRZ workaround to '"+pubDate+"'");
-                        return sdf.parse(pubDate.toLowerCase(Locale.GERMAN).replace("mrz", "mär"));
-                    } catch (ParseException ex) {
-                    }
-                }
+            DateTimeFormatter formatter = DateTimeFormatter.RFC_1123_DATE_TIME.withLocale(locale);
 
-                log.debug("Date '"+pubDate+"' is not parsable according to " + locale);
+            try {
+                ZonedDateTime date = ZonedDateTime.parse(pubDate, formatter);
+                return Date.from(date.toInstant());
+            } catch (DateTimeParseException e) {
+                // workaround for https://bugs.openjdk.java.net/browse/JDK-8136539
+                if(locale == Locale.GERMAN && (pubDate.toLowerCase(Locale.GERMAN).contains("mrz")
+                    || pubDate.toLowerCase(Locale.GERMAN).contains("mär"))) {
+                    try {
+                        log.info("Applying MRZ workaround to '" + pubDate + "'");
+                        String wad = pubDate.toLowerCase(Locale.GERMAN).replace("mrz", "mar");
+                        wad = wad.replace("mär", "mar");
+                        ZonedDateTime workedAroundDate = ZonedDateTime.parse(wad, formatter);
+                        return Date.from(workedAroundDate.toInstant());
+                    } catch (DateTimeParseException ex) {}
+                }
+                log.debug("Date '" + pubDate + "' is not parsable according to " + locale);
             }
         }
 
-        throw new ParseException("Can't parse date '"+pubDate+"'", 0);
-    }
-
-    public List<HarvestError> getErrors() {
-        return errors;
+        throw new ParseException("Can't parse date '" + pubDate + "'", 0);
     }
 }
 

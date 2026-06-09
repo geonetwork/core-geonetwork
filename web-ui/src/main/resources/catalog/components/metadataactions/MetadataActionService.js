@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,8 +27,10 @@
   goog.require("gn_category");
   goog.require("gn_popup");
   goog.require("gn_share");
+  goog.require("gn_anonymous_access");
 
   var module = angular.module("gn_mdactions_service", [
+    "gn_anonymous_access",
     "gn_share",
     "gn_category",
     "gn_popup"
@@ -45,12 +47,14 @@
     "gnGlobalSettings",
     "gnUtilityService",
     "gnShareService",
+    "gnAnonymousAccessService",
     "gnPopup",
     "gnMdFormatter",
     "$translate",
     "$q",
     "$http",
     "gnConfig",
+    "gnLangs",
     function (
       $rootScope,
       $timeout,
@@ -62,16 +66,20 @@
       gnGlobalSettings,
       gnUtilityService,
       gnShareService,
+      gnAnonymousAccessService,
       gnPopup,
       gnMdFormatter,
       $translate,
       $q,
       $http,
-      gnConfig
+      gnConfig,
+      gnLangs
     ) {
       var windowName = "geonetwork";
       var windowOption = "";
       var translations = null;
+      var selectedMetadataTypes = [];
+
       $translate([
         "metadataPublished",
         "metadataUnpublished",
@@ -88,6 +96,55 @@
           type: "success"
         });
       };
+
+      $rootScope.$on("metadataSelectedClear", function (event, args) {
+        selectedMetadataTypes = [];
+      });
+
+      $rootScope.$on("metadataSelected", function (event, args) {
+        var selectedMetadata;
+        if (angular.isArray(args)) {
+          selectedMetadata = args;
+        } else {
+          selectedMetadata = [args];
+        }
+
+        for (var j = 0; j < selectedMetadata.length; j++) {
+          var resourceType = selectedMetadata[j]["resourceType"][0];
+          var index = _.findIndex(selectedMetadataTypes, function (o) {
+            return o.type === resourceType;
+          });
+
+          if (index == -1) {
+            selectedMetadataTypes.push({ type: resourceType, count: 1 });
+          } else {
+            selectedMetadataTypes[index].count = selectedMetadataTypes[index].count + 1;
+          }
+        }
+      });
+
+      $rootScope.$on("metadataUnselected", function (event, args) {
+        var index = _.findIndex(selectedMetadataTypes, function (o) {
+          return o.type === args["resourceType"][0];
+        });
+
+        if (index > -1) {
+          selectedMetadataTypes[index].count = selectedMetadataTypes[index].count - 1;
+
+          if (selectedMetadataTypes[index].count === 0) {
+            selectedMetadataTypes.splice(index, 1);
+          }
+        }
+      });
+
+      $rootScope.$on("metadataSelectedAll", function (event, args) {
+        var keys = Object.keys(args.data);
+        var values = Object.values(args.data);
+
+        for (var i = 0; i < keys.length; i++) {
+          selectedMetadataTypes.push({ type: keys[i], count: values[i] });
+        }
+      });
 
       var callBatch = function (service) {
         return gnHttp.callService(service).then(function (data) {
@@ -140,6 +197,10 @@
           );
       };
 
+      this.getSelectedMetadataTypes = function () {
+        return selectedMetadataTypes;
+      };
+
       /**
        * Export as PDF (one or selection). If params is search object, we check
        * for sortBy and sortOrder to process the print. If it is a string
@@ -154,7 +215,7 @@
           if (params.sortOrder) {
             url += "&sortOrder=" + params.sortOrder;
           }
-          url += "&bucket=" + bucket;
+          url += "&bucket=" + bucket + "&language=" + gnLangs.current;
           location.replace(url);
         } else if (angular.isString(params)) {
           gnMdFormatter.getFormatterUrl(null, null, params).then(function (url) {
@@ -184,24 +245,35 @@
        * one metadata, else export the whole selection.
        * @param {string} uuid
        */
-      this.metadataMEF = function (uuid, bucket, approved) {
+      this.metadataMEF = function (uuid, bucket, approved, includeAttachments) {
         var url = "../api/records/zip?";
         url += angular.isDefined(uuid) ? "&uuids=" + uuid : "";
         url += angular.isDefined(bucket) ? "&bucket=" + bucket : "";
         url += angular.isDefined(approved) ? "&approved=" + approved : "";
+        url += angular.isDefined(includeAttachments)
+          ? "&includeAttachments=" + includeAttachments
+          : "";
 
         location.replace(url);
       };
 
       this.exportCSV = function (bucket) {
-        window.open("../api/records/csv" + "?bucket=" + bucket, windowName, windowOption);
+        window.open(
+          "../api/records/csv" + "?bucket=" + bucket + "&language=" + gnLangs.current,
+          windowName,
+          windowOption
+        );
       };
       this.validateMdLinks = function (bucket) {
         $rootScope.$broadcast("operationOnSelectionStart");
         return gnHttp
-          .callService("../api/records/links?" + "analyze=true&bucket=" + bucket, null, {
-            method: "POST"
-          })
+          .callService(
+            "../api/records/links/analyze?" + "analyze=true&bucket=" + bucket,
+            null,
+            {
+              method: "POST"
+            }
+          )
           .then(function (data) {
             $rootScope.processReport = data.data;
 
@@ -240,7 +312,7 @@
               gnUtilityService.openModal(
                 {
                   title: translations.metadataValidated,
-                  content: '<div gn-batch-report="processReport"></div>',
+                  content: '<div gn-batch-validation-report="processReport"></div>',
                   className: "gn-validation-popup",
                   onCloseCallback: function () {
                     $rootScope.$broadcast("operationOnSelectionStop");
@@ -271,22 +343,34 @@
           );
         } else {
           $rootScope.$broadcast("operationOnSelectionStart");
-          $http.delete("../api/records?" + "bucket=" + bucket).then(
-            function (data) {
-              $rootScope.$broadcast("mdSelectNone");
-              $rootScope.$broadcast("operationOnSelectionStop");
-              $rootScope.$broadcast("search");
-              $timeout(function () {
+          $http
+            .delete("../api/records?" + "bucket=" + bucket)
+            .then(
+              function (data) {
+                $rootScope.$broadcast("mdSelectNone");
                 $rootScope.$broadcast("search");
-              }, 5000);
-              deferred.resolve(data);
-            },
-            function (data) {
-              deferred.reject(data);
-            }
-          );
+                $timeout(function () {
+                  $rootScope.$broadcast("search");
+                }, 5000);
+                deferred.resolve(data);
+              },
+              function (data) {
+                gnAlertService.addAlert({
+                  msg: data.data.message || data.data.description,
+                  type: "danger"
+                });
+                deferred.reject(data);
+              }
+            )
+            .finally(function () {
+              $rootScope.$broadcast("operationOnSelectionStop");
+            });
         }
         return deferred.promise;
+      };
+
+      this.cancelWorkingCopy = function (md) {
+        return gnMetadataManager.remove(md.id);
       };
 
       this.getMetadataIdToEdit = function (md) {
@@ -367,6 +451,18 @@
           },
           scope,
           "StatusUpdated"
+        );
+      };
+
+      this.deleteBatch = function (bucket, resourceType, scope) {
+        gnUtilityService.openModal(
+          {
+            title: "batchDeleteTitle",
+            content:
+              '<div gn-metadata-batch-delete selection-bucket="' + bucket + '"></div>'
+          },
+          scope,
+          "MetadataDeleted"
         );
       };
 
@@ -454,16 +550,21 @@
        * @param {string} flag
        * @return {*}
        */
-      this.publish = function (md, bucket, flag, scope) {
+      this.publish = function (md, bucket, flag, scope, publicationType) {
         if (md) {
-          flag = md.isPublished() ? "off" : "on";
+          // Determine the publication flag based on current publication state
+          flag = md.isPublished(publicationType) ? "off" : "on";
         }
 
         scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
 
-        //Warn about possible workflow changes on batch changes
-        // or when record is not approved
-        if ((!md || md.mdStatus != 2) && flag === "on" && scope.isMdWorkflowEnable) {
+        // Warn about possible workflow changes on batch changes or when record is not approved
+        if (
+          (!md || (md.mdStatus != 2 && md.isWorkflowEnabled())) &&
+          flag === "on" &&
+          scope.isMdWorkflowEnable
+        ) {
+          // Show confirmation dialog to the user
           if (!confirm($translate.instant("warnPublishDraft"))) {
             return;
           }
@@ -477,7 +578,8 @@
             angular.isDefined(md) ? md.id : undefined,
             angular.isDefined(md) ? undefined : bucket,
             onOrOff,
-            $rootScope.user
+            $rootScope.user,
+            publicationType.name === "default" ? "" : publicationType.name
           )
           .then(
             function (response) {
@@ -514,7 +616,8 @@
               }
 
               if (md) {
-                md.publish();
+                gnMetadataManager.updateMdObj(md);
+                md.publish(publicationType);
               }
             },
             function (response) {
@@ -530,6 +633,55 @@
               });
             }
           );
+      };
+
+      this.createAnonymousAccess = function (md, scope) {
+        return gnAnonymousAccessService
+          .create(angular.isDefined(md) ? md.uuid : undefined)
+          .then(
+            function (response) {
+              scope.$broadcast("AnonymousAccessCreated");
+              scope.hash = response;
+              scope.uuid = md.uuid;
+
+              // A hash is returned
+              gnUtilityService.openModal(
+                {
+                  title: $translate.instant("anonymousAccessTo", {
+                    title: md.resourceTitle
+                  }),
+                  content:
+                    '<div gn-anonymous-access="uuid" gn-anonymous-access-hash="hash"></div>',
+                  onCloseCallback: function () {
+                    scope.hash = null;
+                  }
+                },
+                scope,
+                "AnonymousAccessDone"
+              );
+            },
+            function (response) {
+              gnAlertService.addAlert({
+                msg: $translate.instant("anonymousAccessCreatedError", {
+                  errorDescription: response.data.description
+                }),
+                type: "danger"
+              });
+            }
+          );
+      };
+
+      this.deleteAnonymousAccess = function (md, scope) {
+        return gnAnonymousAccessService
+          .delete(angular.isDefined(md) ? md.uuid : undefined)
+          .then(function (response) {
+            scope.$broadcast("AnonymousAccessDeleted");
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("anonymousAccessDeleted"),
+              timeout: 2,
+              type: "success"
+            });
+          });
       };
 
       this.assignGroup = function (metadataId, groupId) {
@@ -631,8 +783,10 @@
           })
           .then(function (data) {
             $rootScope.$broadcast("inspireMdValidationStop");
-            $rootScope.$broadcast("operationOnSelectionStop");
             $rootScope.$broadcast("search");
+          })
+          .finally(function () {
+            $rootScope.$broadcast("operationOnSelectionStop");
           });
       };
 
@@ -644,8 +798,10 @@
             method: "DELETE"
           })
           .then(function (data) {
-            $rootScope.$broadcast("operationOnSelectionStop");
             $rootScope.$broadcast("search");
+          })
+          .finally(function () {
+            $rootScope.$broadcast("operationOnSelectionStop");
           });
       };
 
@@ -657,6 +813,33 @@
         var crs = (crsDetails.codeSpace && crsDetails.codeSpace + ":") + crsDetails.code;
         if (crsDetails.name) return crsDetails.name + " (" + crs + ")";
         else return crs;
+      };
+
+      /**
+       * Retrieves the name of a group given its ID.
+       *
+       * @param {number} groupId - The ID of the group to retrieve the name for.
+       * @returns {Promise<string>} - A promise that resolves to the name of the group.
+       */
+      this.getGroupName = function (groupId) {
+        return $http.get("../api/groups/" + groupId).then(function (data) {
+          return data.data.name;
+        });
+      };
+
+      /**
+       * Checks if the given group name matches the workflow group matching regex.
+       *
+       * @param {string} groupName - The name of the group to check.
+       * @returns {boolean} - True if the group name matches the workflow group matching regex, false otherwise.
+       */
+      this.isGroupWithWorkflowEnabled = function (groupName) {
+        var workflowGroupMatchingRegex = gnConfig["metadata.workflow.draftWhenInGroup"];
+        return (
+          groupName &&
+          workflowGroupMatchingRegex &&
+          !!groupName.match(workflowGroupMatchingRegex)
+        );
       };
     }
   ]);

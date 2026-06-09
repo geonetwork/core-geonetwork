@@ -53,14 +53,4 @@ public class LanguageRepositoryCustomImpl implements LanguageRepositoryCustom {
 
         return _entityManager.createQuery(query).getResultList();
     }
-
-    @Override
-    public Language findOneByDefaultLanguage() {
-        CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
-        CriteriaQuery<Language> query = cb.createQuery(Language.class);
-        Root<Language> root = query.from(Language.class);
-        query.where(cb.equal(root.get(Language_.defaultLanguage_JPAWorkaround), Constants.YN_TRUE));
-
-        return _entityManager.createQuery(query).getSingleResult();
-    }
 }

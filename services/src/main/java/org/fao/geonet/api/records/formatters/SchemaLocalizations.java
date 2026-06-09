@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -26,11 +26,9 @@ package org.fao.geonet.api.records.formatters;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Joiner;
 import com.google.common.collect.*;
-import groovy.util.slurpersupport.GPathResult;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.guiservices.XmlFile;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.records.formatters.groovy.CurrentLanguageHolder;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.IsoLanguage;
@@ -41,6 +39,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.locationtech.jts.util.Assert;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
@@ -85,9 +84,7 @@ public class SchemaLocalizations {
      *
      * @return Map(SchemaName, SchemaLocalizations)
      */
-    static Map<String, SchemaLocalization> loadSchemaLocalizations(ApplicationContext context, SchemaManager schemaManager)
-        throws IOException, JDOMException {
-
+    static Map<String, SchemaLocalization> loadSchemaLocalizations(ApplicationContext context, SchemaManager schemaManager) {
         Map<String, SchemaLocalization> localization = Maps.newHashMap();
         final Set<String> allSchemas = schemaManager.getSchemas();
         for (String schema : allSchemas) {
@@ -101,14 +98,23 @@ public class SchemaLocalizations {
     public static SchemaLocalizations create(String schema) throws IOException, JDOMException {
         Object obj = RequestContextHolder.getRequestAttributes();
 
-        ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
-        HttpServletRequest request = attributes.getRequest();
+        String lang3 = null;
+        if (obj instanceof ServletRequestAttributes) {
 
-        final ApplicationContext appContext = ApplicationContextHolder.get();
-        final ServiceContext serviceContext = ServiceContext.get();
-        final String lang3 = serviceContext != null ?
-            serviceContext.getLanguage() :
-            appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
+            ServletRequestAttributes attributes = (ServletRequestAttributes) obj;
+            HttpServletRequest request = attributes.getRequest();
+
+            final ApplicationContext appContext = ApplicationContextHolder.get();
+            final ServiceContext serviceContext = ServiceContext.get();
+            lang3 = serviceContext != null ?
+                serviceContext.getLanguage() :
+                appContext.getBean(LanguageUtils.class).getIso3langCode(request.getLocales());
+        }
+        if (!StringUtils.hasLength(lang3)) {
+            // It may be null if executed from a jobs which don't have servlet request attributes.
+            // Use the system default locale when language not detected.
+            lang3 = Locale.getDefault().getISO3Language();
+        }
         return create(schema, lang3);
     }
 
@@ -157,70 +163,107 @@ public class SchemaLocalizations {
     }
 
     /**
-     * Obtain a translation for the given node by looking up the elements name in the the schema's
-     * labels.xml file
-     *
-     * @param node the node to get a translation for.
-     */
-    public String nodeLabel(GPathResult node) throws Exception {
-        String parentNodeName = parentNodeName(node);
-        return nodeLabel(node.name(), parentNodeName);
-    }
-
-    /**
-     * Look up a translation in the schema's labels.xml file
+     * Look up a translation in the schema's labels.xml file.
+     *   - qualifiedParentNodeName is used as the second lookup key.
+     *   - if not found the default value will be returned.
      *
      * @param qualifiedNodeName       the name to use as a key for the lookup
      * @param qualifiedParentNodeName the name of the parent, used as the second lookup key.  This
-     *                                can be null and the default value will be returned
+     *                                can be null
      */
     public String nodeLabel(String qualifiedNodeName, String qualifiedParentNodeName) throws Exception {
-        return nodeTranslation(qualifiedNodeName, qualifiedParentNodeName, "label");
+        return nodeTranslation(qualifiedNodeName, qualifiedParentNodeName, "", "label");
     }
 
     /**
-     * Obtain the description for the given node by looking up the elements name in the the schema's
-     * labels.xml file
-     *
-     * @param node the node to get a description for.
-     */
-    public String nodeDesc(GPathResult node) throws Exception {
-        String parentNodeName = parentNodeName(node);
-        return nodeDesc(node.name(), parentNodeName);
-    }
-
-    protected String parentNodeName(GPathResult node) {
-        GPathResult parentNode = node.parent();
-        String parentNodeName = null;
-        if (parentNode != node) {
-            parentNodeName = parentNode.name();
-        }
-        return parentNodeName;
-    }
-
-    /**
-     * Look up a description in the schema's labels.xml file
+     * Look up a translation in the schema's labels.xml file:
+     *   - qualifiedXpath is used as the second lookup key.
+     *   - if not found and provided the qualifiedParentNodeName is used as the second lookup key.
+     *   - if still not found the default value will be returned.
      *
      * @param qualifiedNodeName       the name to use as a key for the lookup
      * @param qualifiedParentNodeName the name of the parent, used as the second lookup key.  This
-     *                                can be null and the default value will be returned
+     *                                can be null
+     * @param qualifiedXpath          the element XPath, used as the second lookup key.  This
+     *                                can be null
+     */
+    public String nodeLabel(String qualifiedNodeName, String qualifiedParentNodeName, String qualifiedXpath) throws Exception {
+        return nodeTranslation(qualifiedNodeName, qualifiedParentNodeName, qualifiedXpath, "label");
+    }
+
+    /**
+     * Look up a description in the schema's labels.xml file.
+     *   - qualifiedParentNodeName is used as the second lookup key.
+     *   - If not found the default value will be returned.
+     *
+     * @param qualifiedNodeName       the name to use as a key for the lookup
+     * @param qualifiedParentNodeName the name of the parent, used as the second lookup key. This can be null
+     *
      */
     public String nodeDesc(String qualifiedNodeName, String qualifiedParentNodeName) throws Exception {
 
-        return nodeTranslation(qualifiedNodeName, qualifiedParentNodeName, "description");
+        return nodeTranslation(qualifiedNodeName, qualifiedParentNodeName, "", "description");
     }
 
-    public String nodeTranslation(String qualifiedNodeName, String qualifiedParentNodeName, String type) throws Exception {
+    /**
+     * Look up a description in the schema's labels.xml file.
+     *   - qualifiedXpath is used as the second lookup key.
+     *   - if not found and provided the qualifiedParentNodeName is used as the second lookup key.
+     *   - if still not found the default value will be returned.
+     *
+     * @param qualifiedNodeName       the name to use as a key for the lookup
+     * @param qualifiedParentNodeName the name of the parent, used as the second lookup key.  This
+     *                                can be null
+     * @param qualifiedXpath          the element XPath, used as the second lookup key.  This
+     *                                can be null
+     */
+    public String nodeDesc(String qualifiedNodeName, String qualifiedParentNodeName, String qualifiedXpath) throws Exception {
+
+        return nodeTranslation(qualifiedNodeName, qualifiedParentNodeName, qualifiedXpath, "description");
+    }
+
+    /**
+     * Look up a translation in the schema's labels.xml file.
+     *   - qualifiedXpath is used as the second lookup key.
+     *   - if not found and provided the qualifiedParentNodeName is used as the second lookup key.
+     *   - if still not found the default value will be returned.
+     *
+     * @param qualifiedNodeName       the name to use as a key for the lookup
+     * @param qualifiedParentNodeName the name of the parent, used as the second lookup key.  This
+     *                                can be null
+     * @param qualifiedXpath          the element XPath, used as the second lookup key.  This
+     *                                can be null
+     * @param type                    the type of translation to look up, label or description
+     */
+    public String nodeTranslation(String qualifiedNodeName, String qualifiedParentNodeName, String qualifiedXpath, String type) throws Exception {
         if (qualifiedParentNodeName == null) {
             qualifiedParentNodeName = "";
         }
 
+        if (qualifiedXpath == null) {
+            qualifiedXpath = "";
+        }
+
         for (SchemaLocalization schemaLocalization : this.schemaLocalizations) {
             final ImmutableTable<String, String, Element> labelIndex = schemaLocalization.getLabelIndex(this.languageHolder.getLang3());
-            Element element = labelIndex.get(qualifiedNodeName, qualifiedParentNodeName);
+            Element element = null;
+
+            // First try with the xpath if provided.
+            if (!qualifiedXpath.isEmpty()) {
+                element = labelIndex.get(qualifiedNodeName, qualifiedXpath);
+            }
+
+            // Next try with the parent node name.
+            if (element == null) {
+                element = labelIndex.get(qualifiedNodeName, qualifiedParentNodeName);
+            }
+
+            // Finally try with no parent node name.
             if (element == null) {
                 element = labelIndex.get(qualifiedNodeName, "");
             }
+
+            // If there are multiple elements with the same name just take the first one.
             if (element == null) {
                 final ImmutableCollection<Element> values = labelIndex.row(qualifiedNodeName).values();
                 if (!values.isEmpty()) {
@@ -232,17 +275,7 @@ public class SchemaLocalizations {
             }
         }
 
-
         return qualifiedNodeName;
-    }
-
-    /**
-     * Obtain a translation for the given codelist by looking up the codelist and codelist value in
-     * the the schema's codelists.xml file * @param node a node containing a codeListValue attribute
-     * and a codeList attribute
-     */
-    public String codelistValueLabel(GPathResult node) throws Exception {
-        return codelistValueLabel(node.getProperty("@codeList").toString(), node.getProperty("@codeListValue").toString());
     }
 
     /**
@@ -254,16 +287,6 @@ public class SchemaLocalizations {
      */
     public String codelistValueLabel(String codelist, String value) throws Exception {
         return codelistTranslation(codelist, value, "label");
-    }
-
-    /**
-     * Obtain the description for the given codelist by looking up the codelist and codelist value
-     * in the the schema's codelists.xml file.
-     *
-     * @param node a node containing a codeListValue attribute and a codeList attribute
-     */
-    public String codelistValueDesc(GPathResult node) throws Exception {
-        return codelistValueDesc(node.getProperty("@codeList").toString(), node.getProperty("@codeListValue").toString());
     }
 
     /**
@@ -360,8 +383,8 @@ public class SchemaLocalizations {
 
         for (SchemaLocalization schemaLocalization : this.schemaLocalizations) {
             Element strings = schemaLocalization.getStrings(this.languageHolder.getLang3());
-            for (int i = 0; i < key.length; i++) {
-                strings = strings.getChild(key[i]);
+            for (String s : key) {
+                strings = strings.getChild(s);
                 if (strings == null) {
                     break;
                 }
@@ -373,5 +396,4 @@ public class SchemaLocalizations {
 
         return "[" + Joiner.on(',').join(key) + "]";
     }
-
 }

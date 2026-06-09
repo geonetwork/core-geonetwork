@@ -22,8 +22,7 @@
  */
 package org.fao.geonet.kernel;
 
-import org.fao.geonet.NodeInfo;
-import org.springframework.beans.factory.annotation.Autowired;
+import jeeves.server.context.ServiceContext;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
@@ -43,15 +42,18 @@ import org.apache.commons.lang.StringUtils;
 
 public class SpringLocalServiceInvoker {
 
-    @Autowired
-    public RequestMappingHandlerMapping requestMappingHandlerMapping;
+    public final RequestMappingHandlerMapping requestMappingHandlerMapping;
 
-    @Autowired
-    public RequestMappingHandlerAdapter requestMappingHandlerAdapter;
+    public final RequestMappingHandlerAdapter requestMappingHandlerAdapter;
 
     private HandlerMethodArgumentResolverComposite argumentResolvers;
     private HandlerMethodReturnValueHandlerComposite returnValueHandlers;
     private DefaultDataBinderFactory webDataBinderFactory;
+
+    public SpringLocalServiceInvoker(RequestMappingHandlerMapping requestMappingHandlerMapping, RequestMappingHandlerAdapter requestMappingHandlerAdapter) {
+        this.requestMappingHandlerMapping = requestMappingHandlerMapping;
+        this.requestMappingHandlerAdapter = requestMappingHandlerAdapter;
+    }
 
     public void init() {
         argumentResolvers = new HandlerMethodArgumentResolverComposite().addResolvers(requestMappingHandlerAdapter.getArgumentResolvers());
@@ -66,7 +68,22 @@ public class SpringLocalServiceInvoker {
     }
 
     public Object invoke(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        ServiceContext srvContext = ServiceContext.get();
+        try {
+            return doInvoke(request, response);
+        } finally {
+            //doInvoke triggered the creation of the request's context, so we restore it
+            restoreNonAnonymousSrvContextToAvoidUILanguageLoss(srvContext);
+        }
+    }
 
+    private static void restoreNonAnonymousSrvContextToAvoidUILanguageLoss(ServiceContext srvContext) {
+        if (srvContext != null) {
+            srvContext.setAsThreadLocal();
+        }
+    }
+
+    private Object doInvoke(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HandlerExecutionChain handlerExecutionChain = requestMappingHandlerMapping.getHandler(request);
         HandlerMethod handlerMethod = (HandlerMethod) handlerExecutionChain.getHandler();
 
@@ -90,10 +107,10 @@ public class SpringLocalServiceInvoker {
             //
             String fwdUrl = StringUtils.substringAfter(checkForward,"forward:");
 						String lastComponent = StringUtils.substringAfterLast(request.getRequestURI(),"/");
-            if (lastComponent.length() > 0 && StringUtils.startsWith(fwdUrl, lastComponent)) {
-							return invoke(request.getRequestURI()+StringUtils.substringAfter(fwdUrl,lastComponent));
+            if (!lastComponent.isEmpty() && StringUtils.startsWith(fwdUrl, lastComponent)) {
+                return invoke(request.getRequestURI() + StringUtils.substringAfter(fwdUrl, lastComponent));
 						} else {
-							return invoke(fwdUrl);
+                return invoke(fwdUrl);
            	}
           }
         }

@@ -106,12 +106,17 @@
 
       $scope.facetConfig = directorySearchSettings.facetConfig;
 
+      var sortConfig = (directorySearchSettings.sortBy || gnSearchSettings.sortBy).split(
+        "#"
+      );
+
       $scope.defaultSearchObj = {
         selectionBucket: "d101",
         configId: "directory",
         any: "",
         params: {
-          sortBy: directorySearchSettings.sortBy || gnSearchSettings.sortBy,
+          sortBy: sortConfig[0] || "relevance",
+          sortOrder: sortConfig[1] || "",
           isTemplate: ["s"],
           from: 1,
           to: 20,
@@ -455,7 +460,7 @@
           .then(refreshEntriesInfo, function (e) {
             gnAlertService.addAlert({
               msg: $translate.instant("directoryEntry-removeError-referenced"),
-              delay: 5000,
+              delay: 5,
               type: "danger"
             });
           });

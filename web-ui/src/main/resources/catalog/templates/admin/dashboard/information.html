@@ -1,13 +1,17 @@
-<div class="row">
-  <div class="col-lg-12">
+<div class="row gn-env">
+  <div
+    class="col-lg-12"
+    data-ng-repeat="section in infoSection"
+    data-ng-show="(info[section.key] | json) != '{}'"
+  >
     <div class="panel panel-default">
-      <div class="panel-heading" data-gn-slide-toggle="" data-translate="">
-        catalogInformation
+      <div class="panel-heading" data-gn-slide-toggle="">
+        {{(section.label || (section.key + 'Information')) | translate}}
       </div>
       <div class="panel-body">
         <span>
           <table class="table">
-            <tr data-ng-repeat="(key, value) in info.catalogue">
+            <tr data-ng-repeat="(key, value) in info[section.key]">
               <td>{{key | translate}}</td>
               <td>
                 <strong>{{value}}</strong>
@@ -16,89 +20,7 @@
           </table>
         </span>
 
-        <div data-gn-need-help="maintainer-guide-home"></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading" data-gn-slide-toggle="" data-translate="">
-        dbInformation
-      </div>
-      <div class="panel-body">
-        <span>
-          <table class="table">
-            <tr data-ng-repeat="(key, value) in info.database">
-              <td>{{key | translate}}</td>
-              <td>
-                <strong>{{value}}</strong>
-              </td>
-            </tr>
-          </table>
-        </span>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading" data-gn-slide-toggle="" data-translate="">
-        systemInformation
-      </div>
-      <div class="panel-body">
-        <span>
-          <table class="table">
-            <tr data-ng-repeat="(key, value) in info.main">
-              <td>{{key | translate}}</td>
-              <td>
-                <strong>{{value}}</strong>
-              </td>
-            </tr>
-          </table>
-        </span>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading" data-gn-slide-toggle="" data-translate="">
-        versionInformation
-      </div>
-      <div class="panel-body">
-        <span>
-          <table class="table">
-            <tr data-ng-repeat="(key, value) in info.version">
-              <td>{{key | translate}}</td>
-              <td>
-                <strong>{{value}}</strong>
-              </td>
-            </tr>
-          </table>
-        </span>
-      </div>
-    </div>
-  </div>
-
-  <div class="col-lg-12">
-    <div class="panel panel-default">
-      <div class="panel-heading" data-gn-slide-toggle="" data-translate="">
-        indexInformation
-      </div>
-      <div class="panel-body">
-        <span>
-          <table class="table">
-            <tr data-ng-repeat="(key, value) in info.index">
-              <td>{{key | translate}}</td>
-              <td>
-                <span data-ng-switch="" data-on="key">
-                  <strong data-ng-switch-default="">{{value}}</strong>
-                </span>
-              </td>
-            </tr>
-          </table>
-        </span>
+        <div data-ng-if="section.help" data-gn-need-help="{{section.help}}"></div>
       </div>
     </div>
   </div>

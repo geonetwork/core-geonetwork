@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,7 +23,14 @@
 
 package org.fao.geonet.api.site;
 
+import co.elastic.clients.elasticsearch.core.CountRequest;
+import co.elastic.clients.elasticsearch.core.CountResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -32,22 +39,19 @@ import jeeves.config.springutil.ServerBeanPropertyUpdater;
 import jeeves.server.JeevesProxyInfo;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.lang.StringUtils;
-import org.elasticsearch.client.RequestOptions;
-import org.elasticsearch.client.core.CountRequest;
-import org.elasticsearch.client.core.CountResponse;
-import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.GeonetContext;
-import org.fao.geonet.NodeInfo;
-import org.fao.geonet.SystemInfo;
+import jeeves.xlink.Processor;
+import org.apache.commons.lang3.StringUtils;
+import org.fao.geonet.*;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.OpenApiConfig;
+import org.fao.geonet.api.exception.FeatureNotEnabledException;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.doi.client.DoiManager;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.index.Status;
@@ -64,53 +68,43 @@ import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.lib.ProxyConfiguration;
 import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.util.MailUtil;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.ProxyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
-import javax.persistence.criteria.Root;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.TimeZone;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 import static org.fao.geonet.constants.Geonet.Path.IMPORT_STYLESHEETS_SCHEMA_PREFIX;
+import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
 
 /**
  *
@@ -122,7 +116,7 @@ import static org.fao.geonet.constants.Geonet.Path.IMPORT_STYLESHEETS_SCHEMA_PRE
 @Tag(name = API_CLASS_CATALOG_TAG,
     description = ApiParams.API_CLASS_CATALOG_OPS)
 @Controller("site")
-public class SiteApi {
+public class SiteApi implements ApplicationEventPublisherAware {
     @Autowired
     GeonetworkDataDirectory dataDirectory;
     @Autowired
@@ -152,6 +146,14 @@ public class SiteApi {
     @Autowired
     private SystemInfo info;
 
+    private ApplicationEventPublisher eventPublisher;
+
+    @Override
+    public void setApplicationEventPublisher(
+        ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
+    }
+
     public static void reloadServices(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager settingMan = gc.getBean(SettingManager.class);
@@ -161,12 +163,12 @@ public class SiteApi {
         try {
             // Load proxy information into Jeeves
             ProxyInfo pi = JeevesProxyInfo.getInstance();
-            boolean useProxy = settingMan.getValueAsBool(Settings.SYSTEM_PROXY_USE, false);
+            boolean useProxy = Lib.net.getProxyConfiguration().isEnabled();
             if (useProxy) {
-                String proxyHost = settingMan.getValue(Settings.SYSTEM_PROXY_HOST);
-                String proxyPort = settingMan.getValue(Settings.SYSTEM_PROXY_PORT);
-                String username = settingMan.getValue(Settings.SYSTEM_PROXY_USERNAME);
-                String password = settingMan.getValue(Settings.SYSTEM_PROXY_PASSWORD);
+                String proxyHost = Lib.net.getProxyConfiguration().getHost();
+                String proxyPort = Lib.net.getProxyConfiguration().getPort();
+                String username = Lib.net.getProxyConfiguration().getUsername();
+                String password = Lib.net.getProxyConfiguration().getPassword();
                 pi.setProxyInfo(proxyHost, Integer.valueOf(proxyPort), username, password);
             } else {
                 pi.setProxyInfo(null, -1, null, null);
@@ -179,8 +181,6 @@ public class SiteApi {
             context.error(e);
             throw new OperationAbortedEx("Parameters saved but cannot set proxy information: " + e.getMessage());
         }
-        DoiManager doiManager = gc.getBean(DoiManager.class);
-        doiManager.loadConfig();
 
         HarvestManager harvestManager = context.getBean(HarvestManager.class);
         harvestManager.rescheduleActiveHarvesters();
@@ -199,7 +199,7 @@ public class SiteApi {
     @ResponseBody
     public SettingsListResponse getSiteOrPortalDescription(
         @Parameter(hidden = true)
-            HttpServletRequest request
+        HttpServletRequest request
     ) throws Exception {
         SettingsListResponse response = new SettingsListResponse();
         response.setSettings(settingManager.getSettings(new String[]{
@@ -233,6 +233,15 @@ public class SiteApi {
                     .setValue(StringUtils.isEmpty(source.get().getLabel(iso3langCode))
                         ? source.get().getName() : source.get().getLabel(iso3langCode)));
         }
+
+        // Setting for OGC API Records service enabled
+        String microservicesTargetUri = (String) request.getServletContext().getAttribute("MicroServicesProxy.targetUri");
+
+        response.getSettings().add(
+            new Setting().setName(Settings.MICROSERVICES_ENABLED)
+                .setValue(Boolean.toString(StringUtils.isNotBlank(microservicesTargetUri)))
+                .setDataType(SettingDataType.BOOLEAN));
+
         return response;
     }
 
@@ -256,7 +265,7 @@ public class SiteApi {
         @RequestParam(
             required = false
         )
-            SettingSet[] set,
+        SettingSet[] set,
         @Parameter(
             description = "Setting key",
             required = false
@@ -264,11 +273,11 @@ public class SiteApi {
         @RequestParam(
             required = false
         )
-            String[] key,
+        String[] key,
         @Parameter(
             hidden = true
         )
-            HttpSession httpSession
+        HttpSession httpSession
     ) throws Exception {
         ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         UserSession session = ApiUtils.getUserSession(httpSession);
@@ -342,7 +351,7 @@ public class SiteApi {
         @RequestParam(
             required = false
         )
-            SettingSet[] set,
+        SettingSet[] set,
         @Parameter(
             description = "Setting key",
             required = false
@@ -350,11 +359,10 @@ public class SiteApi {
         @RequestParam(
             required = false
         )
-            String[] key,
+        String[] key,
         @Parameter(hidden = true)
-            HttpSession httpSession
+        HttpSession httpSession
     ) throws Exception {
-        ConfigurableApplicationContext appContext = ApplicationContextHolder.get();
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile profile = session == null ? null : session.getProfile();
 
@@ -390,11 +398,45 @@ public class SiteApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Save settings",
-        description = "")
-    @RequestMapping(
+        description = "Save the provided settings.",
+        requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+            description = "Map of settings to be saved",
+            required = true,
+            content = {
+                @Content(
+                    mediaType = MediaType.APPLICATION_FORM_URLENCODED_VALUE,
+                    schema = @Schema(implementation = Map.class),
+                    examples = {
+                        @ExampleObject(
+                            name = "Example setting (application/x-www-form-urlencoded)",
+                            value = "{\n  \"additionalProp1\": \"string\",\n  \"additionalProp2\": \"string\",\n  \"additionalProp3\": \"string\"\n}"
+                        ),
+                        @ExampleObject(
+                            name = "Example setting selection manager max records to 1000 (application/x-www-form-urlencoded)",
+                            value = "{\n  \"system/selectionmanager/maxrecords\": \"1000\"\n}"
+                        )
+                    }
+                ),
+                @Content(
+                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                    schema = @Schema(implementation = Map.class),
+                    examples = {
+                        @ExampleObject(
+                            name = "Example setting (application/json)",
+                            value = "{\n  \"additionalProp1\": \"string\",\n  \"additionalProp2\": \"string\",\n  \"additionalProp3\": \"string\"\n}"
+                        ),
+                        @ExampleObject(
+                            name = "Example setting selection manager max records to 1000 (application/json)",
+                            value = "{\n  \"system/selectionmanager/maxrecords\": \"1000\"\n}"
+                        )
+                    }
+                )
+            }
+        )
+    )
+    @PostMapping(
         path = "/settings",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.POST
+        consumes = {MediaType.APPLICATION_FORM_URLENCODED_VALUE, MediaType.APPLICATION_JSON_VALUE}
     )
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -403,14 +445,28 @@ public class SiteApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     public void saveSettings(
-        @Parameter(hidden = false)
-        @RequestParam
-            Map<String, String> allRequestParams,
+        // Mark parameter as hidden in open api specification as the Operation requestBody(above) will describe the format to be supplied
+        //    Without this fix, the swagger ui will fail to work correctly.
+        @Parameter(description = "Map of settings to be saved",
+            required = true, hidden = true)
+        @RequestParam Map<String, String> allRequestParams,
         HttpServletRequest request
     ) throws Exception {
+        //If sent as JSON then the allRequestParams will be empty, and we need to manually load it from the request body
+        if (MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType()) && allRequestParams.isEmpty()) {
+            BufferedReader reader = request.getReader();
+            ObjectMapper mapper = new ObjectMapper();
+            allRequestParams = mapper.readValue(reader, new TypeReference<>() {
+            });
+        }
+
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         String currentUuid = settingManager.getSiteId();
         String oldSiteName = settingManager.getSiteName();
+        String oldBaseUrl = settingManager.getBaseURL();
+
+        List<Setting> oldSettings = settingManager.getAll();
+        List<Setting> oldSettingsClone = oldSettings.stream().map(Setting::createDeepCopy).collect(Collectors.toList());
 
         if (!settingManager.setValues(allRequestParams)) {
             throw new OperationAbortedEx("Cannot set all values");
@@ -419,10 +475,10 @@ public class SiteApi {
         String newSiteName = settingManager.getSiteName();
         // Update site source name/translations if the site name is updated
         if (!oldSiteName.equals(newSiteName)) {
-            SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
-            Source siteSource = sourceRepository.findById(currentUuid).get();
+            Optional<Source> siteSourceOpt = sourceRepository.findById(currentUuid);
 
-            if (siteSource != null) {
+            if (siteSourceOpt.isPresent()) {
+                Source siteSource = siteSourceOpt.get();
                 siteSource.setName(newSiteName);
                 siteSource.getLabelTranslations().forEach(
                     (l, t) -> siteSource.getLabelTranslations().put(l, newSiteName)
@@ -430,11 +486,16 @@ public class SiteApi {
                 sourceRepository.save(siteSource);
             }
         }
+        String newBaseUrl = settingManager.getBaseURL();
+        // Update SpringDoc host information if the base url is changed.
+        if (!oldBaseUrl.equals(newBaseUrl)) {
+            OpenApiConfig.setHostRelatedInfo();
+        }
 
         // Update the system default timezone. If the setting is blank use the timezone user.timezone property from command line or
         // TZ environment variable
         String zoneId = StringUtils.defaultIfBlank(settingManager.getValue(Settings.SYSTEM_SERVER_TIMEZONE, true),
-                SettingManager.DEFAULT_SERVER_TIMEZONE.getId());
+            SettingManager.DEFAULT_SERVER_TIMEZONE.getId());
         TimeZone.setDefault(TimeZone.getTimeZone(zoneId));
 
 
@@ -442,30 +503,33 @@ public class SiteApi {
         String newUuid = allRequestParams.get(Settings.SYSTEM_SITE_SITE_ID_PATH);
 
         if (newUuid != null && !currentUuid.equals(newUuid)) {
-            final IMetadataManager metadataRepository = applicationContext.getBean(IMetadataManager.class);
-            final SourceRepository sourceRepository = applicationContext.getBean(SourceRepository.class);
-            final Source source = sourceRepository.findById(currentUuid).get();
-            Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.getType());
-            sourceRepository.save(newSource);
+            final IMetadataManager metadataManager = applicationContext.getBean(IMetadataManager.class);
+            final Optional<Source> sourceOpt = sourceRepository.findById(currentUuid);
 
-            PathSpec<Metadata, String> servicesPath = new PathSpec<Metadata, String>() {
-                @Override
-                public javax.persistence.criteria.Path<String> getPath(Root<Metadata> root) {
-                    return root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
-                }
-            };
-            metadataRepository.createBatchUpdateQuery(servicesPath, newUuid, MetadataSpecs.isHarvested(false));
-            sourceRepository.delete(source);
+            if (sourceOpt.isPresent()) {
+                Source source = sourceOpt.get();
+                Source newSource = new Source(newUuid, source.getName(), source.getLabelTranslations(), source.getType());
+                sourceRepository.save(newSource);
+
+                PathSpec<Metadata, String> servicesPath = root -> root.get(Metadata_.sourceInfo).get(MetadataSourceInfo_.sourceId);
+                metadataManager.createBatchUpdateQuery(servicesPath, newUuid, MetadataSpecs.isHarvested(false));
+                sourceRepository.delete(source);
+            }
         }
 
-        SettingInfo info = applicationContext.getBean(SettingInfo.class);
+        SettingInfo settingInfo = applicationContext.getBean(SettingInfo.class);
         ServiceContext context = ApiUtils.createServiceContext(request);
-        ServerBeanPropertyUpdater.updateURL(info.getSiteUrl() +
+        ServerBeanPropertyUpdater.updateURL(settingInfo.getSiteUrl() +
                 context.getBaseUrl(),
             applicationContext);
 
         // Reload services affected by updated settings
         reloadServices(context);
+
+        eventPublisher.publishEvent(
+            new org.fao.geonet.events.setting.SettingsChanged(settingManager.getAll(),
+                oldSettingsClone));
+
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -514,13 +578,13 @@ public class SiteApi {
         method = RequestMethod.PUT)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Staging profile saved."),
+        @ApiResponse(responseCode = "204", description = "Staging profile saved.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @PreAuthorize("hasAuthority('Administrator')")
     public void updateStagingProfile(
         @PathVariable
-            SystemInfo.Staging profile) {
+        SystemInfo.Staging profile) {
         this.info.setStagingProfile(profile.toString());
     }
 
@@ -564,30 +628,26 @@ public class SiteApi {
         method = RequestMethod.PUT)
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
-    public HttpEntity index(
+    public HttpEntity indexSite(
         @Parameter(description = "Drop and recreate index",
             required = false)
         @RequestParam(required = false, defaultValue = "true")
-            boolean reset,
+        boolean reset,
         @Parameter(description = "Asynchronous mode (only on all records. ie. no selection bucket)",
             required = false)
         @RequestParam(required = false, defaultValue = "false")
-            boolean asynchronous,
-        @Parameter(description = "Records having only XLinks",
-            required = false)
-        @RequestParam(required = false, defaultValue = "false")
-            boolean havingXlinkOnly,
+        boolean asynchronous,
         @Parameter(description = "Index. By default only remove record index.",
             required = false)
         @RequestParam(required = false, defaultValue = "records")
-            String[] indices,
+        String[] indices,
         @Parameter(
             description = ApiParams.API_PARAM_BUCKET_NAME,
             required = false)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         HttpServletRequest request
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -604,11 +664,14 @@ public class SiteApi {
             searchMan.init(true, Optional.of(Arrays.asList(indices)));
         }
 
+        // clean XLink Cache so that cache and index remain in sync
+        Processor.clearCache();
+
         if (StringUtils.isEmpty(bucket)) {
             BaseMetadataManager metadataManager = ApplicationContextHolder.get().getBean(BaseMetadataManager.class);
             metadataManager.synchronizeDbWithIndex(context, false, asynchronous);
         } else {
-            searchMan.rebuildIndex(context, havingXlinkOnly, false, bucket);
+            searchMan.rebuildIndex(context, false, bucket);
         }
 
         return new HttpEntity<>(HttpStatus.CREATED);
@@ -657,7 +720,7 @@ public class SiteApi {
     public Map<String, Object> indexAndDbSynchronizationStatus(
         HttpServletRequest request
     ) throws Exception {
-        Map<String, Object> info = new HashMap<>();
+        Map<String, Object> infoIndexDbSynch = new HashMap<>();
         long dbCount = metadataRepository.count();
 
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
@@ -665,14 +728,14 @@ public class SiteApi {
             dbCount += metadataDraftRepository.count();
         }
 
-        info.put("db.count", dbCount);
+        infoIndexDbSynch.put("db.count", dbCount);
 
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
         CountResponse countResponse = esRestClient.getClient().count(
-            new CountRequest(searchMan.getDefaultIndex()),
-            RequestOptions.DEFAULT);
-        info.put("index.count", countResponse.getCount());
-        return info;
+            CountRequest.of(b -> b.index(searchMan.getDefaultIndex()))
+        );
+        infoIndexDbSynch.put("index.count", countResponse.count());
+        return infoIndexDbSynch;
     }
 
 
@@ -730,6 +793,24 @@ public class SiteApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get proxy configuration details",
+        description = "Get the proxy configuration.")
+    @RequestMapping(
+        path = "/info/proxy",
+        produces = MediaType.APPLICATION_JSON_VALUE,
+        method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Proxy configuration.")
+    })
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
+    public ProxyConfiguration getProxyConfiguration(
+    ) {
+        return Lib.net.getProxyConfiguration();
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
         summary = "Set catalog logo",
         description = "Logos are stored in the data directory " +
             "resources/images/harvesting as PNG or GIF images. " +
@@ -742,13 +823,13 @@ public class SiteApi {
     @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "204", description = "Logo set."),
+        @ApiResponse(responseCode = "204", description = "Logo set.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     public void setLogo(
         @Parameter(description = "Logo to use for the catalog")
         @RequestParam("file")
-            String file,
+        String file,
         @Parameter(
             description = "Create favicon too",
             required = false
@@ -757,7 +838,7 @@ public class SiteApi {
             defaultValue = "false",
             required = false
         )
-            boolean asFavicon,
+        boolean asFavicon,
         HttpServletRequest request
 
     ) throws Exception {
@@ -844,7 +925,7 @@ public class SiteApi {
             )) {
                 for (Path sheet : sheets) {
                     String id = sheet.toString();
-                    if (id != null && id.contains("convert/from") && id.endsWith(".xsl")) {
+                    if (id != null && id.contains("convert" + File.separator + "from") && id.endsWith(".xsl")) {
                         String name = com.google.common.io.Files.getNameWithoutExtension(
                             sheet.getFileName().toString());
                         list.add(IMPORT_STYLESHEETS_SCHEMA_PREFIX + schema + ":convert/" + name);
@@ -869,5 +950,78 @@ public class SiteApi {
             }
             return list;
         }
+    }
+
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Send an email to catalogue administrator with feedback about the application",
+        description = "")
+    @PostMapping(
+        value = "/userfeedback",
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public ResponseEntity<String> sendApplicationUserFeedback(
+        @Parameter(
+            description = "Recaptcha validation key."
+        )
+        @RequestParam(required = false, defaultValue = "") final String recaptcha,
+        @Parameter(
+            description = "User name.",
+            required = true
+        )
+        @RequestParam final String name,
+        @Parameter(
+            description = "User organisation.",
+            required = true
+        )
+        @RequestParam final String org,
+        @Parameter(
+            description = "User email address.",
+            required = true
+        )
+        @RequestParam final String email,
+        @Parameter(
+            description = "A comment or question.",
+            required = true
+        )
+        @RequestParam final String comments,
+        @Parameter(hidden = true) final HttpServletRequest request
+    ) throws Exception {
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
+
+        boolean feedbackEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERFEEDBACK_ENABLE, false);
+        if (!feedbackEnabled) {
+            throw new FeatureNotEnabledException(
+                "Application feedback is not enabled.")
+                .withMessageKey("exception.resourceNotEnabled.applicationFeedback")
+                .withDescriptionKey("exception.resourceNotEnabled.applicationFeedback.description");
+        }
+
+        boolean recaptchaEnabled = settingManager.getValueAsBool(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_ENABLE);
+
+        if (recaptchaEnabled) {
+            boolean validRecaptcha = RecaptchaChecker.verify(recaptcha,
+                settingManager.getValue(Settings.SYSTEM_USERSELFREGISTRATION_RECAPTCHA_SECRETKEY));
+            if (!validRecaptcha) {
+                return new ResponseEntity<>(
+                    messages.getString("recaptcha_not_valid"), HttpStatus.PRECONDITION_FAILED);
+            }
+        }
+
+        String to = settingManager.getValue(SYSTEM_FEEDBACK_EMAIL);
+
+        Set<String> toAddress = new HashSet<>();
+        toAddress.add(to);
+
+        MailUtil.sendMail(new ArrayList<>(toAddress),
+            messages.getString("site_user_feedback_title"),
+            String.format(
+                messages.getString("site_user_feedback_text"),
+                name, email, org, comments),
+            settingManager);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
