@@ -26,6 +26,7 @@ package org.fao.geonet.kernel.harvest.harvester.csw;
 import org.fao.geonet.csw.common.Csw;
 import org.fao.geonet.csw.common.exceptions.InvalidParameterValueEx;
 import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
+import org.fao.geonet.csw.common.exceptions.OperationNotSupportedEx;
 import org.jdom.Element;
 import org.junit.Test;
 
@@ -230,17 +231,62 @@ public class HarvesterTest {
     }
 
     @Test
-    public void recognisesServerSideExceptionsAsRecoverable() {
-        assertTrue(Harvester.isRecordPresentationError(new NoApplicableCodeEx("nope")));
-        assertTrue(Harvester.isRecordPresentationError(new InvalidParameterValueEx("OutputSchema", "gmd")));
-        // wrapped in another exception
-        assertTrue(Harvester.isRecordPresentationError(
-            new RuntimeException(new NoApplicableCodeEx("nope"))));
+    public void treatsEmptySuccessResponseForSingleRecordAsConsumed() throws Exception {
+        // A server that returns a valid but empty SearchResults for a single-record
+        // window (no exception, just 0 children) must still advance the position by
+        // 1 so the caller does not stall or stop the harvest prematurely.
+        Harvester.SearchResultsFetcher server = (start, length) -> {
+            Element results = new Element("SearchResults", Csw.NAMESPACE_CSW);
+            results.setAttribute("numberOfRecordsMatched", "5");
+            // deliberately return no Record children
+            return results;
+        };
+        List<Element> records = new ArrayList<>();
+        List<Integer> skipped = new ArrayList<>();
+        int[] matched = {-1};
+
+        int consumed = Harvester.recoverRange(server, 3, 1, records, matched,
+            (pos, cause) -> skipped.add(pos));
+
+        assertTrue(records.isEmpty());
+        assertTrue(skipped.isEmpty());
+        assertEquals("empty single-record response must consume the position", 1, consumed);
     }
 
     @Test
-    public void treatsConnectionErrorsAsNonRecoverable() {
-        assertTrue(!Harvester.isRecordPresentationError(new IOException("connection reset")));
-        assertTrue(!Harvester.isRecordPresentationError(new RuntimeException("boom")));
+    public void classifiesAnUnreturnableRecordAsRecoverable() {
+        // A CSW server that can not present a single record in the requested
+        // outputSchema surfaces a generic NoApplicableCode OWS exception (the
+        // outputSchema / record id only survive in the message text). This is
+        // the case the page recovery is meant to skip.
+        assertEquals(Harvester.CswRequestError.RECORD_NOT_RETURNABLE,
+            Harvester.classifyRequestError(new NoApplicableCodeEx(
+                "OutputSchema 'gmd' not supported for metadata with '2368' (iso19110)")));
+        // wrapped in another exception
+        assertEquals(Harvester.CswRequestError.RECORD_NOT_RETURNABLE,
+            Harvester.classifyRequestError(new RuntimeException(new NoApplicableCodeEx("nope"))));
+    }
+
+    @Test
+    public void classifiesARejectedRequestAsSystematic() {
+        // A wrong outputSchema / typeNames / operation for the endpoint comes
+        // back as a specifically typed OWS exception. It fails the same way for
+        // every record, so it must abort the harvest, not be skipped.
+        assertEquals(Harvester.CswRequestError.REQUEST_REJECTED,
+            Harvester.classifyRequestError(new InvalidParameterValueEx("outputSchema", "gmd")));
+        assertEquals(Harvester.CswRequestError.REQUEST_REJECTED,
+            Harvester.classifyRequestError(new OperationNotSupportedEx("GetRecords")));
+        // wrapped in another exception
+        assertEquals(Harvester.CswRequestError.REQUEST_REJECTED,
+            Harvester.classifyRequestError(new RuntimeException(
+                new InvalidParameterValueEx("typeNames", "gmd:MD_Metadata"))));
+    }
+
+    @Test
+    public void classifiesConnectionErrorsAsTransport() {
+        assertEquals(Harvester.CswRequestError.TRANSPORT,
+            Harvester.classifyRequestError(new IOException("connection reset")));
+        assertEquals(Harvester.CswRequestError.TRANSPORT,
+            Harvester.classifyRequestError(new RuntimeException("boom")));
     }
 }

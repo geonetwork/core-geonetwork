@@ -41,6 +41,7 @@ import org.fao.geonet.csw.common.ElementSetName;
 import org.fao.geonet.csw.common.ResultType;
 import org.fao.geonet.csw.common.TypeName;
 import org.fao.geonet.csw.common.exceptions.CatalogException;
+import org.fao.geonet.csw.common.exceptions.NoApplicableCodeEx;
 import org.fao.geonet.csw.common.requests.CatalogRequest;
 import org.fao.geonet.csw.common.requests.GetRecordsRequest;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -692,9 +693,12 @@ class Harvester implements IHarvester<HarvestResult> {
      * (the number of positions consumed, i.e. returned plus skipped) and
      * {@code nextRecord} attributes so the harvesting loop carries on normally.
      * <p>
-     * Only server-side OWS exceptions ({@link CatalogException}) trigger this
-     * recovery. Connection and protocol errors keep the previous behaviour and
-     * abort the harvest.
+     * Only a record the source can not return (a {@code NoApplicableCode} OWS
+     * exception, see {@link #classifyRequestError}) triggers this recovery. A
+     * request the source rejects as a whole (a wrong outputSchema, an
+     * unsupported operation, an invalid filter, ...) and connection / protocol
+     * errors keep the previous behaviour and abort the harvest with a
+     * meaningful error.
      *
      * @param matchedHint number of matched records if already known from a
      *                    previous page (-1 otherwise).
@@ -703,16 +707,36 @@ class Harvester implements IHarvester<HarvestResult> {
         try {
             return executeGetRecords(request, start, length);
         } catch (Exception e) {
-            if (!isRecordPresentationError(e)) {
-                // Not a record that can not be presented (e.g. a connection or
-                // protocol error): keep the previous behaviour and abort.
+            CswRequestError errorType = classifyRequestError(e);
+            if (errorType == CswRequestError.TRANSPORT) {
+                // Connection or protocol error: keep the previous behaviour and
+                // abort the harvest.
                 errors.add(new HarvestError(context, e));
                 log.warning("Raised exception when searching : " + e);
                 log.warning("Url: " + request.getHost());
                 log.warning("Method: " + request.getMethod());
                 throw new OperationAbortedEx("Raised exception when searching: " + e.getMessage(), e);
             }
+            if (errorType == CswRequestError.REQUEST_REJECTED) {
+                // The source rejected the request itself (a parameter it does
+                // not accept, a missing parameter, an unsupported operation or a
+                // version mismatch). It fails the same way for every page, so
+                // splitting the page can not recover anything: abort with an
+                // actionable message instead of silently skipping every record
+                // and reporting an empty but successful harvest.
+                errors.add(new HarvestError(context, e));
+                throw new OperationAbortedEx(String.format(
+                    "The CSW source '%s' rejected the GetRecords request (%s). This points at a "
+                        + "harvester configuration problem (for instance an unsupported outputSchema, "
+                        + "typeNames, filter/constraint or operation) rather than a single record that "
+                        + "can not be harvested. Aborting the harvest.",
+                    params.getName(), e.getMessage()), e);
+            }
 
+            // errorType == RECORD_NOT_RETURNABLE: the source could not return a
+            // particular record of the page (for instance an ISO 19110 feature
+            // catalogue requested as gmd). Split the page to isolate and skip it
+            // while still harvesting the rest.
             if (log.isDebugEnabled()) {
                 log.debug(String.format(
                     "Page [%d..%d] of '%s' could not be retrieved in a single request (%s). "
@@ -769,14 +793,14 @@ class Harvester implements IHarvester<HarvestResult> {
      * Retrieve the records of the range [start, start + length) recovering as
      * many records as possible when the source can not return them all.
      * <p>
-     * The range is fetched in one request; if that fails with a server-side OWS
-     * exception (a record that can not be presented, see
-     * {@link #isRecordPresentationError}), the range is split in half and each
-     * half retried. A single record that still fails is reported to
-     * {@code onSkip}, skipped, and the harvest carries on. The number of extra
-     * requests stays logarithmic in the page size, so records are not fetched
-     * one by one. Connection and protocol errors are rethrown so they abort the
-     * harvest as before.
+     * The range is fetched in one request; if that fails because the source can
+     * not return a record (a {@code NoApplicableCode} OWS exception, see
+     * {@link #classifyRequestError}), the range is split in half and each half
+     * retried. A single record that still fails is reported to {@code onSkip},
+     * skipped, and the harvest carries on. Records are isolated by binary
+     * splitting, not fetched one by one from the start.
+     * Connection and protocol errors, and requests the source rejects as a
+     * whole, are rethrown so they abort the harvest.
      * <p>
      * Package-private and static so the recovery logic can be unit tested with a
      * fake fetcher. Cancellation is handled by the caller, per page.
@@ -813,10 +837,19 @@ class Harvester implements IHarvester<HarvestResult> {
                 recordsOut.add((Element) ((Element) child).clone());
                 returned++;
             }
+            // A server that returns a successful but empty response for a
+            // single-record window still consumes that position; without this
+            // the caller would see consumed=0 and the outer paging loop would
+            // stall or stop prematurely.
+            if (length == 1 && returned == 0) {
+                return 1;
+            }
             return returned;
         } catch (Exception e) {
-            if (!isRecordPresentationError(e)) {
-                // Connection / protocol error: let it abort the harvest.
+            if (classifyRequestError(e) != CswRequestError.RECORD_NOT_RETURNABLE) {
+                // Connection / protocol error, or a request the source rejects
+                // as a whole: let it propagate and abort the harvest instead of
+                // being skipped as if it were a single unreturnable record.
                 throw e;
             }
             if (length == 1) {
@@ -873,19 +906,73 @@ class Harvester implements IHarvester<HarvestResult> {
     }
 
     /**
-     * Whether the given error is a server-side OWS exception, i.e. the source
-     * processed the request but could not return a record (for example because
-     * it can not be presented in the requested outputSchema). Such errors can be
-     * recovered from by skipping the offending record; connection and protocol
-     * errors can not and must abort the harvest.
+     * How the harvester should react to an error raised while requesting a page
+     * of records from the remote CSW. See {@link #classifyRequestError}.
      */
-    static boolean isRecordPresentationError(Throwable e) {
+    enum CswRequestError {
+        /**
+         * The source processed the request but could not return a particular
+         * record, for instance an ISO 19110 feature catalogue that can not be
+         * presented in the requested outputSchema. A CSW server reports this as
+         * a generic {@code NoApplicableCode} OWS exception (the outputSchema and
+         * record id, when known, are only carried in the message text). The
+         * offending record can be isolated and skipped so the rest of the
+         * catalogue is still harvested.
+         */
+        RECORD_NOT_RETURNABLE,
+        /**
+         * The source rejected the request itself: a parameter it does not
+         * accept (a wrong {@code outputSchema} for the endpoint, an unsupported
+         * {@code typeNames}, an invalid {@code maxRecords} / {@code startPosition},
+         * an invalid filter, ...), a missing parameter, an unsupported operation
+         * or a version mismatch. These OWS exceptions carry a specific
+         * code/locator and fail identically for every page and every record, so
+         * splitting the page can not help. The harvest must stop and report the
+         * misconfiguration.
+         */
+        REQUEST_REJECTED,
+        /**
+         * A connection or protocol error: the request never produced a valid
+         * OWS answer. The harvest is aborted.
+         */
+        TRANSPORT
+    }
+
+    /**
+     * Translates the error raised while fetching a page of records into the
+     * action the harvester should take.
+     * <p>
+     * The distinction relies on the OWS exception code returned by the remote
+     * server and unmarshalled by {@link CatalogException#unmarshal}. A CSW
+     * server that can not serialize a single record in the requested
+     * outputSchema surfaces a generic {@link NoApplicableCodeEx}, whereas a
+     * problem with the request itself comes back as a specifically typed OWS
+     * exception ({@code InvalidParameterValue}, {@code MissingParameterValue},
+     * {@code OperationNotSupported}, {@code VersionNegotiationFailed}, ...).
+     * Errors that are not OWS exceptions are connection or protocol problems.
+     */
+    static CswRequestError classifyRequestError(Throwable e) {
+        CatalogException owsException = null;
         for (Throwable t = e; t != null; t = t.getCause()) {
             if (t instanceof CatalogException) {
-                return true;
+                owsException = (CatalogException) t;
+                break;
             }
         }
-        return false;
+        if (owsException == null) {
+            // Not an OWS exception: connection reset, timeout, malformed
+            // response, ... Abort as before.
+            return CswRequestError.TRANSPORT;
+        }
+        if (owsException instanceof NoApplicableCodeEx) {
+            // Generic server-side failure while producing the response: the
+            // server choked on a record it could not return. Recoverable by
+            // isolating and skipping that record.
+            return CswRequestError.RECORD_NOT_RETURNABLE;
+        }
+        // Any other typed OWS exception identifies a problem with the request
+        // itself, which will fail the same way for every record.
+        return CswRequestError.REQUEST_REJECTED;
     }
 
     private int getSearchResultAttribute(Element results, String attribName) throws OperationAbortedEx {
