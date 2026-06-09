@@ -56,6 +56,9 @@ public class EsHTTPProxyTest {
     private EsResponseProcessor responseProcessor;
 
     @Mock
+    private EsResponseContentTypeValidator contentTypeValidator;
+
+    @Mock
     private EsQueryProcessor queryPreprocessor;
 
     @Mock
@@ -85,6 +88,7 @@ public class EsHTTPProxyTest {
         ReflectionTestUtils.setField(esHTTPProxy, "proxyHeadersAllowedList", new String[]{"content-type"});
         ReflectionTestUtils.setField(esHTTPProxy, "client", esRestClient);
         ReflectionTestUtils.setField(esHTTPProxy, "responseProcessor", responseProcessor);
+        ReflectionTestUtils.setField(esHTTPProxy, "contentTypeValidator", contentTypeValidator);
         ReflectionTestUtils.setField(esHTTPProxy, "queryPreprocessor", queryPreprocessor);
 
         lenient().when(esRestClient.getServerUrl()).thenReturn(SERVER_URL);
