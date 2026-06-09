@@ -96,7 +96,7 @@ public class AlternateLogoForPdfExportTest extends AbstractServiceIntegrationTes
         ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
         Mockito.verify(responseWriterSpy).writeOutResponse(any(ServiceContext.class), any(String.class), any(String.class), any(HttpServletResponse.class), any(FormatType.class), captor.capture());
         assertFalse(new String(captor.getValue(), StandardCharsets.UTF_8).contains("pdf_test_banner_to_use.png"));
-        assertTrue(new String(captor.getValue(), StandardCharsets.UTF_8).contains("images/logos/" + siteId + ".png"));
+        assertTrue(new String(captor.getValue(), StandardCharsets.UTF_8).contains("srv/api/sources/" + metadata.getSourceInfo().getSourceId() + "/logo"));
     }
 
     @Test
@@ -117,6 +117,6 @@ public class AlternateLogoForPdfExportTest extends AbstractServiceIntegrationTes
         ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
         Mockito.verify(responseWriterSpy).writeOutResponse(any(ServiceContext.class), any(String.class), any(String.class), any(HttpServletResponse.class), any(FormatType.class), captor.capture());
         assertFalse(new String(captor.getValue(), StandardCharsets.UTF_8).contains("pdf_test_banner_to_use.png"));
-        assertTrue(new String(captor.getValue(), StandardCharsets.UTF_8).contains("images/logos/" + siteId + ".png"));
+        assertTrue(new String(captor.getValue(), StandardCharsets.UTF_8).contains("srv/api/sources/" + metadata.getSourceInfo().getSourceId() + "/logo"));
     }
 }
