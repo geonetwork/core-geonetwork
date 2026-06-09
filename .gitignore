@@ -28,6 +28,7 @@ eclipse/
 es/elasticsearch-*
 es/es-dashboards/kibana-*
 es/es-dashboards/data/nodes/
+es/es-dashboards/data/index/
 harvesters/harvester_*.log
 idea/
 jcs_caching/
