@@ -147,6 +147,46 @@ public class SearchResponseDeserializerTest {
     }
 
     @Test
+    public void deserialize_malformedHit_isSkippedAndReported() throws IOException {
+        String goodUuid = UUID.randomUUID().toString();
+        String catalogueUuid = UUID.randomUUID().toString();
+        // The second hit has no "_id" so it cannot be harvested: it must be skipped and reported,
+        // not abort parsing of the whole page (which previously aborted the whole harvest).
+        String json = "{\n" +
+            "  \"hits\": {\n" +
+            "    \"total\": {\"value\": 2},\n" +
+            "    \"hits\": [\n" +
+            "      {\n" +
+            "        \"_id\": \"" + goodUuid + "\",\n" +
+            "        \"_source\": {\n" +
+            "          \"documentStandard\": \"iso19139\",\n" +
+            "          \"dateStamp\": \"2024-01-15T10:00:00.000Z\",\n" +
+            "          \"sourceCatalogue\": \"" + catalogueUuid + "\"\n" +
+            "        }\n" +
+            "      },\n" +
+            "      {\n" +
+            "        \"_source\": {\n" +
+            "          \"documentStandard\": \"iso19139\",\n" +
+            "          \"sourceCatalogue\": \"" + catalogueUuid + "\"\n" +
+            "        }\n" +
+            "      }\n" +
+            "    ]\n" +
+            "  }\n" +
+            "}";
+
+        SearchResponse response = mapper.readValue(json, SearchResponse.class);
+
+        // The total still reflects the remote count, but only the parseable hit is returned.
+        assertEquals(2, response.getTotal());
+        assertEquals(1, response.getHits().size());
+        assertEquals(goodUuid, response.getHits().iterator().next().getUuid());
+
+        // The skipped hit is reported so the harvester can surface it.
+        assertEquals(1, response.getFailedHits().size());
+        assertEquals(SearchResponseDeserializer.UNKNOWN_ID, response.getFailedHits().get(0));
+    }
+
+    @Test
     public void deserialize_emptyHits() throws IOException {
         String json = "{\n" +
             "  \"hits\": {\n" +
