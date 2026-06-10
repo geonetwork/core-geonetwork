@@ -452,7 +452,9 @@ public class UsersApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
 
-        if (!XslUtil.isUserProfileCreateEnabled()) {
+        // Allow administrator to create a user to manually pre-create users via api in certain cases (i.e. migration)
+        if (!XslUtil.isUserProfileCreateEnabled() &&
+            !Profile.Administrator.equals(myProfile)) {
             return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
         }
 
