@@ -103,7 +103,7 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
 
         //--- retrieve info on categories and groups
 
-        log.info("Retrieving information from : " + params.host);
+        log.info("Retrieving information from : {}", params.host);
 
         String serverUrl = getServerUrl();
         Map<String, Source> sources = geoNetworkApiClient.retrieveSources(serverUrl, username, password);
@@ -133,12 +133,12 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
             if (cancelMonitor.get()) {
                 return new HarvestResult();
             }
-            log.info(String.format("Processing search with these parameters %s", s.toString()));
+            log.info("Processing search with these parameters {}", s);
             int from = 0;
             s.setRange(from, pageSize);
 
             long resultCount = Integer.MAX_VALUE;
-            log.info("Searching on : " + params.getName());
+            log.info("Searching on : {}", params.getName());
 
             while (from < resultCount && !error) {
                 try {
@@ -173,10 +173,9 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
         reportSkippedRecords(unparseableRecordIds);
         int badRecords = unparseableRecordIds.size() + malformedRecordIds.size();
 
-        log.info("Total records processed from this search :" + records.size());
+        log.info("Total records processed from this search : {}", records.size());
         if (badRecords > 0) {
-            log.warning("Skipped " + badRecords
-                + " record(s) that could not be harvested from " + params.getName() + ".");
+            log.warning("Skipped {} record(s) that could not be harvested from {}.", badRecords, params.getName());
         }
 
         //--- align local node
@@ -277,8 +276,7 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
 
             String queryBody = s.createElasticsearchQuery();
             if (log.isDebugEnabled()) {
-                log.debug(String.format("GeoNetwork 4 harvester sending search request to %s/api/search/records/_search%nRequest body:%n %s",
-                    getServerUrl(), queryBody));
+                log.debug("GeoNetwork 4 harvester sending search request to {}/api/search/records/_search\nRequest body:\n{}", getServerUrl(), queryBody);
             }
             return geoNetworkApiClient.query(getServerUrl(), queryBody, username, password);
         } catch (Exception ex) {
