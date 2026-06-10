@@ -41,20 +41,24 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang3.StringUtils;
-import org.fao.geonet.*;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.NodeInfo;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.LogoUtils;
 import org.fao.geonet.api.OpenApiConfig;
 import org.fao.geonet.api.exception.FeatureNotEnabledException;
 import org.fao.geonet.api.exception.NotAllowedException;
-import org.fao.geonet.api.groups.GroupsApi;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.index.Status;
 import org.fao.geonet.index.es.EsRestClient;
@@ -106,7 +110,6 @@ import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
 import static org.fao.geonet.constants.Geonet.Path.IMPORT_STYLESHEETS_SCHEMA_PREFIX;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
-import static org.fao.geonet.resources.ResourceFilter.DEFAULT_LOGO;
 
 /**
  *
@@ -856,11 +859,11 @@ public class SiteApi implements ApplicationEventPublisherAware {
 
         Optional<Source> siteSourceOpt = sourceRepository.findById(nodeUuid);
         if (siteSourceOpt.isEmpty()) {
-            throw new Exception("Unable to find main catalog in source table with uuid '" + nodeUuid + "'.");
+            throw new ResourceNotFoundException("Unable to find main catalog in source table with uuid '" + nodeUuid + "'.");
         }
         Source siteSource = siteSourceOpt.get();
         if (siteSource.getType() != SourceType.portal) {
-            throw new Exception("Source with uuid '" + nodeUuid + "' is not of the type portal (main catalogue).");
+            throw new BadParameterEx("Source with uuid '" + nodeUuid + "' is not of the type portal (main catalogue).");
         }
         boolean isSvg = file.endsWith(".svg");
 
@@ -910,9 +913,8 @@ public class SiteApi implements ApplicationEventPublisherAware {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get catalog logo image.",
         description = LogoUtils.API_GET_LOGO_NOTE)
-    @RequestMapping(
-        path = "/logo",
-        method = RequestMethod.GET)
+    @GetMapping(
+        path = "/logo")
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void getLogo(

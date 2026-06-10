@@ -454,7 +454,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     }
                 }
 
-                String logoUUID = null;
                 // Group logo are in the harvester folder and contains extension in file name
                 boolean groupLogoAdded = false;
 

@@ -24,7 +24,6 @@ package org.fao.geonet.api.sources;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import junit.framework.Assert;
 import org.fao.geonet.api.FieldNameExclusionStrategy;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.ISODate;
@@ -44,6 +43,8 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -73,7 +74,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void getSource() throws Exception {
         Source source = sourceRepo.findOneByName("source-test");
-        Assert.assertNotNull(source);
+        assertNotNull(source);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
@@ -89,7 +90,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void getSourceLogo() throws Exception {
         Source source = sourceRepo.findOneByName("source-test");
-        Assert.assertNotNull(source);
+        assertNotNull(source);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         this.mockMvc.perform(get("/srv/api/sources/" + source.getUuid() + "/logo"))
@@ -107,7 +108,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void getNonExistingSource() throws Exception {
         Source sourceToUpdate = sourceRepo.findOneByName("source-test-2");
-        Assert.assertNull(sourceToUpdate);
+        assertNull(sourceToUpdate);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
@@ -135,7 +136,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void updateSource() throws Exception {
         Source source = sourceRepo.findOneByName("source-test");
-        Assert.assertNotNull(source);
+        assertNotNull(source);
 
         source.setName("source-test-updated");
 
@@ -160,7 +161,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void updateNonExistingSource() throws Exception {
         Source sourceToUpdate = sourceRepo.findOneByName("source-test-2");
-        Assert.assertNull(sourceToUpdate);
+        assertNull(sourceToUpdate);
 
         sourceToUpdate = new Source();
         sourceToUpdate.setName("source-test-2");

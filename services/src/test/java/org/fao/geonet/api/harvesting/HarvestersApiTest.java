@@ -22,7 +22,6 @@
  */
 package org.fao.geonet.api.harvesting;
 
-import junit.framework.Assert;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
@@ -35,8 +34,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -57,7 +56,7 @@ public class HarvestersApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void getHarvesterLogoRedirectsToSourceLogo() throws Exception {
         Source source = sourceRepo.findOneByName("harvester-source");
-        Assert.assertNotNull(source);
+        assertNotNull(source);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         this.mockMvc.perform(get("/srv/api/harvesters/" + source.getUuid() + "/logo"))

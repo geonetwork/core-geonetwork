@@ -138,7 +138,7 @@ public class SourcesApi {
         if (sources == null) {
             return ResponseEntity.notFound().build();
         }
-        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT))?MediaType.APPLICATION_JSON_VALUE:request.getHeader(HttpHeaders.ACCEPT);
+        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.APPLICATION_JSON_VALUE : request.getHeader(HttpHeaders.ACCEPT);
         if (acceptHeader.contains(MediaType.TEXT_HTML_VALUE)) {
             return ResponseEntity.ok().contentType(MediaType.TEXT_HTML).body(getSourcesAsHtml(sources));
         } else {
@@ -150,12 +150,12 @@ public class SourcesApi {
         Element sourcesList = new Element("sources");
         sources.stream().map(GeonetEntity::asXml).forEach(sourcesList::addContent);
         return new XsltResponseWriter(null, "portal")
-                .withJson("catalog/locales/en-core.json")
-                .withJson("catalog/locales/en-search.json")
-                .withXml(sourcesList)
-                .withParam("cssClass", "gn-portal")
-                .withXsl("xslt/ui-search/portal-list.xsl")
-                .asHtml();
+            .withJson("catalog/locales/en-core.json")
+            .withJson("catalog/locales/en-search.json")
+            .withXml(sourcesList)
+            .withParam("cssClass", "gn-portal")
+            .withXsl("xslt/ui-search/portal-list.xsl")
+            .asHtml();
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -193,9 +193,8 @@ public class SourcesApi {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get source logo image.",
         description = LogoUtils.API_GET_LOGO_NOTE)
-    @RequestMapping(
-        value = "/{sourceIdentifier}/logo",
-        method = RequestMethod.GET)
+    @GetMapping(
+        value = "/{sourceIdentifier}/logo")
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Logo returned."),
