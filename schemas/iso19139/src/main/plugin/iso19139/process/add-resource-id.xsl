@@ -42,13 +42,10 @@
   </xsl:variable>
 
 
-  <xsl:variable name="resource-id-url-prefix-tmp"
-                select="util:getSettingValue('metadata/resourceIdentifierPrefix')"/>
+  <xsl:variable name="resource-id-url-prefix" select="''"/>
+  <xsl:param name="useMetadataIdentifier" select="'0'"/>
 
-  <xsl:variable name="resource-id-url-prefix"
-                select="if (ends-with($resource-id-url-prefix-tmp, '/'))
-                            then $resource-id-url-prefix-tmp
-                            else concat($resource-id-url-prefix-tmp, '/')"/>
+  <xsl:variable name="useMetadataIdentifierMode" select="geonet:parseBoolean($useMetadataIdentifier)"/>
 
 
 
@@ -72,6 +69,9 @@
           <xsl:value-of select="geonet:i18n($add-resource-id-loc, 'a', $guiLang)"/>
         </name>
         <operational>true</operational>
+        <params>
+          "useMetadataIdentifier":{"type":"boolean", "defaultValue":"<xsl:value-of select="$useMetadataIdentifier"/>"},
+        </params>
       </suggestion>
     </xsl:if>
 
@@ -88,14 +88,35 @@
   <!-- Remove geonet:* elements. -->
   <xsl:template match="geonet:*" priority="2"/>
 
-  <xsl:function name="gn-fn-iso19139:resource-id-generate" as="xs:string">
-    <xsl:param name="resourceIdentifier" as="xs:string"/>
+  <xsl:function name="geonet:generateCodeFromMetadataIdentifier">
+    <xsl:param name="catalogUrl"/>
+    <xsl:param name="nodeId"/>
+    <xsl:param name="resource-id-url-prefix"/>
+    <xsl:param name="metadataIdentifier"/>
 
-    <!-- Create resource identifier based on metadata record identifier -->
     <xsl:variable name="urlWithoutLang" select="substring-before($catalogUrl, $nodeId)"/>
     <xsl:variable name="prefix"
                   select="if ($resource-id-url-prefix != '') then $resource-id-url-prefix else $urlWithoutLang"/>
-    <xsl:value-of select="concat($prefix, $resourceIdentifier)"/>
+
+    <xsl:value-of select="concat($prefix, $metadataIdentifier)"/>
+  </xsl:function>
+
+
+  <xsl:function name="geonet:generateRandomCode">
+    <xsl:param name="resource-id-url-prefix"/>
+
+    <xsl:variable name="resource-id-url-prefix-tmp"
+                  select="util:getSettingValue('metadata/resourceIdentifierPrefix')"/>
+
+    <xsl:variable name="resource-id-url-prefix-local"
+                  select="if (ends-with($resource-id-url-prefix-tmp, '/'))
+                            then $resource-id-url-prefix-tmp
+                            else concat($resource-id-url-prefix-tmp, '/')"/>
+    <xsl:variable name="resourceUuid" select="util-uuid:toString(util-uuid:randomUUID())"/>
+    <xsl:variable name="prefix"
+                  select="if ($resource-id-url-prefix != '') then $resource-id-url-prefix else $resource-id-url-prefix-local"/>
+
+    <xsl:value-of select="concat($prefix, $resourceUuid)"/>
   </xsl:function>
 
   <xsl:template
@@ -112,10 +133,13 @@
                 gmd:edition|
                 gmd:editionDate"/>
 
-      <xsl:variable name="code" select="gn-fn-iso19139:resource-id-generate(util-uuid:toString(util-uuid:randomUUID()))" />
+      <xsl:variable name="code"
+                    select="if ($useMetadataIdentifierMode)
+                            then geonet:generateCodeFromMetadataIdentifier($catalogUrl, $nodeId, $resource-id-url-prefix, /*/gmd:fileIdentifier/gco:CharacterString)
+                            else geonet:generateRandomCode($resource-id-url-prefix)"/>
 
       <xsl:copy-of
-        select="gmd:identifier"/>
+        select="gmd:identifier[gmd:MD_Identifier/gmd:code/gco:CharacterString != $code]"/>
       <gmd:identifier>
         <gmd:MD_Identifier>
           <gmd:code>
@@ -133,7 +157,8 @@
                 gmd:otherCitationDetails|
                 gmd:collectiveTitle|
                 gmd:ISBN|
-                gmd:ISSN"/>
+                gmd:ISSN|
+                gmd:onlineResource"/>
 
     </xsl:copy>
   </xsl:template>
