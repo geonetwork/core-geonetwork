@@ -226,7 +226,7 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
                 malformedRecordIds.add(md.getUuid() != null ? md.getUuid() : SearchResponseDeserializer.UNKNOWN_ID);
                 HarvestError harvestError = new HarvestError(context, e);
                 harvestError.setDescription("Malformed element '"
-                    + md.toString() + "'");
+                    + md + "'");
                 harvestError
                     .setHint("It seems that there was some malformed element. Check with your administrator.");
                 this.errors.add(harvestError);
@@ -250,9 +250,8 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
         }
 
         String ids = String.join(", ", unparseableRecordIds);
-        String message = "Skipped " + unparseableRecordIds.size()
-            + " record(s) that could not be parsed from the search response of " + params.getName()
-            + ". Document id(s): " + ids;
+        String message = String.format("Skipped %d record(s) that could not be parsed from the search response of %s. Document id(s): %s",
+            unparseableRecordIds.size(), params.getName(), ids);
         log.warning(message);
 
         HarvestError harvestError = new HarvestError(context, new Exception(message));
@@ -278,8 +277,8 @@ class Harvester extends BaseGeoNetworkHarvester<GeonetParams> implements IHarves
 
             String queryBody = s.createElasticsearchQuery();
             if (log.isDebugEnabled()) {
-                log.debug("GeoNetwork 4 harvester sending search request to "
-                    + getServerUrl() + "/api/search/records/_search\nRequest body:\n" + queryBody);
+                log.debug(String.format("GeoNetwork 4 harvester sending search request to %s/api/search/records/_search%nRequest body:%n %s",
+                    getServerUrl(), queryBody));
             }
             return geoNetworkApiClient.query(getServerUrl(), queryBody, username, password);
         } catch (Exception ex) {
