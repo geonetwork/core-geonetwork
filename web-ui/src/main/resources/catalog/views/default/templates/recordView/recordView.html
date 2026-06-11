@@ -99,6 +99,8 @@
                 gn-static-page-menu="menu"
                 language="{{lang}}"
                 section="record_view_menu"
+                render-as-button="true"
+                context="{uuid: mdView.current.record.uuid, id: mdView.current.record.id}"
               ></div>
 
               <!-- edit -->
@@ -115,9 +117,16 @@
 
               <!-- manage -->
               <div
-                data-ng-if="menu == 'gn-recordview-manage-menu' && mdView.current.record"
+                data-ng-if="menu == 'gn-recordview-manage-menu' && mdView.current.record && user.isEditorOrMore()"
                 class="gn-md-actions-btn pull-left"
-                data-gn-md-actions-menu="mdView.current.record"
+                gn-manage-record-menu="mdView.current.record"
+              ></div>
+
+              <!-- download -->
+              <div
+                data-ng-if="menu == 'gn-recordview-download-menu' && mdView.current.record"
+                class="gn-md-actions-btn pull-left"
+                gn-download-record-menu="mdView.current.record"
               ></div>
 
               <!-- display mode -->

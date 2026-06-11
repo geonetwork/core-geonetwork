@@ -373,6 +373,8 @@
     "createChild": "Create a child",
     "privileges": "Privileges",
     "whoCanAccess": "Who has access",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions" : "Actions",
     "reset" : "Reset",
     "stop": "Stop",

@@ -159,6 +159,7 @@
     "exportCSV": "İxrac (CSV)",
     "exportPDF": "İxrac (PDF)",
     "exportMEF": "İxrac (ZIP)",
+    "exportMEF-excludeAttachments": "Export (ZIP) without attachments",
     "welcomeText": "Burada məlumat, xidmətlər və xəritələr və daha çoxunu tapa bilərsiniz.",
     "searchOver": "<strong>{{records}}</strong> data dəstləri, xidmətlər və xəritələr axtarın, ...",
     "browseBy": "Gözdən keçirin",
@@ -559,5 +560,8 @@
     "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Xəbərdarlıq / Sahə resursuTemporalDateRange / Aşağı diapazon {{lowerBound}} yuxarı sərhəddən {{upperBound}} böyük ola bilməz. Tarix diapazonu indeksləşdirilməyib.",
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Xəbərdarlıq / Sahə resursuTemporalDateRange / Aşağı hədd həddi {{lowerBound}} yuxarı həddən {{upperBound}} böyük ola bilməz.",
     "indexingErrorMsg-schemaNotRegistered": "Qeyd {{record}} / &#39;{{schema}}&#39; sxemi bu kataloqda qeydə alınmayıb. Onu quraşdırın və ya həmin qeydləri silin. Qeyd indeksləşdirilmiş xəta bayrağıdır.",
-    "indexingErrorMsg-indexingStyleSheetError": "İndeksləmə üslub cədvəlində xətalar var: {{message}}\n Metadatanın indeksdə _indexingError=1 kimi qeyd edilməsi."
+    "indexingErrorMsg-indexingStyleSheetError": "İndeksləmə üslub cədvəlində xətalar var: {{message}}\n Metadatanın indeksdə _indexingError=1 kimi qeyd edilməsi.",
+    "createAnonymousAccess": "Share unpublished record preview",
+    "deleteAnonymousAccess": "Revoke unpublished record preview",
+    "anonymousAccessTo": "Anonymous access to {{title}}"
 }

@@ -372,6 +372,30 @@
                   </cit:CI_OnlineResource>
                 </mrd:onLine>
               </xsl:for-each>
+              <xsl:for-each select="links[rel = 'example']">
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString>
+                        <xsl:value-of select="href" />
+                      </gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString>
+                        <xsl:value-of select="title" />
+                      </gco:CharacterString>
+                    </cit:name>
+                    <cit:description>
+                      <gco:CharacterString>
+                        <xsl:value-of select="description" />
+                      </gco:CharacterString>
+                    </cit:description>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+              </xsl:for-each>
               <xsl:if test="sci_doi">
                 <mrd:onLine>
                   <cit:CI_OnlineResource>

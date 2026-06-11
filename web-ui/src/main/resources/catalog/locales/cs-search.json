@@ -159,6 +159,7 @@
     "exportCSV": "Exportovat (CSV)",
     "exportPDF": "Exportovat (PDF)",
     "exportMEF": "Exportovat (ZIP)",
+    "exportMEF-excludeAttachments": "Export (ZIP) without attachments",
     "welcomeText": "Zde naleznete data, služby, mapy a řadu dalších informací.",
     "searchOver": "Prohledat <strong>{{records}}</strong> datových sad, služeb a map, ...",
     "browseBy": "Prohledávat dle",
@@ -552,12 +553,15 @@
     "addLayerPrefix": "Přidat vrstvu",
     "addLayerPostfix": "do mapy",
     "submit": "Odeslat",
-    "additionalLinks": "Additional Links",
+    "additionalLinks": "Další odkazy",
     "indexingErrorMsg-invalidBounds": "Upozornění / Pole resourceTemporalDateRange / Dolní a horní hranice prázdné nebo neplatné datum. Časové období není indexováno.",
     "indexingErrorMsg-invalidDateFormat": "Upozornění / Datum {{dateType}} s hodnotou '{{date}}' nebyl platný formát data.",
     "indexingErrorMsg-keywordNotFoundInThesaurus": "Upozornění / Klíčové slovo {{keyword}} nebylo v {{thesaurus}} nalezeno.",
     "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Upozornění / pole resourceTemporalDateRange / Dolní hranice rozsahu {{lowerBound}} nemůže být větší než horní hranice {{upperBound}}. Časové období není indexováno.",
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Upozornění / pole resourceTemporalDateRange / dolní hranice rozsahu {{lowerBound}} nemůže být větší než horní hranice {{upperBound}}.",
     "indexingErrorMsg-schemaNotRegistered": "Záznam {{record}} / Schéma '{{schema}}' není registrován v tomto katalogu. Nainstalujte jej nebo tyto záznamy odstraňte. Záznam je indexovaný příznak chyby indexování.",
-    "indexingErrorMsg-indexingStyleSheetError": "Šablona stylů indexování obsahuje chyby: {{message}}\n Označení metadat jako _indexingError=1 v indexu."
+    "indexingErrorMsg-indexingStyleSheetError": "Šablona stylů indexování obsahuje chyby: {{message}}\n Označení metadat jako _indexingError=1 v indexu.",
+    "createAnonymousAccess": "Share unpublished record preview",
+    "deleteAnonymousAccess": "Revoke unpublished record preview",
+    "anonymousAccessTo": "Anonymous access to {{title}}"
 }

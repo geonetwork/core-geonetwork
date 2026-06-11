@@ -1,0 +1,31 @@
+================================================================================
+===
+=== GeoNetwork 4.2.15-SNAPSHOT: List of changes
+===
+================================================================================
+- Transifex updates for GeoNetwork 4.2.15 (#9238)
+- Modify URI construction logic in ThesaurusService (#9241)
+- [Backport 4.2.x] Update OpenLayers library to version 10.8.0 (#9239)
+- Map viewer / ignore layer dimensions for non WMS layers (#9237)
+- Add missing directive
+- Allow to customise the cookie warning template (#9223)
+- [Backport 4.2.x] Add Log4j2 JsonTemplateLayout support for JSON log output (#9221)
+- Documentation / remove admin batch update section and update batch update process usage (#9220)
+- [Backport 4.2.x] ISO19139 / ISO19115-3.2018 / Full record view improvements (#9198)
+- Fix path for encryptor.properties file (#9162)
+- ISO19115-3.2018 / Configure the xpath for the feature catalogue metadata titles (#9190)
+- [Backport 4.2.x] FIX: GeoNetwork 4 harvester missing one record due to pagination bug
+- [Backport 4.2.x] Update leadership team active maintainers list (#9137)
+- [Backport 4.2.x] Harvesters / Check if the metadata schema of a metadata to update has changed (#9126)
+- [Backport 4.2.x] Additional filter options in GN 4.x harvesters (#9104)
+- Update API Key authentication section in user guide
+- Update formatting for API Key authentication section
+- [Backport 4.2.x] Documentation for API Key in SimpleURL and CSW harvesters (#9098)
+- [Backport 4.2.x] Add support for API Key in harvesters (#9096)
+- [Backport 4.2.x] Fix errors with GN4 type harvester (#9093)
+- [BP] API / Allow editors to index their records   (#9085)
+- [Backport 4.2.x] Restrict username / group name characters (#9083)
+- [Backport 4.2.x] Skip BOM chars from XML documents (#9067)
+- Release notes for 4.2.14 - update change log page (#9062)
+- Add migration to 4.2.15.
+- Update version to 4.2.15-SNAPSHOT

@@ -2523,6 +2523,15 @@
       };
     }
   ]);
+  module.filter("replaceLinkPlaceholders", [
+    function () {
+      return function (url, context) {
+        return url
+          .replace(/{uuid}/g, (context && context.uuid) || "")
+          .replace(/{id}/g, (context && context.id) || "");
+      };
+    }
+  ]);
   module.filter("signInLink", [
     "$location",
     "$filter",

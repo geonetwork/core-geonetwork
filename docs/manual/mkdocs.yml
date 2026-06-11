@@ -149,10 +149,13 @@ nav:
     - overview/authors.md
     - 'Changelog':
       - overview/change-log/index.md
-      - overview/change-log/version-4.4.9.md
-      - overview/change-log/version-4.2.14.md
+      - overview/change-log/version-4.4.10.md
+      - overview/change-log/version-4.2.15.md
       - 'Release History':
         - overview/change-log/history/index.md
+        - overview/change-log/version-4.4.11.md
+        - overview/change-log/version-4.4.10.md
+        - overview/change-log/version-4.4.9.md
         - overview/change-log/version-4.4.8.md
         - overview/change-log/version-4.4.7.md
         - overview/change-log/version-4.4.6.md
@@ -162,6 +165,8 @@ nav:
         - overview/change-log/version-4.4.2.md
         - overview/change-log/version-4.4.1.md
         - overview/change-log/version-4.4.0.md
+        - overview/change-log/version-4.2.16.md
+        - overview/change-log/version-4.2.15.md
         - overview/change-log/version-4.2.14.md
         - overview/change-log/version-4.2.13.md
         - overview/change-log/version-4.2.12.md
@@ -267,6 +272,7 @@ nav:
         - user-guide/associating-resources/linking-feature-catalog.md
         - user-guide/associating-resources/linking-others.md
         - user-guide/associating-resources/linking-remote-records.md
+        - user-guide/associating-resources/linking-panel-configuration.md
       - user-guide/associating-resources/doi.md
       - user-guide/associating-resources/cite.md
     - 'Tag information':
@@ -287,7 +293,6 @@ nav:
       - 'Updating a set of records':
         - user-guide/workflow/batchupdate/index.md
         - user-guide/workflow/batchediting.md
-        - user-guide/workflow/batchupdate-from-admin.md
         - user-guide/workflow/batchupdate-xsl.md
       - user-guide/workflow/geopublication.md
       - user-guide/workflow/life-cycle.md
@@ -311,6 +316,7 @@ nav:
       - user-guide/harvesting/harvesting-webdav.md
       - user-guide/harvesting/harvesting-wfs-features.md
       - user-guide/harvesting/harvesting-database.md
+      - user-guide/harvesting/harvesting-stac.md
     - user-guide/export/index.md
     - 'Administration':
       - administrator-guide/index.md

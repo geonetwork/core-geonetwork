@@ -2318,20 +2318,6 @@
                 scope.ctrl = {};
                 scope.searchObj = gnOnlinesrc.getSearchConfig();
 
-                // Define configuration to restrict search
-                // to a subset of records when an initiative type
-                // and/or association type is selected.
-                // eg. crossReference-study restrict to DC records
-                // using _schema=dublin-core
-                scope.searchParamsPerType = {
-                  //'crossReference-study': {
-                  //  _schema: 'dublin-core'
-                  //},
-                  //'crossReference-*': {
-                  //  _isHarvested: 'n'
-                  //}
-                };
-
                 scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
               },
               post: function postLink(scope, iElement, iAttrs) {
@@ -2359,6 +2345,13 @@
                       (config && config.fields && config.fields.initiativeType) || null,
                     sources: config && config.sources
                   };
+                  var metadataStore =
+                    scope.config &&
+                    scope.config.sources &&
+                    scope.config.sources.metadataStore;
+                  scope.baseSearchParams = (metadataStore && metadataStore.params) || {};
+                  scope.searchParamsPerType =
+                    (metadataStore && metadataStore.searchParamsPerType) || {};
 
                   $(scope.popupid).modal("show");
 
@@ -2366,11 +2359,15 @@
                   scope.selection = [];
                 });
 
-                // Clear the search params and input
                 scope.clearSearch = function () {
                   $("#siblingdd input").val("");
                   scope.searchObj.any = "";
-                  scope.$broadcast("resetSearch");
+                  scope.searchObj.params = angular.extend(
+                    {},
+                    scope.searchObj.defaultParams,
+                    scope.baseSearchParams || {}
+                  );
+                  scope.$broadcast("resetSearch", scope.searchObj.params);
                 };
 
                 // Append * for like search
@@ -2391,15 +2388,16 @@
                 // Based on initiative type and association type
                 // define custom search parameter and refresh search
                 var setSearchParamsPerType = function () {
+                  var searchParams = scope.searchParamsPerType || {};
                   var p =
-                    scope.searchParamsPerType[
+                    searchParams[
                       scope.config.associationType + "-" + scope.config.initiativeType
                     ];
-                  var pall =
-                    scope.searchParamsPerType[scope.config.associationType + "-*"];
+                  var pall = searchParams[scope.config.associationType + "-*"];
                   scope.searchObj.params = angular.extend(
                     {},
                     scope.searchObj.defaultParams,
+                    scope.baseSearchParams || {},
                     angular.isDefined(p) ? p : angular.isDefined(pall) ? pall : {}
                   );
                   scope.$broadcast("resetSearch", scope.searchObj.params);

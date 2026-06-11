@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.security.openidconnect;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.security.RedirectUtil;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
@@ -47,9 +48,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.text.Normalizer;
 import java.util.IllformedLocaleException;
 import java.util.Locale;
 
@@ -128,41 +126,33 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
             // redirecting the user to the OIDC provider login
             String redirectURL = null;
 
+            boolean redirectFromSavedRequest = false;
             if (requestCache != null) {
                 SavedRequest savedRequest = requestCache.getRequest(request, response);
                 if (savedRequest != null) {
                     redirectURL = savedRequest.getRedirectUrl();
+                    redirectFromSavedRequest = true;
                     Log.debug(Geonet.SECURITY, "Retrieved original request from SavedRequest: " + redirectURL);
                 } else {
                     Log.debug(Geonet.SECURITY, "No SavedRequest found in RequestCache");
                 }
-
-                if (redirectURL != null) {
-                    Log.info(Geonet.SECURITY, "Redirecting to " + redirectURL);
-
-                    // Removing original request, since we want to
-                    // retain current headers.
-                    // If request remains in cache, requestCacheFilter
-                    // will reinstate the original headers and we don't
-                    // want it.
-                    requestCache.removeRequest(request, response);
-
-                    redirectIfSafeOrFallback(redirectURL, request, response);
-                } else {
-                    response.sendRedirect(request.getContextPath());
-                }
             } else {
                 Log.debug(Geonet.SECURITY, "RequestCache is not available");
+            }
 
+            if (redirectURL == null) {
                 redirectURL = findQueryParameter(request, "redirectUrl");
                 if (redirectURL != null) {
                     Log.debug(Geonet.SECURITY, "Retrieved redirect URL from query parameter: " + redirectURL);
-
-                    redirectIfSafeOrFallback(redirectURL, request, response);
-                } else {
-                    response.sendRedirect(request.getContextPath());
                 }
             }
+
+            if (redirectFromSavedRequest) {
+                // Removing original request retains current headers (same behavior as before).
+                requestCache.removeRequest(request, response);
+            }
+
+            RedirectUtil.sendSafeRedirect(request, response, redirectURL);
 
             // Set users preferred locale if it exists. - cf. keycloak
             String localeString = oidcUser.getLocale();
@@ -217,96 +207,4 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         }
     }
 
-    void redirectIfSafeOrFallback(String redirectUrl, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String safeRedirectTarget = buildSafeRedirectTarget(redirectUrl, request);
-        if (safeRedirectTarget != null) {
-            response.sendRedirect(safeRedirectTarget);
-            return;
-        }
-
-        Log.warning(Geonet.SECURITY, "Rejected unsafe redirect target after OIDC login.");
-
-        response.sendRedirect(request.getContextPath());
-    }
-
-    private String buildSafeRedirectTarget(String redirectUrl, HttpServletRequest request) {
-        if (StringUtils.isBlank(redirectUrl) || hasControlCharacters(redirectUrl)) {
-            return null;
-        }
-
-        try {
-            URI redirectUri = new URI(Normalizer.normalize(redirectUrl, Normalizer.Form.NFKC));
-            String rawPath;
-            String query;
-
-            if (redirectUri.isAbsolute()) {
-                if (!hasSameOrigin(redirectUri, request)) {
-                    return null;
-                }
-                rawPath = redirectUri.getRawPath();
-                query = redirectUri.getRawQuery();
-            } else {
-                // Reject scheme-relative or authority-bearing URLs.
-                if (redirectUri.getHost() != null || redirectUri.getRawAuthority() != null) {
-                    return null;
-                }
-                rawPath = redirectUri.getRawPath();
-                query = redirectUri.getRawQuery();
-            }
-
-            rawPath = StringUtils.defaultIfBlank(rawPath, "/");
-            if (!rawPath.startsWith("/") || rawPath.startsWith("//") || rawPath.contains("\\")) {
-                return null;
-            }
-
-            String contextPath = StringUtils.defaultString(request.getContextPath());
-            if (!contextPath.isEmpty() && !rawPath.equals(contextPath) && !rawPath.startsWith(contextPath + "/")) {
-                return null;
-            }
-
-            URI safeUri = new URI(null, null, rawPath, query, null);
-            return safeUri.toASCIIString();
-        } catch (URISyntaxException | IllegalArgumentException e) {
-            return null;
-        }
-    }
-
-    private boolean hasSameOrigin(URI redirectUri, HttpServletRequest request) {
-        String redirectScheme = StringUtils.lowerCase(redirectUri.getScheme());
-        String requestScheme = StringUtils.lowerCase(request.getScheme());
-
-        if (!StringUtils.equals(redirectScheme, requestScheme)) {
-            return false;
-        }
-
-        if (!StringUtils.equalsIgnoreCase(redirectUri.getHost(), request.getServerName())) {
-            return false;
-        }
-
-        int redirectPort = getEffectivePort(redirectUri.getScheme(), redirectUri.getPort());
-        int requestPort = getEffectivePort(request.getScheme(), request.getServerPort());
-        return redirectPort == requestPort;
-    }
-
-    private int getEffectivePort(String scheme, int port) {
-        if (port > 0) {
-            return port;
-        }
-        if ("https".equalsIgnoreCase(scheme)) {
-            return 443;
-        }
-        if ("http".equalsIgnoreCase(scheme)) {
-            return 80;
-        }
-        return -1;
-    }
-
-    private boolean hasControlCharacters(String value) {
-        for (int i = 0; i < value.length(); i++) {
-            if (Character.isISOControl(value.charAt(i))) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
