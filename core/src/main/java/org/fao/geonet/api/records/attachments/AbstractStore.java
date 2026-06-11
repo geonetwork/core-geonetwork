@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataResource;
@@ -35,14 +36,22 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.LimitedInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -53,6 +62,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public abstract class AbstractStore implements Store {
     protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR = ":";
     protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_ESCAPED_SEPARATOR = "\\:";
+    private static final Logger log = LoggerFactory.getLogger(AbstractStore.class);
+
+    @Value("${api.params.maxUploadSize}")
+    protected long maxUploadSize;
 
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
@@ -98,6 +111,24 @@ public abstract class AbstractStore implements Store {
         } catch (ResourceNotFoundException ignored) {
         }
         return getResource(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, approved);
+    }
+
+    @Override
+    public final MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
+        try {
+            return getResourceMetadata(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, approved);
+        } catch (ResourceNotFoundException ignored) {
+        }
+        return getResourceMetadata(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, approved);
+    }
+
+    @Override
+    public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, String resourceId, Boolean approved, long start, long end) throws Exception {
+        try {
+            return getResourceWithRange(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, approved, start, end);
+        } catch (ResourceNotFoundException ignored) {
+        }
+        return getResourceWithRange(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, approved, start, end);
     }
 
     protected static AccessManager getAccessManager(final ServiceContext context) {
@@ -157,13 +188,14 @@ public abstract class AbstractStore implements Store {
         if (fileName.contains("?")) {
             fileName = fileName.substring(0, fileName.indexOf("?"));
         }
+        fileName = URLDecoder.decode(fileName, StandardCharsets.UTF_8);
         return fileName;
     }
 
     @Override
     public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final MultipartFile file,
             final MetadataResourceVisibility visibility) throws Exception {
-        return putResource(context, metadataUuid, file.getOriginalFilename(), file.getInputStream(), null, visibility, true);
+        return putResource(context, metadataUuid, file, visibility, true);
     }
 
     @Override
@@ -173,20 +205,27 @@ public abstract class AbstractStore implements Store {
             throw new NotAllowedException(String.format(
                 "Uploaded resource '%s' contains forbidden character ; for metadata '%s'.", file.getOriginalFilename(), metadataUuid));
         }
-        return putResource(context, metadataUuid, file.getOriginalFilename(), file.getInputStream(), null, visibility, approved);
+        long fileSize = file.getSize();
+        if (fileSize > maxUploadSize) {
+            throw new InputStreamLimitExceededException(maxUploadSize, fileSize);
+        }
+        try (LimitedInputStream is = new LimitedInputStream(file.getInputStream(), maxUploadSize, fileSize)) {
+            return putResource(context, metadataUuid, file.getOriginalFilename(), is, null, visibility, approved);
+        }
     }
 
     @Override
-    public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final Path file,
+    public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final Resource resource,
             final MetadataResourceVisibility visibility) throws Exception {
-        return putResource(context, metadataUuid, file, visibility, true);
+        return putResource(context, metadataUuid, resource, visibility, true);
     }
 
     @Override
-    public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final Path file,
+    public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final Resource resource,
             final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        final InputStream is = new BufferedInputStream(Files.newInputStream(file));
-        return putResource(context, metadataUuid, file.getFileName().toString(), is, null, visibility, approved);
+        try (InputStream is = resource.getInputStream()) {
+            return putResource(context, metadataUuid, resource.getFilename(), is, null, visibility, approved);
+        }
     }
 
     @Override
@@ -198,7 +237,38 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
             MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        return putResource(context, metadataUuid, getFilenameFromUrl(fileUrl), fileUrl.openStream(), null, visibility, approved);
+
+        // Open a connection to the URL
+        HttpURLConnection connection = (HttpURLConnection) fileUrl.openConnection();
+        connection.setInstanceFollowRedirects(true);
+        connection.setRequestMethod("GET");
+
+        // Check if the response code is OK
+        int responseCode = connection.getResponseCode();
+        if (responseCode != HttpURLConnection.HTTP_OK) {
+            throw new IOException("Unexpected response code: " + responseCode);
+        }
+
+        // Extract filename from Content-Disposition header if present otherwise use the filename from the URL
+        String contentDisposition = connection.getHeaderField(HttpHeaders.CONTENT_DISPOSITION);
+        String filename = null;
+        if (contentDisposition != null) {
+            filename = ContentDisposition.parse(contentDisposition).getFilename();
+        }
+        if (filename == null || filename.isEmpty()) {
+            filename = getFilenameFromUrl(fileUrl);
+        }
+
+        // Check if the content length is within the allowed limit
+        long contentLength = connection.getContentLengthLong();
+        if (contentLength > maxUploadSize) {
+            throw new InputStreamLimitExceededException(maxUploadSize, contentLength);
+        }
+
+        // Upload the resource while ensuring the input stream does not exceed the maximum allowed size.
+        try (LimitedInputStream is = new LimitedInputStream(connection.getInputStream(), maxUploadSize, contentLength)) {
+            return putResource(context, metadataUuid, filename, is, null, visibility, approved);
+        }
     }
 
     @Override
@@ -228,7 +298,7 @@ public abstract class AbstractStore implements Store {
         final List<MetadataResource> resources = getResources(context, sourceUuid, metadataResourceVisibility, null, sourceApproved);
         for (MetadataResource resource: resources) {
             try (Store.ResourceHolder holder = getResource(context, sourceUuid, metadataResourceVisibility, resource.getFilename(), sourceApproved)) {
-                putResource(context, targetUuid, holder.getPath(), metadataResourceVisibility, targetApproved);
+                putResource(context, targetUuid, holder.getResource(), metadataResourceVisibility, targetApproved);
             }
         }
     }
@@ -286,7 +356,7 @@ public abstract class AbstractStore implements Store {
 
     private String escapeResourceManagementExternalProperties(String value) {
         return value.replace(RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_SEPARATOR, RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_ESCAPED_SEPARATOR);
-}
+    }
 
     /**
      * Create an encoded base 64 object id contains the following fields to uniquely identify the resource

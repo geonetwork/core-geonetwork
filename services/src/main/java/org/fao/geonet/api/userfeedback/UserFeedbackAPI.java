@@ -524,14 +524,33 @@ public class UserFeedbackAPI {
 
                     if (toAddress.size() > 0) {
                         try {
-                            MailUtil.sendMail(toAddress,
-                                String.format(
-                                    messages.getString("new_user_rating"),
-                                    catalogueName, title),
-                                String.format(
-                                    messages.getString("new_user_rating_text"),
-                                    metadataUtils.getDefaultUrl(userFeedbackDto.getMetadataUUID(), locale.getISO3Language())),
-                                settingManager);
+                            Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
+
+                            LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "new_user_rating", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+                            LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "new_user_rating_text", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+
+                            for (Locale feedbackLocale : feedbackLocales) {
+                                emailSubjectComponent.addParameters(
+                                    feedbackLocale,
+                                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, catalogueName),
+                                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, title)
+                                );
+
+                                emailMessageComponent.addParameters(
+                                    feedbackLocale,
+                                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, metadataUtils.getDefaultUrl(userFeedbackDto.getMetadataUUID(), feedbackLocale.getISO3Language()))
+                                );
+                            }
+
+                            LocalizedEmail localizedEmail = new LocalizedEmail(false);
+                            localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
+                            MailUtil.sendMail(
+                                toAddress,
+                                localizedEmail.getParsedSubject(feedbackLocales),
+                                localizedEmail.getParsedMessage(feedbackLocales),
+                                settingManager
+                            );
                         } catch (IllegalArgumentException ex) {
                             Log.warning(API.LOG_MODULE_NAME, ex.getMessage(), ex);
                         }

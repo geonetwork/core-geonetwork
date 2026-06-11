@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -22,12 +22,25 @@
  */
 package org.fao.geonet.api.selections;
 
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsAggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.StringTermsBucket;
+import co.elastic.clients.elasticsearch.core.SearchRequest;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.StringReader;
+import java.io.StringWriter;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SelectionManager;
+import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.utils.Log;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -36,11 +49,17 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
+import static org.fao.geonet.kernel.SelectionManager.DEFAULT_MAXHITS;
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
 
 /**
  * Select a list of elements stored in session.
@@ -52,6 +71,9 @@ import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS;
     description = "Selection related operations")
 @Controller("selections")
 public class SelectionsApi {
+
+    @Autowired
+    private EsSearchManager esSearchManager;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get current selections")
     @RequestMapping(
@@ -178,5 +200,82 @@ public class SelectionsApi {
             ApiUtils.createServiceContext(request));
 
         return new ResponseEntity<>(nbSelected, HttpStatus.OK);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get current selection resource types")
+    @RequestMapping(
+        method = RequestMethod.GET,
+        value = "/{bucket}/statistics",
+        produces = {
+            MediaType.APPLICATION_JSON_VALUE
+        })
+    public
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    Map<String, Integer> getSelectionFieldStatistics(
+        @Parameter(description = "Bucket name",
+            required = true,
+            example = "metadata")
+        @PathVariable
+        String bucket,
+        @Parameter(description = "Field name to get the statistics",
+            required = true,
+            example = "resourceType")
+        @RequestParam
+        String field,
+        @Parameter(hidden = true)
+        HttpSession httpSession
+    )
+        throws Exception {
+        SelectionManager selectionManager =
+            SelectionManager.getManager(ApiUtils.getUserSession(httpSession));
+
+        Map<String, Integer> resourceTypes = new HashMap<>();
+        
+        final String aggregationField;
+        final String aggName;
+
+        switch (field) {
+            case "resourceType":
+                aggregationField = "resourceType";
+                aggName = "resourceTypes";
+                break;
+
+            default:
+                throw new IllegalArgumentException("The value field '" + field + "' is not supported.");
+        }
+
+        synchronized (selectionManager.getSelection(bucket)) {
+            UserSession session = ApiUtils.getUserSession(httpSession);
+            JsonNode request = (JsonNode) session.getProperty(Geonet.Session.SEARCH_REQUEST + bucket);
+            if (request != null) {
+                try {
+                    Aggregation aggregation = Aggregation.of(a -> a
+                        .terms(t -> t
+                            .field(aggregationField)
+                        )
+                    );
+                    Map<String, Aggregation> aggregations = new HashMap<>();
+                    aggregations.put(aggName, aggregation);
+
+                    JsonNode queryJson = request.get("query");
+                    if (queryJson == null) {
+                        return resourceTypes;
+                    }
+
+                    SearchResponse<Void> searchResponse = esSearchManager.aggregate(queryJson, aggregations);
+
+                    StringTermsAggregate terms = searchResponse.aggregations().get(aggName).sterms();
+                    for (StringTermsBucket b : terms.buckets().array()) {
+                        resourceTypes.put(b.key().stringValue(), (int) b.docCount());
+                    }
+                } catch (Exception e) {
+                    Log.error(Geonet.GEONETWORK,
+                        "Error getting selection statistics: " + e.getMessage(), e);
+                }
+            }
+
+            return resourceTypes;
+        }
     }
 }

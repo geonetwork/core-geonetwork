@@ -408,8 +408,8 @@
 
           <xsl:for-each select="cit:identifier/*[string(mcc:code/*)]">
             <resourceIdentifier type="object">{
-              "code": "<xsl:value-of select="mcc:code/(gco:CharacterString|gcx:Anchor)"/>",
-              "codeSpace": "<xsl:value-of select="mcc:codeSpace/(gco:CharacterString|gcx:Anchor)"/>",
+              "code": "<xsl:value-of select="gn-fn-index:json-escape(mcc:code/(gco:CharacterString|gcx:Anchor))"/>",
+              "codeSpace": "<xsl:value-of select="gn-fn-index:json-escape(mcc:codeSpace/(gco:CharacterString|gcx:Anchor))"/>",
               "link": "<xsl:value-of select="mcc:code/gcx:Anchor/@xlink:href"/>"
               }</resourceIdentifier>
           </xsl:for-each>
@@ -464,7 +464,7 @@
 
 
         <xsl:for-each
-          select="mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue">
+          select="mri:defaultLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue|mri:otherLocale/lan:PT_Locale/lan:language/lan:LanguageCode/@codeListValue">
           <resourceLanguage>
             <xsl:value-of select="."/>
           </resourceLanguage>
@@ -737,8 +737,12 @@
         <xsl:for-each select="*:resourceMaintenance/*">
           <maintenance type="object">{
             "frequency": "<xsl:value-of select="*:maintenanceAndUpdateFrequency/*/@codeListValue"/>"
-            <xsl:for-each select="*:dateOfNextUpdate[*/text() != '']">
+            <xsl:for-each select="*:maintenanceDate/*/cit:date[*/text() != '']">
+              <xsl:variable name="dateOfNextUpdateZulu"
+                            select="date-util:convertToISOZuluDateTime(*/text())"/>
+              <xsl:if test="$dateOfNextUpdateZulu != ''">
               ,"nextUpdateDate": "<xsl:value-of select="*/text()"/>"
+              </xsl:if>
             </xsl:for-each>
             <xsl:for-each select="*:userDefinedMaintenanceFrequency[*/text() != '']">
               ,"userDefinedFrequency": "<xsl:value-of select="*/text()"/>"
@@ -1067,7 +1071,11 @@
           "definition" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:definition/gco:CharacterString/text())"/>",
           "code" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:code/(gco:CharacterString|gcx:Anchor)/text())"/>",
           "isAbstract" :"<xsl:value-of select="gfc:FC_FeatureType/gfc:isAbstract/gco:Boolean/text()"/>",
-          "aliases" : "<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:aliases/gco:CharacterString/text())"/>"
+          "aliases" : [
+          <xsl:for-each select="gfc:FC_FeatureType/gfc:aliases[string(*/text())]">
+            "<xsl:value-of select="util:escapeForJson(*/text())"/>"<xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+          ]
           <!--"inheritsFrom" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsFrom/*/text()"/>",
           "inheritsTo" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsTo/*/text()"/>",
           "constrainedBy" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:constrainedBy/*/text()"/>",
@@ -1176,24 +1184,25 @@
         <xsl:variable name="processSteps"
                       select="mrl:processStep/*[mrl:description/gco:CharacterString != '']"/>
         <xsl:for-each select="$processSteps">
+          <xsl:variable name="stepDateTimeZulu"
+                        select="date-util:convertToISOZuluDateTime(normalize-space(mrl:stepDateTime//gml:timePosition/text()))"/>
+
           <processSteps type="object">{
             "descriptionObject": <xsl:value-of select="gn-fn-index:add-multilingual-field(
                                 'description', mrl:description, $allLanguages, true())"/>
-            <xsl:if test="normalize-space(mrl:stepDateTime) != ''">
-              ,"date": "<xsl:value-of select="mrl:stepDateTime//gml:timePosition/text()"/>"
+            <xsl:if test="$stepDateTimeZulu != ''">
+              ,"date": "<xsl:value-of select="$stepDateTimeZulu"/>"
             </xsl:if>
-            <xsl:if test="normalize-space(mrl:source) != ''">
-              ,"source": [
-              <xsl:for-each select="mrl:source/*[mrl:description/gco:CharacterString != '']">
-                {
-                "descriptionObject": <xsl:value-of
-                select="gn-fn-index:add-multilingual-field(
-                                            'description', mrl:description, $allLanguages, true())"/>
-                }
-                <xsl:if test="position() != last()">,</xsl:if>
-              </xsl:for-each>
-              ]
-            </xsl:if>
+            ,"source": [
+            <xsl:for-each select="mrl:source/*[mrl:description/gco:CharacterString != '']">
+              {
+              "descriptionObject": <xsl:value-of
+              select="gn-fn-index:add-multilingual-field(
+                                          'description', mrl:description, $allLanguages, true())"/>
+              }
+              <xsl:if test="position() != last()">,</xsl:if>
+            </xsl:for-each>
+            ]
 
             <xsl:variable name="processor"
                           select="mrl:processor/*[.//cit:CI_Organisation/cit:name != '']"/>
@@ -1243,16 +1252,16 @@
                         select="mdq:valueUnit//gml:identifier"/>
           <xsl:variable name="description"
                         select="(../../mdq:measure/*/mdq:measureDescription/gco:CharacterString)[1]"/>
-
           <xsl:variable name="measureDate"
-                        select="mdq:dateTime/gco:DateTime"/>
-
+                        select="normalize-space(mdq:dateTime/gco:DateTime)"/>
+          <xsl:variable name="measureDateZulu"
+                        select="date-util:convertToISOZuluDateTime($measureDate)"/>
           <measure type="object">{
             "name": "<xsl:value-of select="util:escapeForJson($name)"/>",
             <xsl:if test="$description != ''">
               "description": "<xsl:value-of select="util:escapeForJson($description)"/>",
             </xsl:if>
-            <xsl:if test="$measureDate != ''">
+            <xsl:if test="$measureDateZulu != ''">
               "date": "<xsl:value-of select="util:escapeForJson($measureDate)"/>",
             </xsl:if>
             <!-- First value only. -->
@@ -1439,7 +1448,7 @@
     <xsl:variable name="email"
                   select="(.//cit:contactInfo/*/cit:address/*/cit:electronicMailAddress/gco:CharacterString)[1]"/>
     <xsl:variable name="phone"
-                  select="(./cit:contactInfo/*/cit:phone/*/cit:number[normalize-space(.) != '']/*/text())[1]"/>
+                  select="(.//cit:contactInfo/*/cit:phone/*/cit:number[normalize-space(.) != '']/*/text())[1]"/>
     <xsl:variable name="individualName"
                   select="(.//cit:CI_Individual/cit:name/gco:CharacterString/text())[1]"/>
     <xsl:variable name="positionName"

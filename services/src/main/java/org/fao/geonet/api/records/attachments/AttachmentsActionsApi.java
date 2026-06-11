@@ -40,6 +40,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.thumbnail.ThumbnailMaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.io.PathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
@@ -131,7 +132,7 @@ public class AttachmentsActionsApi {
                 jsonConfig,
                 rotationAngle);
 
-            return store.putResource(context, metadataUuid, thumbnailFile, MetadataResourceVisibility.PUBLIC, false);
+            return store.putResource(context, metadataUuid, new PathResource(thumbnailFile), MetadataResourceVisibility.PUBLIC, false);
         } finally {
             if (thumbnailFile != null) {
                 FileUtils.deleteQuietly(thumbnailFile.toFile());

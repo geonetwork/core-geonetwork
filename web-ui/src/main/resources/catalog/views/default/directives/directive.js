@@ -79,6 +79,25 @@
     }
   ]);
 
+  module.directive("gnApplicationBanner", [
+    "gnConfig",
+    "gnConfigService",
+    function (gnConfig, gnConfigService) {
+      return {
+        restrict: "E",
+        replace: true,
+        scope: true,
+        templateUrl:
+          "../../catalog/views/default/directives/partials/applicationBanner.html",
+        link: function linkFn(scope) {
+          gnConfigService.load().then(function (c) {
+            scope.isBannerEnabled = gnConfig["system.banner.enable"];
+          });
+        }
+      };
+    }
+  ]);
+
   module.directive("gnLinksBtn", [
     "gnTplResultlistLinksbtn",
     "gnMetadataActions",
@@ -90,198 +109,6 @@
         templateUrl: gnTplResultlistLinksbtn,
         link: function linkFn(scope) {
           scope.gnMetadataActions = gnMetadataActions;
-        }
-      };
-    }
-  ]);
-
-  module.directive("gnMdActionsMenu", [
-    "gnMetadataActions",
-    "$http",
-    "$q",
-    "gnConfig",
-    "gnConfigService",
-    "gnGlobalSettings",
-    "gnLangs",
-    function (
-      gnMetadataActions,
-      $http,
-      $q,
-      gnConfig,
-      gnConfigService,
-      gnGlobalSettings,
-      gnLangs
-    ) {
-      return {
-        restrict: "A",
-        replace: true,
-        templateUrl: "../../catalog/views/default/directives/partials/mdactionmenu.html",
-        link: function linkFn(scope, element, attrs) {
-          scope.mdService = gnMetadataActions;
-          scope.md = scope.$eval(attrs.gnMdActionsMenu);
-          scope.formatterList = gnGlobalSettings.gnCfg.mods.search.downloadFormatter;
-
-          scope.tasks = [];
-          scope.hasVisibletasks = false;
-
-          scope.doiServers = [];
-
-          gnConfigService.load().then(function (c) {
-            scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
-
-            scope.isMdWorkflowAssistEnable =
-              gnGlobalSettings.gnCfg.mods.workflowHelper.enabled;
-            scope.workFlowApps =
-              gnGlobalSettings.gnCfg.mods.workflowHelper.workflowAssistApps;
-            scope.iso2Lang = gnLangs.getIso2Lang(gnLangs.getCurrent());
-          });
-
-          scope.status = undefined;
-
-          scope.buildFormatter = function (url, uuid, isDraft) {
-            if (url.indexOf("${uuid}") !== -1) {
-              return url.replace("${lang}", scope.lang).replace("${uuid}", uuid);
-            } else {
-              return (
-                "../api/records/" +
-                uuid +
-                url.replace("${lang}", scope.lang) +
-                (isDraft == "y"
-                  ? (url.indexOf("?") !== -1 ? "&" : "?") + "approved=false"
-                  : "")
-              );
-            }
-          };
-
-          function loadWorkflowStatus() {
-            return $http
-              .get("../api/status/workflow", { cache: true })
-              .then(function (response) {
-                scope.status = {};
-                response.data.forEach(function (s) {
-                  scope.status[s.name] = s.id;
-                });
-
-                scope.statusEffects = {
-                  editor: [
-                    {
-                      from: "draft",
-                      to: "submitted"
-                    },
-                    {
-                      from: "retired",
-                      to: "draft"
-                    },
-                    {
-                      from: "submitted",
-                      to: "draft"
-                    }
-                  ],
-                  reviewer: [
-                    {
-                      from: "draft",
-                      to: "submitted"
-                    },
-                    {
-                      from: "submitted",
-                      to: "approved"
-                    },
-                    {
-                      from: "submitted",
-                      to: "draft"
-                    },
-                    {
-                      from: "draft",
-                      to: "approved"
-                    },
-                    {
-                      from: "approved",
-                      to: "retired"
-                    },
-                    {
-                      from: "retired",
-                      to: "draft"
-                    }
-                  ]
-                };
-              });
-          }
-
-          function loadTasks() {
-            return $http
-              .get("../api/status/task", { cache: true })
-              .then(function (response) {
-                scope.tasks = response.data;
-                scope.getVisibleTasks();
-              });
-          }
-
-          scope.getVisibleTasks = function () {
-            $.each(scope.tasks, function (i, t) {
-              scope.hasVisibletasks =
-                scope.taskConfiguration[t.name] &&
-                scope.taskConfiguration[t.name].isVisible &&
-                scope.taskConfiguration[t.name].isVisible();
-            });
-          };
-
-          scope.taskConfiguration = {
-            doiCreationTask: {
-              isVisible: function (md) {
-                return scope.doiServers.length > 0;
-              },
-              isApplicable: function (md) {
-                // TODO: Would be good to return why a task is not applicable as tooltip
-                // TODO: Add has DOI already
-                return (
-                  md &&
-                  md.isPublished() &&
-                  md.isTemplate === "n" &&
-                  JSON.parse(md.isHarvested) === false
-                );
-              }
-            }
-          };
-
-          /**
-           * Display the publication / un-publication option. Checks:
-           *   - User can review the metadata.
-           *   - It's not a draft.
-           *   - Retired metadata can't be published.
-           *   - The user profile can publish / unpublish the metadata.
-           * @param md
-           * @param user
-           * @returns {*|boolean|false|boolean}
-           */
-          scope.displayPublicationOption = function (md, user, pubOption) {
-            return (
-              md &&
-              md.canReview &&
-              md.draft != "y" &&
-              md.mdStatus != 3 &&
-              ((md.isPublished(pubOption) && user.canUnpublishMetadata()) ||
-                (!md.isPublished(pubOption) && user.canPublishMetadata()))
-            );
-          };
-
-          loadTasks();
-          loadWorkflowStatus();
-
-          scope.$watch(attrs.gnMdActionsMenu, function (a) {
-            scope.md = a;
-
-            if (scope.md) {
-              $http
-                .get("../api/doiservers/metadata/" + scope.md.id)
-                .then(function (response) {
-                  scope.doiServers = response.data;
-                });
-            }
-          });
-
-          scope.getScope = function () {
-            return scope;
-          };
         }
       };
     }

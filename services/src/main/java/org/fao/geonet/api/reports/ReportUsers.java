@@ -20,12 +20,24 @@
  * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
  * Rome - Italy. email: geonetwork@osgeo.org
  */
-
 package org.fao.geonet.api.reports;
 
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.csv.CSVPrinter;
-import org.fao.geonet.domain.*;
+import org.fao.geonet.auditable.UserAuditableService;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.User_;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
@@ -34,17 +46,10 @@ import org.fao.geonet.repository.specification.UserSpecs;
 import org.springframework.data.domain.Sort;
 import org.springframework.util.StringUtils;
 
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-
 import static org.fao.geonet.api.reports.ReportUtils.CSV_FORMAT;
 
 /**
  * Creates a users report including last login date.
- *
  */
 public class ReportUsers implements IReport {
     /**
@@ -72,8 +77,15 @@ public class ReportUsers implements IReport {
      */
     public void create(final ServiceContext context,
                        final PrintWriter writer) throws Exception {
+        SettingManager settingManager = context.getBean(SettingManager.class);
+        UserAuditableService userAuditableService = context.getBean(UserAuditableService.class);
+        boolean isUserHistoryEnabled = settingManager.getValueAsBool(Settings.SYSTEM_AUDITABLE_ENABLE, false);
+        String lang = context.getLanguage();
+        ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages",
+            new Locale(lang));
+
         // Initialize CSVPrinter object
-        try(CSVPrinter csvFilePrinter = new CSVPrinter(writer, CSV_FORMAT)) {
+        try (CSVPrinter csvFilePrinter = new CSVPrinter(writer, CSV_FORMAT)) {
             // Retrieve users
             final UserRepository userRepository =
                 context.getBean(UserRepository.class);
@@ -91,7 +103,7 @@ public class ReportUsers implements IReport {
             csvFilePrinter.println();
 
             String[] entries = ("Username#Surname#Name#"
-                + "Email#User groups/Profile#Last login date").split("#");
+                + "Email#User groups/Profile#Last login date" + (isUserHistoryEnabled ? "#Change history" : "")).split("#");
             csvFilePrinter.printRecord(Arrays.asList(entries));
 
             for (User user : records) {
@@ -112,13 +124,20 @@ public class ReportUsers implements IReport {
                 }
 
                 // Build the record element with the information for the report
-                List<String> metadataRecord = new ArrayList<>();
+                List<String> metadataRecord = new ArrayList<>(isUserHistoryEnabled ? 7 : 6);
                 metadataRecord.add(username);
                 metadataRecord.add(surname);
                 metadataRecord.add(name);
                 metadataRecord.add(email);
                 metadataRecord.add(userGroupsInfo);
                 metadataRecord.add(lastLoginDate);
+
+                if (isUserHistoryEnabled) {
+                    String userChanges = userAuditableService.getEntityHistoryAsString(user.getId(), messages);
+                    if (StringUtils.hasLength(userChanges)) {
+                        metadataRecord.add(userChanges);
+                    }
+                }
 
                 csvFilePrinter.printRecord(metadataRecord);
             }
@@ -129,8 +148,8 @@ public class ReportUsers implements IReport {
 
     /**
      * Creates a string with the list of groups / profiles of a user:
-     *
-     *  group1/profileGroup1-group2/profileGroup2 ...
+     * <p>
+     * group1/profileGroup1-group2/profileGroup2 ...
      *
      * @param context
      * @param user
@@ -159,7 +178,7 @@ public class ReportUsers implements IReport {
             if (i++ > 0) {
                 userGroupsList.append("-");
             }
-            userGroupsList.append(groupName + "/" + groupProfile);
+            userGroupsList.append(groupName).append("/").append(groupProfile);
         }
 
         return userGroupsList.toString();

@@ -58,7 +58,7 @@
         <div class="col-lg-6 col-md-6 col-sm-6">
           <div class="gn-md-abstract text-muted">
             <p title="{{md.resourceAbstract}}">
-              {{md.resourceAbstract.split('\n')[0] | striptags}}
+              {{::abstractBriefMaker(md.resourceAbstract) | striptags}}
             </p>
 
             <div

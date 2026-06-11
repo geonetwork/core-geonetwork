@@ -5,8 +5,10 @@
       <span class="fa fa-paint-brush"></span>
       <span class="caret"></span>
     </button>
-
-    <ul class="dropdown-menu">
+    <ul
+      class="dropdown-menu"
+      data-ng-class="{'dropdown-menu-right': dropdownDirection === 'right'}"
+    >
       <li class="dropdown-header" data-translate="">selectStyle</li>
       <li data-ng-repeat="s in styles | orderBy:'Title'">
         <div class="flex-row">

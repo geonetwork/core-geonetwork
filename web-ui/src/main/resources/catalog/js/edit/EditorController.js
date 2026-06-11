@@ -478,6 +478,26 @@
         return gnMetadataActions.startVersioning(gnCurrentEdit.id);
       };
 
+      $scope.switchToTabWithParam = function (name, value) {
+        var inputForParameter = $("#" + name)[0];
+        if (inputForParameter) {
+          inputForParameter.value = value;
+        } else {
+          inputForParameter = $("<input>")
+            .attr({
+              type: "hidden",
+              id: name,
+              name: name,
+              value: value
+            })
+            .appendTo($(gnCurrentEdit.formId));
+        }
+        $scope.switchToTab(
+          gnCurrentEdit.tab,
+          $("#flat")[0].value === "true" ? "flat" : ""
+        );
+      };
+
       /**
        * Update the form according to the target tab
        * properties and save.

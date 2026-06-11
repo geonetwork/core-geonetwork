@@ -203,7 +203,19 @@ public class RegionsApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get geometry as image",
-        description = "A rendering of the geometry as a png.")
+        description = "A rendering of the geometry as a `png`.\n " +
+            "\n " +
+            "The coverage of the image is computed from the geometry envelope and size using scale factor configuration " +
+            "(See `regionGetMapExpandFactors` bean in `config-spring-geonetwork.xml`) " +
+            "to give enough context on where the geometry is. The smaller the geometry, the bigger the expand factor.\n" +
+            "\n " +
+            "If needed, when the factor is high, square image mode can be enabled (instead of proportional geometry size):\n" +
+            "\n " +
+            "```xml\n" +
+            " <util:set id=\"regionGetMapExpandFactors\" set-class=\"java.util.TreeSet\">\n" +
+            "    <bean class=\"org.fao.geonet.api.records.extent.ExpandFactor\"\n" +
+            "          p:proportion=\".00005\" p:factor=\"256\" p:squareImage=\"true\"/>\n" +
+            "```\n")
     @RequestMapping(
         value = "/geom.png",
         produces = {

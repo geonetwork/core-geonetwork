@@ -321,8 +321,7 @@
             // properly without removing them. There is maybe
             // references to DOM objects in the JS code which
             // make those objects not reachable by GC.
-            $(gnCurrentEdit.containerId).find("*").remove();
-
+            $(gnCurrentEdit.containerId).empty();
             $(gnCurrentEdit.containerId).replaceWith(snippet);
 
             if (gnCurrentEdit.compileScope) {

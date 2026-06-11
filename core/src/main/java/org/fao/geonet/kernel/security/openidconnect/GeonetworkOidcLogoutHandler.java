@@ -71,7 +71,11 @@ public class GeonetworkOidcLogoutHandler implements LogoutSuccessHandler {
             String host = request.getServerName();
             int port = request.getServerPort();
             String path = servletContext.getContextPath();
-            uri = protocol + "://" + host + ":" + port + path;
+            // Only include the port if it's not the default for the scheme
+            boolean isDefaultPort = ("https".equalsIgnoreCase(protocol) && port == 443)
+                || ("http".equalsIgnoreCase(protocol) && port == 80);
+
+            uri = protocol + "://" + host + (isDefaultPort ? "" : ":" + port) + path;
             return new URI(uri);
         } catch (URISyntaxException e) {
             Log.debug(Geonet.SECURITY,"OIDC Post Logout Redirect Uri is invalid.  Likely you can ignore this -"

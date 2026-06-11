@@ -938,14 +938,6 @@
     <label>Distanza</label>
     <description>Risoluzione geometrica al suolo</description>
     <condition>Provide a distance if no equivalent Scale is documented</condition>
-    <helper relAtt="uom">
-      <option value="0.10" title="cm">10 cm</option>
-      <option value="0.25" title="cm">25 cm</option>
-      <option value="0.50" title="cm">50 cm</option>
-      <option value="1" title="m">1 m</option>
-      <option value="30" title="m">30 m</option>
-      <option value="100" title="m">100 m</option>
-    </helper>
   </element>
   <element name="gmd:distributionFormat" id="271.0">
     <label>Formato di distribuzione</label>

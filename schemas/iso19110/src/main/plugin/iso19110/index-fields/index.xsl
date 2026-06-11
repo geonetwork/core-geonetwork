@@ -101,7 +101,11 @@
           "definition" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:definition/*/text())"/>",
           "code" :"<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:code/*/text())"/>",
           "isAbstract" :"<xsl:value-of select="gfc:FC_FeatureType/gfc:isAbstract/*/text()"/>",
-          "aliases" : "<xsl:value-of select="util:escapeForJson(gfc:FC_FeatureType/gfc:aliases/*/text())"/>"
+          "aliases" : [
+          <xsl:for-each select="gfc:FC_FeatureType/gfc:aliases[string(*/text())]">
+            "<xsl:value-of select="util:escapeForJson(*/text())"/>"<xsl:if test="position() != last()">,</xsl:if>
+          </xsl:for-each>
+          ]
           <!--"inheritsFrom" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsFrom/*/text()"/>",
           "inheritsTo" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:inheritsTo/*/text()"/>",
           "constrainedBy" : "<xsl:value-of select="gfc:FC_FeatureType/gfc:constrainedBy/*/text()"/>",

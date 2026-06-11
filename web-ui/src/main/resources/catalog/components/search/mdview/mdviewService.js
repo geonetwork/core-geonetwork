@@ -424,6 +424,56 @@
       gnUtilityService
     ) {
       /**
+       * Calculates the valid formatters for a record based on the formatters defined in the configuration
+       * and the formatters available for the record.
+       *
+       * @param formattersForRecord Defined formatters in the configuration.
+       * @param recordAvailableFormatters Available formatter names for the record.
+       * @returns {*[]}
+       */
+      this.calculateValidFormattersForRecord = function (
+        formattersForRecord,
+        recordAvailableFormatters
+      ) {
+        var recordFormatterList = [];
+        // Check if the formatter is available for the metadata record
+        var formatterNameExpression = /\/formatters\/([a-zA-Z0-9-_]+)/;
+
+        for (var i = 0; i < formattersForRecord.length; i++) {
+          var f = formattersForRecord[i];
+          var formatterInfo = formatterNameExpression.exec(f.url);
+
+          if (formatterInfo != null) {
+            if (recordAvailableFormatters.indexOf(formatterInfo[1]) > -1) {
+              recordFormatterList.push(f);
+            }
+          } else {
+            recordFormatterList.push(f);
+          }
+        }
+
+        return recordFormatterList;
+      };
+
+      this.getAvailableFormattersForRecord = function (record) {
+        var deferred = $q.defer();
+
+        $http
+          .get("../api/records/" + record.uuid + "/formatters", {
+            cache: true
+          })
+          .then(
+            function (r) {
+              deferred.resolve(r.data);
+            },
+            function (r) {
+              deferred.reject();
+            }
+          );
+
+        return deferred.promise;
+      };
+      /**
        * First matching view for each formatter is returned.
        *
        * @param record

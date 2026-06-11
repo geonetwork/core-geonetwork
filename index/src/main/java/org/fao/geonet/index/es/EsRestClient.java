@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -26,14 +26,16 @@ package org.fao.geonet.index.es;
 import co.elastic.clients.elasticsearch.ElasticsearchAsyncClient;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.*;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryStringQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.WrapperQuery;
 import co.elastic.clients.elasticsearch.cluster.HealthResponse;
 import co.elastic.clients.elasticsearch.core.*;
-import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.indices.AnalyzeRequest;
 import co.elastic.clients.elasticsearch.indices.AnalyzeResponse;
+import co.elastic.clients.elasticsearch.indices.IndicesStatsRequest;
+import co.elastic.clients.elasticsearch.indices.IndicesStatsResponse;
 import co.elastic.clients.elasticsearch.indices.analyze.AnalyzeToken;
 import co.elastic.clients.json.JsonData;
 import co.elastic.clients.json.JsonpMapper;
@@ -54,6 +56,7 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
@@ -67,6 +70,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.*;
@@ -82,7 +86,7 @@ public class EsRestClient implements InitializingBean {
 
     private ElasticsearchAsyncClient asyncClient;
 
-    @Value("${es.url}")
+
     private String serverUrl;
 
     @Value("${es.protocol}")
@@ -128,10 +132,18 @@ public class EsRestClient implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
+        if (StringUtils.isBlank(serverProtocol) || StringUtils.isBlank(serverHost) || StringUtils.isBlank(serverPort)) {
+            Log.error("geonetwork.index", String.format(
+                "Elasticsearch URL defined by serverProtocol='%s', serverHost='%s', serverPort='%s' is missing. "
+                    + "Check configuration.", this.serverProtocol,this.serverHost,this.serverPort));
+        }
+
+        //build server URL
+        serverUrl = serverProtocol + "://" + serverHost + ":" + serverPort;
         if (StringUtils.isNotEmpty(serverUrl)) {
             RestClientBuilder builder = RestClient.builder(new HttpHost(serverHost, Integer.parseInt(serverPort), serverProtocol));
 
-            if (serverUrl.startsWith("https://")) {
+            if (serverProtocol.startsWith("https")) {
                 SSLContext sslContext = new SSLContextBuilder().loadTrustMaterial(
                     null, new TrustStrategy() {
                         public boolean isTrusted(X509Certificate[] arg0, String arg1) throws CertificateException {
@@ -148,9 +160,9 @@ public class EsRestClient implements InitializingBean {
                     credentialsProvider.setCredentials(AuthScope.ANY,
                         new UsernamePasswordCredentials(username, password));
 
-                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setSSLContext(sslContext).setDefaultCredentialsProvider(credentialsProvider));
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties().setSSLContext(sslContext).setDefaultCredentialsProvider(credentialsProvider));
                 } else {
-                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setSSLContext(sslContext));
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties().setSSLContext(sslContext));
                 }
             } else {
                 if (StringUtils.isNotEmpty(username) && StringUtils.isNotEmpty(password)) {
@@ -158,7 +170,9 @@ public class EsRestClient implements InitializingBean {
                     credentialsProvider.setCredentials(AuthScope.ANY,
                         new UsernamePasswordCredentials(username, password));
 
-                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider));
+                    builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder.useSystemProperties().setDefaultCredentialsProvider(credentialsProvider));
+                } else {
+                    builder.setHttpClientConfigCallback(HttpAsyncClientBuilder::useSystemProperties);
                 }
             }
 
@@ -222,10 +236,7 @@ public class EsRestClient implements InitializingBean {
         JsonpMapper jsonpMapper = client._transport().jsonpMapper();
         JsonProvider jsonProvider = jsonpMapper.jsonProvider();
 
-        Iterator<Map.Entry<String, String>> iterator = docs.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Map.Entry<String, String> entry = iterator.next();
-
+        for (Map.Entry<String, String> entry : docs.entrySet()) {
             JsonData jd = JsonData.from(jsonProvider.createParser(new StringReader(entry.getValue())), jsonpMapper);
 
             requestBuilder
@@ -243,16 +254,6 @@ public class EsRestClient implements InitializingBean {
             throw e;
         }
     }
-
-//
-//    public void bulkRequestAsync(Bulk.Builder bulk , JestResultHandler<BulkResult> handler) {
-//        client.executeAsync(bulk.build(), handler);
-//
-//    }
-//
-//    public BulkResult bulkRequestSync(Bulk.Builder bulk) throws IOException {
-//        return client.execute(bulk.build());
-//    }
 
 
     /**
@@ -335,7 +336,7 @@ public class EsRestClient implements InitializingBean {
         if (MapUtils.isNotEmpty(scriptedFields)) {
             for (Map.Entry<String, String> scriptedField: scriptedFields.entrySet()) {
                 ScriptField scriptField = ScriptField.of(
-                    b -> b.script(sb -> sb.inline(is -> is.source(scriptedField.getValue())))
+                    b -> b.script(sb -> sb.source(scriptedField.getValue()))
                 );
 
                 searchRequestBuilder.scriptFields(scriptedField.getKey(), scriptField);
@@ -354,6 +355,41 @@ public class EsRestClient implements InitializingBean {
         } catch (ElasticsearchException esException) {
             Log.error("geonetwork.index", String.format(
                 "Error during querying index. %s", esException.error().toString()));
+            throw esException;
+        }
+    }
+
+    /**
+     * Executes a search query to compute aggregations and returns the aggregation results.
+     * This method does not return any search hits as the query size is set to 0.
+     *
+     * @param index        The name of the index to search in.
+     * @param jsonQuery    The query to execute, as a JsonNode.
+     * @param aggregations A map of aggregations to compute.
+     * @return A SearchResponse containing the aggregation results.
+     * @throws IOException If an error occurs during the search.
+     */
+    public SearchResponse<Void> aggregate(String index, JsonNode jsonQuery, Map<String, Aggregation> aggregations) throws IOException {
+        StringWriter writer = new StringWriter();
+        new ObjectMapper().writeValue(writer, jsonQuery);
+        StringReader reader = new StringReader(writer.toString());
+
+        SearchRequest.Builder searchRequestBuilder = new SearchRequest.Builder()
+            .index(index)
+            .size(0)
+            .query(q -> q.withJson(reader));
+
+        if (aggregations != null) {
+            searchRequestBuilder.aggregations(aggregations);
+        }
+
+        SearchRequest searchRequest = searchRequestBuilder.build();
+
+        try {
+            return client.search(searchRequest, Void.class);
+        } catch (ElasticsearchException esException) {
+            Log.error("geonetwork.index", String.format(
+                "Error during querying index with aggregation. %s", esException.error().toString()));
             throw esException;
         }
     }
@@ -381,7 +417,7 @@ public class EsRestClient implements InitializingBean {
             deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
 
             throw new IOException(String.format(
-                "Error during removal. Errors are '%s'.", stringBuilder.toString()
+                "Error during removal. Errors are '%s'.", stringBuilder
             ));
         }
     }
@@ -509,5 +545,10 @@ public class EsRestClient implements InitializingBean {
         ElasticsearchVersionInfo version = client.info().version();
 
         return version.number();
+    }
+
+    public IndicesStatsResponse getIndexStats(String index) throws IOException {
+        IndicesStatsRequest statsRequest = IndicesStatsRequest.of(b -> b.index(index));
+        return client.indices().stats(statsRequest);
     }
 }

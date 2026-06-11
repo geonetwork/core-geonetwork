@@ -36,9 +36,9 @@
         restrict: "E",
         replace: "true",
         template:
-          '<p class="help-block"' +
+          '<div class="help-block"' +
           "           data-ng-show=\"(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')\"" +
-          "           data-ng-bind-html=\"('ui-' + key + '-help') | translate\"></p>"
+          "           data-ng-bind-html=\"('ui-' + key + '-help') | translate\"></div>"
       };
     }
   ]);
@@ -354,6 +354,51 @@
             }
             angular.merge(scope.value, newObj);
           }
+          internalUpdate = true;
+        });
+      }
+    };
+  });
+  module.directive("gnTomlEdit", function () {
+    return {
+      restrict: "E",
+      scope: {
+        value: "=model"
+      },
+      template:
+        '<div style="height: {{height}}"' +
+        '          ui-ace="{' +
+        "  useWrapMode:true, " +
+        "  showGutter:true, " +
+        "  mode:'toml'," +
+        "  require: ['ace/ext/language_tools'],\n" +
+        "  advanced: {\n" +
+        "      enableSnippets: true,\n" +
+        "      enableBasicAutocompletion: true,\n" +
+        "      enableLiveAutocompletion: true\n" +
+        '  }}"' +
+        '          data-ng-model="asText"></div>',
+
+      link: function (scope, element, attrs) {
+        scope.height = (attrs.height || "300") + "px";
+
+        var internalUpdate = false;
+
+        // Watch for model changes
+        scope.$watch("value", function (value) {
+          if (internalUpdate) {
+            internalUpdate = false;
+            return;
+          }
+          scope.asText = value || "";
+        });
+
+        // Watch for editor changes
+        scope.$watch("asText", function (text) {
+          if (!text || text === scope.value) {
+            return;
+          }
+          scope.value = text;
           internalUpdate = true;
         });
       }

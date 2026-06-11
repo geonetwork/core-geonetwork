@@ -76,7 +76,7 @@ public class DefaultResourceDownloadHandler implements IResourceDownloadHandler 
             MultiValueMap<String, String> headers = new HttpHeaders();
             headers.add("Content-Disposition", "inline; filename=\"" + fileName + "\"");
             headers.add("Cache-Control", "no-cache");
-            headers.add("Content-Type", getFileContentType(file));
+            headers.add("Content-Type", getFileContentType(file.getFileName().toString()));
 
             return new HttpEntity<>(Files.readAllBytes(file), headers);
 

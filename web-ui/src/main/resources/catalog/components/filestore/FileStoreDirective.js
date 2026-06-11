@@ -61,12 +61,33 @@
               ? "public"
               : attrs["visibility"];
             scope.queue = [];
+            scope.singleUpload = true;
+
+            var input = element.find("input");
+            if (
+              angular.isDefined(scope.uploadOptions) &&
+              scope.uploadOptions.singleUpload === false
+            ) {
+              input.attr("multiple", "multiple");
+            }
+
+            var droparea = $(".file-drop-area");
+
+            // highlight drag area
+            input.on("dragenter focus click", function () {
+              droparea.addClass("is-active");
+            });
+
+            // back to normal state
+            input.on("dragleave blur drop", function () {
+              droparea.removeClass("is-active");
+            });
 
             var uploadFile = function () {
               scope.queue = [];
               scope.filestoreUploadOptions = angular.extend(
                 {
-                  singleUpload: true,
+                  singleUpload: scope.singleUpload,
                   autoUpload: scope.autoUpload,
                   url:
                     "../api/records/" +
@@ -74,6 +95,7 @@
                     "/attachments?visibility=" +
                     (scope.visibility || "public"),
                   dropZone: $("#gn-upload-" + scope.id),
+                  pasteZone: null,
                   // TODO: acceptFileTypes: /(\.|\/)(xml|skos|rdf)$/i,
                   done: uploadResourceSuccess,
                   fail: uploadResourceFailed,
@@ -91,30 +113,91 @@
               }
             });
 
+            var humanizeDataSize = function (bytes) {
+              if (bytes === 0) return "0 Bytes";
+              var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+              var i = Math.floor(Math.log(bytes) / Math.log(1024)); // Determine the index for sizes
+              return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + " " + sizes[i]; // Format size
+            };
+
+            // Function to remove files from scope.queue that match data.files by $$hashKey
+            var removeUploadedFilesFromQueue = function (data) {
+              data.files.forEach(function (file) {
+                for (var i = 0; i < scope.queue.length; i++) {
+                  if (scope.queue[i].$$hashKey === file.$$hashKey) {
+                    scope.queue.splice(i, 1);
+                    break;
+                  }
+                }
+              });
+            };
+
             var uploadResourceSuccess = function (e, data) {
               $rootScope.$broadcast("gnFileStoreUploadDone");
               if (scope.afterUploadCb && angular.isFunction(scope.afterUploadCb())) {
                 scope.afterUploadCb()(data.response().jqXHR.responseJSON);
               }
-              scope.clear(scope.queue);
+              removeUploadedFilesFromQueue(data);
             };
 
             var uploadResourceFailed = function (e, data) {
+              var jqXHR = angular.isDefined(data.response().jqXHR)
+                ? data.response().jqXHR
+                : null;
               var message =
-                data.errorThrown +
-                angular.isDefined(data.response().jqXHR.responseJSON.message)
-                  ? data.response().jqXHR.responseJSON.message
+                jqXHR &&
+                angular.isDefined(jqXHR.responseJSON) &&
+                angular.isDefined(jqXHR.responseJSON.message)
+                  ? jqXHR.responseJSON.message
                   : "";
+              if (message === "" && jqXHR) {
+                if (jqXHR.status === 0) {
+                  // Catch 0 which is generally a network error
+                  message = "uploadNetworkErrorException";
+                } else if (jqXHR.status === 413) {
+                  // Catch 413 which may come from a proxy server with no messages.
+                  message = "uploadedResourceSizeExceededException";
+                }
+              }
+              if (message === "" && typeof data.errorThrown === "string") {
+                message = data.errorThrown;
+              }
 
               $rootScope.$broadcast("StatusUpdated", {
                 title: $translate.instant("resourceUploadError"),
                 error: {
-                  message:
-                    message === "ResourceAlreadyExistException"
-                      ? $translate.instant("uploadedResourceAlreadyExistException", {
+                  message: (function () {
+                    switch (message) {
+                      case "uploadNetworkErrorException":
+                        return $translate.instant("uploadNetworkErrorException", {
                           file: data.files[0].name
-                        })
-                      : message
+                        });
+                      case "ResourceAlreadyExistException":
+                        return $translate.instant(
+                          "uploadedResourceAlreadyExistException",
+                          {
+                            file: data.files[0].name
+                          }
+                        );
+                      case "uploadedResourceSizeExceededException":
+                        console.error(
+                          "File " +
+                            data.files[0].name +
+                            " too large (" +
+                            data.files[0].size +
+                            " bytes)."
+                        );
+                        return $translate.instant(
+                          "uploadedResourceSizeExceededException",
+                          {
+                            file: data.files[0].name,
+                            humanizedSize: humanizeDataSize(data.files[0].size)
+                          }
+                        );
+                      default:
+                        return message;
+                    }
+                  })()
                 },
                 timeout: 0,
                 type: "danger"
@@ -125,6 +208,7 @@
               ) {
                 scope.afterUploadErrorCb()(message);
               }
+              removeUploadedFilesFromQueue(data);
             };
           }
         };
@@ -157,6 +241,17 @@
           link: function (scope, element, attrs, controller) {
             scope.autoUpload =
               angular.isUndefined(attrs["autoUpload"]) || attrs["autoUpload"] == "true";
+
+            scope.filestoreUploadOptions = {
+              autoUpload: scope.autoUpload,
+              singleUpload: false
+            };
+
+            scope.filestoreUploadOptionsSetResource = {
+              autoUpload: scope.autoUpload,
+              singleUpload: true
+            };
+
             var defaultStatus = angular.isUndefined(attrs["defaultStatus"])
               ? "public"
               : attrs["defaultStatus"];
@@ -233,15 +328,6 @@
                 scope.loadMetadataResources();
 
                 scope.queue = [];
-                scope.filestoreUploadOptions = {
-                  autoUpload: scope.autoUpload,
-                  url:
-                    "../api/records/" +
-                    scope.uuid +
-                    "/attachments?visibility=" +
-                    defaultStatus,
-                  singleUpload: false
-                };
               }
             });
             if (angular.isDefined(scope.uuid)) {

@@ -1,11 +1,14 @@
 package org.fao.geonet.api.pages;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.Page.PageFormat;
 import org.fao.geonet.domain.page.Page.PageSection;
 import org.fao.geonet.domain.page.Page.PageStatus;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PageProperties implements Serializable {
@@ -21,6 +24,7 @@ public class PageProperties implements Serializable {
     private String label;
     private String icon;
     private Page.PageFormat format;
+    private List<String> groups;
     private Page page;
 
     public PageProperties() {
@@ -36,6 +40,12 @@ public class PageProperties implements Serializable {
         status = p.getStatus();
         label = p.getLabel();
         icon = p.getIcon();
+        if (CollectionUtils.isNotEmpty(p.getGroups())) {
+            groups = new ArrayList<>();
+            for (Group g : p.getGroups()) {
+                groups.add(g.getName());
+            }
+        }
     }
 
     @Override
@@ -113,5 +123,13 @@ public class PageProperties implements Serializable {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public List<String> getGroups() {
+        return groups;
+    }
+
+    public void setGroups(List<String> groups) {
+        this.groups = groups;
     }
 }

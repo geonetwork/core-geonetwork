@@ -178,12 +178,28 @@
             var resourceType = scope.md.resourceType
               ? scope.md.resourceType[0]
               : undefined;
+            var filter = [];
             if (scope.ofSameType && resourceType) {
               var mapping = resourceTypeMapping[resourceType];
               scope.label = mapping ? mapping.label : resourceType;
-              query.query.bool.filter = [
-                { terms: { resourceType: mapping ? mapping.types : [resourceType] } }
-              ];
+              filter.push({
+                terms: { resourceType: mapping ? mapping.types : [resourceType] }
+              });
+            }
+
+            if (
+              gnGlobalSettings.gnCfg.mods.search.moreLikeThisFilter &&
+              gnGlobalSettings.gnCfg.mods.search.moreLikeThisFilter != ""
+            ) {
+              filter.push({
+                query_string: {
+                  query: gnGlobalSettings.gnCfg.mods.search.moreLikeThisFilter
+                }
+              });
+            }
+
+            if (filter.length > 0) {
+              query.query.bool.filter = filter;
             }
 
             return query;
@@ -412,7 +428,8 @@
   module.directive("gnMetadataContacts", [
     "$http",
     "$filter",
-    function ($http, $filter) {
+    "gnGlobalSettings",
+    function ($http, $filter, gnGlobalSettings) {
       return {
         templateUrl: "../../catalog/components/search/mdview/partials/contact.html",
         restrict: "A",
@@ -421,11 +438,26 @@
           // Group by 'default', 'role', 'org-role'
           mode: "@gnMode",
           // 'icon' or 'list' (default)
-          layout: "@layout"
+          layout: "@layout",
+          type: "@type"
         },
         link: function (scope, element, attrs, controller) {
+          scope.isDefaultContactViewEnabled = function () {
+            return gnGlobalSettings.gnCfg.mods.recordview.isDefaultContactViewEnabled;
+          };
+
           if (["default", "role", "org-role"].indexOf(scope.mode) == -1) {
             scope.mode = "default";
+          }
+
+          if (scope.type === "metadata") {
+            scope.focusOnFilterFieldName = "OrgObject.default";
+          } else if (scope.type === "distribution") {
+            scope.focusOnFilterFieldName = "OrgForDistributionObject.default";
+          } else if (scope.type === "processing") {
+            scope.focusOnFilterFieldName = "OrgForProcessingObject.default";
+          } else {
+            scope.focusOnFilterFieldName = "OrgForResourceObject.default";
           }
 
           scope.calculateContacts = function () {
@@ -578,16 +610,16 @@
   ]);
 
   module.directive("gnMetadataSocialLink", [
-    "gnUtilityService",
+    "gnMetadataActions",
     "$http",
-    function (gnUtilityService, $http) {
+    function (gnMetadataActions, $http) {
       return {
         templateUrl: "../../catalog/components/search/mdview/partials/social.html",
         scope: {
           md: "=gnMetadataSocialLink"
         },
         link: function (scope, element, attrs) {
-          scope.mdService = gnUtilityService;
+          scope.mdService = gnMetadataActions;
 
           scope.$watch(
             "md",

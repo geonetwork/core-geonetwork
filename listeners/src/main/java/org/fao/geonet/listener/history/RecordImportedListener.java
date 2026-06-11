@@ -31,7 +31,7 @@ import org.springframework.stereotype.Component;
 public class RecordImportedListener extends GenericMetadataEventListener implements ApplicationListener<RecordImportedEvent> {
 
     private String changeMessage = "";
-    private String eventType = StatusValue.Events.RECORDIMPORTED;
+    private final StatusValue.Events eventType = StatusValue.Events.RECORDIMPORTED;
 
     @Override
     public String getChangeMessage() {
@@ -40,7 +40,7 @@ public class RecordImportedListener extends GenericMetadataEventListener impleme
 
     @Override
     public String getEventType() {
-        return eventType;
+        return eventType.getCode();
     }
 
     @Override

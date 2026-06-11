@@ -25,9 +25,11 @@ package org.fao.geonet.doi.client;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.DoiServer;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.DoiServerRepository;
 import org.fao.geonet.repository.GroupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -64,21 +66,30 @@ public class DoiBuilder {
     /**
      * Static utility for XSL calls.
      */
-    public static String createDoi(String uuid) {
+    public static String createDoi(String doiServerId, String uuid) {
+        if (StringUtils.isEmpty(doiServerId)) {
+            return uuid;
+        }
+
         DoiBuilder doiBuilder =
             ApplicationContextHolder.get().getBean(DoiBuilder.class);
 
-        SettingManager settingManager =
-            ApplicationContextHolder.get().getBean(SettingManager.class);
-        String doiPrefix = settingManager.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIKEY);
-        String doiPattern = StringUtils.defaultIfEmpty(
-            settingManager.getValue(DoiSettings.SETTING_PUBLICATION_DOI_DOIPATTERN),
-            DOI_DEFAULT_PATTERN);
+        DoiServerRepository doiServerRepository =
+            ApplicationContextHolder.get().getBean(DoiServerRepository.class);
+        Optional<DoiServer> doiServerOpt = doiServerRepository.findOneById(Integer.parseInt(doiServerId));
 
-        BaseMetadataUtils metadataUtils =
-            ApplicationContextHolder.get().getBean(BaseMetadataUtils.class);
-        AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
+        if (doiServerOpt.isPresent()) {
+            String doiPrefix = doiServerOpt.get().getPrefix();
+            String doiPattern = StringUtils.defaultIfEmpty(
+                doiServerOpt.get().getPattern(),
+                DOI_DEFAULT_PATTERN);
 
-        return doiBuilder.create(doiPattern, doiPrefix, metadata);
+            BaseMetadataUtils metadataUtils =
+                ApplicationContextHolder.get().getBean(BaseMetadataUtils.class);
+            AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
+
+            return doiBuilder.create(doiPattern, doiPrefix, metadata);
+        }
+        return uuid;
     }
 }

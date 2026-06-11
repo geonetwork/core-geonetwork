@@ -42,20 +42,20 @@
       $scope.doiServerUpdated = false;
       $scope.doiServerSearch = "";
       $scope.isUpdate = null;
-      $scope.selectedPublicationGroups = [];
-      $scope.groupsForPublication = [];
+      $scope.selectedRecordGroups = [];
+      $scope.recordGroups = [];
 
       // Load groups
       function loadGroups() {
         $http.get("../api/groups").then(
           function (response) {
-            $scope.groupsForPublication = response.data;
+            $scope.recordGroups = response.data;
 
             var getLabel = function (g) {
               return g.label[$scope.lang] || g.name;
             };
 
-            angular.forEach($scope.groupsForPublication, function (u) {
+            angular.forEach($scope.recordGroups, function (u) {
               u.langlabel = getLabel(u);
             });
           },
@@ -99,12 +99,12 @@
         $scope.isUpdate = true;
         $scope.doiServerUpdated = false;
         $scope.doiServerSelected = v;
-        $scope.selectedPublicationGroups = [];
+        $scope.selectedRecordGroups = [];
 
         for (var i = 0; i < v.publicationGroups.length; i++) {
-          var group = _.find($scope.groupsForPublication, { id: v.publicationGroups[i] });
+          var group = _.find($scope.recordGroups, { id: v.publicationGroups[i] });
           if (group !== undefined) {
-            $scope.selectedPublicationGroups.push(group);
+            $scope.selectedRecordGroups.push(group);
           }
         }
 
@@ -113,7 +113,7 @@
 
       $scope.addDoiServer = function () {
         $scope.isUpdate = false;
-        $scope.selectedPublicationGroups = [];
+        $scope.selectedRecordGroups = [];
         $scope.doiServerSelected = {
           id: "",
           name: "",
@@ -131,7 +131,7 @@
       };
       $scope.saveDoiServer = function () {
         $scope.doiServerSelected.publicationGroups = _.map(
-          $scope.selectedPublicationGroups,
+          $scope.selectedRecordGroups,
           "id"
         );
 

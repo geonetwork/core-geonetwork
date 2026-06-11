@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -107,6 +107,7 @@
       gnConfigService.load().then(function (c) {
         $scope.isRecordHistoryEnabled = gnConfig["metadata.history.enabled"];
         $scope.isPreferGroupLogo = gnConfig["system.metadata.prefergrouplogo"];
+        $scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
 
         var statusSystemRating = gnConfig["system.localrating.enable"];
 
@@ -167,6 +168,49 @@
         return list;
       }
 
+      /**
+       * Ask for confirmation to delete a metadata.
+       */
+      $scope.removeMetadata = function () {
+        $("#gn-confirm-remove-metadata").modal("show");
+      };
+
+      /**
+       * Remove the metadata and refresh the list when done.
+       */
+      $scope.confirmRemoveMetadata = function () {
+        // Close the confirm dialog properly before redirecting to the search page
+        $scope.deleteRecord($scope.mdView.current.record).then(function () {
+          $("#gn-confirm-remove-metadata").modal("hide");
+          $scope.closeRecord(md);
+        });
+      };
+
+      $scope.getMetadataDeleteConfirmMessage = function () {
+        if (!$scope.mdView.current.record) {
+          $("#gn-confirm-remove-metadata").modal("hide");
+          return "";
+        }
+
+        var translation = $translate.instant("metadataDeleteConfirm", {
+          title: $scope.mdView.current.record.resourceTitle
+        });
+
+        var translationMetadataResourceTypeKey =
+          "metadataDelete-" + $scope.mdView.current.record.resourceType;
+
+        var translationResourceType = $translate.instant(
+          translationMetadataResourceTypeKey
+        );
+
+        // If there is a message for the specific metadata resource type, append it to the generic message.
+        if (translationResourceType !== translationMetadataResourceTypeKey) {
+          translation += "<br/>" + translationResourceType;
+        }
+
+        return translation;
+      };
+
       $scope.recordFormatterList = gnMdFormatter.getFormatterForRecord(
         $scope.mdView.current.record
       );
@@ -192,7 +236,6 @@
               msg: $translate.instant("metadataRemoved", { title: md.resourceTitle }),
               type: "success"
             });
-            $scope.closeRecord(md);
           },
           function (reason) {
             // Data needs improvements
@@ -201,6 +244,7 @@
               msg: reason.data.message || reason.data.description,
               type: "danger"
             });
+            throw reason;
           }
         );
       };
@@ -345,21 +389,33 @@
       // in default mode.
       function loadFormatter(n, o) {
         if (n === true) {
-          $scope.recordFormatterList = gnMdFormatter.getFormatterForRecord(
-            $scope.mdView.current.record
-          );
+          gnMdFormatter
+            .getAvailableFormattersForRecord($scope.mdView.current.record)
+            .then(function (availableFormatters) {
+              var formattersForRecord = gnMdFormatter.getFormatterForRecord(
+                $scope.mdView.current.record
+              );
 
-          checkIfCitationIsDisplayed($scope.mdView.current.record);
+              $scope.recordFormatterList =
+                gnMdFormatter.calculateValidFormattersForRecord(
+                  formattersForRecord,
+                  availableFormatters
+                );
 
-          var f = gnSearchLocation.getFormatterPath($scope.recordFormatterList[0].url);
-          $scope.currentFormatter = "";
+              checkIfCitationIsDisplayed($scope.mdView.current.record);
 
-          gnMdViewObj.usingFormatter = f !== undefined;
+              var f = gnSearchLocation.getFormatterPath(
+                $scope.recordFormatterList[0].url
+              );
+              $scope.currentFormatter = "";
 
-          if (f != undefined) {
-            $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, "$1");
-            $scope.loadFormatter(f);
-          }
+              gnMdViewObj.usingFormatter = f !== undefined;
+
+              if (f != undefined) {
+                $scope.currentFormatter = f.replace(/.*(\/formatters.*)/, "$1");
+                $scope.loadFormatter(f);
+              }
+            });
         }
       }
       $scope.$watch("mdView.recordsLoaded", loadFormatter);

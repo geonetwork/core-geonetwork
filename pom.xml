@@ -29,7 +29,7 @@
   <groupId>org.geonetwork-opensource</groupId>
   <artifactId>geonetwork</artifactId>
   <packaging>pom</packaging>
-  <version>4.4.6-SNAPSHOT</version>
+  <version>4.4.12-SNAPSHOT</version>
   <name>GeoNetwork opensource</name>
   <description>GeoNetwork opensource is a standards based, Free and
     Open Source catalog application to manage spatially referenced
@@ -118,7 +118,7 @@
         </plugin>
         <plugin>
           <artifactId>maven-resources-plugin</artifactId>
-          <version>3.3.0</version>
+          <version>3.3.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-dependency-plugin</artifactId>
@@ -148,7 +148,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>exec-maven-plugin</artifactId>
-          <version>1.6.0</version>
+          <version>3.5.0</version>
         </plugin>
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
@@ -221,17 +221,17 @@
           <version>1.4.2</version>
         </plugin>
         <plugin>
-          <groupId>com.ruleoftech</groupId>
-          <artifactId>markdown-page-generator-plugin</artifactId>
-          <version>2.4.0</version>
-        </plugin>
-        <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.8.1</version>
         </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <version>3.3.0</version>
+        </plugin>
+        <plugin>
+          <groupId>com.ruleoftech</groupId>
+          <artifactId>markdown-page-generator-plugin</artifactId>
+          <version>2.5.2</version>
         </plugin>
         <plugin>
           <artifactId>maven-antrun-plugin</artifactId>
@@ -469,7 +469,7 @@
         <groupId>org.apache.jena</groupId>
         <artifactId>apache-jena-libs</artifactId>
         <type>pom</type>
-        <version>3.17.0</version>
+        <version>4.10.0</version>
       </dependency>
 
       <!-- PDF stuff: Managed by Mapfish -->
@@ -537,12 +537,12 @@
       <dependency>
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
-        <version>2.7</version>
+        <version>2.18.0</version>
       </dependency>
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
-        <version>1.5</version>
+        <version>1.6.0</version>
       </dependency>
       <dependency>
         <groupId>commons-collections</groupId>
@@ -553,6 +553,11 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-email</artifactId>
         <version>1.5</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-codec</groupId>
+        <artifactId>commons-codec</artifactId>
+        <version>1.15</version>
       </dependency>
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
@@ -600,6 +605,11 @@
       <dependency>
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-jul</artifactId>
+        <version>${log4j2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-layout-template-json</artifactId>
         <version>${log4j2.version}</version>
       </dependency>
       <dependency>
@@ -855,9 +865,9 @@
 
       <!-- Security stuff -->
       <dependency>
-        <groupId>jsch</groupId>
+        <groupId>com.github.mwiede</groupId>
         <artifactId>jsch</artifactId>
-        <version>0.1.8</version> <!-- TODO check version, latest from public repository -->
+        <version>2.27.2</version>
       </dependency>
       <dependency>
         <groupId>globus</groupId>
@@ -877,7 +887,7 @@
       <dependency>
         <groupId>org.mapfish.print</groupId>
         <artifactId>print-lib</artifactId>
-        <version>2.3.0</version>
+        <version>2.3.5</version>
         <exclusions>
           <exclusion>
             <groupId>log4j</groupId>
@@ -919,6 +929,13 @@
         </exclusions>
       </dependency>
 
+      <dependency>
+        <groupId>com.jayway.jsonpath</groupId>
+        <artifactId>json-path</artifactId>
+        <version>2.4.0</version>
+      </dependency>
+
+
       <!-- Tests -->
       <dependency>
         <groupId>junit</groupId>
@@ -934,20 +951,14 @@
       </dependency>
       <dependency>
         <groupId>org.mockito</groupId>
-        <artifactId>mockito-all</artifactId>
-        <version>1.10.19</version>
+        <artifactId>mockito-core</artifactId>
+        <version>4.11.0</version>
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-module-junit4</artifactId>
-        <version>1.7.4</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-api-mockito</artifactId>
-        <version>1.7.4</version>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-inline</artifactId>
+        <version>4.11.0</version>
         <scope>test</scope>
       </dependency>
       <dependency>
@@ -1084,6 +1095,26 @@
         <version>${spring.security.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-oauth2-client</artifactId>
+        <version>${spring.security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-oauth2-jose</artifactId>
+        <version>${spring.security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-oauth2-resource-server</artifactId>
+        <version>${spring.security.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.keycloak</groupId>
+        <artifactId>keycloak-spring-security-adapter</artifactId>
+        <version>${keycloak.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
         <version>${spring.version}</version>
@@ -1153,6 +1184,11 @@
       <dependency>
         <groupId>org.springframework.data</groupId>
         <artifactId>spring-data-jpa</artifactId>
+        <version>${spring.jpa.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.data</groupId>
+        <artifactId>spring-data-envers</artifactId>
         <version>${spring.jpa.version}</version>
       </dependency>
       <dependency>
@@ -1290,11 +1326,27 @@
       </dependency>
 
       <dependency>
+        <groupId>org.apache.tika</groupId>
+        <artifactId>tika-core</artifactId>
+        <version>3.2.2</version>
+      </dependency>
+
+      <dependency>
         <groupId>org.json</groupId>
         <artifactId>json</artifactId>
         <version>20240205</version>
       </dependency>
-
+      <dependency>
+        <groupId>com.zaxxer</groupId>
+        <artifactId>HikariCP</artifactId>
+        <version>7.0.2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -1407,7 +1459,9 @@
     <module>estest</module>
     <module>index</module>
     <module>datastorages</module>
+    <module>plugins</module>
     <module>translationproviders</module>
+    <module>auditable</module>
   </modules>
 
   <profiles>
@@ -1436,6 +1490,21 @@
       <modules>
         <module>jmeter</module>
       </modules>
+    </profile>
+    <profile>
+      <id>macOS-M-series</id>
+      <activation>
+        <os>
+          <family>mac</family>
+          <arch>aarch64</arch>
+        </os>
+      </activation>
+      <properties>
+        <es.platform>darwin-aarch64</es.platform>
+        <kb.executable>kibana.sh</kb.executable>
+        <kb.platform>darwin-aarch64</kb.platform>
+        <kb.installer.extension>tar.gz</kb.installer.extension>
+      </properties>
     </profile>
     <profile>
       <id>macOS</id>
@@ -1478,7 +1547,7 @@
          <es.platform>windows-x86_64</es.platform>
          <es.installer.extension>zip</es.installer.extension>
          <kb.executable>kibana.bat</kb.executable>
-         <kb.platform>windows-x86</kb.platform>
+         <kb.platform>windows-x86_64</kb.platform>
          <kb.installer.extension>zip</kb.installer.extension>
        </properties>
      </profile>
@@ -1505,7 +1574,7 @@
     <app.properties>WEB-INF/config.properties</app.properties>
     <!--<app.properties>file:/${geonetwork.dir}/config.properties</app.properties>-->
     <!-- Configure database config file to use. Could be
-     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi
+     h2, postgres, sqlserver, mysql, oracle, db2, postgres-postgis, jndi, postgres-postgis-hikari
      -->
     <!--
     The following environment variable can also be set for connecting to the database.
@@ -1565,13 +1634,12 @@
     <jetty.port>8080</jetty.port>
     <jetty.stop.port>8090</jetty.stop.port>
 
-    <es.version>8.14.0</es.version>
+    <es.version>8.19.13</es.version>
     <es.platform>linux-x86_64</es.platform>
     <es.installer.extension>tar.gz</es.installer.extension>
     <es.protocol>http</es.protocol>
     <es.port>9200</es.port>
     <es.host>localhost</es.host>
-    <es.url>${es.protocol}://${es.host}:${es.port}</es.url>
     <es.index.features>gn-features</es.index.features>
     <es.index.features.type>features</es.index.features.type>
     <es.index.records>gn-records</es.index.records>
@@ -1629,15 +1697,16 @@
 
     <!-- NOTE: When updating GeoTools, check which version
     of Postgres is used and update pg.version if needed. -->
-    <geotools.version>30.0</geotools.version>
-    <jts.version>1.19.0</jts.version>
+    <geotools.version>33.5</geotools.version>
+    <jts.version>1.20.0</jts.version>
     <pg.version>42.7.3</pg.version>
 
-    <spring.version>5.3.33</spring.version>
-    <spring.security.version>5.8.11</spring.security.version>
+    <spring.version>5.3.39</spring.version>
+    <spring.security.version>5.8.16</spring.security.version>
     <spring.jpa.version>2.7.18</spring.jpa.version>
     <springboot.version>2.7.0</springboot.version>
     <springdoc.version>1.8.0</springdoc.version>
+    <keycloak.version>18.0.2</keycloak.version>
     <hibernate.version>5.6.15.Final</hibernate.version>
 
     <metrics.version>2.2.0</metrics.version>
@@ -1646,12 +1715,12 @@
     <rootProjectDir>..</rootProjectDir>
     <wro.version>1.10.1</wro.version>
     <wro.debug>true</wro.debug>
-    <fop.version>2.7</fop.version>
+    <fop.version>2.11</fop.version>
     <xmlunit.version>2.10.0</xmlunit.version>
-    <jackson.version>2.16.2</jackson.version>
+    <jackson.version>2.18.2</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
-    <log4j2.version>2.17.2</log4j2.version>
+    <log4j2.version>2.24.3</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>4.22</xbean.version>
     <jolokia.version>1.7.2</jolokia.version>

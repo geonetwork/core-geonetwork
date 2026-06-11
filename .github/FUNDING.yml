@@ -1,4 +1,4 @@
 # These are supported funding model platforms
 
 github: [osgeo]
-cusotm: ['https://github.com/geonetwork/core-geonetwork/wiki#financial-support','https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LDTWEL3XKUVU8&source=url','https://www.osgeo.org/about/how-to-become-a-sponsor/']
+custom: ['https://github.com/geonetwork/core-geonetwork/wiki#financial-support','https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=LDTWEL3XKUVU8&source=url','https://www.osgeo.org/about/how-to-become-a-sponsor/']

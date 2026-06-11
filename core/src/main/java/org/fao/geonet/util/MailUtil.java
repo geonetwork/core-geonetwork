@@ -378,6 +378,8 @@ public class MailUtil {
             }
         }
 
+        email.setCharset(EmailConstants.UTF_8);
+
         if (ignoreSslCertificateErrors != null && ignoreSslCertificateErrors) {
             try {
                 email.setSSLCheckServerIdentity(false);

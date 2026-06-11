@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/"
+         xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#">
+  <skos:ConceptScheme rdf:about="https://en.wikipedia.org/wiki/Length">
+    <dc:title xml:lang="en">Units of measurements / Distance</dc:title>
+    <dc:title xml:lang="fr">Unités de mesure / Distance</dc:title>
+    <dcterms:type>theme</dcterms:type>
+    <dcterms:identifier>codelist_unit_distance</dcterms:identifier>
+  </skos:ConceptScheme>
+
+  <rdf:Description rdf:about="https://en.wikipedia.org/wiki/Kilometre">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <skos:prefLabel xml:lang="en">km</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">km</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Kilomètre</skos:scopeNote>
+    <skos:scopeNote xml:lang="en">Kilometer</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://en.wikipedia.org/wiki/Length"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://en.wikipedia.org/wiki/Metre">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <skos:prefLabel xml:lang="en">m</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">m</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Mètre</skos:scopeNote>
+    <skos:scopeNote xml:lang="en">Meter</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://vocab.ifremer.fr/scheme/SXT/codelist_unit_vertical"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://en.wikipedia.org/wiki/Centimetre">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <skos:prefLabel xml:lang="en">cm</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">cm</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Centimètre</skos:scopeNote>
+    <skos:scopeNote xml:lang="en">Centimeter</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://vocab.ifremer.fr/scheme/SXT/codelist_unit_vertical"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://en.wikipedia.org/wiki/Degree_(angle)">
+    <rdf:type rdf:resource="http://www.w3.org/2004/02/skos/core#Concept"/>
+    <skos:prefLabel xml:lang="en">°</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">°</skos:prefLabel>
+    <skos:scopeNote xml:lang="fr">Degré</skos:scopeNote>
+    <skos:scopeNote xml:lang="en">Degree</skos:scopeNote>
+    <skos:inScheme rdf:resource="https://en.wikipedia.org/wiki/Length"/>
+  </rdf:Description>
+</rdf:RDF>
+

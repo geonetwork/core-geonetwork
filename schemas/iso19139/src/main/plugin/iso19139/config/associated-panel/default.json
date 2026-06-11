@@ -51,7 +51,9 @@
     }],
     "multilingualFields": ["name", "desc"],
     "wmsResources": {
-      "addLayerNamesMode": "resourcename"
+      "addLayerNamesMode": "resourcename",
+      "resourceName": "layerName",
+      "resourceDescription": "layerTitle"
     },
     "associatedResourcesTypes": [{
       "type": "parent",

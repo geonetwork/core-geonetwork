@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,9 +24,11 @@
 package org.fao.geonet.api.users.validation;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.users.UsersApi;
 import org.fao.geonet.api.users.model.UserRegisterDto;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.utils.EmailUtil;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -37,8 +39,6 @@ import org.springframework.validation.Validator;
  *
  */
 public class UserRegisterDtoValidator implements Validator {
-    private static final String OWASP_EMAIL_REGEX = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-    private static final java.util.regex.Pattern OWASP_EMAIL_PATTERN = java.util.regex.Pattern.compile(OWASP_EMAIL_REGEX);
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -55,17 +55,21 @@ public class UserRegisterDtoValidator implements Validator {
         ValidationUtils.rejectIfEmptyOrWhitespace(errors, "email", "field.required", Params.EMAIL
             + " is required");
 
-        if (StringUtils.hasLength(userRegisterDto.getEmail()) && !OWASP_EMAIL_PATTERN.matcher(userRegisterDto.getEmail()).matches()) {
+        if (StringUtils.hasLength(userRegisterDto.getEmail()) && !EmailUtil.isValidEmailAddress(userRegisterDto.getEmail())) {
             errors.rejectValue("email", "field.notvalid", "Email address is not valid");
         }
 
-        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
-        if (userRepository.findOneByEmail(userRegisterDto.getEmail()) != null) {
-            errors.rejectValue("", "user_with_that_email_found", "A user with this email or username already exists.");
+        if (StringUtils.hasLength(userRegisterDto.getUsername()) && userRegisterDto.getUsername().length() > UsersApi.MAX_USERNAME_LENGTH) {
+            errors.rejectValue("username", "field.length",
+                new Object[]{UsersApi.MAX_USERNAME_LENGTH},
+                "username size should be less or equals than " + UsersApi.MAX_USERNAME_LENGTH + " characters");
         }
 
-        if (userRepository.findByUsernameIgnoreCase(userRegisterDto.getEmail()).size() != 0) {
-            errors.rejectValue("", "user_with_that_username_found", "A user with this email or username already exists.");
+        UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);
+        if ((userRepository.findOneByEmail(userRegisterDto.getEmail()) != null) ||
+            (!userRepository.findByUsernameIgnoreCase(userRegisterDto.getEmail()).isEmpty())) {
+            errors.rejectValue("", "user_with_that_email_username_found", "A user with this email or username already exists.");
         }
+
     }
 }

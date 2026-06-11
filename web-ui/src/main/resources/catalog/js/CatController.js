@@ -109,6 +109,7 @@
               ita: "it",
               dut: "nl",
               kor: "ko",
+              pol: "pl",
               por: "pt",
               rum: "ro",
               rus: "ru",
@@ -370,6 +371,8 @@
               size: 20
             },
             moreLikeThisSameType: true,
+            moreLikeThisFilter:
+              "-cl_status.key:(obsolete OR historicalArchive OR superseded)",
             moreLikeThisConfig: {
               more_like_this: {
                 fields: [
@@ -438,6 +441,14 @@
                       query_string: {
                         query: "+linkProtocol:/OGC:WFS.*/"
                       }
+                    }
+                  }
+                },
+                aggs: {
+                  keep_nonzero: {
+                    bucket_selector: {
+                      buckets_path: { count: "_count" },
+                      script: "params.count > 0"
                     }
                   }
                 },
@@ -679,6 +690,10 @@
                 sortOrder: ""
               },
               {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
+              },
+              {
                 sortBy: "rating",
                 sortOrder: "desc"
               },
@@ -754,6 +769,11 @@
               {
                 label: "exportMEF",
                 url: "/formatters/zip?withRelated=false",
+                class: "fa-file-zip-o"
+              },
+              {
+                label: "exportMEF-excludeAttachments",
+                url: "/formatters/zip?withRelated=false&includeAttachments=false",
                 class: "fa-file-zip-o"
               },
               {
@@ -904,8 +924,10 @@
             // and redirecting to the catalogue to view metadata record
             // appUrl: "https://sextant.ifremer.fr/Donnees/Catalogue",
             isSocialbarEnabled: true,
+            isDefaultContactViewEnabled: false,
             showStatusWatermarkFor: "",
             showStatusTopBarFor: "",
+            recordviewCustomMenu: [], // List of static pages identifiers to display
             showCitation: {
               enabled: false,
               // if: {'documentStandard': ['iso19115-3.2018']}
@@ -1033,6 +1055,23 @@
                 },
                 meta: {
                   collapsed: true
+                }
+              },
+              "indexingErrorMsg.type": {
+                terms: {
+                  field: "indexingErrorMsg.type",
+                  size: 2
+                },
+                meta: {
+                  collapsed: true,
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      error: "fa-exclamation-circle",
+                      warning: "fa-exclamation-triangle"
+                    }
+                  }
                 }
               },
               sourceCatalogue: {
@@ -1164,6 +1203,10 @@
                 sortOrder: ""
               },
               {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
+              },
+              {
                 sortBy: "recordOwner",
                 sortOrder: ""
               },
@@ -1230,6 +1273,14 @@
                       }
                     }
                   }
+                },
+                aggs: {
+                  keep_nonzero: {
+                    bucket_selector: {
+                      buckets_path: { count: "_count" },
+                      script: "params.count > 0"
+                    }
+                  }
                 }
               },
               resourceType: {
@@ -1260,7 +1311,11 @@
           authentication: {
             enabled: true,
             signinUrl: "../../{{node}}/{{lang}}/catalog.signin",
+            signinAPI: "../../signin",
             signoutUrl: "../../signout"
+            // GN5 configuration
+            // signinAPI: "../../api/user/signin",
+            // signoutUrl: "../../api/user/signout"
           },
           page: {
             enabled: true,
@@ -1322,6 +1377,7 @@
           "geocoder",
           "disabledTools",
           "filters",
+          "info",
           "scoreConfig",
           "autocompleteConfig",
           "moreLikeThisConfig",
@@ -1605,6 +1661,7 @@
     "gnExternalViewer",
     "gnAlertService",
     "gnESFacet",
+    "gnFacetMetaLabel",
     function (
       $scope,
       $http,
@@ -1625,7 +1682,8 @@
       $cookies,
       gnExternalViewer,
       gnAlertService,
-      gnESFacet
+      gnESFacet,
+      gnFacetMetaLabel
     ) {
       $scope.version = "0.0.1";
       var defaultNode = "srv";
@@ -1734,7 +1792,8 @@
         swe: "Svenska",
         ukr: "українська",
         dan: "Dansk",
-        wel: "Cymraeg"
+        wel: "Cymraeg",
+        pol: "Polski"
       };
       $scope.url = "";
       $scope.gnUrl = gnGlobalSettings.gnUrl;
@@ -1750,6 +1809,7 @@
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();
       $scope.externalViewerUrl = gnExternalViewer.getBaseUrl();
       $scope.publicationOptions = [];
+      $scope.getFacetLabel = gnFacetMetaLabel.getFacetLabel;
 
       $http.get("../api/records/sharing/options").then(function (response) {
         $scope.publicationOptions = response.data;
@@ -1828,8 +1888,11 @@
         }
       });
 
-      // login url for inline signin form in top toolbar
-      $scope.signInFormAction = "../../signin#" + $location.url();
+      // login url and form action with hash reference to the current page
+      $scope.signInFormLinkWithHash =
+        $scope.gnCfg.mods.authentication.signinUrl + "#" + $location.url();
+      $scope.signInFormActionWithHash =
+        $scope.gnCfg.mods.authentication.signinAPI + "#" + $location.url();
 
       // when the login input have focus, do not close the dropdown/popup
       $scope.focusLoginPopup = function () {
@@ -2031,6 +2094,17 @@
                       return true;
                     }
                     return false;
+                  };
+                  me["is" + profile + "OrMoreForGroup"] = function (groupId) {
+                    if ("Administrator" == profile) {
+                      return me.admin;
+                    }
+                    var allowedProfiles = $scope.profiles.slice(
+                      $scope.profiles.indexOf(profile)
+                    );
+                    return allowedProfiles.some(function (p) {
+                      return me["is" + p + "ForGroup"](groupId);
+                    });
                   };
                 });
                 angular.extend($scope.user, me);

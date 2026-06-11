@@ -24,9 +24,11 @@
 package org.fao.geonet.domain;
 
 import org.fao.geonet.entitylistener.StatusValueEntityListenerManager;
+import org.springframework.http.MediaType;
 
 import javax.persistence.*;
 
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -223,20 +225,141 @@ public class StatusValue extends Localized {
      * List of predefined status part of the events. Those values are the default
      * one for GeoNetwork and may be modified in the database.
      */
-    public static final class Events {
-        public static final String RECORDCREATED = "50";
-        public static final String RECORDUPDATED = "51";
-        public static final String ATTACHMENTADDED = "52";
-        public static final String ATTACHMENTDELETED = "53";
-        public static final String RECORDOWNERCHANGE = "54";
-        public static final String RECORDGROUPOWNERCHANGE = "55";
-        public static final String RECORDPRIVILEGESCHANGE = "56";
-        public static final String RECORDCATEGORYCHANGE = "57";
-        public static final String RECORDVALIDATIONTRIGGERED = "58";
-        public static final String RECORDSTATUSCHANGE = "59";
-        public static final String RECORDPROCESSINGCHANGE = "60";
-        public static final String RECORDDELETED = "61";
-        public static final String RECORDIMPORTED = "62";
-        public static final String RECORDRESTORED = "63";
+    public enum Events {
+        RECORDCREATED(50, false, MediaType.APPLICATION_JSON, null),
+        RECORDUPDATED(51, true, MediaType.APPLICATION_XML, MediaType.APPLICATION_XML),
+        ATTACHMENTADDED(52, false, MediaType.TEXT_PLAIN, null),
+        ATTACHMENTDELETED(53, false, null, MediaType.TEXT_PLAIN),
+        RECORDOWNERCHANGE(54, false, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON),
+        RECORDGROUPOWNERCHANGE(55, false, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON),
+        RECORDPRIVILEGESCHANGE(56, false, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON),
+        RECORDCATEGORYCHANGE(57, false, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON),
+        RECORDVALIDATIONTRIGGERED(58, false, MediaType.TEXT_PLAIN, null),
+        RECORDSTATUSCHANGE(59, false, MediaType.APPLICATION_JSON, MediaType.APPLICATION_JSON),
+        RECORDPROCESSINGCHANGE(60, true, MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML),
+        RECORDDELETED(61, true, null, MediaType.APPLICATION_XML),
+        RECORDIMPORTED(62, false, MediaType.APPLICATION_JSON, null),
+        RECORDRESTORED(63, true, MediaType.APPLICATION_XML, MediaType.APPLICATION_XML);
+
+        /**
+         * The id of the event.
+         */
+        private final Integer id;
+        /**
+         * The restore function currently supports these states
+         */
+        private final boolean isSupportedRestoreStatus;
+
+        /**
+         * Indicates mime type of the current state will be stored in.
+         * This is generally json or xml and if it is null then the state is not supported.
+         */
+        private final MediaType currentStateFormat;
+
+        /**
+         * Indicates mime type of the previous state will be stored in.
+         * This is generally json or xml and if it is null then the state is not supported.
+         */
+        private final MediaType previousStateFormat;
+
+        /**
+         * Constructor.
+         *
+         * @param id the id of the event.
+         * @param isSupportedRestoreStatus the restore function currently supports these states.
+         * @param currentStateFormat indicates mime type of the current state will be stored in.
+         * @param previousStateFormat indicates mime type of the current state will be stored in.
+         */
+        Events(Integer id, boolean isSupportedRestoreStatus, MediaType currentStateFormat, MediaType previousStateFormat) {
+            this.id = id;
+            this.isSupportedRestoreStatus = isSupportedRestoreStatus;
+            this.currentStateFormat = currentStateFormat;
+            this.previousStateFormat = previousStateFormat;
+        }
+
+        /**
+         * Get the id of the event.
+         *
+         * @return the id of the event.
+         */
+        public Integer getId() {
+            return id;
+        }
+
+        /**
+         * Get the event from the id.
+         *
+         * @param id the id of the event.
+         * @return the event.
+         */
+        public static Events fromId(Integer id) {
+            return Arrays.stream(values())
+                .filter(event -> event.getId().equals(id))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No event found with id: " + id));
+        }
+
+        /**
+         * Get the code of the event.
+         * The code currently is the string representation of the id.
+         *
+         * @return the code of the event.
+         */
+        public String getCode() {
+            return String.valueOf(id);
+        }
+
+        /**
+         * Get the event from the code.
+         *
+         * @param code the code of the event.
+         * @return the event.
+         */
+        public static Events fromCode(String code) {
+            return Arrays.stream(values())
+                .filter(event -> event.getCode().equals(code))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("No event found with code: " + code));
+        }
+
+        /**
+         * Get the mime type of the current state will be stored in.
+         *
+         * @return the mime type of the current state will be stored in.
+         */
+        public MediaType getCurrentStateFormat() {
+            return currentStateFormat;
+        }
+
+        /**
+         * Get the mime type of the previous state will be stored in.
+         *
+         * @return the mime type of the previous state will be stored in.
+         */
+        public MediaType getPreviousStateFormat() {
+            return previousStateFormat;
+        }
+
+        /**
+         * Identify if the current status supports restoring the values.
+         * This is mostly for restoring xml metadata records.
+         *
+         * @return true if supported.
+         */
+        public boolean isSupportedRestoreStatus() {
+            return isSupportedRestoreStatus;
+        }
+
+        /**
+         * Get an array of the event that support restoring statuses.
+         * This is mostly for restoring xml metadata records.
+         *
+         * @return list of events with isSupportedRestoreStatus set to true.
+         */
+        public static Events[] getSupportedRestoreStatuses() {
+            return Arrays.stream(values())
+                .filter(Events::isSupportedRestoreStatus)
+                .toArray(Events[]::new);
+        }
     }
 }

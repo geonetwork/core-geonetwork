@@ -7,6 +7,7 @@
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:mrd="http://standards.iso.org/iso/19115/-3/mrd/1.0"
+                xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
@@ -21,6 +22,7 @@
   <xsl:function name="gn-fn-iso19115-3.2018:get-author-list">
     <xsl:param name="authors" as="node()*"/>
     <xsl:param name="langId" as="xs:string"/>
+    <xsl:param name="withAffiliation" as="xs:string"/>
 
     <xsl:variable name="authorsNameAndOrgListTmp"
                   as="node()*">
@@ -39,13 +41,25 @@
           </xsl:variable>
 
           <xsl:value-of select="$listOfNames"/>
-          <xsl:if test="normalize-space($listOfNames) != ''"> (</xsl:if>
-          <xsl:for-each select="cit:party/*/cit:name">
-            <xsl:call-template name="get-iso19115-3.2018-localised">
-              <xsl:with-param name="langId" select="$langId"/>
-            </xsl:call-template>
-          </xsl:for-each>
-          <xsl:if test="normalize-space($listOfNames) != ''">)</xsl:if>
+
+          <xsl:variable name="affiliation">
+            <xsl:for-each select="cit:party/*/cit:name">
+              <xsl:call-template name="get-iso19115-3.2018-localised">
+                <xsl:with-param name="langId" select="$langId"/>
+              </xsl:call-template>
+            </xsl:for-each>
+          </xsl:variable>
+
+          <xsl:choose>
+            <xsl:when test="normalize-space($listOfNames) != ''">
+              <xsl:if test="$withAffiliation = 'true' and normalize-space($affiliation) != ''">
+                (<xsl:value-of select="$affiliation"/>)
+              </xsl:if>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="$affiliation"/>
+            </xsl:otherwise>
+          </xsl:choose>
         </author>
       </xsl:for-each>
     </xsl:variable>
@@ -66,7 +80,7 @@
                   select="$metadata/mdb:identificationInfo/*/mri:pointOfContact/
                                 *[cit:role/*/@codeListValue = $authorRolesList]"/>
     <xsl:variable name="authorsNameAndOrgList"
-                  select="gn-fn-iso19115-3.2018:get-author-list($authors, $langId)"/>
+                  select="gn-fn-iso19115-3.2018:get-author-list($authors, $langId, $withAffiliation)"/>
 
 
     <!-- What name is the data set called? -->
@@ -92,6 +106,10 @@
                                     ('publication', 'revision')]/
                                     cit:date/gco:*[. != '']"/>
 
+
+    <xsl:variable name="datasetLanguage"
+                  select="$metadata/mdb:identificationInfo/*/mri:defaultLocale/*/lan:language/*/@codeListValue"/>
+
     <xsl:variable name="publicationDates" as="node()*">
       <xsl:perform-sort select="$dates">
         <xsl:sort select="." order="descending"/>
@@ -105,7 +123,7 @@
                                 *[cit:role/*/@codeListValue = $publisherRolesList]"/>
 
     <xsl:variable name="publishersNameAndOrgList" as="node()*"
-                  select="gn-fn-iso19115-3.2018:get-author-list($publishers, $langId)"/>
+                  select="gn-fn-iso19115-3.2018:get-author-list($publishers, $langId, $withAffiliation)"/>
 
     <!-- Electronic Retrieval Location -->
     <xsl:variable name="doiInResourceIdentifier"
@@ -163,6 +181,7 @@
       <doiUrl><xsl:value-of select="$doiUrl"/></doiUrl>
       <xsl:copy-of select="$translatedKeywords"/>
       <additionalCitation><xsl:value-of select="$additionalCitation"/></additionalCitation>
+      <language><xsl:value-of select="$datasetLanguage" /></language>
     </citation>
 
   </xsl:template>

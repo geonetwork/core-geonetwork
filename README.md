@@ -1,8 +1,8 @@
 # GeoNetwork opensource
 
-## Build Health
+[![LFX Health Score](https://insights.linuxfoundation.org/api/badge/health-score?project=geonetwork-core-geonetwork)](https://insights.linuxfoundation.org/project/geonetwork-core-geonetwork) [![LFX Active Contributors](https://insights.linuxfoundation.org/api/badge/active-contributors?project=geonetwork-core-geonetwork)](https://insights.linuxfoundation.org/project/geonetwork-core-geonetwork)
 
-[![Build Status](https://github.com/geonetwork/core-geonetwork/actions/workflows/linux.yml/badge.svg?branch=main)](https://github.com/geonetwork/core-geonetwork/actions/workflows/linux.yml?query=branch%3Amain)
+[![Build Status](https://github.com/geonetwork/core-geonetwork/actions/workflows/linux.yml/badge.svg?branch=main)](https://github.com/geonetwork/core-geonetwork/actions/workflows/linux.yml?query=branch%3Amain) [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8626/badge)](https://www.bestpractices.dev/projects/8626)  [![CLA assistant](https://cla-assistant.io/readme/badge/geonetwork/geonetwork)](https://cla-assistant.io/geonetwork/geonetwork)
 
 ## Features
 
@@ -29,7 +29,4 @@ Developer documentation located in ``README.md`` files in the code-base:
 
 * General documentation for the project as a whole is in this [README.md](README.md)
 * [Software Development Documentation](/software_development/) provides instructions for setting up a development environment, building GeoNetwork, compiling user documentation, and making a releases.
-* Module specific documentation can be found in each module:
-
-## Open Source Security Foundation (OpenSSF) best practices status
-[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8626/badge)](https://www.bestpractices.dev/projects/8626)
+* Module specific documentation can be found in each module

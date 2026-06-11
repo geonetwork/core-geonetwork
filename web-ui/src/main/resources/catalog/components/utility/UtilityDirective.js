@@ -504,7 +504,10 @@
            * Load list on init to fill the dropdown
            */
           gnRegionService.loadList().then(function (data) {
-            scope.regionTypes = angular.copy(data);
+            var dataFiltered = _.filter(data, function (o) {
+              return o.id !== "metadata";
+            });
+            scope.regionTypes = angular.copy(dataFiltered);
             if (addGeonames) {
               scope.regionTypes.unshift({
                 name: "Geonames",
@@ -629,6 +632,85 @@
                 n.notProcessFound != 0 ||
                 n.metadataErrorReport.metadataErrorReport.length != 0;
             }
+          });
+        }
+      };
+    }
+  ]);
+
+  module.directive("gnBatchValidationReport", [
+    function () {
+      return {
+        restrict: "A",
+        replace: true,
+        scope: {
+          validationReport: "=gnBatchValidationReport"
+        },
+        templateUrl: function ($element, $attrs) {
+          return (
+            $attrs.templateUrl ||
+            "../../catalog/components/utility/" + "partials/batchvalidationreport.html"
+          );
+        },
+        link: function (scope, element, attrs) {
+          function compareByIdThenSchematron(a, b) {
+            var idA = +a.metadataId,
+              idB = +b.metadataId;
+            if (idA < idB) return -1;
+            if (idA > idB) return 1;
+            return a.schematron.localeCompare(b.schematron);
+          }
+
+          function flatten(map) {
+            var out = [];
+            map = map || {};
+            angular.forEach(map, function (schematronValidationReports, metadataId) {
+              angular.forEach(
+                schematronValidationReports,
+                function (schematronValidationReport) {
+                  angular.forEach(
+                    schematronValidationReport.messages,
+                    function (messages, pattern) {
+                      angular.forEach(messages, function (message) {
+                        if (pattern === "NO_PATTERN_TITLE") {
+                          out.push({
+                            metadataId: metadataId,
+                            schematron: schematronValidationReport.schematron,
+                            message: message
+                          });
+                        } else {
+                          out.push({
+                            metadataId: metadataId,
+                            pattern: pattern,
+                            schematron: schematronValidationReport.schematron,
+                            message: message
+                          });
+                        }
+                      });
+                    }
+                  );
+                }
+              );
+            });
+            return out;
+          }
+
+          scope.$watch("validationReport", function (report) {
+            if (!report) {
+              return;
+            }
+
+            scope.flatValidationErrors = flatten(report.validationErrors).sort(
+              compareByIdThenSchematron
+            );
+            scope.flatValidationWarnings = flatten(report.validationWarnings).sort(
+              compareByIdThenSchematron
+            );
+
+            scope.validationReportWarning =
+              report.numberOfInvalidRecords > 0 ||
+              report.numberOfNullRecords > 0 ||
+              report.numberOfRecordsNotEditable;
           });
         }
       };
@@ -901,6 +983,7 @@
         restrict: "A",
         link: function (scope, element, attrs) {
           scope.prefix = attrs["prefix"] || "";
+          scope.showHintsOnFocus = attrs.showHintsOnFocus === "true"; // displays all the values on focus, default shows only the selected value
           element.attr("placeholder", "...");
           element.on("focus", function () {
             $http
@@ -945,7 +1028,8 @@
                 $(element).typeahead(
                   {
                     minLength: 0,
-                    highlight: true
+                    highlight: true,
+                    showHintsOnFocus: scope.showHintsOnFocus
                   },
                   {
                     name: "isoLanguages",
@@ -958,6 +1042,10 @@
                     }
                   }
                 );
+                // Since the typeahead is initialized on focus the first focus will not trigger the hints
+                // So we blur then refocus to trigger the hints
+                $(element).blur();
+                $(element).focus();
               });
             element.unbind("focus");
           });
@@ -1185,12 +1273,12 @@
    *
    * The code to be used in a HTML page:
    *
-   * <span gn-copy-to-clipboard=""></span>
+   * <span gn-copy-to-clipboard-button=""></span>
    *  eg. for citation
    *
    * or
    *
-   * <span gn-copy-to-clipboard="" data-text="{{::r.locUrl}}" gn-copy-button-only="true"></span>
+   * <span gn-copy-to-clipboard-button="" data-text="{{::r.locUrl}}" gn-copy-button-only="true"></span>
    *  eg. copy UUID or link URL
    *
    * or
@@ -1245,6 +1333,67 @@
                   console.warn("Failed to copy to clipboard.");
                 }
               );
+            });
+          };
+        }
+      };
+    }
+  ]);
+
+  /*
+   * @description
+   * Save a file with a string in an input field, the parent element text
+   * or the results of a promise.
+   *
+   * The code to be used in a HTML page:
+   *
+   * <span gn-save-text-button="" data-file-name="citation.txt"></span>
+   *  eg. for citation
+   *
+   * <span gn-save-text-button="" data-text="{{::r.locUrl}}"></span>
+   *  eg. save UUID or link URL
+   *
+   * or
+   *
+   * <button gn-save-text-button="" get-text-fn="getListOfUuids()"/>
+   *  eg. UUID of record with indexing errors
+   */
+  module.directive("gnSaveTextButton", [
+    "$q",
+    function ($q) {
+      return {
+        restrict: "A",
+        replace: true,
+        template:
+          "<a class=\"{{::btnClass || 'btn btn-default btn-xs'}}\" " +
+          '           ng-click="save()" ' +
+          '           href=""' +
+          '           title="{{::title | translate}}">' +
+          '  <i class="fa fa-download"></i>' +
+          "</a>",
+        scope: {
+          btnClass: "@",
+          getTextFn: "&?",
+          fileName: "@"
+        },
+        link: function linkFn(scope, element, attr) {
+          scope.title = attr["tooltip"] || "saveToFile";
+          scope.fileName = scope.fileName || "file.txt";
+          scope.save = function () {
+            var promise = undefined;
+
+            if (angular.isFunction(scope.getTextFn)) {
+              promise = scope.getTextFn();
+            } else {
+              promise = $q.when(
+                attr["text"] ? attr["text"] : element.parent().text().trim()
+              );
+            }
+
+            promise.then(function (text) {
+              var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+              // Bootstrap FileSaver
+              saveAs(blob, scope.fileName);
             });
           };
         }
@@ -1491,10 +1640,10 @@
           '             viewBox="0 0 500 500">' +
           "    <defs>" +
           '      <pattern id="image{{imageId}}" x="0" y="0" patternUnits="userSpaceOnUse" height="100%" width="100%">' +
-          '        <image ng-if="hasIcon" x="0" y="0" height="100%" width="100%" xlink:href="{{\'../../images/harvesting/\' + orgKey + \'.png\'}}"></image>' +
+          '        <image ng-if="hasIcon" x="0" y="0" height="100%" width="100%" ng-attr-href="{{\'../api/logos/\' + orgKey + \'.png\'}}"></image>' +
           "      </pattern>" +
           "    </defs>" +
-          '    <circle fill="url(\'#image{{imageId}}\')" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
+          '    <circle fill="url(#image{{imageId}})" style="stroke-miterlimit:10;" cx="250" cy="250" r="240"/>' +
           '    <text x="50%" y="50%"' +
           '          text-anchor="middle" alignment-baseline="central" dominant-baseline="central"' +
           "          font-size=\"300\">{{hasIcon ? '' : org.substr(0, 1).toUpperCase()}}</text>" +
@@ -2301,26 +2450,29 @@
             href,
             isCurrentService = false;
 
-          link = $filter("setUrlPlaceholder")(link);
+          function updateHref() {
+            link = $filter("setUrlPlaceholder")(link);
 
-          // Insert debug mode between service and route
-          if (link.indexOf("#") !== -1) {
-            var tokens = link.split("#");
-            isCurrentService =
-              window.location.pathname.match(".*" + tokens[0] + "$") !== null;
-            href =
-              (isCurrentService ? "" : tokens[0] + (scope.isDebug ? "?debug" : "")) +
-              "#" +
-              tokens[1];
-          } else {
-            isCurrentService = window.location.pathname.match(".*" + link + "$") !== null;
-            href = isCurrentService ? "#/" : link + (scope.isDebug ? "?debug" : "");
+            // Insert debug mode between service and route
+            if (link.indexOf("#") !== -1) {
+              var tokens = link.split("#");
+              isCurrentService =
+                window.location.pathname.match(".*" + tokens[0] + "$") !== null;
+              href =
+                (isCurrentService ? "" : tokens[0] + (scope.isDebug ? "?debug" : "")) +
+                "#" +
+                tokens[1];
+            } else {
+              isCurrentService =
+                window.location.pathname.match(".*" + link + "$") !== null;
+              href = isCurrentService ? "#/" : link + (scope.isDebug ? "?debug" : "");
+            }
+
+            // Set the href attribute for the element
+            // with the link containing the debug mode
+            // or not
+            element.attr("href", href);
           }
-
-          // Set the href attribute for the element
-          // with the link containing the debug mode
-          // or not
-          element.attr("href", href);
 
           function checkActive() {
             // regexps for getting the service & path
@@ -2346,6 +2498,14 @@
 
           scope.$on("$locationChangeSuccess", checkActive);
 
+          // Watch for changes in the link attribute
+          attrs.$observe("gnActiveTbItem", function (newLink) {
+            link = newLink;
+            updateHref();
+            checkActive();
+          });
+
+          updateHref();
           checkActive();
         }
       };
@@ -2360,6 +2520,15 @@
           .replace("{{lang}}", gnLangs.getCurrent())
           .replace("{{isoLang}}", gnLangs.getIso2Lang(gnLangs.getCurrent()))
           .replace("{{node}}", gnConfig.env.node);
+      };
+    }
+  ]);
+  module.filter("replaceLinkPlaceholders", [
+    function () {
+      return function (url, context) {
+        return url
+          .replace(/{uuid}/g, (context && context.uuid) || "")
+          .replace(/{id}/g, (context && context.id) || "");
       };
     }
   ]);

@@ -48,6 +48,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
 import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.*;
@@ -330,22 +332,24 @@ public class DefaultStatusActions implements StatusActions {
             );
         }
 
-        LocalizedEmail localizedEmail = new LocalizedEmail(false);
-        localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent, emailSalutationComponent);
-
-        String subject = localizedEmail.getParsedSubject(feedbackLocales);
-
         for (User user : userToNotify) {
+            LocalizedEmail localizedEmail = new LocalizedEmail(false);
+
             String userName = Joiner.on(" ").skipNulls().join(user.getName(), user.getSurname());
             //If we have a userName add the salutation
             String message;
             if (StringUtils.isEmpty(userName)) {
+                localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
                 message = localizedEmail.getParsedMessage(feedbackLocales);
             } else {
+                localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent, emailSalutationComponent);
+
                 Map<String, String> replacements = new HashMap<>();
                 replacements.put("{{userName}}", userName);
                 message = localizedEmail.getParsedMessage(feedbackLocales, replacements);
             }
+            String subject = localizedEmail.getParsedSubject(feedbackLocales);
             sendEmail(user.getEmail(), subject, message);
         }
     }
@@ -408,8 +412,14 @@ public class DefaultStatusActions implements StatusActions {
                 if (owner.isPresent()) {
                     users.add(owner.get());
                 }
-            } else if (notificationLevel == StatusValueNotificationLevel.recordProfileReviewer) {
-                List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(recordIds, Profile.Reviewer);
+            } else if (notificationLevel.name().startsWith("recordProfile")) {
+                String profileId = notificationLevel.name().replace("recordProfile", "");
+                Profile profile = Profile.findProfileIgnoreCase(profileId);
+                if (profile == null) {
+                    Log.error(Geonet.DATA_MANAGER, "Invalid notification level is configured '" + notificationLevel + "' The associated profile '" + profileId + "' does not exist.");
+                    return users;
+                }
+                List<Pair<Integer, User>> results = userRepository.findAllByGroupOwnerNameAndProfile(recordIds, profile);
                 Collections.sort(results, Comparator.comparing(s -> s.two().getName()));
                 for (Pair<Integer, User> p : results) {
                     users.add(p.two());
@@ -437,6 +447,10 @@ public class DefaultStatusActions implements StatusActions {
             } else if (notificationLevel.name().startsWith("catalogueProfile")) {
                 String profileId = notificationLevel.name().replace("catalogueProfile", "");
                 Profile profile = Profile.findProfileIgnoreCase(profileId);
+                if (profile == null) {
+                    Log.error(Geonet.DATA_MANAGER, "Invalid notification level is configured '" + notificationLevel + "' The associated profile '" + profileId + "' does not exist.");
+                    return users;
+                }
                 users = userRepository.findAllByProfile(profile);
             } else if (notificationLevel == StatusValueNotificationLevel.catalogueAdministrator) {
                 SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
@@ -449,7 +463,9 @@ public class DefaultStatusActions implements StatusActions {
                 }
             }
         }
-        return users;
+
+        // Filter out users without email
+        return users.stream().filter(u -> StringUtils.isNotEmpty(u.getEmail())).collect(Collectors.toList());
     }
 
     public static List<Group> getGroupToNotify(StatusValueNotificationLevel notificationLevel, List<String> groupNames) {

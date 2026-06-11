@@ -15,6 +15,9 @@
   <enum1>Value </enum1>
   <enum2> is not valid for the field </enum2>
   <enum3>Potential values are: </enum3>
+  <selectFeaturetype>Select a feature type</selectFeaturetype>
+  <missingFeatureTypeName>New feature type</missingFeatureTypeName>
+
 
 
   <understandResource>Information about the dataset</understandResource>

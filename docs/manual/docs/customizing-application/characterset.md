@@ -12,6 +12,6 @@ JAVA_OPTS="-Dgeonetwork.file.encoding=UTF-16"
 
 to the startup script and the default codec in GeoNetwork will be ``UTF-16``.
 
-It is also recommended to set the file.encoding parameter to the same codec as this dictates to the default encoding used in Java and the Web Server may reference at times use the default codec.
+It is also recommended to set the file.encoding parameter to the same codec, as this dictates the default encoding used in Java and the web server may at times use the default codec.
 
 Finally, by default the URL parameters are typically interpreted as ASCII characters which can be a problem when searching for metadata that are not in the english language. Each Web Server will have a method for configuring the encoding used when reading the parameters. For example, in Tomcat the encoding/charset configuration is in the **`server.xml`** Connector element.

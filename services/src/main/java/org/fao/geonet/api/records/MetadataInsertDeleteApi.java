@@ -49,17 +49,7 @@ import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.MetadataCategory;
-import org.fao.geonet.domain.MetadataDraft;
-import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.domain.MetadataType;
-import org.fao.geonet.domain.Pair;
-import org.fao.geonet.domain.Profile;
-import org.fao.geonet.domain.ReservedGroup;
-import org.fao.geonet.domain.ReservedOperation;
-import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordCreateEvent;
 import org.fao.geonet.events.history.RecordDeletedEvent;
@@ -82,6 +72,7 @@ import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserGroupRepository;
@@ -95,7 +86,9 @@ import org.jdom.Element;
 import org.jdom.input.JDOMParseException;
 import org.jdom.output.XMLOutputter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -122,15 +115,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.ResourceBundle;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
@@ -193,14 +178,26 @@ public class MetadataInsertDeleteApi {
     @Autowired
     IMetadataOperations metadataOperations;
 
+    /**
+     * Language utils used to detect the requested language.
+     */
     @Autowired
     LanguageUtils languageUtils;
+
+    /**
+     * Message source.
+     */
+    @Autowired
+    @Qualifier("apiMessages")
+    private ResourceBundleMessageSource messages;
 
     @Autowired
     RoleHierarchy roleHierarchy;
 
     @Autowired
     IMetadataValidator metadataValidator;
+    @Autowired
+    private GroupRepository groupRepository;
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Delete a record", description = "User MUST be able to edit the record to delete it. "
         + "By default, a backup is made in ZIP format. After that, "
@@ -215,8 +212,10 @@ public class MetadataInsertDeleteApi {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteRecord(
         @Parameter(description = API_PARAM_RECORD_UUID, required = true) @PathVariable String metadataUuid,
-        @Parameter(description = API_PARAM_BACKUP_FIRST, required = false) @RequestParam(required = false, defaultValue = "true") boolean withBackup,
+        @Parameter(description = API_PARAM_BACKUP_FIRST, required = false) @RequestParam(required = false) Boolean withBackup,
         HttpServletRequest request) throws Exception {
+        boolean doBackup = withDeleteBackup(withBackup, request);
+
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ServiceContext context = ApiUtils.createServiceContext(request);
         Store store = context.getBean("resourceStore", Store.class);
@@ -225,7 +224,7 @@ public class MetadataInsertDeleteApi {
         ApplicationContextHolder.get().publishEvent(preRemoveEvent);
 
         if (metadata.getDataInfo().getType() != MetadataType.SUB_TEMPLATE
-            && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && withBackup) {
+            && metadata.getDataInfo().getType() != MetadataType.TEMPLATE_OF_SUB_TEMPLATE && doBackup) {
             MEFLib.backupRecord(metadata, context);
         }
 
@@ -345,6 +344,10 @@ public class MetadataInsertDeleteApi {
          HttpServletRequest request) throws Exception {
 
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        checkGroupIsWorkspace(group, locale);
 
         if (url == null && xml == null && serverFolder == null) {
             throw new IllegalArgumentException(
@@ -502,6 +505,10 @@ public class MetadataInsertDeleteApi {
 
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        checkGroupIsWorkspace(group, locale);
+
         AbstractMetadata sourceMetadata = ApiUtils.getRecord(sourceUuid);
 
         boolean generateUuid = settingManager.getValueAsBool(Settings.SYSTEM_METADATACREATE_GENERATE_UUID);
@@ -617,6 +624,10 @@ public class MetadataInsertDeleteApi {
 
         ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
 
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        checkGroupIsWorkspace(group, locale);
+
         if (file == null) {
             throw new IllegalArgumentException(messages.getString("api.metadata.import.errorFileRequired"));
         }
@@ -712,6 +723,11 @@ public class MetadataInsertDeleteApi {
         @RequestParam(required = false, defaultValue = "iso19139")
         final String schema,
         HttpServletRequest request) throws Exception {
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        checkGroupIsWorkspace(group, locale);
+
         if (StringUtils.isEmpty(xml) && StringUtils.isEmpty(url)) {
             throw new IllegalArgumentException("A context as XML or a remote URL MUST be provided.");
         }
@@ -959,7 +975,7 @@ public class MetadataInsertDeleteApi {
         }
 
         if (uuidProcessing == MEFLib.UuidAction.NOTHING) {
-            AbstractMetadata md = metadataRepository.findOneByUuid(uuid);
+            AbstractMetadata md = metadataUtils.findOneByUuid(uuid);
             if (md != null) {
                 throw new IllegalArgumentException(
                     String.format(messages.getString("api.metadata.import.errorDuplicatedUUIDDetailed"), uuid));
@@ -1017,13 +1033,75 @@ public class MetadataInsertDeleteApi {
 
         if (rejectIfInvalid) {
             // Persist the validation status
-            AbstractMetadata metadata = metadataRepository.findOneById(iId);
+            AbstractMetadata metadata = metadataUtils.findOne(iId);
 
             metadataValidator.doValidate(metadata, context.getLanguage());
         }
 
         dataManager.indexMetadata(id.get(0), true);
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
+    }
+
+    /**
+     * Determine if the metadata backup is needed during delete API.<br/>
+     * 1) The withBackup flag missing from the API, will only overide if setting as ForceNoBackup, otherwise default to true<br/>
+     * 2) The withBackup flag designated as true from the API, will throw an error if system setting for ForceNoBackup
+     * 3) The withbackup flag designated as false from the API, will throw an error if system setting for ForceBackup
+     *
+     * @param withBackup API parameter from the client side
+     * @param request HTTP Request
+     * @return boolean of metadata backup and defaulted to true
+     */
+    private boolean withDeleteBackup (Boolean withBackup, HttpServletRequest request) {
+        ResourceBundle messages = ApiUtils.getMessagesResourceBundle(request.getLocales());
+        String mdDeleteBackupOption = settingManager.getValue(Settings.METADATA_DELETE_BACKUPOPTIONS);
+        if (withBackup == null) {
+            if (StringUtils.equals(mdDeleteBackupOption, "ForceNoBackup")) {
+                return false;
+            }
+            // Will default to true if setting set to UseAPIParameter, ForceBackup or empty
+            return true;
+        } else if (withBackup == true) {
+            if (StringUtils.equals(mdDeleteBackupOption, "ForceNoBackup")) {
+                throw new IllegalArgumentException(
+                    String.format(messages.getString("api.metadata.delete.errorForceBackup"), withBackup));
+            }
+            return true;
+        } else if (withBackup = false) {
+            if (StringUtils.equals(mdDeleteBackupOption, "ForceBackup")) {
+                throw new IllegalArgumentException(
+                    String.format(messages.getString("api.metadata.delete.errorForceNoBackup"), withBackup));
+            }
+            return false;
+        }
+
+        return true;
+
+    }
+
+    /**
+     * Checks if the given group ID corresponds to a workspace group.
+     *
+     * @param groupId the ID of the group to check
+     * @param locale the locale to use for error messages
+     * @throws ResourceNotFoundException if the group is not found
+     * @throws IllegalArgumentException if the group is not a workspace
+     */
+    private void checkGroupIsWorkspace(String groupId, Locale locale) throws ResourceNotFoundException {
+        // Find the group by its ID
+        Group group = groupRepository.findById(Integer.parseInt(groupId)).orElse(null);
+
+        // If the group is not found, throw a ResourceNotFoundException
+        if (group == null) {
+            throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
+                Object[]{groupId}, locale));
+        }
+
+        // If the group is not a workspace, throw an IllegalArgumentException
+        if (!group.isWorkspace()) {
+            throw new IllegalArgumentException(messages.getMessage("api.groups.group_not_workspace", new
+                Object[]{groupId}, locale));
+        }
     }
 
 }

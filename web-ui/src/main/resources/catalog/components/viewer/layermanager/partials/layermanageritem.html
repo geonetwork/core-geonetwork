@@ -3,7 +3,7 @@
     class="flex-row width-100 flex-align-stretch"
     data-ng-class="{'active': layer.showInfo}"
   >
-    <div class="flex-col">
+    <div class="flex-self-center">
       <a
         href=""
         class="btn btn-sm btn-link gn-layer-radio"
@@ -16,7 +16,7 @@
         ></i>
       </a>
     </div>
-    <div class="flex-col">
+    <div class="flex-self-center">
       <input
         type="checkbox"
         id="layer-{{$index}}"
@@ -27,64 +27,77 @@
 
     <div class="flex-spacer"></div>
 
-    <div class="flex-col flex-grow">
-      <div class="width-100 flex-grow">
-        <span class="gn-layer-ordering btn-group btn-group-xs pull-right">
-          <!-- Layer Up -->
-          <a
-            href=""
-            class="btn btn-default"
-            ng-disabled="$first"
-            ng-click="moveLayer(layer, 1)"
-            title="{{'layerMoveUp'|translate}}"
-          >
-            <span class="fa fa-arrow-up"></span>
-          </a>
-          <!-- Layer Down -->
-          <a
-            href=""
-            class="btn btn-default"
-            ng-disabled="$last"
-            ng-click="moveLayer(layer, -1, $last)"
-            title="{{'layerMoveDown'|translate}}"
-          >
-            <span class="fa fa-arrow-down"></span>
-          </a>
-
-          <!-- Remove Layer -->
-          <a
-            href=""
-            class="btn btn-default"
-            data-ng-click="removeLayer(layer, map)"
-            title="{{'layerDelete'|translate}}"
-          >
-            <span class="fa fa-times"></span>
-          </a>
-        </span>
-        <label
-          class="gn-map-layer"
-          for="layer-{{$index}}"
-          data-ng-class="{'gn-map-layer-selected': layer.showInfo}"
+    <div class="flex-self-center flex-grow gn-break-anywhere">
+      <label
+        class="gn-map-layer"
+        for="layer-{{$index}}"
+        data-ng-class="{'gn-map-layer-selected': layer.showInfo}"
+      >
+        <span
+          class="clickable"
+          data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''"
+          title="{{layer.get('label')}}"
         >
+          {{layer.get('layerTitleFromMetadata') || layer.get('label')}}
           <span
-            class="clickable"
-            data-ng-class="layer.get('errors').length > 0 ? 'text-danger' : ''"
-            title="{{layer.get('label')}}"
-          >
-            {{layer.get('layerTitleFromMetadata') || layer.get('label')}}
-            <span
-              ><em>
-                {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title ||
-                layer.get('currentStyle').Name) + ')' : ''}}
-              </em>
-            </span>
+            ><em>
+              {{layer.get('currentStyle') ? '(' + (layer.get('currentStyle').Title ||
+              layer.get('currentStyle').Name) + ')' : ''}}
+            </em>
           </span>
-        </label>
-      </div>
+        </span>
+      </label>
     </div>
 
-    <div class="flex-col flex-self-center">
-      <span class="pull-right fa fa-ellipsis-v text-medium text-muted"></span>
+    <div class="flex-self-center gn-padding-vertical-sm">
+      <div class="dropdown dropdown-left">
+        <button
+          class="btn btn-default dropdown-toggle"
+          type="button"
+          data-toggle="dropdown"
+          aria-haspopup="true"
+          aria-expanded="true"
+        >
+          <span class="fa fa-fw fa-ellipsis-vertical"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-left">
+          <li>
+            <span class="btn-group btn-group-xs">
+              <!-- Layer Up -->
+              <a
+                href=""
+                class="btn btn-default"
+                ng-disabled="$first"
+                ng-click="moveLayer(layer, 1)"
+                title="{{'layerMoveUp'|translate}}"
+              >
+                <span class="fa fa-arrow-up"></span>
+              </a>
+
+              <!-- Layer Down -->
+              <a
+                href=""
+                class="btn btn-default"
+                ng-disabled="$last"
+                ng-click="moveLayer(layer, -1, $last)"
+                title="{{'layerMoveDown'|translate}}"
+              >
+                <span class="fa fa-arrow-down"></span>
+              </a>
+
+              <!-- Remove Layer -->
+              <a
+                href=""
+                class="btn btn-default"
+                data-ng-click="removeLayer(layer, map)"
+                title="{{'layerDelete'|translate}}"
+              >
+                <span class="fa fa-times"></span>
+              </a>
+            </span>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -113,6 +126,7 @@
         <div data-ng-if="::layer.get('style').length > 0">
           <div
             data-gn-layer-styles="layer.get('style')"
+            data-gn-layer-styles-dropdown-direction="left"
             data-gn-layer-styles-on-click="setLayerStyle(layer, style)"
             data-gn-layer-styles-current="layer.get('currentStyle')"
           ></div>

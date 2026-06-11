@@ -20,6 +20,7 @@
       <a href="../../srv/{{lang}}/catalog.search#/home">
         <img
           class="gn-source-logo"
+          onerror="this.style.visibility='hidden'"
           data-ng-src="{{gnUrl}}../images/logos/{{info['system/site/siteId']}}.png"
         />
         {{::info['system/site/name']}}
@@ -44,6 +45,7 @@
       <a href="../../{{p.uuid}}/{{lang}}/catalog.search">
         <img
           class="gn-source-logo"
+          onerror="this.style.visibility='hidden'"
           data-ng-src="{{'../../images/harvesting/' +  p.logo}}"
         />
         {{::p.label[lang]}}

@@ -25,7 +25,7 @@ Since the settings form is a long form, the `save` button is repeated between th
 
 ## Catalog Server {#system-config-server}
 
--   **Host** The node's name or IP number (without <http://>). For example, they are used during metadata editing to create resource links and when returning the server's capabilities during a CSW request.
+-   **Host** The node's name or IP number (without `http://`). For example, they are used during metadata editing to create resource links and when returning the server's capabilities during a CSW request.
     -   If your node is publicly accessible from the Internet, you have to use the domain name.
     -   If your node is hidden inside your private network and you have a firewall or web server that redirects incoming requests to the node, you have to enter the public address of the firewall or web server. A typical configuration is to have an Apache web server on address A that is publicly accessible and redirects the requests to a Tomcat server on a private address B. In this case you have to enter A in the host parameter.
 -   **Port** The server's port number (usually 80 or 8080). If using HTTP, set it to 80.
@@ -58,21 +58,41 @@ JVM proxy parameters may also be required to properly set the proxy for all remo
 
 ## Feedback {#system-config-feedback}
 
-Email may be sent by the catalog.
+Email notifications are sent by the catalog.
 
--   you are using the User Self-registration system
--   you are using the metadata status workflow (See [Life cycle](../../user-guide/workflow/life-cycle.md))
--   a file uploaded with a metadata record is downloaded and notify privilege is selected
+-   When using the User Self-registration system.
+-   When using the metadata status workflow (See [Life cycle](../../user-guide/workflow/life-cycle.md)).
+-   When a file uploaded with a metadata record is downloaded and notify privilege is selected.
 
 This section configure the mail server to use.
 
 -   **Email** This is the administrator's email address used to send feedback.
 -   **SMTP host** The mail server name or IP address to use for sending emails.
 -   **SMTP port** The SMTP port.
--   **Use SSL** Enable SSL mode
+-   **Use SSL** Enable Secure Sockets Layer (SSL) mode
 -   **User name** Username if connection is required on the SMTP server
 -   **Password** Username password if connection is required on the SMTP server
+-   **Use TLS** Enable use of Transport Layer Security (TLS) 
 
+![](img/feedback-email.png)
+
+Additional settings are available to respect user language preference:
+
+-  **Language for system generated emails** The UI language will be used when sending notification emails by default. To override this behaviour and generate a multi-lingual notification email, list the languages to be used.
+
+-  **Translation follows text** Provide an introduction phrase indicating a multi-lingual notification follows.
+
+![](img/feedback-multilingual.png)
+
+!!! note
+    
+    Email notifications for metadata publication are sent as `text/html` messages, this can be changed using ```WEB-INF/config.properties``` configuration:
+    
+    ```properties
+    # Configure the metadata publication notification mails to be sent as HTML (true) or TEXT (false)
+    metadata.publicationmail.format.html=true
+    ```
+    
 ## Metadata search results
 
 Configuration settings in this group determine what the limits are on user interaction with the search results.
@@ -104,6 +124,24 @@ Enabling the setting, displays in the application footer a link to a page that a
 
 It requires an email server configured.
 
+## Application banner
+
+In certain situations it can be useful to display a banner in the application to inform users, for example to announce a maintenance window or an outage.
+
+Enabling this setting displays a banner in the public pages of the application.
+
+-   **Enable** If set, the application banner is displayed with the message configured.
+
+![](img/application-banner-config.png)
+
+To configure the banner message, go to `Admin console` --> `Settings` --> `Languages and translations` and add a translation entry with the key **application-banner**.
+
+![](img/application-banner-config2.png)
+
+The banner is shown at the top of the public search page.
+
+![](img/application-banner2.png)
+
 ## Link in metadata records
 
 !!! warning "Deprecated"
@@ -133,7 +171,7 @@ The XLink resolver replaces the content of elements with an attribute @xlink:hre
 
 For each metadata schema, the catalog has an XSL transformation (`update-fixed-info.xsl`) that it can apply to a metadata record belonging to that schema. The aim of this transformation is to allow fixed schema, site and catalog information to be applied to a metadata record every time the metadata record is saved in the editor. As an example, this transformation is used to build and store the URL of any files uploaded and stored with the metadata record in the editor.
 
--   **Automatic Fixes**: Enabled by default. It is recommended you do not use the metadata editor when auto-fixing is disabled. See <http://trac.osgeo.org/geonetwork/ticket/368> for more details.
+-   **Automatic Fixes**: Enabled by default. It is recommended you do not use the metadata editor when auto-fixing is disabled. See [ticket #368](http://trac.osgeo.org/geonetwork/ticket/368) for more details.
 
 ## Search Statistics {#search_stats_config}
 
@@ -212,6 +250,79 @@ Note: this option is only available for databases that have been tested. Those d
 
 *Only set privileges to user's groups*: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator). At the moment this option cannot be disabled and is likely to be deprecated in the next version of GeoNetwork.
 
+## Metadata create
+
+### Generate UUID
+
+When enabled, GeoNetwork automatically assigns a **random UUID** to each new metadata record.
+
+- This ensures that every record has a unique and globally identifiable ID.
+- Disable this option if you want to assign metadata UUIDs manually.
+- When disabled, you must specify a **metadata UUID prefix** that will be used when generating the record's UUID.
+
+### Publish for group editors
+
+When enabled, newly created metadata records are **automatically published** and made editable by **editors in the group that owns the record** (the group in which the record was created).
+
+- Enables collaborative editing within the owning group without requiring manual sharing after creation.
+- You can **override this behavior** on the metadata creation page if a specific record should not be editable.
+
+### Copy attachments
+
+When enabled, **attachments** (e.g., documents, images, or data files) from the **source template or record** are automatically copied into the new record.
+
+- Useful when creating similar metadata records that share supporting files.
+- Disable this option if you prefer to start with an empty record.
+- You can **override this behavior** on the metadata creation page if a specific record’s attachments should not be copied.
+
+### Skip metadata creation page
+
+When enabled, if there is **only one available group** and **one available template**, the system automatically creates the metadata record using default options and skips the creation page.
+
+- Speeds up creation in environments with a single group or standardized template.
+- If multiple groups or templates exist, the creation page will still appear.
+
+### Preferred metadata group owner
+
+Specifies the **default group owner** that will be preselected on the metadata creation page.
+
+- Helps users who frequently create records under the same group avoid repetitive selection.
+- You can still choose a different group when creating a record if needed.
+
+### Preferred metadata template
+
+Specifies the **default template** that will be preselected on the metadata creation page.
+
+- Useful when most new records are based on the same template type.
+- You can still select a different template when creating a record if required.
+
+## Metadata configuration {#metadata_configuration}
+
+### Allowed file mime types to attach to a metadata record
+
+Specifies the **file types** that can be attached to a metadata record.
+
+- Enter a **pipe (|)** separated list of MIME types.
+- Supports **exact** and **wildcard** patterns (e.g. `image/*` for all images, `*/*` for all types).
+- If left **empty**, file uploads are **not allowed**.
+
+**Examples:**
+- `image/*|text/plain|application/xml|application/pdf` — allows images, text, XML, and PDF files.
+- `*/*` — allows all file types.
+
+## Metadata History
+
+Allows to view metadata history
+
+![](img/metadata_history.png)
+
+-   **Minimum user profile allowed to view metadata history** Minimum user profile allowed to delete metadata (`Registered User`, `Editor` or `Administrator`). The default value is `Editor`.
+    ![](img/metadata_history_config.png)
+
+-   **Registered User Configuration** The user who has granted view permission to the metadata record can view the history.
+-   **Editor Configuration** The user who has granted editing permission to the metadata record can view the history.
+-   **Administrator Configuration** The user who has granted system administrator permission can view the history.
+
 ## Metadata import {#editing_harvested_records}
 
 -   **Restrict import to schemas** List of all allowed schemas for metadata to be imported. If the metadata schema is not allowed, then the import is not done. Use an empty value to allow all schemas.
@@ -236,18 +347,11 @@ Allows to configure the user profile allowed to publish and un-publish metadata.
 
 ![](img/metadata-publication.png)
 
-## Metadata History
+## Metadata selection - zip export
 
-Allows to view metadata history
+Allows to configure the zip export of metadata records and their attachments.
 
-![](img/metadata_history.png)
-
--   **Minimum user profile allowed to view metadata history** Minimum user profile allowed to delete metadata (`Registered User`, `Editor` or `Administrator`). The default value is `Editor`.
-![](img/metadata_history_config.png)
-
--   **Registered User Configuration** The user who has granted view permission to the metadata record can view the history.
--   **Editor Configuration** The user who has granted editing permission to the metadata record can view the history.
--   **Administrator Configuration** The user who has granted system administrator permission can view the history.
+-   **Total size of attachments allowed in zip export (MB)** Maximum total size of attachments allowed in zip export (in MB). If the total size of attachments linked to the selected metadata is above this value, exporting as zip (with attachments) is not allowed. Leave empty for no limit.
 
 ## Harvesting
 

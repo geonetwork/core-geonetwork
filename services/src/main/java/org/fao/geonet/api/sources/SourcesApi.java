@@ -33,6 +33,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.fao.geonet.api.ApiError;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -108,6 +109,10 @@ public class SourcesApi {
             value = "group",
             required = false)
         Integer group,
+        @RequestParam(
+            value = "type",
+            required = false)
+        SourceType type,
         @Parameter(hidden = true)
         HttpServletResponse response,
         @Parameter(hidden = true)
@@ -115,8 +120,12 @@ public class SourcesApi {
     ) throws Exception {
         setHeaderVaryOnAccept(response);
         List<Source> sources;
-        if (group != null) {
-            sources = sourceRepository.findByGroupOwner(group);
+        if (group != null && type != null) {
+            sources = sourceRepository.findByGroupOwnerAndType(group, type, SortUtils.createSort(Source_.name));
+        } else if (group != null) {
+            sources = sourceRepository.findByGroupOwner(group, SortUtils.createSort(Source_.name));
+        } else if (type != null) {
+            sources = sourceRepository.findByType(type, SortUtils.createSort(Source_.name));
         } else {
             sources = sourceRepository.findAll(SortUtils.createSort(Source_.name));
         }
@@ -145,15 +154,35 @@ public class SourcesApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get all sources by type",
-        description = "Sources are the local catalogue, subportal, external catalogue (when importing MEF files) or harvesters.")
+        summary = "Get a source",
+        description = "")
     @RequestMapping(
-        value = "/{type}",
+        value = "/{sourceIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Source found."),
+        @ApiResponse(responseCode = "404", description = "Source not found.",
+            content = @Content(schema = @Schema(implementation = ApiError.class)))
+    })
     @ResponseBody
-    public List<Source> getSourcesByType(@PathVariable SourceType type) throws Exception {
-        return sourceRepository.findByType(type, SortUtils.createSort(Source_.name));
+    public Source getSource(
+        @Parameter(
+            description = "Source identifier",
+            required = true
+        )
+        @PathVariable
+        String sourceIdentifier) throws Exception {
+        Optional<Source> existingSource = sourceRepository.findById(sourceIdentifier);
+        if (existingSource.isPresent()) {
+            return existingSource.get();
+        } else {
+            throw new ResourceNotFoundException(String.format(
+                "Source with uuid '%s' does not exist.",
+                sourceIdentifier
+            ));
+        }
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -327,6 +356,8 @@ public class SourcesApi {
             entity.setGroupOwner(source.getGroupOwner());
             entity.setServiceRecord(source.getServiceRecord());
             entity.setUiConfig(source.getUiConfig());
+            entity.setDatahubEnabled(source.getDatahubEnabled());
+            entity.setDatahubConfiguration(source.getDatahubConfiguration());
             entity.setLogo(source.getLogo());
             entity.setListableInHeaderSelector(source.isListableInHeaderSelector());
             Map<String, String> labelTranslations = source.getLabelTranslations();

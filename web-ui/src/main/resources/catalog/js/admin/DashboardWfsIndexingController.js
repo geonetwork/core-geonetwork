@@ -86,7 +86,7 @@
       ];
 
       // URL of the index service endpoint
-      $scope.indexUrl = gnHttp.getService("featureindexproxy") + "?_=_search";
+      $scope.indexUrl = gnHttp.getService("featureindexproxy");
 
       // URL of the message producer CRUD API endpoint
       $scope.messageProducersApiUrl = "../api/msg_producers";

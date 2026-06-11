@@ -221,7 +221,7 @@ public class HarvesterSettingsManager {
 
     public String add(String path, Object name, Object value, boolean encrypted) {
 
-            if (name == null)
+        if (name == null)
             throw new IllegalArgumentException("Name cannot be null");
 
         String sName = makeString(name);

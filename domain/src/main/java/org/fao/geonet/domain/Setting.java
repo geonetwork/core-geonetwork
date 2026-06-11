@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,6 +23,8 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.fao.geonet.entitylistener.SettingEntityListenerManager;
 import org.hibernate.annotations.Type;
@@ -237,12 +239,12 @@ public class Setting extends GeonetEntity {
     }
 
     /**
-     * Set true if the setting is private.
+     * Set whether the setting is editable in the administration UI.
      *
-     * @param editable true if the setting is private.
+     * @param editable true if the setting should be editable.
      */
     public Setting setEditable(boolean editable) {
-        setInternal_JpaWorkaround(Constants.toYN_EnabledChar(editable));
+        setEditable_JpaWorkaround(Constants.toYN_EnabledChar(editable));
         return this;
     }
 
@@ -251,4 +253,12 @@ public class Setting extends GeonetEntity {
         return "Setting{'" + name + "' = '" + value + "'}";
     }
 
+    public static Setting createDeepCopy(Setting setting) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.readValue(objectMapper.writeValueAsString(setting), Setting.class);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
 }

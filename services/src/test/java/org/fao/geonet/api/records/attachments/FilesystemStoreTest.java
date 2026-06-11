@@ -24,7 +24,18 @@
  */
 package org.fao.geonet.api.records.attachments;
 
+import jeeves.server.context.ServiceContext;
+import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static org.junit.Assert.assertTrue;
 
 public class FilesystemStoreTest extends AbstractStoreTest {
     @Autowired
@@ -32,5 +43,30 @@ public class FilesystemStoreTest extends AbstractStoreTest {
 
     public Store getStore() {
         return _store;
+    }
+
+    @Test
+    public void testPutResource_resourceExistsOnTheDisk() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        _store.delResources(context, metadataUuid, true);
+
+        String filename = "record-with-old-links.xml";
+        MultipartFile file = new MockMultipartFile(filename,
+            filename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, filename)
+            ));
+        _store.putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+
+        try (final Store.ResourceHolder resourceHolder = _store.getResource(
+            context, metadataUuid, MetadataResourceVisibility.PUBLIC, filename, true)) {
+            Path filePath = FilesystemStore.getResourcePath(resourceHolder.getResource(), context);
+            assertTrue("File exists on the disk", Files.isRegularFile(filePath));
+        }
     }
 }

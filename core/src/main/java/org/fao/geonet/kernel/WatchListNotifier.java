@@ -218,8 +218,7 @@ public class WatchListNotifier extends QuartzJobBean {
                         feedbackLocale,
                         new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, listOfUpdateMessage.toString()),
                         new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, lastNotificationDate),
-                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, url),
-                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 4, url)
+                        new LocalizedEmailParameter(ParameterType.RAW_VALUE, 3, url)
                         );
 
                 }

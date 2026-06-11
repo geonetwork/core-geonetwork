@@ -31,6 +31,12 @@
 
   <bean id="iso19110SchemaPlugin"
         class="org.fao.geonet.schema.iso19110.ISO19110SchemaPlugin">
+    <property name="outputSchemas">
+      <util:map key-type="java.lang.String" value-type="java.lang.String">
+        <entry key="csw" value="http://www.opengis.net/cat/csw/2.0.2"/>
+        <entry key="gfc" value="http://www.isotc211.org/2005/gfc"/>
+      </util:map>
+    </property>
     <property name="xpathTitle">
       <util:list value-type="java.lang.String">
         <value>gmx:name/gco:CharacterString</value>

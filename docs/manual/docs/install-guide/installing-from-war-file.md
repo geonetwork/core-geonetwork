@@ -14,16 +14,16 @@ Host ports requirements:
 
 For  [Apache Tomcat](https://tomcat.apache.org/) we recommend the following versions: 8.5.x and 9.0.x. The latest Apache Tomcat 10.x cannot be used at this time.
 
-For [Jetty](https://www.eclipse.org/jetty/) we the following versions: 9.4.x. Newer versions to Jetty cannot be used at this time.
+For [Jetty](https://www.eclipse.org/jetty/) we recommend the following versions: 9.4.x. Newer versions of Jetty cannot be used at this time.
 
 1.  Download the WAR file
 
-    GeoNetwork releases are available in <https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/>
+    GeoNetwork releases are available at [sourceforge.net](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/)
 
     You can download the WAR file `geonetwork.war` from your browser or use command line like
 
     ``` shell
-    wget https://downloads.sourceforge.net/project/geonetwork/GeoNetwork_opensource/v3.10.2/geonetwork.war
+    wget https://downloads.sourceforge.net/project/geonetwork/GeoNetwork_opensource/v4.4.6/geonetwork.war
     ```
 
 2.  Copy the WAR to the Java web server
@@ -40,7 +40,7 @@ For [Jetty](https://www.eclipse.org/jetty/) we the following versions: 9.4.x. Ne
 
     !!! note
 
-        You need to ensure Tomcat is configured with enough memory for GeoNetwork to launch. This can be be configured via the `setenv` script in tomcat with the appropriate memory for the JAVA_OPTS property). `-Xms2g -Xmx2g` is usually fine.
+        You need to ensure Tomcat is configured with enough memory for GeoNetwork to launch. This can be configured via the `setenv` script in Tomcat with the appropriate memory for the JAVA_OPTS property. `-Xms2g -Xmx2g` is usually fine.
 
     !!! note
 

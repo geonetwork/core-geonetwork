@@ -69,6 +69,11 @@ public class JCloudConfiguration {
     private String externalResourceManagementChangedDatePropertyName;
 
     /**
+     * Property name for storing the creation date of the record.
+     */
+    private String externalResourceManagementCreatedDatePropertyName;
+
+    /**
      * Property name for validation status that is expected to be an integer with values of null, 0, 1, 2
      * (See MetadataResourceExternalManagementProperties.ValidationStatus for code meaning)
      * If null then validation status will default to UNKNOWN.
@@ -86,7 +91,39 @@ public class JCloudConfiguration {
      * Enable option to add versioning in the link to the resource.
      */
     private Boolean versioningEnabled;
+    /**
+     * Property name for storing the version information JCloud does not support versioning.
+     */
+    private String externalResourceManagementVersionPropertyName;
 
+    /**
+     * Property to identify the version strategy to be used.
+     */
+    public enum VersioningStrategy {
+        /**
+         * Each new resource change should generate a new version
+         * i.e. All new uploads will increase the version including draft and working copy.
+         * For workflow, this could cause confusion on working copies which would increase the version in the working copy
+         * but when merged only the last version would be merged and could make it look like there are missing versions.
+         */
+        ALL,
+        /**
+         * Each new resource change should generate a new version, But working copies will only increase by one version.
+         * This will avoid working copy version increases more than one to avoid the issues from ALL (lost versions on merge)
+         * This option may be preferred to ALL when workflow is enabled.
+         */
+        DRAFT,
+        /**
+         * Add a new version each time a metadata is approved.
+         * i.e. draft will remain as version 1 until approved and working copy will only increase by 1 which is what would be used once approved.
+         */
+        APPROVED
+    }
+
+    /**
+     * Version strategy to use when generating new versions
+     */
+    private VersioningStrategy versioningStrategy = VersioningStrategy.ALL;
 
     public void setProvider(String provider) {
         this.provider = provider;
@@ -225,6 +262,24 @@ public class JCloudConfiguration {
         this.versioningEnabled = BooleanUtils.toBooleanObject(versioningEnabled);
     }
 
+    public String getExternalResourceManagementVersionPropertyName() {
+        return externalResourceManagementVersionPropertyName;
+    }
+
+    public void setExternalResourceManagementVersionPropertyName(String externalResourceManagementVersionPropertyName) {
+        this.externalResourceManagementVersionPropertyName = externalResourceManagementVersionPropertyName;
+    }
+
+    public VersioningStrategy getVersioningStrategy() {
+        return versioningStrategy;
+    }
+
+    public void setVersioningStrategy(String versioningStrategy) {
+        if (StringUtils.hasLength(versioningStrategy)) {
+            this.versioningStrategy = VersioningStrategy.valueOf(versioningStrategy);
+        }
+    }
+
     public String getMetadataUUIDPropertyName() {
        return metadataUUIDPropertyName;
     }
@@ -240,6 +295,15 @@ public class JCloudConfiguration {
     public void setExternalResourceManagementChangedDatePropertyName(String externalResourceManagementChangedDatePropertyName) {
         this.externalResourceManagementChangedDatePropertyName = externalResourceManagementChangedDatePropertyName;
     }
+
+    public String getExternalResourceManagementCreatedDatePropertyName() {
+        return externalResourceManagementCreatedDatePropertyName;
+    }
+
+    public void setExternalResourceManagementCreatedDatePropertyName(String externalResourceManagementCreatedDatePropertyName) {
+        this.externalResourceManagementCreatedDatePropertyName = externalResourceManagementCreatedDatePropertyName;
+    }
+
     public String getExternalResourceManagementValidationStatusPropertyName() {
         return externalResourceManagementValidationStatusPropertyName;
     }
@@ -311,7 +375,9 @@ public class JCloudConfiguration {
         String[] names = {
             getMetadataUUIDPropertyName(),
             getExternalResourceManagementChangedDatePropertyName(),
-            getExternalResourceManagementValidationStatusPropertyName()
+            getExternalResourceManagementValidationStatusPropertyName(),
+            getExternalResourceManagementCreatedDatePropertyName(),
+            getExternalResourceManagementVersionPropertyName()
         };
 
         JCloudMetadataNameValidator.validateMetadataNamesForProvider(provider, names);

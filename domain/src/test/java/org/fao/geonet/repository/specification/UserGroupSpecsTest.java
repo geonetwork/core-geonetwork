@@ -23,6 +23,7 @@
 
 package org.fao.geonet.repository.specification;
 
+import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.repository.*;
@@ -34,6 +35,7 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.*;
@@ -86,6 +88,24 @@ public class UserGroupSpecsTest extends AbstractSpringDataTest {
 
         for (UserGroup userGroup : found) {
             assertEquals(ug1.getProfile(), userGroup.getProfile());
+        }
+    }
+
+    @Test
+    public void testHasProfileIn() throws Exception {
+        UserGroup ug1 = newUserGroup();
+        ug1.setProfile(Profile.Reviewer);
+        _repo.save(ug1);
+        _repo.save(newUserGroup());
+        _repo.save(newUserGroup());
+        _repo.save(newUserGroup());
+
+        Set<Profile> profiles = Set.of(Profile.Editor, Profile.Reviewer);
+
+        List<UserGroup> found = _repo.findAll(hasProfileIn(profiles));
+
+        for (UserGroup userGroup : found) {
+            assertTrue(profiles.contains(userGroup.getProfile()));
         }
     }
 

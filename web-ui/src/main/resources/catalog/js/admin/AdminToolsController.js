@@ -82,6 +82,7 @@
     "gnUtilityService",
     "gnSearchSettings",
     "gnGlobalSettings",
+    "gnLangs",
 
     function (
       $scope,
@@ -97,7 +98,8 @@
       gnConfigService,
       gnUtilityService,
       gnSearchSettings,
-      gnGlobalSettings
+      gnGlobalSettings,
+      gnLangs
     ) {
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
 
@@ -116,6 +118,12 @@
             label: "transfertPrivs",
             icon: "fa-user",
             href: "#/tools/transferownership"
+          },
+          {
+            type: "anonymousaccess",
+            label: "anonymousAccessList",
+            icon: "fa-eye",
+            href: "#/tools/anonymousaccess"
           }
         ]
       };
@@ -124,7 +132,7 @@
         $http.get("../api/users/owners").then(function (response) {
           $scope.editors = response.data;
         });
-        $http.get("../api/users/groups").then(function (response) {
+        $http.get("../api/users/groups?groupTypes=Workspace").then(function (response) {
           var uniqueUserGroups = {};
           angular.forEach(response.data, function (g) {
             var key = g.groupId + "-" + g.userId;
@@ -162,7 +170,8 @@
         $http.get("../api/users/" + id + "/groups").then(function (response) {
           var uniqueGroup = {};
           angular.forEach(response.data, function (g) {
-            if (!uniqueGroup[g.group.id]) {
+            // Only include workspace groups
+            if (g.group.type === "Workspace" && !uniqueGroup[g.group.id]) {
               uniqueGroup[g.group.id] = g.group;
             }
           });
@@ -199,7 +208,12 @@
               params.running = false;
             },
             function (response) {
-              // TODO
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("transfertPrivilegesError"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
               params.running = false;
             }
           );
@@ -354,6 +368,46 @@
             type: "success"
           });
         });
+      };
+
+      $scope.recordsWithAnonymousAccess = [];
+
+      function loadAnonymousAccessList() {
+        $http.get("../api/anonymousAccessLink").then(function (response) {
+          var flattened = response.data.map((item) => {
+            return {
+              id: item.metadataId,
+              uuid: item.metadataUuid,
+              resourceTitle:
+                item.getResultSource.resourceTitleObject["lang" + gnLangs.current] ||
+                item.getResultSource.resourceTitleObject.default,
+              resourceAbstract:
+                item.getResultSource.resourceAbstractObject["lang" + gnLangs.current] ||
+                item.getResultSource.resourceAbstractObject.default,
+              recordOwner: item.getResultSource.recordOwner,
+              changeDate: item.getResultSource.dateStamp
+            };
+          });
+          $scope.recordsWithAnonymousAccess = flattened;
+        });
+      }
+
+      loadAnonymousAccessList();
+
+      $scope.deleteAnonymousAccess = function (metadataUuid) {
+        return $http.delete("../api/anonymousAccessLink/" + metadataUuid).then(
+          function () {
+            loadAnonymousAccessList();
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("anonymousAccessDeleted"),
+              timeout: 2,
+              type: "success"
+            });
+          },
+          function () {
+            loadAnonymousAccessList();
+          }
+        );
       };
     }
   ]);

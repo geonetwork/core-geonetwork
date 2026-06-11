@@ -60,21 +60,22 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 -   **Search application**: Select this check box to determine whether the search application is visible in the top toolbar. If not set, no link is shown.
 -   **Application URL**: Define the URL for the search application. In the majority of cases this can be left as the default.
 -   **Number of records per page**: Define the options to determine the number of records shown per page of results, and the default.
--   **Type of facet**: Define the set of search facets should be visible in the search page. The default is `details` but `manager` can be used to show the facets more normally used on the editor page.
--   **Default search**: Define a default filter for the search.
+-   **Facet configuration**: See [Configuring faceted search](../../customizing-application/configuring-faceted-search.md). The configurations are defined using JSON following the [Elasticsearch Aggregations API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html).
 
 ![](img/ui-settings-searchpage.png)
 
--   **Facet field to display using tabs**: This option creates a tab for each configured facet above the search results. This can be used to further narrow down the search results. The list of facet names can be found at <https://github.com/geonetwork/core-geonetwork/blob/master/web/src/main/webapp/WEB-INF/config-summary.xml#L82>. For example, to include the Topic Category filter above the search results, the administrator would add `topicCat` as the facet field to display.
--   **List of facets**: This can be used to restrict the facets available for searching. For example, adding `topicCat` to this list would restrict the search options to `Topic Category` only. This can be useful for restricting the search options in a sub-portal or external web application. To add additional facets to the list, select the blue `+` button.
+-   **Facet field to display using tabs**: This option creates a tab for each configured facet above the search results. This can be used to further narrow down the search results. 
 -   **Filters**: Define additional search criteria added to all searches and again are used primarily for external applications and sub-portals.
-
-![](img/ui-settings-searchpage2.png)
-
 -   **Type of sort options**: Define the different ways by which a user can sort a set of search results. The **default sort by option** is shown below. Note that to search for example on `title` in alphabetical order it is necessary to set the order to `reverse`.
 -   **List of templates for search results**: This section allows the administrator to configure templates for the layout of the search results. The default is `grid` whereas `list` is the default for the editor board.
 
 ![](img/ui-settings-searchpage3.png)
+
+
+-   **Similar records** or **More like this**: Define the query used to search for similar records that are displayed at the bottom of the record view.
+
+![](img/morelikethisconfig.png)
+
 
 -   **Default template used for search results**: Define the template page for the search. Generally this can be left as the default.
 -   **List of formatter for record view**: Determine the formatter used to display the search results. See [Customizing metadata views](../../customizing-application/creating-custom-view.md) for information on creating a new formatter. To add an additional view, click the blue `+` button below the list and provide a name and a URL.
@@ -145,7 +146,7 @@ You can configure each map with different layers and projections.
 
     ![](img/ui-settings-mapprojection2.png)
 
-    In order to enable a new projection it must be defined here using the **proj4** syntax, which can be found for many EPSG-listed projections at, for example, <https://epsg.io>. Additionall, the default bounding box extent, maximum bounding box extent and allowed resolutions (if required) can be defined.
+    In order to enable a new projection it must be defined here using the **proj4** syntax, which can be found for many EPSG-listed projections at, for example, [epsg.io](https://epsg.io). Additionally, the default bounding box extent, maximum bounding box extent and allowed resolutions (if required) can be defined.
 
     Ensure that the coordinates inserted are in the correct units for the projection and are local to the projection. A list of resolutions is only relevant if the main map layer has a XYZ source that does not follow the common tiling pattern.
 
@@ -216,6 +217,19 @@ This section defines the configuration for the map shown when editing a record. 
 
 -   **Record view**:
 -   **Show Social bar**: If enabled, the social media bar is enabled in record view.
+-   **Record View custom menu items**: Use this setting to control the order of the default record view actions and any static pages configured for the record view toolbar. By default, the record view toolbar uses the following menu keys:
+
+    ``` json
+    ["gn-recordview-edit-menu",
+     "gn-recordview-delete-menu",
+     "gn-recordview-manage-menu",
+     "gn-recordview-download-menu",
+     "gn-recordview-display-menu"]
+    ```
+
+    Custom static pages can be inserted between these default entries. Static pages used there must be created for the `RECORD_VIEW_MENU` section. See [Adding static pages](../../customizing-application/adding-static-pages.md).
+
+    The `gn-recordview-manage-menu` entry contains record management actions and is only shown to users with editor privileges or above. The `gn-recordview-download-menu` entry contains download and export actions and is available whenever a record is displayed.
 
 ## Editor Application
 

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       default-lazy-init="true"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+	">
+  <context:property-placeholder location="${db.properties},file://#{systemEnvironment['geonetwork_dir']}/config/db.properties"
+                            ignore-unresolvable="true"
+                            ignore-resource-not-found="true"
+                            file-encoding="UTF-8"
+                            order="-1"/>
+
+  <bean id="jdbcDataSource" class=" com.zaxxer.hikari.HikariDataSource" destroy-method="close">
+    <property name="poolName" value="jdbcDataSource"/>
+    <property name="driverClassName" ref="jdbcDriverClassName"/>
+    <property name="jdbcUrl" ref="jdbcURL"/>
+    <property name="username" value="${jdbc.username}"/>
+    <property name="password" value="${jdbc.password}"/>
+    <property name="maximumPoolSize" value="${jdbc.basic.maxActive}"/>
+    <property name="connectionTimeout" value="${jdbc.basic.maxWait}"/>
+    <property name="maxLifetime" value="0" />
+    <property name="idleTimeout" value="${jdbc.basic.minEvictableIdleTimeMillis}"/>
+    <property name="connectionTestQuery" value="${jdbc.basic.validationQuery}"/>
+    <property name="readOnly" value="${jdbc.basic.defaultReadOnly}"/>
+    <property name="autoCommit" value="${jdbc.basic.defaultAutoCommit}"/>
+    <property name="isolateInternalQueries" value="true"/>
+  </bean>
+
+</beans>

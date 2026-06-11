@@ -58,7 +58,8 @@ public class GeoNetworkPortalFilter implements javax.servlet.Filter {
 
     @Override
     public void init(FilterConfig config) {
-        String excludedPathsValue = config.getInitParameter(EXCLUDED_URL_PATHS);
+        ServletContext context = config.getServletContext();
+        String excludedPathsValue = context.getInitParameter(EXCLUDED_URL_PATHS);
         if (StringUtils.isNotEmpty(excludedPathsValue)) {
             excludedPathsMatchers = Arrays.stream(excludedPathsValue.split(","))
                 .map(StringUtils::trimToEmpty)

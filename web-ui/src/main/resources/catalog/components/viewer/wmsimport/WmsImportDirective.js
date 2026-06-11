@@ -643,10 +643,13 @@
           onClick: "&gnLayerStylesOnClick",
           current: "=gnLayerStylesCurrent",
           // 'select' or default is list
-          layout: "@gnLayerStylesLayout"
+          layout: "@gnLayerStylesLayout",
+          // dropdown open to the left or right
+          dropdownDirection: "@gnLayerStylesDropdownDirection"
         },
         link: function (scope) {
           scope.data = { currentStyle: scope.current };
+          scope.dropdownDirection = scope.dropdownDirection || "left";
           scope.$watch("data.currentStyle", function (n, o) {
             if (n && n !== o) {
               scope.clickFn(n);

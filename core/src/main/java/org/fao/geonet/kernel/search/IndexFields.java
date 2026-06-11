@@ -45,4 +45,5 @@ public class IndexFields {
     public static final String INDEXING_ERROR_MSG = "indexingErrorMsg";
     public static final String INDEXING_ERROR_FIELD = "indexingError";
     public static final String DBID = "id";
+    public static final String FILESTORE = "filestore";
 }

@@ -43,10 +43,6 @@
   <xsl:template match="/" priority="999">
     <xsl:variable name="iso19115Record">
       <xsl:for-each select="//(gmd:MD_Metadata|gmi:MI_Metadata)">
-        <xsl:variable name="nameSpacePrefix">
-          <xsl:call-template name="getNamespacePrefix"/>
-        </xsl:variable>
-
         <xsl:element name="mdb:MD_Metadata">
           <xsl:call-template name="add-iso19115-3.2018-namespaces"/>
 

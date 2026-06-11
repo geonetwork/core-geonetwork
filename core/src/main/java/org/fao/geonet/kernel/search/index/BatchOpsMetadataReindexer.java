@@ -58,6 +58,7 @@ import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
 
 import javax.management.ObjectName;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -80,7 +81,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
         .removalListener(removalListener)
         .build();
 
-    private final Set<Integer> metadata;
+    private final Collection<Integer> metadata;
     private ExecutorService executor = null;
     private ObjectName probeName;
     private final int toProcessCount;
@@ -88,12 +89,14 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
     private final AtomicInteger inError = new AtomicInteger();
     private CompletableFuture<Void> allCompleted;
     private final MBeanExporter exporter;
+    private final EsSearchManager esSearchManager;
 
-    public BatchOpsMetadataReindexer(DataManager dm, Set<Integer> metadata) {
+    public BatchOpsMetadataReindexer(DataManager dm, Collection<Integer> metadata) {
         super(dm);
         this.metadata = metadata;
         this.toProcessCount = metadata.size();
         exporter = ApplicationContextHolder.get().getBean(MBeanExporter.class);
+        esSearchManager = ApplicationContextHolder.get().getBean(EsSearchManager.class);
         removalListener.setExporter(exporter);
     }
 
@@ -221,7 +224,7 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
                 beginIndex, beginIndex + count, ids.length,
                 System.currentTimeMillis() - start,
                 Thread.currentThread().getId()));
-            ApplicationContextHolder.get().getBean(EsSearchManager.class).forceIndexChanges();
+            esSearchManager.forceIndexChanges();
         }
     }
 }

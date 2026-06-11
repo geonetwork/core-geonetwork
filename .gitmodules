@@ -7,3 +7,6 @@
 [submodule "web-ui/src/main/resources/catalog/lib/bootstrap-table"]
 	path = web-ui/src/main/resources/catalog/lib/bootstrap-table
 	url = https://github.com/wenzhixin/bootstrap-table.git
+[submodule "plugins/datahub-integration/geonetwork-ui"]
+	path = plugins/datahub-integration/geonetwork-ui
+	url = https://github.com/geonetwork/geonetwork-ui.git

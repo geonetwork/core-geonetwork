@@ -104,11 +104,17 @@
           if any issue with the ETF validator returning the task as pending while any error happened.
 
         - Interval to wait until do a new check, in milliseconds.
+
+        - Processing to apply to the metadata before the document is sent to the validation.
+          It does not apply to the CSW mode.
+          The XSL file must be in the schema folder corresponding to the metadata record.
+          eg. `present/csw/gmd-inspire-postprocessing.xsl` in the iso19139 schema folder.
   -->
   <util:map id="validatorAdditionalConfig">
     <entry key="defaultTestSuite" value="TG version 2.0 - Data sets and series"/>
     <entry key="maxNumberOfEtfChecks" value="20"/>
     <entry key="intervalBetweenEtfChecks" value="5000"/>
+    <entry key="processing" value=""/>
   </util:map>
 
 

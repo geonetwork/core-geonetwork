@@ -54,7 +54,7 @@
         gn-collapsible="::ctrl.fLvlCollapse[facet.key]"
       >
         <span class="flex-shrink text-ellipsis"
-          >{{('facet-' + facet.key) | facetKeyTranslator}}</span
+          >{{getFacetLabel(facet, 'facet-' + facet.key)}}</span
         >
         <span
           class="fa fa-fw"

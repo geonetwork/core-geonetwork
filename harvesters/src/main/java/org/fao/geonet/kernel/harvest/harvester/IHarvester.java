@@ -35,11 +35,6 @@ import org.fao.geonet.Logger;
 public interface IHarvester<T extends HarvestResult> {
 
     /**
-     * Returns all the (important?) exceptions that were thrown during the execution
-     */
-    List<HarvestError> getErrors();
-
-    /**
      * Actual harvest function.
      */
     T harvest(Logger log) throws Exception;

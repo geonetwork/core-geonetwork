@@ -1,0 +1,229 @@
+<form name="harvesterForm" data-ng-keypress="updatingHarvester()">
+  <input type="hidden" name="_csrf" value="{{csrf}}" />
+
+  <div class="row">
+    <div
+      id="gn-harvest-settings-selected-id"
+      class="col-lg-6 gn-nopadding-left"
+      data-gn-harvester-identification="harvesterSelected"
+    ></div>
+    <div
+      id="gn-harvest-settings-selected-schedule"
+      class="col-lg-6 gn-nopadding-right"
+      data-gn-harvester-schedule="harvesterSelected"
+    ></div>
+  </div>
+
+  <fieldset id="gn-harvest-settings-sftp-basic-row">
+    <legend id="gn-harvest-settings-sftp-basic-title">
+      <i class="fa fa-fw fa-plug"></i
+      ><span data-translate="">harvesterConnectionConfiguration</span> {{('harvester-' +
+      harvesterSelected['@type']) | translate}}
+    </legend>
+
+    <div
+      id="gn-harvest-settings-sftp-basic-server-row"
+      data-ng-class="harvesterSelected.site.server == '' ? 'has-error' : ''"
+    >
+      <label
+        id="gn-harvest-settings-sftp-basic-server-label"
+        class="control-label"
+        data-translate=""
+        >sftp-server</label
+      >
+      <input
+        id="gn-harvest-sett ings-sftp-basic-server-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.site.server"
+      />
+      <p class="help-block" data-translate="">sftp-serverHelp</p>
+    </div>
+
+    <div
+      id="gn-harvest-settings-sftp-basic-port-row"
+      data-ng-class="harvesterSelected.site.port == '' ? 'has-error' : ''"
+    >
+      <label
+        id="gn-harvest-settings-sftp-basic-port-label"
+        class="control-label"
+        data-translate=""
+        >sftp-port</label
+      >
+      <input
+        id="gn-harvest-sett ings-sftp-basic-port-input"
+        type="number"
+        class="form-control"
+        data-gn-string-to-number
+        data-ng-model="harvesterSelected.site.port"
+      />
+      <p class="help-block" data-translate="">sftp-portHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-sftp-basic-folder-row">
+      <label
+        id="gn-harvest-settings-sftp-basic-folder-label"
+        class="control-label"
+        data-translate=""
+        >sftp-folder</label
+      >
+      <input
+        id="gn-harvest-settings-sftp-basic-folder-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.options.folder"
+      />
+      <p class="help-block" data-translate="">sftp-folderHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-sftp-advanced-subfolder-row">
+      <label class="control-label">
+        <input
+          id="gn-harvest-settings-sftp-advanced-subfolder-checkbox"
+          type="checkbox"
+          data-ng-model="harvesterSelected.options.recurse"
+        />
+        <span id="gn-harvest-settings-sftp-advanced-subfolder-label" data-translate=""
+          >sftp-recurse</span
+        >
+      </label>
+      <p class="help-block" data-translate="">sftp-recurseHelp</p>
+    </div>
+
+    <div id="gn-harvest-settings-gn-advanced-remote-username-row">
+      <label
+        id="gn-harvest-settings-gn-advanced-remote-username-label"
+        class="control-label"
+        data-translate=""
+        >username</label
+      >
+      <input
+        id="gn-harvest-settings-gn-advanced-remote-username-input"
+        type="text"
+        class="form-control"
+        data-ng-model="harvesterSelected.site.account.username"
+      />
+    </div>
+
+    <div id="gn-harvest-settings-sftp-advanced-useAuthKey-row">
+      <label class="control-label">
+        <input
+          id="gn-harvest-settings-sftp-advanced-useAuthKey-checkbox"
+          type="checkbox"
+          data-ng-model="harvesterSelected.options.useAuthKey"
+        />
+        <span id="gn-harvest-settings-sftp-advanced-useAuthKey-label" data-translate=""
+          >sftp-useAuthKey</span
+        >
+      </label>
+      <p class="help-block" data-translate="">sftp-useAuthKeyHelp</p>
+    </div>
+
+    <div
+      id="gn-harvest-settings-sftp-advanced-typeAuthKey-row"
+      data-ng-show="harvesterSelected.options.useAuthKey == true"
+    >
+      <label class="control-label" data-translate=""> sftp-typeAuthKey </label>
+      <select
+        id="gn-harvest-settings-sftp-advanced-typeAuthKey-select"
+        class="form-control"
+        data-ng-model="harvesterSelected.options.typeAuthKey"
+      >
+        <option value="RSA">RSA</option>
+        <option value="ECDSA">ECDSA</option>
+      </select>
+      <p class="help-block" data-translate="">sftp-typeAuthKeyHelp</p>
+    </div>
+
+    <div
+      id="gn-harvest-settings-sftp-advanced-publicKey-row"
+      data-ng-show="harvesterSelected.options.useAuthKey == true"
+    >
+      <label class="control-label" data-translate="">sftp-publicKey</label>
+      <textarea disabled="disabled" rows="5" style="width: 100%">
+{{harvesterSelected.options.publicKey}}</textarea
+      >
+      <p class="help-block" data-translate="">sftp-publicKeyHelp</p>
+    </div>
+
+    <div
+      id="gn-harvest-settings-gn-advanced-remote-password-row"
+      data-ng-show="harvesterSelected.options.useAuthKey != true"
+    >
+      <label
+        id="gn-harvest-settings-gn-advanced-remote-password-label"
+        class="control-label"
+        data-translate=""
+        >password</label
+      >
+      <input
+        id="gn-harvest-settings-gn-advanced-remote-password-input"
+        type="password"
+        class="form-control"
+        autocomplete="new-password"
+        data-ng-disabled="harvesterSelected.options.useAuthKey == true"
+        data-ng-model="harvesterSelected.site.account.password"
+      />
+    </div>
+  </fieldset>
+
+  <fieldset id="gn-harvest-settings-sftp-advanced-row">
+    <legend id="gn-harvest-settings-sftp-advanced-title">
+      <i class="fa fa-fw fa-cogs"></i
+      ><span data-translate="">harvesterResponseProcessing</span>
+      {{harvesterSelected['@type'] | translate}}
+    </legend>
+
+    <div data-gn-harvester-extras="harvesterSelected"></div>
+
+    <fieldset>
+      <legend data-translate="">filteringAndProcessing</legend>
+
+      <div id="gn-harvest-settings-gn-advanced-xsl-row">
+        <label
+          id="gn-harvest-settings-gn-advanced-xsl-label"
+          class="control-label"
+          data-translate=""
+          >geonetwork-xslfilter</label
+        >
+        <div
+          id="gn-harvest-settings-gn-advanced-xsl-input"
+          data-gn-import-xsl="harvesterSelected.site.xslfilter"
+          data-mode="btn-group"
+        ></div>
+        <p class="help-block" data-translate="">geonetwork-xslfilterHelp</p>
+      </div>
+
+      <div id="gn-harvest-settings-sftp-advanced-validate-row">
+        <label
+          id="gn-harvest-settings-sftp-advanced-validate-label"
+          class="control-label"
+        >
+          <span data-translate="">harvesterValidate</span>
+        </label>
+        <div
+          id="gn-harvest-settings-sftp-advanced-validate-list"
+          data-gn-harvester-validation="harvesterSelected.content.validate"
+        ></div>
+        <p class="help-block" data-translate="">harvesterValidateHelp</p>
+      </div>
+    </fieldset>
+
+    <div
+      data-gn-harvester-translate-content-configurator="harvesterSelected.content"
+    ></div>
+
+    <div
+      id="gn-harvest-settings-sftp-advanced-category-row"
+      data-gn-category="harvesterSelected.categories[0]['@id']"
+      data-lang="{{lang}}"
+      data-label="category"
+    ></div>
+  </fieldset>
+
+  <div
+    id="gn-harvest-settings-sftp-privileges-row"
+    data-gn-harvester-privileges="harvesterSelected"
+    data-lang="{{lang}}"
+  ></div>
+</form>

@@ -7,13 +7,13 @@
     <span
       class="text-muted badge"
       data-ng-class="{
-              'text-success': md.mdStatus == 2,
-              'text-warning': md.mdStatus == 4
+              'text-success': mdView.current.record.mdStatus == 2,
+              'text-warning': mdView.current.record.mdStatus == 4
               }"
       data-ng-if="user.isEditorOrMore()
-                      && md.mdStatus < 50
+                      && mdView.current.record.mdStatus < 50
                       && isMdWorkflowEnable"
-      >{{('status-' + md.mdStatus) | translate}}</span
+      >{{('status-' + mdView.current.record.mdStatus) | translate}}</span
     >
   </h1>
 

@@ -15,7 +15,7 @@
    
    ```bash
    git add .
-   git commit -m "Transifix update"
+   git commit -m "Transifex update"
    ```
 
 ### Release Notes
@@ -60,7 +60,7 @@
    ./release-notes
    ```
    
-   After the script runs it will produces:
+   After the script runs, it will produce:
    
    * ``docs/changes/changes4.4.4-0.txt``
      
@@ -127,9 +127,100 @@
     ./release-restore.sh
     ```
 
+3. Close the milestone on github https://github.com/geonetwork/core-geonetwork/milestones?state=closed with link to sourceforge download.
+   
+   **Title:** ``4.4.7``
+   ```
+   Downloads available here: https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.7/
+   ```
+   
+4. Publish the release on github https://github.com/geonetwork/core-geonetwork/releases .
+   
+   **Title:** ``GeoNetwork v4.4.7``
+   ```
+   https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.7/
+
+   Check the [GeoNetwork 4.4.7 changelog](https://docs.geonetwork-opensource.org/4.4/overview/change-log/version-4.4.7/)
+   ```
+   
+5. Update the website https://github.com/geonetwork/website .
+   
+   * Version: [docssrc/conf.py](https://github.com/geonetwork/website/blob/master/docsrc/conf.py):
+   
+     ```
+     # The short X.Y version.
+     version = '4.4.7'
+     # The full version, including alpha/beta/rc tags.
+     release = '4.4.7'
+     ```
+
+    -   Update the download link: <>
+    -   Add the section for the new release: <https://github.com/geonetwork/website/blob/master/docsrc/news.rst>
+    
+   * Download: [docsrc/downloads.rst](https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst)
+   
+     ```
+     Releases
+     --------
+     
+      * `v4.4.7 <https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.7/>`_
+     ``` 
+     
+   * News: [docsrc/news.rst](https://github.com/geonetwork/website/blob/master/docsrc/news.rst)
+     
+     ```
+     News
+     ====
+     
+     GeoNetwork opensource v4.4.7 released
+     ------------------------------------------------
+     
+     Date: 10 April 2025
+     
+     We're pleased to announce the release 4.4.7 of GeoNetwork opensource.
+     Check the `changelog <https://docs.geonetwork-opensource.org/4.4/overview/change-log/version-4.4.7/>`__ and proceed to :doc:`downloads` and enjoy!
+     
+     Thanks and congratulations to the all community members!
+     ```
+   
+6. Share with [GeoNetwork User Forum](https://discourse.osgeo.org/c/geonetwork/user/54) inviting discussion:
+   
+   Latest: **GeoNetwork 4.4.7 Released** (Tags: ``release``)
+   
+   ```
+   We're pleased to [announce the release GeoNetwork opensource v4.4.7](https://geonetwork-opensource.org/news.html).
+   
+   This is a minor update to the 4.4 latest series, recommended for those enjoying the newest features from the GeoNetwork community.
+   
+   You can find the software in [GeoNetwork/v4.4.7](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.7/) downloads.
+   
+   The changelog [provides an overview of new functionality and features](https://docs.geonetwork-opensource.org/4.4/overview/change-log/version-4.4.7/).
+   
+   Thanks to everyone who contributed and congratulations to the GeoNetwork community.
+   
+   If you have any questions about this release please reply to this topic.
+   ```
+   
+   Stable: **GeoNetwork 4.4.12 Released** (Tags: ``release``)
+   
+   ```
+   We're pleased to [announce the release GeoNetwork opensource v4.2.12](https://geonetwork-opensource.org/news.html).
+   
+   This is a minor update to the 4.2 stable series, recommended for production use and for new installations of GeoNetwork.
+   
+   You can find the software in [GeoNetwork/v4.2.12](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.2.12/) downloads.
+   
+   The changelog [provides an overview of new functionality and features](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.2.12/).
+   
+   Thanks and congratulations to all community members.
+
+   If you have any questions about this release please reply to this topic.
+   ```
+
+
 ## Doing a manual release
 
-This section documents the steps followed by the development team to do a new release.
+This section documents the manual steps followed by the development team to do a new release.
 
 Once the release branch has been thoroughly tested and is stable a release can be made.
 
@@ -137,7 +228,7 @@ The following script can be used on Linux and Mac. For this a running build envi
 with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 
 
-1.  Prepare the release (examples prepairs version 4.4.1 as latest release):
+1.  Prepare the release (this example prepares version 4.4.1 as the latest release):
 
     ``` shell
     # Setup properties
@@ -243,7 +334,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
 
     cat <<EOF > docs/manual/docs/overview/change-log/version-$version.md
     
-    and more \... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.
+    and more... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.
     EOF
     ```
     
@@ -264,7 +355,7 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     ```
     Once running check the new page:
     ```
-    open http://localhost:8000/ocverview/change-log/$newversion
+    open http://localhost:8000/overview/change-log/$newversion
     ```
 
 5.  Commit & tag the new version
@@ -354,15 +445,15 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     -   If using Linux:
 
         ``` shell
-        cd web/target && md5sum geonetwork.war > geonetwork.war.md5 && cd ../..
-        cd release/target/GeoNetwork-$version && md5sum geonetwork-bundle-$newversion.zip >  geonetwork-bundle-$newversion.zip.md5 && cd ../../..
+        cd web/target && sha256sum geonetwork.war > geonetwork.war.sha256 && cd ../..
+        cd release/target/GeoNetwork-$version && sha256sum geonetwork-bundle-$newversion.zip >  geonetwork-bundle-$newversion.zip.sha256 && cd ../../..
         ```
 
     -   If using Mac OS X:
 
         ``` shell
-        md5 -r web/target/geonetwork.war > web/target/geonetwork.war.md5
-        md5 -r release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip > release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip.md5
+        shasum -a 256 web/target/geonetwork.war > web/target/geonetwork.war.sha256
+        shasum -a 256 release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip > release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip.sha256
         ```
 
     On sourceforge first:
@@ -381,27 +472,27 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     bye
     ```
 
-11.  Close the milestone on github <https://github.com/geonetwork/core-geonetwork/milestones?state=closed> with link to sourceforge download.
+11.  [Close the milestone on GitHub](https://github.com/geonetwork/core-geonetwork/milestones?state=closed) with a link to the SourceForge download.
 
-    Publish the release on github <https://github.com/geonetwork/core-geonetwork/releases> .
+    [Publish the release on GitHub](https://github.com/geonetwork/core-geonetwork/releases).
 
-    Update the website links <https://github.com/geonetwork/website> .
+    Update the [website repository](https://github.com/geonetwork/website):
 
-    -   Add the changes file for the release to <https://github.com/geonetwork/doc/tree/develop/source/overview/change-log>
-    -   List the previous file in <https://github.com/geonetwork/doc/blob/develop/source/overview/change-log/index.rst>
-    -   Update the version: <https://github.com/geonetwork/website/blob/master/docsrc/conf.py>
-    -   Update the download link: <https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst>
-    -   Add the section for the new release: <https://github.com/geonetwork/website/blob/master/docsrc/news.rst>
+    -   Add the changes file for the release to [geonetwork/doc change-log](https://github.com/geonetwork/doc/tree/develop/source/overview/change-log)
+    -   List the previous file in [change-log/index.rst](https://github.com/geonetwork/doc/blob/develop/source/overview/change-log/index.rst)
+    -   Update the version in [docsrc/conf.py](https://github.com/geonetwork/website/blob/master/docsrc/conf.py)
+    -   Update the download link in [docsrc/downloads.rst](https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst)
+    -   Add the section for the new release in [docsrc/news.rst](https://github.com/geonetwork/website/blob/master/docsrc/news.rst)
 
     Send an email to the mailing lists.
 
 10. Merge in depending branches
 
-    If a major version, then master version has to be updated to the next one (eg. if 3.8.0, then 3.7.x is 3.9.x).
+    If a major version, then the main branch version has to be updated to the next one (e.g. if 3.8.0, then 3.7.x becomes 3.9.x).
 
     ``` shell
     # Create it if it does not exist yet
-    git checkout master
+    git checkout main
     ./update-version.sh $currentversion $nextMajorVersion
     ```
     
@@ -418,5 +509,5 @@ with the following utilities: ***sed***, ***xmlstarlet*** and ***sftp***.
     ``` shell
     git add .
     git commit -m "Update version to $nextMajorVersion"
-    git push origin master
+    git push origin main
     ```

@@ -49,6 +49,9 @@ public class MEFVisitor implements IVisitor {
     public void visit(Path mefFile, IMEFVisitor v) throws Exception {
         Element info = handleXml(mefFile, v);
         handleBin(mefFile, v, info, 0);
+
+        // Index the record so that the resources are included
+        v.indexMetadata(0);
     }
 
     // --------------------------------------------------------------------------

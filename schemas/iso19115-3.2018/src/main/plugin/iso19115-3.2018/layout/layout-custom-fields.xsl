@@ -13,6 +13,7 @@
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
   xmlns:saxon="http://saxon.sf.net/"
+  xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
   extension-element-prefixes="saxon"
   exclude-result-prefixes="#all">
 
@@ -20,8 +21,9 @@
   <!-- Readonly elements -->
   <xsl:template mode="mode-iso19115-3.2018"
                 match="mdb:metadataIdentifier/mcc:MD_Identifier/mcc:code|
-                       mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:date|
-                       mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:dateType"
+                             mdb:metadataLinkage/*[cit:function/*/@codeListValue = 'completeMetadata']/cit:linkage[not(lan:PT_FreeText)]|
+                             mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:date|
+                             mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:dateType"
                 priority="2000">
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
@@ -139,81 +141,6 @@
   </xsl:template>
 
 
-  <!-- Measure elements, gco:Distance, gco:Angle, gco:Scale, gco:Length, ... -->
-  <xsl:template mode="mode-iso19115-3.2018" priority="2000" match="mri:*[gco:*/@uom]">
-    <xsl:param name="schema" select="$schema" required="no"/>
-    <xsl:param name="labels" select="$labels" required="no"/>
-    <xsl:param name="refToDelete" select="''" required="no"/>
-    <xsl:param name="overrideLabel" select="''" required="no"/>
-
-    <!--Avoid CHOICEELEMENT level for parent name -->
-    <xsl:variable name="labelConfig"
-                  select="gn-fn-metadata:getLabel($schema, name(), $labels,
-                              name(ancestor::mri:*[not(contains(name(), 'CHOICE_ELEMENT'))][1]),
-                              '', '')"/>
-    <xsl:variable name="labelMeasureType"
-                  select="gn-fn-metadata:getLabel($schema, name(gco:*), $labels, name(), '', '')"/>
-    <xsl:variable name="isRequired" select="gn:element/@min = 1 and gn:element/@max = 1"/>
-
-    <xsl:variable name="parentEditInfo" select="if ($refToDelete) then $refToDelete else gn:element"/>
-
-    <div class="form-group gn-field gn-title {if ($isRequired) then 'gn-required' else ''}"
-         id="gn-el-{*/gn:element/@ref}"
-         data-gn-field-highlight="">
-      <label class="col-sm-2 control-label">
-        <xsl:value-of select="if ($overrideLabel) then $overrideLabel else $labelConfig/label"/>
-        <xsl:if test="$overrideLabel = '' and
-                      $labelMeasureType != '' and
-                      $labelMeasureType/label != $labelConfig/label">&#10;
-          (<xsl:value-of select="$labelMeasureType/label"/>)
-        </xsl:if>
-      </label>
-      <div class="col-sm-9 gn-value">
-        <xsl:variable name="elementRef"
-                      select="gco:*/gn:element/@ref"/>
-        <xsl:variable name="helper"
-                      select="gn-fn-metadata:getHelper($labelConfig/helper, .)"/>
-        <div data-gn-measure="{gco:*/text()}"
-             data-uom="{gco:*/@uom}"
-             data-ref="{concat('_', $elementRef)}">
-        </div>
-
-        <textarea id="_{$elementRef}_config" class="hidden">
-          <xsl:copy-of select="java-xsl-util:xmlToJson(
-              saxon:serialize($helper, 'default-serialize-mode'))"/></textarea>
-      </div>
-      <div class="col-sm-1 gn-control">
-        <xsl:call-template name="render-form-field-control-remove">
-          <xsl:with-param name="editInfo" select="*/gn:element"/>
-          <xsl:with-param name="parentEditInfo" select="$parentEditInfo"/>
-        </xsl:call-template>
-      </div>
-    </div>
-  </xsl:template>
-
- <!-- <xsl:template mode="mode-iso19115-3.2018"
-                match="cit:CI_Date"
-                priority="2000">
-    <xsl:param name="schema" select="$schema" required="no"/>
-    <xsl:param name="labels" select="$labels" required="no"/>
-
-    <div class="row">
-      <div class="col-md-8">
-        <xsl:apply-templates mode="mode-iso19115-3.2018" select="cit:date">
-          <xsl:with-param name="schema" select="$schema"/>
-          <xsl:with-param name="labels" select="$labels"/>
-        </xsl:apply-templates>
-      </div>
-      <div class="col-md-4">
-        <xsl:apply-templates mode="mode-iso19115-3.2018" select="cit:dateType">
-          <xsl:with-param name="schema" select="$schema"/>
-          <xsl:with-param name="labels" select="$labels"/>
-        </xsl:apply-templates>
-      </div>
-    </div>
-  </xsl:template>-->
-
-
 
   <!-- ===================================================================== -->
   <!-- gml:TimePeriod (format = %Y-%m-%dThh:mm:ss) -->
@@ -273,6 +200,7 @@
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
 
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
@@ -286,7 +214,8 @@
           data-hright-ref="_{gex:eastBoundLongitude/gco:Decimal/gn:element/@ref}"
           data-hbottom-ref="_{gex:southBoundLatitude/gco:Decimal/gn:element/@ref}"
           data-htop-ref="_{gex:northBoundLatitude/gco:Decimal/gn:element/@ref}"
-          data-lang="lang"></div>
+          data-lang="lang"
+          data-read-only="{$readonly}"></div>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>
