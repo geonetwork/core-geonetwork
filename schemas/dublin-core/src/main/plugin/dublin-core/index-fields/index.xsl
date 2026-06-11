@@ -186,9 +186,7 @@
               <xsl:for-each select="$keywords">
                 <keyword>
                   <values>
-                    <value>
-                      "default": <xsl:value-of select="concat($doubleQuote, util:escapeForJson(.), $doubleQuote)"/>
-                    </value>
+                    <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':' , $doubleQuote, util:escapeForJson(.), $doubleQuote)"/></value>
                   </values>
                 </keyword>
               </xsl:for-each>
