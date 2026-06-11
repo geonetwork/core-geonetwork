@@ -45,8 +45,7 @@ public final class LogoUtils {
 
     private static final int SIX_HOURS = 60 * 60 * 6;
 
-    private static final String TRANSPARENT_1_X_1_PNG_BASE64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR"
-        + "42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
+    private static final String TRANSPARENT_1_X_1_PNG_BASE64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII";
 
     private static final byte[] TRANSPARENT_1_X_1_PNG = org.apache.commons.codec.binary.Base64.decodeBase64(TRANSPARENT_1_X_1_PNG_BASE64);
 
