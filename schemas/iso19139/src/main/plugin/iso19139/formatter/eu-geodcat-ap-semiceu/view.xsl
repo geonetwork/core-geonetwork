@@ -84,7 +84,7 @@
         xmlns:xlink  = "http://www.w3.org/1999/xlink"
         xmlns:xsi    = "http://www.w3.org/2001/XMLSchema-instance"
         xmlns:xsl    = "http://www.w3.org/1999/XSL/Transform"
-        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+												   
         exclude-result-prefixes="earl gco gmd gml gmx i i-gp srv xlink xsi xsl wdrs"
         version="2.0">
 
@@ -454,7 +454,7 @@
                               gmd:identifier/*"/>
 
       <xsl:variable name="uriIdentifiers"
-                    as="node()*">
+>
         <xsl:for-each select="$identifiers">
           <xsl:variable name="rURI"
                         select="if (gmd:codeSpace)
@@ -1353,7 +1353,7 @@
           <xsl:variable name="Title">
             <xsl:for-each select="gmd:name">
               <dct:title xml:lang="{$MetadataLanguage}">
-                <xsl:value-of select="normalize-space(*)"/>
+                <xsl:value-of select="normalize-space(*[self::gco:CharacterString|self::gmx:Anchor])"/>
               </dct:title>
               <xsl:call-template name="LocalisedString">
                 <xsl:with-param name="term">dct:title</xsl:with-param>
@@ -1364,7 +1364,7 @@
           <xsl:variable name="Description">
             <xsl:for-each select="gmd:description">
               <dct:description xml:lang="{$MetadataLanguage}">
-                <xsl:value-of select="normalize-space(*)"/>
+                <xsl:value-of select="normalize-space(*[self::gco:CharacterString|self::gmx:Anchor])"/>
               </dct:description>
               <xsl:call-template name="LocalisedString">
                 <xsl:with-param name="term">dct:description</xsl:with-param>
@@ -1387,10 +1387,10 @@
 
           <xsl:variable name="TitleOrDescriptionOrPlaceholder">
             <xsl:choose>
-              <xsl:when test="normalize-space(gmd:name/*) != ''">
-                <xsl:value-of select="normalize-space(gmd:name/*)"/>
+              <xsl:when test="normalize-space(gmd:name/*[self::gco:CharacterString|self::gmx:Anchor]) != ''">
+                <xsl:value-of select="normalize-space(gmd:name/*[self::gco:CharacterString|self::gmx:Anchor])"/>
               </xsl:when>
-              <xsl:when test="normalize-space(gmd:description/*) != ''">
+              <xsl:when test="normalize-space(gmd:description/*[self::gco:CharacterString|self::gmx:Anchor]) != ''">
                 <xsl:value-of select="normalize-space(gmd:description)"/>
               </xsl:when>
               <xsl:otherwise>
@@ -1633,7 +1633,7 @@
     </xsl:param>
 
     <xsl:param name="IndividualName">
-      <xsl:value-of select="normalize-space(gmd:individualName/*)"/>
+      <xsl:value-of select="normalize-space(gmd:individualName/*[self::gco:CharacterString|self::gmx:Anchor])"/>
     </xsl:param>
 
     <xsl:param name="IndividualName-FOAF">
@@ -1700,13 +1700,13 @@
     </xsl:param>
 
     <xsl:param name="Email">
-      <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/*[normalize-space() != '']">
+      <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString[normalize-space() != '']">
         <foaf:mbox rdf:resource="mailto:{normalize-space(.)}"/>
       </xsl:for-each>
     </xsl:param>
 
     <xsl:param name="Email-vCard">
-      <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/*[normalize-space() != '']">
+      <xsl:for-each select="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString[normalize-space() != '']">
         <vcard:hasEmail rdf:resource="mailto:{normalize-space(.)}"/>
       </xsl:for-each>
     </xsl:param>
@@ -4010,7 +4010,7 @@
       </xsl:when>
       <xsl:otherwise>
         <xsl:choose>
-          <xsl:when test="$code castable as xs:double and $code = number($code) and (translate($codespace,$uppercase,$lowercase) = 'epsg' or starts-with(translate($codespace,$uppercase,$lowercase),translate($EpsgSrsBaseUrn,$uppercase,$lowercase)))">
+          <xsl:when test="number($code) = number($code) and (translate($codespace,$uppercase,$lowercase) = 'epsg' or starts-with(translate($codespace,$uppercase,$lowercase),translate($EpsgSrsBaseUrn,$uppercase,$lowercase)))">
             <geodcatap:referenceSystem>
               <rdf:Description rdf:about="{$EpsgSrsBaseUri}/{$code}">
                 <rdf:type rdf:resource="{$dct}Standard"/>
@@ -4109,6 +4109,7 @@
 
   <xsl:template name="LocalisedString">
     <xsl:param name="term"/>
+    <xsl:variable name="primaryValue" select="normalize-space(*[self::gco:CharacterString|self::gmx:Anchor])"/>
     <xsl:for-each select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString">
       <xsl:variable name="value" select="normalize-space(.)"/>
       <xsl:variable name="langs">
@@ -4116,7 +4117,7 @@
           <xsl:with-param name="lang" select="translate(translate(@locale, $uppercase, $lowercase), '#', '')"/>
         </xsl:call-template>
       </xsl:variable>
-      <xsl:if test="$value != ''">
+      <xsl:if test="$value != '' and not($primaryValue != '' and $value = $primaryValue)">
         <xsl:element name="{$term}">
           <xsl:attribute name="xml:lang"><xsl:value-of select="$langs"/></xsl:attribute>
           <xsl:value-of select="$value"/>
