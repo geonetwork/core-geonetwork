@@ -192,20 +192,17 @@
     </xsl:choose>
   </xsl:variable>
 
-<!-- Parameter $locale-prefix -->
+
+<!-- Parameter $locale-preferred-lang -->
 <!--
-  This parameter specifies the prefix (can be empty) used in ISO 19139 language tags
+  This parameter specifies the preferred language for localized text.
+  Must be a valid gmd:locale//gmd:LanguageCode/@codeListValue, or empty.
 -->
 
+  <xsl:param name="locale-preferred-lang">eng</xsl:param>
 
-  <xsl:param name="locale-prefix">locale-</xsl:param>
-
-<!-- Parameter $locale-default-lang -->
-<!--
-  This parameter specifies the default language tag used in ISO 19139 language tags
--->
-
-  <xsl:param name="locale-default-lang">en</xsl:param>
+  <xsl:variable name="locale-preferred-id"
+                select="//gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $locale-preferred-lang]/@id"/>
 
 
   <!-- Parameter $include-deprecated -->
@@ -436,13 +433,10 @@
     Handles three patterns:
     1. gmx:Anchor - returns the text content
     2. gco:CharacterString - returns the text content
-    3. gmd:PT_FreeText with LocalisedCharacterStrings - returns English text if available, otherwise first available
+    3. gmd:PT_FreeText with LocalisedCharacterStrings - returns preferred localized text if available, otherwise first available
   -->
   <xsl:function name="local:getTextContent">
     <xsl:param name="element"/>
-
-    <xsl:variable name="localeId" select="concat('#', $locale-prefix, $locale-default-lang)"/>
-
     <xsl:choose>
       <!-- Handle gmx:Anchor -->
       <xsl:when test="$element/gmx:Anchor">
@@ -455,13 +449,14 @@
       <!-- Handle PT_FreeText with LocalisedCharacterStrings -->
       <xsl:when test="$element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString">
         <xsl:choose>
-          <!-- Try to find English locale first -->
-          <xsl:when test="$element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#{$locale-prefix}{$locale-default-lang}']">
-            <xsl:value-of select="normalize-space($element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale='#${locale-prefix}{$locale-default-lang}'][1])"/>
+          <!-- Try to find preferred locale first -->
+          <xsl:when test="$locale-preferred-id != ''
+                          and $element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = concat('#', $locale-preferred-id)]">
+            <xsl:value-of select="normalize-space($element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[@locale = concat('#', $locale-preferred-id)])"/>
           </xsl:when>
           <!-- Otherwise use the first available LocalisedCharacterString -->
           <xsl:otherwise>
-            <xsl:value-of select="normalize-space($element/gmd:PT_FreeText/gmd:textGroup/gmd:LocalisedCharacterString[1])"/>
+            <xsl:value-of select="normalize-space($element/gmd:PT_FreeText/gmd:textGroup[1]/gmd:LocalisedCharacterString)"/>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:when>
@@ -473,6 +468,27 @@
   </xsl:function>
 
   <!--
+    Function to normalize a decimal number represented as string.
+    Makes sure the normalized output can be parsed as decimal while preserving input precision.
+    See https://github.com/SEMICeu/iso-19139-to-dcat-ap/issues/112 for context.
+  -->
+  <xsl:function name="local:normalize-number" as="xs:string">
+    <xsl:param name="val" as="xs:string"/>
+    <xsl:choose>
+      <xsl:when test="contains($val, '.')">
+        <xsl:value-of select="concat(
+          string(number(substring-before($val, '.'))),
+          '.',
+          substring-after($val, '.')
+        )"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="string(number($val))"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:function>
+
+<!--
 
     Master template
     ===============
@@ -855,7 +871,8 @@
     </xsl:param>
 
     <xsl:param name="ConstraintsRelatedToAccessAndUse">
-      <xsl:apply-templates mode="iso19139-to-dcatap" select="gmd:identificationInfo[1]/*/gmd:resourceConstraints/*">
+      <xsl:apply-templates mode="iso19139-to-dcatap"
+                           select="gmd:identificationInfo[1]/*/gmd:resourceConstraints/*">
         <xsl:with-param name="MetadataLanguage" select="$MetadataLanguage"/>
       </xsl:apply-templates>
     </xsl:param>
@@ -941,7 +958,8 @@
                     </dct:title>
           -->
           <xsl:copy-of select="$specTitle"/>
-          <xsl:apply-templates mode="iso19139-to-dcatap" select="gmd:date/gmd:CI_Date"/>
+          <xsl:apply-templates mode="iso19139-to-dcatap"
+                               select="gmd:date/gmd:CI_Date"/>
         </xsl:variable>
         <xsl:variable name="degree">
           <xsl:choose>
@@ -1054,12 +1072,14 @@
     <!-- Metadata character encoding (only for the extended profile) -->
 
     <xsl:param name="MetadataCharacterEncoding">
-      <xsl:apply-templates mode="iso19139-to-dcatap" select="gmd:characterSet/gmd:MD_CharacterSetCode"/>
+      <xsl:apply-templates mode="iso19139-to-dcatap"
+                           select="gmd:characterSet/gmd:MD_CharacterSetCode"/>
     </xsl:param>
 
     <xsl:param name="ResourceCharacterEncoding">
       <xsl:for-each select="gmd:identificationInfo/gmd:MD_DataIdentification">
-        <xsl:apply-templates mode="iso19139-to-dcatap" select="gmd:characterSet/gmd:MD_CharacterSetCode"/>
+        <xsl:apply-templates mode="iso19139-to-dcatap"
+                             select="gmd:characterSet/gmd:MD_CharacterSetCode"/>
       </xsl:for-each>
     </xsl:param>
 
@@ -1094,13 +1114,15 @@
       <!-- Metadata point of contact: only for the extended profile -->
       <xsl:if test="$profile = $extended">
         <xsl:for-each select="gmd:contact">
-          <xsl:apply-templates mode="iso19139-to-dcatap" select="gmd:CI_ResponsibleParty">
+          <xsl:apply-templates mode="iso19139-to-dcatap"
+                               select="gmd:CI_ResponsibleParty">
             <xsl:with-param name="MetadataLanguage" select="$MetadataLanguage"/>
             <xsl:with-param name="ResourceType" select="$ResourceType"/>
           </xsl:apply-templates>
         </xsl:for-each>
         <!-- Old version
-                <xsl:apply-templates mode="iso19139-to-dcatap" select="gmd:contact/gmd:CI_ResponsibleParty">
+                <xsl:apply-templates mode="iso19139-to-dcatap"
+                select="gmd:contact/gmd:CI_ResponsibleParty">
                   <xsl:with-param name="MetadataLanguage" select="$MetadataLanguage"/>
                 </xsl:apply-templates>
         -->
@@ -2619,11 +2641,12 @@
   <!--
     <xsl:template mode="iso19139-to-dcatap" name="GeographicBoundingBox" match="gmd:identificationInfo[1]/*/*[self::gmd:extent|self::srv:extent]/*/gmd:geographicElement/gmd:EX_GeographicBoundingBox">
   -->
-  <xsl:template mode="iso19139-to-dcatap" name="GeographicBoundingBox" match="gmd:EX_GeographicBoundingBox">
-    <xsl:param name="north" select="format-number(gmd:northBoundLatitude/gco:Decimal, '0.0######')"/>
-    <xsl:param name="east"  select="format-number(gmd:eastBoundLongitude/gco:Decimal, '0.0######')"/>
-    <xsl:param name="south" select="format-number(gmd:southBoundLatitude/gco:Decimal, '0.0######')"/>
-    <xsl:param name="west"  select="format-number(gmd:westBoundLongitude/gco:Decimal, '0.0######')"/>
+  <xsl:template name="GeographicBoundingBox" match="gmd:EX_GeographicBoundingBox"
+                mode="iso19139-to-dcatap">
+    <xsl:param name="north" select="local:normalize-number(gmd:northBoundLatitude/gco:Decimal)"/>
+    <xsl:param name="east"  select="local:normalize-number(gmd:eastBoundLongitude/gco:Decimal)"/>
+    <xsl:param name="south" select="local:normalize-number(gmd:southBoundLatitude/gco:Decimal)"/>
+    <xsl:param name="west"  select="local:normalize-number(gmd:westBoundLongitude/gco:Decimal)"/>
 
     <!-- Bbox as a dct:Box -->
     <!-- Need to check whether this is correct - in particular, the "projection" parameter -->
@@ -4209,14 +4232,16 @@
     <xsl:param name="term"/>
     <xsl:for-each select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString">
       <xsl:variable name="value" select="normalize-space(.)"/>
-      <xsl:variable name="langs">
-        <xsl:call-template name="Alpha3-to-Alpha2">
-          <xsl:with-param name="lang" select="substring-after(translate(translate(@locale, $uppercase, $lowercase), '#', ''), $locale-prefix)"/>
-        </xsl:call-template>
-      </xsl:variable>
       <xsl:if test="$value != ''">
+        <xsl:variable name="locale-id" select="substring-after(@locale, '#')"/>
+        <xsl:variable name="lang-alpha3" select="//gmd:PT_Locale[@id = $locale-id]/gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
+        <xsl:variable name="lang-alpha2">
+          <xsl:call-template name="Alpha3-to-Alpha2">
+              <xsl:with-param name="lang" select="$lang-alpha3"/>
+          </xsl:call-template>
+        </xsl:variable>
         <xsl:element name="{$term}">
-          <xsl:attribute name="xml:lang"><xsl:value-of select="$langs"/></xsl:attribute>
+          <xsl:attribute name="xml:lang"><xsl:value-of select="$lang-alpha2"/></xsl:attribute>
           <xsl:value-of select="$value"/>
         </xsl:element>
       </xsl:if>

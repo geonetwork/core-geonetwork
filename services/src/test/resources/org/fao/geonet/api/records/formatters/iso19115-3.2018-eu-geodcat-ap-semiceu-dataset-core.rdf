@@ -394,21 +394,21 @@
       <dct:spatial xmlns:dct="http://purl.org/dc/terms/" rdf:parseType="Resource">
          <rdf:type rdf:resource="http://purl.org/dc/terms/Location"/>
          <locn:geometry xmlns:locn="http://www.w3.org/ns/locn#"
-                        rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral"><![CDATA[POLYGON((2.75 50.85,6.5 50.85,6.5 49.45,2.75 49.45,2.75 50.85))]]></locn:geometry>
+                        rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral"><![CDATA[POLYGON((2.75 50.85,6.50 50.85,6.50 49.45,2.75 49.45,2.75 50.85))]]></locn:geometry>
          <locn:geometry xmlns:locn="http://www.w3.org/ns/locn#"
-                        rdf:datatype="http://www.opengis.net/ont/geosparql#gmlLiteral"><![CDATA[<gml:Envelope srsName="http://www.opengis.net/def/crs/OGC/1.3/CRS84"><gml:lowerCorner>2.75 49.45</gml:lowerCorner><gml:upperCorner>6.5 50.85</gml:upperCorner></gml:Envelope>]]></locn:geometry>
+                        rdf:datatype="http://www.opengis.net/ont/geosparql#gmlLiteral"><![CDATA[<gml:Envelope srsName="http://www.opengis.net/def/crs/OGC/1.3/CRS84"><gml:lowerCorner>2.75 49.45</gml:lowerCorner><gml:upperCorner>6.50 50.85</gml:upperCorner></gml:Envelope>]]></locn:geometry>
          <locn:geometry xmlns:locn="http://www.w3.org/ns/locn#"
-                        rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.5,50.85],[6.5,49.45],[2.75,49.45],[2.75,50.85]]]}]]></locn:geometry>
+                        rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.50,50.85],[6.50,49.45],[2.75,49.45],[2.75,50.85]]]}]]></locn:geometry>
          <locn:geometry xmlns:locn="http://www.w3.org/ns/locn#"
-                        rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.5,50.85],[6.5,49.45],[2.75,49.45],[2.75,50.85]]]}]]></locn:geometry>
+                        rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.50,50.85],[6.50,49.45],[2.75,49.45],[2.75,50.85]]]}]]></locn:geometry>
          <dcat:bbox xmlns:dcat="http://www.w3.org/ns/dcat#"
-                    rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral"><![CDATA[POLYGON((2.75 50.85,6.5 50.85,6.5 49.45,2.75 49.45,2.75 50.85))]]></dcat:bbox>
+                    rdf:datatype="http://www.opengis.net/ont/geosparql#wktLiteral"><![CDATA[POLYGON((2.75 50.85,6.50 50.85,6.50 49.45,2.75 49.45,2.75 50.85))]]></dcat:bbox>
          <dcat:bbox xmlns:dcat="http://www.w3.org/ns/dcat#"
-                    rdf:datatype="http://www.opengis.net/ont/geosparql#gmlLiteral"><![CDATA[<gml:Envelope srsName="http://www.opengis.net/def/crs/OGC/1.3/CRS84"><gml:lowerCorner>2.75 49.45</gml:lowerCorner><gml:upperCorner>6.5 50.85</gml:upperCorner></gml:Envelope>]]></dcat:bbox>
+                    rdf:datatype="http://www.opengis.net/ont/geosparql#gmlLiteral"><![CDATA[<gml:Envelope srsName="http://www.opengis.net/def/crs/OGC/1.3/CRS84"><gml:lowerCorner>2.75 49.45</gml:lowerCorner><gml:upperCorner>6.50 50.85</gml:upperCorner></gml:Envelope>]]></dcat:bbox>
          <dcat:bbox xmlns:dcat="http://www.w3.org/ns/dcat#"
-                    rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.5,50.85],[6.5,49.45],[2.75,49.45],[2.75,50.85]]]}]]></dcat:bbox>
+                    rdf:datatype="https://www.iana.org/assignments/media-types/application/vnd.geo+json"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.50,50.85],[6.50,49.45],[2.75,49.45],[2.75,50.85]]]}]]></dcat:bbox>
          <dcat:bbox xmlns:dcat="http://www.w3.org/ns/dcat#"
-                    rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.5,50.85],[6.5,49.45],[2.75,49.45],[2.75,50.85]]]}]]></dcat:bbox>
+                    rdf:datatype="http://www.opengis.net/ont/geosparql#geoJSONLiteral"><![CDATA[{"type":"Polygon","coordinates":[[[2.75,50.85],[6.50,50.85],[6.50,49.45],[2.75,49.45],[2.75,50.85]]]}]]></dcat:bbox>
       </dct:spatial>
       <dct:spatial xmlns:dct="http://purl.org/dc/terms/">
          <dct:Location rdf:about="https://en.wikipedia.org/wiki/Wallonia"/>
