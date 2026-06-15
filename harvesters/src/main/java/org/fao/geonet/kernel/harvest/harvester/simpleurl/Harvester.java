@@ -27,13 +27,12 @@ import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ValueNode;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.CharStreams;
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
-import com.jayway.jsonpath.JsonPathException;
 import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
-import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
@@ -268,10 +267,18 @@ class Harvester implements IHarvester<HarvestResult> {
                 .jsonProvider(new JacksonJsonNodeJsonProvider())
                 .mappingProvider(new JacksonMappingProvider());
         return record -> {
-            // as per RFC9535, the result of a JsonPath is always an array
-            ArrayNode node = path.read(record, configuration);
-            // always return the first element
-            return node.get(0).asText();
+            // as per RFC9535, the result of a JsonPath is always a nodelist,
+            // but that does not mean the result is always an array!
+            // The underlying library may return TextNodes directly depending on the path
+            JsonNode node = path.read(record, configuration);
+            if (node instanceof ArrayNode) {
+                // always return the first element
+                return node.get(0).asText();
+            } else if (node instanceof ValueNode) {
+                return node.asText();
+            } else {
+                throw new IllegalStateException("Json Path yielded unexpected node type: " + node.getClass());
+            }
         };
     }
 
