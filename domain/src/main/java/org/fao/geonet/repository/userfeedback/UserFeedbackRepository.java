@@ -110,12 +110,12 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, UUID
      */
     UserFeedback findByUuidAndStatus(String uuid, UserRatingStatus status);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("update GUF_UserFeedback uf set uf.authorId = null where uf.authorId.id = ?1")
     int nullifyAuthor(int userId);
 
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Transactional
     @Query("update GUF_UserFeedback uf set uf.approver = null where uf.approver.id = ?1")
     int nullifyApprover(int userId);

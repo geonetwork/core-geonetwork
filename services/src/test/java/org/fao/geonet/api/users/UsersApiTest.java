@@ -180,6 +180,12 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         // 4. Verify user is deleted
         Assert.assertFalse(_userRepo.findById(userToDelete.getId()).isPresent());
 
+        // Flush and clear the persistence context so the assertions below read
+        // from the database instead of returning the stale managed instances
+        // cached before the nullify bulk updates ran.
+        _entityManager.flush();
+        _entityManager.clear();
+
         // 5. Verify feedback entries still exist and author/approver are null
         UserFeedback updatedFeedback1 = userFeedbackRepository.findByUuid(feedback1.getUuid());
         Assert.assertNotNull(updatedFeedback1);
