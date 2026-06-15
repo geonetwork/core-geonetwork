@@ -20,6 +20,8 @@ Configuration options:
 
 -   *Create element if it does not exist when using XPath in CSW transaction.*: If not checked, only existing elements can be updated.
 
+-   *Ignore metadata not supporting requested outputSchema.*: If checked, when a metadata record does not support the requested outputSchema in GetRecords operation, it will be skipped from the search results. If not checked, an exception will be returned.
+
 ## Service Metadata Record {#csw-configuration_service_record}
 
 In order to create a custom capabilities, it is recommended to create a dedicated service metadata record (using ISO19115-3 or ISO19139 standards). This record is used to build the capabilities document using the template `web/src/main/webapp/xml/csw/capabilities.xml`.
