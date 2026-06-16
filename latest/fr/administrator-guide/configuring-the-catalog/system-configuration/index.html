@@ -3517,10 +3517,11 @@ type=&quot;application/opensearchdescription+xml&quot; title=&quot;Open Search 
 </ul>
 <p><img alt="" src="../../../../administrator-guide/configuring-the-catalog/img/metadata-delete.png" /></p>
 <h2 id="metadata-publication">Metadata publication</h2>
-<p>Allows to configure the user profile allowed to publish and un-publish metadata.</p>
+<p>Allows to configure the required user profile to publish and un-publish metadata.</p>
+<p>The configured profile is evaluated on the metadata owner group (per-group role), not the user's global profile. The user must have exactly this profile in the record owner group. For example, with <code>Reviewer</code>, only users who are <code>Reviewer</code> in the owner group are allowed (not <code>UserAdmin</code>). Global <code>Administrator</code> is always allowed.</p>
 <ul>
-<li><strong>Minimum user profile allowed to publish metadata</strong> Minimum user profile allowed to publish metadata (<code>Reviewer</code> or <code>Administrator</code>). The default value is <code>Reviewer</code>.</li>
-<li><strong>Minimum user profile allowed to un-publish metadata</strong> Minimum user profile allowed to un-publish metadata (<code>Reviewer</code> or <code>Administrator</code>). The default value is <code>Reviewer</code>.</li>
+<li><strong>Required profile to publish metadata</strong> Profile required to publish metadata, evaluated in the record owner group (<code>Reviewer</code> or <code>Administrator</code>). The default value is <code>Reviewer</code>.</li>
+<li><strong>Required profile to un-publish metadata</strong> Profile required to un-publish metadata, evaluated in the record owner group (<code>Reviewer</code> or <code>Administrator</code>). The default value is <code>Reviewer</code>.</li>
 </ul>
 <p><img alt="" src="../../../../administrator-guide/configuring-the-catalog/img/metadata-publication.png" /></p>
 <h2 id="metadata-selection-zip-export">Metadata selection - zip export</h2>

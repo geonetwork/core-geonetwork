@@ -2010,7 +2010,7 @@
 <p class="admonition-title">Note</p>
 <p>The privileges panel uses colour coding to identify different group types:</p>
 <ul>
-<li><strong>Blue rows</strong> — <a href="../../../administrator-guide/managing-users-and-groups/creating-group/">Reserved groups</a> (All, Intranet, Guest). Only Administrators and Reviewers can edit these privileges.</li>
+<li><strong>Blue rows</strong> — <a href="../../../administrator-guide/managing-users-and-groups/creating-group/">Reserved groups</a> (All, Intranet, Guest). Editing these privileges requires the configured publication profile on the record owner group (default: Reviewer). Administrators are always allowed.</li>
 <li><strong>Yellow rows</strong> — <a href="../../../administrator-guide/managing-users-and-groups/creating-group/#2-record-privilege-group">Record Privilege Groups</a>. These groups can be assigned privileges on specific records but cannot own metadata.</li>
 <li><strong>No highlight</strong> — Standard <a href="../../../administrator-guide/managing-users-and-groups/creating-group/#1-workspace-group">Workspace Groups</a>.</li>
 </ul>
@@ -2068,10 +2068,10 @@
 <p>A button to access the Privileges page for a metadata record displays in the search results or when you are viewing the record for:</p>
 <ul>
 <li>All Administrators</li>
-<li>All Reviewers that are member of one of the groups assigned to the metadata owner.</li>
+<li>Users who meet the configured publication profile in the metadata owner group (default: Reviewer).</li>
 <li>The Owner of the metadata</li>
 </ul>
-<p>Only Administrators and Reviewers can edit privileges for the All and Intranet groups.</p>
+<p>Only users meeting the configured publication profile in the metadata owner group can edit privileges for reserved groups (All, Intranet, Guest). By default this is Reviewer.</p>
 <h2 id="setting-privileges-on-a-selected-set-of-metadata-records">Setting Privileges on a selected set of metadata records</h2>
 <p>You can set privileges on a selected set of records in the search results using the "actions on selected set" menu.</p>
 <p><img alt="" src="../../../../user-guide/publishing/img/set-selection-privileges.png" /></p>
