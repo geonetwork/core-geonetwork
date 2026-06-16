@@ -1,126 +1,24 @@
 package org.geonetwork.map.wms;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.utils.Xml;
 import org.geotools.factory.CommonFactoryFinder;
 import org.geotools.filter.v1_1.OGCConfiguration;
-import org.geotools.ows.ServiceException;
 import org.geotools.xsd.Configuration;
 import org.geotools.xsd.Encoder;
-import org.jdom.Content;
-import org.jdom.Element;
-import org.jdom.JDOMException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.geotools.api.filter.Filter;
 import org.geotools.api.filter.FilterFactory;
 
-import javax.mail.internet.ContentType;
-import javax.mail.internet.ParseException;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.*;
 
 public class SLDUtil {
 
     public static final String LOGGER = Geonet.GEONETWORK + ".util.sld";
-
-    /**
-     * Issue a GetStyle query on specified server for specified layers, parse XML result and return
-     * the SLD as a String.
-     *
-     * @param url base url of WMS server with no parameter. ex: http://demo.boundlessgeo.com/geoserver/wms
-     * @param layers comma separated list of layers
-     * @return String the sld of the layers from the server url
-     * @throws IOException if there is an error communicating with the server
-     * @throws ServiceException if the server responds with an error
-     * @throws ParseException if unable to parse content type header from server
-     */
-    public static Map<String, String> parseSLD(URI url, String layers) throws URISyntaxException, IOException, ParseException {
-        Map<String, String> hash = new HashMap<String, String>();
-
-        String requestUrl = SLDUtil.getGetStyleRequest(url, layers);
-
-        HttpGet httpGet = new HttpGet(requestUrl);
-        HttpClient client = new DefaultHttpClient();
-        final HttpResponse httpResponse = client.execute(httpGet);
-
-        // Set encoding of response from HTTP content-type header
-        ContentType contentType = new ContentType(httpResponse.getEntity().getContentType().getValue());
-        String charset = contentType.getParameter("charset");
-        hash.put("charset", charset);
-        hash.put("content", IOUtils.toString(httpResponse.getEntity().getContent(), charset).trim());
-
-        return hash;
-    }
-
-
-    public static String getGetStyleRequest(URI uri, String layers) throws URISyntaxException {
-        URIBuilder builder = new URIBuilder(uri);
-        builder.addParameter("service", "WMS");
-        builder.addParameter("request", "GetStyles");
-        builder.addParameter("version", "1.1.1");
-        builder.addParameter("layers", layers);
-
-        return builder.build().toString();
-    }
-
-    /**
-     * Insert a new filter in all rules of the sld document. For each rule,
-     * the ogc:Filter ellement is added if not exist, or merge with an ogc:And
-     * tag with the giver filter.
-     *
-     * @param doc Xml docuement representing the SLD
-     * @param filter the new filter to insert
-     * @throws JDOMException
-     * @throws IOException
-     */
-    public static void insertFilter(Element doc, Filter filter) throws JDOMException, IOException {
-
-        String sFilter = SLDUtil.encodeFilter(filter);
-        Element newFilterElt = Xml.loadString(sFilter, false);
-        List<Element> newFilterChildren = (List<Element>) ((Element)newFilterElt.clone()).getChildren();
-
-        if(newFilterChildren.size() > 0) {
-            Content newFilterContent = newFilterChildren.get(0).detach();
-
-            // Check rules in both se and sld namespaces
-            List<Element> rules = (List<Element>) Xml.selectNodes(doc, "*//sld:Rule", Arrays.asList(Geonet.Namespaces.SLD));
-            if(rules.size() == 0) {
-                rules = (List<Element>) Xml.selectNodes(doc, "*//se:Rule", Arrays.asList(Geonet.Namespaces.SE));
-            }
-
-            for (Element rule : rules) {
-                List<Element> filters = (List<Element>) Xml.selectNodes(rule, "ogc:Filter", Arrays.asList(Geonet.Namespaces.OGC));
-                if(filters.size() == 0) {
-                    rule.addContent((Element)newFilterElt.clone());
-                }
-                else if (filters.size() == 1) {
-                    Element sldFilterElt = filters.get(0);
-                    Element filterContent = (Element)sldFilterElt.getChildren().get(0);
-                    filterContent.detach();
-                    sldFilterElt.removeContent();
-                    Element andElt = new Element("And", Geonet.Namespaces.OGC);
-                    andElt.addContent(filterContent);
-                    andElt.addContent((Content)newFilterContent.clone());
-                    sldFilterElt.addContent(andElt);
-                }
-                else {
-                    throw new JDOMException("A rule must have maximum one ogc:filter element");
-                }
-            }
-        }
-    }
 
     /**
      * Encode into a string the given OGC Filter
