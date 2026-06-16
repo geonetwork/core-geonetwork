@@ -340,10 +340,12 @@ Allows to configure the user profile allowed to delete published metadata.
 
 ## Metadata publication
 
-Allows to configure the user profile allowed to publish and un-publish metadata.
+Allows to configure the required user profile to publish and un-publish metadata.
 
--   **Minimum user profile allowed to publish metadata** Minimum user profile allowed to publish metadata (`Reviewer` or `Administrator`). The default value is `Reviewer`.
--   **Minimum user profile allowed to un-publish metadata** Minimum user profile allowed to un-publish metadata (`Reviewer` or `Administrator`). The default value is `Reviewer`.
+The configured profile is evaluated on the metadata owner group (per-group role), not the user's global profile. The user must have exactly this profile in the record owner group. For example, with `Reviewer`, only users who are `Reviewer` in the owner group are allowed (not `UserAdmin`). Global `Administrator` is always allowed.
+
+-   **Required profile to publish metadata** Profile required to publish metadata, evaluated in the record owner group (`Reviewer` or `Administrator`). The default value is `Reviewer`.
+-   **Required profile to un-publish metadata** Profile required to un-publish metadata, evaluated in the record owner group (`Reviewer` or `Administrator`). The default value is `Reviewer`.
 
 ![](img/metadata-publication.png)
 
