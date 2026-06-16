@@ -26,6 +26,8 @@ package org.fao.geonet.util;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class XslUtilTest {
 
@@ -54,6 +56,57 @@ public class XslUtilTest {
         String text = XslUtil.html2textNormalized(html);
 
         assertEquals(expectedText, text);
+    }
+
+    @Test
+    public void testToUiConfigArgValidObject() {
+        String result = XslUtil.toUiConfigArg("{\"a\":1}");
+        assertTrue(result.startsWith("JSON.parse("));
+        assertTrue(result.contains("a"));
+    }
+
+    @Test
+    public void testToUiConfigArgScriptBreakout() {
+        String result = XslUtil.toUiConfigArg("{\"x\":\"</script>\"}");
+        assertFalse(result.isEmpty());
+        assertFalse(result.contains("</script>"));
+    }
+
+    @Test
+    public void testToUiConfigArgArrayReturnsEmpty() {
+        assertEquals("", XslUtil.toUiConfigArg("[1,2]"));
+    }
+
+    @Test
+    public void testToUiConfigArgStringReturnsEmpty() {
+        assertEquals("", XslUtil.toUiConfigArg("\"5\""));
+    }
+
+    @Test
+    public void testToUiConfigArgBooleanReturnsEmpty() {
+        assertEquals("", XslUtil.toUiConfigArg("true"));
+    }
+
+    @Test
+    public void testToUiConfigArgTrailingTokensReturnsEmpty() {
+        assertEquals("", XslUtil.toUiConfigArg("{}whatever"));
+    }
+
+    @Test
+    public void testToUiConfigArgBlankReturnsEmpty() {
+        assertEquals("", XslUtil.toUiConfigArg(""));
+        assertEquals("", XslUtil.toUiConfigArg("   "));
+        assertEquals("", XslUtil.toUiConfigArg(null));
+    }
+
+    @Test
+    public void testToUiConfigArgLineSeparatorEscaped() {
+        String lineSep = String.valueOf((char) 0x2028);
+        String input = "{\"k\":\"val" + lineSep + "ue\"}";
+        String result = XslUtil.toUiConfigArg(input);
+        assertFalse(result.isEmpty());
+        assertFalse(result.contains(lineSep));
+        assertTrue(result.contains("\\u2028"));
     }
 
 }
