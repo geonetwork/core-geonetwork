@@ -201,7 +201,7 @@
   <xsl:param name="locale-preferred-lang">eng</xsl:param>
 
   <xsl:variable name="locale-preferred-id"
-                select="//gmd:PT_Locale[gmd:languageCode/gmd:LanguageCode/@codeListValue = $locale-preferred-lang]/@id"/>
+                select="root(.)//gmd:PT_Locale[*[self::gmd:languageCode|self::gmd:language]/gmd:LanguageCode/@codeListValue = $locale-preferred-lang]/@id"/>
 
 
   <!-- Parameter $include-deprecated -->
@@ -1048,8 +1048,13 @@
       </dct:conformsTo>
       <!-- Metadata language -->
       <xsl:if test="$ormlang != ''">
+        <xsl:variable name="ormlang-alpha3">
+          <xsl:call-template name="NormalizeLanguageToAlpha3">
+            <xsl:with-param name="lang" select="$ormlang"/>
+          </xsl:call-template>
+        </xsl:variable>
         <dct:language>
-          <dct:LinguisticSystem rdf:about="{concat($oplang,translate($ormlang,$lowercase,$uppercase))}"/>
+          <dct:LinguisticSystem rdf:about="{concat($oplang,translate($ormlang-alpha3,$lowercase,$uppercase))}"/>
         </dct:language>
       </xsl:if>
       <!-- Metadata date -->
@@ -1268,8 +1273,13 @@
         <xsl:choose>
           <xsl:when test="$orrlang[1]">
             <xsl:for-each select="$orrlang">
+            <xsl:variable name="orrlang-item-alpha3">
+              <xsl:call-template name="NormalizeLanguageToAlpha3">
+                <xsl:with-param name="lang" select="."/>
+              </xsl:call-template>
+            </xsl:variable>
             <dct:language>
-                <dct:LinguisticSystem rdf:about="{concat($oplang,translate(.,$lowercase,$uppercase))}"/>
+                <dct:LinguisticSystem rdf:about="{concat($oplang,translate($orrlang-item-alpha3,$lowercase,$uppercase))}"/>
             </dct:language>
             </xsl:for-each>
           </xsl:when>
@@ -1400,7 +1410,7 @@
           <xsl:variable name="Title">
             <xsl:for-each select="gmd:name">
               <dct:title xml:lang="{$MetadataLanguage}">
-                <xsl:value-of select="normalize-space(gco:CharacterString)"/>
+                <xsl:value-of select="normalize-space(*[self::gco:CharacterString|self::gmx:Anchor])"/>
               </dct:title>
               <xsl:call-template name="LocalisedString">
                 <xsl:with-param name="term">dct:title</xsl:with-param>
@@ -1411,7 +1421,7 @@
           <xsl:variable name="Description">
             <xsl:for-each select="gmd:description">
               <dct:description xml:lang="{$MetadataLanguage}">
-                <xsl:value-of select="*"/>
+                <xsl:value-of select="normalize-space(*[self::gco:CharacterString|self::gmx:Anchor])"/>
               </dct:description>
               <xsl:call-template name="LocalisedString">
                 <xsl:with-param name="term">dct:description</xsl:with-param>
@@ -2810,6 +2820,40 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- Normalize a language value to its ISO 639-2/B alpha-3 code.
+       Source records sometimes use the full language name (e.g. "Dansk",
+       "Danish") in gmd:LanguageCode instead of the standard alpha-3 code
+       ("dan"), which is a data quality issue but one that this template
+       defends against so that emitted dct:language URIs remain valid
+       Publications Office NAL identifiers rather than malformed ones like
+       ".../language/DANSK". The input is assumed to already be lowercased. -->
+  <xsl:template name="NormalizeLanguageToAlpha3">
+    <xsl:param name="lang"/>
+    <xsl:choose>
+      <xsl:when test="$lang = 'dansk' or $lang = 'danish'">
+        <xsl:text>dan</xsl:text>
+      </xsl:when>
+      <xsl:when test="$lang = 'engelsk' or $lang = 'english'">
+        <xsl:text>eng</xsl:text>
+      </xsl:when>
+      <xsl:when test="$lang = 'tysk' or $lang = 'german' or $lang = 'deutsch'">
+        <xsl:text>ger</xsl:text>
+      </xsl:when>
+      <xsl:when test="$lang = 'svensk' or $lang = 'swedish'">
+        <xsl:text>swe</xsl:text>
+      </xsl:when>
+      <xsl:when test="$lang = 'norsk' or $lang = 'norwegian'">
+        <xsl:text>nor</xsl:text>
+      </xsl:when>
+      <xsl:when test="$lang = 'fransk' or $lang = 'french'">
+        <xsl:text>fre</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$lang"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <!-- Constraints related to access and use -->
 
   <xsl:template mode="iso19139-to-dcatap" name="ConstraintsRelatedToAccessAndUse" match="gmd:identificationInfo[1]/*/gmd:resourceConstraints/*">
@@ -4182,15 +4226,40 @@
 
   <xsl:template name="LocalisedString">
     <xsl:param name="term"/>
+    <xsl:variable name="primaryValue" select="normalize-space(*[self::gco:CharacterString|self::gmx:Anchor])"/>
     <xsl:for-each select="gmd:PT_FreeText/*/gmd:LocalisedCharacterString">
       <xsl:variable name="value" select="normalize-space(.)"/>
-      <xsl:if test="$value != ''">
+      <xsl:if test="$value != '' and not($primaryValue != '' and $value = $primaryValue)">
         <xsl:variable name="locale-id" select="substring-after(@locale, '#')"/>
-        <xsl:variable name="lang-alpha3" select="//gmd:PT_Locale[@id = $locale-id]/gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
+        <xsl:variable name="lang-alpha3" select="root(.)//gmd:PT_Locale[@id = $locale-id]/*[self::gmd:languageCode|self::gmd:language]/gmd:LanguageCode/@codeListValue"/>
+        <xsl:variable name="lang-alpha2-from-lookup">
+          <xsl:if test="$lang-alpha3 != ''">
+            <xsl:call-template name="Alpha3-to-Alpha2">
+                <xsl:with-param name="lang" select="$lang-alpha3"/>
+            </xsl:call-template>
+          </xsl:if>
+        </xsl:variable>
+        <!-- Fallback: if the PT_Locale lookup fails to resolve a language (e.g. because
+             gmd:otherLocale/gmd:defaultLocale does not define a PT_Locale for this
+             locale-id, which happens when GeoNetwork's ISO 19115-3 to ISO 19139
+             conversion drops the defaultLocale), fall back to using locale-id itself.
+             The locale-id (taken from @locale="#XX") is in practice almost always
+             already a valid ISO 639-1 alpha-2 code (e.g. "DA", "EN"), so lowercasing
+             it directly is a reasonable last resort. -->
         <xsl:variable name="lang-alpha2">
-          <xsl:call-template name="Alpha3-to-Alpha2">
-              <xsl:with-param name="lang" select="$lang-alpha3"/>
-          </xsl:call-template>
+          <xsl:choose>
+            <xsl:when test="$lang-alpha2-from-lookup != ''">
+              <xsl:value-of select="$lang-alpha2-from-lookup"/>
+            </xsl:when>
+            <xsl:when test="string-length($locale-id) = 2">
+              <xsl:value-of select="translate($locale-id,$uppercase,$lowercase)"/>
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:call-template name="Alpha3-to-Alpha2">
+                <xsl:with-param name="lang" select="translate($locale-id,$uppercase,$lowercase)"/>
+              </xsl:call-template>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:variable>
         <xsl:element name="{$term}">
           <xsl:attribute name="xml:lang"><xsl:value-of select="$lang-alpha2"/></xsl:attribute>
