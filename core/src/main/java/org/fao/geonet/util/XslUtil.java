@@ -24,6 +24,8 @@
 package org.fao.geonet.util;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.cache.Cache;
@@ -416,6 +418,39 @@ public final class XslUtil {
         } catch (Exception e) {
             return "";
         }
+    }
+
+    /**
+     * Build a JavaScript expression for an optional inline UI configuration.
+     *
+     * Returns a {@code JSON.parse(...)} call when the value is a JSON object,
+     * or an empty string otherwise so the caller can fall back to a default.
+     */
+    public static String toUiConfigArg(String config) {
+        if (StringUtils.isBlank(config)) {
+            return "";
+        }
+        try {
+            ObjectMapper mapper = new ObjectMapper()
+                .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
+            JsonNode node = mapper.readTree(config);
+            if (node == null || !node.isObject()) {
+                return "";
+            }
+            String literal = mapper.writeValueAsString(mapper.writeValueAsString(node));
+            return "JSON.parse(" + escapeForScriptContext(literal) + ")";
+        } catch (JsonProcessingException e) {
+            return "";
+        }
+    }
+
+    private static String escapeForScriptContext(String value) {
+        return value
+            .replace("&", "\\u0026")
+            .replace("<", "\\u003c")
+            .replace(">", "\\u003e")
+            .replace(String.valueOf((char) 0x2028), "\\u2028")
+            .replace(String.valueOf((char) 0x2029), "\\u2029");
     }
 
     /**

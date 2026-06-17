@@ -282,7 +282,7 @@
     <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
 
     <xsl:variable name="appConfig"
-                  select="util:getUiConfiguration(/root/request/ui)"/>
+                  select="util:toUiConfigArg(util:getUiConfiguration(/root/request/ui))"/>
 
     <script type="text/javascript">
       var module = angular.module('<xsl:value-of select="$angularApp"/>');
