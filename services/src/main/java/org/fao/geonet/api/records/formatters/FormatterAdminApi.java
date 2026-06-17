@@ -1,5 +1,5 @@
 //==============================================================================
-//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -54,7 +54,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -137,7 +136,7 @@ public class FormatterAdminApi extends AbstractFormatService {
                 if (Files.isDirectory(file) && legalFile(file)) {
                     element = new Element("dir");
                     makeTree(id, file, element);
-                    if (element.getChildren().size() > 0) {
+                    if (!element.getChildren().isEmpty()) {
                         element.setAttribute("leaf", "false");
                         element.setAttribute("text", file.getFileName().toString()).setAttribute("path", id).setAttribute("name", name);
                         result.addContent(element);
@@ -230,7 +229,7 @@ public class FormatterAdminApi extends AbstractFormatService {
             try {
                 loadMetadata(applicationContext.getBean(IMetadataUtils.class), Integer.parseInt(resolveId(id, uuid)));
             } catch (Throwable e) {
-                // its ok.  just can't use metadata
+                // it's ok.  just can't use metadata
             }
         }
 
@@ -271,8 +270,6 @@ public class FormatterAdminApi extends AbstractFormatService {
     public void downloadFormatter(
         @PathVariable final String formatter,
         @PathVariable final String schema,
-        @Parameter(hidden = true)
-            HttpServletRequest request,
         @Parameter(hidden = true)
             HttpServletResponse response) throws Exception {
         Path schemaDir = null;
@@ -358,6 +355,7 @@ public class FormatterAdminApi extends AbstractFormatService {
         value = "/{portal}/api/formatters",
         produces = {MediaType.APPLICATION_JSON_VALUE})
     @ResponseBody
+    @PreAuthorize("hasAuthority('UserAdmin')")
     @ResponseStatus(value = HttpStatus.CREATED)
     public void addFormatter(
         @RequestParam("file")
@@ -365,6 +363,7 @@ public class FormatterAdminApi extends AbstractFormatService {
     ) throws Exception {
         for (MultipartFile f : file) {
             String fileName = f.getOriginalFilename();
+            if (fileName == null) continue;
 
             String fileWithoutExtension = fileName.substring(0, fileName.indexOf("."));
             String[] tokens = fileWithoutExtension.split("-");
@@ -492,7 +491,7 @@ public class FormatterAdminApi extends AbstractFormatService {
         @PathVariable final String formatter,
         @PathVariable final String schema,
         @PathVariable final String file,
-        @RequestParam(required = true)
+        @RequestParam
             String data
     ) throws Exception {
         Path schemaDir = null;
