@@ -1,3 +1,26 @@
+/*
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
+
 package org.geonetwork.map.wms;
 
 import org.fao.geonet.constants.Geonet;
@@ -69,7 +92,7 @@ public class SLDUtil {
         FilterFactory ff2 = CommonFactoryFinder.getFilterFactory();
 
         JSONArray filters = userFilters.getJSONArray("filters");
-        List<Filter> res = new LinkedList<Filter>();
+        List<Filter> res = new LinkedList<>();
 
         for(int i=0;i<filters.length();i++)
             res.add(SLDUtil.generateFilter(filters.getJSONObject(i)));
@@ -87,7 +110,7 @@ public class SLDUtil {
 
         String fieldName = jsonObject.getString("field_name");
 
-        List<Filter> res = new LinkedList<Filter>();
+        List<Filter> res = new LinkedList<>();
 
         JSONArray filters = jsonObject.getJSONArray("filter");
         for(int i=0;i<filters.length();i++)
@@ -133,7 +156,7 @@ public class SLDUtil {
             if (parameters.size() != 1) throw new JSONException("Invalid parameter count");
             return ff2.like(ff2.property(fieldName), (String) parameters.get(0));
         } else if(filterType.equals("PropertyIsNull")) {
-            if (parameters.size() != 0) throw new JSONException("Invalid parameter count");
+            if (!parameters.isEmpty()) throw new JSONException("Invalid parameter count");
             return ff2.isNull(ff2.property(fieldName));
         } else if(filterType.equals("PropertyIsBetween")) {
             if (parameters.size() != 2) throw new JSONException("Invalid parameter count");
