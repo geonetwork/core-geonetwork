@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -110,7 +110,7 @@ public class MetadataLink extends GeonetEntity {
         MetadataLink other = (MetadataLink) obj;
         if (link.getId() != other.link.getId())
             return false;
-        if (metadataId.intValue() != metadataId.intValue())
+        if (metadataId.intValue() != other.metadataId.intValue())
             return false;
         return true;
     }

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -539,7 +539,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                             if (status == MetadataValidationStatus.NEVER_CALCULATED && vi.isRequired()) {
                                 isValid = "-1";
                             }
-                            if (status == MetadataValidationStatus.INVALID && vi.isRequired() && isValid != "-1") {
+                            if (status == MetadataValidationStatus.INVALID && vi.isRequired() && !"-1".equals(isValid)) {
                                 isValid = "0";
                             }
                         } else {

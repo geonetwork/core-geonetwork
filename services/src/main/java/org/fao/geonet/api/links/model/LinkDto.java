@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -178,7 +178,7 @@ public class LinkDto implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         LinkDto that = (LinkDto) o;
         return id == that.id &&
-            featuredType == that.featuredType &&
+            Objects.equals(featuredType, that.featuredType) &&
             creatorId == that.creatorId &&
             url.equals(that.url) &&
             creationDate.equals(that.creationDate) &&
