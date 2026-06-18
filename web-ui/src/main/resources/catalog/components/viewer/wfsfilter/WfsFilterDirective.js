@@ -97,16 +97,7 @@
 
   var module = angular.module("gn_wfsfilter_directive", []);
 
-  module.constant("gnWfsFilterConfig", {
-    // Define how WMS filter features
-    // * Inject filter in SLD
-    // filterStrategy: "SLD"
-    // * Same but using SLD_BODY parameter (Do not activate it,
-    // Usually return 414 Request-URI Too Large)
-    // filterStrategy: "SLD_BODY"
-    // * Using FILTER parameter (recommended)
-    filterStrategy: "FILTER"
-  });
+  module.constant("gnWfsFilterConfig", {});
 
   /**
    * @ngdoc directive
@@ -1032,7 +1023,6 @@
               );
             }
             if (sldConfig.filters.length > 0) {
-              var isSld = gnWfsFilterConfig.filterStrategy.indexOf("SLD") === 0;
               wfsFilterService
                 .getFilter(sldConfig, layer.get("directUrl") || layer.get("url"), ftName)
                 .then(
