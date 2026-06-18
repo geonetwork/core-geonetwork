@@ -37,6 +37,7 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Objects;
 
 /**
  * An entity that represents the relationship between a metadata and a metadata link.
@@ -92,11 +93,7 @@ public class MetadataLink extends GeonetEntity {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + link.getId();
-        result = prime * result + metadataId;
-        return result;
+        return Objects.hash(link.getId(), metadataId);
     }
 
     @Override
@@ -110,7 +107,7 @@ public class MetadataLink extends GeonetEntity {
         MetadataLink other = (MetadataLink) obj;
         if (link.getId() != other.link.getId())
             return false;
-        if (metadataId.intValue() != other.metadataId.intValue())
+        if (!Objects.equals(metadataId, other.metadataId))
             return false;
         return true;
     }

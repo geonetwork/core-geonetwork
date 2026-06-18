@@ -207,9 +207,9 @@ public class UserSearchDto implements Serializable {
         return id == that.id &&
             Objects.equals(featuredType, that.featuredType) &&
             creatorId == that.creatorId &&
-            url.equals(that.url) &&
-            creationDate.equals(that.creationDate) &&
-            creator.equals(that.creator) &&
+            Objects.equals(url, that.url) &&
+            Objects.equals(creationDate, that.creationDate) &&
+            Objects.equals(creator, that.creator) &&
             Objects.equals(logo, that.logo) &&
             names.equals(that.names) &&
             Objects.equals(groups, that.groups);
