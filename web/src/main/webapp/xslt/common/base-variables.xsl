@@ -72,6 +72,9 @@
   <xsl:variable name="isShowLoginAsLink"
                 select="util:isShowLoginAsLink()"/>
 
+  <xsl:variable name="isUserProfileCreateEnabled"
+                select="util:isUserProfileCreateEnabled()"/>
+
   <xsl:variable name="isUserProfileUpdateEnabled"
                 select="util:isUserProfileUpdateEnabled()"/>
 
