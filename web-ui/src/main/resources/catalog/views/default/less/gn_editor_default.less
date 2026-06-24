@@ -2,6 +2,25 @@
 @import "../../../style/gn_editor.less";
 @import "gn_view.less";
 
+//ensure gn-beginPosition has the label displayed
+.gn-beginPosition {
+  label {
+    display: block !important;
+    visibility: visible !important;
+  }
+  .row {
+    display: flex;
+  }
+
+  .gn-control {
+    margin-top: auto;
+  }
+
+  .gn-indeterminate-position {
+    min-width: 90px;
+  }
+}
+
 .gn-results-editor {
   .gn-status {
     font-weight: 500;
