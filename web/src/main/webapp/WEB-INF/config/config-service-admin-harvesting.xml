@@ -25,7 +25,7 @@
 <geonet>
   <services package="org.fao.geonet">
 
-    <service name="admin.harvester.list">
+    <service name="admin.harvester.list" deprecated="true">
       <documentation><![CDATA[
               Return the list of harvester in the catalog.
               ]]></documentation>
@@ -46,21 +46,21 @@
       <class name=".services.harvesting.Update"/>
     </service>
 
-    <service name="admin.harvester.clone">
+    <service name="admin.harvester.clone" deprecated="true">
       <documentation><![CDATA[
               Clone an existing harvester.
               ]]></documentation>
       <class name=".services.harvesting.CreateClone"/>
     </service>
 
-    <service name="admin.harvester.clear">
+    <service name="admin.harvester.clear" deprecated="true">
       <documentation><![CDATA[
               Remove all records attached to an harvester.
               ]]></documentation>
       <class name=".services.harvesting.Clear"/>
     </service>
 
-    <service name="admin.harvester.remove">
+    <service name="admin.harvester.remove" deprecated="true">
       <documentation><![CDATA[
               Drop an existing harvester.
               ]]></documentation>
@@ -68,7 +68,7 @@
     </service>
 
 
-    <service name="admin.harvester.start">
+    <service name="admin.harvester.start" deprecated="true">
       <documentation><![CDATA[
               Activate an harvester.
               ]]>
@@ -77,7 +77,7 @@
     </service>
 
 
-    <service name="admin.harvester.stop">
+    <service name="admin.harvester.stop" deprecated="true">
       <documentation><![CDATA[
               Desactivate an harvester.
               ]]>
@@ -85,7 +85,7 @@
       <class name=".services.harvesting.Stop"/>
     </service>
 
-    <service name="admin.harvester.run">
+    <service name="admin.harvester.run" deprecated="true">
       <documentation><![CDATA[
               Activate and run a harvester.
               ]]></documentation>
@@ -116,14 +116,14 @@
       <class name=".services.harvesting.History"/>
     </service>
 
-    <service name="admin.harvester.history.delete">
+    <service name="admin.harvester.history.delete" deprecated="true">
       <documentation><![CDATA[
               Delete history.
               ]]></documentation>
       <class name=".services.harvesting.HistoryDelete"/>
     </service>
 
-    <service name="admin.harvester.log">
+    <service name="admin.harvester.log" deprecated="true">
       <class name=".services.harvesting.Log"/>
       <output file="true" contentType="text/plain"/>
     </service>

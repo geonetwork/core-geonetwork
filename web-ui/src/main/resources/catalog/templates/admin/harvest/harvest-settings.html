@@ -390,7 +390,7 @@
                     <a
                       data-ng-show="h.info[0].logfile"
                       class="btn btn-default pull-right"
-                      ng-href="admin.harvester.log?file={{ (h.info[0].logfile | asArray)[0] | encodeURIComponent }}"
+                      ng-href="../api/harvesters/{{h.id}}/log"
                       target="_blank"
                     >
                       <i class="fa fa-fw fa-download"></i>
