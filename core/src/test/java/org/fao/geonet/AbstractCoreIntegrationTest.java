@@ -31,6 +31,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.sources.ServiceRequest;
+import jeeves.server.sources.http.JeevesServlet;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
@@ -217,6 +218,7 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
         context.setMaxUploadSize(100);
         context.setOutputMethod(ServiceRequest.OutputMethod.DEFAULT);
         context.setBaseUrl("geonetwork");
+        context.setServlet(new JeevesServlet());
         context.getBean(ServiceManager.class).registerContext(Geonet.CONTEXT_NAME, gc);
 
         assertDataDirInMemoryFS(context);
