@@ -214,6 +214,87 @@
         };
       }
     ])
+    .directive("gnDataUploaderFromUrl", [
+      "gnCurrentEdit",
+      "$rootScope",
+      "$http",
+      "$translate",
+      "gnUrlUtils",
+      function (gnCurrentEdit, $rootScope, $http, $translate, gnUrlUtils) {
+        return {
+          restrict: "A",
+          templateUrl:
+            "../../catalog/components/filestore/partials/dataUploaderFromUrl.html",
+          scope: {
+            btnLabel: "=?gnDataUploaderButton",
+            isOverview: "=?isOverview",
+            visibility: "@?",
+            afterUploadCb: "&?",
+            afterUploadErrorCb: "&?"
+          },
+          link: function (scope, element, attrs) {
+            scope.uuid = undefined;
+            scope.gnCurrentEdit = gnCurrentEdit;
+            scope.lang = scope.$parent.lang;
+            scope.id = Math.random();
+            scope.fileTypes = scope.fileTypes || "*.*";
+            scope.visibility = scope.visibility || "public";
+
+            scope.uploadFromUrl = function () {
+              var params = gnUrlUtils.toKeyValue({
+                url: scope.url,
+                visibility: scope.visibility
+              });
+              $http
+                .put("../api/records/" + gnCurrentEdit.uuid + "/attachments?" + params)
+                .then(
+                  function (response) {
+                    $rootScope.$broadcast("gnFileStoreUploadDone");
+                    if (angular.isFunction(scope.afterUploadCb())) {
+                      scope.afterUploadCb()(response.data);
+                    }
+                  },
+                  function (response) {
+                    var message = response.data.message || "";
+                    var errorMessage =
+                      {
+                        uploadNetworkErrorException: $translate.instant(
+                          "uploadNetworkErrorException",
+                          { file: scope.url }
+                        ),
+                        ResourceAlreadyExistException: $translate.instant(
+                          "uploadedResourceAlreadyExistException",
+                          { file: scope.url }
+                        ),
+                        uploadedResourceSizeExceededException: $translate.instant(
+                          "uploadedResourceSizeExceededException",
+                          { file: scope.url }
+                        )
+                      }[message] || message;
+
+                    $rootScope.$broadcast("StatusUpdated", {
+                      title: $translate.instant("resourceUploadError"),
+                      error: { message: errorMessage },
+                      timeout: 0,
+                      type: "danger"
+                    });
+                    if (angular.isFunction(scope.afterUploadErrorCb)) {
+                      scope.afterUploadErrorCb()(message);
+                    }
+                  }
+                );
+            };
+
+            var unregisterWatch = scope.$watch("gnCurrentEdit.uuid", function (n, o) {
+              if ((n && angular.isUndefined(scope.uuid)) || (n && n != o)) {
+                scope.uuid = n;
+                unregisterWatch();
+              }
+            });
+          }
+        };
+      }
+    ])
     .directive("gnFileStore", [
       "gnFileStoreService",
       "gnOnlinesrc",
