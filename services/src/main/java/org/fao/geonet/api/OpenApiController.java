@@ -117,12 +117,15 @@ public class OpenApiController extends AbstractOpenApiResource {
     }
 
     @Operation(hidden = true)
-    @GetMapping(value = "/{portal}/api/doc", produces = MediaType.APPLICATION_JSON_VALUE)
-    public String openapiJson(HttpServletRequest request, Locale locale)
+    @GetMapping(value = "/{portal}/api/doc",
+        produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_HTML_VALUE, MediaType.ALL_VALUE})
+    public org.springframework.http.ResponseEntity<String> openapiJson(HttpServletRequest request, Locale locale)
         throws JsonProcessingException {
         calculateServerUrl(request, locale);
         OpenAPI openAPI = this.getOpenApi(locale);
-        return new String(this.writeJsonValue(openAPI), StandardCharsets.UTF_8);
+        return org.springframework.http.ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(new String(this.writeJsonValue(openAPI), StandardCharsets.UTF_8));
     }
 
     @Operation(hidden = true)
