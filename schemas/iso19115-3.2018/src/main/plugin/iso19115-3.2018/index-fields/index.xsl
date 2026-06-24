@@ -414,13 +414,6 @@
               }</resourceIdentifier>
           </xsl:for-each>
 
-          <xsl:for-each
-            select="cit:presentationForm/cit:CI_PresentationFormCode/@codeListValue[. != '']">
-            <presentationForm>
-              <xsl:value-of select="."/>
-            </presentationForm>
-          </xsl:for-each>
-
           <xsl:for-each select="cit:edition/*">
             <xsl:copy-of select="gn-fn-index:add-field('resourceEdition', .)"/>
           </xsl:for-each>
@@ -727,13 +720,6 @@
           </xsl:for-each>
         </xsl:for-each>
 
-        <xsl:for-each
-          select="mri:spatialRepresentationType/mcc:MD_SpatialRepresentationTypeCode/@codeListValue[. != '']">
-          <spatialRepresentationType>
-            <xsl:value-of select="."/>
-          </spatialRepresentationType>
-        </xsl:for-each>
-
         <xsl:for-each select="*:resourceMaintenance/*">
           <maintenance type="object">{
             "frequency": "<xsl:value-of select="*:maintenanceAndUpdateFrequency/*/@codeListValue"/>"
@@ -753,7 +739,7 @@
             </xsl:for-each>
             }</maintenance>
         </xsl:for-each>
-
+        
         <xsl:for-each select="mri:resourceConstraints/*">
           <xsl:variable name="fieldPrefix" select="local-name()"/>
 
@@ -1345,17 +1331,6 @@
             "group": <xsl:value-of select="$transferGroup"/>
             }
           </link>
-
-          <xsl:if test="$operatesOnSetByProtocol and normalize-space($protocol) != ''">
-            <xsl:if test="daobs:contains($protocol, 'wms')">
-              <recordOperatedByType>view</recordOperatedByType>
-            </xsl:if>
-            <xsl:if test="daobs:contains($protocol, 'wfs') or
-                          daobs:contains($protocol, 'wcs') or
-                          daobs:contains($protocol, 'download')">
-              <recordOperatedByType>download</recordOperatedByType>
-            </xsl:if>
-          </xsl:if>
         </xsl:for-each>
       </xsl:for-each>
 
