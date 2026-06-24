@@ -28,11 +28,13 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.List;
 import jeeves.server.UserSession;
 import jeeves.services.ReadWriteController;
 import jeeves.xlink.Processor;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
@@ -112,13 +114,17 @@ public class MetadataIndexApi {
         for (String uuid : records) {
             ApiUtils.canEditRecord(uuid, request);
             try {
-                metadataUtils.findAllByUuid(uuid).forEach(m -> ids.add(m.getId()));
-            } catch (Exception e) {
-                try {
-                    ids.add(Integer.valueOf(uuid));
-                } catch (NumberFormatException nfe) {
-                    // skip
+                List<? extends AbstractMetadata> listOfRecords = metadataUtils.findAllByUuid(uuid);
+                if (listOfRecords.isEmpty()) {
+                    AbstractMetadata metadata = metadataUtils.findOne(uuid);
+                    if (metadata != null) {
+                        ids.add(metadata.getId());
+                    }
+                } else {
+                    listOfRecords.forEach(m -> ids.add(m.getId()));
                 }
+            } catch (Exception e) {
+                // skip
             }
         }
         int index = ids.size();
