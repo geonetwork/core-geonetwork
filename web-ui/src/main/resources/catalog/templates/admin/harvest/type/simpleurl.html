@@ -122,6 +122,34 @@
       <p class="help-block" data-translate="">simpleurl-recordIdPathHelp</p>
     </div>
 
+    <div id="gn-harvest-settings-recordIdPathMode-row">
+      <div class="row">
+        <label
+          id="gn-harvest-settings-recordIdPathMode-label"
+          class="control-label"
+          data-translate=""
+          >simpleurl-recordIdPathMode</label
+        >
+        <select
+          id="gn-harvest-settings-recordIdPathMode-list"
+          data-ng-model="harvesterSelected.site.recordIdPathMode"
+          class="form-control gn-csw-criteria"
+        >
+          <option value="auto" data-translate="">simpleurl-recordIdPathMode-auto</option>
+          <option value="xpath" data-translate="">
+            simpleurl-recordIdPathMode-xpath
+          </option>
+          <option value="jsonpointer" data-translate="">
+            simpleurl-recordIdPathMode-jsonpointer
+          </option>
+          <option value="jsonpath" data-translate="">
+            simpleurl-recordIdPathMode-jsonpath
+          </option>
+        </select>
+      </div>
+      <p class="help-block" data-translate="">simpleurl-recordIdPathModeHelp</p>
+    </div>
+
     <div>
       <label class="control-label">
         <input
