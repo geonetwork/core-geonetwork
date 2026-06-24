@@ -385,6 +385,13 @@ public class EditLib {
                     LOGGER.debug("Add XML fragment; {} to element with ref: {} replacing content.", fragment, nodeRef);
                     // clean before update
                     el.removeContent();
+                    // attributes
+                    Iterator<Attribute> attributeIterator = el.getAttributes().iterator();
+                    while (attributeIterator.hasNext()) {
+                        Attribute at = attributeIterator.next();
+                        attributeIterator.remove();
+                    }
+
                     fragment = addGmlNamespaceToFragment(fragment);
 
                     // Add content
