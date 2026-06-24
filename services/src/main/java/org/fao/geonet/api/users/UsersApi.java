@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2025 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,7 +27,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.regex.Pattern;
 import jeeves.server.UserSession;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -51,6 +50,7 @@ import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.util.PasswordUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -74,6 +74,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET;
@@ -124,6 +125,9 @@ public class UsersApi {
     @Autowired(required=false)
     SecurityProviderConfiguration securityProviderConfiguration;
 
+    @Autowired
+    UserFeedbackRepository userFeedbackRepository;
+
     private BufferedImage pixel;
 
     public UsersApi() {
@@ -133,8 +137,7 @@ public class UsersApi {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get users",
-        description = "")
+        summary = "Get users")
     @RequestMapping(
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
@@ -178,8 +181,7 @@ public class UsersApi {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get user",
-        description = "")
+        summary = "Get user")
     @RequestMapping(
         value = "/{userIdentifier}",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -228,8 +230,7 @@ public class UsersApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get user identicon",
-        description = "")
+        summary = "Get user identicon")
     @RequestMapping(
         value = "/{userIdentifier}.png",
         produces = MediaType.IMAGE_PNG_VALUE,
@@ -314,7 +315,7 @@ public class UsersApi {
 
 
         if (myProfile == Profile.UserAdmin) {
-            final Integer iMyUserId = Integer.parseInt(myUserId);
+            final int iMyUserId = Integer.parseInt(myUserId);
             final List<Integer> groupIdsSessionUser = userGroupRepository
                 .findGroupIds(where(hasUserId(iMyUserId)));
 
@@ -353,6 +354,8 @@ public class UsersApi {
             Arrays.asList(userIdentifier));
 
         userSavedSelectionRepository.deleteAllByUser(userIdentifier);
+        userFeedbackRepository.nullifyAuthor(userIdentifier);
+        userFeedbackRepository.nullifyApprover(userIdentifier);
 
         try {
             userRepository.deleteById(userIdentifier);
@@ -364,8 +367,7 @@ public class UsersApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Check if a user property already exist",
-        description = ""
+        summary = "Check if a user property already exist"
         //       authorizations = {
         //           @Authorization(value = "basicAuth")
         //      })
@@ -503,7 +505,7 @@ public class UsersApi {
         user = userRepository.save(user);
         setUserGroups(user, groups);
 
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -719,7 +721,7 @@ public class UsersApi {
         user.get().getSecurity().getSecurityNotifications().remove(UserSecurityNotification.UPDATE_HASH_REQUIRED);
         userRepository.save(user.get());
 
-        return new ResponseEntity(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
