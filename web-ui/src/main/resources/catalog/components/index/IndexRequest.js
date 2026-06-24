@@ -422,10 +422,9 @@
             function (k) {
               var fObj = this.getIdxNameObj_(field[k]);
               if (fObj) {
-                statParams[fObj.idxName] = {
-                  terms: {
-                    field: fObj.idxName,
-                    size: MAX_ROWS
+                statParams[fObj.idxName + "stats"] = {
+                  stats: {
+                    field: fObj.idxName
                   }
                 };
                 rangeDate[k] = fObj.idxName;
@@ -729,43 +728,31 @@
 
       var initialParam = params.params && params.params[k];
 
-      var minF = aggs[v.minField];
-      var maxF = aggs[v.maxField];
-      var allDates = minF.buckets
-        .concat(maxF.buckets)
-        .map(function (bucket) {
-          return bucket.key;
-        })
-        .unique();
+      var minFstats = aggs[v.minField + "stats"];
+      var maxFstats = aggs[v.maxField + "stats"];
 
-      // compute bucket interval
-      var interval = "week";
       var minDate = initialParam
         ? moment(initialParam.values.from, "DD-MM-YYYY")
-        : moment(_.min(allDates));
+        : moment(minFstats.min);
       var maxDate = initialParam
         ? moment(initialParam.values.to, "DD-MM-YYYY")
-        : moment(_.max(allDates));
-      var fullRange = maxDate.diff(minDate, "days");
-      if (fullRange > 1000) interval = "month";
+        : moment(maxFstats.max);
 
-      var groupedDates = _.groupBy(allDates, function (date) {
-        return moment(date).startOf(interval).valueOf();
-      });
-      groupedDates = Object.keys(groupedDates)
-        .map(function (key) {
-          return parseInt(key);
-        })
-        .sort(function (a, b) {
-          return Math.sign(a - b);
-        });
-
-      // no available dates: do not add an empty filter
-      if (!groupedDates.length) {
-        return;
+      var nbOfDays = maxDate.diff(minDate, "days"),
+        interval = "weeks",
+        daysByGroup = 7;
+      if (nbOfDays > 6000) {
+        interval = "years";
+        daysByGroup = 365;
+      } else if (nbOfDays > 3000) {
+        interval = "months";
+        daysByGroup = 30.5;
       }
-
-      groupedDates.forEach(
+      var dateBuckets = [];
+      for (var i = 0; i < nbOfDays / daysByGroup; i++) {
+        dateBuckets.push(minDate.clone().add(i, interval).valueOf());
+      }
+      dateBuckets.forEach(
         function (date, i, array) {
           var rangeSpec = {
             bool: {
