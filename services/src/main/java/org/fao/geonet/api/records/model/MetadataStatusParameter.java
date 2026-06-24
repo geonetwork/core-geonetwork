@@ -25,7 +25,7 @@ package org.fao.geonet.api.records.model;
 
 import org.fao.geonet.domain.StatusValueType;
 
-public class MetadataStatusParameter {
+public class MetadataStatusParameter implements Cloneable {
     private StatusValueType type;
     private int status;
     private String changeMessage;
@@ -79,5 +79,10 @@ public class MetadataStatusParameter {
 
     public void setOwner(Integer owner) {
         this.owner = owner;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
