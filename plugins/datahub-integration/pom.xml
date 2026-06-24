@@ -60,6 +60,11 @@
 
   <properties>
     <rootProjectDir>../..</rootProjectDir>
+    <datahub.version>2.9.0</datahub.version>
+    <datahub.zip.name>datahub-${datahub.version}.zip</datahub.zip.name>
+    <datahub.download.url>https://github.com/geonetwork/geonetwork-ui/releases/download/v${datahub.version}/${datahub.zip.name}</datahub.download.url>
+    <datahub.webcomponent.download.url>https://raw.githubusercontent.com/geonetwork/geonetwork-ui/refs/tags/v${datahub.version}/tools/webcomponent/wc-embedder.html</datahub.webcomponent.download.url>
+    <datahub.unpack.dir>${project.build.directory}/datahub-ui</datahub.unpack.dir>
   </properties>
 
   <build>
@@ -72,78 +77,27 @@
       </resource>
     </resources>
     <plugins>
-      <!--   Install node & npm -> npm install -> npm run build  -->
+       <!-- Download datahub UI archive from GitHub releases and unpack it. -->
       <plugin>
-        <artifactId>maven-clean-plugin</artifactId>
+        <artifactId>maven-antrun-plugin</artifactId>
         <executions>
           <execution>
-            <id>reset</id>
-            <goals><goal>clean</goal></goals>
+            <id>download-datahub-ui</id>
+            <goals><goal>run</goal></goals>
             <configuration>
-              <filesets>
-                <!-- reset working files covered by .gitignore -->
-                <fileset>
-                  <directory>.</directory>
-                  <includes>
-                    <include>node/**</include>
-                  </includes>
-                </fileset>
-              </filesets>
+              <target>
+                <delete file="${project.build.directory}/${datahub.zip.name}"/>
+                <delete dir="${datahub.unpack.dir}"/>
+                <mkdir dir="${datahub.unpack.dir}"/>
+                <get src="${datahub.download.url}" dest="${project.build.directory}/${datahub.zip.name}"/>
+                <unzip src="${project.build.directory}/${datahub.zip.name}" dest="${datahub.unpack.dir}"/>
+                <get src="${datahub.webcomponent.download.url}" dest="${datahub.unpack.dir}"/>
+                <echo file="${datahub.unpack.dir}/package.json">{"name":"datahub","version":"${datahub.version}"}</echo>
+              </target>
             </configuration>
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.15.0</version>
-        <executions>
-          <execution>
-            <!--   Installing node and npm   -->
-            <id>install-node-and-npm</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>install-node-and-npm</goal>
-            </goals>
-            <configuration>
-              <nodeVersion>v20.12.2</nodeVersion>
-              <npmVersion>10.7.0</npmVersion>
-            </configuration>
-          </execution>
-          <!--   Install geonetwork-ui dependencies   -->
-          <execution>
-            <id>npm-install</id>
-            <phase>initialize</phase>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <arguments>ci --loglevel error</arguments>
-              <workingDirectory>geonetwork-ui</workingDirectory>
-              <installDirectory>${basedir}</installDirectory>
-            </configuration>
-          </execution>
-          <!--   Build datahub app   -->
-          <execution>
-            <id>npm-build</id>
-            <phase>generate-resources</phase>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-            <configuration>
-              <environmentVariables>
-                <NX_DAEMON>false</NX_DAEMON>
-              </environmentVariables>
-              <arguments>
-                run nx -- build datahub --base-href=./
-              </arguments>
-              <workingDirectory>geonetwork-ui</workingDirectory>
-              <installDirectory>${basedir}</installDirectory>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
       <!--   Copy of datahub files   -->
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
@@ -160,18 +114,18 @@
               <outputDirectory>target/resources/datahub</outputDirectory>
               <resources>
                 <resource>
-                  <directory>geonetwork-ui/dist/apps/datahub</directory>
+                  <directory>${datahub.unpack.dir}/dist/apps/datahub</directory>
                   <filtering>false</filtering>
                 </resource>
                 <resource>
-                  <directory>geonetwork-ui</directory>
+                  <directory>${datahub.unpack.dir}</directory>
                   <includes>
                     <include>package.json</include>
                   </includes>
                   <filtering>false</filtering>
                 </resource>
                 <resource>
-                  <directory>geonetwork-ui/tools/webcomponent</directory>
+                  <directory>${datahub.unpack.dir}/tools/webcomponent</directory>
                   <includes>
                     <include>wc-embedder.html</include>
                   </includes>
