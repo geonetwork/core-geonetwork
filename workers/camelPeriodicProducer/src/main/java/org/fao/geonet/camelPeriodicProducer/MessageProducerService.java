@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2015 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -51,7 +51,7 @@ import static org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuild
 
 @Component
 public class MessageProducerService implements ApplicationListener<ServerStartup> {
-    private static final String DEFAULT_CONSUMER_URI = "activemq://queue:" + MESSAGE_HARVEST_WFS_FEATURES + "?concurrentConsumers=5";
+    private static final String DEFAULT_CONSUMER_URI = "seda:harvest-wfs-features";
     private static Logger LOGGER = LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     private static boolean isConfigured = false;
     protected String consumerUri = DEFAULT_CONSUMER_URI;
