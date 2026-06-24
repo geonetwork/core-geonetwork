@@ -38,6 +38,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.security.web.savedrequest.SavedRequest;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -57,6 +59,9 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
 
     @Autowired
     OAuth2SecurityProviderUtil oAuth2SecurityProviderUtil;
+
+    @Autowired
+    RequestCache requestCache;
 
     public GeonetworkOAuth2LoginAuthenticationFilter(ClientRegistrationRepository clientRegistrationRepository, OAuth2AuthorizedClientService authorizedClientService) {
         super(clientRegistrationRepository, authorizedClientService);
@@ -116,9 +121,37 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
         try{
             SecurityContextHolder.getContext().setAuthentication(authResult);
 
+            // Use Spring Security's SavedRequest mechanism to get the original request URL
+            // The request should have been saved by GeonetworkOidcPreAuthActionsLoginFilter before
+            // redirecting the user to the OIDC provider login
+            String redirectURL = null;
 
-            //cf GN keycloak
-            String redirectURL = findQueryParameter(request, "redirectUrl");
+            boolean redirectFromSavedRequest = false;
+            if (requestCache != null) {
+                SavedRequest savedRequest = requestCache.getRequest(request, response);
+                if (savedRequest != null) {
+                    redirectURL = savedRequest.getRedirectUrl();
+                    redirectFromSavedRequest = true;
+                    Log.debug(Geonet.SECURITY, "Retrieved original request from SavedRequest: " + redirectURL);
+                } else {
+                    Log.debug(Geonet.SECURITY, "No SavedRequest found in RequestCache");
+                }
+            } else {
+                Log.debug(Geonet.SECURITY, "RequestCache is not available");
+            }
+
+            if (redirectURL == null) {
+                redirectURL = findQueryParameter(request, "redirectUrl");
+                if (redirectURL != null) {
+                    Log.debug(Geonet.SECURITY, "Retrieved redirect URL from query parameter: " + redirectURL);
+                }
+            }
+
+            if (redirectFromSavedRequest) {
+                // Removing original request retains current headers (same behavior as before).
+                requestCache.removeRequest(request, response);
+            }
+
             RedirectUtil.sendSafeRedirect(request, response, redirectURL);
 
             // Set users preferred locale if it exists. - cf. keycloak
