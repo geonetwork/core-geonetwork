@@ -383,7 +383,14 @@
                 }
               });
 
-              scope.$on("$locationChangeSuccess", function (next, current) {
+              scope.$on("$locationChangeSuccess", function (evt, next, current, newState, oldState) {
+                // When using window.location.hash or replace to change the location
+                // $locationChangeSuccess is triggered 2 times.
+                // Second time on HashChangeEvent which can be ignored
+                // and the state contains a navigationId property.
+                if (oldState && oldState.navigationId) {
+                  return;
+                }
                 initFromLocation();
               });
 
