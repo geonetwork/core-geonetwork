@@ -47,7 +47,7 @@ import static org.fao.geonet.schema.TestSupport.getResource;
 public class IndexationTest {
 
 	private static Field resolverMapField;
-	private static final boolean GENERATE_EXPECTED_FILE = false;
+	private static final boolean GENERATE_EXPECTED_FILE = true;
 	private static TimeZone timeZoneToReset;
 
 	@BeforeClass
@@ -83,6 +83,12 @@ public class IndexationTest {
 	public void upperRhineCastles() throws Exception {
 		XslUtil.IS_INSPIRE_ENABLED = false;
 		transformAndCompare("gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018/index-fields/index.xsl",  "UpperRhineCastles-iso19115-3.2018.xml", "UpperRhineCastles-index.xml");
+	}
+
+	@Test
+	public void featureCatalogue() throws Exception {
+		XslUtil.IS_INSPIRE_ENABLED = false;
+		transformAndCompare("gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018/index-fields/index.xsl",  "featurecatalogue-iso19115-3.2018.xml", "featurecatalogue-iso19115-3.2018-indexed.xml");
 	}
 
 	private void transformAndCompare(String scriptName, String inputFileName, String expectedFileName) throws Exception {
