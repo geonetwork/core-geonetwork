@@ -181,6 +181,7 @@
                                   |mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicBoundingBox
                                   |mdb:identificationInfo/*/mri:extent/*/gex:geographicElement/gex:EX_GeographicDescription
                                   |mdb:identificationInfo/*/mri:extent/*/gex:temporalElement/*/gex:extent
+                                  |mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat
                                   |mdb:distributionInfo//mrd:onLine
                                   |.//mpc:portrayalCatalogueCitation/*/cit:onlineResource
                                   |.//mrl:additionalDocumentation//cit:onlineResource
