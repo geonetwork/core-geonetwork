@@ -278,6 +278,26 @@
           searchObj.params = angular.extend({}, searchObj.defaultParams);
           return searchObj;
         },
+        getSearchFilterForType: function (gnCurrentEdit, type) {
+          var uuidsAlreadyLinked = [gnCurrentEdit.uuid];
+          var existingRelations = gnCurrentEdit.getRelations(type);
+
+          if (existingRelations && existingRelations.length) {
+            for (var i = 0; i < existingRelations.length; i++) {
+              uuidsAlreadyLinked.push(existingRelations[i].uuid);
+            }
+          }
+          if (uuidsAlreadyLinked.length > 0) {
+            return [
+              {
+                query_string: {
+                  query: '-_id:("' + uuidsAlreadyLinked.join('" OR "') + '")'
+                }
+              }
+            ];
+          }
+          return [];
+        },
 
         /**
          * @ngdoc method
@@ -411,19 +431,15 @@
          *
          * @param {string} type of the directive that calls it.
          */
-        onOpenPopup: function (type, additionalParams) {
-          if (
-            type === "parent" &&
-            additionalParams.fields &&
-            additionalParams.fields.associationType
-          ) {
+        onOpenPopup: function (type) {
+          if (type === "parent" && config.fields && config.fields.associationType) {
             // In ISO19115-3, parents are usually encoded using the association records
             // Configured in config/associated-panel/default.json
             type = "siblings";
           }
           var fn = openCb[type];
           if (angular.isFunction(fn)) {
-            openCb[type](additionalParams);
+            openCb[type].apply(null, Array.prototype.slice.call(arguments, 1));
           } else {
             console.warn(
               "No callback functions available for '" + type + "'. Check the type value."
