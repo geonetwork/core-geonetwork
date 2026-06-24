@@ -1,18 +1,6 @@
 INSERT INTO Languages (id, name, isinspire) VALUES ('vie','Tiếng Việt', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'vie','Maps & graphics');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'vie','Datasets');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'vie','Interactive resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'vie','Applications');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'vie','Case studies, best practices');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'vie','Conference proceedings');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'vie','Photo');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'vie','Audio/Video');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'vie','Directories');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'vie','Other information resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'vie','Registers');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'vie','Physical Samples');
 
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (-1,'vie','Guest');
 INSERT INTO GroupsDes (iddes, langid, label) VALUES (0,'vie','Intranet');

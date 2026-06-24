@@ -1,18 +1,6 @@
 INSERT INTO Languages (id, name, isinspire) VALUES ('ara','العربية', 'n');
 
 -- Take care to table ID (related to other loc files)
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (1,'ara','Maps & graphics');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (2,'ara','Datasets');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (3,'ara','Interactive resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (4,'ara','Applications');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (5,'ara','Case studies, best practices');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (6,'ara','Conference proceedings');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (7,'ara','Photo');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (8,'ara','Audio/Video');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (9,'ara','Directories');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (10,'ara','Other information resources');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (12,'ara','Registers');
-INSERT INTO CategoriesDes (iddes, langid, label) VALUES (13,'ara','Physical Samples');
 
 INSERT INTO GroupsDes (iddes, langid, label)VALUES (-1,'ara','Guest');
 INSERT INTO GroupsDes (iddes, langid, label)VALUES (0,'ara','Intranet');

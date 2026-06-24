@@ -33,6 +33,7 @@ import java.util.UUID;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -54,6 +55,9 @@ public class DataManagerWorksWithoutTransactionIntegrationTest extends AbstractD
                 public void run() throws Exception {
                     ServiceContext serviceContext = createContextAndLogAsAdmin();
 
+                    MetadataCategory category = new MetadataCategory();
+                    category.setName("sample");
+                    metadataCategoryRepository.save(category);
                     String metadataCategory = metadataCategoryRepository.findAll().get(0).getName();
                     Element sampleMetadataXml = getSampleMetadataXml();
                     UserSession userSession = serviceContext.getUserSession();
