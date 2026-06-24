@@ -34,14 +34,10 @@ import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.NoResultsFoundException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.HarvestHistory;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.repository.HarvestHistoryRepository;
@@ -54,14 +50,11 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,6 +164,34 @@ public class HarvestersApi {
         historyRepository.save(history);
 
         return new HttpEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get harvester logo image.",
+        description = "Redirect to source logo endpoint."
+    )
+    @GetMapping(
+        value = "/{harvesterUuid}/logo"
+    )
+    @ResponseStatus(value = HttpStatus.FOUND)
+    public void getHarvesterLogo(
+        @PathVariable
+        String portal,
+        @Parameter(
+            description = "The harvester UUID"
+        )
+        @PathVariable
+        String harvesterUuid,
+        HttpServletResponse response
+    ) throws ResourceNotFoundException, IOException {
+        Source source = sourceRepository.findOneByUuid(harvesterUuid);
+        if (source == null || source.getType() != SourceType.harvester) {
+            throw new ResourceNotFoundException(String.format(
+                "Harvester with UUID '%s' not found.",
+                harvesterUuid));
+        }
+
+        response.sendRedirect("/" + portal + "/api/sources/" + harvesterUuid + "/logo");
     }
 
 

@@ -62,7 +62,6 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  */
 public abstract class Resources {
     public static final String BLANK_LOGO = "blank.png";
-    public static final String DEFAULT_LOGO_EXTENSION = ".png";
 
     protected final static Set<String> IMAGE_READ_SUFFIXES;
     protected final static Set<String> IMAGE_WRITE_SUFFIXES;

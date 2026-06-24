@@ -61,11 +61,9 @@
             }
             $("#translationModal").modal("show");
           };
-          $http
-            .get("admin.harvester.info?type=icons&_content_type=json", { cache: true })
-            .then(function (response) {
-              scope.icons = response.data[0];
-            });
+          $http.get("../api/logos", { cache: true }).then(function (response) {
+            scope.icons = response.data;
+          });
           $http
             .get("info?_content_type=json&type=languages", { cache: true })
             .then(function (response) {
@@ -338,11 +336,9 @@
           "../../catalog/components/admin/harvester/partials/" + "logopicker.html",
 
         link: function (scope, element, attrs) {
-          $http
-            .get("admin.harvester.info?type=icons&_content_type=json", { cache: true })
-            .then(function (response) {
-              scope.icons = response.data[0];
-            });
+          $http.get("../api/logos", { cache: true }).then(function (response) {
+            scope.icons = response.data;
+          });
 
           /**
            * Set the icon
