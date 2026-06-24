@@ -333,11 +333,34 @@ public class BaseMetadataUtils implements IMetadataUtils {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPermalink(String uuid, String language) {
-        Boolean doiIsFirst = settingManager.getValueAsBool(METADATA_URL_SITEMAPDOIFIRST, false);
+        return getPermalink(uuid, language, false);
+    }
 
-        if (Boolean.TRUE.equals(doiIsFirst)) {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getPlainHtmlUrl(String uuid, String language) {
+        return getPermalink(uuid, language, true);
+    }
+
+    /**
+     * Build a record URL with optional plain HTML rendering.
+     *
+     * If DOI-first is enabled and a DOI exists, the DOI is returned immediately.
+     * Otherwise, this uses the configured permalink template when available; if not,
+     * it falls back to the default API record URL and adapts it depending on whether
+     * a plain HTML (crawler-friendly) link is requested.
+     */
+    private String getPermalink(String uuid, String language, boolean plainHtml) {
+        boolean doiIsFirst = settingManager.getValueAsBool(METADATA_URL_SITEMAPDOIFIRST, false);
+
+        if (doiIsFirst) {
             String doi = null;
             try {
                 doi = getDoi(uuid);
@@ -351,24 +374,21 @@ public class BaseMetadataUtils implements IMetadataUtils {
 
 
         String sitemapLinkUrl = settingManager.getValue(METADATA_URL_SITEMAPLINKURL);
-        String defaultLink = settingManager.getNodeURL() + "api/records/" + uuid + "?language=all";
+        String defaultLink = settingManager.getNodeURL() + "api/records/" + uuid;
         String permalink = buildUrl(uuid, language, sitemapLinkUrl);
 
         // If the permalink template has been modified use the configured permalink template
-        // otherwise use the defaultLink
+        // Otherwise, if plain html is requested, use the xsl-view formatter
+        // Otherwise, fallback to the default link
         UriComponentsBuilder uriComponentsBuilder;
         if (StringUtils.isNotEmpty(permalink) && !defaultLink.equals(permalink)) {
             uriComponentsBuilder = UriComponentsBuilder.fromUriString(permalink);
         } else {
             uriComponentsBuilder = UriComponentsBuilder.fromUriString(defaultLink);
-
-            // Get the formatter configured for *links* to records (recordLinkFormatter) from the UI configuration.
-            String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
-
-            // When building the record URL, the formatter is passed as the `recordViewFormatter` query parameter
-            // because the API expects that parameter name to decide which formatter to use when displaying the record.
-            if (StringUtils.isNotBlank(recordLinkFormatter)) {
-                uriComponentsBuilder.queryParam("recordViewFormatter", recordLinkFormatter);
+            if (plainHtml) {
+                uriComponentsBuilder.pathSegment("formatters", "xsl-view");
+            } else {
+                uriComponentsBuilder.queryParam("language", "all");
             }
         }
 
