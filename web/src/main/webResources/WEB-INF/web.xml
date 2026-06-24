@@ -497,6 +497,11 @@
       <param-name>isSecured</param-name>
       <param-value>true</param-value>
     </init-param>-->
+    <init-param>
+      <param-name>disallowResponseHeaders</param-name>
+      <param-value>WWW-Authenticate</param-value>
+    </init-param>
+
   </servlet>
   <servlet-mapping>
     <servlet-name>ESFeaturesProxy</servlet-name>
