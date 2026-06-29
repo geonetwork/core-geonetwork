@@ -1,5 +1,7 @@
 package org.fao.geonet.api.records.formatters;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.nio.charset.StandardCharsets;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.Constants;
 import org.fao.geonet.api.records.extent.MapRenderer;
@@ -24,6 +26,22 @@ class PdfOrHtmlResponseWriter {
         if (formatType == FormatType.pdf) {
             writerAsPDF(context, response, formattedMetadata, lang);
         } else {
+            if (formatType == FormatType.json) {
+                // Ensure the JSON response is valid and format it.
+                // XSLT is not the best way to generate JSON, so ensure the output is valid JSON.
+                // and log error to be able to improve the formatter if needed.
+                try {
+                    ObjectMapper mapper = new ObjectMapper();
+                    formattedMetadata = mapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(mapper.readTree(formattedMetadata));
+                } catch (IOException e) {
+                    Log.error(Geonet.FORMATTER, String.format(
+                        "Invalid JSON response for metadata UUID: %s. Error is: %s.%nJSON:%n%s",
+                        metadataUuid,
+                        e.getMessage(),
+                        new String(formattedMetadata, StandardCharsets.UTF_8)));
+                    throw e;
+                }
+            }
             response.setCharacterEncoding(Constants.ENCODING);
             response.setContentType(formatType.contentType);
             response.setContentLength(formattedMetadata.length);
