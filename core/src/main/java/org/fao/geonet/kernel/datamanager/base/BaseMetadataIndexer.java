@@ -705,7 +705,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 fullMd.getUuid(),
                 (org.fao.geonet.api.records.attachments.Sort) null,
                 null,
-                !(fullMd instanceof MetadataDraft));
+                !(fullMd instanceof MetadataDraft),
+                true);
 
             if (metadataResources != null && !metadataResources.isEmpty()) {
                 JsonNode jsonNode = indexObjectMapper.valueToTree(metadataResources);

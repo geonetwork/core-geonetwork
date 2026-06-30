@@ -102,6 +102,57 @@ public interface Store {
     List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String filter, Boolean approved) throws Exception;
 
     /**
+     * Retrieve all resources for a metadata. The list of resources depends on current user
+     * privileges.
+     *
+     * <p>This overload allows callers to control whether additional indexed properties
+     * are populated on each returned {@link MetadataResource}. Callers should set
+     * {@code includeAdditionalIndexedProperties} to {@code true} only when they actually
+     * need those extra indexed values (for example, when preparing data for search or
+     * indexing purposes). For simple listing or download operations where these extra
+     * properties are not required, it is recommended to set this flag to {@code false}.</p>
+     *
+     * @param context      the service context
+     * @param metadataUuid the metadata UUID
+     * @param sort         sort by resource name or sharing policy {@link Sort}
+     * @param filter       a {@link java.nio.file.Files#newDirectoryStream(Path) GLOB
+     *                     expression} to filter resources eg. *.{png|jpg}
+     * @param approved     return the approved version or not
+     * @param includeAdditionalIndexedProperties whether to populate additional indexed
+     *                     properties on returned resources ({@code true}) or to skip them
+     *                     for better performance when they are not needed ({@code false})
+     * @return A list of resources
+     * @throws Exception if an error occurs while retrieving the resources
+     */
+    List<MetadataResource> getResources(ServiceContext context, String metadataUuid, Sort sort, String filter, Boolean approved, boolean includeAdditionalIndexedProperties) throws Exception;
+
+    /**
+     * Retrieve all resources for a metadata having a specific sharing policy.
+     *
+     * <p>This overload allows callers to control whether additional indexed properties
+     * are populated on each returned {@link MetadataResource}. Callers should set
+     * {@code includeAdditionalIndexedProperties} to {@code true} only when they actually
+     * need those extra indexed values (for example, when preparing data for search or
+     * indexing purposes). For simple listing or download operations where these extra
+     * properties are not required, it is recommended to set this flag to {@code false}.</p>
+     *
+     * @param context                     the service context
+     * @param metadataUuid                the metadata UUID
+     * @param metadataResourceVisibility  the type of sharing policy
+     *                                    {@link MetadataResourceVisibility}
+     * @param filter                      a {@link java.nio.file.Files#newDirectoryStream(Path) GLOB
+     *                                    expression} to filter resources eg. *.{png|jpg}
+     * @param approved                    return the approved version or not
+     * @param includeAdditionalIndexedProperties whether to populate additional indexed
+     *                                    properties on returned resources ({@code true})
+     *                                    or to skip them for better performance when they
+     *                                    are not needed ({@code false})
+     * @return A list of resources
+     * @throws Exception if an error occurs while retrieving the resources
+     */
+    List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String filter, Boolean approved, boolean includeAdditionalIndexedProperties) throws Exception;
+
+    /**
      * Retrieve a resource.
      *
      *
