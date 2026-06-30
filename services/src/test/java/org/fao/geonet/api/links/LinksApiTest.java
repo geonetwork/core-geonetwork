@@ -98,7 +98,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
     private void createTestData() throws Exception {
         loginAsAdmin(context);
-        this.md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+        this.md = injectMetadataInDb(getSampleMetadataXml(), context);
         Element xmlData = this.md.getXmlData(false);
 
         urlAnalyzer.processMetadata(xmlData, this.md);

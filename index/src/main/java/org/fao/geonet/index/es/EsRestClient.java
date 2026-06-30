@@ -114,7 +114,7 @@ public class EsRestClient implements InitializingBean {
         return client;
     }
 
-    public ElasticsearchAsyncClient getAsynchClient() {
+    public ElasticsearchAsyncClient getAsyncClient() {
         return asyncClient;
     }
 
@@ -222,12 +222,14 @@ public class EsRestClient implements InitializingBean {
         return this;
     }
 
-    public static final String ROUTING_KEY = "101";
-
-    public BulkResponse bulkRequest(String index, Map<String, String> docs) throws IOException {
+    private void checkActivated() {
         if (!activated) {
-            throw new IOException("Index not yet activated.");
+            throw new IllegalStateException("Index not yet activated.");
         }
+    }
+
+    public BulkRequest buildIndexBulkRequest(String index, Map<String, String> docs) {
+        checkActivated();
 
         BulkRequest.Builder requestBuilder = new BulkRequest.Builder()
             .index(index)
@@ -245,14 +247,31 @@ public class EsRestClient implements InitializingBean {
                     .document(jd)));
         }
 
-        BulkRequest request = requestBuilder.build();
+        return requestBuilder.build();
+    }
 
-        try {
-            return client.bulk(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
+    public BulkRequest buildDeleteBulkRequest(String index, List<String> deletionUUIDs) {
+        checkActivated();
+
+        BulkRequest.Builder requestBuilder = new BulkRequest.Builder()
+            .index(index)
+            .refresh(Refresh.True);
+
+        for (String uuid : deletionUUIDs) {
+            requestBuilder.operations(op -> op.delete(del -> del.index(index)
+                .id(uuid)));
         }
+
+        return requestBuilder.build();
+    }
+
+    public DeleteByQueryRequest buildDeleteByQuery(String index, String query) {
+        checkActivated();
+
+        return DeleteByQueryRequest.of(
+            b -> b.index(index)
+                .q(query)
+                .refresh(true));
     }
 
 
@@ -391,34 +410,6 @@ public class EsRestClient implements InitializingBean {
             Log.error("geonetwork.index", String.format(
                 "Error during querying index with aggregation. %s", esException.error().toString()));
             throw esException;
-        }
-    }
-
-
-    public String deleteByQuery(String index, String query) throws Exception {
-        if (!activated) {
-            return "";
-        }
-
-        DeleteByQueryRequest request = DeleteByQueryRequest.of(
-            b -> b.index(new ArrayList<>(Arrays.asList(index)))
-                .q(query)
-                .refresh(true));
-
-        final DeleteByQueryResponse deleteByQueryResponse =
-            client.deleteByQuery(request);
-
-
-        if (deleteByQueryResponse.deleted() >= 0) {
-            return String.format("Record removed. %s.", deleteByQueryResponse.deleted());
-        } else {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
-
-            throw new IOException(String.format(
-                "Error during removal. Errors are '%s'.", stringBuilder
-            ));
         }
     }
 
