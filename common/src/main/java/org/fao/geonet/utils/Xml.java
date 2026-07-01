@@ -96,6 +96,9 @@ import static org.fao.geonet.Constants.ENCODING;
  * General class of useful static methods.
  */
 public final class Xml {
+    public static Path webappDir;
+    public static Path thesauriDir;
+    public static Path schemaPluginsDir;
 
     public static final Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
     public static final NioPathAwareEntityResolver PATH_RESOLVER = new NioPathAwareEntityResolver();

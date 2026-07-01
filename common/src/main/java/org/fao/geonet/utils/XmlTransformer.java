@@ -23,38 +23,52 @@
 
 package org.fao.geonet.utils;
 
-import net.sf.saxon.Configuration;
-import net.sf.saxon.Controller;
-import net.sf.saxon.FeatureKeys;
+import net.sf.saxon.*;
+import net.sf.saxon.expr.Expression;
+import net.sf.saxon.expr.StaticContext;
+import net.sf.saxon.functions.FunctionLibrary;
+import net.sf.saxon.om.StructuredQName;
 import org.apache.xml.resolver.tools.CatalogResolver;
+import net.sf.saxon.expr.XPathContext;
+import net.sf.saxon.om.SequenceIterator;
+import net.sf.saxon.trans.UnparsedTextURIResolver;
+import net.sf.saxon.trans.XPathException;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.transform.JDOMSource;
 
+import javax.xml.XMLConstants;
 import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamSource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Reader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class XmlTransformer {
     private TransformerFactory factory;
+    private TransformerFactory untrustredFactory;
     private Map<String, Object> properties = new HashMap<>();
     private Map<String, Object> transformerParameters = null;
+    private final boolean useSaxonParser;
 
     private XmlTransformer() throws TransformerConfigurationException {
-        factory = TransformerFactoryFactory.getTransformerFactory();
+        factory = TransformerFactoryFactory.newTransformerFactory();
+        untrustredFactory = TransformerFactoryFactory.newTransformerFactory();
+        useSaxonParser = factory instanceof TransformerFactoryImpl;
     }
 
     public static XmlTransformer createWithJeevesUIResolver() throws TransformerConfigurationException {
         XmlTransformer t = new XmlTransformer();
-        t.factory.setURIResolver(new JeevesURIResolver());
+        t.factory.setURIResolver(new JeevesURIResolver(false));
+        t.untrustredFactory.setURIResolver(new JeevesURIResolver(true));
         return t;
     }
 
@@ -69,20 +83,32 @@ public class XmlTransformer {
     }
 
     public void transform(Element xml, Path sourcePath, Result result) throws TransformerException, IOException {
+        boolean isUntrusted = Files.exists(sourcePath.getParent().resolve("untrusted_formatter_bundle"));
+        final TransformerFactory _factory = isUntrusted ? untrustredFactory : this.factory;
         try {
-            initialiseCommonConfiguration(factory);
-            properties.entrySet().forEach(e -> factory.setAttribute(e.getKey(), e.getValue()));
+            initialiseCommonConfiguration(_factory);
+            if (isUntrusted) {
+                initialiseUntrustedFormatterBundle(_factory);
+            }
+            properties.entrySet().forEach(e -> _factory.setAttribute(e.getKey(), e.getValue()));
         } catch (IllegalArgumentException e) {
             Log.warning(Log.ENGINE, "WARNING: transformerfactory does not like saxon attributes!", e);
         } finally {
             try (InputStream in = IO.newInputStream(sourcePath)) {
                 Source source = new StreamSource(in, sourcePath.toUri().toASCIIString());
-
-                Transformer t = factory.newTransformer(source);
+                Transformer t = _factory.newTransformer(source);
                 if (transformerParameters != null) {
                     initialiseTransformerParameters(t);
                 }
                 Source srcXml = new JDOMSource(new Document((Element) xml.detach()));
+                if (useSaxonParser && isUntrusted) {
+                    ((Controller) t).setUnparsedTextURIResolver(new UnparsedTextURIResolver() {
+                        @Override
+                        public Reader resolve(URI uri, String s, Configuration configuration) throws XPathException {
+                            throw new XPathException("Unparsed Text URI resolution not supported");
+                        }
+                    });
+                }
                 t.transform(srcXml, result);
             }
         }
@@ -98,7 +124,7 @@ public class XmlTransformer {
         }
     }
 
-    private void initialiseCommonConfiguration(TransformerFactory factory) throws TransformerConfigurationException {
+    private void initialiseCommonConfiguration(TransformerFactory factory) {
         factory.setAttribute(FeatureKeys.VERSION_WARNING, false);
         factory.setAttribute(FeatureKeys.LINE_NUMBERING, true);
         // Dear old saxon likes to yell loudly about each and every XSLT 1.0
@@ -110,7 +136,34 @@ public class XmlTransformer {
         //transFact.setAttribute(FeatureKeys.TIMING,true);
     }
 
+    private void initialiseUntrustedFormatterBundle(TransformerFactory factory) throws TransformerConfigurationException {
+        TransformerFactoryImpl transformerFactory = (TransformerFactoryImpl) factory;
+        PatchedConfiguration patchedConfiguration = new PatchedConfiguration(transformerFactory.getConfiguration());
+        transformerFactory.setConfiguration(patchedConfiguration);
+
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        if (AllowlistedFunctionLibrary.ALLOW_LIST.isEmpty()) {
+            factory.setAttribute(FeatureKeys.ALLOW_EXTERNAL_FUNCTIONS, false);
+        } else {
+            // custom whitelist
+            factory.setAttribute(FeatureKeys.ALLOW_EXTERNAL_FUNCTIONS, true);
+            patchedConfiguration.setExtensionBinder("java", new AllowlistedFunctionLibrary(patchedConfiguration.getExtensionBinder("java")));
+        }
+        factory.setAttribute(FeatureKeys.COLLECTION_URI_RESOLVER, new CollectionURIResolver() {
+            @Override
+            public SequenceIterator resolve(String s, String s1, XPathContext xPathContext) throws XPathException {
+                throw new XPathException("Collection URI resolution not supported");
+            }
+        });
+    }
+
     private static class JeevesURIResolver implements URIResolver {
+        private final boolean isUntrusted;
+
+        public JeevesURIResolver(boolean isUntrusted) {
+            this.isUntrusted = isUntrusted;
+        }
+
         public Source resolve(String href, String base) throws TransformerException {
             Resolver resolver = ResolverWrapper.getInstance();
             CatalogResolver catResolver = resolver.getCatalogResolver();
@@ -120,11 +173,22 @@ public class XmlTransformer {
             Source s = catResolver.resolve(href, base);
 
             boolean isFile;
+            Path file;
             try {
-                final Path file = IO.toPath(new URI(s.getSystemId()));
+                file = IO.toPath(new URI(s.getSystemId()));
                 isFile = Files.isRegularFile(file);
             } catch (Exception e) {
+                file = null;
                 isFile = false;
+            }
+
+            if (isFile && isUntrusted) {
+                boolean isOutsideWebappDir = isFileOutsideDir(file, Xml.webappDir);
+                boolean isOutsideSchemaPluginsDir = isFileOutsideDir(file, Xml.schemaPluginsDir);
+                boolean isOutsideThesauriDir = isFileOutsideDir(file, Xml.thesauriDir);
+                if (isOutsideWebappDir && isOutsideSchemaPluginsDir && isOutsideThesauriDir) {
+                    throw new XPathException("File " + file + " is not in webapp or schemaPlugins or thesauri directory");
+                }
             }
 
             // If resolver has a blank XSL file use it to replace
@@ -161,6 +225,14 @@ public class XmlTransformer {
             return s;
         }
 
+        private static boolean isFileOutsideDir(Path file, Path dir) {
+            try {
+                return dir.relativize(file).toString().contains("..");
+            } catch (RuntimeException e) {
+                return true;
+            }
+        }
+
         private Path resolvePath(Source s) throws URISyntaxException {
             Path f;
             final String systemId = s.getSystemId().replaceAll("%5C", "/");
@@ -170,6 +242,38 @@ public class XmlTransformer {
                 f = IO.toPath(systemId);
             }
             return f;
+        }
+    }
+
+    public static class AllowlistedFunctionLibrary implements FunctionLibrary {
+        private final FunctionLibrary delegate;
+        private static final List<String> ALLOW_LIST = List.of("org.fao.geonet.util.XslUtil", "org.fao.geonet.api.records.MetadataUtils", "org.fao.geonet.api.records.formatters.SchemaLocalizations");
+
+        public AllowlistedFunctionLibrary(FunctionLibrary delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public boolean isAvailable(StructuredQName structuredQName, int i) {
+            if (ALLOW_LIST.stream().filter(s -> structuredQName.getNamespaceURI().contains(s)).findFirst().isPresent()) {
+                return delegate.isAvailable(structuredQName, i);
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public Expression bind(StructuredQName structuredQName, Expression[] expressions, StaticContext staticContext) throws XPathException {
+            if (ALLOW_LIST.stream().filter(s -> structuredQName.getNamespaceURI().contains(s)).findFirst().isPresent()) {
+                return delegate.bind(structuredQName, expressions, staticContext);
+            } else {
+                return null;
+            }
+        }
+
+        @Override
+        public FunctionLibrary copy() {
+            return delegate.copy();
         }
     }
 }
