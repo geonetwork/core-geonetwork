@@ -1717,7 +1717,7 @@
     <wro.debug>true</wro.debug>
     <fop.version>2.11</fop.version>
     <xmlunit.version>2.10.0</xmlunit.version>
-    <jackson.version>2.18.2</jackson.version>
+    <jackson.version>2.22.0</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j2.version>2.24.3</log4j2.version>
