@@ -30,6 +30,13 @@ import java.util.List;
 
 /**
  * Generic processor for processing items in batches within transactions.
+  * <p>
+ * Each batch runs in its own {@code PROPAGATION_REQUIRES_NEW} transaction. Because of this,
+ * integration tests exercising code that uses this class cannot rely on the test framework's
+ * usual transaction-per-test rollback (e.g. Spring's {@code @Transactional} test rollback):
+ * the nested per-batch transactions commit independently of the outer test transaction. Such
+ * tests should run with {@code @Transactional(propagation = Propagation.NOT_SUPPORTED)} and
+ * clean up any created/modified data explicitly (e.g. in an {@code @After} method).
  *
  * @param <T> The type of the items to process.
  */
@@ -53,10 +60,13 @@ public class BatchTransactionalProcessor<T> {
     /**
      * Sets the batch size.
      *
-     * @param batchSize The batch size.
+     * @param batchSize The batch size. Must be greater than 0.
      * @return This processor.
      */
     public BatchTransactionalProcessor<T> setBatchSize(int batchSize) {
+        if (batchSize <= 0) {
+            throw new IllegalArgumentException("batchSize must be greater than 0");
+        }
         this.batchSize = batchSize;
         return this;
     }

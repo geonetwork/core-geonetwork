@@ -47,9 +47,12 @@ import jeeves.server.dispatchers.ServiceManager;
 import jeeves.constants.Jeeves;
 import org.fao.geonet.kernel.BatchEditParameter;
 
+import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
+import org.fao.geonet.api.processing.report.IProcessingReport;
+import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.domain.Profile;
 import java.util.*;
@@ -165,5 +168,41 @@ public class BatchEditsApiTest {
 
         // Verify that TransactionManager.runInTransaction was effectively called twice
         verify(transactionManager, times(2)).getTransaction(any());
+    }
+
+    @Test
+    public void testBatchProcessingContinuesAfterRecordFailure() throws Exception {
+        when(schemaManager.getSchema(anyString())).thenThrow(new RuntimeException("Simulated schema failure"));
+
+        int numRecords = 150;
+        String[] uuids = new String[numRecords];
+        for (int i = 0; i < numRecords; i++) {
+            uuids[i] = "uuid-" + i;
+            AbstractMetadata record = mock(AbstractMetadata.class);
+            when(record.getId()).thenReturn(i);
+            MetadataDataInfo dataInfo = mock(MetadataDataInfo.class);
+            when(record.getDataInfo()).thenReturn(dataInfo);
+            when(dataInfo.getSchemaId()).thenReturn("iso19139");
+            when(record.getXmlData(false)).thenReturn(new org.jdom.Element("root"));
+
+            when(metadataUtils.findOneByUuid(uuids[i])).thenReturn(record);
+            when(accessManager.isOwner(any(), anyString())).thenReturn(true);
+        }
+
+        BatchEditParameter[] edits = new BatchEditParameter[1];
+        edits[0] = new BatchEditParameter();
+        edits[0].setXpath("/root/element");
+        edits[0].setValue("value");
+
+        // Must not throw: a failure processing one record must not abort the whole batch.
+        IProcessingReport report = api.batchEdit(uuids, null, false, edits, request);
+
+        // Both batches (150 records / batch size 100) must still run their own transaction.
+        verify(transactionManager, times(2)).getTransaction(any());
+
+        // Every record failed, but every failure is captured rather than aborting the run.
+        SimpleMetadataProcessingReport simpleReport = (SimpleMetadataProcessingReport) report;
+        assertEquals(numRecords, simpleReport.getNumberOfRecordsWithErrors());
+        assertEquals(numRecords, simpleReport.getNumberOfRecordsProcessed());
     }
 }

@@ -393,21 +393,33 @@ public class XslProcessApi {
                 }
 
                 for (Integer id : idList) {
-                    Log.info("org.fao.geonet.services.metadata",
-                        "Processing metadata with id:" + id);
+                    try {
+                        Log.info("org.fao.geonet.services.metadata",
+                            "Processing metadata with id:" + id);
 
-                    Element beforeMetadata = dm.getMetadata(context, String.valueOf(id), false, false, false);
+                        Element beforeMetadata = dm.getMetadata(context, String.valueOf(id), false, false, false);
 
-                    XslProcessUtils.process(context, String.valueOf(id), process,
-                        true, index, updateDateStamp, xslProcessingReport,
-                        siteURL, request.getParameterMap());
+                        XslProcessUtils.process(context, String.valueOf(id), process,
+                            true, index, updateDateStamp, xslProcessingReport,
+                            siteURL, request.getParameterMap());
 
-                    Element afterMetadata = dm.getMetadata(context, String.valueOf(id), false, false, false);
+                        Element afterMetadata = dm.getMetadata(context, String.valueOf(id), false, false, false);
 
-                    XMLOutputter outp = new XMLOutputter();
-                    String xmlAfter = outp.outputString(afterMetadata);
-                    String xmlBefore = outp.outputString(beforeMetadata);
-                    new RecordProcessingChangeEvent(id, userId, xmlBefore, xmlAfter, process).publish(appContext);
+                        XMLOutputter outp = new XMLOutputter();
+                        String xmlAfter = outp.outputString(afterMetadata);
+                        String xmlBefore = outp.outputString(beforeMetadata);
+                        new RecordProcessingChangeEvent(id, userId, xmlBefore, xmlAfter, process).publish(appContext);
+                    } catch (Exception e) {
+                        // Isolate the failure to this record so the rest of the batch (and
+                        // subsequent batches) still get processed instead of being rolled back
+                        // or skipped, see BatchTransactionalProcessor.
+                        AbstractMetadata metadata = metadataUtils.findOne(id);
+                        if (metadata != null) {
+                            xslProcessingReport.addMetadataError(metadata, e);
+                        } else {
+                            xslProcessingReport.addMetadataError(id, uuid, false, false, e);
+                        }
+                    }
                 }
             });
         }
