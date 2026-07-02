@@ -2006,14 +2006,15 @@
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
           canPublishMetadata: function (groupId) {
+            if ($scope.user.profile === "Administrator") {
+              return true;
+            }
+
             var profile =
                 gnConfig["metadata.publication.profilePublishMetadata"] || "Reviewer",
               fnName =
                 profile !== ""
-                  ? "is" +
-                  profile[0].toUpperCase() +
-                  profile.substring(1) +
-                  "OrMoreForGroup"
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "ForGroup"
                   : "";
             if (groupId === undefined || groupId === null) {
               return false;
@@ -2021,14 +2022,15 @@
             return angular.isFunction(this[fnName]) ? this[fnName](groupId) : false;
           },
           canUnpublishMetadata: function (groupId) {
+            if ($scope.user.profile === "Administrator") {
+              return true;
+            }
+
             var profile =
                 gnConfig["metadata.publication.profileUnpublishMetadata"] || "Reviewer",
               fnName =
                 profile !== ""
-                  ? "is" +
-                    profile[0].toUpperCase() +
-                    profile.substring(1) +
-                    "OrMoreForGroup"
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "ForGroup"
                   : "";
             if (groupId === undefined || groupId === null) {
               return false;
