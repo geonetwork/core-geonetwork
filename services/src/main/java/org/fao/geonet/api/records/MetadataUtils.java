@@ -38,7 +38,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.API;
-import org.fao.geonet.api.es.EsHTTPProxy;
+import org.fao.geonet.api.es.processors.response.EsDocumentUserInfoProcessor;
 import org.fao.geonet.api.records.model.related.AssociatedRecord;
 import org.fao.geonet.api.records.model.related.RelatedItemOrigin;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
@@ -373,7 +373,9 @@ public class MetadataUtils {
                     JsonNode source = mapper.convertValue(e.source(), JsonNode.class);
                     ObjectNode doc = mapper.createObjectNode();
                     doc.set("_source", source);
-                    EsHTTPProxy.addUserInfo(doc, context);
+
+                    EsDocumentUserInfoProcessor esDocumentUserInfoProcessor = gc.getBean(EsDocumentUserInfoProcessor.class);
+                    esDocumentUserInfoProcessor.process(doc, context, Collections.emptyMap());
                     Iterator<String> fieldNames = doc.fieldNames();
                     while (fieldNames.hasNext()) {
                         String field = fieldNames.next();
