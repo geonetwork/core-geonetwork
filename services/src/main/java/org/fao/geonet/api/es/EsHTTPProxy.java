@@ -660,30 +660,7 @@ public class EsHTTPProxy {
                     addRelatedTypes(doc, relatedTypes, context);
                 }
 
-                if (doc.has("_source")) {
-                    ObjectNode sourceNode = (ObjectNode) doc.get("_source");
-
-                    if (sourceNode.has(Geonet.IndexFieldNames.SCHEMA)) {
-                        String metadataSchema = sourceNode.get(Geonet.IndexFieldNames.SCHEMA).asText();
-                        try {
-                            MetadataSchema mds = schemaManager.getSchema(metadataSchema);
-
-                            // Apply metadata schema filters to remove non-allowed fields
-                            processMetadataSchemaFilters(context, mds, doc);
-                        } catch (IllegalArgumentException e) {
-                            LOGGER.error("Failed to load metadata schema for {}. Error is: {}",
-                                getSourceString(doc, Geonet.IndexFieldNames.UUID),
-                                e.getMessage()
-                            );
-                        }
-                    }
-
-                    // Remove fields with privileges info
-                    for (ReservedOperation o : ReservedOperation.values()) {
-                        sourceNode.remove("op" + o.getId());
-                    }
-
-                }
+                processSourceNode(context, doc);
             });
         } else {
             JsonStreamUtils.addInfoToDocsMSearch(parser, generator, doc -> {
@@ -696,14 +673,7 @@ public class EsHTTPProxy {
                     addRelatedTypes(doc, relatedTypes, context);
                 }
 
-                // Remove fields with privileges info
-                if (doc.has("_source")) {
-                    ObjectNode sourceNode = (ObjectNode) doc.get("_source");
-
-                    for (ReservedOperation o : ReservedOperation.values()) {
-                        sourceNode.remove("op" + o.getId());
-                    }
-                }
+                processSourceNode(context, doc);
             });
         }
 
@@ -915,5 +885,33 @@ public class EsHTTPProxy {
         }
 
         return mapper.readTree(jsonContext.jsonString());
+    }
+
+    private void processSourceNode(ServiceContext context, ObjectNode doc) throws SQLException, JsonProcessingException {
+        if (!doc.has("_source")) {
+            return;
+        }
+
+        ObjectNode sourceNode = (ObjectNode) doc.get("_source");
+
+        // Remove fields with privileges info
+        for (ReservedOperation o : ReservedOperation.values()) {
+            sourceNode.remove("op" + o.getId());
+        }
+
+        if (sourceNode.has(Geonet.IndexFieldNames.SCHEMA)) {
+            String metadataSchema = sourceNode.get(Geonet.IndexFieldNames.SCHEMA).asText();
+            try {
+                MetadataSchema mds = schemaManager.getSchema(metadataSchema);
+
+                // Apply metadata schema filters to remove non-allowed fields
+                processMetadataSchemaFilters(context, mds, doc);
+            } catch (IllegalArgumentException e) {
+                LOGGER.error("Failed to load metadata schema for {}. Error is: {}",
+                    getSourceString(doc, Geonet.IndexFieldNames.UUID),
+                    e.getMessage()
+                );
+            }
+        }
     }
 }
