@@ -184,6 +184,7 @@ There is very little compute overhead involved in storing search statistics as t
 Options in this group control the way in which the OAI Server responds to OAIPMH harvest requests from remote sites.
 
 -   **Datesearch**: OAI Harvesters may request records from GeoNetwork in a date range. GeoNetwork can use one of two date fields from the metadata to check for a match with this date range. The default choice is *Temporal extent*, which is the temporal extent from the metadata record. The other option, *Modification date*, uses the modification date of the metadata record in the GeoNetwork database. The modification date is the last time the metadata record was updated in or harvested by GeoNetwork.
+-   **Enable**: Enable or disable the OAI-PMH service. If disabled, the OAI-PMH API returns an error message.
 -   **Resumption Token Timeout**: Metadata records that match an OAI harvest search request are usually returned to the harvester in groups with a fixed size (eg. in groups of 10 records). With each group a resumption token is included so that the harvester can request the next group of records. The resumption token timeout is the time (in seconds) that GeoNetwork OAI server will wait for a resumption token to be used. If the timeout is exceeded GeoNetwork OAI server will drop the search results and refuse to recognize the resumption token. The aim of this feature is to ensure that resources in the GeoNetwork OAI server are released.
 -   **Cache size**: The maximum number of concurrent OAI harvests that the GeoNetwork OAI server can support.
 
