@@ -2010,7 +2010,10 @@
                 gnConfig["metadata.publication.profilePublishMetadata"] || "Reviewer",
               fnName =
                 profile !== ""
-                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "ForGroup"
+                  ? "is" +
+                  profile[0].toUpperCase() +
+                  profile.substring(1) +
+                  "OrMoreForGroup"
                   : "";
             if (groupId === undefined || groupId === null) {
               return false;
@@ -2022,7 +2025,10 @@
                 gnConfig["metadata.publication.profileUnpublishMetadata"] || "Reviewer",
               fnName =
                 profile !== ""
-                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "ForGroup"
+                  ? "is" +
+                    profile[0].toUpperCase() +
+                    profile.substring(1) +
+                    "OrMoreForGroup"
                   : "";
             if (groupId === undefined || groupId === null) {
               return false;
