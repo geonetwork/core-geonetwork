@@ -2006,7 +2006,7 @@
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
           canPublishMetadata: function (groupId) {
-            if ($scope.user.profile === "Administrator") {
+            if (this.isAdministrator()) {
               return true;
             }
 
@@ -2022,7 +2022,7 @@
             return angular.isFunction(this[fnName]) ? this[fnName](groupId) : false;
           },
           canUnpublishMetadata: function (groupId) {
-            if ($scope.user.profile === "Administrator") {
+            if (this.isAdministrator()) {
               return true;
             }
 
