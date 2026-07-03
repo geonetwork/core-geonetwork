@@ -229,6 +229,33 @@ public class EsHTTPProxyTest {
         assertNotNull("filter key must replace global (aggregations key variant)", gAgg.get("filter"));
     }
 
+    @Test
+    public void testMSearchAppliesDefaultIndexOnlyToHeaderAndFilterOnlyToSearchRequest() throws Exception {
+        setPrivateField("defaultIndex", "gn-records");
+        ServiceContext context = new ServiceContext("default", applicationContext, new HashMap<>(), null);
+        UserSession userSession = spy(new UserSession());
+        when(userSession.getProfile()).thenReturn(Profile.Administrator);
+        context.setUserSession(userSession);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String msearchBody = "{\"index\":\"external-index\"}\n"
+            + "{\"query\":{\"match_all\":{}}}\n";
+        String rewrittenBody = invokeBuildSearchRequestBody(context, userSession, mapper, msearchBody, "_msearch", null);
+
+        String[] lines = rewrittenBody.split("\\R");
+        assertTrue("Expected header + request NDJSON lines", lines.length >= 2);
+
+        JsonNode headerNode = mapper.readTree(lines[0]);
+        JsonNode searchNode = mapper.readTree(lines[1]);
+
+        assertEquals("gn-records", headerNode.path("index").asText());
+        assertFalse("Header must not be rewritten into a query payload", headerNode.has("query"));
+        assertFalse("Header must not receive ACL filter", headerNode.toString().contains("*:*"));
+
+        assertTrue("Search request must receive ACL filter",
+            searchNode.path("query").path("bool").path("filter").toString().contains("*:*"));
+    }
+
     private void invokeAddFilterToQuery(ObjectNode body, ObjectMapper mapper) throws Exception {
         ServiceContext context = new ServiceContext("default", applicationContext, new HashMap<>(), null);
         UserSession userSession = spy(new UserSession());
@@ -242,6 +269,31 @@ public class EsHTTPProxyTest {
         method.setAccessible(true);
         method.invoke(esHTTPProxy, context, mapper, body);
     }
+
+    private String invokeBuildSearchRequestBody(ServiceContext context,
+                                                UserSession session,
+                                                ObjectMapper mapper,
+                                                String body,
+                                                String endPoint,
+                                                String selectionBucket) throws Exception {
+        Method method = EsHTTPProxy.class.getDeclaredMethod("buildSearchRequestBody",
+            ServiceContext.class,
+            UserSession.class,
+            ObjectMapper.class,
+            String.class,
+            String.class,
+            String.class);
+        method.setAccessible(true);
+        return (String) method.invoke(esHTTPProxy, context, session, mapper, body, endPoint, selectionBucket);
+    }
+
+    private void setPrivateField(String fieldName, Object value) throws Exception {
+        java.lang.reflect.Field field = EsHTTPProxy.class.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(esHTTPProxy, value);
+    }
+
+
 
     private void assertAclFilterPresent(ObjectNode body, String caseLabel) {
         JsonNode queryNode = body.get("query");

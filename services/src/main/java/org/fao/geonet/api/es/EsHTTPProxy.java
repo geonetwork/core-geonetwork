@@ -411,41 +411,62 @@ public class EsHTTPProxy {
         if (SEARCH_ENDPOINT.equals(endPoint) || MULTISEARCH_ENDPOINT.equals(endPoint)) {
             UserSession session = context.getUserSession();
             ObjectMapper objectMapper = new ObjectMapper();
-
-            // multisearch support
-            final MappingIterator<Object> mappingIterator = objectMapper.readerFor(JsonNode.class).readValues(body);
-            StringBuilder requestBody = new StringBuilder();
-            while (mappingIterator.hasNextValue()) {
-                JsonNode node = (JsonNode) mappingIterator.nextValue();
-                final JsonNode indexNode = node.get("index");
-                if (indexNode != null) {
-                    ((ObjectNode) node).put("index", defaultIndex);
-                } else {
-                    addFilterToQuery(context, objectMapper, node);
-                    if (selectionBucket != null) {
-                        // Multisearch are not supposed to work with a bucket.
-                        // Only one request is store in session
-                        session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, node);
-                    }
-                    final JsonNode sourceNode = node.get("_source");
-                    if (sourceNode != null) {
-                        if (sourceNode.isArray()) {
-                            addRequiredField((ArrayNode) sourceNode);
-                        } else {
-                            final JsonNode sourceIncludes = sourceNode.get("includes");
-                            if (sourceIncludes != null && sourceIncludes.isArray()) {
-                                addRequiredField((ArrayNode) sourceIncludes);
-                            }
-                        }
-                    }
-                }
-                requestBody.append(node).append(System.lineSeparator());
-            }
+            String requestBody = buildSearchRequestBody(context, session, objectMapper, body, endPoint, selectionBucket);
             handleRequest(context, httpSession, request, response, url, endPoint,
-                requestBody.toString(), true, selectionBucket, relatedTypes);
+                requestBody, true, selectionBucket, relatedTypes);
         } else {
             handleRequest(context, httpSession, request, response, url, endPoint,
                 body, true, selectionBucket, relatedTypes);
+        }
+    }
+
+    private String buildSearchRequestBody(ServiceContext context,
+                                          UserSession session,
+                                          ObjectMapper objectMapper,
+                                          String body,
+                                          String endPoint,
+                                          String selectionBucket) throws Exception {
+        boolean isMultiSearch = MULTISEARCH_ENDPOINT.equals(endPoint);
+        final MappingIterator<Object> mappingIterator = objectMapper.readerFor(JsonNode.class).readValues(body);
+        StringBuilder requestBody = new StringBuilder();
+        int requestLineNumber = 0;
+        while (mappingIterator.hasNextValue()) {
+            JsonNode node = (JsonNode) mappingIterator.nextValue();
+            boolean isMultiSearchHeader = isMultiSearch && requestLineNumber % 2 == 0;
+            if (isMultiSearchHeader) {
+                if (node.isObject()) {
+                    ((ObjectNode) node).put("index", defaultIndex);
+                }
+            } else {
+                enrichSearchRequestNode(context, session, objectMapper, node, selectionBucket);
+            }
+            requestLineNumber++;
+            requestBody.append(node).append(System.lineSeparator());
+        }
+        return requestBody.toString();
+    }
+
+    private void enrichSearchRequestNode(ServiceContext context,
+                                         UserSession session,
+                                         ObjectMapper objectMapper,
+                                         JsonNode node,
+                                         String selectionBucket) throws Exception {
+        addFilterToQuery(context, objectMapper, node);
+        if (selectionBucket != null) {
+            // Multisearch are not supposed to work with a bucket.
+            // Only one request is store in session
+            session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, node);
+        }
+        final JsonNode sourceNode = node.get("_source");
+        if (sourceNode != null) {
+            if (sourceNode.isArray()) {
+                addRequiredField((ArrayNode) sourceNode);
+            } else {
+                final JsonNode sourceIncludes = sourceNode.get("includes");
+                if (sourceIncludes != null && sourceIncludes.isArray()) {
+                    addRequiredField((ArrayNode) sourceIncludes);
+                }
+            }
         }
     }
 
