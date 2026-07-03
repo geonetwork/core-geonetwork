@@ -35,6 +35,7 @@ public class SimpleUrlParams extends AbstractParams {
     public String loopElement;
     public String numberOfRecordPath;
     public String recordIdPath;
+    public String urlCrawlerPath;
     public String pageSizeParam;
     public String pageFromParam;
     public String toISOConversion;
@@ -56,6 +57,7 @@ public class SimpleUrlParams extends AbstractParams {
         loopElement = Util.getParam(site, "loopElement", "");
         numberOfRecordPath = Util.getParam(site, "numberOfRecordPath", "");
         recordIdPath = Util.getParam(site, "recordIdPath", "");
+        urlCrawlerPath = Util.getParam(site, "urlCrawlerPath", "");
         pageSizeParam = Util.getParam(site, "pageSizeParam", "");
         pageFromParam = Util.getParam(site, "pageFromParam", "");
         toISOConversion = Util.getParam(site, "toISOConversion", "");
@@ -74,6 +76,7 @@ public class SimpleUrlParams extends AbstractParams {
         loopElement = Util.getParam(site, "loopElement", "");
         numberOfRecordPath = Util.getParam(site, "numberOfRecordPath", "");
         recordIdPath = Util.getParam(site, "recordIdPath", "");
+        urlCrawlerPath = Util.getParam(site, "urlCrawlerPath", "");
         pageSizeParam = Util.getParam(site, "pageSizeParam", "");
         pageFromParam = Util.getParam(site, "pageFromParam", "");
         toISOConversion = Util.getParam(site, "toISOConversion", "");
@@ -93,6 +96,7 @@ public class SimpleUrlParams extends AbstractParams {
         copy.icon = icon;
         copy.loopElement = loopElement;
         copy.numberOfRecordPath = numberOfRecordPath;
+        copy.urlCrawlerPath = urlCrawlerPath;
         copy.pageSizeParam = pageSizeParam;
         copy.pageFromParam = pageFromParam;
         copy.recordIdPath = recordIdPath;

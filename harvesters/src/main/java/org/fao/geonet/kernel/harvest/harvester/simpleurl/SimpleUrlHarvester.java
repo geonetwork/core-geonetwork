@@ -55,6 +55,7 @@ public class SimpleUrlHarvester extends AbstractHarvester<HarvestResult, SimpleU
         harvesterSettingsManager.add("id:" + siteId, "loopElement", params.loopElement);
         harvesterSettingsManager.add("id:" + siteId, "numberOfRecordPath", params.numberOfRecordPath);
         harvesterSettingsManager.add("id:" + siteId, "recordIdPath", params.recordIdPath);
+        harvesterSettingsManager.add("id:" + siteId, "urlCrawlerPath", params.urlCrawlerPath);
         harvesterSettingsManager.add("id:" + siteId, "pageFromParam", params.pageFromParam);
         harvesterSettingsManager.add("id:" + siteId, "pageSizeParam", params.pageSizeParam);
         harvesterSettingsManager.add("id:" + siteId, "toISOConversion", params.toISOConversion);

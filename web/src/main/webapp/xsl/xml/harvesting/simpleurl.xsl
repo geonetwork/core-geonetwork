@@ -25,6 +25,9 @@
     <recordIdPath>
       <xsl:value-of select="recordIdPath/value"/>
     </recordIdPath>
+    <urlCrawlerPath>
+      <xsl:value-of select="urlCrawlerPath/value"/>
+    </urlCrawlerPath>
     <pageSizeParam>
       <xsl:value-of select="pageSizeParam/value"/>
     </pageSizeParam>
