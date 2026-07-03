@@ -674,6 +674,7 @@
           defaultValues: {
             loopElement: "",
             numberOfRecordPath: "",
+            urlCrawlerPath: "",
             pageSizeParam: "",
             pageFromParam: "",
             recordIdPath: "",
@@ -684,6 +685,7 @@
           defaultValues: {
             loopElement: "/datasets",
             numberOfRecordPath: "/total_count",
+            urlCrawlerPath: "",
             pageSizeParam: "limit",
             pageFromParam: "offset",
             recordIdPath: "/dataset/dataset_id",
@@ -694,16 +696,29 @@
           defaultValues: {
             loopElement: "/collections",
             numberOfRecordPath: "",
+            urlCrawlerPath: "",
             pageSizeParam: "limit",
             pageFromParam: "page",
             recordIdPath: "/id",
             toISOConversion: "schema:iso19115-3.2018:convert/stac-to-iso19115-3"
           }
         },
+        "OGC API Processes": {
+          defaultValues: {
+            loopElement: ".",
+            numberOfRecordPath: "",
+            urlCrawlerPath: "$..links[?(@.title == 'Process description as JSON')].href",
+            pageSizeParam: "",
+            pageFromParam: "",
+            recordIdPath: "/id",
+            toISOConversion: "schema:iso19115-3.2018:convert/fromOGCAPIProcesses"
+          }
+        },
         "XML (ISO19115-3)": {
           defaultValues: {
             loopElement: ".",
             numberOfRecordPath: "",
+            urlCrawlerPath: "",
             pageSizeParam: "",
             pageFromParam: "",
             recordIdPath: "mdb:metadataIdentifier/*/mcc:code/*/text()",
@@ -714,6 +729,7 @@
           defaultValues: {
             loopElement: ".//csw:SearchResults/*",
             numberOfRecordPath: "",
+            urlCrawlerPath: "",
             pageSizeParam: "",
             pageFromParam: "",
             recordIdPath: "gmd:fileIdentifier/*/text()",

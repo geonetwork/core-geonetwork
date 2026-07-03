@@ -312,6 +312,8 @@
     "simpleurl-configHelper-help": "Depending on the target URL and the type of documents to harvest each configuration illustrate of to configure the harvester to extract the metadata records from the remote document.",
     "simpleurl-loopElementHelp": "For each element, one metadata record is created. For JSON document, points to a property. For XML document, points using XPath. eg. '.' if the element at the root of the XML document is a metadata document like 'mdb:MD_Metadata'.",
     "simpleurl-pagination": "Pagination parameters (optional)",
+    "urlCrawlerPath": "JSON path or XPath pointing to element containing URL pointing to the documents to harvest",
+    "simpleurl-urlCrawlerPathHelp": "eg. `$..links[?(@.title == 'Process description as JSON')].href` for an OGC API Process landing page and harvesting all links with title 'Process description as JSON'.",
     "numberOfRecordPath": "Element for the number of records to collect",
     "simpleurl-numberOfRecordPathHelp": "JSON property or XPath to the element containing the number of records to collect. This information is used to compute the number of pages in case pagination is needed to collect all records.",
     "recordIdPath": "Element for the UUID of each record",
