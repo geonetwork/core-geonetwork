@@ -434,9 +434,11 @@ public class EsHTTPProxy {
             JsonNode node = (JsonNode) mappingIterator.nextValue();
             boolean isMultiSearchHeader = isMultiSearch && requestLineNumber % 2 == 0;
             if (isMultiSearchHeader) {
-                if (node.isObject()) {
-                    ((ObjectNode) node).put("index", defaultIndex);
+                if (!node.isObject()) {
+                    throw new IllegalArgumentException(
+                        "Invalid _msearch request: expected a JSON object for the header at line " + requestLineNumber);
                 }
+                ((ObjectNode) node).put("index", defaultIndex);
             } else {
                 enrichSearchRequestNode(context, session, objectMapper, node, selectionBucket);
             }
