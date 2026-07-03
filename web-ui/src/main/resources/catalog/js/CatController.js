@@ -2006,6 +2006,10 @@
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
           canPublishMetadata: function (groupId) {
+            if (this.isAdministrator()) {
+              return true;
+            }
+
             var profile =
                 gnConfig["metadata.publication.profilePublishMetadata"] || "Reviewer",
               fnName =
@@ -2018,6 +2022,10 @@
             return angular.isFunction(this[fnName]) ? this[fnName](groupId) : false;
           },
           canUnpublishMetadata: function (groupId) {
+            if (this.isAdministrator()) {
+              return true;
+            }
+
             var profile =
                 gnConfig["metadata.publication.profileUnpublishMetadata"] || "Reviewer",
               fnName =
