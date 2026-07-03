@@ -1947,13 +1947,13 @@
 
 
 <h1 id="internals.rst">Multi schema support</h1>
-<p>This paragraph explains how GeoNetwork leverages metadata records formatted in various schemas (metadata models). Over time various communities adopted a number of metadata standards and profiles for metadata records.</p>
-<p>Metadata models define which properties can be registered for an asset, such as title, author, creation date. In the spatial domain TC211 together with OGC are the standardisation bodies which define the standards. In 2005 TC211 released ISO19139, a standard for metadata to describe spatial assets which is still widely used. In 2014 TC211 released a big update to this standard, named ISO19115-1. GeoNetwork is able to manage records in either schema (and other schemas, such as Dublin Core, DCAT).</p>
+<p>This section explores how GeoNetwork leverages metadata records formatted in various schemas (metadata models). Over time different communities have eached adopted a metadata standards and profiles for metadata records appropriate to their needs.</p>
+<p>Metadata models define which properties can be registered for an asset, such as title, author, creation date. In the spatial domain TC211 together with OGC are the standardisation bodies which define the standards. In 2005 TC211 released ISO19139, a standard for metadata to describe spatial assets which is widely used. In 2014 TC211 released a big update to this standard, named ISO19115-1. GeoNetwork is able to manage records in either schema (and other schemas, such as Dublin Core, DCAT).</p>
 <h2 id="indexing-records">Indexing records</h2>
 <p>In GeoNetwork records in various schemas are stored as XML-documents in the database. To manage records that follow a certain schema a series of "schema-plugins" is available, which define rules how to manage records formatted according to that schema. One aspect of a schema-plugin is that it defines which parts of the xml document contain relevant information for the search mechanism. The process of extracting this information and storing it in a unified search index is called 'indexing'. This process is triggered when a record is updated or imported in the database.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The search index of GeoNetwork is based on an external component, called "Elastic Search".</p>
+<p>The search index of GeoNetwork is based on an external component, called "Elasticsearch".</p>
 </div>
 <h2 id="authoring-records">Authoring Records</h2>
 <p>GeoNetwork provides an option to create and modify records in an advanced web form. The web form is created and validated from rules that are defined in the relevant "schema-plugin". Saving the form results in an updated xml-document in the database. Read more on this topic on the next page.</p>
