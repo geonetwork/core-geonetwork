@@ -4,7 +4,7 @@ The quickest way to add relevant data to your catalog is by harvesting. This mea
 
 ## GeoNetwork
 
-GeoNetwork can harvest from other GeoNetwork catalogs. For this tutorial, we are going to use this catalog: `http://ide.siia.gov.ar/geonetwork`
+GeoNetwork can harvest from other GeoNetwork catalogs. For this tutorial, we are going to use this catalog: `https://test.geocat.live/catalogue/`
 
 To add a new harvester, we have to enter the administration console: `http://localhost:8080/geonetwork/srv/eng/admin.console#/harvest`
 
