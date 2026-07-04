@@ -47,6 +47,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.api.registries.model.ThesaurusInfo;
@@ -57,6 +58,8 @@ import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.*;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.kernel.url.UrlWhitelistService;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.FileMimetypeChecker;
@@ -129,6 +132,9 @@ public class KeywordsApi {
 
     @Autowired
     GeonetHttpRequestFactory httpRequestFactory;
+
+    @Autowired
+    UrlWhitelistService urlWhitelistService;
     /**
      * The mapper.
      */
@@ -1202,6 +1208,7 @@ public class KeywordsApi {
 
         // Specific upload steps
         if (urlUpload) {
+            checkUrlAllowed(url);
 
             Log.debug(Geonet.THESAURUS, "Uploading thesaurus from URL: " + url);
 
@@ -1215,6 +1222,8 @@ public class KeywordsApi {
 
 
         } else if (registryUpload) {
+            checkUrlAllowed(registryUrl);
+
             if (ArrayUtils.isEmpty(registryLanguage)) {
                 throw new MissingServletRequestParameterException("Select at least one language.", "language");
             }
@@ -1289,6 +1298,23 @@ public class KeywordsApi {
 
         return String.format("Thesaurus '%s' loaded in %d sec.",
             fname, duration);
+    }
+
+    /**
+     * Checks that a URL used to import a thesaurus (either the direct {@code url} parameter or
+     * the {@code registryUrl} parameter of {@link #uploadThesaurusFromUrl}) is allowed by the
+     * {@link Settings#SYSTEM_METADATA_THESAURUS_URL_WHITELIST} system setting.
+     *
+     * @param url the URL to check
+     * @throws NotAllowedException if the URL is not allowed by the whitelist
+     */
+    private void checkUrlAllowed(String url) {
+        String whitelist = settingManager.getValue(Settings.SYSTEM_METADATA_THESAURUS_URL_WHITELIST);
+        if (!urlWhitelistService.isUrlAllowed(url, whitelist)) {
+            throw new NotAllowedException(String.format(
+                "The URL '%s' is not allowed. Check the 'Thesaurus URL whitelist' system setting.",
+                url));
+        }
     }
 
     /**

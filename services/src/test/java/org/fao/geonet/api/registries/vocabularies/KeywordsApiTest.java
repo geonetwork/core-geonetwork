@@ -24,12 +24,15 @@
 package org.fao.geonet.api.registries.vocabularies;
 
 import com.sun.net.httpserver.HttpServer;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
@@ -72,6 +75,9 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private ThesaurusManager thesaurusMan;
+
+    @Autowired
+    private SettingManager settingManager;
 
     /**
      * Thesauri are registered in {@link ThesaurusManager}'s in-memory map, which lives for the
@@ -365,6 +371,40 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
             }
         } finally {
             httpServer.stop(0);
+        }
+    }
+
+    /**
+     * When the thesaurus URL whitelist is configured, uploading from a URL that doesn't match
+     * any whitelist pattern must be rejected, without even attempting to fetch the URL.
+     */
+    @Test
+    public void testUploadThesaurusFromUrlRejectsUrlNotInWhitelist() throws Exception {
+        createServiceContext();
+        User user = new User().setId(USER_ID);
+        HttpSession session = loginAs(user);
+
+        settingManager.setValue(Settings.SYSTEM_METADATA_THESAURUS_URL_WHITELIST, "https://trusted.example.org/*");
+        try {
+            MockHttpServletRequest request = new MockHttpServletRequest(session.getServletContext());
+            request.setMethod("PUT");
+            request.setRequestURI("/srv/api/registries/vocabularies");
+            request.setSession(session);
+            request.setParameter("url", "https://not-in-whitelist.example.org/vocab.rdf");
+            request.setParameter("type", "external");
+            request.setParameter("dir", "theme");
+
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            try {
+                invoker.invoke(request, response);
+                fail("Expected upload from a URL not in the whitelist to be rejected");
+            } catch (NotAllowedException e) {
+                assertTrue("Error message should mention the URL is not allowed, was: " + e.getMessage(),
+                    e.getMessage().contains("is not allowed"));
+            }
+        } finally {
+            // Restore the default (empty whitelist = allow all) so other tests are unaffected.
+            settingManager.setValue(Settings.SYSTEM_METADATA_THESAURUS_URL_WHITELIST, "");
         }
     }
 }
