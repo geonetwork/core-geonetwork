@@ -39,6 +39,10 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.api.ApiParams;
@@ -1456,6 +1460,16 @@ public class KeywordsApi {
             tsXml = xml;
         }
 
+        // Validate that the resulting document is well-formed RDF/XML.
+        // Checked here (after the optional XSL conversion) so that OWL/SDMX uploads
+        // are validated on their SKOS/RDF output, not on their original, non-RDF format.
+        try {
+            validateRdfXml(tsXml);
+        } catch (WebApplicationException e) {
+            IO.deleteFile(rdfFile, false, Geonet.THESAURUS);
+            throw e;
+        }
+
         // Load document and check namespace
         if (tsXml.getNamespacePrefix().equals("rdf")
             && tsXml.getName().equals("RDF")) {
@@ -1472,6 +1486,28 @@ public class KeywordsApi {
         } else {
             IO.deleteFile(rdfFile, false, Geonet.THESAURUS);
             throw new WebApplicationException("Unknown format (Must be in SKOS format).");
+        }
+    }
+
+    /**
+     * Validates that the given XML content is a well-formed RDF/XML document, using Apache Jena.
+     * <p>
+     * This is a stricter check than looking at the root element name: it ensures the content
+     * can actually be parsed as RDF/XML (correct namespaces, well-formed RDF constructs, etc.),
+     * catching thesaurus uploads (either from a file or from a URL) that are XML but are not
+     * valid RDF/XML (e.g. an HTML error page, or an unrelated XML document).
+     *
+     * @param xml the XML content to validate
+     * @throws WebApplicationException if the content is not a valid RDF/XML document
+     */
+    private void validateRdfXml(Element xml) {
+        String xmlContent = Xml.getString(xml);
+        Model model = ModelFactory.createDefaultModel();
+        try (InputStream in = IOUtils.toInputStream(xmlContent, StandardCharsets.UTF_8)) {
+            RDFDataMgr.read(model, in, Lang.RDFXML);
+        } catch (Exception e) {
+            throw new WebApplicationException(
+                "The uploaded thesaurus is not a valid RDF/XML file. " + e.getMessage(), e);
         }
     }
 
