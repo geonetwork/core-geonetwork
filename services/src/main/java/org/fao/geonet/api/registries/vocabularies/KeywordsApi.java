@@ -717,9 +717,9 @@ public class KeywordsApi {
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Thesaurus uploaded in SKOS format."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
-    @PreAuthorize("hasAuthority('Reviewer')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.CREATED)
     public String uploadThesaurus(
@@ -842,9 +842,9 @@ public class KeywordsApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Thesaurus converted and imported in SKOS format."),
         @ApiResponse(responseCode = "200", description = "Thesaurus converted and returned in response in SKOS format."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
-    @PreAuthorize("hasAuthority('Reviewer')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public void importCsvAsThesaurus(
         @Parameter(
@@ -1151,9 +1151,9 @@ public class KeywordsApi {
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Thesaurus uploaded in SKOS format."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
-    @PreAuthorize("hasAuthority('Reviewer')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.CREATED)
     public String uploadThesaurusFromUrl(
