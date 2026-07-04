@@ -32,7 +32,7 @@
   goog.require("XLink_1_0");
   goog.require("gn_wfsfilter_service");
 
-  var module = angular.module("gn_owscontext_service", []);
+  var module = angular.module("gn_owscontext_service", ["ngSanitize"]);
 
   // OWC Client
   // Jsonix wrapper to read or write OWS Context
@@ -74,6 +74,7 @@
     "$timeout",
     "gnGlobalSettings",
     "wfsFilterService",
+    "$sanitize",
     function (
       gnMap,
       gnOwsCapabilities,
@@ -86,7 +87,8 @@
       $rootScope,
       $timeout,
       gnGlobalSettings,
-      wfsFilterService
+      wfsFilterService,
+      $sanitize
     ) {
       var firstLoad = true;
 
@@ -237,7 +239,7 @@
                 layerAttributionArray = [];
                 for (var a = 0; a < layer.vendorExtension.attribution.length; a++) {
                   var attribution = layer.vendorExtension.attribution[a];
-                  var layerAttribution = attribution.title;
+                  var layerAttribution = $sanitize(attribution.title);
                   // If href exist then make the title a link
                   if (attribution.onlineResource && attribution.onlineResource[0].href) {
                     var link = document.createElement("a");
