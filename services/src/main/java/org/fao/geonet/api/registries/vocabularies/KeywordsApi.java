@@ -1240,6 +1240,8 @@ public class KeywordsApi {
         } else if (thesaurusInfo != null) {
             final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
 
+            FilePathChecker.verify(thesaurusInfo.getFilename());
+
             rdfFile = thesaurusMan.buildThesaurusFilePath(thesaurusInfo.getFilename(), thesaurusInfo.getType(), thesaurusInfo.getDname());
 
             final String siteURL = applicationContext.getBean(SettingManager.class).getSiteURL(context);
@@ -1499,6 +1501,8 @@ public class KeywordsApi {
         // Load document and check namespace
         if (tsXml.getNamespacePrefix().equals("rdf")
             && tsXml.getName().equals("RDF")) {
+
+            FilePathChecker.verify(fname);
 
             // copy to directory according to type
             Path path = thesaurusMan.buildThesaurusFilePath(fname, type, dir);
