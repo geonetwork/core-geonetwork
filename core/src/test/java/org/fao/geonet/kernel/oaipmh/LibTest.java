@@ -26,9 +26,10 @@ package org.fao.geonet.kernel.oaipmh;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import org.fao.geonet.kernel.search.EsQueryFilterUtils;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.jdom.Element;
-import org.jsoup.select.Elements;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -262,6 +263,43 @@ public class LibTest {
             assertEquals(searchQueryExpected, searchQuery);
         } catch (Exception ex) {
             fail("Error creating OAIMPH search query");
+        }
+    }
+
+    @Test
+    public void testAddFilterToQuery() {
+        Element params = new Element("params");
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            String queryExpected = "{" +
+                "    \"bool\": {" +
+                "      \"must\": [" +
+                "        {" +
+                "          \"terms\": {" +
+                "            \"isTemplate\": [\"n\"]" +
+                "          }" +
+                "        }" +
+                "      ]," +
+                "      \"filter\": {" +
+                "        \"query_string\": {" +
+                "          \"query\": \"op0:(1)\"" +
+                "        }" +
+                "      }" +
+                "    }" +
+                "}";
+
+            JsonNode searchQueryExpected = objectMapper.readTree(queryExpected);
+            JsonNode searchQuery = Lib.createSearchQuery(params);
+            ObjectNode wrappedSearchRequest = objectMapper.createObjectNode();
+            wrappedSearchRequest.set("query", searchQuery);
+            EsQueryFilterUtils.addFilterToQuery(
+                objectMapper,
+                wrappedSearchRequest,
+                EsQueryFilterUtils.buildQueryStringFilter(objectMapper, "op0:(1)"));
+            assertEquals(searchQueryExpected, wrappedSearchRequest.get("query"));
+        } catch (Exception ex) {
+            fail("Error adding ACL filter to OAIPMH search query");
         }
     }
 }

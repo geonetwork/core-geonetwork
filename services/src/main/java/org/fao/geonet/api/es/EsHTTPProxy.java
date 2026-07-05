@@ -31,7 +31,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.collect.Sets;
 import com.jayway.jsonpath.DocumentContext;
@@ -67,6 +66,7 @@ import org.fao.geonet.kernel.schema.MetadataOperationFilterType;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
 import org.fao.geonet.kernel.search.EsFilterBuilder;
+import org.fao.geonet.kernel.search.EsQueryFilterUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -411,41 +411,64 @@ public class EsHTTPProxy {
         if (SEARCH_ENDPOINT.equals(endPoint) || MULTISEARCH_ENDPOINT.equals(endPoint)) {
             UserSession session = context.getUserSession();
             ObjectMapper objectMapper = new ObjectMapper();
-
-            // multisearch support
-            final MappingIterator<Object> mappingIterator = objectMapper.readerFor(JsonNode.class).readValues(body);
-            StringBuilder requestBody = new StringBuilder();
-            while (mappingIterator.hasNextValue()) {
-                JsonNode node = (JsonNode) mappingIterator.nextValue();
-                final JsonNode indexNode = node.get("index");
-                if (indexNode != null) {
-                    ((ObjectNode) node).put("index", defaultIndex);
-                } else {
-                    addFilterToQuery(context, objectMapper, node);
-                    if (selectionBucket != null) {
-                        // Multisearch are not supposed to work with a bucket.
-                        // Only one request is store in session
-                        session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, node);
-                    }
-                    final JsonNode sourceNode = node.get("_source");
-                    if (sourceNode != null) {
-                        if (sourceNode.isArray()) {
-                            addRequiredField((ArrayNode) sourceNode);
-                        } else {
-                            final JsonNode sourceIncludes = sourceNode.get("includes");
-                            if (sourceIncludes != null && sourceIncludes.isArray()) {
-                                addRequiredField((ArrayNode) sourceIncludes);
-                            }
-                        }
-                    }
-                }
-                requestBody.append(node).append(System.lineSeparator());
-            }
+            String requestBody = buildSearchRequestBody(context, session, objectMapper, body, endPoint, selectionBucket);
             handleRequest(context, httpSession, request, response, url, endPoint,
-                requestBody.toString(), true, selectionBucket, relatedTypes);
+                requestBody, true, selectionBucket, relatedTypes);
         } else {
             handleRequest(context, httpSession, request, response, url, endPoint,
                 body, true, selectionBucket, relatedTypes);
+        }
+    }
+
+    private String buildSearchRequestBody(ServiceContext context,
+                                          UserSession session,
+                                          ObjectMapper objectMapper,
+                                          String body,
+                                          String endPoint,
+                                          String selectionBucket) throws Exception {
+        boolean isMultiSearch = MULTISEARCH_ENDPOINT.equals(endPoint);
+        final MappingIterator<Object> mappingIterator = objectMapper.readerFor(JsonNode.class).readValues(body);
+        StringBuilder requestBody = new StringBuilder();
+        int requestLineNumber = 0;
+        while (mappingIterator.hasNextValue()) {
+            JsonNode node = (JsonNode) mappingIterator.nextValue();
+            boolean isMultiSearchHeader = isMultiSearch && requestLineNumber % 2 == 0;
+            if (isMultiSearchHeader) {
+                if (!node.isObject()) {
+                    throw new IllegalArgumentException(
+                        "Invalid _msearch request: expected a JSON object for the header at line " + requestLineNumber);
+                }
+                ((ObjectNode) node).put("index", defaultIndex);
+            } else {
+                enrichSearchRequestNode(context, session, objectMapper, node, selectionBucket);
+            }
+            requestLineNumber++;
+            requestBody.append(node).append(System.lineSeparator());
+        }
+        return requestBody.toString();
+    }
+
+    private void enrichSearchRequestNode(ServiceContext context,
+                                         UserSession session,
+                                         ObjectMapper objectMapper,
+                                         JsonNode node,
+                                         String selectionBucket) throws Exception {
+        addFilterToQuery(context, objectMapper, node);
+        if (selectionBucket != null) {
+            // Multisearch are not supposed to work with a bucket.
+            // Only one request is store in session
+            session.setProperty(Geonet.Session.SEARCH_REQUEST + selectionBucket, node);
+        }
+        final JsonNode sourceNode = node.get("_source");
+        if (sourceNode != null) {
+            if (sourceNode.isArray()) {
+                addRequiredField((ArrayNode) sourceNode);
+            } else {
+                final JsonNode sourceIncludes = sourceNode.get("includes");
+                if (sourceIncludes != null && sourceIncludes.isArray()) {
+                    addRequiredField((ArrayNode) sourceIncludes);
+                }
+            }
         }
     }
 
@@ -465,122 +488,13 @@ public class EsHTTPProxy {
                                   ObjectMapper objectMapper,
                                   JsonNode esQuery) throws Exception {
 
-        // Build filter node
         String esFilter = buildQueryFilter(context,
             "",
             esQuery.toString().contains("\"draft\":")
                 || esQuery.toString().contains("+draft:")
                 || esQuery.toString().contains("-draft:"));
         JsonNode nodeFilter = objectMapper.readTree(esFilter);
-
-        JsonNode queryNode = esQuery.get("query");
-
-
-        // Replace any "global" aggregation with a "filter" aggregation scoped to
-        // the ACL filter.
-        // Must run after nodeFilter is built, before any branch exits early via return.
-        for (String aggsKey : new String[]{"aggs", "aggregations"}) {
-            JsonNode aggsNode = esQuery.get(aggsKey);
-            if (aggsNode != null && aggsNode.isObject()) {
-                replaceGlobalAggregations((ObjectNode) aggsNode, nodeFilter);
-            }
-        }
-        // Defensive: if no "query", create a bool { must: match_all, filter: nodeFilter }
-        if (queryNode == null || queryNode.isNull()
-            || (queryNode.isObject() && queryNode.isEmpty())) {
-            ObjectNode boolNode = objectMapper.createObjectNode();
-            // prefer must = match_all object (same shape as existing code)
-            ObjectNode matchAll = objectMapper.createObjectNode();
-            matchAll.putObject("match_all");
-            boolNode.set("must", matchAll);
-            boolNode.set("filter", nodeFilter);
-            ((ObjectNode) esQuery).set("query", objectMapper.createObjectNode().set("bool", boolNode));
-            return;
-        }
-
-        // Try to find the boolean node where to insert the filter.
-        // Prefer function_score.query.bool if present because function_score
-        // needs the filter to be applied to the inner query used for scoring.
-        JsonNode functionScoreNode = queryNode.get("function_score");
-        if (functionScoreNode != null && functionScoreNode.isObject()) {
-            JsonNode innerQuery = functionScoreNode.get("query");
-            if (innerQuery == null || innerQuery.isNull()) {
-                // create function_score.query.bool with only the filter
-                ObjectNode boolNode = objectMapper.createObjectNode();
-                boolNode.set("filter", nodeFilter);
-                ((ObjectNode) functionScoreNode).set("query", objectMapper.createObjectNode().set("bool", boolNode));
-                return;
-            }
-
-            JsonNode innerBool = innerQuery.get("bool");
-            if (innerBool != null && innerBool.isObject()) {
-                insertFilter((ObjectNode) innerBool, nodeFilter);
-                return;
-            }
-
-            // innerQuery exists but isn't a bool -> wrap it into a bool { must: <old>, filter: <new> }
-            ObjectNode newBool = objectMapper.createObjectNode();
-            newBool.set("must", innerQuery.deepCopy());
-            newBool.set("filter", nodeFilter);
-            ((ObjectNode) functionScoreNode).set("query", objectMapper.createObjectNode().set("bool", newBool));
-            return;
-        }
-
-        // Top-level bool
-        JsonNode boolNode = queryNode.get("bool");
-        if (boolNode != null && boolNode.isObject()) {
-            insertFilter((ObjectNode) boolNode, nodeFilter);
-            return;
-        }
-
-        // Other query shapes: wrap existing query into a bool { must: <existing query>, filter: nodeFilter }
-        ObjectNode copy = queryNode.deepCopy();
-        ObjectNode objectNodeBool = objectMapper.createObjectNode();
-        objectNodeBool.set("must", copy);
-        objectNodeBool.set("filter", nodeFilter);
-
-        // Replace the existing "query" content with the new bool
-        ((ObjectNode) queryNode).removeAll();
-        ((ObjectNode) queryNode).set("bool", objectNodeBool);
-    }
-
-    private void replaceGlobalAggregations(ObjectNode aggsNode, JsonNode aclFilter) {
-        aggsNode.fields().forEachRemaining(entry -> {
-            JsonNode aggDef = entry.getValue();
-            if (!aggDef.isObject()) {
-                return;
-            }
-            ObjectNode aggDefObj = (ObjectNode) aggDef;
-            if (aggDefObj.has("global")) {
-                // "global" ignores the query scope; swap it for a filter-scoped bucket.
-                aggDefObj.remove("global");
-                aggDefObj.set("filter", aclFilter);
-            }
-            // Recurse into nested sub-aggregations.
-            for (String subKey : new String[]{"aggs", "aggregations"}) {
-                JsonNode sub = aggDefObj.get(subKey);
-                if (sub != null && sub.isObject()) {
-                    replaceGlobalAggregations((ObjectNode) sub, aclFilter);
-                }
-            }
-        });
-    }
-
-
-
-    private void insertFilter(ObjectNode objectNode, JsonNode nodeFilter) {
-        JsonNode filter = objectNode.get("filter");
-        if (filter == null || filter.isNull() || (filter.isObject() && filter.isEmpty())) {
-            objectNode.set("filter", nodeFilter);
-        } else if (filter.isArray()) {
-            ((ArrayNode) filter).add(nodeFilter);
-        } else {
-            // existing filter is an object (or other non-array) -> convert to array preserving both
-            ArrayNode arr = JsonNodeFactory.instance.arrayNode();
-            arr.add(filter);
-            arr.add(nodeFilter);
-            objectNode.set("filter", arr);
-        }
+        EsQueryFilterUtils.addFilterToQuery(objectMapper, esQuery, nodeFilter);
     }
 
     /**

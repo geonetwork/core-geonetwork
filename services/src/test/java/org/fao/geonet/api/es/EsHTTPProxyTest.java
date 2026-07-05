@@ -229,6 +229,139 @@ public class EsHTTPProxyTest {
         assertNotNull("filter key must replace global (aggregations key variant)", gAgg.get("filter"));
     }
 
+    @Test
+    public void testMSearchAppliesDefaultIndexOnlyToHeaderAndFilterOnlyToSearchRequest() throws Exception {
+        setPrivateField("defaultIndex", "gn-records");
+        ServiceContext context = new ServiceContext("default", applicationContext, new HashMap<>(), null);
+        UserSession userSession = spy(new UserSession());
+        when(userSession.getProfile()).thenReturn(Profile.Administrator);
+        context.setUserSession(userSession);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String msearchBody = "{\"index\":\"external-index\"}\n"
+            + "{\"query\":{\"match_all\":{}}}\n";
+        String rewrittenBody = invokeBuildSearchRequestBody(context, userSession, mapper, msearchBody, "_msearch", null);
+
+        String[] lines = rewrittenBody.split("\\R");
+        assertTrue("Expected header + request NDJSON lines", lines.length >= 2);
+
+        JsonNode headerNode = mapper.readTree(lines[0]);
+        JsonNode searchNode = mapper.readTree(lines[1]);
+
+        assertEquals("gn-records", headerNode.path("index").asText());
+        assertFalse("Header must not be rewritten into a query payload", headerNode.has("query"));
+        assertFalse("Header must not receive ACL filter", headerNode.toString().contains("*:*"));
+
+        assertTrue("Search request must receive ACL filter",
+            searchNode.path("query").path("bool").path("filter").toString().contains("*:*"));
+    }
+
+    /**
+     * Reproduces the reported bug: third-party clients may send a _msearch header that omits
+     * the "index" field entirely (relying on the URL path's default index instead). The old
+     * content-sniffing implementation (checking for an "index" key to decide header vs. body)
+     * misclassified this as a search body and corrupted it with an ACL filter, producing an
+     * invalid request. The position-based implementation must still recognise it as the header.
+     */
+    @Test
+    public void testMSearchAppliesDefaultIndexToHeaderMissingIndexField() throws Exception {
+        setPrivateField("defaultIndex", "gn-records");
+        ServiceContext context = new ServiceContext("default", applicationContext, new HashMap<>(), null);
+        UserSession userSession = spy(new UserSession());
+        when(userSession.getProfile()).thenReturn(Profile.Administrator);
+        context.setUserSession(userSession);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String msearchBody = "{\"search_type\":\"query_then_fetch\"}\n"
+            + "{\"query\":{\"match_all\":{}}}\n";
+        String rewrittenBody = invokeBuildSearchRequestBody(context, userSession, mapper, msearchBody, "_msearch", null);
+
+        String[] lines = rewrittenBody.split("\\R");
+        assertEquals("Expected exactly one header + one request line", 2, lines.length);
+
+        JsonNode headerNode = mapper.readTree(lines[0]);
+        JsonNode searchNode = mapper.readTree(lines[1]);
+
+        assertEquals("Header without an index field must still get the default index",
+            "gn-records", headerNode.path("index").asText());
+        assertEquals("Other header fields must be preserved",
+            "query_then_fetch", headerNode.path("search_type").asText());
+        assertFalse("Header must not receive ACL filter", headerNode.toString().contains("*:*"));
+
+        assertTrue("Search request must receive ACL filter",
+            searchNode.path("query").path("bool").path("filter").toString().contains("*:*"));
+    }
+
+    /**
+     * A _msearch body can contain several header/body pairs. The header/body alternation must
+     * be tracked by line position across the whole request, not just for the first pair.
+     */
+    @Test
+    public void testMSearchHandlesMultipleRequestPairs() throws Exception {
+        setPrivateField("defaultIndex", "gn-records");
+        ServiceContext context = new ServiceContext("default", applicationContext, new HashMap<>(), null);
+        UserSession userSession = spy(new UserSession());
+        when(userSession.getProfile()).thenReturn(Profile.Administrator);
+        context.setUserSession(userSession);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String msearchBody = "{}\n"
+            + "{\"query\":{\"match_all\":{}}}\n"
+            + "{\"index\":\"external-index\"}\n"
+            + "{\"query\":{\"term\":{\"field\":\"value\"}}}\n";
+        String rewrittenBody = invokeBuildSearchRequestBody(context, userSession, mapper, msearchBody, "_msearch", null);
+
+        String[] lines = rewrittenBody.split("\\R");
+        assertEquals("Expected two header + request pairs", 4, lines.length);
+
+        JsonNode header1 = mapper.readTree(lines[0]);
+        JsonNode search1 = mapper.readTree(lines[1]);
+        JsonNode header2 = mapper.readTree(lines[2]);
+        JsonNode search2 = mapper.readTree(lines[3]);
+
+        assertEquals("gn-records", header1.path("index").asText());
+        assertTrue("First search request must receive ACL filter",
+            search1.path("query").path("bool").path("filter").toString().contains("*:*"));
+
+        assertEquals("Second header's index must also be forced to the default index, " +
+            "overriding any client-supplied value", "gn-records", header2.path("index").asText());
+        assertTrue("Second search request must receive ACL filter",
+            search2.path("query").path("bool").path("filter").toString().contains("*:*"));
+    }
+
+    /**
+     * A _msearch header line must be a JSON object. A malformed header (e.g. a bare JSON null)
+     * cannot carry an "index" override, so it can't be used to bypass the default index, but it
+     * must still be rejected clearly by the proxy rather than silently forwarded to Elasticsearch.
+     *
+     * Note: the header must be a JSON scalar such as "null" here, not "[]". A top-level JSON
+     * array is special-cased by Jackson's ObjectReader#readValues(String): it is treated as the
+     * single root value to unwrap into a sequence of its own elements, rather than as one NDJSON
+     * line among several root-level values. An empty array therefore makes hasNextValue() return
+     * false immediately, silently skipping the rest of the request body (and this test) instead
+     * of reaching the code under test.
+     */
+    @Test
+    public void testMSearchRejectsNonObjectHeader() throws Exception {
+        setPrivateField("defaultIndex", "gn-records");
+        ServiceContext context = new ServiceContext("default", applicationContext, new HashMap<>(), null);
+        UserSession userSession = spy(new UserSession());
+        when(userSession.getProfile()).thenReturn(Profile.Administrator);
+        context.setUserSession(userSession);
+
+        ObjectMapper mapper = new ObjectMapper();
+        String msearchBody = "null\n"
+            + "{\"query\":{\"match_all\":{}}}\n";
+
+        try {
+            invokeBuildSearchRequestBody(context, userSession, mapper, msearchBody, "_msearch", null);
+            fail("Expected an exception for a non-object _msearch header");
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            assertTrue("Cause must be an IllegalArgumentException",
+                e.getCause() instanceof IllegalArgumentException);
+        }
+    }
+
     private void invokeAddFilterToQuery(ObjectNode body, ObjectMapper mapper) throws Exception {
         ServiceContext context = new ServiceContext("default", applicationContext, new HashMap<>(), null);
         UserSession userSession = spy(new UserSession());
@@ -242,6 +375,31 @@ public class EsHTTPProxyTest {
         method.setAccessible(true);
         method.invoke(esHTTPProxy, context, mapper, body);
     }
+
+    private String invokeBuildSearchRequestBody(ServiceContext context,
+                                                UserSession session,
+                                                ObjectMapper mapper,
+                                                String body,
+                                                String endPoint,
+                                                String selectionBucket) throws Exception {
+        Method method = EsHTTPProxy.class.getDeclaredMethod("buildSearchRequestBody",
+            ServiceContext.class,
+            UserSession.class,
+            ObjectMapper.class,
+            String.class,
+            String.class,
+            String.class);
+        method.setAccessible(true);
+        return (String) method.invoke(esHTTPProxy, context, session, mapper, body, endPoint, selectionBucket);
+    }
+
+    private void setPrivateField(String fieldName, Object value) throws Exception {
+        java.lang.reflect.Field field = EsHTTPProxy.class.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(esHTTPProxy, value);
+    }
+
+
 
     private void assertAclFilterPresent(ObjectNode body, String caseLabel) {
         JsonNode queryNode = body.get("query");
