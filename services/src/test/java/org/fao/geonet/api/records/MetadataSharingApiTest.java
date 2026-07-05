@@ -467,4 +467,180 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
         metadataId = metadata.getId();
         metadataUuid = metadata.getUuid();
     }
+
+    /**
+     * Regression test for issue documented in docs/issue-useradmin-publication.md (Symptom 1).
+     *
+     * <p>A user who is {@code UserAdmin} in one group AND has a
+     * {@code UserGroup(profile=Reviewer)} entry for the metadata's group owner MUST be
+     * allowed to change reserved-group (publication) privileges.
+     */
+    @Test
+    public void shareMetadataForPublicationAsUserAdminWithReviewerInGroup() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        // Create a user who is UserAdmin in a dedicated group (which sets their top-level profile
+        // to UserAdmin) and also holds Reviewer membership in the record's group owner.
+        User userAdminWithReviewer = UserRepositoryTest.newUser(_inc);
+        userAdminWithReviewer.setUsername("useradmin_reviewer");
+        userAdminWithReviewer.setProfile(Profile.UserAdmin);
+        _userRepo.save(userAdminWithReviewer);
+        grantUserAdminInNewGroup(userAdminWithReviewer, "useradmin-reviewer-admin-group");
+        Group sampleGroup = _groupRepo.findById(SAMPLE_GROUP_ID).get();
+        _userGroupRepo.save(new UserGroup()
+            .setGroup(sampleGroup)
+            .setProfile(Profile.Reviewer)
+            .setUser(userAdminWithReviewer));
+
+        MockHttpSession mockHttpSession = loginAs(userAdminWithReviewer);
+
+        checkMetadataHasNoPrivileges();
+
+        SharingParameter privilegesRequest = createPrivilegesRequest(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(privilegesRequest);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/sharing")
+                .session(mockHttpSession)
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+
+        List<OperationAllowed> metadataOperations =
+            operationAllowedRepository.findAllById_MetadataId(metadataId);
+        boolean hasReservedGroupPrivileges = metadataOperations.stream()
+            .anyMatch(op -> ReservedGroup.isReserved(op.getId().getGroupId()));
+        assertTrue(
+            "UserAdmin who is also per-group Reviewer should be able to publish",
+            hasReservedGroupPrivileges);
+    }
+
+    /**
+     * Back-end side of issue documented in docs/issue-useradmin-publication.md (Symptom 2).
+     *
+     * <p>A user who is {@code UserAdmin} in one group but has NO
+     * {@code UserGroup(profile=Reviewer)} entry for the metadata's group owner MUST be
+     * blocked from changing reserved-group (publication) privileges with 403 Forbidden.
+     */
+    @Test
+    public void shareMetadataForPublicationAsUserAdminWithoutReviewerInGroup() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        // Create a user who is UserAdmin in a dedicated group (which sets their top-level profile
+        // to UserAdmin) but only holds Editor membership in the record's group owner.
+        User userAdminEditorOnly = UserRepositoryTest.newUser(_inc);
+        userAdminEditorOnly.setUsername("useradmin_editor");
+        userAdminEditorOnly.setProfile(Profile.UserAdmin);
+        _userRepo.save(userAdminEditorOnly);
+        grantUserAdminInNewGroup(userAdminEditorOnly, "useradmin-editor-admin-group");
+        Group sampleGroup = _groupRepo.findById(SAMPLE_GROUP_ID).get();
+        _userGroupRepo.save(new UserGroup()
+            .setGroup(sampleGroup)
+            .setProfile(Profile.Editor)
+            .setUser(userAdminEditorOnly));
+
+        MockHttpSession mockHttpSession = loginAs(userAdminEditorOnly);
+
+        SharingParameter privilegesRequest = createPrivilegesRequest(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(privilegesRequest);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/sharing")
+                .session(mockHttpSession)
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void publishMetadataAsUserAdminWithUserAdminInGroup() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        User userAdminInGroup = createUserAdminWithGroupProfile("useradmin_group_admin", Profile.UserAdmin);
+        MockHttpSession mockHttpSession = loginAs(userAdminInGroup);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/publish")
+                .session(mockHttpSession))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void unpublishMetadataAsUserAdminWithUserAdminInGroup() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        publishMetadata();
+
+        User userAdminInGroup = createUserAdminWithGroupProfile("useradmin_group_admin_unpublish", Profile.UserAdmin);
+        MockHttpSession mockHttpSession = loginAs(userAdminInGroup);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/unpublish")
+                .session(mockHttpSession))
+            .andExpect(status().isForbidden());
+
+        List<OperationAllowed> metadataOperations =
+            operationAllowedRepository.findAllById_MetadataId(metadataId);
+        boolean hasReservedGroupPrivileges = metadataOperations.stream()
+            .anyMatch(op -> ReservedGroup.isReserved(op.getId().getGroupId()));
+        assertTrue("Reserved-group publication privileges should remain set when unpublish is denied", hasReservedGroupPrivileges);
+    }
+
+    @Test
+    public void unpublishMetadataAsUserAdminWithoutRequiredGroupProfile() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        publishMetadata();
+
+        User userAdminEditorOnly = createUserAdminWithGroupProfile("useradmin_editor_unpublish", Profile.Editor);
+        MockHttpSession mockHttpSession = loginAs(userAdminEditorOnly);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/unpublish")
+                .session(mockHttpSession))
+            .andExpect(status().isForbidden());
+    }
+
+    /**
+     * Creates a user whose top-level profile is {@code UserAdmin} because they are
+     * {@code UserAdmin} in a dedicated group, and who additionally holds {@code groupProfile}
+     * membership in the sample group (group owner of the test record).
+     *
+     * <p>In GeoNetwork, {@code UserAdmin} is always a per-group role – not a standalone
+     * "global" profile. A user's top-level {@code profile} field simply reflects the highest
+     * role they hold in any of their groups. By giving the user an explicit
+     * {@code UserGroup(profile=UserAdmin)} in a separate group we honour that constraint.
+     */
+    private User createUserAdminWithGroupProfile(String username, Profile groupProfile) {
+        User user = UserRepositoryTest.newUser(_inc);
+        user.setUsername(username);
+        user.setProfile(Profile.UserAdmin);
+        _userRepo.save(user);
+
+        // Give the user UserAdmin membership in a dedicated group so the top-level
+        // UserAdmin profile is backed by a real per-group assignment.
+        grantUserAdminInNewGroup(user, username + "-admin-group");
+
+        Group sampleGroup = _groupRepo.findById(SAMPLE_GROUP_ID).get();
+        _userGroupRepo.save(new UserGroup()
+            .setGroup(sampleGroup)
+            .setProfile(groupProfile)
+            .setUser(user));
+
+        return user;
+    }
+
+    /**
+     * Creates a new workspace group with the given name, saves it, and adds a
+     * {@code UserGroup(profile=UserAdmin)} entry for {@code user} in that group.
+     * This reflects the real-world constraint that {@code UserAdmin} is a per-group role.
+     */
+    private void grantUserAdminInNewGroup(User user, String groupName) {
+        Group adminGroup = _groupRepo.save(new Group().setName(groupName));
+        _userGroupRepo.save(new UserGroup()
+            .setGroup(adminGroup)
+            .setProfile(Profile.UserAdmin)
+            .setUser(user));
+    }
 }

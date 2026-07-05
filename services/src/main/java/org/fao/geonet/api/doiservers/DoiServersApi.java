@@ -350,6 +350,6 @@ public class DoiServersApi {
                                               Integer groupOwner, Profile userProfile) throws Exception {
 
         return (userProfile == Profile.Administrator) || accessManager.isOwner(serviceContext, String.valueOf(metadataId))
-            || accessManager.isProfileOrMoreOnGroup(serviceContext, Profile.Reviewer, groupOwner);
+            || accessManager.isProfileOrMoreOnGroup(serviceContext.getUserSession(), Profile.Reviewer, groupOwner);
     }
 }
