@@ -1125,11 +1125,6 @@
         <version>${spring.jpa.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.fasterxml.jackson.datatype</groupId>
-        <artifactId>jackson-datatype-hibernate5</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
         <groupId>edu.ucar</groupId>
         <artifactId>netcdf</artifactId>
         <version>4.3.23</version>
@@ -1161,20 +1156,15 @@
         <artifactId>flying-saucer-pdf-openpdf</artifactId>
         <version>${flying-saucer}</version>
       </dependency>
+      <!-- Manages all Jackson artifacts, including jackson-annotations,
+           which since 2.20 is released without the patch digit and can no
+           longer share a single version property with the other modules. -->
       <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-databind</artifactId>
+        <groupId>com.fasterxml.jackson</groupId>
+        <artifactId>jackson-bom</artifactId>
         <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-core</artifactId>
-        <version>${jackson.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-annotations</artifactId>
-        <version>${jackson.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>javax.xml.bind</groupId>
@@ -1642,7 +1632,7 @@
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
-    <jackson.version>2.16.2</jackson.version>
+    <jackson.version>2.21.4</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j2.version>2.24.3</log4j2.version>
