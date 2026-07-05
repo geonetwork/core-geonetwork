@@ -30,8 +30,6 @@ import org.apache.camel.model.dataformat.JaxbDataFormat;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.w3c.dom.Document;
 
-import javax.xml.bind.JAXBContext;
-
 /**
  * Created by francois on 28/10/15.
  */
@@ -105,7 +103,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
                 .to("direct:delete-wfs-featuretype-features")
                 .to("direct:index-wfs");
 
-        from("seda:queue:" + MESSAGE_DELETE_WFS_FEATURES + "?concurrentConsumers=5")
+        from("seda:" + MESSAGE_DELETE_WFS_FEATURES + "?concurrentConsumers=5")
                 .id("harvest-wfs-delete-features-from-message")
                 .log(LoggingLevel.INFO, LOGGER_NAME, "Delete features message received via SEDA.")
                 .setProperty("url", simple("${body.parameters.url}"))
