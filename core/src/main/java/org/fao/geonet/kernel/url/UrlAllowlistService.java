@@ -24,27 +24,27 @@
 package org.fao.geonet.kernel.url;
 
 /**
- * Generic service checking whether a URL is allowed according to a whitelist of URL patterns.
+ * Generic service checking whether a URL is allowed according to a allowlist of URL patterns.
  * <p>
  * This is deliberately decoupled from any particular system setting: callers are responsible
- * for retrieving the whitelist value that applies to their use case (e.g. a dedicated setting
+ * for retrieving the allowlist value that applies to their use case (e.g. a dedicated setting
  * for thesaurus URL imports, or in the future a separate one for harvester source URLs) and
  * pass it in. This keeps the matching logic reusable across features without this service
  * needing to know about each of its callers.
  */
-public interface UrlWhitelistService {
+public interface UrlAllowlistService {
 
     /**
-     * Checks if a URL is allowed according to a whitelist of URL patterns.
+     * Checks if a URL is allowed according to a allowlist of URL patterns.
      *
      * @param url       the URL to check.
-     * @param whitelist the whitelist patterns, one per line. Each pattern may use {@code *} as
+     * @param allowlist the allowlist patterns, one per line. Each pattern may use {@code *} as
      *                  a wildcard matching any sequence of characters (including none), e.g.
      *                  {@code https://example.org/*} or {@code https://*.example.org/vocab/*}.
      *                  Lines that are blank, or start with {@code #}, are ignored. A blank (or
-     *                  {@code null}) whitelist allows any URL.
-     * @return {@code true} if the whitelist is blank, or if the URL matches at least one
-     * whitelist pattern; {@code false} otherwise.
+     *                  {@code null}) allowlist allows any URL.
+     * @return {@code true} if the allowlist is blank, or if the URL matches at least one
+     * allowlist pattern; {@code false} otherwise.
      */
-    boolean isUrlAllowed(String url, String whitelist);
+    boolean isUrlAllowed(String url, String allowlist);
 }

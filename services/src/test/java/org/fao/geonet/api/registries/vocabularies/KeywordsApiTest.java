@@ -375,36 +375,36 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
     }
 
     /**
-     * When the thesaurus URL whitelist is configured, uploading from a URL that doesn't match
-     * any whitelist pattern must be rejected, without even attempting to fetch the URL.
+     * When the thesaurus URL allowlist is configured, uploading from a URL that doesn't match
+     * any allowlist pattern must be rejected, without even attempting to fetch the URL.
      */
     @Test
-    public void testUploadThesaurusFromUrlRejectsUrlNotInWhitelist() throws Exception {
+    public void testUploadThesaurusFromUrlRejectsUrlNotInAllowlist() throws Exception {
         createServiceContext();
         User user = new User().setId(USER_ID);
         HttpSession session = loginAs(user);
 
-        settingManager.setValue(Settings.SYSTEM_METADATA_THESAURUS_URL_WHITELIST, "https://trusted.example.org/*");
+        settingManager.setValue(Settings.SYSTEM_METADATA_THESAURUS_URL_ALLOWLIST, "https://trusted.example.org/*");
         try {
             MockHttpServletRequest request = new MockHttpServletRequest(session.getServletContext());
             request.setMethod("PUT");
             request.setRequestURI("/srv/api/registries/vocabularies");
             request.setSession(session);
-            request.setParameter("url", "https://not-in-whitelist.example.org/vocab.rdf");
+            request.setParameter("url", "https://not-in-allowlist.example.org/vocab.rdf");
             request.setParameter("type", "external");
             request.setParameter("dir", "theme");
 
             MockHttpServletResponse response = new MockHttpServletResponse();
             try {
                 invoker.invoke(request, response);
-                fail("Expected upload from a URL not in the whitelist to be rejected");
+                fail("Expected upload from a URL not in the allowlist to be rejected");
             } catch (NotAllowedException e) {
                 assertTrue("Error message should mention the URL is not allowed, was: " + e.getMessage(),
                     e.getMessage().contains("is not allowed"));
             }
         } finally {
-            // Restore the default (empty whitelist = allow all) so other tests are unaffected.
-            settingManager.setValue(Settings.SYSTEM_METADATA_THESAURUS_URL_WHITELIST, "");
+            // Restore the default (empty allowlist = allow all) so other tests are unaffected.
+            settingManager.setValue(Settings.SYSTEM_METADATA_THESAURUS_URL_ALLOWLIST, "");
         }
     }
 }

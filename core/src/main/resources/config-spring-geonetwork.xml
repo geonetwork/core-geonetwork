@@ -74,7 +74,7 @@
     <property name="UserAgent" value="${urlChecker.UserAgent}"/>
   </bean>
 
-  <bean id="urlWhitelistService" class="org.fao.geonet.kernel.url.UrlWhitelistServiceImpl" lazy-init="true"/>
+  <bean id="urlAllowlistService" class="org.fao.geonet.kernel.url.UrlAllowlistServiceImpl" lazy-init="true"/>
 
   <bean id="SearchLogger" class="org.fao.geonet.kernel.search.log.SearcherLogger" lazy-init="true"/>
 

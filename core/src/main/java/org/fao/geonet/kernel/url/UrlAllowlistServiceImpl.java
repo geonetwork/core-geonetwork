@@ -28,27 +28,27 @@ import org.apache.commons.io.IOCase;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * Default implementation of {@link UrlWhitelistService}.
+ * Default implementation of {@link UrlAllowlistService}.
  * <p>
- * The whitelist is a plain multi-line string (as configured by an administrator in a system
+ * The allowlist is a plain multi-line string (as configured by an administrator in a system
  * setting). Each non-blank, non-comment line is treated as a wildcard pattern (using {@code *}
  * to match any sequence of characters) and matched against the whole URL.
  */
-public class UrlWhitelistServiceImpl implements UrlWhitelistService {
+public class UrlAllowlistServiceImpl implements UrlAllowlistService {
 
     private static final String COMMENT_PREFIX = "#";
 
     @Override
-    public boolean isUrlAllowed(String url, String whitelist) {
-        if (StringUtils.isBlank(whitelist)) {
-            // No whitelist configured: allow any URL.
+    public boolean isUrlAllowed(String url, String allowlist) {
+        if (StringUtils.isBlank(allowlist)) {
+            // No allowlist configured: allow any URL.
             return true;
         }
         if (StringUtils.isBlank(url)) {
             return false;
         }
 
-        for (String line : whitelist.split("\\r?\\n")) {
+        for (String line : allowlist.split("\\r?\\n")) {
             String pattern = line.trim();
             if (pattern.isEmpty() || pattern.startsWith(COMMENT_PREFIX)) {
                 continue;

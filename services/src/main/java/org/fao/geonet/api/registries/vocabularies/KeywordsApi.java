@@ -59,7 +59,7 @@ import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.*;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
-import org.fao.geonet.kernel.url.UrlWhitelistService;
+import org.fao.geonet.kernel.url.UrlAllowlistService;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.FileMimetypeChecker;
@@ -134,7 +134,7 @@ public class KeywordsApi {
     GeonetHttpRequestFactory httpRequestFactory;
 
     @Autowired
-    UrlWhitelistService urlWhitelistService;
+    UrlAllowlistService urlAllowlistService;
     /**
      * The mapper.
      */
@@ -1305,16 +1305,16 @@ public class KeywordsApi {
     /**
      * Checks that a URL used to import a thesaurus (either the direct {@code url} parameter or
      * the {@code registryUrl} parameter of {@link #uploadThesaurusFromUrl}) is allowed by the
-     * {@link Settings#SYSTEM_METADATA_THESAURUS_URL_WHITELIST} system setting.
+     * {@link Settings#SYSTEM_METADATA_THESAURUS_URL_ALLOWLIST} system setting.
      *
      * @param url the URL to check
-     * @throws NotAllowedException if the URL is not allowed by the whitelist
+     * @throws NotAllowedException if the URL is not allowed by the allowlist
      */
     private void checkUrlAllowed(String url) {
-        String whitelist = settingManager.getValue(Settings.SYSTEM_METADATA_THESAURUS_URL_WHITELIST);
-        if (!urlWhitelistService.isUrlAllowed(url, whitelist)) {
+        String allowlist = settingManager.getValue(Settings.SYSTEM_METADATA_THESAURUS_URL_ALLOWLIST);
+        if (!urlAllowlistService.isUrlAllowed(url, allowlist)) {
             throw new NotAllowedException(String.format(
-                "The URL '%s' is not allowed. Check the 'Thesaurus URL whitelist' system setting.",
+                "The URL '%s' is not allowed. Check the 'Thesaurus URL allowlist' system setting.",
                 url));
         }
     }

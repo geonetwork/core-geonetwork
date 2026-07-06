@@ -311,7 +311,7 @@ Specifies the **file types** that can be attached to a metadata record.
 - `image/*|text/plain|application/xml|application/pdf` — allows images, text, XML, and PDF files.
 - `*/*` — allows all file types.
 
-### Thesaurus URL whitelist
+### Thesaurus URL allowlist
 
 Restricts which URLs can be used when importing a thesaurus from a URL or from a registry (see
 [Managing thesaurus](../managing-classification-systems/managing-thesaurus.md)), to prevent the

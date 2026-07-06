@@ -2,7 +2,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 
 INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct 'system/oai/enable', 'true', 2, 7000, 'n'  from settings WHERE NOT EXISTS (SELECT name FROM Settings WHERE name = 'system/oai/enable');
 
-INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct 'system/metadata/thesaurusUrlWhitelist', '', 0, 9162, 'n' from settings WHERE NOT EXISTS (SELECT name FROM Settings WHERE name = 'system/metadata/thesaurusUrlWhitelist');
+INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct 'system/metadata/thesaurusUrlAllowlist', '', 0, 9162, 'n' from settings WHERE NOT EXISTS (SELECT name FROM Settings WHERE name = 'system/metadata/thesaurusUrlAllowlist');
 
 UPDATE Settings SET value='4.4.12' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
