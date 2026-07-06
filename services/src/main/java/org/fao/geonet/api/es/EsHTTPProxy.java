@@ -895,11 +895,6 @@ public class EsHTTPProxy {
      * @throws JsonProcessingException
      */
     private void processMetadataSchemaFilters(ServiceContext context, MetadataSchema mds, ObjectNode doc) throws JsonProcessingException {
-        if (!doc.has("_source")) {
-            return;
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
         ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
         MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter("authenticated");
@@ -913,7 +908,7 @@ public class EsHTTPProxy {
         MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(ReservedOperation.editing);
 
         if (editFilter != null) {
-            boolean canEdit = doc.get("edit").asBoolean();
+            boolean canEdit = doc.path("edit").asBoolean(false);
 
             if (!canEdit) {
                 jsonpathFilters.add(editFilter.getJsonpath());
@@ -922,7 +917,7 @@ public class EsHTTPProxy {
 
         MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(ReservedOperation.download);
         if (downloadFilter != null) {
-            boolean canDownload = doc.get("download").asBoolean();
+            boolean canDownload = doc.path("download").asBoolean(false);
 
             if (!canDownload) {
                 jsonpathFilters.add(downloadFilter.getJsonpath());
@@ -931,13 +926,18 @@ public class EsHTTPProxy {
 
         MetadataSchemaOperationFilter dynamicFilter = mds.getOperationFilter(ReservedOperation.dynamic);
         if (dynamicFilter != null) {
-            boolean canDynamic = doc.get("dynamic").asBoolean();
+            boolean canDynamic = doc.path("dynamic").asBoolean(false);
 
             if (!canDynamic) {
                 jsonpathFilters.add(dynamicFilter.getJsonpath());
             }
         }
 
+        if (jsonpathFilters.isEmpty()) {
+            return;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = filterResponseElements(mapper, sourceNode, jsonpathFilters);
         if (actualObj != null) {
             doc.set("_source", actualObj);
@@ -955,7 +955,7 @@ public class EsHTTPProxy {
         return mapper.readTree(jsonContext.jsonString());
     }
 
-    private void processSourceNode(ServiceContext context, ObjectNode doc) throws SQLException, JsonProcessingException {
+    private void processSourceNode(ServiceContext context, ObjectNode doc) throws JsonProcessingException {
         if (!doc.has("_source")) {
             return;
         }
