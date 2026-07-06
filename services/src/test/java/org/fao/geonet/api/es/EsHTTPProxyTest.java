@@ -29,8 +29,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.schema.MetadataOperationFilterType;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.MetadataSchemaOperationFilter;
@@ -43,7 +46,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.servlet.http.HttpSession;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.lang.reflect.Method;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,6 +66,9 @@ public class EsHTTPProxyTest {
 
     @Mock
     private UserGroupRepository userGroupRepository;
+
+    @Mock
+    private SchemaManager schemaManager;
 
     @InjectMocks
     private EsHTTPProxy esHTTPProxy = new EsHTTPProxy();
@@ -98,9 +110,8 @@ public class EsHTTPProxyTest {
         when(userGroupRepository.findGroupIds(any(Specification.class))).thenReturn(List.of(1));
 
         // 2. Call a private method using reflection
-        Method method = EsHTTPProxy.class.getDeclaredMethod("processMetadataSchemaFilters", ServiceContext.class, MetadataSchema.class, ObjectNode.class);
-        method.setAccessible(true);
-        method.invoke(esHTTPProxy, context, mds, doc);
+        Method method = getProcessMetadataSchemaFiltersMethod();
+        method.invoke(esHTTPProxy, context, mds, doc, new EsHTTPProxy.UserEditorGroups(userSession));
 
         // 3. Assertions for user in a group
         assertTrue("someField should exist when user is in groupOwner", doc.get("_source").has("someField"));
@@ -119,9 +130,120 @@ public class EsHTTPProxyTest {
         doc.put("download", false);
         doc.put("dynamic", false);
 
-        method.invoke(esHTTPProxy, context, mds, doc);
+        method.invoke(esHTTPProxy, context, mds, doc, new EsHTTPProxy.UserEditorGroups(userSession));
 
         assertFalse("someField should be filtered when user is not in groupOwner", doc.get("_source").has("someField"));
+    }
+
+    /**
+     * The edit, download and dynamic flags are only added to the document when permissions are
+     * requested. When they are missing, the schema filters must fall back to the restrictive
+     * behaviour instead of failing.
+     */
+    @Test
+    public void testProcessMetadataSchemaFiltersAppliesEditFilterWhenPermissionFlagsMissing() throws Exception {
+        ServiceContext context = createServiceContext(new UserSession());
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode doc = mapper.createObjectNode();
+        ObjectNode source = mapper.createObjectNode();
+        source.put("someField", "someValue");
+        source.put("otherField", "keep");
+        doc.set("_source", source);
+        // No edit/download/dynamic flags on the doc (addPermissions=false case)
+
+        MetadataSchema mds = mock(MetadataSchema.class);
+        MetadataSchemaOperationFilter editFilter = new MetadataSchemaOperationFilter(null, "$.someField", null);
+        when(mds.getOperationFilter(ReservedOperation.editing)).thenReturn(editFilter);
+
+        Method method = getProcessMetadataSchemaFiltersMethod();
+        method.invoke(esHTTPProxy, context, mds, doc, new EsHTTPProxy.UserEditorGroups(context.getUserSession()));
+
+        assertFalse("someField should be filtered when the edit flag is missing", doc.get("_source").has("someField"));
+        assertTrue("otherField should be preserved", doc.get("_source").has("otherField"));
+    }
+
+    /**
+     * When no filter applies, the source node must be left untouched: no JsonPath
+     * serialize/deserialize round trip per document.
+     */
+    @Test
+    public void testProcessMetadataSchemaFiltersKeepsSourceNodeWhenNoFilterApplies() throws Exception {
+        UserSession userSession = spy(new UserSession());
+        when(userSession.isAuthenticated()).thenReturn(true);
+        ServiceContext context = createServiceContext(userSession);
+
+        ObjectMapper mapper = new ObjectMapper();
+        ObjectNode doc = mapper.createObjectNode();
+        ObjectNode source = mapper.createObjectNode();
+        source.put("someField", "someValue");
+        doc.set("_source", source);
+
+        MetadataSchema mds = mock(MetadataSchema.class);
+
+        Method method = getProcessMetadataSchemaFiltersMethod();
+        method.invoke(esHTTPProxy, context, mds, doc, new EsHTTPProxy.UserEditorGroups(userSession));
+
+        assertSame("_source must be kept as-is when no filter applies", source, doc.get("_source"));
+    }
+
+    /**
+     * The _source node returned to the client must only contain the expected fields,
+     * also when the schema filters replace the _source node.
+     */
+    @Test
+    public void testProcessResponseSearchProcessesSourceNode() throws Exception {
+        ServiceContext context = createServiceContext(anonymousUserSession());
+        mockSchemaWithAuthenticatedFilter();
+
+        String esResponse = "{\"took\":1,\"hits\":{\"total\":{\"value\":1},\"hits\":[" + searchHit("uuid-1") + "]}}";
+
+        JsonNode result = invokeProcessResponse(context, "_search", esResponse);
+
+        JsonNode sourceNode = result.path("hits").path("hits").path(0).path("_source");
+        assertSourceNodeProcessed(sourceNode);
+    }
+
+    @Test
+    public void testProcessResponseMSearchProcessesSourceNode() throws Exception {
+        ServiceContext context = createServiceContext(anonymousUserSession());
+        mockSchemaWithAuthenticatedFilter();
+
+        String esResponse = "{\"responses\":[{\"took\":1,\"hits\":{\"total\":{\"value\":1},\"hits\":["
+            + searchHit("uuid-1") + "]}}]}";
+
+        JsonNode result = invokeProcessResponse(context, "_msearch", esResponse);
+
+        JsonNode sourceNode = result.path("responses").path(0).path("hits").path("hits").path(0).path("_source");
+        assertSourceNodeProcessed(sourceNode);
+    }
+
+    /**
+     * The editor groups of the user must be fetched at most once per response,
+     * not once per returned document.
+     */
+    @Test
+    public void testProcessResponseFetchesEditorGroupsOnce() throws Exception {
+        UserSession userSession = spy(new UserSession());
+        when(userSession.isAuthenticated()).thenReturn(true);
+        when(userSession.getUserIdAsInt()).thenReturn(42);
+        ServiceContext context = createServiceContext(userSession);
+
+        MetadataSchema mds = mock(MetadataSchema.class);
+        MetadataSchemaOperationFilter groupOwnerFilter = new MetadataSchemaOperationFilter(null, "$.protectedField", null);
+        when(mds.getOperationFilter(MetadataOperationFilterType.groupOwner.name())).thenReturn(groupOwnerFilter);
+        when(schemaManager.getSchema("iso19139")).thenReturn(mds);
+
+        // The user is not in the groupOwner group of the documents
+        when(userGroupRepository.findGroupIds(any(Specification.class))).thenReturn(List.of(2));
+
+        String esResponse = "{\"took\":1,\"hits\":{\"total\":{\"value\":2},\"hits\":["
+            + searchHit("uuid-1") + "," + searchHit("uuid-2") + "]}}";
+
+        JsonNode result = invokeProcessResponse(context, "_search", esResponse);
+
+        assertEquals(2, result.path("hits").path("hits").size());
+        verify(userGroupRepository, times(1)).findGroupIds(any(Specification.class));
     }
 
     /**
@@ -360,6 +482,77 @@ public class EsHTTPProxyTest {
             assertTrue("Cause must be an IllegalArgumentException",
                 e.getCause() instanceof IllegalArgumentException);
         }
+    }
+
+    private ServiceContext createServiceContext(UserSession userSession) {
+        ServiceContext context = new ServiceContext("default", applicationContext, new HashMap<>(), null);
+        context.setUserSession(userSession);
+        return context;
+    }
+
+    /**
+     * A bare UserSession reports itself as authenticated when there is no security context,
+     * so the anonymous case must be stubbed explicitly.
+     */
+    private UserSession anonymousUserSession() {
+        UserSession userSession = spy(new UserSession());
+        when(userSession.isAuthenticated()).thenReturn(false);
+        return userSession;
+    }
+
+    private Method getProcessMetadataSchemaFiltersMethod() throws NoSuchMethodException {
+        Method method = EsHTTPProxy.class.getDeclaredMethod("processMetadataSchemaFilters",
+            ServiceContext.class, MetadataSchema.class, ObjectNode.class, EsHTTPProxy.UserEditorGroups.class);
+        method.setAccessible(true);
+        return method;
+    }
+
+    private void mockSchemaWithAuthenticatedFilter() {
+        MetadataSchema mds = mock(MetadataSchema.class);
+        MetadataSchemaOperationFilter authenticatedFilter = new MetadataSchemaOperationFilter(null, "$.protectedField", null);
+        when(mds.getOperationFilter(MetadataOperationFilterType.authenticated.name())).thenReturn(authenticatedFilter);
+        when(schemaManager.getSchema("iso19139")).thenReturn(mds);
+    }
+
+    /**
+     * A search hit with the internal index fields, a field covered by the schema filters
+     * and a regular field.
+     */
+    private String searchHit(String uuid) {
+        StringBuilder ops = new StringBuilder();
+        for (ReservedOperation o : ReservedOperation.values()) {
+            ops.append("\"op").append(o.getId()).append("\":[1],");
+        }
+        return "{\"_id\":\"" + uuid + "\",\"_source\":{"
+            + "\"" + Geonet.IndexFieldNames.SCHEMA + "\":\"iso19139\","
+            + "\"" + Geonet.IndexFieldNames.UUID + "\":\"" + uuid + "\","
+            + "\"" + Geonet.IndexFieldNames.GROUP_OWNER + "\":1,"
+            + ops
+            + "\"protectedField\":\"secret\","
+            + "\"resourceTitle\":\"Title\"}}";
+    }
+
+    private void assertSourceNodeProcessed(JsonNode sourceNode) {
+        assertTrue("_source must be present in the response", sourceNode.isObject());
+        for (ReservedOperation o : ReservedOperation.values()) {
+            assertFalse("op" + o.getId() + " must not be present in _source", sourceNode.has("op" + o.getId()));
+        }
+        assertFalse("filtered element must not be present for anonymous users", sourceNode.has("protectedField"));
+        assertTrue("regular fields must be preserved", sourceNode.has("resourceTitle"));
+    }
+
+    private JsonNode invokeProcessResponse(ServiceContext context, String endPoint, String esResponse) throws Exception {
+        Method method = EsHTTPProxy.class.getDeclaredMethod("processResponse",
+            ServiceContext.class, HttpSession.class, InputStream.class, OutputStream.class,
+            String.class, String.class, boolean.class, RelatedItemType[].class);
+        method.setAccessible(true);
+
+        InputStream streamFromServer = new ByteArrayInputStream(esResponse.getBytes(StandardCharsets.UTF_8));
+        ByteArrayOutputStream streamToClient = new ByteArrayOutputStream();
+
+        method.invoke(esHTTPProxy, context, null, streamFromServer, streamToClient, endPoint, null, false, null);
+
+        return new ObjectMapper().readTree(streamToClient.toString(StandardCharsets.UTF_8.name()));
     }
 
     private void invokeAddFilterToQuery(ObjectNode body, ObjectMapper mapper) throws Exception {
