@@ -1,5 +1,5 @@
 //=============================================================================
-//===   Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===   Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===   and United Nations Environment Programme (UNEP)
 //===
@@ -129,8 +129,7 @@ public class LinksApi {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get record links",
-        description = "")
+        summary = "Get record links")
     @Parameters({
         @Parameter(name = "page",
             in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int32"),
@@ -147,13 +146,13 @@ public class LinksApi {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     public Page<Link> getRecordLinks(
-        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'", required = false)
+        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'")
         @RequestParam(required = false)
         LinkFilter filter,
-        @Parameter(description = "Optional, filter links to records published in that group.", required = false)
+        @Parameter(description = "Optional, filter links to records published in that group.")
         @RequestParam(required = false)
         Integer[] groupIdFilter,
-        @Parameter(description = "Optional, filter links to records created in that group.", required = false)
+        @Parameter(description = "Optional, filter links to records created in that group.")
         @RequestParam(required = false)
         Integer[] groupOwnerIdFilter,
         @Parameter(description = "Optional, filter links to http status.")
@@ -165,17 +164,14 @@ public class LinksApi {
         @Parameter(hidden = true)
         Pageable pageRequest,
         @Parameter(hidden = true)
-        HttpSession session,
-        @Parameter(hidden = true)
-        HttpServletRequest request) throws Exception {
+        HttpSession session) throws Exception {
 
         final UserSession userSession = ApiUtils.getUserSession(session);
         return getLinks(filter, groupIdFilter, groupOwnerIdFilter, httpErrorStatusValueFilter, excludeHarvestedMetadataFilter, pageRequest, userSession);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Get record links",
-        description = "")
+        summary = "Get record links")
     @Parameters({
         @Parameter(name = "page",
             in = ParameterIn.QUERY, schema = @Schema(type = "integer", format = "int32"),
@@ -194,13 +190,13 @@ public class LinksApi {
         produces = MediaType.APPLICATION_JSON_VALUE)
     @PreAuthorize("isAuthenticated()")
     public Page<Link> getRecordLinksPost(
-        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'", required = false)
+        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'")
         @RequestParam(required = false)
         LinkFilter filter,
-        @Parameter(description = "Optional, filter links to records published in that group.", required = false)
+        @Parameter(description = "Optional, filter links to records published in that group.")
         @RequestParam(required = false)
         Integer[] groupIdFilter,
-        @Parameter(description = "Optional, filter links to records created in that group.", required = false)
+        @Parameter(description = "Optional, filter links to records created in that group.")
         @RequestParam(required = false)
         Integer[] groupOwnerIdFilter,
         @Parameter(description = "Optional, filter links to http status.")
@@ -212,9 +208,7 @@ public class LinksApi {
         @Parameter(hidden = true)
         Pageable pageRequest,
         @Parameter(hidden = true)
-        HttpSession session,
-        @Parameter(hidden = true)
-        HttpServletRequest request) throws Exception {
+        HttpSession session) throws Exception {
 
         final UserSession userSession = ApiUtils.getUserSession(session);
         return getLinks(filter, groupIdFilter, groupOwnerIdFilter, httpStatusValueFilter, excludeHarvestedMetadataFilter, pageRequest, userSession);
@@ -232,7 +226,7 @@ public class LinksApi {
         if (userSession.getProfile() != Profile.Administrator) {
             final List<Integer> editingGroupList = AccessManager.getGroups(userSession, Profile.Editor);
             if (!editingGroupList.isEmpty()) {
-                editingGroups = editingGroupList.toArray(new Integer[editingGroupList.size()]);
+                editingGroups = editingGroupList.toArray(new Integer[0]);
             }
         }
 
@@ -291,13 +285,13 @@ public class LinksApi {
     )
     @PreAuthorize("isAuthenticated()")
     public void getRecordLinksAsCsv(
-        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'", required = false)
+        @Parameter(description = "Filter, e.g. \"{url: 'png', lastState: 'ko', records: 'e421'}\", lastState being 'ok'/'ko'/'unknown'")
         @RequestParam(required = false)
         LinkFilter filter,
-        @Parameter(description = "Optional, filter links to records published in that group.", required = false)
+        @Parameter(description = "Optional, filter links to records published in that group.")
         @RequestParam(required = false)
         Integer[] groupIdFilter,
-        @Parameter(description = "Optional, filter links to records created in that group.", required = false)
+        @Parameter(description = "Optional, filter links to records created in that group.")
         @RequestParam(required = false)
         Integer[] groupOwnerIdFilter,
         @Parameter(description = "Optional, filter links to http status.")
@@ -326,15 +320,14 @@ public class LinksApi {
     @PostMapping(
         path = "/analyze",
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('Editor')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.CREATED)
     public SimpleMetadataProcessingReport analyzeRecordLinks(
         @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION)
         @RequestParam(required = false)
         String[] uuids,
         @Parameter(
-            description = ApiParams.API_PARAM_BUCKET_NAME,
-            required = false)
+            description = ApiParams.API_PARAM_BUCKET_NAME)
         @RequestParam(
             required = false
         )
@@ -415,12 +408,11 @@ public class LinksApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Analyze one or more links",
-        description = "")
+        summary = "Analyze one or more links")
     @PostMapping(
         path = "/analyzeurl",
         produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasAuthority('Editor')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseStatus(HttpStatus.CREATED)
     public void analyzeLinks(
         @Parameter(description = "URL")
@@ -433,8 +425,7 @@ public class LinksApi {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Remove all links and status history",
-        description = "")
+        summary = "Remove all links and status history")
     @DeleteMapping(
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.OK)
@@ -489,10 +480,9 @@ public class LinksApi {
                     }
                 }
             });
-            Iterator<SelfNaming> it = processToRemove.iterator();
 
-            while (it.hasNext()) {
-                mBeanExporter.unregisterManagedResource(it.next().getObjectName());
+            for (SelfNaming selfNaming : processToRemove) {
+                mBeanExporter.unregisterManagedResource(selfNaming.getObjectName());
             }
         } catch (MalformedObjectNameException e) {
             Log.error(LOGGER, String.format("Error unregistering metadata links analysis process '%s'",
