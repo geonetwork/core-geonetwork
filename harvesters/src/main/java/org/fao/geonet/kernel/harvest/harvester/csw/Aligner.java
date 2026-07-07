@@ -466,7 +466,7 @@ public class Aligner extends BaseAligner<CswParams> {
             updateSchema = !newSchema.equals(schema);
             schema = newSchema;
         } else {
-            if (!ri.schema.equals(schema)) {
+            if (!schema.equals(ri.schema)) {
                 log.warning("  - Detected schema '" + schema + "' is different from the one of the metadata in the catalog '" + ri.schema + "'. Using the detected one.");
                 updateSchema = true;
             }
