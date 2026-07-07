@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -157,7 +157,7 @@ public class Aligner extends BaseAligner<SftpParams> {
                     }
 
                     if (valid) {
-                        RecordInfo ri = new RecordInfo(uuid, modified);
+                        RecordInfo ri = new RecordInfo(uuid, modified, schema, null);
                         insertOrUpdate(ri, md, errors);
                     }
                 } catch (SchemaMatchConflictException | NoSchemaMatchesException e) {
@@ -368,7 +368,7 @@ public class Aligner extends BaseAligner<SftpParams> {
             updateSchema = !newSchema.equals(schema);
             schema = newSchema;
         } else {
-            if (!ri.schema.equals(schema)) {
+            if (!schema.equals(ri.schema)) {
                 log.warning("  - Detected schema '" + schema + "' is different from the one of the metadata in the catalog '" + ri.schema + "'. Using the detected one.");
                 updateSchema = true;
             }
