@@ -42,6 +42,7 @@
     "gnHumanizeTimeService",
     "$window",
     "getBsTableLang",
+    "gnUtilityService",
     function (
       $scope,
       $routeParams,
@@ -53,7 +54,8 @@
       $compile,
       gnHumanizeTimeService,
       $window,
-      getBsTableLang
+      getBsTableLang,
+      gnUtilityService
     ) {
       $scope.filter = {};
       $scope.selections = [];
@@ -61,6 +63,8 @@
       $scope.selectionFilter = "";
       $scope.groupLinkFilter = null;
       $scope.groupOwnerIdFilter = null;
+
+      var escapeHtml = gnUtilityService.escapeHtml;
 
       $http.get("../api/selections").then(function (r) {
         Object.keys(r.data).map(function (k) {
@@ -220,7 +224,7 @@
                   "<div><i class='fa fa-fw fa-2x " +
                   _class +
                   "'><p class='hidden'>" +
-                  _key +
+                  escapeHtml(_key) +
                   "</p></i></div>"
                 );
               }.bind(this)
@@ -233,7 +237,10 @@
               filterControl: "input",
               filterControlPlaceholder: "",
               formatter: function (val, row) {
-                return "<a href='" + row.url + "' target='_blank'>" + row.url + "</a>";
+                var escapedUrl = escapeHtml(row.url);
+                return (
+                  "<a href='" + escapedUrl + "' target='_blank'>" + escapedUrl + "</a>"
+                );
               }.bind(this)
             },
             {
@@ -248,7 +255,13 @@
                     null,
                     true
                   );
-                  return '<div title="' + date.title + '">' + date.value + "</div>";
+                  return (
+                    '<div title="' +
+                    escapeHtml(date.title) +
+                    '">' +
+                    escapeHtml(date.value) +
+                    "</div>"
+                  );
                 } else {
                   return "";
                 }
@@ -262,9 +275,9 @@
               formatter: function (val, row) {
                 if (row.linkStatus && row.linkStatus[0]) {
                   return (
-                    row.linkStatus[0].statusValue +
+                    escapeHtml(row.linkStatus[0].statusValue) +
                     (row.linkStatus[0].statusInfo != ""
-                      ? ": " + row.linkStatus[0].statusInfo
+                      ? ": " + escapeHtml(row.linkStatus[0].statusInfo)
                       : "")
                   );
                 } else {
@@ -283,11 +296,12 @@
                 var ulElem = "<ul>";
                 for (var i = 0; i < row.records.length; i++) {
                   var record = row.records[i];
+                  var escapedUuid = escapeHtml(record.metadataUuid);
                   var aElem =
                     "<li><a href='catalog.search#/metadata/" +
-                    record.metadataUuid +
+                    escapedUuid +
                     "' target='_blank'>" +
-                    record.metadataUuid +
+                    escapedUuid +
                     "</a></li>";
                   ulElem = ulElem + aElem;
                 }
@@ -301,7 +315,7 @@
                 var key = row.url;
                 return (
                   '<a class="btn btn-xs btn-block btn-default" data-job-key="' +
-                  key +
+                  escapeHtml(key) +
                   '"><icon class="fa fa-fw fa-play"></icon></a>'
                 );
               }.bind(this)
