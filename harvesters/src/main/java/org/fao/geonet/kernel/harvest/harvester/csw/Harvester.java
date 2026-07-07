@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -730,7 +730,7 @@ class Harvester implements IHarvester<HarvestResult> {
             if (modified.length() == 0) modified = null;
             if (log.isDebugEnabled())
                 log.debug("getRecordInfo: adding " + identif + " with modification date " + modified);
-            return new RecordInfo(identif, modified);
+            return new RecordInfo(identif, modified, schema, null);
         } catch (Exception e) {
             log.warning("Skipped record not in supported format : " + name);
         }
