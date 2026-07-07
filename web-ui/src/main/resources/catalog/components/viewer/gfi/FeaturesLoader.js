@@ -24,7 +24,9 @@
 (function () {
   goog.provide("gn_featurestable_loader");
 
-  var module = angular.module("gn_featurestable_loader", []);
+  goog.require("gn_utility_service");
+
+  var module = angular.module("gn_featurestable_loader", ["gn_utility_service"]);
 
   var linkTpl =
     '<span class="fa-stack">' +
