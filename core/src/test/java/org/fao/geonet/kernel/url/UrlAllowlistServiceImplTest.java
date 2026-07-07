@@ -116,4 +116,73 @@ public class UrlAllowlistServiceImplTest {
         assertTrue(service.isUrlAllowed("https://example.org/a.rdf", allowlist));
         assertTrue(service.isUrlAllowed("https://other.org/b.rdf", allowlist));
     }
+
+    /**
+     * A host wildcard must be anchored to the host: the literal that follows {@code *} in the
+     * host part appearing later in the path must not make the URL match.
+     */
+    @Test
+    public void hostWildcardDoesNotSpillIntoPath() {
+        String allowlist = "https://*.example.org/*";
+        assertFalse(service.isUrlAllowed("https://evil.org/.example.org/vocab.rdf", allowlist));
+        assertFalse(service.isUrlAllowed("https://evil.org/?x=.example.org/", allowlist));
+    }
+
+    /**
+     * The host is taken from the parsed URL, not the raw authority, so a userinfo prefix cannot
+     * be used to make an untrusted host look trusted.
+     */
+    @Test
+    public void rejectsUserinfoHostSpoofing() {
+        String allowlist = "https://trusted.example.org/*";
+        assertFalse(service.isUrlAllowed("https://trusted.example.org@evil.org/vocab.rdf", allowlist));
+        assertFalse(service.isUrlAllowed("https://trusted.example.org:pass@evil.org/vocab.rdf", allowlist));
+    }
+
+    /**
+     * An exact host pattern must not match a host that merely has the allowed host as a prefix
+     * or suffix.
+     */
+    @Test
+    public void anchorsHostBoundaries() {
+        String allowlist = "https://example.org/*";
+        assertFalse(service.isUrlAllowed("https://example.org.evil.com/vocab.rdf", allowlist));
+        assertFalse(service.isUrlAllowed("https://notexample.org/vocab.rdf", allowlist));
+    }
+
+    @Test
+    public void matchesSchemeWildcard() {
+        String allowlist = "http*://vocabs.example.org/*";
+        assertTrue(service.isUrlAllowed("http://vocabs.example.org/a.rdf", allowlist));
+        assertTrue(service.isUrlAllowed("https://vocabs.example.org/a.rdf", allowlist));
+        assertFalse(service.isUrlAllowed("ftp://vocabs.example.org/a.rdf", allowlist));
+    }
+
+    @Test
+    public void matchesWhenPatternHasNoPath() {
+        String allowlist = "https://vocabs.example.org";
+        assertTrue(service.isUrlAllowed("https://vocabs.example.org", allowlist));
+        assertTrue(service.isUrlAllowed("https://vocabs.example.org/deep/path.rdf", allowlist));
+        assertFalse(service.isUrlAllowed("https://other.example.org/a.rdf", allowlist));
+    }
+
+    @Test
+    public void matchesPortWhenSpecifiedInPattern() {
+        String allowlist = "https://vocabs.example.org:8443/*";
+        assertTrue(service.isUrlAllowed("https://vocabs.example.org:8443/a.rdf", allowlist));
+        assertFalse(service.isUrlAllowed("https://vocabs.example.org:9000/a.rdf", allowlist));
+    }
+
+    @Test
+    public void bareWildcardAllowsAnyUrl() {
+        assertTrue(service.isUrlAllowed("https://anything.example.org/a.rdf", "*"));
+        assertTrue(service.isUrlAllowed("ftp://host/path", "*"));
+    }
+
+    @Test
+    public void rejectsUnparseableUrlWhenAllowlistConfigured() {
+        String allowlist = "https://example.org/*";
+        assertFalse(service.isUrlAllowed("not a url", allowlist));
+        assertFalse(service.isUrlAllowed("https://exa mple.org/a.rdf", allowlist));
+    }
 }

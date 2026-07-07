@@ -322,6 +322,17 @@ catalogue from being used to fetch content from arbitrary, untrusted URLs.
 - Lines starting with **`#`** are treated as comments and ignored.
 - If left **empty** (the default), **any URL is allowed**.
 
+Matching is **host-anchored**: the pattern's scheme, host and path are matched separately, so a
+`*` in the host part cannot spill over into the path. For example, `https://*.example.org/*` does
+**not** match `https://evil.org/.example.org/vocab.rdf`. The host is taken from the parsed URL,
+so a userinfo prefix such as `https://trusted.example.org@evil.org/` is matched on its real host
+(`evil.org`) and rejected. Within the **path** part, `*` still matches across `/`, so
+`https://example.org/*` matches arbitrarily deep paths.
+
+- **Always include the scheme** (`https://…`) so the pattern is host-anchored. A pattern without
+  a scheme (for example a bare `*`, meaning "allow any URL") is matched against the whole URL and
+  is **not** host-anchored.
+
 **Examples:**
 ```
 # Only allow this specific vocabulary registry

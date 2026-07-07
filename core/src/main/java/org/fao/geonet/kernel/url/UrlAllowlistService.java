@@ -41,8 +41,12 @@ public interface UrlAllowlistService {
      * @param allowlist the allowlist patterns, one per line. Each pattern may use {@code *} as
      *                  a wildcard matching any sequence of characters (including none), e.g.
      *                  {@code https://example.org/*} or {@code https://*.example.org/vocab/*}.
-     *                  Lines that are blank, or start with {@code #}, are ignored. A blank (or
-     *                  {@code null}) allowlist allows any URL.
+     *                  Matching is host-anchored: for a pattern that includes a scheme
+     *                  ({@code ://}), the scheme, host and path are matched separately, so a
+     *                  {@code *} in the host part cannot spill over into the path (e.g.
+     *                  {@code https://evil.org/.example.org/} does not match
+     *                  {@code https://*.example.org/*}). Lines that are blank, or start with
+     *                  {@code #}, are ignored. A blank (or {@code null}) allowlist allows any URL.
      * @return {@code true} if the allowlist is blank, or if the URL matches at least one
      * allowlist pattern; {@code false} otherwise.
      */
