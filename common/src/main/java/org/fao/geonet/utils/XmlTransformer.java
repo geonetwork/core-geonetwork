@@ -51,6 +51,7 @@ import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class XmlTransformer {
     private TransformerFactory factory;
@@ -142,7 +143,7 @@ public class XmlTransformer {
         transformerFactory.setConfiguration(patchedConfiguration);
 
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        if (AllowlistedFunctionLibrary.ALLOW_LIST.isEmpty()) {
+        if (AllowlistedFunctionLibrary.ALLOW_LIST != null && AllowlistedFunctionLibrary.ALLOW_LIST.isEmpty()) {
             factory.setAttribute(FeatureKeys.ALLOW_EXTERNAL_FUNCTIONS, false);
         } else {
             // custom whitelist
@@ -247,7 +248,93 @@ public class XmlTransformer {
 
     public static class AllowlistedFunctionLibrary implements FunctionLibrary {
         private final FunctionLibrary delegate;
-        private static final List<String> ALLOW_LIST = List.of("org.fao.geonet.util.XslUtil", "org.fao.geonet.api.records.MetadataUtils", "org.fao.geonet.api.records.formatters.SchemaLocalizations");
+        private static final Set<String> ALLOW_LIST = Set.of(
+            "{java:org.fao.geonet.util.XslUtil}parseGml",
+            "{java:org.fao.geonet.util.XslUtil}gmlToGeoJson",
+            "{java:org.fao.geonet.util.XslUtil}addToList",
+            "{java:org.fao.geonet.util.XslUtil}toMultiPolygon",
+            "{java:org.fao.geonet.util.XslUtil}clean",
+            "{java:org.fao.geonet.util.XslUtil}countryMatch",
+            "{java:org.fao.geonet.util.XslUtil}replace",
+            "{java:org.fao.geonet.util.XslUtil}isCasEnabled",
+            "{java:org.fao.geonet.util.XslUtil}getConfigValue",
+            "{java:org.fao.geonet.util.XslUtil}getBuildNumber",
+            "{java:org.fao.geonet.util.XslUtil}getUiConfiguration",
+            "{java:org.fao.geonet.util.XslUtil}getUiConfigurationJsonProperty",
+            "{java:org.fao.geonet.util.XslUtil}toUiConfigArg",
+            "{java:org.fao.geonet.util.XslUtil}escapeForScriptContext",
+            "{java:org.fao.geonet.util.XslUtil}getSettingValue",
+            "{java:org.fao.geonet.util.XslUtil}getNodeName",
+            "{java:org.fao.geonet.util.XslUtil}getNodeId",
+            "{java:org.fao.geonet.util.XslUtil}getNodeLogo",
+            "{java:org.fao.geonet.util.XslUtil}getDiscoveryServiceUuid",
+            "{java:org.fao.geonet.util.XslUtil}getSource",
+            "{java:org.fao.geonet.util.XslUtil}getJsonSettingValue",
+            "{java:org.fao.geonet.util.XslUtil}isAuthenticated",
+            "{java:org.fao.geonet.util.XslUtil}isDisableLoginForm",
+            "{java:org.fao.geonet.util.XslUtil}isShowLoginAsLink",
+            "{java:org.fao.geonet.util.XslUtil}isUserProfileUpdateEnabled",
+            "{java:org.fao.geonet.util.XslUtil}isUserGroupUpdateEnabled",
+            "{java:org.fao.geonet.util.XslUtil}getSecurityProvider",
+            "{java:org.fao.geonet.util.XslUtil}getResourceContainerDescription",
+            "{java:org.fao.geonet.util.XslUtil}getResourceManagementExternalProperties",
+            "{java:org.fao.geonet.util.XslUtil}isAccessibleService",
+            "{java:org.fao.geonet.util.XslUtil}takeUntil",
+            "{java:org.fao.geonet.util.XslUtil}xmlToJson",
+            "{java:org.fao.geonet.util.XslUtil}htmlElement2textReplacer",
+            "{java:org.fao.geonet.util.XslUtil}html2text",
+            "{java:org.fao.geonet.util.XslUtil}html2textNormalized",
+            "{java:org.fao.geonet.util.XslUtil}toWktCoords",
+            "{java:org.fao.geonet.util.XslUtil}posListToWktCoords",
+            "{java:org.fao.geonet.util.XslUtil}wktGeomToBbox",
+            "{java:org.fao.geonet.util.XslUtil}geoJsonGeomToBbox",
+            "{java:org.fao.geonet.util.XslUtil}getIndexField",
+            "{java:org.fao.geonet.util.XslUtil}getIndexFieldById",
+            "{java:org.fao.geonet.util.XslUtil}getCodelistTranslation",
+            "{java:org.fao.geonet.util.XslUtil}iso639_2B_to_iso639_2T",
+            "{java:org.fao.geonet.util.XslUtil}iso639_2T_to_iso639_2B",
+            "{java:org.fao.geonet.util.XslUtil}twoCharLangCode",
+            "{java:org.fao.geonet.util.XslUtil}threeCharLangCode",
+            "{java:org.fao.geonet.util.XslUtil}match",
+            "{java:org.fao.geonet.util.XslUtil}setNoScript",
+            "{java:org.fao.geonet.util.XslUtil}allowScripting",
+            "{java:org.fao.geonet.util.XslUtil}getUserDetails",
+            "{java:org.fao.geonet.util.XslUtil}reprojectCoords",
+            "{java:org.fao.geonet.util.XslUtil}geomToBbox",
+            "{java:org.fao.geonet.util.XslUtil}getRecord",
+            "{java:org.fao.geonet.util.XslUtil}evaluate",
+            "{java:org.fao.geonet.util.XslUtil}getSiteUrl",
+            "{java:org.fao.geonet.util.XslUtil}getPermalink",
+            "{java:org.fao.geonet.util.XslUtil}getDefaultUrl",
+            "{java:org.fao.geonet.util.XslUtil}getDefaultLangCode",
+            "{java:org.fao.geonet.util.XslUtil}getLanguage",
+            "{java:org.fao.geonet.util.XslUtil}encodeForJavaScript",
+            "{java:org.fao.geonet.util.XslUtil}encodeForHTML",
+            "{java:org.fao.geonet.util.XslUtil}md5Hex",
+            "{java:org.fao.geonet.util.XslUtil}encodeForURL",
+            "{java:org.fao.geonet.util.XslUtil}decodeURLParameter",
+            "{java:org.fao.geonet.util.XslUtil}randomId",
+            "{java:org.fao.geonet.util.XslUtil}getMax",
+            "{java:org.fao.geonet.util.XslUtil}getThesaurusDir",
+            "{java:org.fao.geonet.util.XslUtil}getThesaurusIdByTitle",
+            "{java:org.fao.geonet.util.XslUtil}getThesaurusTitleByKey",
+            "{java:org.fao.geonet.util.XslUtil}getThesaurusUriByKey",
+            "{java:org.fao.geonet.util.XslUtil}getIsoLanguageLabel",
+            "{java:org.fao.geonet.util.XslUtil}getKeywordHierarchy",
+            "{java:org.fao.geonet.util.XslUtil}getKeywordValueByUri",
+            "{java:org.fao.geonet.util.XslUtil}getKeywordUri",
+            "{java:org.fao.geonet.util.XslUtil}buildRecordLink",
+            "{java:org.fao.geonet.util.XslUtil}escapeForJson",
+            "{java:org.fao.geonet.util.XslUtil}escapeForEcmaScript",
+            "{java:org.fao.geonet.util.XslUtil}getWebAnalyticsService",
+            "{java:org.fao.geonet.util.XslUtil}getWebAnalyticsJavascriptCode",
+            "{java:org.fao.geonet.api.records.MetadataUtils}getAssociatedAsXml",
+            "{java:org.fao.geonet.api.records.MetadataUtils}isMetadataFieldValueExistingInOtherRecords",
+            "{java:org.fao.geonet.api.records.formatters.SchemaLocalizations}create",
+            "{java:org.fao.geonet.api.records.formatters.SchemaLocalizations}codelist-value-label",
+            "{java:org.fao.geonet.api.records.formatters.SchemaLocalizations}codelist-value-desc",
+            "{java:org.fao.geonet.api.records.formatters.SchemaLocalizations}nodeDesc",
+            "{java:org.fao.geonet.api.records.formatters.SchemaLocalizations}nodeLabel");
 
         public AllowlistedFunctionLibrary(FunctionLibrary delegate) {
             this.delegate = delegate;
@@ -255,7 +342,7 @@ public class XmlTransformer {
 
         @Override
         public boolean isAvailable(StructuredQName structuredQName, int i) {
-            if (ALLOW_LIST.stream().filter(s -> structuredQName.getNamespaceURI().contains(s)).findFirst().isPresent()) {
+            if (ALLOW_LIST.contains(structuredQName.getClarkName())) {
                 return delegate.isAvailable(structuredQName, i);
             } else {
                 return false;
@@ -264,7 +351,7 @@ public class XmlTransformer {
 
         @Override
         public Expression bind(StructuredQName structuredQName, Expression[] expressions, StaticContext staticContext) throws XPathException {
-            if (ALLOW_LIST.stream().filter(s -> structuredQName.getNamespaceURI().contains(s)).findFirst().isPresent()) {
+            if (ALLOW_LIST.contains(structuredQName.getClarkName())) {
                 return delegate.bind(structuredQName, expressions, staticContext);
             } else {
                 return null;
