@@ -450,7 +450,8 @@
           .replace(/</g, "&lt;")
           .replace(/>/g, "&gt;")
           .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#39;");
+          .replace(/'/g, "&#39;")
+          .replace(/=/g, "&#x3D;");
       };
 
       /**
