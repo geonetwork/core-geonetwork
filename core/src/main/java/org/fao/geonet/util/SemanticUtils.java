@@ -42,11 +42,14 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 public class SemanticUtils {
-    @Value("${semantic.server.url:http://localhost:11434/api/embeddings}")
+    @Value("${semantic.server.url:http://localhost:11434/v1/embeddings}")
     private String semanticServerUrl;
 
     @Value("${semantic.server.model:bge-m3}")
     private String semanticServerModel;
+
+    @Value("${semantic.server.apikey:}")
+    private String semanticServerApiKey;
 
     public String buildEmbedding(String text) {
         if (StringUtils.isBlank(text)) {
@@ -61,12 +64,15 @@ public class SemanticUtils {
             connection.setConnectTimeout(10_000);
             connection.setReadTimeout(30_000);
             connection.setRequestProperty("Content-Type", "application/json");
+            if (StringUtils.isNotBlank(semanticServerApiKey)) {
+                connection.setRequestProperty("Authorization", "Bearer " + semanticServerApiKey);
+            }
             connection.setDoOutput(true);
 
             ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode payload = objectMapper.createObjectNode();
             payload.put("model", semanticServerModel);
-            payload.put("prompt", text);
+            payload.put("input", text);
 
             try (OutputStream outputStream = connection.getOutputStream()) {
                 outputStream.write(objectMapper.writeValueAsBytes(payload));
@@ -82,9 +88,10 @@ public class SemanticUtils {
 
             try (InputStream inputStream = connection.getInputStream()) {
                 JsonNode response = objectMapper.readTree(inputStream);
-                JsonNode embedding = response.get("embedding");
-                if (embedding == null || !embedding.isArray()) {
-                    Log.error(Geonet.GEONETWORK, "Semantic embedding response does not contain an embedding array.");
+                JsonNode embedding = extractEmbedding(response);
+                if (embedding == null) {
+                    Log.error(Geonet.GEONETWORK,
+                        "Semantic embedding response does not contain an embedding array.");
                     return "";
                 }
                 return objectMapper.writeValueAsString(embedding);
@@ -97,5 +104,28 @@ public class SemanticUtils {
                 connection.disconnect();
             }
         }
+    }
+
+    static JsonNode extractEmbedding(JsonNode response) {
+        if (response == null || response.isNull()) {
+            return null;
+        }
+
+        JsonNode embedding = response.get("embedding");
+        if (embedding != null && embedding.isArray()) {
+            return embedding;
+        }
+
+        JsonNode data = response.get("data");
+        if (data != null && data.isArray()) {
+            for (JsonNode item : data) {
+                JsonNode itemEmbedding = item.get("embedding");
+                if (itemEmbedding != null && itemEmbedding.isArray()) {
+                    return itemEmbedding;
+                }
+            }
+        }
+
+        return null;
     }
 }

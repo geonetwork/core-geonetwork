@@ -356,6 +356,13 @@
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract', gmd:abstract, $allLanguages)"/>
 
+        <xsl:variable name="embedding" select="util:buildEmbedding(gmd:citation/*/gmd:title/*/text())"/>
+        <xsl:if test="$embedding != ''">
+          <text_vector type="object">
+            <xsl:value-of select="$embedding"/>
+          </text_vector>
+        </xsl:if>
+
         <xsl:for-each select="gmd:characterSet/*[@codeListValue != '']">
           <xsl:copy-of select="gn-fn-index:add-codelist-field(
                                   'cl_resourceCharacterSet', ., $allLanguages)"/>
