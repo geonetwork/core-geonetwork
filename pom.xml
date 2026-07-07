@@ -1651,8 +1651,9 @@
     <es.index.mapping.total_fields.limit>4000</es.index.mapping.total_fields.limit>
     <es.index.ignore_above>2000</es.index.ignore_above>
 
-    <es.index.semantic.server.url>http://localhost:11434/api/embeddings</es.index.semantic.server.url>
+    <es.index.semantic.server.url>http://localhost:11434/v1/embeddings</es.index.semantic.server.url>
     <es.index.semantic.server.model>bge-m3</es.index.semantic.server.model>
+    <es.index.semantic.server.apikey></es.index.semantic.server.apikey>
     <es.index.semantic.server.model.dims>1024</es.index.semantic.server.model.dims>
 
     <!-- If elasticsearch security is on,
