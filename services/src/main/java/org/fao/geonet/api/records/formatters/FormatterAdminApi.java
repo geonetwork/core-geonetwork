@@ -63,10 +63,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.io.Serializable;
 import java.net.URLEncoder;
-import java.nio.file.DirectoryStream;
-import java.nio.file.FileSystem;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -501,6 +498,11 @@ public class FormatterAdminApi extends AbstractFormatService {
 
         Path formatDir = getAndVerifyFormatDir(
             dataDirectory, Params.ID, formatter, schemaDir);
+        Path markerFilePath = formatDir.resolve("untrusted_formatter_bundle");
+        if (!Files.exists(markerFilePath)) {
+            Files.createFile(markerFilePath);
+        }
+
 
         FilePathChecker.verify(file);
         Path toUpdate = formatDir.resolve(file);
@@ -573,6 +575,11 @@ public class FormatterAdminApi extends AbstractFormatService {
                 out.println("but it is recommended to always have the default language localization");
                 out.println("(unless language is fixed in the config.properties)");
             }
+        }
+
+        Path markerFilePath = file.resolve("untrusted_formatter_bundle");
+        if (!Files.exists(markerFilePath)) {
+            Files.createFile(markerFilePath);
         }
     }
 

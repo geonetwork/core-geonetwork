@@ -706,7 +706,7 @@ public class ServiceManager {
                             Path file;
                             try {
                                 //--- first we do the transformation
-                                file = Xml.transformFOP(dataDirectory.getUploadDir(), rootElem, styleSheet.toString());
+                                file = Xml.transformFOP(dataDirectory.getUploadDir(), rootElem, styleSheet);
                             } finally {
                                 timerContext.stop();
                             }

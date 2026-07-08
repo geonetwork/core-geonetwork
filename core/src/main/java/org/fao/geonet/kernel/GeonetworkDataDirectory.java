@@ -31,6 +31,7 @@ import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Log;
+import org.fao.geonet.utils.Xml;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
@@ -810,6 +811,9 @@ public class GeonetworkDataDirectory {
         public GeonetworkDataDirectoryInitializedEvent(ApplicationContext context, GeonetworkDataDirectory dataDirectory) {
             super(dataDirectory);
             this.applicationContext = context;
+            Xml.webappDir = dataDirectory.getWebappDir();
+            Xml.schemaPluginsDir = dataDirectory.getSchemaPluginsDir();
+            Xml.thesauriDir = dataDirectory.getThesauriDir();
         }
 
         public ApplicationContext getApplicationContext() {
