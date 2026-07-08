@@ -6,7 +6,7 @@ GeoNetwork 4.2.17 is a minor release.
 
 ### API changes
 
-- Formatter limits (#9408) (#9411)
+- [Formatter limits](https://github.com/geonetwork/core-geonetwork/pull/9411)
 - [Map viewer / WFS filter / remove unused SLD API endpoints](https://github.com/geonetwork/core-geonetwork/pull/9344)
 
 ## List of changes
