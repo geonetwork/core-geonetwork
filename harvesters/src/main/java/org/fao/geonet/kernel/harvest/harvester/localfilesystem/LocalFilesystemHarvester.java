@@ -31,12 +31,15 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
@@ -54,6 +57,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Harvester for local filesystem.
@@ -245,19 +249,60 @@ public class LocalFilesystemHarvester extends AbstractHarvester<HarvestResult, L
 			return;
 		}
 
-        throw new InterruptedException("Script option is currently disabled.");
-        // TODO: Script MUST be limited to well known ones added by a
-        // catalog admin in the data directory. To be improved
-        //		log.info("Running the before script: " + params.beforeScript);
-        //        List<String> args = new ArrayList<String>(Arrays.asList(params.beforeScript.split(" ")));
-        //        Process process = new ProcessBuilder(args).
-        //				redirectError(ProcessBuilder.Redirect.INHERIT).
-        //				redirectOutput(ProcessBuilder.Redirect.INHERIT).
-        //				start();
-        //		int result = process.waitFor();
-        //		if ( result != 0 ) {
-        //			log.warning("The beforeScript failed with exit value=" + Integer.toString(result));
-        //			throw new RuntimeException("The beforeScript returned an error: " + Integer.toString(result));
-        //		}
+        // Script MUST be limited to well known ones added by a
+        // catalog admin in the data directory.
+        log.info("Checking script: " + params.beforeScript);
+        List<String> args = new ArrayList<String>(Arrays.asList(params.beforeScript.split(" ")));
+        if (isScriptAllowed(args)) {
+            log.info("Running script: " + params.beforeScript);
+            Process process = new ProcessBuilder(args).
+                redirectError(ProcessBuilder.Redirect.INHERIT).
+                redirectOutput(ProcessBuilder.Redirect.INHERIT).
+                start();
+            int result = process.waitFor();
+            if (result != 0) {
+                log.warning("The beforeScript failed with exit value=" + Integer.toString(result));
+                throw new RuntimeException("The beforeScript returned an error: " + Integer.toString(result));
+            }
+        } else {
+            throw new RuntimeException(String.format(
+                "Script %s is not allowed. Only script in the data directory can be triggered.",
+                params.beforeScript));
+        }
 	}
+
+    public boolean isScriptAllowed(List<String> args) {
+        String scriptFile = args.get(0);
+        if(scriptFile == null) {
+            log.warning("The beforeScript can't be null.");
+            return false;
+        }
+        if(scriptFile.contains("..")) {
+            log.warning("The beforeScript can't contains '..'.");
+            return false;
+        }
+
+        GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
+        Path scriptPath = dataDirectory.getConfigDir().resolve(scriptFile);
+        if(!Files.exists(scriptPath)) {
+            log.warning("The beforeScript MUST exists.");
+            return false;
+        } else {
+            args.set(0, scriptPath.toString());
+        }
+
+        List<String> argsWithSemiColon = args
+            .stream()
+            .filter(a -> a.contains(";")
+                || a.contains("|")
+                || a.contains("&")
+                || a.contains("`")
+                || a.contains("$"))
+            .collect(Collectors.toList());
+        if (argsWithSemiColon.size() > 0) {
+            log.warning("The beforeScript can't contains ';|&`$'. Only one script can be triggered with simple arguments.");
+            return false;
+        }
+        return true;
+    }
 }
