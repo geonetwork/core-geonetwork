@@ -64,6 +64,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -616,7 +617,7 @@ public class SiteApi implements ApplicationEventPublisherAware {
         HttpServletRequest request
     ) throws Exception {
         ApiUtils.createServiceContext(request);
-        return ApplicationContextHolder.get().getBean(DataManager.class).isIndexing();
+        return BatchOpsMetadataReindexer.isIndexing();
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -633,10 +634,6 @@ public class SiteApi implements ApplicationEventPublisherAware {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
         boolean reset,
-        @Parameter(description = "Asynchronous mode (only on all records. ie. no selection bucket)",
-            required = false)
-        @RequestParam(required = false, defaultValue = "false")
-        boolean asynchronous,
         @Parameter(description = "Index. By default only remove record index.",
             required = false)
         @RequestParam(required = false, defaultValue = "records")
@@ -652,8 +649,7 @@ public class SiteApi implements ApplicationEventPublisherAware {
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-        DataManager dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
-        boolean isIndexing = dataManager.isIndexing();
+        boolean isIndexing = BatchOpsMetadataReindexer.isIndexing();
 
         if (isIndexing) {
             throw new NotAllowedException(
@@ -669,28 +665,12 @@ public class SiteApi implements ApplicationEventPublisherAware {
 
         if (StringUtils.isEmpty(bucket)) {
             BaseMetadataManager metadataManager = ApplicationContextHolder.get().getBean(BaseMetadataManager.class);
-            metadataManager.synchronizeDbWithIndex(context, false, asynchronous);
+            metadataManager.synchronizeDbWithIndex(context);
         } else {
             searchMan.rebuildIndex(context, false, bucket);
         }
 
         return new HttpEntity<>(HttpStatus.CREATED);
-    }
-
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Index commit",
-        description = "")
-    @RequestMapping(
-        path = "/index/commit",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('Administrator')")
-    public void indexCommit(
-        HttpServletRequest request
-    ) throws Exception {
-        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-        searchMan.forceIndexChanges();
     }
 
 
@@ -736,24 +716,6 @@ public class SiteApi implements ApplicationEventPublisherAware {
         );
         infoIndexDbSynch.put("index.count", countResponse.count());
         return infoIndexDbSynch;
-    }
-
-
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Force to commit pending documents in index.",
-        description = "May be used when indexing task is hanging.")
-    @PutMapping(
-        path = "/index/commit")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Changes committed.")
-    })
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('Administrator')")
-    public void commitIndexChanges(
-    ) throws Exception {
-        ApplicationContextHolder.get()
-            .getBean(EsSearchManager.class)
-            .forceIndexChanges();
     }
 
 
