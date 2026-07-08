@@ -1,0 +1,30 @@
+================================================================================
+===
+=== GeoNetwork 4.2.17: List of changes
+===
+================================================================================
+- Formatter limits (#9408) (#9411)
+- [Backport 4.2.x] Fix GeoNetwork and SFTP harvester NullPointerException when RecordInfo schema is null (#9407)
+- [Backport 4.2.x] Escape HTML content (#9406)
+- Fix CSW harvester NullPointerException when RecordInfo schema is null (#9405)
+- Map viewer / Sanitize layer attribution information and map popover (#9400)
+- Bump org.apache.logging.log4j:log4j-core from 2.24.3 to 2.25.4 (#9398)
+- Bump actions/setup-java from 4.2.1 to 5.4.0 (#9397)
+- Bump actions/checkout from 3.1.0 to 7.0.0 (#9396)
+- Bump org.postgresql:postgresql from 42.7.3 to 42.7.11 (#9389)
+- Bump advanced-security/maven-dependency-submission-action from 4 to 5 (#9388)
+- Bump actions/cache from 4 to 5 (#9386)
+- Bump Jackson to 2.21.4 LTS and manage it with the BOM (#9383)
+- Update ace editor to version 1.44.0 (#9384)
+- Update proj4 to version 2.20.9 (#9381)
+- [Backport 4.2.x] Update moment to 2.30.1 and moment-timezone to 0.6.2 (#9380)
+- Update OpenLayers to version 10.9.0 (#9379)
+- Update jquery-migrate to version 3.6.0 (#9378)
+- [Backport 4.2.x] Update lodash to version 4.18.1 (#9371)
+- User management / User edit should enable the Save button when selecting the 'Is Administrator' checkbox (#9367)
+- [Backport 4.2.x] Fix delete users with metadata user feedback entries associated (#9356)
+- [Backport 4.2.x] Map viewer / WFS filter / remove unused SLD API endpoints (#9344)
+- [Backport 4.2.x] Validate inline UI configuration before initialization (#9340)
+- Ensure consistent access control to formatter admin API (#9347)
+- Metadata editor / fix generate thumbnail from metadata layer when the map background layer is a WMTS layer (#9335)
+- [Backport 4.2.x] GeoNetwork4 harvester / fix NPE when dateStamp is absent from search response (#9330)

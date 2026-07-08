@@ -1,6 +1,6 @@
 ================================================================================
 ===
-=== GeoNetwork 4.2.16-SNAPSHOT: List of changes
+=== GeoNetwork 4.2.16: List of changes
 ===
 ================================================================================
 - Elasticsearch / Proxy / More robust aggregations processing (#9312)

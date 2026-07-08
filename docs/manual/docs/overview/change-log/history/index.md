@@ -12,6 +12,9 @@ This series is under **active use** by our community, with regular improvements,
 
 ### 4.2
 
+- [Version 4.2.17](../version-4.2.17.md)
+- [Version 4.2.16](../version-4.2.16.md)
+- [Version 4.2.15](../version-4.2.15.md)
 - [Version 4.2.14](../version-4.2.14.md)
 - [Version 4.2.13](../version-4.2.13.md)
 - [Version 4.2.12](../version-4.2.12.md)
