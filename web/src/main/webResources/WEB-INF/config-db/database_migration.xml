@@ -424,5 +424,10 @@
         <value>WEB-INF/classes/setup/sql/migrate/v4217/migrate-</value>
       </list>
     </entry>
+    <entry key="4.2.18">
+      <list>
+        <value>WEB-INF/classes/setup/sql/migrate/v4218/migrate-</value>
+      </list>
+    </entry>
   </util:map>
 </beans>
