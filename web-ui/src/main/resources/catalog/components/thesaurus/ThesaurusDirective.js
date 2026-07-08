@@ -256,6 +256,9 @@
           // Max number of tags allowed. Use 1 to restrict to only
           // on keyword.
           maxTags: "@",
+
+          // Max number of tags searched in thesaurus
+          maxSearched: "@",
           thesaurusTitle: "@",
           browsable: "@",
           required: "@"
@@ -460,7 +463,8 @@
                         thesaurusKey: scope.thesaurusKey,
                         dataToExclude: scope.selected,
                         lang: gnLangs.current,
-                        orderById: scope.orderById
+                        orderById: scope.orderById,
+                        max: scope.maxSearched
                       });
 
                     // Init typeahead
