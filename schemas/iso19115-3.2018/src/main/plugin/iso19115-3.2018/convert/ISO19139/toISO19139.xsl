@@ -245,8 +245,9 @@
           </xsl:call-template>
           <xsl:call-template name="writeCodelistElement">
             <xsl:with-param name="elementName" select="'gmd:status'"/>
-            <xsl:with-param name="codeListValue" select="mri:status/mcc:MD_ProgressCode/@codeListValue"/>
             <xsl:with-param name="codeListName" select="'gmd:MD_ProgressCode'"/>
+            <xsl:with-param name="codeListValue" select="mri:status/mcc:MD_ProgressCode/@codeListValue"/>
+            <xsl:with-param name="codeListText" select="mri:status/mcc:MD_ProgressCode/text()"/>
           </xsl:call-template>
           <xsl:apply-templates select="mri:pointOfContact"/>
           <xsl:apply-templates select="mri:resourceMaintenance"/>
@@ -260,6 +261,7 @@
             <xsl:with-param name="elementName" select="'gmd:spatialRepresentationType'"/>
             <xsl:with-param name="codeListName" select="'gmd:MD_SpatialRepresentationTypeCode'"/>
             <xsl:with-param name="codeListValue" select="mri:spatialRepresentationType/mcc:MD_SpatialRepresentationTypeCode/@codeListValue"/>
+            <xsl:with-param name="codeListText" select="mri:spatialRepresentationType/mcc:MD_SpatialRepresentationTypeCode/text()"/>
           </xsl:call-template>
           <xsl:apply-templates select="mri:spatialResolution"/>
           <!-- This is here to handle early adopters of temporalResolution -->
@@ -272,6 +274,7 @@
               <xsl:with-param name="elementName" select="'gmd:characterSet'"/>
               <xsl:with-param name="codeListName" select="'gmd:MD_CharacterSetCode'"/>
               <xsl:with-param name="codeListValue" select="lan:MD_CharacterSetCode/@codeListValue"/>
+              <xsl:with-param name="codeListText" select="lan:MD_CharacterSetCode/text()"/>
             </xsl:call-template>
           </xsl:for-each>
           <xsl:apply-templates select="mri:topicCategory"/>
@@ -305,6 +308,7 @@
             <xsl:with-param name="elementName" select="'srv:couplingType'"/>
             <xsl:with-param name="codeListName" select="'srv:SV_CouplingType'"/>
             <xsl:with-param name="codeListValue" select="srv2:couplingType/srv2:SV_CouplingType/@codeListValue"/>
+            <xsl:with-param name="codeListText" select="srv2:couplingType/srv2:SV_CouplingType/text()"/>
           </xsl:call-template>
           <xsl:apply-templates select="srv2:containsOperations"/>
 
@@ -513,6 +517,7 @@
                 <xsl:with-param name="elementName" select="'gmd:evaluationMethodType'"/>
                 <xsl:with-param name="codeListName" select="'gmd:DQ_EvaluationMethodTypeCode'"/>
                 <xsl:with-param name="codeListValue" select="mdq:evaluation/mdq:DQ_FullInspection/mdq:evaluationMethodType/mdq:DQ_EvaluationMethodTypeCode/@codeListValue"/>
+                <xsl:with-param name="codeListText" select="mdq:evaluation/mdq:DQ_FullInspection/mdq:evaluationMethodType/mdq:DQ_EvaluationMethodTypeCode/text()"/>
               </xsl:call-template>
 
               <xsl:call-template name="writeCharacterStringElement">
@@ -671,6 +676,7 @@
             <xsl:with-param name="elementName" select="'gmd:dateType'"/>
             <xsl:with-param name="codeListName" select="'gmd:CI_DateTypeCode'"/>
             <xsl:with-param name="codeListValue" select="cit:CI_DateTypeCode/@codeListValue"/>
+            <xsl:with-param name="codeListText" select="cit:CI_DateTypeCode/text()"/>
           </xsl:call-template>
         </xsl:for-each>
       </gmd:CI_Date>
@@ -775,7 +781,8 @@
               <xsl:call-template name="writeCodelistElement">
                 <xsl:with-param name="elementName" select="'gmd:role'"/>
                 <xsl:with-param name="codeListName" select="'gmd:CI_RoleCode'"/>
-                  <xsl:with-param name="codeListValue" select="ancestor::cit:CI_Responsibility/cit:role/cit:CI_RoleCode/@codeListValue"/>
+                <xsl:with-param name="codeListValue" select="ancestor::cit:CI_Responsibility/cit:role/cit:CI_RoleCode/@codeListValue"/>
+                <xsl:with-param name="codeListText" select="ancestor::cit:CI_Responsibility/cit:role/cit:CI_RoleCode/text()"/>
               </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
@@ -928,6 +935,7 @@
     <xsl:param name="elementName"/>
     <xsl:param name="codeListName"/>
     <xsl:param name="codeListValue"/>
+    <xsl:param name="codeListText" select="''"/>
     <!-- The correct codeList Location goes here -->
     <xsl:variable name="codeListLocation" select="'http://standards.iso.org/iso/19139/resources/gmxCodelists.xml'"/>
     <xsl:for-each select="$codeListValue">
@@ -944,7 +952,7 @@
             <!-- commented out for testing -->
             <!--<xsl:value-of select="$codeListValue"/>-->
           </xsl:attribute>
-          <xsl:value-of select="current()"/>
+          <xsl:value-of select="if ($codeListText[position()] != '') then $codeListText[position()] else current()"/>
         </xsl:element>
       </xsl:element>
     </xsl:for-each>
