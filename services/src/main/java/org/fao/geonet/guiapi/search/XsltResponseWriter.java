@@ -120,7 +120,7 @@ public class XsltResponseWriter {
 
     public void asPdf(HttpServletResponse response, String fileName) throws Exception {
         GeonetworkDataDirectory dataDirectory = ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class);
-        Path file = Xml.transformFOP(dataDirectory.getUploadDir(), xml, xsl.toString());
+        Path file = Xml.transformFOP(dataDirectory.getUploadDir(), xml, xsl);
         try {
             response.setContentType("application/pdf");
             response.addHeader("Content-Disposition", "attachment; filename=" + fileName);
