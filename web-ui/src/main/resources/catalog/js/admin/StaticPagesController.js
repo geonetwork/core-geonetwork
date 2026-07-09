@@ -171,7 +171,10 @@
           status: "HIDDEN",
           groups: "",
           label: "",
-          sections: []
+          sections: [],
+          showOnNonApproved: true,
+          showOnApproved: true,
+          showWhenWorkflowDisabled: true
         };
 
         $scope.pageApiLink = "";

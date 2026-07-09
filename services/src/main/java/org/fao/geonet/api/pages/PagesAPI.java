@@ -213,6 +213,10 @@ public class PagesAPI {
                 }
             }
 
+            newPage.setShowOnNonApproved(pageProperties.isShowOnNonApproved());
+            newPage.setShowOnApproved(pageProperties.isShowOnApproved());
+            newPage.setShowWhenWorkflowDisabled(pageProperties.isShowWhenWorkflowDisabled());
+
             pageRepository.save(newPage);
             return ResponseEntity.status(HttpStatus.CREATED).body("{}");
         } else {
@@ -296,6 +300,9 @@ public class PagesAPI {
                 newIcon != null ? newIcon : pageToUpdate.getIcon(),
                 CollectionUtils.isNotEmpty(_groups)? _groups: null);
 
+            pageCopy.setShowOnNonApproved(pageProperties.isShowOnNonApproved());
+            pageCopy.setShowOnApproved(pageProperties.isShowOnApproved());
+            pageCopy.setShowWhenWorkflowDisabled(pageProperties.isShowWhenWorkflowDisabled());
             pageRepository.save(pageCopy);
             pageRepository.delete(pageToUpdate);
         } else {
@@ -305,6 +312,9 @@ public class PagesAPI {
             pageToUpdate.setStatus(pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
             pageToUpdate.setLabel(newLabel);
             pageToUpdate.setIcon(newIcon);
+            pageToUpdate.setShowOnNonApproved(pageProperties.isShowOnNonApproved());
+            pageToUpdate.setShowOnApproved(pageProperties.isShowOnApproved());
+            pageToUpdate.setShowWhenWorkflowDisabled(pageProperties.isShowWhenWorkflowDisabled());
 
             pageToUpdate.getGroups().clear();
             if (pageToUpdate.getStatus() == Page.PageStatus.GROUPS || pageToUpdate.getStatus() == Page.PageStatus.GROUPS_AND_ADMIN) {
