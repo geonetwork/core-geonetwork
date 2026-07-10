@@ -29,6 +29,14 @@ To add new static pages go to **Admin Console** -->  **Settings** -->  **Static 
 
 - **Page section**: Section of the page to display the link. Currently implemented sections are `TOP` (top menu of the main page), `FOOTER` (footer of the main page), and `RECORD_VIEW_MENU` (toolbar shown on the record view page).
 
+- **Workflow visibility (`RECORD_VIEW_MENU` only)**: Controls whether a page is shown for each workflow state.
+
+  - `showWhenWorkflowDisabled`
+  - `showOnApproved`
+  - `showOnNonApproved`
+
+  These options default to `true` (backward compatible).
+
 - **Status**: Defines which users can see the link.
 
     - **Visible only to the administrator**
@@ -123,4 +131,3 @@ As with the top toolbar, insert a page as a simple menu using the page identifie
 ## Change the static pages order in the footer
 
 The order of the footer pages can be configured in **Admin Console** -->  **Settings** -->  **User interface**, in the **Footer custom menu items** section.
-
