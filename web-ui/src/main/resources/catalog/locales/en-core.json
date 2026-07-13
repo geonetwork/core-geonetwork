@@ -591,6 +591,7 @@
     "options": "Options",
     "metadataInfoReport": "Metadata information",
     "metadataErrorReport": "Metadata errors",
+    "pasteFromClipboard": "Paste the text from the clipboard",
     "copyToClipboard": "Copy the text to the clipboard",
     "textCopied": "Text has been copied to the clipboard.",
     "metadataApproved": "Metadata approved.",
