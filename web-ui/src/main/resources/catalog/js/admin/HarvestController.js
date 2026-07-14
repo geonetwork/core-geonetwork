@@ -91,7 +91,7 @@
       $scope.loadHarvesters = function () {
         $scope.isLoadingHarvester = true;
         $scope.harvesters = null;
-        return $http.get("admin.harvester.list?_content_type=json&id=-1").then(
+        return $http.get("../api/harvesters?id=-1").then(
           function (response) {
             var data = response.data;
 
@@ -140,10 +140,7 @@
         isPolling = true;
 
         $http
-          .get(
-            "admin.harvester.list?onlyInfo=true&_content_type=json&id=" +
-              runningHarvesters.join("&id=")
-          )
+          .get("../api/harvesters?onlyInfo=true&id=" + runningHarvesters.join("&id="))
           .then(
             function (response) {
               var data = response.data;
