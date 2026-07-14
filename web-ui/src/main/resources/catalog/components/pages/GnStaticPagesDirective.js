@@ -154,15 +154,10 @@
            */
           function shouldShowPage(page) {
             if (!page) return false;
-            if (
-              $scope.section === "record_view_menu" &&
-              $scope.context &&
-              $scope.context.currentRecord
-            ) {
-              var currentRecord = $scope.context.currentRecord;
-              if (!currentRecord.isWorkflowEnabled())
+            if ($scope.section === "record_view_menu" && $scope.context) {
+              if (!$scope.context.isWorkflowEnabled)
                 return page.showWhenWorkflowDisabled === true;
-              if (currentRecord.mdStatus == 2) return page.showOnApproved === true;
+              if ($scope.context.mdStatus == 2) return page.showOnApproved === true;
               return page.showOnNonApproved === true;
             }
             return true;
@@ -281,14 +276,10 @@
               }
             );
 
-            // Rebuild visibility-dependent menu items when context or any nested value changes.
-            $scope.$watch(
-              "context",
-              function () {
-                rebuildMenu();
-              },
-              true
-            );
+            // Rebuild menu when any context field changes.
+            $scope.$watch("context", function () {
+              rebuildMenu();
+            }, true);
           }
         }
       };
