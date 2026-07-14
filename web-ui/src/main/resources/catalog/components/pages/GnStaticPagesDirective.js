@@ -162,7 +162,7 @@
               var currentRecord = $scope.context.currentRecord;
               if (!currentRecord.isWorkflowEnabled())
                 return page.showWhenWorkflowDisabled === true;
-              if (currentRecord.mdStatus === "2") return page.showOnApproved === true;
+              if (currentRecord.mdStatus == 2) return page.showOnApproved === true;
               return page.showOnNonApproved === true;
             }
             return true;
