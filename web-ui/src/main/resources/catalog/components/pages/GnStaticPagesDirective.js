@@ -277,9 +277,13 @@
             );
 
             // Rebuild menu when any context field changes.
-            $scope.$watch("context", function () {
-              rebuildMenu();
-            }, true);
+            $scope.$watch(
+              "context",
+              function () {
+                rebuildMenu();
+              },
+              true
+            );
           }
         }
       };
