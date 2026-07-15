@@ -1220,6 +1220,17 @@ As for most of GeoNetwork, the output of this rule can be localized to different
 </strings>
 ```
 
+##### Available parameters in schematron rules
+
+When GeoNetwork executes a compiled schematron, the following parameters are automatically passed to the XSL and can be referenced inside `<sch:rule>` blocks using `$paramName`:
+
+| Parameter       | Type    | Description                                                                 |
+|-----------------|---------|-----------------------------------------------------------------------------|
+| `lang`          | string  | The two or three letter language code of the current user session (e.g. `eng`). Use this to return localised messages. |
+| `rule`          | string  | The file name of the compiled schematron XSL (e.g. `schematron-rules-iso.xsl`). |
+| `thesaurusDir`  | string  | Absolute path to the GeoNetwork thesaurus directory. Useful for rules that need to validate against controlled vocabularies. |
+| `metadataId`    | integer | The internal database identifier of the metadata record being validated. Useful for rules that need to look up related information. |
+
 Procedure for adding schematron rules, working within the schematrons directory:
 
 1.  Place your schematron rules in 'rules'. Naming convention is 'schematron-rules-<suffix>.sch' eg. `schematron-rules-iso-mcp.sch`. Place localized strings for the rule assertions into 'rules/loc/<language_prefix>'.
