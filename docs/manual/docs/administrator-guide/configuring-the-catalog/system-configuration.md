@@ -356,6 +356,13 @@ Allows to configure the zip export of metadata records and their attachments.
 
 -   **Total size of attachments allowed in zip export (MB)** Maximum total size of attachments allowed in zip export (in MB). If the total size of attachments linked to the selected metadata is above this value, exporting as zip (with attachments) is not allowed. Leave empty for no limit.
 
+## Metadata workflow
+
+The following settings control what metadata can be published when the metadata workflow is active. They are found under `Administration` --> `Settings` --> `Metadata Workflow`.
+
+-   **Allow publication of invalid metadata** When disabled, only metadata that passes all required XSD and schematron validation rules can be published. When enabled, metadata can be published regardless of its validation status. Templates are always exempt from this check, as they are typically incomplete by design.
+-   **Allow publication of non-approved metadata** When disabled, only metadata with an `Approved` workflow status can be published. When enabled, metadata can be published regardless of its workflow status. Templates are always exempt from this check, as they are not expected to go through the approval workflow.
+
 ## Harvesting
 
 *Allow editing on harvested records*: Enables/Disables editing of harvested records in the catalogue. By default, harvested records cannot be edited.
