@@ -137,3 +137,134 @@ By default, GeoNetwork expects Elasticsearch to be running at <http://localhost:
   ```
 
 Once the configuration is complete, you will need to restart the application.
+
+
+## Using semantic search with Elasticsearch
+
+To use semantic search with Elasticsearch, one option is to run a model to compute embeddings at index and search time. 
+
+The main benefits of the hybrid search are:
+* when a lexical search does not return any results, the semantic search can still find records that are semantically related to the query terms.
+* it can improve the ranking of the results by combining the lexical and semantic scores.
+* it can support multilingual search by using a model that can compute embeddings for multiple languages.
+
+
+### Setting up the model
+
+This model (local or not) computes embeddings for the text fields of the records and stores them in Elasticsearch.
+For the time being, only the record title is used to compute embeddings.
+
+Then, at search time, the same model is used to compute embeddings for the query terms. Then the hybrid search combines a lexical search and a semantic (vector) search in Elasticsearch.
+Computing embeddings has an overhead at index and search time, but it allows to find records that are semantically related to the query terms.
+
+The following example uses [Ollama](https://ollama.com/) to run a local model `bge-m3` using Docker.
+Create a `docker-compose.yml` file with the following content:
+
+```yaml
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    entrypoint: [ "/bin/sh", "-c" ]
+    command:
+      - |
+        ollama serve &
+        echo "Waiting for Ollama server..."
+        while ! curl -s http://localhost:11434/api/tags > /dev/null; do sleep 1; done
+        echo "Pulling bge-m3 model..."
+        ollama pull bge-m3
+        echo "Model ready! Keeping server alive..."
+        wait
+volumes:
+  ollama_data:
+```
+
+and then run the following command to start the Ollama server:
+
+```shell
+docker-compose up -d
+```
+
+Once the Ollama server is running, you can check the model is available with http://localhost:11434/api/tags.
+Then, you can configure GeoNetwork to use it for semantic search by setting the following properties in ```WEB-INF/config.properties```:
+
+```properties
+semantic.server.url=http://localhost:11434/v1/embeddings
+semantic.server.model=bge-m3
+semantic.server.apikey=
+```
+
+Depending on the model you are using, you may need to change the vector dimension in the index configuration file. For example, the `bge-m3` model uses 1024 dimensions.
+
+```json
+   "properties": {
+      "text_vector": {
+        "type": "dense_vector",
+        "dims": 1024
+      }
+```
+
+Once updated, you need to recreate the index and reindex your records from the admin console.
+
+
+### Searching
+
+When searching a [KNN search](https://www.elastic.co/docs/solutions/search/vector/knn) is used in combination with the standard search.
+
+Searching for "rivière en afrique" will return the "Hydrological basins of Africa" record even if the words "rivière" or "afrique" are not present in the record title.
+
+Explanation of the score for this search is the following:
+
+```json
+{
+  "hits": {
+    "hits": [
+      {
+        "_id": "da165110-88fd-11da-a88f-000d939bc5d8",
+        "_explanation": {
+          "value": 0.7646189,
+          "description": "sum of:",
+          "details": [
+              {
+                  "value": 0.7646189,
+                  "description": "sum of:",
+                  "details": [
+                      {
+                          "value": 0.7646189,
+                          "description": "within top k documents",
+                          "details": []
+                      }
+                  ]
+              },
+              {
+                  "value": 0.0,
+                  "description": "match on required clause, product of:",
+                  "details": [
+                      {
+                          "value": 0.0,
+                          "description": "# clause",
+                          "details": []
+                      },
+                      {
+                          "value": 1.0,
+                          "description": "FieldExistsQuery [field=_primary_term]",
+                          "details": []
+                      }
+                  ]
+              }
+          ]
+      },
+```
+
+The total score is the sum of the KNN score (0.7646189) and the standard search score (0.0). 
+The KNN score is computed based on the similarity between the query embedding and the record embedding, 
+while the standard search score is based on the presence of query terms in the record fields.
+
+
+### Indexing
+
+For the time being only the main language record title is used to compute embeddings (see `index.xsl` for each schema).

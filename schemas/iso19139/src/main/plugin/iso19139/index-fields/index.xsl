@@ -356,7 +356,7 @@
 
         <xsl:copy-of select="gn-fn-index:add-multilingual-field('resourceAbstract', gmd:abstract, $allLanguages)"/>
 
-        <xsl:variable name="embedding" select="util:buildEmbedding(gmd:citation/*/gmd:title/*/text())"/>
+        <xsl:variable name="embedding" select="util:buildEmbedding(gmd:citation/*/gmd:title/gco:CharacterString/text())"/>
         <xsl:if test="$embedding != ''">
           <text_vector type="object">
             <xsl:value-of select="$embedding"/>
