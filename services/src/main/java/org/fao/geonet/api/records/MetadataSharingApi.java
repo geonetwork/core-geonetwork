@@ -549,7 +549,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware {
 
             boolean sharingChanges = false;
 
-            boolean allowPublishInvalidMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD);
+            boolean allowPublishInvalidMd = sm.getValueAsBool(Settings.METADATA_PUBLICATION_ALLOW_PUBLISH_INVALID_MD);
             boolean allowPublishNonApprovedMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD);
 
             boolean isMdWorkflowEnable = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);

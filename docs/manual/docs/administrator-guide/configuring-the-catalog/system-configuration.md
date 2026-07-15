@@ -339,16 +339,37 @@ Allows to configure the user profile allowed to delete published metadata.
 
 ![](img/metadata-delete.png)
 
+## Metadata workflow
+
+Allows to configure the metadata approval workflow (record life cycle). See [Life cycle](../../user-guide/workflow/life-cycle.md) for details about how the workflow is used.
+
+-   **Enable workflow** Enables the metadata approval workflow. When enabled, editors work on a draft copy of approved records and changes must be submitted and approved before they become visible to users outside the owner group. The default value is disabled.
+-   **Activate workflow for record created in** Restricts the groups for which the workflow is automatically activated when a record is created. Choose `Any group` to activate it for all groups, or `Selected groups` to provide a regular expression matching the group names where records must be set to draft status automatically. eg. `MYOCEAN-.*` to match all groups starting with `MYOCEAN-`, `GROUP1|GROUP2` to match `GROUP1` or `GROUP2`.
+-   **Allow submission/approval of invalid metadata** Allows the submission/approval of metadata that is not valid according to xsd or schematron rules. The default value is enabled.
+-   **Allow publication of non-approved metadata** Allows the publication of metadata that is not approved. The default value is enabled.
+
 ## Metadata publication
 
-Allows to configure the required user profile to publish and un-publish metadata.
+Allows to configure the publication of metadata records.
 
-The configured profile is evaluated on the metadata owner group (per-group role), not the user's global profile. The user must have exactly this profile in the record owner group. For example, with `Reviewer`, only users who are `Reviewer` in the owner group are allowed (not `UserAdmin`). Global `Administrator` is always allowed.
+The settings in this section apply whether or not the metadata approval workflow is enabled.
+
+The required user profile is evaluated on the metadata owner group (per-group role), not the user's global profile. The user must have exactly this profile in the record owner group. For example, with `Reviewer`, only users who are `Reviewer` in the owner group are allowed (not `UserAdmin`). Global `Administrator` is always allowed.
 
 -   **Required profile to publish metadata** Profile required to publish metadata, evaluated in the record owner group (`Reviewer` or `Administrator`). The default value is `Reviewer`.
 -   **Required profile to un-publish metadata** Profile required to un-publish metadata, evaluated in the record owner group (`Reviewer` or `Administrator`). The default value is `Reviewer`.
+-   **Allow publication of invalid metadata** Allows the publication of metadata that is not valid according to xsd or schematron rules. When disabled, a record that is invalid cannot be published to the `All` group. The default value is enabled.
+-   **Automatic unpublication of invalid metadata** Automatically unpublishes metadata that, once edited, becomes not valid according to xsd or schematron rules. The default value is disabled.
 
 ![](img/metadata-publication.png)
+
+## Metadata save
+
+Allows to configure the behaviour when a metadata record is saved and the editor is closed.
+
+This setting applies whether or not the metadata approval workflow is enabled.
+
+-   **Force validation on metadata save** When enabled, the validation of the metadata is forced (and its validation status stored) each time the record is saved and the editor is closed. The default value is disabled.
 
 ## Metadata selection - zip export
 
