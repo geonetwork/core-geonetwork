@@ -23,14 +23,23 @@
 
 package org.fao.geonet.api.registries.vocabularies;
 
+import com.sun.net.httpserver.HttpServer;
+import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
+import org.fao.geonet.kernel.Thesaurus;
+import org.fao.geonet.kernel.ThesaurusManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
@@ -41,6 +50,10 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.http.HttpSession;
+import java.net.InetSocketAddress;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.fao.geonet.csw.common.Csw.NAMESPACE_DC;
@@ -48,26 +61,40 @@ import static org.fao.geonet.csw.common.Csw.NAMESPACE_DCT;
 import static org.fao.geonet.kernel.rdf.Selectors.RDF_NAMESPACE;
 import static org.fao.geonet.kernel.rdf.Selectors.SKOS_NAMESPACE;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * export CATALOG=http://localhost:8080/geonetwork
- * export CATALOGUSER=admin
- * export CATALOGPASS=admin
- * rm -f /tmp/cookie;
- * curl -s -c /tmp/cookie -o /dev/null -H "accept: application/json" "$CATALOG/srv/api/me";
- * export TOKEN=`grep XSRF-TOKEN /tmp/cookie | cut -f 7`;
- * curl -H "accept: application/json" -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie "$CATALOG/srv/api/me"
- * <p>
- * curl -X POST -H "X-XSRF-TOKEN: $TOKEN" --user $CATALOGUSER:$CATALOGPASS -b /tmp/cookie -F 'file=@reftax_SIH_20201216.csv' "http://localhost:8080/geonetwork/srv/api/registries/vocabularies/import/csv?importAsThesaurus=true&thesaurusTitle=Taxons&thesaurusNs=https://registry.ifremer.fr/taxref/&languages=en&languages=fr&conceptIdColumn=ID&conceptLabelColumn=NAME&conceptBroaderColumn=PARENT_TAXON_NAME_FK&encoding=ISO-8859-1"
- */
 public class KeywordsApiTest extends AbstractServiceIntegrationTest {
 
     public static final int USER_ID = 42;
 
     @Autowired
     private SpringLocalServiceInvoker invoker;
+
+    @Autowired
+    private ThesaurusManager thesaurusMan;
+
+    @Autowired
+    private SettingManager settingManager;
+
+    /**
+     * Thesauri are registered in {@link ThesaurusManager}'s in-memory map, which lives for the
+     * whole Spring test context (not per-test), so a thesaurus uploaded by a previous run of a
+     * test is still registered on the next run and {@code addThesaurus} rejects it as a
+     * duplicate. Remove any leftover registration so the test is idempotent.
+     */
+    private void removeThesaurusIfExists(String thesaurusKey) throws Exception {
+        Thesaurus thesaurusObject = thesaurusMan.getThesaurusByName(thesaurusKey);
+        if (thesaurusObject != null) {
+            Path file = thesaurusObject.getFile();
+            thesaurusMan.remove(thesaurusKey);
+            if (file != null && Files.exists(file)) {
+                IO.deleteFile(file, false, Geonet.THESAURUS);
+            }
+        }
+    }
 
     @Autowired
     private WebApplicationContext wac;
@@ -200,7 +227,6 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
         invoker.invoke(request, response);
         assertEquals(200, response.getStatus());
 
-
         Element thesaurus = Xml.loadString(response.getContentAsString(), false);
 
         Element scheme = (Element) thesaurus.getChildren("ConceptScheme", SKOS_NAMESPACE).get(0);
@@ -213,42 +239,172 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void testImportOntologyToSkos() throws Exception {
+        String thesaurusKey = "external.theme.mobility-theme";
+        // Guard against a leftover registration from a previous run of this test.
+        removeThesaurusIfExists(thesaurusKey);
+
+        try {
+            createServiceContext();
+            User user = new User().setId(USER_ID);
+            HttpSession session = loginAs(user);
+            MockHttpSession mockHttpSession = loginAsAdmin();
+
+            MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest(session.getServletContext());
+            request.setRequestURI("/srv/api/registries/vocabularies");
+            MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "mobility-theme.owl",
+                null,
+                getClass().getClassLoader().getResourceAsStream("mobility-theme.owl"));
+            request.addFile(file);
+            request.setSession(session);
+            request.setParameter("type", "external");
+            request.setParameter("dir", "theme");
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            invoker.invoke(request, response);
+            assertEquals(200, response.getStatus());
+
+
+            MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+            MvcResult result = mockMvc.perform(get("/srv/api/registries/vocabularies/" + thesaurusKey)
+                    .accept("application/xml")
+                    .session(mockHttpSession))
+                .andExpect(status().isOk())
+                .andReturn();
+
+            Element thesaurus = Xml.loadString(result.getResponse().getContentAsString(), false);
+            Element scheme = (Element) thesaurus.getChildren("ConceptScheme", SKOS_NAMESPACE).get(0);
+            assertEquals(
+                "https://w3id.org/mobilitydcat-ap/mobility-theme", scheme.getAttributeValue("about", RDF_NAMESPACE));
+            assertEquals(
+                "Mobility Theme", scheme.getChildText("title", NAMESPACE_DCT));
+
+            List concepts = thesaurus.getChildren("Concept", SKOS_NAMESPACE);
+            assertEquals(121, concepts.size());
+        } finally {
+            // Leave no state behind for subsequent runs of this test.
+            removeThesaurusIfExists(thesaurusKey);
+        }
+    }
+
+    /**
+     * Uploading a thesaurus file (POST) that is well-formed XML, but not valid RDF/XML,
+     * must be rejected with a clear error instead of being silently accepted.
+     */
+    @Test
+    public void testUploadThesaurusFileRejectsInvalidRdfXml() throws Exception {
         createServiceContext();
         User user = new User().setId(USER_ID);
         HttpSession session = loginAs(user);
-        MockHttpSession mockHttpSession = loginAsAdmin();
 
         MockMultipartHttpServletRequest request = new MockMultipartHttpServletRequest(session.getServletContext());
         request.setRequestURI("/srv/api/registries/vocabularies");
+        // Well-formed XML, but not valid RDF/XML: a node element in RDF/XML may only contain
+        // property elements, not direct text content (verified against Apache Jena's RDF/XML
+        // parser, which throws a RiotException for this exact shape).
+        String notRdfXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<catalog>Not an RDF/XML document at all, just text.</catalog>";
         MockMultipartFile file = new MockMultipartFile(
             "file",
-            "mobility-theme.owl",
-            null,
-            getClass().getClassLoader().getResourceAsStream("mobility-theme.owl"));
+            "not-rdf.xml",
+            "application/xml",
+            notRdfXml.getBytes(StandardCharsets.UTF_8));
         request.addFile(file);
         request.setSession(session);
         request.setParameter("type", "external");
         request.setParameter("dir", "theme");
+
         MockHttpServletResponse response = new MockHttpServletResponse();
-        invoker.invoke(request, response);
-        assertEquals(200, response.getStatus());
+        try {
+            invoker.invoke(request, response);
+            fail("Expected upload of a non RDF/XML file to be rejected");
+        } catch (WebApplicationException e) {
+            assertTrue("Error message should mention the file is not a valid RDF/XML file, was: " + e.getMessage(),
+                e.getMessage().contains("not a valid RDF/XML file"));
+        }
+    }
 
+    /**
+     * Uploading a thesaurus from a URL (PUT, urlUpload case) that returns well-formed XML, but not
+     * valid RDF/XML (e.g. an unrelated document or an error page), must be rejected with a clear
+     * error instead of being silently accepted.
+     */
+    @Test
+    public void testUploadThesaurusFromUrlRejectsInvalidRdfXml() throws Exception {
+        createServiceContext();
+        User user = new User().setId(USER_ID);
+        HttpSession session = loginAs(user);
 
-        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        MvcResult result = mockMvc.perform(get("/srv/api/registries/vocabularies/external.theme.mobility-theme")
-                .accept("application/xml")
-                .session(mockHttpSession))
-            .andExpect(status().isOk())
-            .andReturn();
+        // Well-formed XML, but not valid RDF/XML: a node element in RDF/XML may only contain
+        // property elements, not direct text content (verified against Apache Jena's RDF/XML
+        // parser, which throws a RiotException for this exact shape).
+        String notRdfXml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
+            + "<catalog>Not an RDF/XML document at all, just text.</catalog>";
+        byte[] notRdfXmlBytes = notRdfXml.getBytes(StandardCharsets.UTF_8);
 
-        Element thesaurus = Xml.loadString(result.getResponse().getContentAsString(), false);
-        Element scheme = (Element) thesaurus.getChildren("ConceptScheme", SKOS_NAMESPACE).get(0);
-        assertEquals(
-            "https://w3id.org/mobilitydcat-ap/mobility-theme", scheme.getAttributeValue("about", RDF_NAMESPACE));
-        assertEquals(
-            "Mobility Theme", scheme.getChildText("title", NAMESPACE_DCT));
+        HttpServer httpServer = HttpServer.create(new InetSocketAddress("localhost", 0), 0);
+        httpServer.createContext("/not-rdf.rdf", exchange -> {
+            exchange.getResponseHeaders().add("Content-Type", "application/xml");
+            exchange.sendResponseHeaders(200, notRdfXmlBytes.length);
+            exchange.getResponseBody().write(notRdfXmlBytes);
+            exchange.close();
+        });
+        httpServer.start();
+        try {
+            String url = "http://localhost:" + httpServer.getAddress().getPort() + "/not-rdf.rdf";
 
-        List concepts = thesaurus.getChildren("Concept", SKOS_NAMESPACE);
-        assertEquals(121, concepts.size());
+            MockHttpServletRequest request = new MockHttpServletRequest(session.getServletContext());
+            request.setMethod("PUT");
+            request.setRequestURI("/srv/api/registries/vocabularies");
+            request.setSession(session);
+            request.setParameter("url", url);
+            request.setParameter("type", "external");
+            request.setParameter("dir", "theme");
+
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            try {
+                invoker.invoke(request, response);
+                fail("Expected upload of a non RDF/XML URL to be rejected");
+            } catch (WebApplicationException e) {
+                assertTrue("Error message should mention the file is not a valid RDF/XML file, was: " + e.getMessage(),
+                    e.getMessage().contains("not a valid RDF/XML file"));
+            }
+        } finally {
+            httpServer.stop(0);
+        }
+    }
+
+    /**
+     * When the thesaurus URL allowlist is configured, uploading from a URL that doesn't match
+     * any allowlist pattern must be rejected, without even attempting to fetch the URL.
+     */
+    @Test
+    public void testUploadThesaurusFromUrlRejectsUrlNotInAllowlist() throws Exception {
+        createServiceContext();
+        User user = new User().setId(USER_ID);
+        HttpSession session = loginAs(user);
+
+        settingManager.setValue(Settings.SYSTEM_METADATA_THESAURUS_URL_ALLOWLIST, "https://trusted.example.org/*");
+        try {
+            MockHttpServletRequest request = new MockHttpServletRequest(session.getServletContext());
+            request.setMethod("PUT");
+            request.setRequestURI("/srv/api/registries/vocabularies");
+            request.setSession(session);
+            request.setParameter("url", "https://not-in-allowlist.example.org/vocab.rdf");
+            request.setParameter("type", "external");
+            request.setParameter("dir", "theme");
+
+            MockHttpServletResponse response = new MockHttpServletResponse();
+            try {
+                invoker.invoke(request, response);
+                fail("Expected upload from a URL not in the allowlist to be rejected");
+            } catch (NotAllowedException e) {
+                assertTrue("Error message should mention the URL is not allowed, was: " + e.getMessage(),
+                    e.getMessage().contains("is not allowed"));
+            }
+        } finally {
+            // Restore the default (empty allowlist = allow all) so other tests are unaffected.
+            settingManager.setValue(Settings.SYSTEM_METADATA_THESAURUS_URL_ALLOWLIST, "");
+        }
     }
 }
