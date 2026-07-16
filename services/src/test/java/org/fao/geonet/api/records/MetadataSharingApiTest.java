@@ -27,11 +27,11 @@ import com.google.gson.Gson;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.records.model.GroupOperations;
 import org.fao.geonet.api.records.model.GroupPrivilege;
+import org.fao.geonet.api.records.model.MetadataStatusParameter;
 import org.fao.geonet.api.records.model.SharingParameter;
 import org.fao.geonet.api.records.model.SharingResponse;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.GroupType;
-import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.MetadataValidation;
@@ -658,9 +658,8 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     }
 
     /**
-     * Verifies that publishing a TEMPLATE succeeds even when the metadata has a required invalid
-     * validation record and {@code allowPublishInvalidMd} is {@code false}.
-     * Templates are exempt from validation checks.
+     * Verifies that publishing a TEMPLATE succeeds even when invalid and {@code allowPublishInvalidMd} is {@code false}.
+     * Templates are exempt from validation checks during publish operations.
      */
     @Test
     public void publishInvalidTemplateSucceedsWhenPublishInvalidMdDisabled() throws Exception {
@@ -696,42 +695,55 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     }
 
     /**
-     * Verifies that publishing a TEMPLATE succeeds even when its workflow status is DRAFT
-     * (non-approved) and {@code allowPublishNonApprovedMd} is {@code false}.
-     * Templates are exempt from approval status checks.
+     * Verifies that approving a TEMPLATE succeeds even when invalid and {@code allowSubmitApproveInvalidMd} is {@code false}.
+     * Templates are exempt from validation checks during submit/approve operations.
      */
     @Test
-    public void publishNonApprovedTemplateSucceedsWhenPublishNonApprovedMdDisabled() throws Exception {
-        // Disable publishing of non-approved metadata.
-        settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD, false);
+    public void approveInvalidTemplateSucceedsWhenAllowInvalidSubmissionApprovalDisabled() throws Exception {
+        // Disable submission/approval of invalid metadata.
+        settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD, false);
+        // The /status workflow endpoint requires workflow to be enabled for the record group.
+        settingManager.setValue(Settings.METADATA_WORKFLOW_ENABLE, true);
+        settingManager.setValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP, ".*");
 
         // Change the metadata type to TEMPLATE.
         Metadata template = metadataRepository.findById(metadataId).get();
         template.getDataInfo().setType(MetadataType.TEMPLATE);
         metadataRepository.save(template);
 
-        // Assign a DRAFT (non-approved) workflow status so the check would fail for normal metadata.
-        MetadataStatus draftStatus = new MetadataStatus();
-        draftStatus.setMetadataId(metadataId);
-        draftStatus.setChangeDate(new ISODate());
-        draftStatus.setUserId(1);
-        draftStatus.setChangeMessage("draft status for template publish test");
-        draftStatus.setOwner(1);
-        draftStatus.setUuid(metadataUuid);
-        draftStatus.setStatusValue(statusValueRepository.findById(Integer.parseInt(StatusValue.Status.DRAFT)).get());
-        metadataStatusRepository.save(draftStatus);
+        // Persist a required, INVALID validation record so the check would fail for normal metadata.
+        MetadataValidation invalidValidation = new MetadataValidation()
+            .setId(new MetadataValidationId(metadataId, "xsd"))
+            .setStatus(MetadataValidationStatus.INVALID)
+            .setRequired(true)
+            .setNumTests(1)
+            .setNumFailures(1);
+        metadataValidationRepository.save(invalidValidation);
 
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAs(reviewerUser);
 
-        // Publishing the template must succeed (HTTP 204) despite the non-approved status.
-        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/publish")
-                .session(mockHttpSession))
-            .andExpect(status().isNoContent());
+        // Create the status parameter with the approved status
+        MetadataStatusParameter statusParameter = new MetadataStatusParameter();
+        statusParameter.setStatus(Integer.parseInt(StatusValue.Status.APPROVED));
 
-        // Confirm publication privileges were actually granted.
-        List<OperationAllowed> ops = operationAllowedRepository.findAllById_MetadataId(metadataId);
-        boolean published = ops.stream().anyMatch(op -> ReservedGroup.isReserved(op.getId().getGroupId()));
-        assertTrue("Template should be published even when its workflow status is not approved", published);
+        // Convert to JSON
+        Gson gson = new Gson();
+        String json = gson.toJson(statusParameter);
+
+        // Approving the template must succeed despite the invalid validation record.
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/status")
+                .session(mockHttpSession)
+                .content(json)
+                .contentType(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated());
+
+        // Confirm the template was actually approved.
+        List<MetadataStatus> statuses = metadataStatusRepository.findAllByMetadataId(metadataId, Sort.unsorted());
+        boolean approved = statuses.stream()
+            .map(MetadataStatus::getStatusValue)
+            .map(StatusValue::getId)
+            .anyMatch(id -> id.equals(Integer.parseInt(StatusValue.Status.APPROVED)));
+        assertTrue("Template should be approved even when it has an invalid validation record", approved);
     }
 }

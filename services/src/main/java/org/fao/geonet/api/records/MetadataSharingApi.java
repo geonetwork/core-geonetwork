@@ -1353,14 +1353,13 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware {
 
     /**
      * For privileges to {@link ReservedGroup#all} group, check if it's allowed or not to publish invalid or
-     * non-approved metadata. Templates (including sub-templates and templates of sub-templates) are exempt from
-     * these checks, as they are typically incomplete and not expected to be valid or approved.
+     * non-approved metadata. Templates are excluded from the validation check as they are incomplete by design.
      *
      * @param context                   the current service context
      * @param messages                  the resource bundle for error messages
      * @param metadata                  the metadata record being published
      * @param allowPublishInvalidMd     whether publishing invalid metadata is allowed (excluding templates)
-     * @param allowPublishNonApprovedMd whether publishing non-approved metadata is allowed (excluding templates)
+     * @param allowPublishNonApprovedMd whether publishing non-approved metadata is allowed
      * @throws Exception if the metadata is invalid or not approved and publishing is not allowed
      */
     private void checkCanPublishToAllGroup(ServiceContext context, ResourceBundle messages, AbstractMetadata metadata,

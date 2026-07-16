@@ -367,4 +367,3 @@ The following settings control what metadata can be published when the metadata 
 ## Harvesting
 
 *Allow editing on harvested records*: Enables/Disables editing of harvested records in the catalogue. By default, harvested records cannot be edited.
-
