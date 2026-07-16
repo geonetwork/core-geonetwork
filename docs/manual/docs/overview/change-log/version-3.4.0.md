@@ -10,7 +10,7 @@
 -   Editor / Better local XLink support
 -   Editor / Add a virtual all thesaurus to easily pick up keywords from all thesaurus
 -   Editor / Support for extent and format subtemplate
--   Editor / Improved configuration (eg. sidepanel, embedded directive, \...)
+-   Editor / Improved configuration (eg. sidepanel, embedded directive, ...)
 -   Subtemplate / [Init extent subtemplate from shapefiles](https://github.com/geonetwork/core-geonetwork/pull/2096)
 -   Subtemplate can now have a validation status
 -   Dashboards and statistics are now using Elasticsearch & Kibana
@@ -20,4 +20,4 @@
 
 ## Removed features
 
-and more \... see [3.4.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.4.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.4.0+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.4.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.4.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.4.0+is%3Aclosed+is%3Apr) for full details.

@@ -13,6 +13,7 @@
   xmlns:gn-fn-metadata="http://geonetwork-opensource.org/xsl/functions/metadata"
   xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
   xmlns:saxon="http://saxon.sf.net/"
+  xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
   extension-element-prefixes="saxon"
   exclude-result-prefixes="#all">
 
@@ -20,7 +21,7 @@
   <!-- Readonly elements -->
   <xsl:template mode="mode-iso19115-3.2018"
                 match="mdb:metadataIdentifier/mcc:MD_Identifier/mcc:code|
-                             mdb:metadataLinkage/*[cit:function/*/@codeListValue = 'completeMetadata']/cit:linkage|
+                             mdb:metadataLinkage/*[cit:function/*/@codeListValue = 'completeMetadata']/cit:linkage[not(lan:PT_FreeText)]|
                              mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:date|
                              mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:dateType"
                 priority="2000">
@@ -199,6 +200,7 @@
 
     <xsl:variable name="xpath" select="gn-fn-metadata:getXPath(.)"/>
     <xsl:variable name="isoType" select="if (../@gco:isoType) then ../@gco:isoType else ''"/>
+    <xsl:variable name="readonly" select="ancestor-or-self::node()[@xlink:href] != ''"/>
 
     <xsl:call-template name="render-boxed-element">
       <xsl:with-param name="label"
@@ -212,7 +214,8 @@
           data-hright-ref="_{gex:eastBoundLongitude/gco:Decimal/gn:element/@ref}"
           data-hbottom-ref="_{gex:southBoundLatitude/gco:Decimal/gn:element/@ref}"
           data-htop-ref="_{gex:northBoundLatitude/gco:Decimal/gn:element/@ref}"
-          data-lang="lang"></div>
+          data-lang="lang"
+          data-read-only="{$readonly}"></div>
       </xsl:with-param>
     </xsl:call-template>
   </xsl:template>

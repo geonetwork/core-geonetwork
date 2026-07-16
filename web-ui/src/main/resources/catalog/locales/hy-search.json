@@ -159,6 +159,7 @@
     "exportCSV": "Արտահանում (CSV)",
     "exportPDF": "Արտահանում (PDF)",
     "exportMEF": "Արտահանում (ZIP)",
+    "exportMEF-excludeAttachments": "Export (ZIP) without attachments",
     "welcomeText": "Այստեղ դուք կգտնեք տվյալներ, ծառայություններ և քարտեզներ և ավելին:",
     "searchOver": "Որոնեք <strong>{{գրառումներ}}</strong> տվյալների հավաքածուներ, ծառայություններ և քարտեզներ, ...",
     "browseBy": "Թերթիր ըստ",
@@ -559,5 +560,8 @@
     "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Զգուշացում / Դաշտային ռեսուրսTemporalDateRange / Ստորին միջակայքի սահմանը {{lowerBound}} չի կարող մեծ լինել վերին սահմանից {{upperBound}}: Ամսաթվերի միջակայքը ինդեքսավորված չէ:",
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Զգուշացում / Դաշտային ռեսուրսTemporalDateRange / Ստորին միջակայքի սահմանը {{lowerBound}} չի կարող մեծ լինել վերին սահմանից {{upperBound}}:",
     "indexingErrorMsg-schemaNotRegistered": "Գրառում {{գրառում}} / «{{schema}}» սխեման գրանցված չէ այս կատալոգում: Տեղադրեք այն կամ հեռացրեք այդ գրառումները: Գրառումը ինդեքսավորվում է ինդեքսավորման սխալի դրոշակ:",
-    "indexingErrorMsg-indexingStyleSheetError": "Ինդեքսավորման ոճաթերթը պարունակում է սխալներ՝ {{հաղորդագրություն }}\n Մետատվյալների նշումը որպես _indexingError=1 ինդեքսում:"
+    "indexingErrorMsg-indexingStyleSheetError": "Ինդեքսավորման ոճաթերթը պարունակում է սխալներ՝ {{հաղորդագրություն }}\n Մետատվյալների նշումը որպես _indexingError=1 ինդեքսում:",
+    "createAnonymousAccess": "Share unpublished record preview",
+    "deleteAnonymousAccess": "Revoke unpublished record preview",
+    "anonymousAccessTo": "Anonymous access to {{title}}"
 }

@@ -5,7 +5,7 @@ In some situations, a dataset is part of a temporal or spatial collections of re
 -   Corine Land Cover
     -   Corine Land Cover 2002
     -   Corine Land Cover 2012
-    -   \...
+    -   ...
 
 Parent/child relations can be set on ISO and Dublin Core records. 
 

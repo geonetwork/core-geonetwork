@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2025 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,11 +24,13 @@
 package org.fao.geonet.kernel.search;
 
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch._types.Refresh;
 import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
+import co.elastic.clients.elasticsearch.core.bulk.BulkResponseItem;
 import co.elastic.clients.elasticsearch.core.bulk.UpdateOperation;
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import co.elastic.clients.elasticsearch.indices.ExistsRequest;
@@ -54,6 +56,10 @@ import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.index.OverviewIndexFieldUpdater;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -179,11 +185,6 @@ public class EsSearchManager implements ISearchManager {
     @Autowired
     private OverviewIndexFieldUpdater overviewFieldUpdater;
 
-    private int commitInterval = 200;
-
-    // public for test, to be private or protected
-    public Map<String, String> listOfDocumentsToIndex =
-        Collections.synchronizedMap(new HashMap<>());
     private Map<String, String> indexList;
 
     private Path getXSLTForIndexing(Path schemaDir, MetadataType metadataType) {
@@ -377,13 +378,12 @@ public class EsSearchManager implements ISearchManager {
                     .scriptedUpsert(true)
                     .upsert(Map.of())
                     .script(script -> script
-                        .inline(inlineScript -> inlineScript
-                            .lang("painless")
-                            .source(scriptSource.toString())
-                        )
+                        .source(scriptSource.toString())
+                        .lang("painless")
                     )
                 )
-        );
+            );
+
 
         UpdateOperation addFieldRequestOperation = UpdateOperation.of(
             b -> b.id(id)
@@ -398,6 +398,7 @@ public class EsSearchManager implements ISearchManager {
         BulkRequest bulkRequest = BulkRequest.of(
             b -> b.index(defaultIndex)
                 .operations(bulkOperationList)
+                .refresh(Refresh.True)
         );
 
         return client.getClient().bulk(bulkRequest);
@@ -412,7 +413,7 @@ public class EsSearchManager implements ISearchManager {
                 .doc(fields)
         );
 
-        client.getAsynchClient()
+        client.getAsyncClient()
             .update(updateRequest, ObjectNode.class)
             .whenComplete((response, exception) -> {
                 if (exception != null) {
@@ -442,7 +443,7 @@ public class EsSearchManager implements ISearchManager {
     public void index(Path schemaDir, Element metadata, String id,
                       Multimap<String, Object> dbFields,
                       MetadataType metadataType,
-                      boolean forceRefreshReaders,
+                      IIndexSubmitter indexSubmittor,
                       IndexingMode indexingMode) throws Exception {
 
         Element docs = new Element("doc");
@@ -468,36 +469,40 @@ public class EsSearchManager implements ISearchManager {
 
         String jsonDocument = mapper.writeValueAsString(doc);
 
-        if (forceRefreshReaders) {
-            Map<String, String> document = new HashMap<>();
-            document.put(id, jsonDocument);
-            final BulkResponse bulkItemResponses = client.bulkRequest(defaultIndex, document);
-            checkIndexResponse(bulkItemResponses, document);
-            overviewFieldUpdater.process(id);
-        } else {
-            listOfDocumentsToIndex.put(id, jsonDocument);
-            if (listOfDocumentsToIndex.size() == commitInterval) {
-                sendDocumentsToIndex();
+        indexSubmittor.submitToIndex(id, jsonDocument, this);
+    }
+
+    public void handleIndexResponse(BulkResponse bulkResponse, Map<String, String> documents) throws IOException {
+        try {
+            checkIndexResponse(bulkResponse, documents);
+        } finally {
+            for (String uuid : documents.keySet()) {
+                overviewFieldUpdater.process(uuid);
             }
         }
     }
 
-    private void sendDocumentsToIndex() {
-        Map<String, String> documents = new HashMap<>(listOfDocumentsToIndex);
-        listOfDocumentsToIndex.clear();
-        if (!documents.isEmpty()) {
-            try {
-                final BulkResponse bulkItemResponses = client
-                    .bulkRequest(defaultIndex, documents);
-                checkIndexResponse(bulkItemResponses, documents);
-            } catch (Exception e) {
-                LOGGER.error(
-                    "An error occurred while indexing {} documents in current indexing list. Error is {}.",
-                    listOfDocumentsToIndex.size(), e.getMessage());
-            } finally {
-                // TODO: Trigger this async ?
-                documents.keySet().forEach(uuid -> overviewFieldUpdater.process(uuid));
+    public void handleDeletionResponse(BulkResponse bulkResponse, List<String> documents) {
+        if (bulkResponse.errors()) {
+            StringBuilder builder = new StringBuilder();
+            for (BulkResponseItem item : bulkResponse.items()) {
+                if (item.error() != null) {
+                    builder.append("Failed to delete document ").append(item.id()).append(" from index: ").append(item.error()).append("\n");
+                }
             }
+            throw new RuntimeException("Some documents could not be deleted from the index!\n" + builder.toString());
+        }
+    }
+
+    public void handleDeletionResponse(DeleteByQueryResponse deleteByQueryResponse, String query) {
+        if (!deleteByQueryResponse.failures().isEmpty()) {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
+
+            throw new RuntimeException(String.format(
+                "Error during removal of query %s. Errors are '%s'.", query, stringBuilder.toString()
+            ));
         }
     }
 
@@ -552,7 +557,8 @@ public class EsSearchManager implements ISearchManager {
             });
 
             if (!listErrorOfDocumentsToIndex.isEmpty()) {
-                BulkResponse response = client.bulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
+                BulkRequest bulkRequest = client.buildIndexBulkRequest(defaultIndex, listErrorOfDocumentsToIndex);
+                BulkResponse response = client.getClient().bulk(bulkRequest);
                 if (response.errors()) {
                     LOGGER.error("Failed to save error documents {}.",
                         Arrays.toString(errorDocumentIds.toArray()));
@@ -561,9 +567,9 @@ public class EsSearchManager implements ISearchManager {
         }
     }
 
-    private static ImmutableSet<String> booleanFields;
-    private static ImmutableSet<String> arrayFields;
-    private static ImmutableSet<String> booleanValues;
+    private static final ImmutableSet<String> booleanFields;
+    private static final ImmutableSet<String> arrayFields;
+    private static final ImmutableSet<String> booleanValues;
 
     static {
         arrayFields = ImmutableSet.<String>builder()
@@ -601,6 +607,8 @@ public class EsSearchManager implements ISearchManager {
             .add("MD_LegalConstraintsUseLimitationObject")
             .add("MD_SecurityConstraintsUseLimitation")
             .add("MD_SecurityConstraintsUseLimitationObject")
+            .add("MD_SecurityConstraintsUserNote")
+            .add("MD_SecurityConstraintsUserNoteObject")
             .add("overview")
             .add("sourceDescriptionObject")
             .add("MD_ConstraintsUseLimitation")
@@ -739,11 +747,6 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Override
-    public void forceIndexChanges() {
-        sendDocumentsToIndex();
-    }
-
-    @Override
     public boolean rebuildIndex(ServiceContext context,
                                 boolean reset, String bucket) throws Exception {
         IMetadataIndexer metadataIndexer = context.getBean(IMetadataIndexer.class);
@@ -759,9 +762,7 @@ public class EsSearchManager implements ISearchManager {
             SelectionManager sm = SelectionManager.getManager(session);
 
             synchronized (sm.getSelection(bucket)) {
-                for (Iterator<String> iter = sm.getSelection(bucket).iterator();
-                     iter.hasNext(); ) {
-                    String uuid = iter.next();
+                for (String uuid : sm.getSelection(bucket)) {
                     for (AbstractMetadata metadata : metadataRepository.findAllByUuid(uuid)) {
                         String indexKey = uuid;
                         if (metadata instanceof MetadataDraft) {
@@ -776,8 +777,10 @@ public class EsSearchManager implements ISearchManager {
                     }
                 }
             }
-            for (String id : listOfIdsToIndex) {
-                metadataIndexer.indexMetadata(id, false, IndexingMode.full);
+            try (BatchingIndexSubmitter indexSubmittor = new BatchingIndexSubmitter(listOfIdsToIndex.size())) {
+                for (String id : listOfIdsToIndex) {
+                    metadataIndexer.indexMetadata(id, indexSubmittor, IndexingMode.full);
+                }
             }
         } else {
             final Specification<Metadata> metadataSpec =
@@ -786,11 +789,12 @@ public class EsSearchManager implements ISearchManager {
             final List<Integer> metadataIds = metadataRepository.findAllIdsBy(
                 Specification.where(metadataSpec)
             );
-            for (Integer id : metadataIds) {
-                metadataIndexer.indexMetadata(id + "", false, IndexingMode.full);
+            try (BatchingIndexSubmitter indexSubmittor = new BatchingIndexSubmitter(metadataIds.size())) {
+                for (Integer id : metadataIds) {
+                    metadataIndexer.indexMetadata(id + "", indexSubmittor, IndexingMode.full);
+                }
             }
         }
-        sendDocumentsToIndex();
         return true;
     }
 
@@ -873,7 +877,7 @@ public class EsSearchManager implements ISearchManager {
 
 
     public void clearIndex() throws Exception {
-        client.deleteByQuery(defaultIndex, "*:*");
+        deleteByQuery("*:*", DirectDeletionSubmitter.INSTANCE);
     }
 
     static ImmutableSet<String> docsChangeIncludedFields;
@@ -931,19 +935,13 @@ public class EsSearchManager implements ISearchManager {
     }
 
     @Override
-    public void delete(String txt) throws Exception {
-        client.deleteByQuery(defaultIndex, txt);
+    public void deleteByQuery(String query, IDeletionSubmitter submitter) throws Exception {
+        submitter.submitQueryToIndex(query, this);
     }
 
     @Override
-    public void delete(List<Integer> metadataIds) throws Exception {
-        metadataIds.forEach(metadataId -> {
-            try {
-                this.delete(String.format("+id:%d", metadataId));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+    public void deleteByUuid(String uuid, IDeletionSubmitter submitter) throws Exception {
+        submitter.submitUUIDToIndex(uuid, this);
     }
 
     public long getNumDocs(String query) throws Exception {
@@ -980,10 +978,6 @@ public class EsSearchManager implements ISearchManager {
             ApplicationContextHolder.get().getBean(EsSearchManager.class).getDefaultIndex(),
             analyzer,
             fieldValue);
-    }
-
-    public boolean isIndexing() {
-        return listOfDocumentsToIndex.size() > 0;
     }
 
     public boolean isIndexWritable(String indexName) throws IOException, ElasticsearchException {

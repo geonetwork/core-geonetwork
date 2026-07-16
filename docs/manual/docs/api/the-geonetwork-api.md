@@ -8,7 +8,7 @@ Reference:
 
 ## GeoNetwork API Access
 
-GeoNetwork API is provided as a self-describing OpenAPI document, browsable in html form, and avaialble as JSON or XML for script interactions.
+GeoNetwork API is provided as a self-describing OpenAPI document, browsable in HTML form, and available as JSON or XML for script interactions.
 
 1. The API is available from the **Admin Console --> Catalogue admin tools** page:
     
@@ -70,7 +70,7 @@ In version `4.0.1` onward the API description is provided using OpenAPI specific
 
 - The GeoNetwork API version number is available to scripts at in the `json` or `xml` info description.
 
-- Previously in GeoNetwork 3 the GeoNetwork API version was included in the path, ``/srv/api/0.1/\...``
+- Previously in GeoNetwork 3 the GeoNetwork API version was included in the path, ``/srv/api/0.1/...``
 
 !!! warning
 

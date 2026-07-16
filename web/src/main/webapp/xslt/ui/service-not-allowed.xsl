@@ -32,7 +32,7 @@
         <h1 class="text-danger">
           <xsl:value-of select="$i18n/serviceNotAllowedTitle"/>
         </h1>
-        <p class="text-danger">
+        <p class="text-danger" ng-non-bindable="">
           <xsl:variable name="referer" select="if (normalize-space(/root/request/referer[1]) = 'UNKNOWN')
                         then '' else /root/request/referer"/>
 

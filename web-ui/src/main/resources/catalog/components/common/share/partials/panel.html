@@ -10,16 +10,35 @@
   privilegesBatchAlert
 </p>
 
-<!--Search inpup-->
-<div class="col-md-4 input-group input-group-sm gn-searchgroup-input">
-  <span class="input-group-addon" translate>filter</span>
-  <input
-    type="text"
-    class="form-control input-sm"
-    ng-model="pFilter"
-    ng-model-options="{debounce: 300}"
-    placeholder="{{'filterGroup' | translate}}"
-  />
+<!--Search and legend-->
+<div class="row">
+  <div class="col-md-4 gn-nopadding-left">
+    <div class="input-group input-group-sm gn-searchgroup-input">
+      <span class="input-group-addon" translate>filter</span>
+      <input
+        type="text"
+        class="form-control input-sm"
+        ng-model="pFilter"
+        ng-model-options="{debounce: 300}"
+        placeholder="{{'filterGroup' | translate}}"
+      />
+    </div>
+  </div>
+  <div class="col-md-8 text-right text-muted">
+    <div class="gn-legend">
+      <div class="gn-legend-item">
+        <span class="gn-legend-box gn-legend-info"></span>
+        <span>{{'reservedGroup' | translate}}</span>
+      </div>
+      <div
+        class="gn-legend-item"
+        data-ng-if="(privileges | filter:{reserved: false} | filter:{recordPrivilege: true}).length > 0"
+      >
+        <span class="gn-legend-box gn-legend-warning"></span>
+        <span>{{'recordPrivilegeGroup' | translate}}</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- TODO: simplify layout if only one group -->
@@ -116,7 +135,7 @@
           data-ng-repeat="g in privileges | filter:{reserved: false} | filter:pFilterFn | orderBy:sortGroups:sorter.reverse"
           data-ng-show="(onlyUserGroup == true && g.userGroup == true) ||
                        onlyUserGroup == false"
-          data-ng-class="g.restricted ? 'warning' : ''"
+          data-ng-class="g.recordPrivilege ? 'warning' : ''"
         >
           <td><strong>{{::('group-' + g.group) | translate}}</strong></td>
           <td data-ng-repeat="key in ::operations" class="text-center">

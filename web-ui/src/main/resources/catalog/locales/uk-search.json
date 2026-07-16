@@ -159,6 +159,7 @@
     "exportCSV": "Експорт (CSV)",
     "exportPDF": "Експорт (PDF)",
     "exportMEF": "Експорт (ZIP)",
+    "exportMEF-excludeAttachments": "Export (ZIP) without attachments",
     "welcomeText": "Тут ви знайдете дані, послуги, карти тощо.",
     "searchOver": "Пошук <strong>{{records}}</strong> наборів даних, служб і карт, ...",
     "browseBy": "Перегляд за",
@@ -559,5 +560,8 @@
     "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Попередження / Поле resourceTemporalDateRange / Нижня межа діапазону {{lowerBound}} не може перевищувати верхню межу {{upperBound}}. Діапазон дат не проіндексовано.",
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Попередження / Поле resourceTemporalDateRange / Нижня межа діапазону {{lowerBound}} не може перевищувати верхню межу {{upperBound}}.",
     "indexingErrorMsg-schemaNotRegistered": "Запис {{record}} / Схема &#39;{{schema}}&#39; не зареєстровано в цьому каталозі. Встановіть його або видаліть ці записи. Запис проіндексовано позначку помилки індексації.",
-    "indexingErrorMsg-indexingStyleSheetError": "Таблиця стилів індексування містить помилки: {{message}}\n Позначення метаданих як _indexingError=1 в індексі."
+    "indexingErrorMsg-indexingStyleSheetError": "Таблиця стилів індексування містить помилки: {{message}}\n Позначення метаданих як _indexingError=1 в індексі.",
+    "createAnonymousAccess": "Share unpublished record preview",
+    "deleteAnonymousAccess": "Revoke unpublished record preview",
+    "anonymousAccessTo": "Anonymous access to {{title}}"
 }
