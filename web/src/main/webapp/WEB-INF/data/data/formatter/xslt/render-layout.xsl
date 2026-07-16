@@ -556,11 +556,13 @@
     <xsl:param name="collapsible" as="xs:boolean" select="true()" required="no"/>
     <xsl:param name="collapsed" as="xs:boolean" select="false()" required="no"/>
 
-    <!-- Matching nodes -->
+    <xsl:variable name="xpath" select="."/>
+
+    <!-- Matching nodes (without context) -->
     <xsl:variable name="nodes">
       <saxon:call-template name="{concat('evaluate-', $schema)}">
         <xsl:with-param name="base" select="$base"/>
-        <xsl:with-param name="in" select="concat('/../', .)"/>
+        <xsl:with-param name="in" select="concat('/../', $xpath)"/>
       </saxon:call-template>
     </xsl:variable>
 
@@ -570,8 +572,28 @@
       </xsl:if>
     </xsl:variable>
 
-    <!-- The matching nodes when using evaluate loose their context, re-calculate it -->
-    <xsl:variable name="originalNodes" select="$metadata//*[some $n in $nodes/* satisfies deep-equal(., $n)]"/>
+    <!--
+    The matching nodes when using evaluate lose their context and the context may be used to get labels.
+    The base can be the root (the metadata document) or a sub element if the field is in a section with forEach.
+
+    * Use deep-equal function to find nodes which are identical to the matching nodes.
+    * Check that those identical nodes are located at the xpath location matching the requested xpath.
+     -->
+    <xsl:variable name="parentForEachSection"
+                  select="ancestor::section[@forEach][1]"/>
+
+    <xsl:variable name="fullXpath"
+                  select="if ($parentForEachSection) then concat($parentForEachSection/@forEach, '/', $xpath) else $xpath"/>
+
+    <!-- May return nodes which are identical but located at another xpath location. -->
+    <xsl:variable name="equalNodes" as="node()*"
+                  select="$metadata//*[some $nodeWithNoContext in $nodes/* satisfies deep-equal(., $nodeWithNoContext)]"/>
+
+    <!-- Filter identical nodes to keep only those located at the right xpath location.
+     XPath using * will never match path matching. Using node without context.
+    This only happens if editor configuration is using *. -->
+    <xsl:variable name="originalNodes"
+                  select="if (contains($xpath, '/*/')) then $nodes else $equalNodes[concat('/', string-join(ancestor-or-self::*/name()[. != 'root'], '/')) = $fullXpath]"/>
 
     <xsl:for-each select="$originalNodes">
       <xsl:apply-templates mode="render-field">
