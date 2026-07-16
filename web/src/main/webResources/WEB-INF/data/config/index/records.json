@@ -1129,6 +1129,10 @@
                 "type": "keyword",
                 "copy_to": ["any.langpor", "organisationName.langpor"]
               },
+              "langswe": {
+                "type": "keyword",
+                "copy_to": ["any.langswe", "organisationName.langswe"]
+              },
               "link": {
                 "type": "keyword"
               }
@@ -1335,6 +1339,17 @@
                   }
                 }
               },
+              "langswe": {
+                "type": "text",
+                "analyzer": "swedish",
+                "copy_to": ["any.langswe"],
+                "fields": {
+                  "keyword": {
+                    "type": "keyword",
+                    "ignore_above": ${es.index.ignore_above}
+                  }
+                }
+              },
               "link": {
                 "type": "keyword"
               }
@@ -1452,6 +1467,10 @@
               "langpor": {
                 "type": "keyword",
                 "copy_to": ["any.langpor"]
+              },
+              "langswe": {
+                "type": "keyword",
+                "copy_to": ["any.langswe"]
               },
               "text": {
                 "type": "keyword"
@@ -1688,6 +1707,10 @@
           "langpor": {
             "type": "text",
             "analyzer": "portuguese"
+          },
+          "langswe": {
+            "type": "text",
+            "analyzer": "swedish"
           }
         }
       },
@@ -1756,6 +1779,10 @@
           "langpor": {
             "type": "keyword",
             "copy_to": ["any.langpor"]
+          },
+          "langswe": {
+            "type": "keyword",
+            "copy_to": ["any.langswe"]
           },
           "link": {
             "type": "keyword"
@@ -2317,6 +2344,9 @@
             "type": "keyword"
           },
           "langpor": {
+            "type": "keyword"
+          },
+          "langswe": {
             "type": "keyword"
           }
         }

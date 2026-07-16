@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -72,7 +73,7 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 
 	@Test
 	public void createAnonymousAccessLink() throws Exception {
-		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context);
 
 		MvcResult result = this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
 						.session(session).accept(MediaType.parseMediaType("application/json")))
@@ -90,7 +91,7 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 
 	@Test
 	public void cannotBindTwoLinksToTheSameMd() throws Exception {
-		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context);
 		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
 						.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk());
@@ -107,7 +108,7 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 
 	@Test
 	public void doesAnonymousAccessLinkExist() throws Exception {
-		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context);
 
 		MvcResult result = this.mockMvc.perform(get("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
 						.session(session).accept(MediaType.parseMediaType("application/json")))
@@ -135,8 +136,8 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 
 	@Test
 	public void listAnonymousAccessLink() throws Exception {
-		AbstractMetadata md1 = injectMetadataInDb(getSampleMetadataXml(), context, true, IndexingMode.full);
-		AbstractMetadata md2 = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md1 = injectMetadataInDb(getSampleMetadataXml(), context, IndexingMode.full);
+		AbstractMetadata md2 = injectMetadataInDb(getSampleMetadataXml(), context);
 		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md1.getUuid())
 						.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk());
@@ -164,7 +165,7 @@ public class AnonymousAccessLinkApiTest extends AbstractServiceIntegrationTest {
 
 	@Test
 	public void deleteAccessLink() throws Exception {
-		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context);
 		this.mockMvc.perform(post("/srv/api/anonymousAccessLink/{uuid}", md.getUuid())
 						.session(session).accept(MediaType.parseMediaType("application/json")))
 				.andExpect(status().isOk())

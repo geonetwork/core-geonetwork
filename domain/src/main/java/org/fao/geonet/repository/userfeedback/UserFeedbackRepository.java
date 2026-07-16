@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -28,7 +28,6 @@ import java.util.UUID;
 import org.fao.geonet.domain.userfeedback.UserFeedback;
 import org.fao.geonet.domain.userfeedback.UserFeedback.UserRatingStatus;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -110,4 +109,14 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, UUID
      * @return the user feedback
      */
     UserFeedback findByUuidAndStatus(String uuid, UserRatingStatus status);
+
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query("update GUF_UserFeedback uf set uf.authorId = null where uf.authorId.id = ?1")
+    int nullifyAuthor(int userId);
+
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query("update GUF_UserFeedback uf set uf.approver = null where uf.approver.id = ?1")
+    int nullifyApprover(int userId);
 }
