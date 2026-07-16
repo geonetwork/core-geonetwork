@@ -1366,15 +1366,9 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware {
     private void checkCanPublishToAllGroup(ServiceContext context, ResourceBundle messages, AbstractMetadata metadata,
                                            boolean allowPublishInvalidMd, boolean allowPublishNonApprovedMd) throws Exception {
 
-        // Templates are typically incomplete and should not be subject to validation or approval checks
-        MetadataType metadataType = metadata.getDataInfo().getType();
-        if (metadataType == MetadataType.TEMPLATE
-            || metadataType == MetadataType.SUB_TEMPLATE
-            || metadataType == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
-            return;
-        }
+        boolean metadataTypeRequiresValidation = metadata.getDataInfo().getType().requiresValidation;
 
-        if (!allowPublishInvalidMd) {
+        if (!allowPublishInvalidMd && metadataTypeRequiresValidation) {
             boolean hasValidation =
                 (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(metadata.getId())) > 0);
 

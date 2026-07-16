@@ -552,9 +552,10 @@ public class MetadataWorkflowApi {
 
         boolean isAllowedSubmitApproveInvalidMd = settingManager
             .getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD);
+        boolean metadataTypeRequiresValidation = metadata.getDataInfo().getType().requiresValidation;
         if (((status.getStatus() == Integer.parseInt(StatusValue.Status.SUBMITTED))
             || (status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED)))
-            && !isAllowedSubmitApproveInvalidMd) {
+            && !isAllowedSubmitApproveInvalidMd && metadataTypeRequiresValidation) {
 
             metadataValidator.doValidate(metadata, context.getLanguage());
             boolean isInvalid = MetadataUtils.retrieveMetadataValidationStatus(metadata, context);
@@ -1373,7 +1374,8 @@ public class MetadataWorkflowApi {
                                                   MetadataProcessingReport report) throws Exception {
         boolean isAllowedSubmitApproveInvalidMd = settingManager
             .getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD);
-        if (!isAllowedSubmitApproveInvalidMd) {
+        boolean metadataTypeRequiresValidation = metadata.getDataInfo().getType().requiresValidation;
+        if (!isAllowedSubmitApproveInvalidMd && metadataTypeRequiresValidation) {
             boolean isInvalid = MetadataUtils.retrieveMetadataValidationStatus(metadata, context);
 
             if (isInvalid) {

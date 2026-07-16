@@ -664,7 +664,7 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
      */
     @Test
     public void publishInvalidTemplateSucceedsWhenPublishInvalidMdDisabled() throws Exception {
-        // Disable publishing of invalid metadata – the strict mode that triggered the bug.
+        // Disable publishing of invalid metadata.
         settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD, false);
 
         // Change the metadata type to TEMPLATE.
@@ -702,7 +702,7 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
      */
     @Test
     public void publishNonApprovedTemplateSucceedsWhenPublishNonApprovedMdDisabled() throws Exception {
-        // Disable publishing of non-approved metadata – the strict mode that triggered the bug.
+        // Disable publishing of non-approved metadata.
         settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_NON_APPROVED_MD, false);
 
         // Change the metadata type to TEMPLATE.

@@ -390,9 +390,10 @@ public class MetadataEditingApi {
             // Automatically change the workflow state after save
             if (isEnabledWorkflow) {
                 boolean isAllowedSubmitApproveInvalidMd = sm.getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD);
+                boolean metadataTypeRequiresValidation = metadata.getDataInfo().getType().requiresValidation;
                 if (((status.equals(StatusValue.Status.SUBMITTED))
                     || (status.equals(StatusValue.Status.APPROVED)))
-                    && !isAllowedSubmitApproveInvalidMd) {
+                    && !isAllowedSubmitApproveInvalidMd && metadataTypeRequiresValidation) {
 
                     if (!forceValidationOnMdSave) {
                         validator.doValidate(metadata, context.getLanguage());
