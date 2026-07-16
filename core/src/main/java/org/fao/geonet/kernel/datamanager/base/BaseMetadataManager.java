@@ -243,7 +243,7 @@ public class BaseMetadataManager implements IMetadataManager {
             }
 
             currentPage++;
-            results = metadataUtils.findIdsAndChangeDates(
+            results = metadataUtils.findAllIdsAndChangeDates(
                 PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortById));
         }
 
