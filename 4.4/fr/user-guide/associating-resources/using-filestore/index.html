@@ -2190,7 +2190,7 @@
 <p class="admonition-title">Version Added</p>
 <p>3.2</p>
 </div>
-<p>If documents are not available, editors can upload attachments to a metadata record. The document is added to the filestore. The filestore can contains any kind of files.</p>
+<p>If documents are not available, editors can upload attachments to a metadata record. The attachment is added to the filestore. The filestore can contain any kind of files.</p>
 <p><img alt="" src="../../../../user-guide/associating-resources/img/filestore.png" /></p>
 <p>To upload a file, click the button and choose a file or drag&amp;drop a file on the button. Files are stored in a folder in the data directory (see <a href="../../../install-guide/customizing-data-directory/">Customizing the data directory</a>). There is one folder per metadata containing:</p>
 <ul>
@@ -2207,6 +2207,9 @@
 <p>A file uploaded in this way will be exported in the metadata export file (MEF). Therefore, its URL will not be automatically added to the metadata. The URL is added when attaching the document to a specific element in the metadata (eg. overview, quality report, legend).</p>
 <h2 id="filestore-configuration">Filestore configuration</h2>
 <p>By default, the maximum file size is set to 100Mb. This limit is set in <code>/services/src/main/resources/config-spring-geonetwork.xml</code> with the parameter <code>maxUploadSize</code>.</p>
+<p>During startup of the application, this limit can be adjusted by adding the following option to <strong>CATALINA_OPTS</strong>. The value is to be specified in bytes, thus, the following example configures a max upload size of 1 GB:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>-Dapi.params.maxUploadSize=1000000000
+</span></code></pre></div>
 <p>Types of attachments allowed to be uploaded can be configured in the system settings.<br />
 See <a href="../../../administrator-guide/configuring-the-catalog/system-configuration/#metadata_configuration">Metadata configuration</a> for more details.</p>
 
