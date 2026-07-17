@@ -633,7 +633,7 @@
                 // that only the service will be updated.
                 $rootScope.$broadcast("StatusUpdated", {
                   title: $translate.instant("linkToServiceError"),
-                  msg: $translate.instant("cantAddLinkToDataset"),
+                  msg: $translate.instant("cantAddLinkToService"),
                   timeout: 0,
                   type: "danger"
                 });
