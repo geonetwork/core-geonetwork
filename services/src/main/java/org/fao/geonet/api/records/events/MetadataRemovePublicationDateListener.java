@@ -46,7 +46,7 @@ public class MetadataRemovePublicationDateListener implements ApplicationListene
     private IMetadataUtils metadataUtils;
 
     @Override
-    public synchronized void onApplicationEvent(MetadataUnpublished event) {
+    public void onApplicationEvent(MetadataUnpublished event) {
         if (!settingManager.getValueAsBool(Settings.SYSTEM_METADATAPRIVS_PUBLICATION_MANAGEPUBLICATIONDATE)) {
             return;
         }

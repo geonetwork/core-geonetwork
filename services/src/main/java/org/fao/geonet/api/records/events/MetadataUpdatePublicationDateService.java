@@ -29,8 +29,11 @@ import org.fao.geonet.api.processing.report.Report;
 import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.kernel.SchemaManager;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,6 +46,12 @@ public class MetadataUpdatePublicationDateService {
         ServiceContext context = ServiceContext.get();
 
         String process = "publicationdate-add";
+        if (!hasProcess(context, md, process)) {
+            // The record schema does not provide the process (only some schemas
+            // such as ISO19115-3 do), so publication date management does not apply.
+            return;
+        }
+
         XsltMetadataProcessingReport report =
             new XsltMetadataProcessingReport(process);
 
@@ -61,6 +70,12 @@ public class MetadataUpdatePublicationDateService {
         ServiceContext context = ServiceContext.get();
 
         String process = "publicationdate-remove";
+        if (!hasProcess(context, md, process)) {
+            // The record schema does not provide the process (only some schemas
+            // such as ISO19115-3 do), so publication date management does not apply.
+            return;
+        }
+
         XsltMetadataProcessingReport report =
             new XsltMetadataProcessingReport(process);
 
@@ -72,6 +87,18 @@ public class MetadataUpdatePublicationDateService {
             throw new RuntimeException(e);
         }
         checkForErrors(report, md);
+    }
+
+    /**
+     * The publication date processes are only provided by some schema plugins (eg. ISO19115-3).
+     * Records whose schema does not provide the process are skipped so that publishing records
+     * of other schemas is not affected.
+     */
+    private boolean hasProcess(ServiceContext context, AbstractMetadata md, String process) {
+        SchemaManager schemaManager = context.getBean(SchemaManager.class);
+        String schema = md.getDataInfo().getSchemaId();
+        Path xslProcessing = schemaManager.getSchemaDir(schema).resolve("process").resolve(process + ".xsl");
+        return Files.exists(xslProcessing);
     }
 
     /**

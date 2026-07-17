@@ -27,7 +27,6 @@ Stylesheet used to add a publication date of a metadata record.
 -->
 <xsl:stylesheet xmlns:geonet="http://www.fao.org/geonetwork"
                 xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
-                xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0"
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
@@ -37,17 +36,20 @@ Stylesheet used to add a publication date of a metadata record.
   <!-- The publication date  -->
   <xsl:param name="publicationDate"/>
 
-  <xsl:template match="mdb:identificationInfo/*/mri:citation/cit:CI_Citation">
+  <xsl:template match="mdb:MD_Metadata">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
       <xsl:copy-of
-        select="cit:title|
-                cit:alternateTitle
+        select="mdb:metadataIdentifier|
+               mdb:defaultLocale|
+               mdb:parentMetadata|
+               mdb:metadataScope|
+               mdb:contact
                "/>
 
       <xsl:choose>
         <xsl:when test="string($publicationDate)">
-          <cit:date>
+          <mdb:dateInfo>
             <cit:CI_Date>
               <cit:date>
                 <gco:DateTime><xsl:value-of select="$publicationDate"/></gco:DateTime>
@@ -56,27 +58,35 @@ Stylesheet used to add a publication date of a metadata record.
                 <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication"/>
               </cit:dateType>
             </cit:CI_Date>
-          </cit:date>
+          </mdb:dateInfo>
 
-          <xsl:apply-templates select="cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue != 'publication']" />
+          <xsl:apply-templates select="mdb:dateInfo[not(cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication')]" />
         </xsl:when>
         <xsl:otherwise>
-          <xsl:apply-templates select="cit:date" />
+          <xsl:apply-templates select="mdb:dateInfo" />
         </xsl:otherwise>
       </xsl:choose>
 
       <xsl:copy-of
-        select=" cit:edition|
-                cit:editionDate|
-                cit:identifier|
-                cit:citedResponsibleParty|
-                cit:presentationForm|
-                cit:series|
-                cit:otherCitationDetails|
-                cit:collectiveTitle|
-                cit:ISBN|
-                cit:ISSN|
-                cit:onlineResource"/>
+        select="mdb:metadataStandard|
+               mdb:metadataProfile|
+               mdb:alternativeMetadataReference|
+               mdb:otherLocale|
+               mdb:metadataLinkage|
+                mdb:spatialRepresentationInfo|
+                mdb:referenceSystemInfo|
+                mdb:metadataExtensionInfo|
+                mdb:identificationInfo|
+                mdb:contentInfo|
+                mdb:distributionInfo|
+                mdb:dataQualityInfo|
+                mdb:resourceLineage|
+                mdb:portrayalCatalogueInfo|
+                mdb:metadataConstraints|
+                mdb:applicationSchemaInfo|
+                mdb:metadataMaintenance|
+                mdb:acquisitionInformation
+               "/>
 
     </xsl:copy>
   </xsl:template>

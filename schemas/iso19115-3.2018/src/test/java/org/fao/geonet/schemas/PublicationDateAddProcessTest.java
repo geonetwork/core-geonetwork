@@ -29,7 +29,6 @@ import org.jdom.Element;
 import org.jdom.Namespace;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,7 +57,7 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
 
         // Check no publication date exists
         assertThat(
-            inputString, hasXPath("count(//cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("0")).withNamespaceContext(ns)
+            inputString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("0")).withNamespaceContext(ns)
         );
 
         // Add publication date
@@ -70,10 +69,10 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
         String resultString = Xml.getString(resultElement);
 
         assertThat(
-            resultString, hasXPath("count(//cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(ns)
+            resultString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(ns)
         );
         assertThat(
-            resultString, hasXPath("//cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']//gco:DateTime/text()", equalTo(newDate)).withNamespaceContext(ns)
+            resultString, hasXPath("//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']//gco:DateTime/text()", equalTo(newDate)).withNamespaceContext(ns)
         );
     }
 
@@ -88,7 +87,7 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
         String midString = Xml.getString(midElement);
 
         assertThat(
-            midString, hasXPath("count(//cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(ns)
+            midString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(ns)
         );
 
         // 2. Replace it with a new one
@@ -98,10 +97,10 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
         String resultString = Xml.getString(resultElement);
 
         assertThat(
-            resultString, hasXPath("count(//cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(ns)
+            resultString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(ns)
         );
         assertThat(
-            resultString, hasXPath("//cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']//gco:DateTime/text()", equalTo(newDate)).withNamespaceContext(ns)
+            resultString, hasXPath("//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']//gco:DateTime/text()", equalTo(newDate)).withNamespaceContext(ns)
         );
     }
 
@@ -114,28 +113,13 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
         params.put("publicationDate", "2020-01-01T00:00:00");
         Element midElement = Xml.transform(inputElement, xslFile, params);
 
-        // Add another one manually
-        Element citation = Xml.selectElement(midElement, "mdb:identificationInfo/*/mri:citation/cit:CI_Citation", new ArrayList<>(ISO19115_3_2018SchemaPlugin.allNamespaces));
-        Namespace citNs = citation.getNamespace();
-        Element date2 = new Element("date", citNs);
-        Element ciDate2 = new Element("CI_Date", citNs);
-        Element dateVal2 = new Element("date", citNs);
-        Element dateTime2 = new Element("DateTime", Namespace.getNamespace("gco", ns.get("gco")));
-        dateTime2.setText("2021-01-01T00:00:00");
-        dateVal2.addContent(dateTime2);
-        ciDate2.addContent(dateVal2);
-        Element dateType2 = new Element("dateType", citNs);
-        Element dateTypeCode2 = new Element("CI_DateTypeCode", citNs);
-        dateTypeCode2.setAttribute("codeListValue", "publication");
-        dateTypeCode2.setAttribute("codeList", "someLocation");
-        dateType2.addContent(dateTypeCode2);
-        ciDate2.addContent(dateType2);
-        date2.addContent(ciDate2);
-        citation.addContent(date2);
+        // Add another publication date manually at metadata level (mdb:dateInfo).
+        // The transformed root element is mdb:MD_Metadata.
+        midElement.addContent(newDateInfo(midElement.getNamespace(), "publication", "2021-01-01T00:00:00"));
 
         String midStringWithTwo = Xml.getString(midElement);
         assertThat(
-            midStringWithTwo, hasXPath("count(//cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("2")).withNamespaceContext(ns)
+            midStringWithTwo, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("2")).withNamespaceContext(ns)
         );
 
         // Now run the process
@@ -145,10 +129,75 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
         String resultString = Xml.getString(resultElement);
 
         assertThat(
-            resultString, hasXPath("count(//cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(ns)
+            resultString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(ns)
         );
         assertThat(
-            resultString, hasXPath("//cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']//gco:DateTime/text()", equalTo(newDate)).withNamespaceContext(ns)
+            resultString, hasXPath("//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']//gco:DateTime/text()", equalTo(newDate)).withNamespaceContext(ns)
         );
+    }
+
+    /**
+     * Regression test: a metadata date whose CI_DateTypeCode has no codeListValue attribute
+     * must be preserved when a publication date is added. A naive {@code @codeListValue != 'publication'}
+     * predicate silently drops such dates (an absent attribute is not "!= 'publication'" in XPath),
+     * so this guards against that data loss.
+     */
+    @Test
+    public void testPreservesDateWithoutCodeListValueWhenAddingPublicationDate() throws Exception {
+        Element inputElement = Xml.loadFile(xmlFile);
+
+        // Add a metadata date with a CI_DateTypeCode that has no codeListValue attribute.
+        // The loaded root element is mdb:MD_Metadata.
+        inputElement.addContent(newDateInfo(inputElement.getNamespace(), null, "2019-05-05T00:00:00"));
+
+        String inputString = Xml.getString(inputElement);
+        assertThat(
+            inputString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode[not(@codeListValue)]])", equalTo("1")).withNamespaceContext(ns)
+        );
+
+        // Add the publication date
+        Map<String, Object> params = new HashMap<>();
+        params.put("publicationDate", "2026-07-02T09:23:00");
+        Element resultElement = Xml.transform(inputElement, xslFile, params);
+        String resultString = Xml.getString(resultElement);
+
+        // The publication date is added ...
+        assertThat(
+            resultString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(ns)
+        );
+        // ... and the date without a codeListValue is preserved (not dropped).
+        assertThat(
+            resultString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode[not(@codeListValue)]])", equalTo("1")).withNamespaceContext(ns)
+        );
+    }
+
+    /**
+     * Build an {@code mdb:dateInfo} element with the given date type code list value
+     * (omitted when {@code codeListValue} is null) and date time value.
+     */
+    private Element newDateInfo(Namespace mdbNs, String codeListValue, String dateTime) {
+        Namespace citNs = Namespace.getNamespace("cit", ns.get("cit"));
+        Namespace gcoNs = Namespace.getNamespace("gco", ns.get("gco"));
+
+        Element dateInfo = new Element("dateInfo", mdbNs);
+        Element ciDate = new Element("CI_Date", citNs);
+
+        Element dateVal = new Element("date", citNs);
+        Element dateTimeEl = new Element("DateTime", gcoNs);
+        dateTimeEl.setText(dateTime);
+        dateVal.addContent(dateTimeEl);
+        ciDate.addContent(dateVal);
+
+        Element dateType = new Element("dateType", citNs);
+        Element dateTypeCode = new Element("CI_DateTypeCode", citNs);
+        if (codeListValue != null) {
+            dateTypeCode.setAttribute("codeListValue", codeListValue);
+            dateTypeCode.setAttribute("codeList", "codeListLocation#CI_DateTypeCode");
+        }
+        dateType.addContent(dateTypeCode);
+        ciDate.addContent(dateType);
+
+        dateInfo.addContent(ciDate);
+        return dateInfo;
     }
 }

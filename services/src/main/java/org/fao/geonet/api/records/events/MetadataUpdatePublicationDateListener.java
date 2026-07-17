@@ -47,7 +47,7 @@ public class MetadataUpdatePublicationDateListener implements ApplicationListene
     private IMetadataUtils metadataUtils;
 
     @Override
-    public synchronized void onApplicationEvent(MetadataPublished event) {
+    public void onApplicationEvent(MetadataPublished event) {
         if (!settingManager.getValueAsBool(Settings.SYSTEM_METADATAPRIVS_PUBLICATION_MANAGEPUBLICATIONDATE)) {
             return;
         }

@@ -51,15 +51,9 @@ public class PublicationDateRemoveProcessTest extends XslProcessTest {
 
         Namespace cit = Namespace.getNamespace("cit", "http://standards.iso.org/iso/19115/-3/cit/2.0");
         Namespace gco = Namespace.getNamespace("gco", "http://standards.iso.org/iso/19115/-3/gco/1.0");
-        Namespace mdb = Namespace.getNamespace("mdb", "http://standards.iso.org/iso/19115/-3/mdb/2.0");
-        Namespace mri = Namespace.getNamespace("mri", "http://standards.iso.org/iso/19115/-3/mri/1.0");
 
-        Element identificationInfo = inputElement.getChild("identificationInfo", mdb);
-        Element dataIdentification = identificationInfo.getChild("MD_DataIdentification", mri);
-        Element citationEl = dataIdentification.getChild("citation", mri);
-        Element ciCitation = citationEl.getChild("CI_Citation", cit);
-
-        Element date = new Element("date", cit);
+        // Add a metadata-level publication date (mdb:dateInfo). The loaded root is mdb:MD_Metadata.
+        Element dateInfo = new Element("dateInfo", inputElement.getNamespace());
         Element ciDate = new Element("CI_Date", cit);
         Element dateEl = new Element("date", cit);
         Element dateTime = new Element("DateTime", gco).setText("2026-07-02T10:00:00");
@@ -72,16 +66,17 @@ public class PublicationDateRemoveProcessTest extends XslProcessTest {
         dateType.addContent(ciDateTypeCode);
         ciDate.addContent(dateEl);
         ciDate.addContent(dateType);
-        date.addContent(ciDate);
-        ciCitation.addContent(date);
+        dateInfo.addContent(ciDate);
+        inputElement.addContent(dateInfo);
 
         String midString = Xml.getString(inputElement);
 
         Map<String, String> xslNs = new HashMap<>();
+        xslNs.put("mdb", "http://standards.iso.org/iso/19115/-3/mdb/2.0");
         xslNs.put("cit", "http://standards.iso.org/iso/19115/-3/cit/2.0");
 
         assertThat(
-            midString, hasXPath("count(//cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(xslNs)
+            midString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(xslNs)
         );
 
         // 2. Now remove it
@@ -89,7 +84,7 @@ public class PublicationDateRemoveProcessTest extends XslProcessTest {
         String resultString = Xml.getString(resultElement);
 
         assertThat(
-            resultString, hasXPath("count(//cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("0")).withNamespaceContext(xslNs)
+            resultString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("0")).withNamespaceContext(xslNs)
         );
     }
 }

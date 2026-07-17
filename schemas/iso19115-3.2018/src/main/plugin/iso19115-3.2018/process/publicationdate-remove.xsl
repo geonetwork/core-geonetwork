@@ -33,7 +33,7 @@ Stylesheet used to remove a publication date of a metadata record.
                 version="2.0"
                 exclude-result-prefixes="#all">
 
-  <xsl:template match="mdb:identificationInfo/*/mri:citation/cit:CI_Citation/cit:date[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']" />
+  <xsl:template match="mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']" />
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">

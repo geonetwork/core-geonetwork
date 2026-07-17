@@ -27,7 +27,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
+import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -64,9 +64,9 @@ public class MetadataUpdatePublicationDateServiceIntegrationTest extends Abstrac
         context = createServiceContext();
         loginAsAdmin(context);
 
-        ns.addAll(ISO19139SchemaPlugin.allNamespaces);
+        ns.addAll(ISO19115_3_2018SchemaPlugin.allNamespaces);
 
-        Element sample = getSampleISO19139MetadataXml();
+        Element sample = getSampleISO19115MetadataXml();
         metadata = injectMetadataInDb(sample, context, true);
     }
 
@@ -76,7 +76,7 @@ public class MetadataUpdatePublicationDateServiceIntegrationTest extends Abstrac
         Element initialXml = metadataRecord.getXmlData(false);
 
         // Ensure no publication date exists
-        assertEquals(0, Xml.selectNodes(initialXml, "//gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'publication']", ns).size());
+        assertEquals(0, Xml.selectNodes(initialXml, "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']", ns).size());
 
         ISODate pubDate = new ISODate("2026-07-02T10:00:00");
         service.addPublicationDate(metadataRecord, pubDate);
@@ -86,8 +86,8 @@ public class MetadataUpdatePublicationDateServiceIntegrationTest extends Abstrac
         AbstractMetadata updatedRecord = repository.findOne(metadata.getId());
         Element updatedXml = updatedRecord.getXmlData(false);
 
-        assertEquals(1, Xml.selectNodes(updatedXml, "gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'publication']", ns).size());
-        Element dateText = (Element) Xml.selectSingle(updatedXml, "gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'publication']//gco:DateTime", ns);
+        assertEquals(1, Xml.selectNodes(updatedXml, "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']", ns).size());
+        Element dateText = (Element) Xml.selectSingle(updatedXml, "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']/cit:CI_Date/cit:date/gco:DateTime", ns);
         assertNotNull(dateText);
         assertEquals(pubDate.toString(), dateText.getText());
     }
@@ -103,7 +103,7 @@ public class MetadataUpdatePublicationDateServiceIntegrationTest extends Abstrac
         entityManager.clear();
 
         AbstractMetadata recordWithPubDate = repository.findOne(metadata.getId());
-        assertEquals(1, Xml.selectNodes(recordWithPubDate.getXmlData(false), "gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'publication']", ns).size());
+        assertEquals(1, Xml.selectNodes(recordWithPubDate.getXmlData(false), "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']", ns).size());
 
         // 2. Remove it
         service.removePublicationDate(recordWithPubDate);
@@ -113,6 +113,6 @@ public class MetadataUpdatePublicationDateServiceIntegrationTest extends Abstrac
         AbstractMetadata updatedRecord = repository.findOne(metadata.getId());
         Element updatedXml = updatedRecord.getXmlData(false);
 
-        assertEquals(0, Xml.selectNodes(updatedXml, "gmd:identificationInfo/*/gmd:citation/*/gmd:date[gmd:CI_Date/gmd:dateType/gmd:CI_DateTypeCode/@codeListValue = 'publication']", ns).size());
+        assertEquals(0, Xml.selectNodes(updatedXml, "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']", ns).size());
     }
 }
