@@ -690,6 +690,10 @@
                 sortOrder: ""
               },
               {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
+              },
+              {
                 sortBy: "rating",
                 sortOrder: "desc"
               },
@@ -1197,6 +1201,10 @@
               {
                 sortBy: "resourceTitleObject.default.sort",
                 sortOrder: ""
+              },
+              {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
               },
               {
                 sortBy: "recordOwner",
@@ -1882,9 +1890,14 @@
 
       // login url and form action with hash reference to the current page
       $scope.signInFormLinkWithHash =
-        $scope.gnCfg.mods.authentication.signinUrl + "#" + $location.url();
+        ($scope.gnCfg.mods.authentication.signinUrl ||
+          "../../{{node}}/{{lang}}/catalog.signin") +
+        "#" +
+        $location.url();
       $scope.signInFormActionWithHash =
-        $scope.gnCfg.mods.authentication.signinAPI + "#" + $location.url();
+        ($scope.gnCfg.mods.authentication.signinAPI || "../../signin") +
+        "#" +
+        $location.url();
 
       // when the login input have focus, do not close the dropdown/popup
       $scope.focusLoginPopup = function () {
@@ -1997,23 +2010,37 @@
                   : "";
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
-          canPublishMetadata: function () {
+          canPublishMetadata: function (groupId) {
+            if (this.isAdministrator()) {
+              return true;
+            }
+
             var profile =
                 gnConfig["metadata.publication.profilePublishMetadata"] || "Reviewer",
               fnName =
                 profile !== ""
-                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "ForGroup"
                   : "";
-            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+            if (groupId === undefined || groupId === null) {
+              return false;
+            }
+            return angular.isFunction(this[fnName]) ? this[fnName](groupId) : false;
           },
-          canUnpublishMetadata: function () {
+          canUnpublishMetadata: function (groupId) {
+            if (this.isAdministrator()) {
+              return true;
+            }
+
             var profile =
                 gnConfig["metadata.publication.profileUnpublishMetadata"] || "Reviewer",
               fnName =
                 profile !== ""
-                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "ForGroup"
                   : "";
-            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+            if (groupId === undefined || groupId === null) {
+              return false;
+            }
+            return angular.isFunction(this[fnName]) ? this[fnName](groupId) : false;
           },
           // The md provide the information about
           // if the current user can edit records or not

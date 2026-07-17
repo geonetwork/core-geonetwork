@@ -55,22 +55,22 @@ Rights associated with the roles are illustrated in detail in the list below:
 
 2.  **User Administrator Profile**
 
-    The user administrator is the administrator of his/her own group(s) with the following privileges:
+    The user administrator is the administrator of their own group(s) with the following privileges:
 
     -   Full rights on creating new users within their own groups.
     -   Rights to change users profiles within their own groups.
 
 3.  **Content Reviewer Profile**
 
-    The content reviewer is the only person allowed to give final clearance on the metadata publication on the Intranet and/or on the Internet:
+    The content reviewer is the only person allowed to give final clearance on the metadata publication on the intranet and/or on the internet:
 
     -   Rights on reviewing metadata content within their own groups and authorising its approval and publication.
 
 4.  **Editor Profile**
 
-    The editor works on metadata with following privileges:
+    The editor works on metadata with the following privileges:
 
-    -   Full rights on creating/editing/ deleting new/old data within their own groups.
+    -   Full rights on creating/editing/deleting new/old data within their own groups.
 
 5.  **Registered User Profile**
 
@@ -78,9 +78,9 @@ Rights associated with the roles are illustrated in detail in the list below:
 
     -   Right to download protected data.
 
-## Role and feature Matrix
+## Role and Feature Matrix
 
-The tables below show a comprehensive overview of Roles and Features. It explains in detail what role can do what in GeoNetwork.
+The tables below show a comprehensive overview of Roles and Features. It explains in detail what each role can do in GeoNetwork.
 
 | Code | Description                                                   |
 |------|---------------------------------------------------------------|
@@ -124,7 +124,7 @@ The tables below show a comprehensive overview of Roles and Features. It explain
     | Manage Record / Workflow / Submit for review                  |                         |                         | :material-check-circle: | :material-check-circle: |                         | :material-check-circle: |
     | Manage Record / Workflow / Directly approve metadata          |                         |                         |                         | :material-check-circle: |                         | :material-check-circle: |
     | Manage Record / Workflow / Approve metadata                   |                         |                         |                         | :material-check-circle: |                         | :material-check-circle: |
-    | Manage Record / Workflow / Reject approval submision          |                         |                         |                         | :material-check-circle: |                         | :material-check-circle: |
+    | Manage Record / Workflow / Reject approval submission         |                         |                         |                         | :material-check-circle: |                         | :material-check-circle: |
     | Manage Record / Workflow / Cancel approval submission         |                         |                         | :material-check-circle: |                         |                         | :material-check-circle: |
     | Manage Record / DOI Creation request                          |                         |                         | :material-check-circle: | :material-check-circle: | UI                      | :material-check-circle: |
     | Manage Record / Duplicate                                     |                         |                         | :material-check-circle: | :material-check-circle: | UI                      | :material-check-circle: |

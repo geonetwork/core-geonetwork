@@ -8,6 +8,7 @@ By default the catalog uses the internal database for user management and authen
 -   [Configuring OAUTH2 OpenID Connect](authentication-mode.md#authentication-openid)
 -   [Configuring JWT/JSON Headers](authentication-mode.md#jwt-headers)
 -   [Configuring Keycloak](authentication-mode.md#authentication-keycloak)
+-   [Configuring EU Login](authentication-mode.md#authentication-ecas)
 -   [Configuring Shibboleth](authentication-mode.md#authentication-shibboleth)
 
 Which mode to use is configured in **`WEB-INF/config-security/config-security.xml`** or via an environment variable `geonetwork.security.type`.
@@ -22,7 +23,7 @@ Uncomment the relevant line in **`WEB-INF/config-security/config-security.xml`**
 
 [Lightweight Directory Access Protocol (LDAP)](https://en.wikipedia.org/wiki/Ldap) enables GeoNetwork to verify usernames and passwords to a remote identity store. LDAP implementation uses the default GeoNetwork Login User Interface elements.
 
-GeoNetwork currently has 2 approaches to configure LDAP. Verify also the alternative approach in [Configuring LDAP - Hierarchy](authentication-mode.md#authentication-ldap-hierarchy).
+GeoNetwork currently has 2 approaches to configure LDAP. See also the alternative approach in [Configuring LDAP - Hierarchy](authentication-mode.md#authentication-ldap-hierarchy).
 
 The LDAP configuration is defined in `WEB-INF/config-security/config-security.properties`, you can then configure your environment updating the previous file or overriding the properties in the file `WEB-INF/config-security/config-security-overrides.properties`.
 
@@ -30,7 +31,7 @@ The LDAP configuration is defined in `WEB-INF/config-security/config-security.pr
 
     -   `ldap.base.provider.url`: This tells the portal where the LDAP server is located. Make sure that the computer with the catalog can hit the computer with the LDAP server. Check to make sure that the appropriate ports are opened, etc.
     -   `ldap.base.dn`: this will usually look something like: "dc=[organizationnamehere],dc=org"
-    -   `ldap.security.principal` / `ldap.security.credentials`: Define LDAP administrator user to use to bind to LDAP. If not define, an anonymous bind is made. Principal is the username and credentials property the password.
+    -   `ldap.security.principal` / `ldap.security.credentials`: Define LDAP administrator user to use to bind to LDAP. If not defined, an anonymous bind is made. Principal is the username and credentials property the password.
 
     ``` text
     # LDAP security properties
@@ -80,19 +81,19 @@ ldapUserContextMapper.mapping[country]=,
 
 #### Privileges configuration
 
-User groups and user profiles could be set optionally from LDAP information or not. By default user privileges are managed from the local database. If LDAP information should be used to define user privileges, set the `ldap.privilege.import` property `true`:
+User groups and user profiles can be set from LDAP information, or left to the local database. By default, user privileges are managed from the local database. If LDAP information should be used to define user privileges, set the `ldap.privilege.import` property `true`:
 
 ``` text
 ldap.privilege.import=true
 ```
 
-When importing privileges from LDAP, the catalog administrator could decide to create groups defined in the LDAP and not defined in local database. For this set the following property to true:
+When importing privileges from LDAP, the catalog administrator can decide to create groups defined in the LDAP and not defined in the local database. For this set the following property to true:
 
 ``` text
 ldap.privilege.create.nonexisting.groups=false
 ```
 
-In order to define which groups the user is member of and which profile is the user:
+To specify which groups the user belongs to and what profile the user has:
 
 ``` text
 ldapUserContextMapper.mapping[privilege]=groups,sample
@@ -103,8 +104,8 @@ ldapUserContextMapper.mapping[profile]=privileges,RegisteredUser
 
 Attributes configuration:
 
--   privilege attribute contains the group this user is member of. More than one group is allowed.
--   profile attribute contains the profile of the user.
+-   The privilege attribute contains the group this user is a member of. More than one group is allowed.
+-   The profile attribute contains the profile of the user.
 
 User valid profiles are:
 
@@ -229,7 +230,7 @@ A synchronization task is taking care of removing LDAP users that may be deleted
 -   T0: User A signs in to the catalog. A local user A is created in the user database.
 -   T1: User A is deleted from the LDAP (User A cannot sign in to the catalog anymore).
 -   T2: The synchronization task will check that all local LDAP users exist in LDAP:
-    -   If the user does not own any records, it will be deleted.
+    -   If the user does not own any records, they will be deleted.
     -   If the user owns metadata records, a warning message will be written to the catalog logging system. The owner of the record should be changed to another user before the task can remove the current owner.
 
 By default the task runs once every day. This can be changed in the following property:
@@ -271,7 +272,7 @@ A slightly different method for LDAP configuration was introduced in mid-2020.
 
 This extends the original configuration infrastructure (original configurations still work without any changes).
 
-Before you start configuring, you will need to know;
+Before you start configuring, you will need to know:
 
 1.  URL to your LDAP Server
 2.  Username/password to login to the LDAP Server (to execute queries)
@@ -296,7 +297,7 @@ Before you start configuring, you will need to know;
 
 ### Configuring LDAP Beans (Hierarchy)
 
-GeoNetwork comes with a sample LDAP configuration that you can use in Apache Directory Studio to create the same LDAP server used in the test cases. There is also a sample GeoNetwork configuration that connects to this LDAP server. Please see `core-geonetwork/blob/master/core/src/test/resources/org/fao/geonet/kernel/security/ldap/README.md`{.interpreted-text role="repo"} or the [video developer chat](https://www.youtube.com/watch?v=f8rvbEdnE-g) for instructions.
+GeoNetwork comes with a sample LDAP configuration that you can use in Apache Directory Studio to create the same LDAP server used in the test cases. There is also a sample GeoNetwork configuration that connects to this LDAP server. Please see the [LDAP README](https://github.com/geonetwork/core-geonetwork/blob/main/core/src/test/resources/org/fao/geonet/kernel/security/ldap/README.md) or the [video developer chat](https://www.youtube.com/watch?v=f8rvbEdnE-g) for instructions.
 
 !!! note
 
@@ -316,7 +317,9 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
 
 2.  Configure the `ldapUserSearch` bean with the query used to find the user (given what was typed in the login page).
 
-    NOTE: Set `searchSubtree` to `true` to do a recursive search of the LDAP. Use `searchBase` to control which directory the search starts in ("" means start from the root).
+    !!! note
+
+        Set `searchSubtree` to `true` to do a recursive search of the LDAP. Use `searchBase` to control which directory the search starts in (`""` means start from the root).
 
     ``` xml
     <bean id="ldapUserSearch" class="…">
@@ -330,7 +333,9 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
 
 3.  Configure the `ldapUserContextMapper` bean with how to convert the LDAP user's attributes to GeoNetwork user attributes (see the original configuration documentation, above).
 
-    NOTE: The `value` portion has two parts. The first part is the name of LDAP attribute (can be blank). The second part is the default value if the LDAP attribute is missing or empty (see the original configuration documentation, above).
+    !!! note
+
+        The `value` portion has two parts. The first part is the name of LDAP attribute (can be blank). The second part is the default value if the LDAP attribute is missing or empty (see the original configuration documentation, above).
 
     ``` xml
     <bean id="ldapUserContextMapper" class=“LDAPUserDetailsContextMapperWithProfileSearchEnhanced">
@@ -357,7 +362,9 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
 
 4.  Continue configuring the `ldapUserContextMapper` bean so the LDAP can also provide group/profile roles for the user.
 
-    NOTE: The `ldapMembershipQuery` is the LDAP directory where the membership query will be start ("" means start at the root of the LDAP).
+    !!! note
+
+        The `membershipSearchStartObject` is the LDAP directory where the membership query will start (`""` means start at the root of the LDAP).
 
     ``` xml
     <bean id="ldapUserContextMapper" class="LDAPUserDetailsContextMapperWithProfileSearchEnhanced">
@@ -377,7 +384,9 @@ GeoNetwork comes with a sample LDAP configuration that you can use in Apache Dir
 
 5.  Continue configuring the `ldapUserContextMapper` bean so the LDAP roles can be converted to GeoNetwork Groups/Profiles.
 
-    NOTE: You can use multiple `ldapRoleConverters`.
+    !!! note
+
+        You can use multiple `ldapRoleConverters`.
 
     ``` xml
     <bean id="ldapUserContextMapper" class="LDAPUserDetailsContextMapperWithProfileSearchEnhanced">
@@ -478,7 +487,7 @@ cas.logout.url=${cas.baseURL}/logout?url=${geonetwork.https.url}/
 
 ## Configuring OAUTH2 OpenID Connect {#authentication-openid}
 
-[OAUTH2 OpenID Connect](https://openid.net/connect/) is an authentication and authorization system based on OAUTH2. Geonetwork's OpenID Connect plugin has been tested with [Keycloak](https://keycloak.org) and [Azure AD](https://azure.microsoft.com/en-ca/services/active-directory/), but should work with any provider.
+[OAUTH2 OpenID Connect](https://openid.net/connect/) is an authentication and authorization system based on OAUTH2. GeoNetwork's OpenID Connect plugin has been tested with [Keycloak](https://keycloak.org) and [Microsoft Entra ID](https://www.microsoft.com/en-us/security/business/identity-access/microsoft-entra-id) (formerly Azure AD), but should work with any provider.
 
 Basic Setup Steps:
 
@@ -490,12 +499,12 @@ Basic Setup Steps:
     5.  Get the Server's JSON metadata document
 2.  Configure Geonetwork via environment variables
     1.  ``GEONETWORK_SECURITY_TYPE=openidconnect``
-    2.  ``OPENIDCONNECT_CLIENTSECRET=\...`` (from your IDP server)
-    3.  ``OPENIDCONNECT_CLIENTID=\...`` (from your IDP server)
-    4.  ``OPENIDCONNECT_SERVERMETADATA_JSON_TEXT='\...'`` (the text of your Server's JSON metadata document)
-    5.  ``OPENIDCONNECT_IDTOKENROLELOCATION=\...`` (location of the user's roles in the ID Token)
+    2.  `OPENIDCONNECT_CLIENTSECRET=...` (from your IDP server)
+    3.  `OPENIDCONNECT_CLIENTID=...` (from your IDP server)
+    4.  `OPENIDCONNECT_SERVERMETADATA_JSON_TEXT='...'` (the text of your Server's JSON metadata document)
+    5.  `OPENIDCONNECT_IDTOKENROLELOCATION=...` (location of the user's roles in the ID Token)
 
-Geonetwork's Open ID Connect plugin has a lot of configuration options - please see the `WEB-INF/config-security/config-security-openidconnect.xml` and `WEB-INF/config-security/config-security-openidconnect-overrides.properties` files.
+GeoNetwork's Open ID Connect plugin has a lot of configuration options - please see the `WEB-INF/config-security/config-security-openidconnect.xml` and `WEB-INF/config-security/config-security-openidconnect-overrides.properties` files.
 
 ### Environment Variable and Meaning
 
@@ -553,13 +562,13 @@ Default is ``"RegisteredUser"``.
 
 **OPENIDCONNECT_USERPROFILEUPDATEENABLED**
 
-When a user logs on, update their Geotwork profile from the OpenID server's ID Token.
+When a user logs on, update their GeoNetwork profile from the OpenID server's ID Token.
 
 Default is ``"true"``.
 
 **OPENIDCONNECT_USERGROUPUPDATEENABLED**
 
-When a user logs on, update their Geotwork group/role permissions.
+When a user logs on, update their GeoNetwork group/role permissions.
 
 Default is ``"true"``.
 
@@ -591,7 +600,7 @@ The access token, userinfo, and id token contain sensitive information (i.e. rea
 
 ### Configuration for a Keycloak Server
 
-It's outside the scope of this document to fully describe the steps to configure keycloak, but this should serve as a guide.
+It's outside the scope of this document to fully describe the steps to configure Keycloak, but this should serve as a guide.
 
 This will configure keycloak backed by **another OpenID IDP** (for example, by an Azure AD). In keycloak:
 
@@ -622,7 +631,7 @@ This will configure keycloak backed by **another OpenID IDP** (for example, by a
 
 You should have Keycloak's Client id ("myclient") and the client secret. The configuration JSON is available at `https://YOUR_KEYCLOAK_HOST/realms/{YOUR REALM NAME}/.well-known/openid-configuration`
 
-Your environment variables will looks like this:
+Your environment variables will look like this:
 
 ``` properties
 GEONETWORK_SECURITY_TYPE=openidconnect
@@ -653,7 +662,7 @@ Setup users and groups:
 2.  Add new Groups - "geonetworkAdmin", "geonetworkReviewer", etc\... Record the name and the group's **Object ID**
 3.  Edit a User, and choose Groups, and add them to appropriate group.
 
-Your environment variables will looks like this:
+Your environment variables will look like this:
 
 ``` properties
 GEONETWORK_SECURITY_TYPE=openidconnect
@@ -699,7 +708,7 @@ Assign Users:
 5.  Press "None Selected" (Under Select a Role) and choose some roles
 6.  Configure all your users with roles
 
-Your environment variables will looks like this:
+Your environment variables will look like this:
 
 ``` properties
 GEONETWORK_SECURITY_TYPE=openidconnect
@@ -793,7 +802,7 @@ For other IDP, you might have to make some modifications.
 
 [Keycloak](https://keycloak.org) is a software solution to facilitate storage of authentication details, user federation, identity brokering and social login. GeoNetwork can be set up to use a keycloak instance for authentication.
 
-Install keycloak from its instructions or use this example setup in docker <https://www.keycloak.org/getting-started/getting-started-docker>
+Install Keycloak from its instructions or use the [Getting started with Keycloak on Docker](https://www.keycloak.org/getting-started/getting-started-docker) guide.
 
 Keycloak details are defined via environment variables
 
@@ -839,13 +848,13 @@ sample:RegisteredUser
 2.  Add or select existing user. Then go to that user.
 3.  Go to role Mappings -> Client Roles (myclient) -> select the available roles to be applied and click on "Add selected" or go to Groups -> Available Groups -> Click on the Administrator Group and then click on "Join"
 
-A similar setup is described for geoserver in the [geoserver documentation](https://docs.geoserver.org/latest/en/user/community/keycloak/index.html).
+A similar setup is described for GeoServer in the [GeoServer documentation](https://docs.geoserver.org/latest/en/user/community/oidc/oauth2/keycloak/).
 
-## Configurating JWT/JSON Headers {#jwt-headers}
+## Configuring JWT/JSON Headers {#jwt-headers}
 
 The JWT Headers module provides a security module for header based security. It is equivalent to GeoServer's JWT Headers Module (both GeoServer and GeoNetwork share a code library to make them equivalent). 
 
-This module allows  [JSON-based](https://en.wikipedia.org/wiki/JSON) headers (for username and roles) as well as [JWT-based](https://en.wikipedia.org/wiki/JSON_Web_Token>) headers (for username and roles).  It also allows for validating JWT-Based AccessTokens (i.e. via [OAUTH2](https://en.wikipedia.org/wiki/OAuth>)/[OpenID Connect](ttps://en.wikipedia.org/wiki/OpenID#OpenID_Connect_(OIDC)).
+This module allows  [JSON-based](https://en.wikipedia.org/wiki/JSON) headers (for username and roles) as well as [JWT-based](https://en.wikipedia.org/wiki/JSON_Web_Token) headers (for username and roles). It also allows for validating JWT-based access tokens (i.e. via [OAUTH2](https://en.wikipedia.org/wiki/OAuth)/[OpenID Connect](https://en.wikipedia.org/wiki/OpenID#OpenID_Connect_(OIDC))).
 
 
 If you are using something like [Apache's mod_auth_openidc](https://github.com/OpenIDC/mod_auth_openidc), then this module will allow you to;
@@ -863,7 +872,7 @@ If you are using [OAUTH2/OIDC Access Tokens](https://www.oauth.com/oauth2-server
    * Validate its Signature
    * Validate that it hasn't expired
    * Validate the token against a token verifier URL ("userinfo_endpoint") and check that subjects match
-   * Validate components of the Access Token (like [aud (audience)](https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims>))
+   * Validate components of the Access Token (like [aud (audience)](https://auth0.com/docs/secure/tokens/json-web-tokens/json-web-token-claims))
    
 4. The user's roles can also come from the GeoNetwork Database (managed by the administrator in the GeoNetwork GUI).
 5. You can also extract roles from the JWT Access Token (via a JSON path).
@@ -1013,7 +1022,7 @@ The JWT Headers module also allows for converting roles (from the external IDP) 
 
 For example, a conversion map like `GeonetworkAdministrator=ADMINISTRATOR` will convert our IDP "GeonetworkAdministrator" to the "ADMINISTRATOR" Profile...
 
-In our example, the user has two roles "GeoserverAdministrator" and "GeonetworkAdministrator".  If the "Only allow External Roles that are explicitly named above" is true, then GeoNetwork will only see the "ADMINISTRATOR" role.  If true, it will see "ADMINISTRATOR" and "GeoserverAdministrator".  In neither case will it see the converted "GeonetworkAdministrator" roles.
+In our example, the user has two roles "GeoserverAdministrator" and "GeonetworkAdministrator". If "Only allow External Roles that are explicitly named above" is true, then GeoNetwork will only see the "ADMINISTRATOR" role. If false, it will see "ADMINISTRATOR" and "GeoserverAdministrator". In neither case will the original "GeonetworkAdministrator" role name be visible, as it has been converted.
 
 ##### Groups
 
@@ -1090,7 +1099,7 @@ For the first filter, use the environment variables defined above (ie. `JWTHEADE
 
 ## Configuring EU Login {#authentication-ecas}
 
-EU Login is the central login mechanism of the European Commission. You can enable login against that central service in case your intended users have ar can acquire a EU Login.
+EU Login is the central login mechanism of the European Commission. You can enable login against that central service in case your intended users have or can acquire an EU Login.
 
 To enable EU Login, set up authentication by including `WEB-INF/config-security/config-security-ecas.xml` in `WEB-INF/config-security/config-security.xml`, uncommenting the following line:
 
@@ -1108,8 +1117,8 @@ The EU Login configuration is defined in **`WEB-INF/config-security/config-secur
 cas.baseURL=https://webgate.ec.europa.eu/cas
 ```
 
-Restart the service and check the authentication menchanism.
+Restart the service and check the authentication mechanism.
 
 ## Configuring Shibboleth {#authentication-shibboleth}
 
-The catalog can operate in a SAML secured federation. Shibboleth should be installed in Apache as described [here](https://wiki.shibboleth.net/confluence/display/SHIB2/Installation). The catalog is accessed via Apache. Setup Shibboleth authentication by including `WEB-INF/config-security/config-security-shibboleth.xml` in `WEB-INF/config-security/config-security.xml`. You can then configure your environment in `config-security-shibboleth-overrides.properties`.
+The catalog can operate in a SAML secured federation. Shibboleth should be installed in Apache as described in the [Shibboleth installation guide](https://wiki.shibboleth.net/confluence/display/SHIB2/Installation). The catalog is accessed via Apache. Setup Shibboleth authentication by including `WEB-INF/config-security/config-security-shibboleth.xml` in `WEB-INF/config-security/config-security.xml`. You can then configure your environment in `config-security-shibboleth-overrides.properties`.

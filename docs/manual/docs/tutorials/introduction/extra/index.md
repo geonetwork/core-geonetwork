@@ -10,13 +10,13 @@ The page describes each of the methods and its properties, but also offers the c
 
 ## Kibana Dashboard
 
-Kibana is an optional component which can be installed with Elastic Search. Kibana offers a dynamic way to create visualisations of the contentn of the Elastc Search index.
+Kibana is an optional component which can be installed with Elasticsearch. Kibana offers a dynamic way to create visualisations of the content of the Elasticsearch index.
 
-The GeoNetwork community has prepared some sample visualisations. Load the samples from <https://github.com/geonetwork/core-geonetwork/blob/4.0.x/es/es-dashboards/data/export.ndjson> via the 'Saved objects --> Import' option in Kibana.
+The GeoNetwork community has prepared some sample visualisations. Load the samples from [export.ndjson](https://github.com/geonetwork/core-geonetwork/blob/4.0.x/es/es-dashboards/data/export.ndjson) via the **Saved objects --> Import** option in Kibana.
 
-If installed, you can access kibana from the GeoNetwork admin interface. To access the Kibana interface you need to be logged in as administrator.
+If installed, you can access Kibana from the GeoNetwork admin interface. To access the Kibana interface you need to be logged in as administrator.
 
-Read more about the usage of kibana at <https://www.elastic.co/guide/en/kibana/current/introduction.html>
+Read more about the usage of Kibana at the [Kibana introduction](https://www.elastic.co/guide/en/kibana/current/introduction.html).
 
 ## Search engines
 

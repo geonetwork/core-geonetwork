@@ -219,7 +219,7 @@
   </xsl:template>
 
   <xsl:template mode="getExtent" match="mdb:MD_Metadata">
-    <xsl:if test=".//mdb:identificationInfo/*/mri:extent">
+    <xsl:if test=".//mdb:identificationInfo/*/mri:extent/*/gex:geographicElement[gex:EX_BoundingPolygon or gex:EX_GeographicBoundingBox]">
       <section class="gn-md-side-extent">
         <h2>
           <i class="fa fa-fw fa-map-marker"></i>

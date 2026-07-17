@@ -25,7 +25,7 @@ Since the settings form is a long form, the `save` button is repeated between th
 
 ## Catalog Server {#system-config-server}
 
--   **Host** The node's name or IP number (without <http://>). For example, they are used during metadata editing to create resource links and when returning the server's capabilities during a CSW request.
+-   **Host** The node's name or IP number (without `http://`). For example, they are used during metadata editing to create resource links and when returning the server's capabilities during a CSW request.
     -   If your node is publicly accessible from the Internet, you have to use the domain name.
     -   If your node is hidden inside your private network and you have a firewall or web server that redirects incoming requests to the node, you have to enter the public address of the firewall or web server. A typical configuration is to have an Apache web server on address A that is publicly accessible and redirects the requests to a Tomcat server on a private address B. In this case you have to enter A in the host parameter.
 -   **Port** The server's port number (usually 80 or 8080). If using HTTP, set it to 80.
@@ -78,7 +78,7 @@ This section configure the mail server to use.
 
 Additional settings are available to respect user language preference:
 
--  **Language for system generated emails** The ui language will be used when sending notification emails by default. To To override this behaviour and generate a multi-lingual notification email list the langauges to be used.
+-  **Language for system generated emails** The UI language will be used when sending notification emails by default. To override this behaviour and generate a multi-lingual notification email, list the languages to be used.
 
 -  **Translation follows text** Provide an introduction phrase indicating a multi-lingual notification follows.
 
@@ -124,6 +124,24 @@ Enabling the setting, displays in the application footer a link to a page that a
 
 It requires an email server configured.
 
+## Application banner
+
+In certain situations it can be useful to display a banner in the application to inform users, for example to announce a maintenance window or an outage.
+
+Enabling this setting displays a banner in the public pages of the application.
+
+-   **Enable** If set, the application banner is displayed with the message configured.
+
+![](img/application-banner-config.png)
+
+To configure the banner message, go to `Admin console` --> `Settings` --> `Languages and translations` and add a translation entry with the key **application-banner**.
+
+![](img/application-banner-config2.png)
+
+The banner is shown at the top of the public search page.
+
+![](img/application-banner2.png)
+
 ## Link in metadata records
 
 !!! warning "Deprecated"
@@ -153,7 +171,7 @@ The XLink resolver replaces the content of elements with an attribute @xlink:hre
 
 For each metadata schema, the catalog has an XSL transformation (`update-fixed-info.xsl`) that it can apply to a metadata record belonging to that schema. The aim of this transformation is to allow fixed schema, site and catalog information to be applied to a metadata record every time the metadata record is saved in the editor. As an example, this transformation is used to build and store the URL of any files uploaded and stored with the metadata record in the editor.
 
--   **Automatic Fixes**: Enabled by default. It is recommended you do not use the metadata editor when auto-fixing is disabled. See <http://trac.osgeo.org/geonetwork/ticket/368> for more details.
+-   **Automatic Fixes**: Enabled by default. It is recommended you do not use the metadata editor when auto-fixing is disabled. See [ticket #368](http://trac.osgeo.org/geonetwork/ticket/368) for more details.
 
 ## Search Statistics {#search_stats_config}
 
@@ -166,6 +184,7 @@ There is very little compute overhead involved in storing search statistics as t
 Options in this group control the way in which the OAI Server responds to OAIPMH harvest requests from remote sites.
 
 -   **Datesearch**: OAI Harvesters may request records from GeoNetwork in a date range. GeoNetwork can use one of two date fields from the metadata to check for a match with this date range. The default choice is *Temporal extent*, which is the temporal extent from the metadata record. The other option, *Modification date*, uses the modification date of the metadata record in the GeoNetwork database. The modification date is the last time the metadata record was updated in or harvested by GeoNetwork.
+-   **Enable**: Enable or disable the OAI-PMH service. If disabled, the OAI-PMH API returns an error message.
 -   **Resumption Token Timeout**: Metadata records that match an OAI harvest search request are usually returned to the harvester in groups with a fixed size (eg. in groups of 10 records). With each group a resumption token is included so that the harvester can request the next group of records. The resumption token timeout is the time (in seconds) that GeoNetwork OAI server will wait for a resumption token to be used. If the timeout is exceeded GeoNetwork OAI server will drop the search results and refuse to recognize the resumption token. The aim of this feature is to ensure that resources in the GeoNetwork OAI server are released.
 -   **Cache size**: The maximum number of concurrent OAI harvests that the GeoNetwork OAI server can support.
 
@@ -322,10 +341,12 @@ Allows to configure the user profile allowed to delete published metadata.
 
 ## Metadata publication
 
-Allows to configure the user profile allowed to publish and un-publish metadata.
+Allows to configure the required user profile to publish and un-publish metadata.
 
--   **Minimum user profile allowed to publish metadata** Minimum user profile allowed to publish metadata (`Reviewer` or `Administrator`). The default value is `Reviewer`.
--   **Minimum user profile allowed to un-publish metadata** Minimum user profile allowed to un-publish metadata (`Reviewer` or `Administrator`). The default value is `Reviewer`.
+The configured profile is evaluated on the metadata owner group (per-group role), not the user's global profile. The user must have exactly this profile in the record owner group. For example, with `Reviewer`, only users who are `Reviewer` in the owner group are allowed (not `UserAdmin`). Global `Administrator` is always allowed.
+
+-   **Required profile to publish metadata** Profile required to publish metadata, evaluated in the record owner group (`Reviewer` or `Administrator`). The default value is `Reviewer`.
+-   **Required profile to un-publish metadata** Profile required to un-publish metadata, evaluated in the record owner group (`Reviewer` or `Administrator`). The default value is `Reviewer`.
 
 ![](img/metadata-publication.png)
 

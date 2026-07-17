@@ -8,7 +8,7 @@ In GeoNetwork, the process of assigning keywords to a metadata record takes plac
 
 Concepts within a field of knowledge or in different fields of knowledge may be related or even be equivalent. For example, in a thesaurus describing geographic regions, the Australian state of 'Tasmania' is a specialization of the country of Australia. As an example of overlapping concepts in different fields, a thesaurus describing science activities in the field of global change may have concepts relating to agricultural activities that will be equivalent to terms from a thesaurus that describes the themes used in a map series.
 
-In GeoNetwork, thesauri are represented as SKOS (<http://www.w3.org/TR/skos-reference>) and stored in an application/xml+rdf encoding. SKOS captures concepts and relationships between concepts. SKOS thesauri can be imported from standalone files or they can be generated from ISO19135 register records in a GeoNetwork catalog. ISO19135 (more on this below) not only captures the concepts and relationships between the concepts, but (amongst other things) how the concepts have evolved and most importantly, who has contributed to and managed the evolution of the concepts and the thesauri itself.
+In GeoNetwork, thesauri are represented as SKOS ([SKOS Reference](http://www.w3.org/TR/skos-reference)) and stored in an application/xml+rdf encoding. SKOS captures concepts and relationships between concepts. SKOS thesauri can be imported from standalone files or they can be generated from ISO19135 register records in a GeoNetwork catalog. ISO19135 (more on this below) not only captures the concepts and relationships between the concepts, but (amongst other things) how the concepts have evolved and most importantly, who has contributed to and managed the evolution of the concepts and the thesauri itself.
 
 ## External, Local and Register Thesauri
 
@@ -20,7 +20,7 @@ There are three types of thesaurus in GeoNetwork. The different types are based 
 
 ## ISO19115/19139 Thesaurus Categories
 
-All thesauri in GeoNetwork are categorized using the code list values for the gmd:MD_KeywordTypeCode element from ISO19115/19139. The categories and their meanings are given below but can also be found in <http://www.isotc211.org/2005/resources/gmxCodelist.xml>:
+All thesauri in GeoNetwork are categorized using the code list values for the gmd:MD_KeywordTypeCode element from ISO19115/19139. The categories and their meanings are given below but can also be found in `http://www.isotc211.org/2005/resources/gmxCodelist.xml`:
 
 | ISO Thesaurus Category | Description                                                                        |
 |------------------------|------------------------------------------------------------------------------------|
@@ -32,7 +32,7 @@ All thesauri in GeoNetwork are categorized using the code list values for the gm
 
 ## SKOS format
 
-The Simple Knowledge Organisation Systems (SKOS) <http://www.w3.org/2004/02/skos/> is an area of work developing specifications and standards to support the use of knowledge organisation systems (KOS) such as thesauri, classification schemes. This format is used by GeoNetwork to store thesaurus information.
+The [Simple Knowledge Organisation System (SKOS)](http://www.w3.org/2004/02/skos/) is an area of work developing specifications and standards to support the use of knowledge organisation systems (KOS) such as thesauri and classification schemes. This format is used by GeoNetwork to store thesaurus information.
 
 A concept is defined by an identifier, a preferred label, a definition and links with other concepts. Labels and definitions could be stored in multiple languages (using the xml:lang attributes). Three type of links between concepts have been defined in the SKOS format:
 
@@ -125,8 +125,8 @@ The thesaurus manager page will show a list of thesauri that have been created o
 
 To create a local thesaurus, click the `+` sign on the category you want your thesaurus to be in. Once created, the thesaurus can be updated through the edit interface. The meaning of each column is as follows:
 
--   **Type** - This is an identifier assigned to the thesaurus in GeoNetwork. It is composed of the ISO category to which the thesaurus has been assigned (see the codelist for the gmd:MD_KeywordTypeCode element in <http://www.isotc211.org/2005/resources/gmxCodelist.xml>), whether the thesaurus is a local, external or register thesaurus and the filename of the SKOS file that holds the thesaurus. (Note: the name of the file used to hold a register thesaurus is the uuid of the ISO19135 register record that describes the thesaurus).
--   **Name** - This is the name of the thesaurus which is the administrator on creation or the filename if the thesaurus is ting a thesaurus, the name of the thesaurus will be the filename of the thesaurus.
+-   **Type** - This is an identifier assigned to the thesaurus in GeoNetwork. It is composed of the ISO category to which the thesaurus has been assigned (see the codelist for the gmd:MD_KeywordTypeCode element at `http://www.isotc211.org/2005/resources/gmxCodelist.xml`), whether the thesaurus is a local, external or register thesaurus and the filename of the SKOS file that holds the thesaurus. (Note: the name of the file used to hold a register thesaurus is the uuid of the ISO19135 register record that describes the thesaurus).
+-   **Name** - This is the name of the thesaurus. It is set by the administrator on creation; for an imported thesaurus, the name defaults to the filename of the SKOS file.
 
 For each thesaurus the following buttons are available:
 

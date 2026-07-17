@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -256,7 +256,7 @@ public class TagsApi {
         Optional<MetadataCategory> category = categoryRepository.findById(tagIdentifier);
         if (category.isPresent()) {
             long recordsCount = metadataRepository.count((Specification<Metadata>) MetadataSpecs.hasCategory(category.get()));
-            if (recordsCount > 0l) {
+            if (recordsCount > 0L) {
                 throw new IllegalArgumentException(String.format(
                     "Tag '%s' is assigned to %d records. Update records first in order to remove that tag.",
                     category.get().getName(), // TODO: Return in user language

@@ -159,6 +159,7 @@
     "exportCSV": "Export (CSV)",
     "exportPDF": "Export (PDF)",
     "exportMEF": "Export (ZIP)",
+    "exportMEF-excludeAttachments": "Export (ZIP) without attachments",
     "welcomeText": "Aici veți găsi date, servicii și hărți și multe altele.",
     "searchOver": "Căutați <strong>{{records}}</strong> seturi de date, servicii și hărți,...",
     "browseBy": "Răsfoiți după",
@@ -559,5 +560,8 @@
     "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Avertisment / Câmp resourceTemporalDateRange / Limita inferioară a intervalului {{lowerBound}} nu poate fi mai mare decât limita superioară {{upperBound}}. Intervalul de date nu este indexat.",
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Avertisment / Câmp resourceTemporalDateRange / Limita inferioară a intervalului {{lowerBound}} nu poate fi mai mare decât limita superioară {{upperBound}}.",
     "indexingErrorMsg-schemaNotRegistered": "Înregistrarea {{record}} / Schema &#39;{{schema}}&#39; nu este înregistrată în acest catalog. Instalați-l sau eliminați acele înregistrări. Înregistrarea este steag de eroare de indexare indexată.",
-    "indexingErrorMsg-indexingStyleSheetError": "Foaia de stil de indexare conține erori: {{mesaj}}\n Se marchează metadatele ca _indexingError=1 în index."
+    "indexingErrorMsg-indexingStyleSheetError": "Foaia de stil de indexare conține erori: {{mesaj}}\n Se marchează metadatele ca _indexingError=1 în index.",
+    "createAnonymousAccess": "Share unpublished record preview",
+    "deleteAnonymousAccess": "Revoke unpublished record preview",
+    "anonymousAccessTo": "Anonymous access to {{title}}"
 }

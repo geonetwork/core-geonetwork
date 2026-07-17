@@ -96,6 +96,9 @@ import static org.fao.geonet.Constants.ENCODING;
  * General class of useful static methods.
  */
 public final class Xml {
+    public static Path webappDir;
+    public static Path thesauriDir;
+    public static Path schemaPluginsDir;
 
     public static final Namespace xsiNS = Namespace.getNamespace("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
     public static final NioPathAwareEntityResolver PATH_RESOLVER = new NioPathAwareEntityResolver();
@@ -109,6 +112,12 @@ public final class Xml {
         + "\ud800\udc00-\udbff\udfff"
         + "]";
     public static final String XML_VERSION_HEADER = "<\\?xml version=['\"]1.0['\"] encoding=['\"].*['\"]\\?>\\s*";
+
+    // see documentation, advanced-configuration.md.
+    // switching from tiny (1) to tinyc (2) saxon tree model
+    // (when saxon version does not support tinyc, asking for 2 will default to linked (0))
+    // default being tiny, but tinyc (or linked) is faster
+    public static final int SAXON_TREE_MODEL = Integer.parseInt(System.getProperty("saxon.treeModel", "2"));
 
     public static SAXBuilder getSAXBuilder(boolean validate) {
         SAXBuilder builder = getSAXBuilderWithPathXMLResolver(validate, null);
@@ -425,67 +434,7 @@ public final class Xml {
     }
 
 
-    /**
-     * Transforms an xml tree putting the result to a stream  - no parameters.
-     */
-    public static void transform(Element xml, String styleSheetPath, Result result) throws Exception {
-        transform(xml, IO.toPath(styleSheetPath), result, null);
-    }
-
-
-    public static Element transformWithXmlParam(Element xml, String styleSheetPath, String xmlParamName, String xmlParam) throws Exception {
-        JDOMResult resXml = new JDOMResult();
-
-        File styleSheet = new File(styleSheetPath);
-        Source srcSheet = new StreamSource(styleSheet);
-        transformWithXmlParam(xml, srcSheet, resXml, xmlParamName, xmlParam);
-
-        return (Element) resXml.getDocument().getRootElement().detach();
-    }
-
-    /**
-     * Transforms an xml tree putting the result to a stream. Sends xml snippet as parameter.
-     */
-    public static void transformWithXmlParam(Element xml, Source xslt, Result result,
-                                             String xmlParamName, String xmlParam) throws Exception {
-        Source srcXml = new JDOMSource(new Document((Element) xml.detach()));
-
-        // Dear old saxon likes to yell loudly about each and every XSLT 1.0
-        // stylesheet so switch it off but trap any exceptions because this
-        // code is run on transformers other than saxon
-        TransformerFactory transFact;
-        transFact = TransformerFactoryFactory.getTransformerFactory();
-
-        try {
-            transFact.setAttribute(FeatureKeys.VERSION_WARNING, false);
-            transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
-            transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, true);
-            transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
-            // Add the following to get timing info on xslt transformations
-            //transFact.setAttribute(FeatureKeys.TIMING,true);
-        } catch (IllegalArgumentException e) {
-            Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
-        } finally {
-            Transformer t = transFact.newTransformer(xslt);
-            if (xmlParam != null) {
-                t.setParameter(xmlParamName, new StreamSource(new StringReader(xmlParam)));
-            }
-            t.transform(srcXml, result);
-        }
-    }
-
     //--------------------------------------------------------------------------
-
-    protected static Path resolvePath(Source s) throws URISyntaxException {
-        Path f;
-        final String systemId = s.getSystemId().replaceAll("%5C", "/");
-        try {
-            f = IO.toPath(new URI(systemId));
-        } catch (FileSystemNotFoundException e) {
-            f = IO.toPath(systemId);
-        }
-        return f;
-    }
 
     /**
      * Transforms an xml tree putting the result to a stream with optional parameters.
@@ -494,45 +443,14 @@ public final class Xml {
      * The preferred method is to define it using xsl:output.
      */
     public static void
-    transform(Element xml, Path styleSheetPath, Result result, Map<String, Object> params) throws Exception {
+    transform(Element xml, Path styleSheetPath, Result result, Map<String, Object> params) throws TransformerException, IOException {
         NioPathHolder.setBase(styleSheetPath);
-        Source srcXml = new JDOMSource(new Document((Element) xml.detach()));
-        try (InputStream in = IO.newInputStream(styleSheetPath)) {
-            Source srcSheet = new StreamSource(in, styleSheetPath.toUri().toASCIIString());
 
-            // Dear old saxon likes to yell loudly about each and every XSLT 1.0
-            // stylesheet so switch it off but trap any exceptions because this
-            // code is run on transformers other than saxon
-            TransformerFactory transFact = TransformerFactoryFactory.getTransformerFactory();
-            transFact.setURIResolver(new JeevesURIResolver());
-            try {
-                transFact.setAttribute(FeatureKeys.VERSION_WARNING, false);
-                transFact.setAttribute(FeatureKeys.LINE_NUMBERING, true);
-                transFact.setAttribute(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, false);
-                transFact.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
-
-                // Add the following to get timing info on xslt transformations
-                //transFact.setAttribute(FeatureKeys.TIMING,true);
-            } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
-            } finally {
-                transFact.setURIResolver(new JeevesURIResolver());
-                Transformer t = transFact.newTransformer(srcSheet);
-                if (params != null) {
-                    for (Map.Entry<String, Object> param : params.entrySet()) {
-                        t.setParameter(param.getKey(), param.getValue());
-                    }
-
-                    if (params.containsKey("geonet-force-xml")) {
-                        ((Controller) t).setOutputProperty("indent", "yes");
-                        ((Controller) t).setOutputProperty("method", "xml");
-                        ((Controller) t).setOutputProperty("{http://saxon.sf.net/}indent-spaces", "2");
-                    }
-                }
-
-                t.transform(srcXml, result);
-            }
-        }
+        XmlTransformer.createWithJeevesUIResolver()
+            .withExtraProperties(FeatureKeys.PRE_EVALUATE_DOC_FUNCTION, false)
+            .withExtraProperties(FeatureKeys.TREE_MODEL, SAXON_TREE_MODEL)
+            .withTransformerParameters(params)
+            .transform(xml, styleSheetPath, result);
     }
 
     //--------------------------------------------------------------------------
@@ -555,7 +473,7 @@ public final class Xml {
      * stylesheet on disk)
      */
 
-    public static Path transformFOP(Path uploadDir, Element xml, String styleSheetPath)
+    public static Path transformFOP(Path uploadDir, Element xml, Path styleSheetPath)
         throws Exception {
         Path file = uploadDir.resolve(UUID.randomUUID().toString() + ".pdf");
 
@@ -570,34 +488,12 @@ public final class Xml {
              OutputStream bufferedOut = new BufferedOutputStream(out)) {
             // Step 3: Construct fop with desired output format
             Fop fop = fopFactory.newFop(MimeConstants.MIME_PDF, bufferedOut);
+            // Resulting SAX events (the generated FO) must be piped through to FOP
+            Result res = new SAXResult(fop.getDefaultHandler());
 
-            // Step 4: Setup JAXP using identity transformer
-            TransformerFactory factory = TransformerFactoryFactory.getTransformerFactory();
-            factory.setURIResolver(new JeevesURIResolver());
-            Source xslt = new StreamSource(new File(styleSheetPath));
-            try {
-                factory.setAttribute(FeatureKeys.VERSION_WARNING, false);
-                factory.setAttribute(FeatureKeys.LINE_NUMBERING, true);
-                factory.setAttribute(FeatureKeys.RECOVERY_POLICY, Configuration.RECOVER_SILENTLY);
-            } catch (IllegalArgumentException e) {
-                Log.warning(Log.ENGINE, "WARNING: transformerfactory doesnt like saxon attributes!", e);
-            } finally {
-                Transformer transformer = factory.newTransformer(xslt);
-
-                // Step 5: Setup input and output for XSLT transformation
-                // Setup input stream
-                Source src = new JDOMSource(new Document((Element) xml.detach()));
-
-                // Resulting SAX events (the generated FO) must be piped through to
-                // FOP
-                Result res = new SAXResult(fop.getDefaultHandler());
-
-                // Step 6: Start XSLT transformation and FOP processing
-                transformer.transform(src, res);
-            }
-
+            XmlTransformer.createWithJeevesUIResolver()
+                .transform(xml, styleSheetPath, res);
         }
-
 
         return file;
     }
@@ -1205,66 +1101,5 @@ public final class Xml {
             retBool = firstTag.matches("<.*:(rdf|catalog|catalogrecord)\\n?");
         }
         return retBool;
-    }
-
-
-    private static class JeevesURIResolver implements URIResolver {
-
-        /**
-         *
-         * @param href
-         * @param base
-         * @return
-         * @throws TransformerException
-         */
-        public Source resolve(String href, String base) throws TransformerException {
-            Resolver resolver = ResolverWrapper.getInstance();
-            CatalogResolver catResolver = resolver.getCatalogResolver();
-            if (Log.isDebugEnabled(Log.XML_RESOLVER)) {
-                Log.debug(Log.XML_RESOLVER, "Trying to resolve " + href + ":" + base);
-            }
-            Source s = catResolver.resolve(href, base);
-
-            boolean isFile;
-            try {
-                final Path file = IO.toPath(new URI(s.getSystemId()));
-                isFile = Files.isRegularFile(file);
-            } catch (Exception e) {
-                isFile = false;
-            }
-
-            // If resolver has a blank XSL file use it to replace
-            // resolved file that doesn't exist...
-            String blankXSLFile = resolver.getBlankXSLFile();
-            if (blankXSLFile != null && s.getSystemId().endsWith(".xsl") && !isFile) {
-                try {
-                    if (Log.isDebugEnabled(Log.XML_RESOLVER)) {
-                        Log.debug(Log.XML_RESOLVER, "  Check if exist " + s.getSystemId());
-                    }
-
-                    Path f;
-                    f = resolvePath(s);
-                    if (Log.isDebugEnabled(Log.XML_RESOLVER))
-                        Log.debug(Log.XML_RESOLVER, "Check on " + f + " exists returned: " + Files.exists(f));
-                    // If the resolved resource does not exist, set it to blank file path to not trigger FileNotFound Exception
-
-                    if (!Files.exists(f)) {
-                        if (Log.isDebugEnabled(Log.XML_RESOLVER)) {
-                            Log.debug(Log.XML_RESOLVER, "  Resolved resource " + s.getSystemId() + " does not exist. blankXSLFile returned instead.");
-                        }
-                        s.setSystemId(blankXSLFile);
-                    } else {
-                        s.setSystemId(f.toUri().toASCIIString());
-                    }
-                } catch (URISyntaxException e) {
-                    Log.warning(Log.XML_RESOLVER, "URI syntax problem: " + e.getMessage(), e);
-                }
-            }
-
-            if (Log.isDebugEnabled(Log.XML_RESOLVER) && s != null) {
-                Log.debug(Log.XML_RESOLVER, "Resolved as " + s.getSystemId());
-            }
-            return s;
-        }
     }
 }

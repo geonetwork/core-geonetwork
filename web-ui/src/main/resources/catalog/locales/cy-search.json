@@ -159,6 +159,7 @@
     "exportCSV": "Allforio (CSV)",
     "exportPDF": "Allforio (PDF)",
     "exportMEF": "Allforio (ZIP)",
+    "exportMEF-excludeAttachments": "Export (ZIP) without attachments",
     "welcomeText": "Yma fe welwch ddata, gwasanaethau a mapiau a mwy.",
     "searchOver": "Chwilio <strong>{{records}}</strong> setiau data, gwasanaethau a mapiau ...",
     "browseBy": "Pori yn ôl",
@@ -559,5 +560,8 @@
     "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Rhybudd / Maes resourceTemporalDateRange / Ni all amrediad is amffiniad {{lowerBound}} fod yn fwy na'r arffin uchaf {{upperBound}}. Nid yw'r ystod dyddiad wedi'i mynegeio.",
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Rhybudd / Maes resourceTemporalDateRange / Ni all amrediad is wedi'i rwymo {{lowerBound}} fod yn fwy na'r arffin uchaf {{upperBound}}.",
     "indexingErrorMsg-schemaNotRegistered": "Nid yw cofnod {{record}} / sgema '{{schema}}' wedi'i gofrestru yn y catalog hwn. Ei osod neu ddileu'r cofnodion hynny. Mae'r cofnod yn faner gwall mynegeio wedi'i mynegeio.",
-    "indexingErrorMsg-indexingStyleSheetError": "Mae dalen arddull mynegeio yn cynnwys gwallau: {{message}}\n  Marcio'r metadata fel _indexingError=1 yn y mynegai."
+    "indexingErrorMsg-indexingStyleSheetError": "Mae dalen arddull mynegeio yn cynnwys gwallau: {{message}}\n  Marcio'r metadata fel _indexingError=1 yn y mynegai.",
+    "createAnonymousAccess": "Share unpublished record preview",
+    "deleteAnonymousAccess": "Revoke unpublished record preview",
+    "anonymousAccessTo": "Anonymous access to {{title}}"
 }
