@@ -570,7 +570,7 @@
               <xsl:call-template name="dataFormat">
                 <xsl:with-param name="format">geojson</xsl:with-param>
               </xsl:call-template>
-              <xsl:if test="metas/records_count &lt; 5000">
+              <xsl:if test="$count &lt; 5000">
                 <xsl:call-template name="dataFormat">
                   <xsl:with-param name="format">shapefile</xsl:with-param>
                 </xsl:call-template>
@@ -609,8 +609,6 @@
               </xsl:for-each>
 
               <!-- Data download links are inferred from the record metadata -->
-              <xsl:variable name="count"
-                            select="$base/default/records_count"/>
               <xsl:if test="$count > 0">
                 <xsl:call-template name="dataLink">
                   <xsl:with-param name="format">csv</xsl:with-param>
@@ -771,8 +769,8 @@
     <xsl:param name="base"/>
     <xsl:for-each select="$base/default/modified[. != 'null']|
                                         $base/default/data_processed[. != 'null']|
-                                        $base/created_at|
-                                        $base/updated_at">
+                                        $base/created_at[. != 'null']|
+                                        $base/updated_at[. != 'null']">
 
       <xsl:variable name="type"
                     select="$dateTagNameToIsoType[@key = current()/local-name()]"/>
