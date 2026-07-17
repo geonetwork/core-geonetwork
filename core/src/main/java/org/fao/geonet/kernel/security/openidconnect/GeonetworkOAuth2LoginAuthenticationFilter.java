@@ -26,6 +26,8 @@ import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.security.RedirectUtil;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.event.InteractiveAuthenticationSuccessEvent;
@@ -62,6 +64,9 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
 
     @Autowired
     RequestCache requestCache;
+
+    @Autowired
+    SettingManager settingManager;
 
     public GeonetworkOAuth2LoginAuthenticationFilter(ClientRegistrationRepository clientRegistrationRepository, OAuth2AuthorizedClientService authorizedClientService) {
         super(clientRegistrationRepository, authorizedClientService);
@@ -124,15 +129,14 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
             // Use Spring Security's SavedRequest mechanism to get the original request URL
             // The request should have been saved by GeonetworkOidcPreAuthActionsLoginFilter before
             // redirecting the user to the OIDC provider login
-            String redirectURL = null;
-
-            boolean redirectFromSavedRequest = false;
+            String savedRequestUrl = null;
             if (requestCache != null) {
                 SavedRequest savedRequest = requestCache.getRequest(request, response);
                 if (savedRequest != null) {
-                    redirectURL = savedRequest.getRedirectUrl();
-                    redirectFromSavedRequest = true;
-                    Log.debug(Geonet.SECURITY, "Retrieved original request from SavedRequest: " + redirectURL);
+                    savedRequestUrl = savedRequest.getRedirectUrl();
+                    Log.debug(Geonet.SECURITY, "Retrieved original request from SavedRequest: " + savedRequestUrl);
+                    // Removing original request retains current headers (same behavior as before).
+                    requestCache.removeRequest(request, response);
                 } else {
                     Log.debug(Geonet.SECURITY, "No SavedRequest found in RequestCache");
                 }
@@ -140,19 +144,30 @@ public class GeonetworkOAuth2LoginAuthenticationFilter extends OAuth2LoginAuthen
                 Log.debug(Geonet.SECURITY, "RequestCache is not available");
             }
 
-            if (redirectURL == null) {
-                redirectURL = findQueryParameter(request, "redirectUrl");
+            if (savedRequestUrl != null) {
+                // The SavedRequest URL is reconstructed by Spring from the original request and is
+                // therefore an absolute URL. Validate it as a same-site redirect (cf. #9307) rather
+                // than as a relative-only path, otherwise the user would never be returned to their
+                // original page. Anything not pointing back to this site falls back to context home.
+                String siteHost = settingManager.getValue(Settings.SYSTEM_SERVER_HOST);
+                String siteProtocol = settingManager.getValue(Settings.SYSTEM_SERVER_PROTOCOL);
+                Integer sitePort = settingManager.getServerPort();
+                if (RedirectUtil.isSafeRedirect(savedRequestUrl, siteHost, siteProtocol, sitePort)) {
+                    response.sendRedirect(savedRequestUrl);
+                } else {
+                    Log.warning(Geonet.SECURITY,
+                        "Refused unsafe login redirect to '" + savedRequestUrl + "'. Redirected to context home instead.");
+                    response.sendRedirect(request.getContextPath());
+                }
+            } else {
+                // No SavedRequest: fall back to the (untrusted) redirectUrl query parameter, which
+                // must be a server-local relative path.
+                String redirectURL = findQueryParameter(request, "redirectUrl");
                 if (redirectURL != null) {
                     Log.debug(Geonet.SECURITY, "Retrieved redirect URL from query parameter: " + redirectURL);
                 }
+                RedirectUtil.sendSafeRedirect(request, response, redirectURL);
             }
-
-            if (redirectFromSavedRequest) {
-                // Removing original request retains current headers (same behavior as before).
-                requestCache.removeRequest(request, response);
-            }
-
-            RedirectUtil.sendSafeRedirect(request, response, redirectURL);
 
             // Set users preferred locale if it exists. - cf. keycloak
             String localeString = oidcUser.getLocale();
