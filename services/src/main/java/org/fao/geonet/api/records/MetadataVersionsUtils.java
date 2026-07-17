@@ -149,6 +149,10 @@ public class MetadataVersionsUtils {
 
         // Find current record in the ordered list (newest to oldest)
         int currentIndex = orderedRecords.indexOf(currentUuid);
+        if (currentIndex < 0) {
+            return new MetadataUtils.RelatedTypeDetails("(uuid:(\"\")) AND (draft:\"n\" OR draft:\"e\")",
+                new HashSet<>(), new HashMap<>(), new HashSet<>(), new ArrayList<>());
+        }
 
         // For next: we need the previous in the list (towards newer versions)
         // For previous: we need the next in the list (towards older versions)
