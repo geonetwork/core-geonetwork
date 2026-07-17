@@ -36,7 +36,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class HarvestersApiTest extends AbstractServiceIntegrationTest {
@@ -54,14 +54,15 @@ public class HarvestersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    public void getHarvesterLogoRedirectsToSourceLogo() throws Exception {
+    public void getHarvesterLogoReturnsLogo() throws Exception {
         Source source = sourceRepo.findOneByName("harvester-source");
         assertNotNull(source);
 
+        // The harvester has no logo so a transparent 1x1 PNG is returned.
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         this.mockMvc.perform(get("/srv/api/harvesters/" + source.getUuid() + "/logo"))
-            .andExpect(status().is3xxRedirection())
-            .andExpect(redirectedUrl("/srv/api/sources/" + source.getUuid() + "/logo"));
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING));
     }
 
     @Test

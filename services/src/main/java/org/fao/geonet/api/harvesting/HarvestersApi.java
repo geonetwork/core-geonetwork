@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -32,9 +32,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.LogoUtils;
 import org.fao.geonet.api.exception.NoResultsFoundException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.resources.Resources;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -51,6 +53,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -168,20 +171,19 @@ public class HarvestersApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get harvester logo image.",
-        description = "Redirect to source logo endpoint."
+        description = LogoUtils.API_GET_LOGO_NOTE
     )
     @GetMapping(
         value = "/{harvesterUuid}/logo"
     )
-    @ResponseStatus(value = HttpStatus.FOUND)
     public void getHarvesterLogo(
-        @PathVariable
-        String portal,
         @Parameter(
             description = "The harvester UUID"
         )
         @PathVariable
         String harvesterUuid,
+        @Parameter(hidden = true) WebRequest webRequest,
+        HttpServletRequest request,
         HttpServletResponse response
     ) throws ResourceNotFoundException, IOException {
         Source source = sourceRepository.findOneByUuid(harvesterUuid);
@@ -191,7 +193,11 @@ public class HarvestersApi {
                 harvesterUuid));
         }
 
-        response.sendRedirect("/" + portal + "/api/sources/" + harvesterUuid + "/logo");
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        Resources resources = serviceContext.getBean(Resources.class);
+        try (Resources.ResourceHolder image = LogoUtils.getImage(resources, serviceContext, source.getLogo())) {
+            LogoUtils.writeImageOrTransparentLogo(webRequest, response, image);
+        }
     }
 
 
