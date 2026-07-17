@@ -17,6 +17,7 @@ import java.io.IOException;
 
 @Component
 class PdfOrHtmlResponseWriter {
+    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
     void writeOutResponse(ServiceContext context, String metadataUuid, String lang, HttpServletResponse response, FormatType formatType, byte[] formattedMetadata) throws Exception {
         response.setContentType(formatType.contentType);
@@ -31,8 +32,8 @@ class PdfOrHtmlResponseWriter {
                 // XSLT is not the best way to generate JSON, so ensure the output is valid JSON.
                 // and log error to be able to improve the formatter if needed.
                 try {
-                    ObjectMapper mapper = new ObjectMapper();
-                    formattedMetadata = mapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(mapper.readTree(formattedMetadata));
+                    formattedMetadata = OBJECT_MAPPER.writerWithDefaultPrettyPrinter()
+                        .writeValueAsBytes(OBJECT_MAPPER.readTree(formattedMetadata));
                 } catch (IOException e) {
                     Log.error(Geonet.FORMATTER, String.format(
                         "Invalid JSON response for metadata UUID: %s. Error is: %s.%nJSON:%n%s",
