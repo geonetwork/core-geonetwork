@@ -58,6 +58,9 @@ import org.fao.geonet.kernel.datamanager.draft.DraftMetadataIndexer;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexFields;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -78,13 +81,11 @@ import org.springframework.transaction.NoTransactionException;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.resources.Resources.DEFAULT_LOGO_EXTENSION;
 
@@ -176,11 +177,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     Set<IndexMetadataTask> batchIndex = ConcurrentHashMap.newKeySet();
 
     @Override
-    public void forceIndexChanges() throws IOException {
-        searchManager.forceIndexChanges();
-    }
-
-    @Override
     public int batchDeleteMetadataAndUpdateIndex(Specification<? extends AbstractMetadata> specification)
         throws Exception {
         final List<? extends AbstractMetadata> metadataToDelete = metadataUtils.findAll(specification);
@@ -201,29 +197,31 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 //        searchManager.delete(metadataToDelete.stream().map(input -> Integer.toString(input.getId())).collect(Collectors.toList()));
 //        metadataManager.deleteAll(specification);
         // So delete one by one even if slower
-        metadataToDelete.forEach(md -> {
-            try {
-                // Extract information for RecordDeletedEvent
-                LinkedHashMap<String, String> titles = metadataUtils.extractTitles(Integer.toString(md.getId()));
-                UserSession userSession = ServiceContext.get().getUserSession();
-                String xmlBefore = md.getData();
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter(metadataToDelete.size())) {
+            metadataToDelete.forEach(md -> {
+                try {
+                    // Extract information for RecordDeletedEvent
+                    LinkedHashMap<String, String> titles = metadataUtils.extractTitles(Integer.toString(md.getId()));
+                    UserSession userSession = ServiceContext.get().getUserSession();
+                    String xmlBefore = md.getData();
 
-                store.delResources(ServiceContext.get(), md.getUuid());
-                metadataManager.deleteMetadata(ServiceContext.get(), String.valueOf(md.getId()));
+                    store.delResources(ServiceContext.get(), md.getUuid());
+                    metadataManager.deleteMetadata(ServiceContext.get(), String.valueOf(md.getId()), submitter);
 
-                // Trigger RecordDeletedEvent
-                new RecordDeletedEvent(md.getId(), md.getUuid(), titles, userSession.getUserIdAsInt(), xmlBefore).publish(ApplicationContextHolder.get());
-            } catch (Exception e) {
-                Log.warning(Geonet.DATA_MANAGER, String.format(
+                    // Trigger RecordDeletedEvent
+                    new RecordDeletedEvent(md.getId(), md.getUuid(), titles, userSession.getUserIdAsInt(), xmlBefore).publish(ApplicationContextHolder.get());
+                } catch (Exception e) {
+                    Log.warning(Geonet.DATA_MANAGER, String.format(
 
-                    "Error during removal of metadata %s part of batch delete operation. " +
-                        "This error may create a ghost record (ie. not in the index " +
-                        "but still present in the database). " +
-                        "You can reindex the catalogue to see it again. " +
-                        "Error was: %s.", md.getUuid(), e.getMessage()));
-                e.printStackTrace();
-            }
-        });
+                        "Error during removal of metadata %s part of batch delete operation. " +
+                            "This error may create a ghost record (ie. not in the index " +
+                            "but still present in the database). " +
+                            "You can reindex the catalogue to see it again. " +
+                            "Error was: %s.", md.getUuid(), e.getMessage()));
+                    e.printStackTrace();
+                }
+            });
+        }
 
         return metadataToDelete.size();
     }
@@ -302,7 +300,6 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             Log.debug(Geonet.INDEX_ENGINE, "Indexing " + metadataIds.size() + " records.");
             Log.debug(Geonet.INDEX_ENGINE, metadataIds.toString());
         }
-        AtomicInteger numIndexedTracker = new AtomicInteger();
         while (index < metadataIds.size()) {
             int start = index;
             int count = Math.min(perThread, metadataIds.size() - start);
@@ -319,7 +316,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
             }
 
             // create threads to process this chunk of ids
-            Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus, numIndexedTracker);
+            Runnable worker = new IndexMetadataTask(context, subList, batchIndex, transactionStatus);
             executor.execute(worker);
             index += count;
         }
@@ -328,20 +325,17 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
     }
 
     @Override
-    public boolean isIndexing() {
-        return searchManager.isIndexing();
-    }
-
-    @Override
     public void indexMetadata(final List<String> metadataIds) throws Exception {
-        for (String metadataId : metadataIds) {
-            indexMetadata(metadataId, true, IndexingMode.full);
+        try (BatchingIndexSubmitter indexSubmittor = new BatchingIndexSubmitter(metadataIds.size())) {
+            for (String metadataId : metadataIds) {
+                indexMetadata(metadataId, indexSubmittor, IndexingMode.full);
+            }
         }
     }
 
     @Override
     public void indexMetadata(final String metadataId,
-                              final boolean forceRefreshReaders,
+                              final IIndexSubmitter indexSubmittor,
                               final IndexingMode indexingMode)
         throws Exception {
         AbstractMetadata fullMd;
@@ -422,7 +416,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                         "error",
                         Map.of("record", metadataId, "schema", schema)));
                 searchManager.index(null, md, indexKey, fields, metadataType,
-                    forceRefreshReaders, indexingMode);
+                    indexSubmittor, indexingMode);
                 Log.error(Geonet.DATA_MANAGER, String.format(
                     "Record %s / Schema '%s' is not registered in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
                     metadataId, schema));
@@ -570,7 +564,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                 }
 
                 searchManager.index(schemaManager.getSchemaDir(schema), md, indexKey, fields, metadataType,
-                    forceRefreshReaders, indexingMode);
+                    indexSubmittor, indexingMode);
             }
         } catch (Exception x) {
             Log.error(Geonet.DATA_MANAGER, "The metadata document index with id=" + metadataId

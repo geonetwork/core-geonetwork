@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -164,15 +165,17 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
     private void deleteLocalMetadataNotInDatabase(List<Integer> idsForHarvestingResult) throws Exception {
         Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
         List<Integer> existingMetadata = metadataRepository.findIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
-        for (Integer existingId : existingMetadata) {
-            if (cancelMonitor.get()) {
-                return;
-            }
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
+            for (Integer existingId : existingMetadata) {
+                if (cancelMonitor.get()) {
+                    return;
+                }
 
-            if (!idsResultHs.contains(existingId)) {
-                log.debug("  Removing: " + existingId);
-                metadataManager.deleteMetadata(context, existingId.toString());
-                result.locallyRemoved++;
+                if (!idsResultHs.contains(existingId)) {
+                    log.debug("  Removing: " + existingId);
+                    metadataManager.deleteMetadata(context, existingId.toString(), submitter);
+                    result.locallyRemoved++;
+                }
             }
         }
     }
@@ -329,7 +332,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
         addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
         metadataManager.flush();
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
     }
 
     /**
@@ -391,13 +394,13 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
 
         return id;
     }

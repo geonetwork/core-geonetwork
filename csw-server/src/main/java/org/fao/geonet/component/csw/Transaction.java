@@ -50,6 +50,8 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
@@ -279,7 +281,7 @@ public class Transaction extends AbstractOperation implements CatalogService {
             dataMan.setOperation(context, id, "" + ReservedGroup.all.getId(), ReservedOperation.dynamic);
         }
 
-        dataMan.indexMetadata(id, true);
+        dataMan.indexMetadata(id, DirectIndexSubmitter.INSTANCE);
 
         AbstractMetadata metadata = metadataUtils.findOne(id);
         ApplicationContext applicationContext = ApplicationContextHolder.get();
@@ -525,38 +527,40 @@ public class Transaction extends AbstractOperation implements CatalogService {
             return deleted;
 
         // delete all matching records
-        while (i.hasNext()) {
-            Element result = i.next();
-            String uuid = result.getChildText("identifier", Csw.NAMESPACE_DC);
-            String id = dataMan.getMetadataId(uuid);
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter(results.size())) {
+            while (i.hasNext()) {
+                Element result = i.next();
+                String uuid = result.getChildText("identifier", Csw.NAMESPACE_DC);
+                String id = dataMan.getMetadataId(uuid);
 
-            if (id == null) {
-                return deleted;
+                if (id == null) {
+                    return deleted;
+                }
+
+                if (!dataMan.getAccessManager().canEdit(context, id)) {
+                    throw new NoApplicableCodeEx("User not allowed to delete metadata : " + id);
+                }
+                AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
+                LinkedHashMap<String, String> titles = new LinkedHashMap<>();
+                try {
+                    titles = metadataUtils.extractTitles(Integer.toString(metadata.getId()));
+                } catch (Exception e) {
+                    Log.warning(Geonet.DATA_MANAGER,
+                        String.format(
+                            "Error while extracting title for the metadata %d " +
+                                "while creating delete event. Error is %s.",
+                            metadata.getId(), e.getMessage()));
+                }
+                RecordDeletedEvent recordDeletedEvent = new RecordDeletedEvent(
+                    metadata.getId(), metadata.getUuid(), titles,
+                    context.getUserSession().getUserIdAsInt(),
+                    metadata.getData());
+
+                metadataManager.deleteMetadata(context, id, submitter);
+                recordDeletedEvent.publish(ApplicationContextHolder.get());
+
+                deleted++;
             }
-
-            if (!dataMan.getAccessManager().canEdit(context, id)) {
-                throw new NoApplicableCodeEx("User not allowed to delete metadata : " + id);
-            }
-            AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
-            LinkedHashMap<String, String> titles = new LinkedHashMap<>();
-            try {
-                titles = metadataUtils.extractTitles(Integer.toString(metadata.getId()));
-            } catch (Exception e) {
-                Log.warning(Geonet.DATA_MANAGER,
-                    String.format(
-                        "Error while extracting title for the metadata %d " +
-                            "while creating delete event. Error is %s.",
-                        metadata.getId(), e.getMessage()));
-            }
-            RecordDeletedEvent recordDeletedEvent = new RecordDeletedEvent(
-                metadata.getId(), metadata.getUuid(), titles,
-                context.getUserSession().getUserIdAsInt(),
-                metadata.getData());
-
-            metadataManager.deleteMetadata(context, id);
-            recordDeletedEvent.publish(ApplicationContextHolder.get());
-
-            deleted++;
         }
 
         return deleted;

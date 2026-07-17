@@ -56,6 +56,7 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.FeedbackLanguages;
@@ -1000,7 +1001,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware {
         }
 
 
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+        dataManager.indexMetadata(String.valueOf(metadata.getId()), DirectIndexSubmitter.INSTANCE);
 
         //publish group change
         new RecordGroupOwnerChangeEvent(metadata.getId(),
@@ -1369,7 +1370,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware {
 
             if (!hasValidation) {
                 validator.doValidate(metadata, context.getLanguage());
-                metadataIndexer.indexMetadata(metadata.getId() + "", true, IndexingMode.full);
+                metadataIndexer.indexMetadata(metadata.getId() + "", DirectIndexSubmitter.INSTANCE, IndexingMode.full);
             }
 
             boolean isInvalid =
@@ -1427,7 +1428,7 @@ public class MetadataSharingApi implements ApplicationEventPublisherAware {
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
             ApiUtils.getUserSession(session).getUserIdAsInt(), true, null, request,
             metadataListToNotifyPublication, notifyByEmail);
-        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
+        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
 
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
         if (publicationOption.isPresent() &&

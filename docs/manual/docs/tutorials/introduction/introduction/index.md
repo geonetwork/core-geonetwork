@@ -42,7 +42,7 @@ Catalogues can be populated in three ways:
     
     *  https://data.bev.gv.at
     *  https://catalogue.ec.gc.ca
-    *  Many others in [gallery](/annexes/gallery)
+    *  Many others in [gallery](../../../annexes/gallery/index.md)
     
     Answer the following questons:
     
