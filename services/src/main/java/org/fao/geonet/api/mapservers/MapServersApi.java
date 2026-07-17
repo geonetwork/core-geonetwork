@@ -315,7 +315,8 @@ public class MapServersApi {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Remove a mapserver"
+        summary = "Remove a mapserver",
+        operationId = "deleteMapserver"
         //       authorizations = {
         //           @Authorization(value = "basicAuth")
         //      })
