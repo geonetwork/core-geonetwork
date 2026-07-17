@@ -27,6 +27,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.fao.geonet.utils.Xml;
@@ -67,7 +68,7 @@ public class MetadataUpdatePublicationDateServiceIntegrationTest extends Abstrac
         ns.addAll(ISO19115_3_2018SchemaPlugin.allNamespaces);
 
         Element sample = getSampleISO19115MetadataXml();
-        metadata = injectMetadataInDb(sample, context, true);
+        metadata = injectMetadataInDb(sample, context, IndexingMode.full);
     }
 
     @Test
