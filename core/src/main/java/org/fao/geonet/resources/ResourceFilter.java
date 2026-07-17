@@ -147,6 +147,14 @@ public class ResourceFilter implements Filter {
 
                 httpServletResponse.setContentType(contentType);
                 httpServletResponse.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
+                if (contentType.equals(SVG_UTF_8.toString())) {
+                    // SVG images may embed scripts which would run if the file is opened
+                    // as a top level document. Neutralize any active content to avoid
+                    // stored XSS while keeping the image usable in <img> tags.
+                    httpServletResponse.setHeader("X-Content-Type-Options", "nosniff");
+                    httpServletResponse.setHeader("Content-Security-Policy",
+                        "default-src 'none'; style-src 'unsafe-inline'; sandbox");
+                }
                 if (filename.equals(IMAGES_LOGOS_FOLDER + siteId + ".ico")) {
                     favicon = resources.loadResource(resourcesDir, servletContext, appPath, IMAGES_LOGOS_FOLDER + siteId + ".ico", favicon.one(),
                                                      favicon.two());

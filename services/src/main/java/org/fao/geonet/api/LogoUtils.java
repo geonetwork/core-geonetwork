@@ -79,6 +79,7 @@ public final class LogoUtils {
             response.setContentType(AttachmentsApi.getFileContentType(image.getPath().getFileName().toString()));
             response.setContentLength((int) Files.size(image.getPath()));
             response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
+            addLogoSecurityHeaders(response);
             FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());
             return;
         }
@@ -89,7 +90,21 @@ public final class LogoUtils {
         response.setContentType("image/png");
         response.setContentLength(TRANSPARENT_1_X_1_PNG.length);
         response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
+        addLogoSecurityHeaders(response);
         response.getOutputStream().write(TRANSPARENT_1_X_1_PNG);
+    }
+
+    /**
+     * Logos can be uploaded in SVG format and are served from the catalog
+     * origin. An SVG may embed scripts which would execute if the logo URL is
+     * opened as a top level document, leading to stored XSS. These headers
+     * neutralize any active content while keeping the logo usable in
+     * {@code <img>} tags (where scripts never run anyway).
+     */
+    private static void addLogoSecurityHeaders(HttpServletResponse response) {
+        response.setHeader("X-Content-Type-Options", "nosniff");
+        response.setHeader("Content-Security-Policy",
+            "default-src 'none'; style-src 'unsafe-inline'; sandbox");
     }
 
     private static boolean isLocalLogoRef(String logoRef) {
