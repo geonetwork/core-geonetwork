@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (C) 2001-2020 Food and Agriculture Organization of the
+  ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
+  ~ and United Nations Environment Programme (UNEP)
+  ~
+  ~ This program is free software; you can redistribute it and/or modify
+  ~ it under the terms of the GNU General Public License as published by
+  ~ the Free Software Foundation; either version 2 of the License, or (at
+  ~ your option) any later version.
+  ~
+  ~ This program is distributed in the hope that it will be useful, but
+  ~ WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+  ~ General Public License for more details.
+  ~
+  ~ You should have received a copy of the GNU General Public License
+  ~ along with this program; if not, write to the Free Software
+  ~ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+  ~
+  ~ Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+  ~ Rome - Italy. email: geonetwork@osgeo.org
+  -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <util:map id="shaclValidatorTestsuites" key-type="java.lang.String" value-type="java.lang.String[]">
+    <!-- Based on configuration of https://www.itb.ec.europa.eu/shacl/dcat-ap/upload -->
+    <entry key="EU DCAT AP 3.0.1 - Base Zero (no background knowledge)">
+      <!-- Base Zero (no background knowledge) -->
+      <array value-type="java.lang.String">
+        <value>eu-dcat-ap-3.0.1/shapes.ttl</value>
+      </array>
+    </entry>
+    <entry key="EU DCAT AP 3.0.1 - Ranges Zero (no background knowledge)">
+      <!-- Ranges Zero (no background knowledge) -->
+      <array value-type="java.lang.String">
+        <value>eu-dcat-ap-3.0.1/range.ttl</value>
+      </array>
+    </entry>
+    <entry key="EU DCAT AP 3.0.1 - Ranges (with background knowledge)">
+      <!-- Ranges Zero (with background knowledge) - results depends on the imports. -->
+      <array value-type="java.lang.String">
+        <value>eu-dcat-ap-3.0.1/imports.ttl</value>
+        <value>eu-dcat-ap-3.0.1/range.ttl</value>
+      </array>
+    </entry>
+    <entry key="EU DCAT AP 3.0.1 - Recommendations (no background knowledge)">
+      <array value-type="java.lang.String">
+        <value>eu-dcat-ap-3.0.1/shapes_recommended.ttl</value>
+      </array>
+    </entry>
+    <entry key="EU DCAT AP 3.0.1 - Recommendations (with background knowledge)">
+      <array value-type="java.lang.String">
+        <value>eu-dcat-ap-3.0.1/imports.ttl</value>
+        <value>eu-dcat-ap-3.0.1/shapes_recommended.ttl</value>
+      </array>
+    </entry>
+    <entry key="EU DCAT AP 3.0.1 - Full (no background knowledge)">
+      <array value-type="java.lang.String">
+        <value>eu-dcat-ap-3.0.1/shapes.ttl</value>
+        <value>eu-dcat-ap-3.0.1/shapes_recommended.ttl</value>
+        <value>eu-dcat-ap-3.0.1/range.ttl</value>
+      </array>
+    </entry>
+    <entry key="EU DCAT AP 3.0.1 - Full (with background knowledge)">
+      <array value-type="java.lang.String">
+        <value>eu-dcat-ap-3.0.1/imports.ttl</value>
+        <value>eu-dcat-ap-3.0.1/shapes.ttl</value>
+        <value>eu-dcat-ap-3.0.1/shapes_recommended.ttl</value>
+        <value>eu-dcat-ap-3.0.1/range.ttl</value>
+      </array>
+    </entry>
+    <entry key="EU DCAT AP 3.0.1 - Controlled Vocabularies">
+      <array value-type="java.lang.String">
+        <value>eu-dcat-ap-3.0.1/imports.ttl</value>
+        <value>eu-dcat-ap-3.0.1/mdr_imports.ttl</value>
+        <value>eu-dcat-ap-3.0.1/mdr-vocabularies.shape.ttl</value>
+      </array>
+    </entry>
+  </util:map>
+</beans>
