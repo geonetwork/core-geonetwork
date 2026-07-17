@@ -1257,7 +1257,7 @@
   <span class="md-ellipsis">
     
   
-    Other types of resources (eg. sensor, publication)
+    Other types of resources (eg. sensor, publication, revision)
   
 
     
@@ -2240,12 +2240,13 @@
 </ul>
 </li>
 </ul>
-<p>Parent/child relations can be set on ISO19139 and Dublin Core records. In ISO19139, the link to a parent record is encoded in the child record using the following:</p>
+<p>Parent/child relations can be set on ISO and Dublin Core records. </p>
+<p>In ISO19139, the link to a parent record is encoded in the child record using the following:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;gmd:parentIdentifier&gt;</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">   </span><span class="nt">&lt;gco:CharacterString&gt;</span>78f93047-74f8-4419-ac3d-fc62e4b0477b<span class="nt">&lt;/gco:CharacterString&gt;</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">&lt;/gmd:parentIdentifier&gt;</span>
 </span></code></pre></div>
-<p>Parent/Child relation in ISO19139 may also be encoded using aggregates (see <a href="../linking-others/">Other types of resources (eg. sensor, publication)</a>).</p>
+<p>Parent/Child relation in ISO may also be encoded using aggregates to clarify the type of the association (see <a href="../linking-others/">Other types of resources (eg. sensor, publication)</a>). By default, ISO19115-3 is using the <code>associatedResource</code> element with association type set to <code>partOfSeamlessDatabase</code> for parent/child relation.</p>
 <p>When creating such relationship, users will be able to navigate between the records in the search and record view.</p>
 <p><img alt="" src="../img/nav-series.png" /></p>
 <p>Click on <code>Link to parent</code> to access the panel providing a simple search to select the target parent metadata</p>

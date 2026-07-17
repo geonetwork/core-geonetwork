@@ -1247,7 +1247,7 @@
   <span class="md-ellipsis">
     
   
-    Other types of resources (eg. sensor, publication)
+    Other types of resources (eg. sensor, publication, revision)
   
 
     
@@ -2500,12 +2500,14 @@
 </span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="w">      </span><span class="p">},</span>
 </span></code></pre></div>
 <h2 id="associated-resources">Associated resources</h2>
-<p>For associated resources, configuration has the following properties:
-* <code>type</code> is the type of association (eg. parent, child, sibling)
-* <code>label</code> is the label key of the resource type (defined in JSON loc file or in database translations)
-* <code>config</code> defines the configuration for the association type, which has the following properties:
-  * <code>fields</code> allows to defined values for <code>associationType</code> and <code>initiativeType</code>
-  * <code>sources</code> defines the sources that can be used to add a resource of this type </p>
+<p>For associated resources, configuration has the following properties:</p>
+<ul>
+<li><code>type</code> is the type of association (eg. parent, child, sibling)</li>
+<li><code>label</code> is the label key of the resource type (defined in JSON loc file or in database translations)</li>
+<li><code>config</code> defines the configuration for the association type, which has the following properties:</li>
+<li><code>fields</code> allows to defined values for <code>associationType</code> and <code>initiativeType</code></li>
+<li><code>sources</code> defines the sources that can be used to add a resource of this type </li>
+</ul>
 <h3 id="sources">Sources</h3>
 <p><code>sources</code> defines the sources that can be used to add a resource of this type.</p>
 <h4 id="metadata-store">Metadata store</h4>
@@ -2535,9 +2537,11 @@
 </span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w">          </span><span class="nt">&quot;isHarvested&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;false&quot;</span>
 </span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="w">        </span><span class="p">}</span>
 </span></code></pre></div>
-In another plugin:
-* <code>catalog-*</code> association type will only search for records with a <code>catalog</code> resource type
-* <code>nextResource-*</code> association type will only search for <code>dataset</code> or <code>service</code></p>
+In another plugin:</p>
+<ul>
+<li><code>catalog-*</code> association type will only search for records with a <code>catalog</code> resource type</li>
+<li><code>nextResource-*</code> association type will only search for <code>dataset</code> or <code>service</code></li>
+</ul>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&quot;config&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&quot;sources&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">&quot;metadataStore&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -2551,9 +2555,11 @@ In another plugin:
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">      </span><span class="p">}</span>
 </span></code></pre></div>
 <h4 id="doi">DOI</h4>
-<p>Allows to select metadata from a DOI endpoint:
-* DataCite
-* Crossref</p>
+<p>Allows to select metadata from a DOI endpoint:</p>
+<ul>
+<li>DataCite</li>
+<li>Crossref</li>
+</ul>
 <p>Can be configured to search both types of providers or only one of them. When both types of providers are configured, results from both are combined in the results list.</p>
 <p>For each type of source:</p>
 <ul>

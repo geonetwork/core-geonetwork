@@ -31,7 +31,7 @@
     
     
       
-        <title>Other types of resources (eg. sensor, publication) - GeoNetwork opensource</title>
+        <title>Other types of resources (eg. sensor, publication, revision) - GeoNetwork opensource</title>
       
     
     
@@ -131,7 +131,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Other types of resources (eg. sensor, publication)
+              Other types of resources (eg. sensor, publication, revision)
             
           </span>
         </div>
@@ -1249,6 +1249,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Other types of resources (eg. sensor, publication, revision)
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1256,7 +1274,7 @@
   <span class="md-ellipsis">
     
   
-    Other types of resources (eg. sensor, publication)
+    Other types of resources (eg. sensor, publication, revision)
   
 
     
@@ -1265,6 +1283,58 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table des matières">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#grouping-records-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grouping records together
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linking-to-previous-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linking to previous version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linking-to-scientific-publications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linking to scientific publications
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2199,6 +2269,47 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table des matières
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#grouping-records-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Grouping records together
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linking-to-previous-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linking to previous version
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linking-to-scientific-publications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linking to scientific publications
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2230,10 +2341,12 @@
   
 
 
-<h1 id="linking-others">Other types of resources (eg. sensor, publication)</h1>
-<p>In ISO, associated resource allows to link to record defining the type of relation with:
-* association type (mandatory)
-* initiative type</p>
+<h1 id="linking-others">Other types of resources (eg. sensor, publication, revision)</h1>
+<p>In ISO, associated resource allows to link to record defining the type of relation with:</p>
+<ul>
+<li>association type (mandatory)</li>
+<li>initiative type</li>
+</ul>
 <p>Codelist values for association types are:</p>
 <ul>
 <li>Cross reference</li>
@@ -2246,8 +2359,30 @@
 <li>Dependency</li>
 <li>Revision Of</li>
 </ul>
-<p>In ISO19115-3, by default parent relations are defined with association type set to <code>partOfSeamlessDatabase</code>. This can be customized with <a href="../linking-panel-configuration/">the panel configuration</a>.</p>
 <p><img alt="" src="../../../../user-guide/associating-resources/img/iso-associated-resources.png" /></p>
+<h2 id="grouping-records-together">Grouping records together</h2>
+<p>When having a series of records related together, it may make sense to group them under a same parent record.</p>
+<p>In ISO19115-3, by default parent relations are defined with association type set to <code>partOfSeamlessDatabase</code> to indicate that a set of datasets are stored in same database.
+This can be customized with <a href="../linking-panel-configuration/">the panel configuration</a>.</p>
+<p>To promote some kind of "data products" or "collections", it may be interesting to create parent records with association type pointing to the child records with association type <code>isComposedOf</code>. This is the approach used at EEA (https://sdi.eea.europa.eu/catalogue) where all datasets are grouped in series. The series provide general information and quick access to all child records (eg. temporal series, current and archived versions).</p>
+<h2 id="linking-to-previous-version">Linking to previous version</h2>
+<p>When a record is updated, it may be interesting to link the new version to the previous version.<br />
+This can be done with the association type <code>revisionOf</code> and linking to the previous version of the record:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;mri:associatedResource&gt;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&lt;mri:MD_AssociatedResource&gt;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">     </span><span class="nt">&lt;mri:associationType&gt;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="nt">&lt;mri:DS_AssociationTypeCode</span><span class="w"> </span><span class="na">codeListValue=</span><span class="s">&quot;revisionOf&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">     </span><span class="nt">&lt;/mri:associationType&gt;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">     </span><span class="nt">&lt;mri:metadataReference</span><span class="w"> </span><span class="na">uuidref=</span><span class="s">&quot;481df889-4f3d-4290-bd89-b7f3ad11a2f1&quot;</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">                            </span><span class="na">xlink:href=</span><span class="s">&quot;http://localhost:8080/geonetwork/srv/api/records/481df889-4f3d-4290-bd89-b7f3ad11a2f1&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">  </span><span class="nt">&lt;/mri:MD_AssociatedResource&gt;</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nt">&lt;/mri:associatedResource&gt;</span>
+</span></code></pre></div>
+<p>This will allow users to navigate between versions of the record in the record view or using the related record API.</p>
+<p>It is recommended to use the same privileges for all versions of the record to be able to navigate between all versions. Usually when a revision is created, the previous version status is updated to "archived" or "superseded".</p>
+<h2 id="linking-to-scientific-publications">Linking to scientific publications</h2>
+<p>When a dataset is linked to a scientific publication, an option is to use a link with the association type <code>cross reference</code> and initiative type set to <code>study</code>.
+Those type of links usually point to a DOI or a remote URL (See <a href="../linking-remote-records/">link to remote URL</a> and <a href="../linking-panel-configuration/">using DataCite and Crossref for DOI</a>).</p>
 
 
 
