@@ -1229,7 +1229,7 @@ When GeoNetwork executes a compiled schematron, the following parameters are aut
 | `lang`          | string  | The two or three letter language code of the current user session (e.g. `eng`). Use this to return localised messages. |
 | `rule`          | string  | The file name of the compiled schematron XSL (e.g. `schematron-rules-iso.xsl`). |
 | `thesaurusDir`  | string  | Absolute path to the GeoNetwork thesaurus directory. Useful for rules that need to validate against controlled vocabularies. |
-| `metadataId`    | integer | The internal database identifier of the metadata record being validated. Useful for rules that need to look up related information. |
+| `metadataId`    | integer | The internal database identifier of the metadata record being validated. Useful for rules that need to look up related information. **Note:** When validating external metadata (metadata not saved to the database), this parameter is set to `-1`. Attempts to query the database using this value will return empty results. |
 
 Procedure for adding schematron rules, working within the schematrons directory:
 
