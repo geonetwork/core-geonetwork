@@ -139,6 +139,8 @@ public class EsSearchManager implements ISearchManager {
             .add("link")
             .add("format")
             .add("resourceType")
+            .add("resourceEdition")
+            .add("resourceDate")
             .add("cl_status.key")
             .add(Geonet.IndexFieldNames.OP_PREFIX + "*")
             .add(Geonet.IndexFieldNames.GROUP_OWNER)
@@ -152,6 +154,7 @@ public class EsSearchManager implements ISearchManager {
             // Elasticsearch scripted field to get the first overview url. Scripted fields must return single values.
             .put("overview", "return params['_source'].overview == null ? [] : params['_source'].overview.stream().map(f -> f.url).findFirst().orElse('');")
             .put("overview_data", "return params['_source'].overview == null ? [] : params['_source'].overview.stream().map(f -> f.data).filter(Objects::nonNull).findFirst().orElse('');")
+            .put("lastResourceDate", "return params['_source'].resourceDate == null ? '' : params['_source'].resourceDate.stream().map(d -> d.date).filter(date -> date != null).max(String::compareTo).orElse('');")
             .build();
     }
 
@@ -799,6 +802,40 @@ public class EsSearchManager implements ISearchManager {
     public Map<String, Object> getDocument(String uuid) throws Exception {
         return client.getDocument(defaultIndex, uuid);
     }
+
+    public static Set<String> extractFieldValues(Object fieldValue) {
+        Set<String> values = new LinkedHashSet<>();
+        if (fieldValue == null) {
+            return values;
+        }
+
+        if (fieldValue instanceof Collection<?>) {
+            for (Object value : (Collection<?>) fieldValue) {
+                addFieldValue(values, value);
+            }
+        } else if (fieldValue.getClass().isArray()) {
+            int length = java.lang.reflect.Array.getLength(fieldValue);
+            for (int i = 0; i < length; i++) {
+                addFieldValue(values, java.lang.reflect.Array.get(fieldValue, i));
+            }
+        } else {
+            addFieldValue(values, fieldValue);
+        }
+
+        return values;
+    }
+
+    private static void addFieldValue(Set<String> values, Object value) {
+        if (value == null) {
+            return;
+        }
+
+        String trimmed = String.valueOf(value).trim();
+        if (StringUtils.isNotEmpty(trimmed)) {
+            values.add(trimmed);
+        }
+    }
+
 
     public SearchResponse query(String luceneQuery, String filterQuery, int startPosition, int maxRecords) throws Exception {
         return client.query(defaultIndex, luceneQuery, filterQuery, new HashSet<>(), new HashMap<>(), startPosition, maxRecords);
