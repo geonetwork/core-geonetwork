@@ -152,6 +152,7 @@ public class EsSearchManager implements ISearchManager {
             // Elasticsearch scripted field to get the first overview url. Scripted fields must return single values.
             .put("overview", "return params['_source'].overview == null ? [] : params['_source'].overview.stream().map(f -> f.url).findFirst().orElse('');")
             .put("overview_data", "return params['_source'].overview == null ? [] : params['_source'].overview.stream().map(f -> f.data).filter(Objects::nonNull).findFirst().orElse('');")
+            .put("lastResourceDate", "return params['_source'].resourceDate == null ? '' : params['_source'].resourceDate.stream().map(d -> d.date).filter(date -> date != null).max(String::compareTo).orElse('');")
             .build();
     }
 
