@@ -55,6 +55,7 @@ Example:
 ## Associated resources
 
 For associated resources, configuration has the following properties:
+
 * `type` is the type of association (eg. parent, child, sibling)
 * `label` is the label key of the resource type (defined in JSON loc file or in database translations)
 * `config` defines the configuration for the association type, which has the following properties:
@@ -98,6 +99,7 @@ When `metadataStore` is defined as a source, the user can search for metadata re
         }
 ```
 In another plugin:
+
 * `catalog-*` association type will only search for records with a `catalog` resource type
 * `nextResource-*` association type will only search for `dataset` or `service`
 
@@ -120,6 +122,7 @@ In another plugin:
 #### DOI 
 
 Allows to select metadata from a DOI endpoint:
+
 * DataCite
 * Crossref
 

@@ -2375,13 +2375,7 @@
                   if (scope.searchObj.any == "") {
                     scope.$broadcast("resetSearch");
                   } else {
-                    var addWildcard =
-                      scope.searchObj.any.indexOf('"') === -1 &&
-                      scope.searchObj.any.indexOf("*") === -1 &&
-                      scope.searchObj.any.indexOf("q(") !== 0;
-                    scope.searchObj.params.any = addWildcard
-                      ? "*" + scope.searchObj.any + "*"
-                      : scope.searchObj.any;
+                    scope.searchObj.params.any = scope.searchObj.any;
                   }
                 };
 
