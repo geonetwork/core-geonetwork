@@ -46,9 +46,15 @@ public class ISO19115_3_2018Namespaces {
     public static final Namespace GEX =
         Namespace.getNamespace("gex",
             "http://standards.iso.org/iso/19115/-3/gex/1.0");
+    public static final Namespace MCC =
+        Namespace.getNamespace("mcc",
+            "http://standards.iso.org/iso/19115/-3/mcc/1.0");
     public static final Namespace MRC =
             Namespace.getNamespace("mrc",
                     "http://standards.iso.org/iso/19115/-3/mrc/2.0");
+    public static final Namespace MRD =
+        Namespace.getNamespace("mrd",
+            "http://standards.iso.org/iso/19115/-3/mrd/1.0");
     public static final Namespace MRL =
             Namespace.getNamespace("mrl",
                     "http://standards.iso.org/iso/19115/-3/mrl/2.0");
