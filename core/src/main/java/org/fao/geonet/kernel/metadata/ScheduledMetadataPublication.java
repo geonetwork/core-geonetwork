@@ -32,6 +32,8 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserSpecs;
@@ -70,6 +72,9 @@ public class ScheduledMetadataPublication extends QuartzJobBean {
     @Autowired
     private MetadataPublicationService metadataPublicationService;
 
+    @Autowired
+    private SettingManager settingManager;
+
     public ScheduledMetadataPublication() {
     }
 
@@ -79,6 +84,9 @@ public class ScheduledMetadataPublication extends QuartzJobBean {
      */
     @Override
     protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
+        if (!settingManager.getValueAsBool(Settings.METADATA_PUBLICATION_ENABLE_SCHEDULED_PUBLICATION, false)) {
+            return;
+        }
         ApplicationContextHolder.set(this.applicationContext);
         ServiceContext serviceContext = createServiceContext();
 

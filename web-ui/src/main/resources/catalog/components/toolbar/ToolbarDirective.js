@@ -278,7 +278,7 @@
             },
             scheduledPublicationTask: {
               isVisible: function (md) {
-                return md && !md.isPublished();
+                return scope.isScheduledPublicationEnable && md && !md.isPublished();
               },
               isApplicable: function (md) {
                 // TODO: Would be good to return why a task is not applicable as tooltip
@@ -425,6 +425,8 @@
 
           gnConfigService.load().then(function () {
             scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
+            scope.isScheduledPublicationEnable =
+              gnConfig["metadata.publication.enableScheduledPublication"];
             scope.isMdWorkflowAssistEnable =
               gnGlobalSettings.gnCfg.mods.workflowHelper.enabled;
             scope.workFlowApps =
