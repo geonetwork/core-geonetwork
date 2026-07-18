@@ -38,6 +38,7 @@ import org.fao.geonet.config.IPublicationConfig;
 import org.fao.geonet.config.PublicationOption;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.GroupType;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataDraft;
@@ -419,9 +420,14 @@ public class MetadataPublicationService {
 
             if (sharing.isClear()) {
                 metadataOperations.deleteMetadataOper(String.valueOf(metadata.getId()), excludeFromDelete);
+                sharingChanges = true;
             }
 
             for (GroupOperations p : privileges) {
+                // Never set any privileges for system privilege groups
+                if (isSystemPrivilegeGroup(p.getGroup())) {
+                    continue;
+                }
                 for (Map.Entry<String, Boolean> o : p.getOperations().entrySet()) {
                     Integer opId = operationMap.get(o.getKey());
                     // Never set editing for reserved group
@@ -739,6 +745,18 @@ public class MetadataPublicationService {
      * @param group   The {@link Group} to change the privileges for.
      * @return True if the user can change the privileges for the group, false otherwise.
      */
+    /**
+     * Checks if the group is a system privilege group, for which privileges must never be set directly.
+     *
+     * @param groupId The group identifier to check.
+     * @return True if the group exists and is of type {@link GroupType#SystemPrivilege}, false otherwise.
+     */
+    private boolean isSystemPrivilegeGroup(Integer groupId) {
+        return groupRepository.findById(groupId)
+            .map(group -> group.getType() == GroupType.SystemPrivilege)
+            .orElse(false);
+    }
+
     private boolean canUserChangePrivilegesForGroup(final ServiceContext context, Group group) {
         Profile minimumProfileForPrivileges = group.getMinimumProfileForPrivileges();
         if (minimumProfileForPrivileges == null) {

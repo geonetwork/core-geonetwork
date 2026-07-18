@@ -38,7 +38,6 @@ import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.utils.Log;
-import org.locationtech.jts.util.Assert;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -136,12 +135,14 @@ public class ScheduledMetadataPublication extends QuartzJobBean {
     }
 
     private void loginAsAdmin(ServiceContext serviceContext) {
-        final User adminUser = userRepository.findAll(
+        final List<User> adminUsers = userRepository.findAll(
             UserSpecs.hasProfile(Profile.Administrator),
-            PageRequest.of(0, 1)).getContent().get(0);
-        Assert.isTrue(adminUser != null, "The system does not have an admin user");
+            PageRequest.of(0, 1)).getContent();
+        if (adminUsers.isEmpty()) {
+            throw new IllegalStateException("The system does not have an admin user");
+        }
         UserSession session = new UserSession();
-        session.loginAs(adminUser);
+        session.loginAs(adminUsers.get(0));
         serviceContext.setUserSession(session);
     }
 }
