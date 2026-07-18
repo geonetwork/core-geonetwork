@@ -362,18 +362,19 @@ public class LocalizedEmailComponent {
     private String replaceLinks(String message) {
         SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
 
-        // Get the recordLinkFormatter from the UI configuration
+        // Get the formatter configured for *links* to records (recordLinkFormatter) from the UI configuration.
         String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
 
         // Build the link to replace the {{link}} placeholder
         // Add the uuid placeholder to the link in the specified format
         UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder
             .fromHttpUrl(settingManager.getNodeURL())
-            .pathSegment("api", "records", replaceLinksWithHtmlFormat ? "{{index:uuid}}" : "'{{'index:uuid'}}'");
+            .pathSegment("api", "records", replaceLinksWithHtmlFormat ? "{{index:uuid}}" : "'{{index:uuid}}'");
 
-        // If recordLinkFormatter is configured add it as a query parameter
+        // When building the record URL, the formatter is passed as the `recordViewFormatter` query parameter
+        // because the API expects that parameter name to decide which formatter to use when displaying the record.
         if (StringUtils.isNotBlank(recordLinkFormatter)) {
-            uriComponentsBuilder.queryParam("recordLinkFormatter", recordLinkFormatter);
+            uriComponentsBuilder.queryParam("recordViewFormatter", recordLinkFormatter);
         }
 
         return message.replace("{{link}}", uriComponentsBuilder.build().toString());

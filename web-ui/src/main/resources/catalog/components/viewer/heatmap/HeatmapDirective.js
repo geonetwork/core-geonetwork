@@ -135,10 +135,10 @@
 
               // unbind event & remove layer on destroy
               $scope.$on("$destroy", function () {
-                ctrl.map.un(mapEventKey);
+                ol.Observable.unByKey(mapEventKey);
                 ctrl.map.removeLayer(ctrl.layer);
                 ctrl.map.removeInteraction(ctrl.hoverInteration);
-                ctrl.map.removeInteraction(ctrl.overlay);
+                ctrl.map.removeOverlay(ctrl.overlay);
               });
 
               // adjust ES request based on current filters

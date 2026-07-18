@@ -20,10 +20,10 @@ INSERT INTO Categories (id, name) VALUES (13,'physicalSamples');
 -- === Table: Groups
 -- ======================================================================
 
-INSERT INTO Groups (id, name, description, email, referrer) VALUES (-1,'GUEST','self-registered users',NULL,NULL);
-INSERT INTO Groups (id, name, description, email, referrer) VALUES (0,'intranet',NULL,NULL,NULL);
-INSERT INTO Groups (id, name, description, email, referrer) VALUES (1,'all',NULL,NULL,NULL);
-INSERT INTO Groups (id, name, description, email, referrer) VALUES (2,'sample',NULL,NULL,NULL);
+INSERT INTO Groups (id, name, description, email, referrer, type) VALUES (-1,'GUEST','self-registered users',NULL,NULL, 'RecordPrivilege');
+INSERT INTO Groups (id, name, description, email, referrer, type) VALUES (0,'intranet',NULL,NULL,NULL, 'RecordPrivilege');
+INSERT INTO Groups (id, name, description, email, referrer, type) VALUES (1,'all',NULL,NULL,NULL, 'RecordPrivilege');
+INSERT INTO Groups (id, name, description, email, referrer, type) VALUES (2,'sample',NULL,NULL,NULL, 'Workspace');
 
 -- ======================================================================
 -- === Table: IsoLanguages
@@ -575,7 +575,7 @@ INSERT INTO Operations (id, name) VALUES  (6,'featured');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/name', 'My GeoNetwork catalogue', 0, 110, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/siteId', '', 0, 120, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/organization', 'My organization', 0, 130, 'n');
-INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/version', '4.4.9', 0, 150, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/version', '4.4.13', 0, 150, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/platform/subVersion', 'SNAPSHOT', 0, 160, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/site/svnUuid', '', 0, 170, 'y');
 
@@ -611,6 +611,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/capabilityRecordUuid', '-1', 0, 1220, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/metadataPublic', 'false', 2, 1310, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/transactionUpdateCreateXPath', 'true', 2, 1320, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/csw/getRecordsIgnoreMetadataNotSupported', 'true', 2, 1321, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userSelfRegistration/enable', 'false', 2, 1910, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/userFeedback/enable', 'false', 2, 1911, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal, editable) VALUES ('system/userFeedback/lastNotificationDate', '', 0, 1912, 'y', 'n');
@@ -630,6 +631,7 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/tokentimeout', '3600', 1, 7020, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/cachesize', '60', 1, 7030, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/maxrecords', '10', 1, 7040, 'y');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/oai/enable', 'true', 2, 7000, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/enable', 'false', 2, 7210, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atom', 'disabled', 0, 7230, 'y');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/inspire/atomSchedule', '0 0 0 * * ?', 0, 7240, 'y');
@@ -657,8 +659,13 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/validation/removeSchemaLocation', 'false', 2, 9170, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/history/enabled', 'false', 2, 9171, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/generateUuid', 'true', 2, 9100, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/publishForGroupEditors', 'false', 2, 9101, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/copyAttachments', 'true', 2, 9102, 'n');
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/skipMetadataCreationPage', 'false', 2, 9103, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/preferredGroup', '', 1, 9105, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadatacreate/preferredTemplate', '', 0, 9106, 'n');
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadata/edit/supportedFileMimetypes', 'image/png|image/gif|image/jpeg|text/plain|application/xml|application/pdf', 0, 9107, 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/usergrouponly', 'false', 2, 9180, 'n');
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/metadataprivs/publicationbyrevieweringroupowneronly', 'true', 2, 9181, 'n');
@@ -727,6 +734,8 @@ INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metada
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/pdfReport/headerLogoFileName', '', 0, 12508, 'y');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/csvReport/csvName', 'metadata_{datetime}.csv', 0, 12607, 'n');
+
+INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/zipExport/attachmentsSizeLimit', NULL , 1, 12700, 'n');
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('system/ui/defaultView', 'default', 0, 10100, 'n');
 

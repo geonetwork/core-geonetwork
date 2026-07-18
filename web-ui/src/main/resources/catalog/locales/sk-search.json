@@ -159,6 +159,7 @@
     "exportCSV": "Exportovať (CSV)",
     "exportPDF": "Exportovať (PDF)",
     "exportMEF": "Exportovať (ZIP)",
+    "exportMEF-excludeAttachments": "Export (ZIP) without attachments",
     "welcomeText": "Tu nájdete údaje, služby, mapy a ďalšie informácie.",
     "searchOver": "Prehľadávať <strong>{{records}}</strong> údajové sady, služby a mapy, ...",
     "browseBy": "Vyhľadávať podľa",
@@ -357,7 +358,7 @@
     "KMLfileURL": "URL súboru KML",
     "refineSearch": "Zúžiť výber",
     "backToList": "Späť na zoznam",
-    "privilegesBatchAlert": "<span class='text-danger'>The privileges will be updated for all editable records in the selection. The privilege form is empty and does not reflect the selected records current privileges! Privileges are reset and replaced by the new one.</span><br/><br/>Clicking on <strong>Merge selected</strong> will add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.<br/><br/>Clicking on <strong>Replace by selected</strong> will remove record categories and then add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.",
+    "privilegesBatchAlert": "<span class='text-danger'>The privileges will be updated for all editable records in the selection. The privilege form is empty and does not reflect the selected records current privileges! Privileges are reset and replaced by the new one.</span><br/><br/>Clicking on <strong>Merge selected</strong> will add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.<br/><br/>Clicking on <strong>Update</strong> will remove record privileges and then add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.",
     "permalink": "Permalink",
     "permalinkTo": "Permalink na {{title}}",
     "shareOnTwitter": "Zdieľaj na Twitter",
@@ -559,5 +560,8 @@
     "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Warning / Field resourceTemporalDateRange / Lower range bound {{lowerBound}} can not be greater than upper bound {{upperBound}}. Date range not indexed.",
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Warning / Field resourceTemporalDateRange / Lower range bound {{lowerBound}} can not be greater than upper bound {{upperBound}}.",
     "indexingErrorMsg-schemaNotRegistered": "Record {{record}} / Schema '{{schema}}' is not registered in this catalog. Install it or remove those records. Record is indexed indexing error flag.",
-    "indexingErrorMsg-indexingStyleSheetError": "Indexing stylesheet contains errors: {{message}} \n  Marking the metadata as _indexingError=1 in index."
+    "indexingErrorMsg-indexingStyleSheetError": "Indexing stylesheet contains errors: {{message}} \n  Marking the metadata as _indexingError=1 in index.",
+    "createAnonymousAccess": "Share unpublished record preview",
+    "deleteAnonymousAccess": "Revoke unpublished record preview",
+    "anonymousAccessTo": "Anonymous access to {{title}}"
 }

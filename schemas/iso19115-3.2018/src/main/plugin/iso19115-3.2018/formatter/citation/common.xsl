@@ -17,16 +17,18 @@
 
   <!-- Who is the creator of the data set?  This can be an individual, a group of individuals, or an organization. -->
   <xsl:param name="authorRoles"
-                select="'custodian,author'"/>
+                select="'custodian,author,coAuthor'"/>
   <xsl:variable name="authorRolesList"
                 select="tokenize($authorRoles, ',')"/>
 
   <!-- What entity is responsible for producing and/or distributing the data set?  Also, is there a physical location associated with the publisher? -->
   <xsl:param name="publisherRoles"
                 select="'publisher'"/>
-
   <xsl:variable name="publisherRolesList"
                 select="tokenize($publisherRoles, ',')"/>
+
+  <xsl:param name="withAffiliation"
+                  select="'false'"/>
 
   <xsl:variable name="formats" as="node()*">
     <format key="html"/>

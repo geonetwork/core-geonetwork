@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -23,6 +23,9 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import co.elastic.clients.elasticsearch.core.search.TotalHits;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Optional;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
@@ -40,9 +43,11 @@ import org.fao.geonet.kernel.XmlSerializer;
 import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SavedQuery;
+import org.fao.geonet.kernel.search.EsFilterBuilder;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.index.IndexingList;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
@@ -116,6 +121,9 @@ public class BaseMetadataUtils implements IMetadataUtils {
     private Path stylePath;
 
     protected IMetadataManager metadataManager;
+
+    @Autowired
+    private NodeInfo nodeInfo;
 
     @Override
     public void setMetadataManager(IMetadataManager metadataManager) {
@@ -355,12 +363,13 @@ public class BaseMetadataUtils implements IMetadataUtils {
         } else {
             uriComponentsBuilder = UriComponentsBuilder.fromUriString(defaultLink);
 
-            // Get the recordLinkFormatter from the UI configuration
+            // Get the formatter configured for *links* to records (recordLinkFormatter) from the UI configuration.
             String recordLinkFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
 
-            // If the recordLinkFormatter is defined append it to the defaultLink
+            // When building the record URL, the formatter is passed as the `recordViewFormatter` query parameter
+            // because the API expects that parameter name to decide which formatter to use when displaying the record.
             if (StringUtils.isNotBlank(recordLinkFormatter)) {
-                uriComponentsBuilder.queryParam("recordLinkFormatter", recordLinkFormatter);
+                uriComponentsBuilder.queryParam("recordViewFormatter", recordLinkFormatter);
             }
         }
 
@@ -532,7 +541,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void setTemplate(final int id, final MetadataType type, final String title) throws Exception {
         setTemplateExt(id, type);
-        metadataIndexer.indexMetadata(Integer.toString(id), true, IndexingMode.full);
+        metadataIndexer.indexMetadata(Integer.toString(id), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
     }
 
     @Override
@@ -546,7 +555,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void setHarvested(int id, String harvestUuid) throws Exception {
         setHarvestedExt(id, harvestUuid);
-        metadataIndexer.indexMetadata(Integer.toString(id), true, IndexingMode.full);
+        metadataIndexer.indexMetadata(Integer.toString(id), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
     }
 
     /**
@@ -787,7 +796,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         getXmlSerializer().update(metadataId, md, changeDate, true, uuid, context);
 
         if (indexAfterChange) {
-            metadataIndexer.indexMetadata(metadataId, true, IndexingMode.full);
+            metadataIndexer.indexMetadata(metadataId, DirectIndexSubmitter.INSTANCE, IndexingMode.full);
         }
     }
 
@@ -1032,7 +1041,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> spec) {
         try {
-            return metadataRepository.findSourceInfo((Specification<Metadata>) spec);
+            return metadataRepository.findSourceInfo(spec);
         } catch (Throwable t) {
             // Maybe it is not a Specification<Metadata>
         }
@@ -1062,5 +1071,39 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public String selectOneWithRegexSearchAndReplace(String uuid, String search, String replace) {
         return metadataRepository.selectOneWithRegexSearchAndReplace(uuid, search, replace);
+    }
+
+    @Override
+    public boolean isMetadataAvailableInPortal(int id) {
+        // Check if the metadata is available in the portal
+        String elasticSearchQuery = "{ \"bool\": {\n" +
+            "            \"must\": [\n" +
+            "        {" +
+            "          \"term\": {" +
+            "            \"id\": {" +
+            "              \"value\": \"%s\"" +
+            "            }" +
+            "          }" +
+            "        } " +
+            "            ]%s}}";
+
+        String portalFilter = "          ,\"filter\":{\"query_string\":{\"query\":\"%s\"}}";
+
+        JsonNode esJsonQuery;
+
+        try {
+            String filterQueryString = EsFilterBuilder.buildPortalFilter(nodeInfo);
+            String jsonQueryFilter = StringUtils.isNotEmpty(filterQueryString) ? String.format(portalFilter, filterQueryString): "";
+            String jsonQuery = String.format(elasticSearchQuery, id, jsonQueryFilter);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            esJsonQuery = objectMapper.readTree(jsonQuery);
+
+            TotalHits total = searchManager.query(esJsonQuery, new HashSet<>(), 0, 0).hits().total();
+
+            return (java.util.Optional.ofNullable(total).map(TotalHits::value).orElse(0L) > 0);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

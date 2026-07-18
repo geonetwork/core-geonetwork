@@ -25,6 +25,8 @@ package org.fao.geonet.util;
 
 import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.cache.Cache;
@@ -410,6 +412,39 @@ public final class XslUtil {
     }
 
     /**
+     * Build a JavaScript expression for an optional inline UI configuration.
+     *
+     * Returns a {@code JSON.parse(...)} call when the value is a JSON object,
+     * or an empty string otherwise so the caller can fall back to a default.
+     */
+    public static String toUiConfigArg(String config) {
+        if (StringUtils.isBlank(config)) {
+            return "";
+        }
+        try {
+            ObjectMapper mapper = new ObjectMapper()
+                .enable(DeserializationFeature.FAIL_ON_TRAILING_TOKENS);
+            JsonNode node = mapper.readTree(config);
+            if (node == null || !node.isObject()) {
+                return "";
+            }
+            String literal = mapper.writeValueAsString(mapper.writeValueAsString(node));
+            return "JSON.parse(" + escapeForScriptContext(literal) + ")";
+        } catch (JsonProcessingException e) {
+            return "";
+        }
+    }
+
+    private static String escapeForScriptContext(String value) {
+        return value
+            .replace("&", "\\u0026")
+            .replace("<", "\\u003c")
+            .replace(">", "\\u003e")
+            .replace(String.valueOf((char) 0x2028), "\\u2028")
+            .replace(String.valueOf((char) 0x2029), "\\u2029");
+    }
+
+    /**
      * Get a setting value
      */
     public static String getSettingValue(String key) {
@@ -708,15 +743,29 @@ public final class XslUtil {
         return "";
     }
 
-    /**
-     * Try to preserve some HTML layout to text layout.
-     *
-     * Replace br tag by new line, li by new line with leading *.
-     */
-    public static String htmlElement2textReplacer(String html) {
-        return html
-            .replaceAll("<br */?>", System.getProperty("line.separator"))
-            .replaceAll("<li>(.*)</li>", System.getProperty("line.separator") + "* $1");
+    public static String htmlElement2textReplacer(String htmlRaw) {
+        String separator = "\n";
+        String htmlWithoutNewlines = htmlRaw.replaceAll("[\n\r]", "");
+        org.jsoup.nodes.Document doc = Jsoup.parse(htmlWithoutNewlines);
+
+        // Handle <li> tags: prepend a bullet (*) to each item
+        doc.select("li:not(:empty)").prepend(separator + "* ");
+
+        // Handle <p> tags: append an empty string (ensure it becomes block-level)
+        doc.select("p:not(:empty)").prepend(separator).append(separator);
+
+        // Handle <h1-h6> tags: prepend # to the header
+        doc.select("h1:not(:empty), h2:not(:empty), h3:not(:empty), h4:not(:empty), h5:not(:empty), h6:not(:empty)").prepend(separator + "# ").append(separator);
+
+        // Handle <a> tags: append the URL in parentheses after the link text
+        for (org.jsoup.nodes.Element element : doc.select("a")) {
+            String text = element.text();
+            String link = element.attr("href");
+            if (!text.equals(link)) {
+                element.text(text + " (" + link + ")");
+            }
+        }
+        return doc.wholeText().trim();
     }
     public static String html2text(String html) {
         return Jsoup.parse(html).wholeText();
@@ -927,10 +976,10 @@ public final class XslUtil {
     }
 
     /**
-     * Return 2 iso lang code from a 3 iso lang code. If any error occurs return "".
+     * Return 2 iso lang code (ISO 639-1 two-letter code) from a 3 iso lang code. If any error occurs return "".
      *
-     * @param iso3LangCode The 2 iso lang code
-     * @return The related 3 iso lang code
+     * @param iso3LangCode The 3 chars iso lang code
+     * @return The related 2 chars iso lang code
      */
     public static
     @Nonnull
@@ -1248,11 +1297,12 @@ public final class XslUtil {
                 BufferedImage image;
                 if (m.find()) {
                     Store store = ApplicationContextHolder.get().getBean("filesystemStore", Store.class);
-                    try (Store.ResourceHolder file = store.getResourceInternal(
+                    try (Store.ResourceHolder resourceHolder = store.getResourceInternal(
                         URLDecoder.decode(m.group(1), Constants.ENCODING),
                         MetadataResourceVisibility.PUBLIC,
-                        URLDecoder.decode(m.group(2), Constants.ENCODING), true)) {
-                        image = ImageIO.read(file.getPath().toFile());
+                        URLDecoder.decode(m.group(2), Constants.ENCODING), true);
+                        InputStream is = resourceHolder.getResource().getInputStream()) {
+                        image = ImageIO.read(is);
                     }
                 } else {
                     URL imageUrl = new URL(url);

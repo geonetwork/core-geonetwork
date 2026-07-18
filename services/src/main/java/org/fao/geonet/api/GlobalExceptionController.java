@@ -196,6 +196,20 @@ public class GlobalExceptionController {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
     @ExceptionHandler({
+        AttachmentsExportLimitExceededException.class
+    })
+    public ApiError attachmentSizeLimitExceededHandler(final Exception exception, final HttpServletRequest request) {
+        storeApiErrorCause(exception);
+
+        Log.warning(Geonet.GEONETWORK, exception.getMessage(), exception);
+
+        return new ApiError("export_attachment_size_limit_exceeded", exception);
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
+    @ExceptionHandler({
         HttpMessageNotReadableException.class,
         Exception.class,
         InspireValidatorException.class,

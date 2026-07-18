@@ -35,6 +35,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.utils.Log;
 import org.jdom.Element;
+import org.springframework.core.io.PathResource;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -77,7 +78,7 @@ public class DefaultResourceUploadHandler implements IResourceUploadHandler {
                 throw new Exception("File upload unsuccessful because "
                     + fileName + " already exists and overwrite was not permitted");
             }
-            store.putResource(context, uuid, source, visibility);
+            store.putResource(context, uuid, new PathResource(source), visibility);
         } finally {
             Files.delete(source);
         }

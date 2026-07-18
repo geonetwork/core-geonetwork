@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2025 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -43,15 +43,19 @@ import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.*;
 import org.fao.geonet.api.records.model.MetadataPublicationNotificationInfo;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.config.IPublicationConfig;
 import org.fao.geonet.config.PublicationOption;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordGroupOwnerChangeEvent;
 import org.fao.geonet.events.history.RecordOwnerChangeEvent;
+import org.fao.geonet.events.history.RecordPrivilegesChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.*;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.api.records.model.GroupOperations;
 import org.fao.geonet.api.records.model.GroupPrivilege;
 import org.fao.geonet.kernel.metadata.MetadataPublicationService;
@@ -62,9 +66,12 @@ import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.util.MetadataPublicationMailNotifier;
-import org.fao.geonet.util.UserUtil;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -76,6 +83,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL;
@@ -93,6 +101,19 @@ import static org.springframework.data.jpa.domain.Specification.where;
 @ReadWriteController
 public class MetadataSharingApi {
     private static final String DEFAULT_PUBLICATION_TYPE_NAME = "default";
+
+    /**
+     * Language utils used to detect the requested language.
+     */
+    @Autowired
+    LanguageUtils languageUtils;
+
+    /**
+     * Message source.
+     */
+    @Autowired
+    @Qualifier("apiMessages")
+    ResourceBundleMessageSource messages;
 
     @Autowired
     FeedbackLanguages feedbackLanguages;
@@ -210,13 +231,14 @@ public class MetadataSharingApi {
         throws Exception {
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        checkUserProfileToPublishMetadata(userSession);
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
+        checkUserProfileToPublishMetadata(groupOwner, userSession);
 
         if (StringUtils.isEmpty(publicationType)) {
             publicationType = DEFAULT_PUBLICATION_TYPE_NAME;
         }
 
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         metadataPublicationService.shareMetadataWithReservedGroup(serviceContext, metadata, true, publicationType);
 
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
@@ -256,13 +278,16 @@ public class MetadataSharingApi {
         throws Exception {
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        checkUserProfileToUnpublishMetadata(userSession);
+
+        // Get the id of the group that owns the metadata record identified by the uuid
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
+        checkUserProfileToUnpublishMetadata(groupOwner, userSession);
 
         if (StringUtils.isEmpty(publicationType)) {
             publicationType = DEFAULT_PUBLICATION_TYPE_NAME;
         }
 
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         metadataPublicationService.shareMetadataWithReservedGroup(serviceContext, metadata, false, publicationType);
 
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
@@ -276,12 +301,13 @@ public class MetadataSharingApi {
         summary = "Set record sharing",
         description = "Privileges are assigned by group. User needs to be able " +
             "to edit a record to set sharing settings. For reserved group " +
-            "(ie. Internet, Intranet & Guest), user MUST be reviewer of one group. " +
+            "(ie. Internet, Intranet & Guest), user MUST have the configured " +
+            "publication profile in the metadata owner group. " +
             "For other group, if Only set privileges to user's groups is set " +
             "in catalog configuration user MUST be a member of the group.<br/>" +
             "Clear first allows to unset all operations first before setting the new ones." +
-            "Clear option does not remove reserved groups operation if user is not an " +
-            "administrator, a reviewer or the owner of the record.<br/>" +
+            "Clear option does not remove reserved groups operation if user does not " +
+            "meet reserved-group publication permissions for the record.<br/>" +
             "<a href='https://geonetwork-opensource.org/manuals/trunk/eng/users/user-guide/publishing/managing-privileges.html'>More info</a>")
     @RequestMapping(
         value = "/{metadataUuid}/sharing",
@@ -321,6 +347,7 @@ public class MetadataSharingApi {
         //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
         //--- and are not sent to the server. So we cannot remove them
         boolean skipAllReservedGroup = !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()));
+
 
         List<Operation> operationList = operationRepository.findAll();
         Map<String, Integer> operationMap = new HashMap<>(operationList.size());
@@ -367,7 +394,7 @@ public class MetadataSharingApi {
         @Parameter(
             description = "Publication type",
             required = false)
-        @RequestParam(required = false)  String publicationType,
+        @RequestParam(required = false) String publicationType,
         @Parameter(hidden = true)
         HttpSession session,
         HttpServletRequest request
@@ -383,7 +410,7 @@ public class MetadataSharingApi {
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
         if (publicationOption.isPresent()) {
             Set<Integer> metadataProcessed = metadataProcessingReport.getMetadata();
-            for(Integer metadataId: metadataProcessed) {
+            for (Integer metadataId : metadataProcessed) {
                 publicationConfig.processMetadata(serviceContext, publicationOption.get(),
                     metadataId, true);
             }
@@ -431,7 +458,7 @@ public class MetadataSharingApi {
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
         if (publicationOption.isPresent()) {
             Set<Integer> metadataProcessed = metadataProcessingReport.getMetadata();
-            for(Integer metadataId: metadataProcessed) {
+            for (Integer metadataId : metadataProcessed) {
                 publicationConfig.processMetadata(serviceContext, publicationOption.get(),
                     metadataId, false);
             }
@@ -535,9 +562,13 @@ public class MetadataSharingApi {
                     && g.getId() == ReservedGroup.intranet.getId()) {
                     continue;
                 }
+                if (g.getType() == GroupType.SystemPrivilege) {
+                    continue;
+                }
                 GroupPrivilege groupPrivilege = new GroupPrivilege();
                 groupPrivilege.setGroup(g.getId());
                 groupPrivilege.setReserved(g.isReserved());
+                groupPrivilege.setRecordPrivilege(g.getType() == GroupType.RecordPrivilege);
                 // TODO: Restrict to user group only in response depending on settings?
                 groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
 
@@ -552,7 +583,7 @@ public class MetadataSharingApi {
                 }
                 groupPrivilege.setUserProfile(userGroupProfile);
 
-                // Restrict changing privileges for groups with a minimum profile for setting privileges set
+                // Restrict changing privileges for groups with a required profile for setting privileges set
                 groupPrivilege.setRestricted(!canUserChangePrivilegesForGroup(context, g));
 
                 //--- get all operations that this group can do on given metadata
@@ -609,14 +640,23 @@ public class MetadataSharingApi {
             required = true
         )
         Integer groupIdentifier,
+        @Parameter(hidden = true)
+        HttpSession session,
         HttpServletRequest request
     )
         throws Exception {
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+
+        ServiceContext context = ApiUtils.createServiceContext(request);
         ApplicationContext appContext = ApplicationContextHolder.get();
 
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        checkGroupIsWorkspace(groupIdentifier, locale);
+
+        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+
         java.util.Optional<Group> group = groupRepository.findById(groupIdentifier);
-        if (!group.isPresent()) {
+        if (group.isEmpty()) {
             throw new ResourceNotFoundException(String.format(
                 "Group with identifier '%s' not found.", groupIdentifier
             ));
@@ -628,14 +668,150 @@ public class MetadataSharingApi {
             oldGroup = groupRepository.findById(previousGroup).get();
         }
 
-        metadata.getSourceInfo().setGroupOwner(groupIdentifier);
-        metadataManager.save(metadata);
-        dataManager.indexMetadata(String.valueOf(metadata.getId()), true);
+        //update group ownership
+        // When workflow is enabled, there may be a draft and an approved version.
+        // Both need to be updated.
+        List<Integer> allMetadataIds = this.metadataUtils.findAllIdsBy(
+            MetadataSpecs.hasMetadataUuid(metadata.getUuid()));
 
+        if (!allMetadataIds.isEmpty()) {
+            for (Integer mdId : allMetadataIds) {
+                AbstractMetadata md = metadataUtils.findOne(mdId);
+                if (md != null) {
+                    if (!accessManager.canEdit(context, String.valueOf(md.getId()))) {
+                        throw new NotAllowedException(
+                            "User does not have permission to edit all versions of metadata " + metadataUuid);
+                    }
+                    md.getSourceInfo().setGroupOwner(groupIdentifier);
+                    metadataManager.save(md);
+                } else {
+                    throw new ResourceNotFoundException(String.format(
+                        "Metadata with uuid '%s' and identifier '%d' not found.", metadataUuid, mdId
+                    ));
+                }
+            }
+        } else {
+            throw new ResourceNotFoundException(String.format(
+                "Metadata with uuid '%s' not found.", metadataUuid
+            ));
+        }
+
+        //need to update permissions.
+        // 1. drop ALL permissions for the "old" group
+        // 2. ADD these permissions to the new group.
+
+        // get the current set of privileges
+        SharingResponse sharingResponse = getRecordSharingSettings(metadataUuid, session, request);
+
+        //copy so we can publish the diff (we are modifying sharingResponse with updated permissions)
+        var originalSharingResponse = new SharingResponse();
+        originalSharingResponse.setGroupOwner(sharingResponse.getGroupOwner());
+        originalSharingResponse.setOwner(sharingResponse.getOwner());
+        var copyPrivs = sharingResponse.getPrivileges().stream()
+            .map(x -> {
+                var result = new GroupPrivilege();
+                result.setGroup(x.getGroup());
+                result.setReserved(x.isReserved());
+                result.setRestricted(x.isRestricted());
+                result.setRecordPrivilege(x.isRecordPrivilege());
+                result.setUserGroup(x.isUserGroup());
+                result.setUserProfile(x.getUserProfiles());
+                result.setOperations(new HashMap<>(x.getOperations()));
+                return result;
+            })
+            .collect(Collectors.toList());
+        originalSharingResponse.setPrivileges(copyPrivs);
+
+
+        //old permissions
+        Integer sourceUsr = metadata.getSourceInfo().getOwner();
+        String metadataId = String.valueOf(metadata.getId());
+        Integer oldGroupId = oldGroup != null ? oldGroup.getId() : null;
+        Vector<OperationAllowedId> oldPriv = retrievePrivileges(context, metadataId, sourceUsr, oldGroupId);
+
+
+        //modify the sharingResponse (current permissions from DB) with new privileges (group XFER).
+        for (var groupPriv : sharingResponse.getPrivileges()) {
+            if (Objects.equals(groupPriv.getGroup(), previousGroup)) {
+                //old group: permissions - remove them (set all false)
+                var ops = groupPriv.getOperations();
+                ops.replaceAll((o, v) -> false);
+            } else if (Objects.equals(groupPriv.getGroup(), groupIdentifier)) {
+                //new group: permissions - ADD the old groups permissions
+                var ops = groupPriv.getOperations();
+                for (var addOp : oldPriv) {
+                    var opName = ReservedOperation.lookup(addOp.getOperationId());
+                    ops.put(opName.toString(), true);
+                }
+            }
+        }
+
+        //convert object for the two apis (getRecordSharingSettings vs setOperations)
+        var newPrivileges = sharingResponse.getPrivileges().stream()
+            .map(p -> {
+                var result = new GroupOperations();
+                result.setGroup(p.getGroup());
+                result.setOperations(p.getOperations());
+                return result;
+            })
+            .collect(Collectors.toList());
+
+
+        SharingParameter sharingParameter = new SharingParameter();
+        sharingParameter.setClear(true); // remove all permissions then add the new ones
+        sharingParameter.setPrivileges(newPrivileges);
+
+        List<Operation> operationList = operationRepository.findAll();
+        Map<String, Integer> operationMap = new HashMap<>(operationList.size());
+        for (Operation o : operationList) {
+            operationMap.put(o.getName(), o.getId());
+        }
+        List<GroupOperations> privileges = sharingParameter.getPrivileges();
+
+        //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
+        //--- and are not sent to the server. So we cannot remove them
+        boolean skipAllReservedGroup = !accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()));
+
+        MetadataProcessingReport metadataProcessingReport = null;
+        List<MetadataPublicationNotificationInfo> metadataListToNotifyPublication = new ArrayList<>();
+        boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
+        Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
+
+        //actually update DB
+        metadataPublicationService.setOperations(sharingParameter,
+            this.dataManager,
+            context,
+            appContext,
+            metadata,
+            operationMap,
+            privileges,
+            sourceUsr,
+            skipAllReservedGroup,
+            metadataProcessingReport,
+            metadataListToNotifyPublication,
+            notifyByEmail
+        );
+
+        if (notifyByEmail && !metadataListToNotifyPublication.isEmpty()) {
+            metadataPublicationMailNotifier.notifyPublication(feedbackLocales,
+                metadataListToNotifyPublication);
+        }
+
+
+        dataManager.indexMetadata(String.valueOf(metadata.getId()), DirectIndexSubmitter.INSTANCE);
+
+        //publish group change
         new RecordGroupOwnerChangeEvent(metadata.getId(),
-                                        ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
-                                        ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),
-                                        ObjectJSONUtils.convertObjectInJsonObject(group.get(), RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
+            ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
+            ObjectJSONUtils.convertObjectInJsonObject(oldGroup, RecordGroupOwnerChangeEvent.FIELD),
+            ObjectJSONUtils.convertObjectInJsonObject(group.get(), RecordGroupOwnerChangeEvent.FIELD)).publish(appContext);
+
+        //publish permissions change
+        new RecordPrivilegesChangeEvent(metadata.getId(),
+            ApiUtils.getUserSession(request.getSession()).getUserIdAsInt(),
+            ObjectJSONUtils.convertObjectInJsonObject(originalSharingResponse.getPrivileges(), RecordPrivilegesChangeEvent.FIELD),
+            ObjectJSONUtils.convertObjectInJsonObject(newPrivileges, RecordPrivilegesChangeEvent.FIELD)).publish(appContext);
+
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -662,10 +838,12 @@ public class MetadataSharingApi {
     )
         throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        UserSession userSession = ApiUtils.getUserSession(session);
 
         SharingResponse sharingResponse = new SharingResponse();
-        sharingResponse.setOwner(userSession.getUserId());
+        if (session != null) {
+            UserSession userSession = ApiUtils.getUserSession(session);
+            sharingResponse.setOwner(userSession.getUserId());
+        }
 
         List<Operation> allOperations = operationRepository.findAll();
 
@@ -685,9 +863,15 @@ public class MetadataSharingApi {
                 && g.getId() == ReservedGroup.intranet.getId()) {
                 continue;
             }
+            if (g.getType() == GroupType.SystemPrivilege) {
+                continue;
+            }
             GroupPrivilege groupPrivilege = new GroupPrivilege();
             groupPrivilege.setGroup(g.getId());
             groupPrivilege.setReserved(g.isReserved());
+            groupPrivilege.setRecordPrivilege(g.getType() == GroupType.RecordPrivilege);
+            // Restrict changing privileges for groups with a required profile for setting privileges set
+            groupPrivilege.setRestricted(!canUserChangePrivilegesForGroup(context, g));
             groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
 
             Map<String, Boolean> operations = new HashMap<>(allOperations.size());
@@ -751,6 +935,15 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        // If the group is reserved, there is no need to check if it's a workspace as the group will not be changed.
+        // This is required for transferring ownership to an administrator
+        if (!ReservedGroup.isReserved(groupIdentifier)) {
+            checkGroupIsWorkspace(groupIdentifier, locale);
+        }
+
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         try {
@@ -821,6 +1014,15 @@ public class MetadataSharingApi {
         HttpServletRequest request
     )
         throws Exception {
+
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+
+        // If the group is reserved, there is no need to check if it's a workspace as the group will not be changed.
+        // This is required for transferring ownership to an administrator
+        if (!ReservedGroup.isReserved(groupIdentifier)) {
+            checkGroupIsWorkspace(groupIdentifier, locale);
+        }
+
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         ApiUtils.canEditRecord(metadataUuid, request);
@@ -920,7 +1122,7 @@ public class MetadataSharingApi {
                     }
                 }
 
-                Long metadataId = Long.valueOf(metadata.getId());
+                Long metadataId = (long) metadata.getId();
                 ApplicationContext context = ApplicationContextHolder.get();
                 if (!Objects.equals(groupIdentifierUsed, sourceGrp)) {
                     Group newGroup = groupRepository.findById(groupIdentifierUsed).get();
@@ -949,36 +1151,67 @@ public class MetadataSharingApi {
     /**
      * Checks if the user profile is allowed to publish metadata.
      *
-     * @param userSession
+     * @param groupId the group owner of the metadata to publish
+     * @param userSession the user session for authorization checks
      */
-    private void checkUserProfileToPublishMetadata(UserSession userSession) {
-        if (userSession.getProfile() != Profile.Administrator) {
-            String allowedUserProfileToPublishMetadata =
-                org.apache.commons.lang.StringUtils.defaultIfBlank(sm.getValue(Settings.METADATA_PUBLISH_USERPROFILE), Profile.Reviewer.toString());
-
-            // Is the user profile is higher than the profile allowed to import metadata?
-            if (!UserUtil.hasHierarchyRole(allowedUserProfileToPublishMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException(String.format(
-                    "Publication of metadata is not allowed. User needs to be at least %s to publish record.", allowedUserProfileToPublishMetadata));
+    private void checkUserProfileToPublishMetadata(Integer groupId, UserSession userSession) {
+        if (userSession.getProfile() == Profile.Administrator) {
+            return; // Administrators are always allowed to publish metadata
+        }
+        if (groupId == null) {
+            throw new NotAllowedException("Publication of metadata is not allowed. Metadata without group owner cannot be published.");
+        }
+        Profile defaultProfileForPublishing = Profile.Reviewer;
+        String configuredProfileForPublishing = sm.getValue(Settings.METADATA_PUBLISH_USERPROFILE);
+        Profile requiredProfileForPublishing;
+        try {
+            requiredProfileForPublishing = Profile.valueOf(configuredProfileForPublishing);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            if (e instanceof IllegalArgumentException) {
+                Log.error(Geonet.SETTINGS, "Invalid profile configured for publishing. Using default value: " + defaultProfileForPublishing);
             }
+            requiredProfileForPublishing = defaultProfileForPublishing;
+        }
+
+        boolean canUserPublishForGroup = accessManager.isProfileOnGroup(userSession, requiredProfileForPublishing, groupId);
+
+        if (!canUserPublishForGroup) {
+            throw new NotAllowedException(String.format(
+                "Publication of metadata is not allowed. User must have the %s profile in the record owner group.", requiredProfileForPublishing));
         }
     }
 
     /**
-     * Checks if the user profile is allowed to un-publish metadata.
+     * Checks if the user profile is allowed to unpublish metadata.
      *
-     * @param userSession
+     * @param groupId the group owner of the metadata to unpublish
+     * @param userSession the user session for authorization checks
+     *
      */
-    private void checkUserProfileToUnpublishMetadata(UserSession userSession) {
-        if (userSession.getProfile() != Profile.Administrator) {
-            String allowedUserProfileToUnpublishMetadata =
-                org.apache.commons.lang.StringUtils.defaultIfBlank(sm.getValue(Settings.METADATA_UNPUBLISH_USERPROFILE), Profile.Reviewer.toString());
-
-            // Is the user profile is higher than the profile allowed to import metadata?
-            if (!UserUtil.hasHierarchyRole(allowedUserProfileToUnpublishMetadata, this.roleHierarchy)) {
-                throw new NotAllowedException(String.format(
-                    "Unpublication of metadata is not allowed. User needs to be at least %s to unpublish record.", allowedUserProfileToUnpublishMetadata));
+    private void checkUserProfileToUnpublishMetadata(Integer groupId, UserSession userSession) {
+        if (userSession.getProfile() == Profile.Administrator) {
+            return; // Administrators are always allowed to unpublish metadata
+        }
+        if (groupId == null) {
+            throw new NotAllowedException("Unpublication of metadata is not allowed. Metadata without group owner cannot be unpublished.");
+        }
+        Profile defaultProfileForUnpublishing = Profile.Reviewer;
+        String configuredProfileForUnpublishing = sm.getValue(Settings.METADATA_UNPUBLISH_USERPROFILE);
+        Profile requiredProfileForUnpublishing;
+        try {
+            requiredProfileForUnpublishing = Profile.valueOf(configuredProfileForUnpublishing);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            if (e instanceof IllegalArgumentException) {
+                Log.error(Geonet.SETTINGS, "Invalid profile configured for unpublishing. Using default value: " + defaultProfileForUnpublishing);
             }
+            requiredProfileForUnpublishing = defaultProfileForUnpublishing;
+        }
+
+        boolean canUserUnpublishForGroup = accessManager.isProfileOnGroup(userSession, requiredProfileForUnpublishing, groupId);
+
+        if (!canUserUnpublishForGroup) {
+            throw new NotAllowedException(String.format(
+                "Unpublication of metadata is not allowed. User must have the %s profile in the record owner group.", requiredProfileForUnpublishing));
         }
     }
 
@@ -994,7 +1227,40 @@ public class MetadataSharingApi {
         if (minimumProfileForPrivileges == null) {
             return true;
         } else {
-            return accessManager.isProfileOrMoreOnGroup(context, minimumProfileForPrivileges, group.getId());
+            return accessManager.isProfileOrMoreOnGroup(context.getUserSession(), minimumProfileForPrivileges, group.getId());
         }
+    }
+
+    /**
+     * Checks if the given group is of type Workspace.
+     *
+     * @param groupId the identifier of the group to check
+     * @param locale  the locale to use for error messages
+     * @throws ResourceNotFoundException if the group is not found
+     * @throws IllegalArgumentException  if the group is not of type Workspace
+     */
+    private void checkGroupIsWorkspace(Integer groupId, Locale locale) throws ResourceNotFoundException {
+        if (!groupIsType(groupId, GroupType.Workspace, locale)) {
+            throw new IllegalArgumentException(messages.getMessage("api.groups.group_not_workspace", new
+                Object[]{groupId}, locale));
+        }
+    }
+
+    /**
+     * Checks if the given group is of the specified type.
+     *
+     * @param groupId   the identifier of the group to check
+     * @param groupType the type to check against
+     * @param locale    the locale to use for error messages
+     * @return true if the group is of the specified type, false otherwise
+     * @throws ResourceNotFoundException if the group is not found
+     */
+    private boolean groupIsType(Integer groupId, GroupType groupType, Locale locale) throws ResourceNotFoundException {
+        Group group = groupRepository.findById(groupId).orElse(null);
+        if (group == null) {
+            throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
+                Object[]{groupId}, locale));
+        }
+        return group.getType() == groupType;
     }
 }

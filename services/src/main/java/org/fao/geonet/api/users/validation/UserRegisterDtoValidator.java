@@ -24,6 +24,7 @@
 package org.fao.geonet.api.users.validation;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.users.UsersApi;
 import org.fao.geonet.api.users.model.UserRegisterDto;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.repository.UserRepository;
@@ -56,6 +57,12 @@ public class UserRegisterDtoValidator implements Validator {
 
         if (StringUtils.hasLength(userRegisterDto.getEmail()) && !EmailUtil.isValidEmailAddress(userRegisterDto.getEmail())) {
             errors.rejectValue("email", "field.notvalid", "Email address is not valid");
+        }
+
+        if (StringUtils.hasLength(userRegisterDto.getUsername()) && userRegisterDto.getUsername().length() > UsersApi.MAX_USERNAME_LENGTH) {
+            errors.rejectValue("username", "field.length",
+                new Object[]{UsersApi.MAX_USERNAME_LENGTH},
+                "username size should be less or equals than " + UsersApi.MAX_USERNAME_LENGTH + " characters");
         }
 
         UserRepository userRepository = ApplicationContextHolder.get().getBean(UserRepository.class);

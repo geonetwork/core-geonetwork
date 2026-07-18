@@ -42,6 +42,7 @@
                 xmlns:gml="http://www.opengis.net/gml/3.2"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xd="http://www.oxygenxml.com/ns/doc/xsl"
+                xmlns:java="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
 
     <xsl:output method="xml" indent="yes"/>
@@ -185,7 +186,7 @@
             </mri:citation>
             <mri:abstract>
               <gco:CharacterString>
-                <xsl:value-of select="notes"/>
+                <xsl:value-of select="java:html2text(notes, boolean(1))"/>
               </gco:CharacterString>
             </mri:abstract>
             <mri:purpose>

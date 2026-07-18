@@ -305,26 +305,7 @@ form.gn-editor {
    * line instead of 100% width in input group.
    */
   .gn-date-picker {
-    > input.gn-date {
-      width: 50%;
-    }
-    > input.gn-time {
-      width: 35%;
-    }
-    > select.gn-timezone {
-      width: 15%;
-    }
-    > input.gn-timezone {
-      width: 15%;
-    }
-    > input.gn-date.gn-notime {
-      width: 100% !important;
-    }
-    > input.gn-time.hidden,
-    > select.gn-timezone.hidden,
-    > input.gn-timezone.hidden {
-      width: 0% !important;
-    }
+    display: flex;
     .gn-indeterminate-position {
       display: table-cell;
       > select {
@@ -341,6 +322,15 @@ form.gn-editor {
       }
       > input[type="time"] {
         width: 40%;
+      }
+    }
+    > select.gn-timezone {
+      min-width: 30%;
+    }
+    .input-group-btn {
+      width: auto !important;
+      > button {
+        height: -webkit-fill-available;
       }
     }
   }
@@ -1042,4 +1032,19 @@ gn-bounding-polygon {
 .is-active {
   background-color: #e2edf7;
   border-radius: 3px;
+}
+
+.container-fluid,
+.container {
+  // Fixes gn-modal windows; TODO: fix this globally in gn-popup style
+  [gn-modal] {
+    max-width: none;
+    max-height: none;
+
+    @media (min-width: 992px) {
+      .modal-dialog {
+        width: 650px;
+      }
+    }
+  }
 }

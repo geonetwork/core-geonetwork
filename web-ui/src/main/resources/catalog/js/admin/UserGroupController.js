@@ -104,6 +104,8 @@
       // List of catalog groups
       $scope.groups = null;
       $scope.groupSelected = { id: $routeParams.userOrGroup };
+      $scope.nonSystemGroups = null;
+      $scope.systemGroups = null;
       // On going changes group ...
       $scope.groupUpdated = false;
       $scope.groupSearch = {};
@@ -167,6 +169,20 @@
         $scope.categories = [nullTag].concat(categoriesSorted);
       });
 
+      $scope.groupTypes = [
+        { id: "Workspace", label: "groupTypeWorkspace", hasProfiles: true },
+        { id: "RecordPrivilege", label: "groupTypeRecordPrivilege", hasProfiles: true },
+        { id: "SystemPrivilege", label: "groupTypeSystemPrivilege", hasProfiles: false }
+      ];
+
+      var groupTypesWithoutProfiles = $scope.groupTypes
+        .filter(function (gt) {
+          return !gt.hasProfiles;
+        })
+        .map(function (gt) {
+          return gt.id;
+        });
+
       function loadGroups() {
         $scope.isLoadingGroups = true;
         // If not send profile, all groups are returned
@@ -177,6 +193,15 @@
             $scope.groups = response.data;
             angular.forEach($scope.groups, function (u) {
               u.langlabel = getLabel(u);
+            });
+            $scope.groupsWithProfiles = $scope.groups.filter(function (g) {
+              return !groupTypesWithoutProfiles.includes(g.type);
+            });
+            $scope.groupsWithoutProfiles = $scope.groups.filter(function (g) {
+              return groupTypesWithoutProfiles.includes(g.type);
+            });
+            $scope.systemGroups = $scope.groups.filter(function (g) {
+              return g.type === "SystemPrivilege";
             });
             $scope.isLoadingGroups = false;
 
@@ -278,6 +303,7 @@
         $scope.userIsEnabled = true;
 
         updateGroupsByProfile($scope.userGroups);
+        updateGroupsWithoutProfilesByType($scope.userGroups);
 
         $timeout(function () {
           $scope.setUserProfile();
@@ -441,6 +467,7 @@
       };
 
       $scope.groupsByProfile = [];
+      $scope.groupsWithoutProfilesByType = [];
 
       /**
        * Returns the list of groups inside "groups" with the selected profile
@@ -464,7 +491,11 @@
           res[profile] = [];
           if (groups != null) {
             for (var i = 0; i < groups.length; i++) {
-              if (groups[i].id.profile == profile) {
+              // If group has the profile, and the group has profiles
+              if (
+                groups[i].id.profile == profile &&
+                !groupTypesWithoutProfiles.includes(groups[i].group.type)
+              ) {
                 var g = groups[i].group;
                 g.langlabel = getLabel(g);
                 res[profile].push(g);
@@ -478,8 +509,36 @@
         $scope.groupsByProfile = res;
       };
 
+      var updateGroupsWithoutProfilesByType = function (groups) {
+        var res = [];
+
+        angular.forEach(groupTypesWithoutProfiles, function (type) {
+          res[type] = [];
+          if (groups != null) {
+            for (var i = 0; i < groups.length; i++) {
+              if (groups[i].group.type === type) {
+                var g = groups[i].group;
+                g.langlabel = getLabel(g);
+                res[type].push(g);
+              }
+            }
+          }
+        });
+
+        //We need to change the pointer,
+        // not only the value, so ng-options is aware
+        $scope.groupsWithoutProfilesByType = res;
+      };
+
+      $scope.$watch("groupSelected.type", function (newValue) {
+        if (newValue === "SystemPrivilege") {
+          $scope.groupSelected.minimumProfileForPrivileges = null;
+        }
+      });
+
       $scope.$watch("userGroups", function (groups) {
         updateGroupsByProfile(groups);
+        updateGroupsWithoutProfilesByType(groups);
       });
 
       $scope.sortByLabel = function (group) {
@@ -505,6 +564,9 @@
           $scope.userIsAdmin = !$scope.userIsAdmin;
           angular.forEach(profiles, function (p) {
             $scope.groupsByProfile[p] = [];
+          });
+          angular.forEach(groupTypesWithoutProfiles, function (t) {
+            $scope.groupsWithoutProfilesByType[t] = [];
           });
         }
         $scope.userUpdated = true;
@@ -565,6 +627,15 @@
           selectedReviewerGroups = [],
           selectedUserAdminGroups = [];
 
+        angular.forEach(groupTypesWithoutProfiles, function (groupType) {
+          for (var j = 0; j < $scope.groupsWithoutProfilesByType[groupType].length; j++) {
+            if ($scope.groupsWithoutProfilesByType[groupType][j]) {
+              selectedRegisteredUserGroups.push(
+                $scope.groupsWithoutProfilesByType[groupType][j].id
+              );
+            }
+          }
+        });
         for (var j = 0; j < $scope.groupsByProfile["RegisteredUser"].length; j++) {
           if ($scope.groupsByProfile["RegisteredUser"][j]) {
             selectedRegisteredUserGroups.push(
@@ -681,6 +752,8 @@
           label: {},
           description: "",
           email: "",
+          type: "Workspace",
+          minimumProfileForPrivileges: null,
           enableAllowedCategories: false,
           allowedCategories: [],
           defaultCategory: null,
@@ -739,10 +812,6 @@
           $scope.groupSelected.defaultCategory.id == null
         ) {
           $scope.groupSelected.defaultCategory = null;
-        }
-        // Ensure that the minimum profile for privileges is not an empty string
-        if ($scope.groupSelected.minimumProfileForPrivileges == "") {
-          $scope.groupSelected.minimumProfileForPrivileges = null;
         }
         $http
           .put(

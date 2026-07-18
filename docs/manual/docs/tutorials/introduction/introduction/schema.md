@@ -1,8 +1,8 @@
 # Multi schema support {#internals.rst}
 
-This paragraph explains how GeoNetwork leverages metadata records formatted in various schemas (metadata models). Over time various communities adopted a number of metadata standards and profiles for metadata records.
+This section explores how GeoNetwork leverages metadata records formatted in various schemas (metadata models). Over time different communities have eached adopted a metadata standards and profiles for metadata records appropriate to their needs.
 
-Metadata models define which properties can be registered for an asset, such as title, author, creation date. In the spatial domain TC211 together with OGC are the standardisation bodies which define the standards. In 2005 TC211 released ISO19139, a standard for metadata to describe spatial assets which is still widely used. In 2014 TC211 released a big update to this standard, named ISO19115-1. GeoNetwork is able to manage records in either schema (and other schemas, such as Dublin Core, DCAT).
+Metadata models define which properties can be registered for an asset, such as title, author, creation date. In the spatial domain TC211 together with OGC are the standardisation bodies which define the standards. In 2005 TC211 released ISO19139, a standard for metadata to describe spatial assets which is widely used. In 2014 TC211 released a big update to this standard, named ISO19115-1. GeoNetwork is able to manage records in either schema (and other schemas, such as Dublin Core, DCAT).
 
 ## Indexing records
 
@@ -10,7 +10,7 @@ In GeoNetwork records in various schemas are stored as XML-documents in the data
 
 !!! note
 
-    The search index of GeoNetwork is based on an external component, called "Elastic Search".
+    The search index of GeoNetwork is based on an external component, called "Elasticsearch".
 
 
 ## Authoring Records

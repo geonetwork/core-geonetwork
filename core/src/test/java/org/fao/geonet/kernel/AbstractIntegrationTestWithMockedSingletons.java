@@ -7,6 +7,7 @@ import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.repository.SourceRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ public abstract class AbstractIntegrationTestWithMockedSingletons extends Abstra
     private static final int TEST_OWNER_ID = 42;
 
     @Autowired
-    private IMetadataManager metadataManager;
+    protected IMetadataManager metadataManager;
 
     @Autowired
     private SchemaManager schemaManager;
@@ -65,6 +66,6 @@ public abstract class AbstractIntegrationTestWithMockedSingletons extends Abstra
             false,
             NO,
             false,
-            true);
+            DirectIndexSubmitter.INSTANCE);
     }
 }

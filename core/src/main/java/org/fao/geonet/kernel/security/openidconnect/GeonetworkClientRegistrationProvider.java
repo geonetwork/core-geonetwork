@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -35,7 +35,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.util.FileCopyUtils;
 
@@ -63,11 +62,13 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class GeonetworkClientRegistrationProvider {
 
-    public static String CLIENTREGISTRATION_NAME = "geonetwork-oidc";
+    public static final String CLIENT_REGISTRATION_NAME = "geonetwork-oidc";
 
-    ClientRegistration clientRegistration;
+    private static final AuthorizationGrantType GRANT_TYPE = AuthorizationGrantType.AUTHORIZATION_CODE;
 
-    OIDCConfiguration oidcConfiguration;
+    private final ClientRegistration clientRegistration;
+
+    private final OIDCConfiguration oidcConfiguration;
 
     /**
      * Create a spring ClientRegistration from either a Resource (i.e. file containing the JSON) or from
@@ -91,17 +92,23 @@ public class GeonetworkClientRegistrationProvider {
                                                 String oidcMetadataConfigURL,
                                                 OIDCConfiguration oidcConfiguration) throws IOException, ParseException {
         this.oidcConfiguration = oidcConfiguration;
-        String clientId = oidcConfiguration.clientId;
-        String clientSecret = oidcConfiguration.clientSecret;
-        if ( (oidcMetadataConfigURL !=null) && (oidcMetadataConfigURL.toLowerCase().startsWith("http")) ) {
+        OIDCConfiguration.ClientConfig clientConfig = getClientConfig(oidcConfiguration);
+        // If the clientConfig is not enabled then just set values to null
+        // This is mostly used to disable the clien credential provider.
+        if (!clientConfig.isEnabled()) {
+            clientRegistration = null;
+            return;
+        }
+        String clientId = clientConfig.getClientId();
+        String clientSecret = clientConfig.getClientSecret();
+        if ((oidcMetadataConfigURL != null) && (oidcMetadataConfigURL.toLowerCase().startsWith("http"))) {
             //they provided a URL to the JSON - lets get it and use that
-            Log.debug(Geonet.SECURITY,"Download OIDC Configuration from -"+oidcMetadataConfigURL);
+            Log.debug(Geonet.SECURITY, "Download OIDC Configuration from -" + oidcMetadataConfigURL);
             URL url = new URL(oidcMetadataConfigURL);
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             try {
                 clientRegistration = createClientRegistration(http.getInputStream(), clientId, clientSecret);
-            }
-            finally {
+            } finally {
                 http.disconnect();
             }
         }
@@ -109,8 +116,7 @@ public class GeonetworkClientRegistrationProvider {
         else if (!StringUtils.isBlank(serverMetadataJsonText) && (serverMetadataJsonText.trim().length() > 50)) {
             Log.debug(Geonet.SECURITY, "OpenID Connect - using IDP server metadata config from text");
             clientRegistration = createClientRegistration(new ByteArrayInputStream(serverMetadataJsonText.getBytes()), clientId, clientSecret);
-        }
-        else {
+        } else {
             Log.debug(Geonet.SECURITY, "OpenID Connect - using IDP server metadata config from resource file");
             clientRegistration = createClientRegistration(metadataResource, clientId, clientSecret);
         }
@@ -120,10 +126,41 @@ public class GeonetworkClientRegistrationProvider {
     public GeonetworkClientRegistrationProvider(InputStream inputStream,
                                                 OIDCConfiguration oidcConfiguration) throws IOException, ParseException {
         this.oidcConfiguration = oidcConfiguration;
-        String clientId = oidcConfiguration.clientId;
-        String clientSecret = oidcConfiguration.clientSecret;
+        OIDCConfiguration.ClientConfig clientConfig = getClientConfig(oidcConfiguration);
+        // If the clientConfig is not enabled then just set values to null
+        // This is mostly used to disable the clien credential provider.
+        if (!clientConfig.isEnabled()) {
+            clientRegistration = null;
+            return;
+        }
+        String clientId = clientConfig.getClientId();
+        String clientSecret = clientConfig.getClientSecret();
         clientRegistration = createClientRegistration(inputStream, clientId, clientSecret);
     }
+
+    /**
+     * Get current client configuration.
+     * @return client configuration
+     */
+    protected OIDCConfiguration.ClientConfig getClientConfig(OIDCConfiguration oidcConfiguration) {
+        return oidcConfiguration.getClientConfig();
+    };
+
+    /**
+     * Get current client registration name.
+     * @return client registration name
+     */
+     protected String getClientRegistrationName() {
+        return CLIENT_REGISTRATION_NAME;
+    };
+
+    /**
+     * Get current client grant type.
+     * @return grant type
+     */
+    protected AuthorizationGrantType getAuthorizationGrantType() {
+        return GRANT_TYPE;
+    };
 
     /**
      * given a resource, read its content and return it as a string
@@ -135,7 +172,7 @@ public class GeonetworkClientRegistrationProvider {
     /**
      * given an inputstream, read its content and return it as a string
      */
-    static String inputStreamToString(InputStream inputStream) throws IOException {
+    private static String inputStreamToString(InputStream inputStream) throws IOException {
         try (Reader reader = new InputStreamReader(inputStream, UTF_8)) {
             return FileCopyUtils.copyToString(reader);
         } catch (Exception e) {
@@ -163,7 +200,7 @@ public class GeonetworkClientRegistrationProvider {
 
     // create the ClientRegistration from the input stream. Use "inputstream" as issuer (not used anywhere).
     // assumes oidcConfiguration is already set
-    ClientRegistration createClientRegistration(InputStream inputStream,
+    private ClientRegistration createClientRegistration(InputStream inputStream,
                                                 String clientId,
                                                 String clientSecret) throws IOException, ParseException {
         return createClientRegistration(inputStreamToString(inputStream), "inputstream", clientId, clientSecret);
@@ -171,7 +208,7 @@ public class GeonetworkClientRegistrationProvider {
 
     // create the ClientRegistration from the input stream. Uses the filename as issuer (not used anywhere).
     // assumes oidcConfiguration is already set
-    ClientRegistration createClientRegistration(Resource metadataResource,
+    private ClientRegistration createClientRegistration(Resource metadataResource,
                                                 String clientId,
                                                 String clientSecret) throws IOException, ParseException {
         return createClientRegistration(resourceToString(metadataResource), metadataResource.getFilename(), clientId, clientSecret);
@@ -191,8 +228,8 @@ public class GeonetworkClientRegistrationProvider {
         }
 
         // we set the scopes to what the user requested - independent of what the server says the allowed scopes are
-        if (oidcConfiguration.getScopeSet() != null) {
-            scopes = new ArrayList<>(oidcConfiguration.getScopeSet());
+        if (oidcConfiguration.getClientConfig().getScopeSet() != null) {
+            scopes = new ArrayList<>(oidcConfiguration.getClientConfig().getScopeSet());
             if (!scopes.contains(OidcScopes.OPENID))
                 scopes.add(OidcScopes.OPENID);
         }
@@ -221,7 +258,7 @@ public class GeonetworkClientRegistrationProvider {
      * @throws IOException
      * @throws ParseException
      */
-    ClientRegistration createClientRegistration(String jsonServerConfig,
+    private ClientRegistration createClientRegistration(String jsonServerConfig,
                                                 String fname,
                                                 String clientId,
                                                 String clientSecret) throws IOException, ParseException {
@@ -235,8 +272,8 @@ public class GeonetworkClientRegistrationProvider {
         ClientAuthenticationMethod method = getClientAuthenticationMethod(issuer, oidcMetadata.getTokenEndpointAuthMethods());
         List<GrantType> grantTypes = oidcMetadata.getGrantTypes();
         // If null, the default includes authorization_code
-        if (grantTypes != null && !grantTypes.contains(GrantType.AUTHORIZATION_CODE)) {
-            throw new IllegalArgumentException("Only AuthorizationGrantType.AUTHORIZATION_CODE is supported. The issuer \"" + issuer +
+        if (grantTypes != null && !grantTypes.contains(GrantType.parse(getAuthorizationGrantType().getValue()))) {
+            throw new IllegalArgumentException("Only " + getAuthorizationGrantType() + " is supported. The issuer \"" + issuer +
                 "\" returned a configuration of " + grantTypes);
         }
         List<String> scopes = getScopes(oidcMetadata);
@@ -244,10 +281,10 @@ public class GeonetworkClientRegistrationProvider {
 
         Map<String, Object> configurationMetadata = new LinkedHashMap<>(oidcMetadata.toJSONObject());
 
-        ClientRegistration.Builder builder = ClientRegistration.withRegistrationId(CLIENTREGISTRATION_NAME)
+        ClientRegistration.Builder builder = ClientRegistration.withRegistrationId(getClientRegistrationName())
             .userNameAttributeName(this.oidcConfiguration.getUserNameAttribute())
             .scope(scopes)
-            .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+            .authorizationGrantType(getAuthorizationGrantType())
             .clientAuthenticationMethod(method)
             .redirectUriTemplate("{baseUrl}/{action}/oauth2/code/{registrationId}")
             .authorizationUri(oidcMetadata.getAuthorizationEndpointURI().toASCIIString())

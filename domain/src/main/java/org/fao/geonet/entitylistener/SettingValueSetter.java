@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,8 +29,24 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Handler for database events to manage encrypt/decrypt of encrypted settings.
+ * JPA entity listener that keeps {@link Setting#getValue()} (transient) and
+ * {@link Setting#getStoredValue()} (persisted column) in sync, handling encryption
+ * transparently.
  *
+ * <p>The {@code value} field is transient and not managed by Hibernate, so this listener
+ * bridges the gap between the in-memory representation and the database column:</p>
+ * <ul>
+ *   <li><b>PrePersist</b>: copies {@code value} → {@code storedValue}, encrypting if needed.
+ *       Skipped when {@code value} is null/empty to preserve any {@code storedValue} set
+ *       directly via {@link Setting#setStoredValue(String)}.</li>
+ *   <li><b>PreUpdate</b>: re-encrypts {@code value} into {@code storedValue} for encrypted
+ *       settings only. Non-encrypted settings are not handled here because
+ *       {@link Setting#setValue(String)} already calls {@link Setting#setStoredValue(String)}
+ *       as a side effect, which is what triggers Hibernate's dirty detection on the
+ *       persistent field.</li>
+ *   <li><b>PostLoad / PostUpdate</b>: populates the transient {@code value} from
+ *       {@code storedValue}, decrypting if needed.</li>
+ * </ul>
  */
 public class SettingValueSetter implements GeonetworkEntityListener<Setting> {
     @Autowired
@@ -44,9 +60,13 @@ public class SettingValueSetter implements GeonetworkEntityListener<Setting> {
     @Override
     public void handleEvent(final PersistentEventType type, final Setting entity) {
         if ((type == PersistentEventType.PrePersist)) {
-            if (entity.isEncrypted() && StringUtils.isNotEmpty(entity.getValue())) {
-                entity.setStoredValue(this.encryptor.encrypt(entity.getValue()));
-            } else {
+            if (entity.isEncrypted()) {
+                if (StringUtils.isNotEmpty(entity.getValue())) {
+                    entity.setStoredValue(this.encryptor.encrypt(entity.getValue()));
+                } else if (StringUtils.isNotEmpty(entity.getStoredValue())) {
+                    entity.setStoredValue(this.encryptor.encrypt(entity.getStoredValue()));
+                }
+            } else if (StringUtils.isNotEmpty(entity.getValue())) {
                 entity.setStoredValue(entity.getValue());
             }
         } else if (type == PersistentEventType.PreUpdate) {
@@ -54,7 +74,7 @@ public class SettingValueSetter implements GeonetworkEntityListener<Setting> {
                 entity.setStoredValue(this.encryptor.encrypt(entity.getValue()));
             }
 
-        } else if ((type == PersistentEventType.PostLoad) ||  (type == PersistentEventType.PostUpdate)) {
+        } else if ((type == PersistentEventType.PostPersist) || (type == PersistentEventType.PostLoad) || (type == PersistentEventType.PostUpdate)) {
             if (entity.isEncrypted() && StringUtils.isNotEmpty(entity.getStoredValue())) {
                 try {
                     entity.setValue(this.encryptor.decrypt(entity.getStoredValue()));

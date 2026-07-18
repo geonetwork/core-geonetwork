@@ -9,6 +9,8 @@
   xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
   xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
   xmlns:gex="http://standards.iso.org/iso/19115/-3/gex/1.0"
+  xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:gml="http://www.opengis.net/gml/3.2"
   xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
   exclude-result-prefixes="#all">
@@ -20,6 +22,9 @@
   <xsl:strip-space elements="*" />
 
   <xsl:template match="/record|*">
+    <xsl:variable name="id">
+      <xsl:value-of select="id[1]" />
+    </xsl:variable>
     <mdb:MD_Metadata>
       <xsl:call-template name="add-iso19115-3.2018-namespaces" />
       <mdb:metadataIdentifier>
@@ -139,6 +144,21 @@
                                         else 'STAC Collection'" />
                 </gco:CharacterString>
               </cit:title>
+              <xsl:if test="sci_doi">
+                <cit:identifier>
+                  <mcc:MD_Identifier>
+                    <mcc:code>
+                      <gcx:Anchor xlink:href="{concat('https://doi.org/', sci_doi)}"><xsl:value-of select="sci_doi"/></gcx:Anchor>
+                    </mcc:code>
+                    <mcc:codeSpace>
+                      <gco:CharacterString>doi.org</gco:CharacterString>
+                    </mcc:codeSpace>
+                    <mcc:description>
+                      <gco:CharacterString>Digital Object Identifier (DOI)</gco:CharacterString>
+                    </mcc:description>
+                  </mcc:MD_Identifier>
+                </cit:identifier>
+              </xsl:if>
             </cit:CI_Citation>
           </mri:citation>
           <mri:abstract>
@@ -317,11 +337,11 @@
                       </gco:CharacterString>
                     </cit:linkage>
                     <cit:protocol>
-                      <gco:CharacterString>STAC</gco:CharacterString>
+                      <gco:CharacterString>STAC Collection</gco:CharacterString>
                     </cit:protocol>
                     <cit:name>
                       <gco:CharacterString>
-                        <xsl:value-of select="title" />
+                        <xsl:value-of select="$id" />
                       </gco:CharacterString>
                     </cit:name>
                     <cit:description>
@@ -330,6 +350,67 @@
                   </cit:CI_OnlineResource>
                 </mrd:onLine>
               </xsl:for-each>
+              <xsl:for-each select="links[rel = 'items']">
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString>
+                        <xsl:value-of select="href" />
+                      </gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString>STAC Items</gco:CharacterString>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString>
+                        <xsl:value-of select="$id" />
+                      </gco:CharacterString>
+                    </cit:name>
+                    <cit:description>
+                      <gco:CharacterString>STAC Items</gco:CharacterString>
+                    </cit:description>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+              </xsl:for-each>
+              <xsl:for-each select="links[rel = 'example']">
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString>
+                        <xsl:value-of select="href" />
+                      </gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString>
+                        <xsl:value-of select="title" />
+                      </gco:CharacterString>
+                    </cit:name>
+                    <cit:description>
+                      <gco:CharacterString>
+                        <xsl:value-of select="description" />
+                      </gco:CharacterString>
+                    </cit:description>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+              </xsl:for-each>
+              <xsl:if test="sci_doi">
+                <mrd:onLine>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString><xsl:value-of select="concat('https://doi.org/', sci_doi)"/></gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString>DOI</gco:CharacterString>
+                    </cit:protocol>
+                    <cit:name>
+                      <gco:CharacterString>Digital Object Identifier (DOI)</gco:CharacterString>
+                    </cit:name>
+                  </cit:CI_OnlineResource>
+                </mrd:onLine>
+              </xsl:if>
             </mrd:MD_DigitalTransferOptions>
           </mrd:transferOptions>
         </mrd:MD_Distribution>

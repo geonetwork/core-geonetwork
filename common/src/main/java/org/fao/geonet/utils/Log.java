@@ -178,6 +178,10 @@ public final class Log {
         LogManager.getLogger(module).warn(message, e);
     }
 
+    public static void warning(String module, String message, Object... objects) {
+        LogManager.getLogger(module).warn(message, objects);
+    }
+
 
     //---------------------------------------------------------------------------
 
@@ -275,7 +279,7 @@ public final class Log {
 
             @Override
             public void warning(String message, Object... object) {
-
+                Log.warning(module, message, object);
             }
 
             public void error(String message) {

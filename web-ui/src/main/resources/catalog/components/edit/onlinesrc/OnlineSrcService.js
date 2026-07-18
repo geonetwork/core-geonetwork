@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -592,8 +592,8 @@
                 closePopup(popupid);
               });
             } else {
-              refreshForm(this);
               closePopup(popupid);
+              refreshForm(this);
             }
           };
 
@@ -697,7 +697,7 @@
                 // that only the service will be updated.
                 $rootScope.$broadcast("StatusUpdated", {
                   title: $translate.instant("linkToServiceError"),
-                  msg: $translate.instant("cantAddLinkToDataset"),
+                  msg: $translate.instant("cantAddLinkToService"),
                   timeout: 0,
                   type: "danger"
                 });

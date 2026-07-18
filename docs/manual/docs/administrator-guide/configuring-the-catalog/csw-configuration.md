@@ -4,7 +4,7 @@ To get to the CSW server configuration, you must be logged on as administrator f
 
 ![](img/csw.png)
 
-The CSW service provides a description of itself, the human who administers it, and other information through a `GetCapabilities` request (eg. <http://localhost:8080/geonetwork/srv/en/csw?request=GetCapabilities&service=CSW&version=2.0.2>). This form allows you to configure the CSW server and fill out some of the properties returned in response to a GetCapabilities request.
+The CSW service provides a description of itself, the human who administers it, and other information through a `GetCapabilities` request (e.g. `http://localhost:8080/geonetwork/srv/en/csw?request=GetCapabilities&service=CSW&version=2.0.2`). This form allows you to configure the CSW server and fill out some of the properties returned in response to a GetCapabilities request.
 
 Configuration options:
 
@@ -19,6 +19,8 @@ Configuration options:
 -   *Inserted metadata is public*: By default, metadata inserted with the CSW Harvest and CSW Transaction operations is not publicly viewable. A user with the appropriate access rights could do this after the CSW Harvest and CSW Transaction operations, but this is not always convenient. If this option is checked all metadata inserted using the CSW Harvest and CSW Transaction operations will be publicly viewable.
 
 -   *Create element if it does not exist when using XPath in CSW transaction.*: If not checked, only existing elements can be updated.
+
+-   *Ignore metadata not supporting requested outputSchema.*: If checked, when a metadata record does not support the requested outputSchema in GetRecords operation, it will be skipped from the search results. If not checked, an exception will be returned.
 
 ## Service Metadata Record {#csw-configuration_service_record}
 
@@ -56,7 +58,7 @@ With this information the CSW can be validated using the INSPIRE validator.
 In some situation, user may want to modify XML encoding of records when retrieved using CSW. For example:
 
 -   to make record more consistent
--   to adapt encoding in order to validate records with INSPIRE rules (eg. as a workaround for workaround for <https://github.com/inspire-eu-validation/community/issues/95>)
+-   to adapt encoding in order to validate records with INSPIRE rules (e.g. as a workaround for [issue #95](https://github.com/inspire-eu-validation/community/issues/95))
 
 For this, user can add extra conversion step during output of GetRecords and GetRecordById operation:
 

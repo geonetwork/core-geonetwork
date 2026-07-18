@@ -690,6 +690,10 @@
                 sortOrder: ""
               },
               {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
+              },
+              {
                 sortBy: "rating",
                 sortOrder: "desc"
               },
@@ -765,6 +769,11 @@
               {
                 label: "exportMEF",
                 url: "/formatters/zip?withRelated=false",
+                class: "fa-file-zip-o"
+              },
+              {
+                label: "exportMEF-excludeAttachments",
+                url: "/formatters/zip?withRelated=false&includeAttachments=false",
                 class: "fa-file-zip-o"
               },
               {
@@ -1194,6 +1203,10 @@
                 sortOrder: ""
               },
               {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
+              },
+              {
                 sortBy: "recordOwner",
                 sortOrder: ""
               },
@@ -1298,7 +1311,11 @@
           authentication: {
             enabled: true,
             signinUrl: "../../{{node}}/{{lang}}/catalog.signin",
+            signinAPI: "../../signin",
             signoutUrl: "../../signout"
+            // GN5 configuration
+            // signinAPI: "../../api/user/signin",
+            // signoutUrl: "../../api/user/signout"
           },
           page: {
             enabled: true,
@@ -1871,8 +1888,16 @@
         }
       });
 
-      // login url for inline signin form in top toolbar
-      $scope.signInFormAction = "../../signin#" + $location.url();
+      // login url and form action with hash reference to the current page
+      $scope.signInFormLinkWithHash =
+        ($scope.gnCfg.mods.authentication.signinUrl ||
+          "../../{{node}}/{{lang}}/catalog.signin") +
+        "#" +
+        $location.url();
+      $scope.signInFormActionWithHash =
+        ($scope.gnCfg.mods.authentication.signinAPI || "../../signin") +
+        "#" +
+        $location.url();
 
       // when the login input have focus, do not close the dropdown/popup
       $scope.focusLoginPopup = function () {
@@ -1985,23 +2010,37 @@
                   : "";
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
-          canPublishMetadata: function () {
+          canPublishMetadata: function (groupId) {
+            if (this.isAdministrator()) {
+              return true;
+            }
+
             var profile =
                 gnConfig["metadata.publication.profilePublishMetadata"] || "Reviewer",
               fnName =
                 profile !== ""
-                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "ForGroup"
                   : "";
-            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+            if (groupId === undefined || groupId === null) {
+              return false;
+            }
+            return angular.isFunction(this[fnName]) ? this[fnName](groupId) : false;
           },
-          canUnpublishMetadata: function () {
+          canUnpublishMetadata: function (groupId) {
+            if (this.isAdministrator()) {
+              return true;
+            }
+
             var profile =
                 gnConfig["metadata.publication.profileUnpublishMetadata"] || "Reviewer",
               fnName =
                 profile !== ""
-                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "ForGroup"
                   : "";
-            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+            if (groupId === undefined || groupId === null) {
+              return false;
+            }
+            return angular.isFunction(this[fnName]) ? this[fnName](groupId) : false;
           },
           // The md provide the information about
           // if the current user can edit records or not

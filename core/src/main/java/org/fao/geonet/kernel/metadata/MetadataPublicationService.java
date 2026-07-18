@@ -64,6 +64,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.FeedbackLanguages;
@@ -84,6 +85,7 @@ import org.fao.geonet.util.WorkflowUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -213,7 +215,7 @@ public class MetadataPublicationService {
         setOperations(sharing, dataManager, context, appContext, metadata, operationMap, privileges,
             context.getUserSession().getUserIdAsInt(), true, null,
             metadataListToNotifyPublication, notifyByEmail);
-        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
+        metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
 
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
         if (publicationOption.isPresent() &&
@@ -742,7 +744,7 @@ public class MetadataPublicationService {
         if (minimumProfileForPrivileges == null) {
             return true;
         } else {
-            return accessManager.isProfileOrMoreOnGroup(context, minimumProfileForPrivileges, group.getId());
+            return accessManager.isProfileOrMoreOnGroup(context.getUserSession(), minimumProfileForPrivileges, group.getId());
         }
     }
 
@@ -806,7 +808,7 @@ public class MetadataPublicationService {
 
             if (!hasValidation) {
                 validator.doValidate(metadata, context.getLanguage());
-                metadataIndexer.indexMetadata(metadata.getId() + "", true, IndexingMode.full);
+                metadataIndexer.indexMetadata(metadata.getId() + "", DirectIndexSubmitter.INSTANCE, IndexingMode.full);
             }
 
             boolean isInvalid =

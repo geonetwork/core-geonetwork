@@ -48,4 +48,6 @@ public interface IMEFVisitor {
 
     public void handlePrivateFile(String file, String changeDate,
                                   InputStream is, int index) throws Exception;
+
+    public void indexMetadata(int index) throws Exception;
 }

@@ -176,7 +176,8 @@ Display help documentation onhover elements (default) or by clicking on an icon.
 
 -   **hideTimeInCalendar** (Optional) Fixed value: **true**
 
-Define if calendar control should allow users to set date only or datetime. If the attribute is not set, then date and datetime can be set. This is controlled at the view level, switching to another view may allow more control over the dates.
+By default, both date and time can be set in calendar fields if this attribute is omitted. However, if the attribute is `true`, only the date can be set and the time component will remain hidden.  
+This is controlled at the view level, so switching to another view may still allow setting the time.
 
 -   **displayIfRecord** (Optional)
 
@@ -332,6 +333,18 @@ e.g. only 2 INSPIRE themes:
              transformations=""/>
 </thesaurusList>
 ```
+
+The `<thesaurus>` element supports the following attributes:
+
+| Attribute | Description |
+|-----------|-------------|
+| `key` | (Required) The thesaurus identifier (e.g. `external.theme.httpinspireeceuropaeutheme-theme`). |
+| `maxtags` | Maximum number of keywords that can be selected. Unlimited if not set. |
+| `orderById` | When `true`, keywords are ordered by their identifier instead of by label. Defaults to `false`. |
+| `fieldset` | When `false`, the widget is rendered as a simple field instead of being boxed in a fieldset. |
+| `browsable` | When `false`, the keyword browse/tree control is hidden and keywords can only be searched. Defaults to `true`. |
+| `transformations` | Comma-separated list of allowed encodings for the keywords (see `convert/thesaurus-transformation.xsl`). Falls back to the `defaultTransformation` defined on `<thesaurusList>` when empty. |
+| `mandatory` | When `true`, the field is flagged as required in the editor (displays the required indicator). Note this is a visual indicator only; it does not enforce keyword selection on save. Defaults to `false`. |
 
 ## Configuring the side panel {#creating-custom-editor-sidePanel}
 

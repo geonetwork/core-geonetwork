@@ -26,6 +26,8 @@ package org.fao.geonet.util;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class XslUtilTest {
 
@@ -39,10 +41,45 @@ public class XslUtilTest {
     }
 
     @Test
-    public void testHtml2textSubstituteHtmlToTextLayoutElement() {
+    public void testHtml2textSubstituteHtmlToTextLayoutElementWithBr() {
         String html = "<div><span>Sample text</span><br/><span>Sample text 2</span><br/><span>Sample text 3</span></div>";
-        String lineSeparator = System.lineSeparator();
-        String expectedText = "Sample text" + lineSeparator + "Sample text 2" + lineSeparator + "Sample text 3";
+        String expectedText = "Sample text\nSample text 2\nSample text 3";
+        String text = XslUtil.html2text(html, true);
+
+        assertEquals(expectedText, text);
+    }
+
+    @Test
+    public void testHtml2textSubstituteHtmlToTextLayoutWithP() {
+        String html = "<div><p>Sample text</p><p>Sample text 2</p><p>Sample text 3</p></div>";
+        String expectedText = "Sample text\n\nSample text 2\n\nSample text 3";
+        String text = XslUtil.html2text(html, true);
+
+        assertEquals(expectedText, text);
+    }
+
+    @Test
+    public void testHtml2textSubstituteHtmlToTextLayoutWithPWithNewLine() {
+        String html = "<div><p>Sample text</p>\n<p>Sample text 2</p>\n<p>Sample text 3</p></div>";
+        String expectedText = "Sample text\n\nSample text 2\n\nSample text 3";
+        String text = XslUtil.html2text(html, true);
+
+        assertEquals(expectedText, text);
+    }
+
+    @Test
+    public void testHtml2textSubstituteHtmlToTextLayoutWithLi() {
+        String html = "<ul><li>Item 1</li><li>Item 2</li><li>Item 3</li></ul>";
+        String expectedText = "* Item 1\n* Item 2\n* Item 3";
+        String text = XslUtil.html2text(html, true);
+
+        assertEquals(expectedText, text);
+    }
+
+    @Test
+    public void testHtml2textSubstituteHtmlToTextLayoutWithA() {
+        String html = "<div><a href=\"https://geonetwork-opensource.org/\">Link to GN</a></div>";
+        String expectedText = "Link to GN (https://geonetwork-opensource.org/)";
         String text = XslUtil.html2text(html, true);
 
         assertEquals(expectedText, text);
@@ -55,6 +92,62 @@ public class XslUtilTest {
         String text = XslUtil.html2textNormalized(html);
 
         assertEquals(expectedText, text);
+    }
+
+    @Test
+    public void testToUiConfigArgValidObject() {
+        String result = XslUtil.toUiConfigArg("{\"a\":1}");
+        assertTrue(result.startsWith("JSON.parse("));
+        assertTrue(result.contains("a"));
+    }
+
+    @Test
+    public void testToUiConfigArgCodeInjectionPayload() {
+        assertEquals("", XslUtil.toUiConfigArg("(alert(1),{})"));
+    }
+
+    @Test
+    public void testToUiConfigArgScriptBreakout() {
+        String result = XslUtil.toUiConfigArg("{\"x\":\"</script>\"}");
+        assertFalse(result.isEmpty());
+        assertFalse(result.contains("</script>"));
+    }
+
+    @Test
+    public void testToUiConfigArgArrayReturnsEmpty() {
+        assertEquals("", XslUtil.toUiConfigArg("[1,2]"));
+    }
+
+    @Test
+    public void testToUiConfigArgStringReturnsEmpty() {
+        assertEquals("", XslUtil.toUiConfigArg("\"5\""));
+    }
+
+    @Test
+    public void testToUiConfigArgBooleanReturnsEmpty() {
+        assertEquals("", XslUtil.toUiConfigArg("true"));
+    }
+
+    @Test
+    public void testToUiConfigArgTrailingTokensReturnsEmpty() {
+        assertEquals("", XslUtil.toUiConfigArg("{}whatever"));
+    }
+
+    @Test
+    public void testToUiConfigArgBlankReturnsEmpty() {
+        assertEquals("", XslUtil.toUiConfigArg(""));
+        assertEquals("", XslUtil.toUiConfigArg("   "));
+        assertEquals("", XslUtil.toUiConfigArg(null));
+    }
+
+    @Test
+    public void testToUiConfigArgLineSeparatorEscaped() {
+        String lineSep = String.valueOf((char) 0x2028);
+        String input = "{\"k\":\"val" + lineSep + "ue\"}";
+        String result = XslUtil.toUiConfigArg(input);
+        assertFalse(result.isEmpty());
+        assertFalse(result.contains(lineSep));
+        assertTrue(result.contains("\\u2028"));
     }
 
 }

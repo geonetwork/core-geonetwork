@@ -38,15 +38,15 @@ import static org.fao.geonet.kernel.schema.SchemaPlugin.LOGGER_NAME;
 public class DatahubController {
     public static final String INDEX_PATH = "/datahub/index.html";
     public static final String DATAHUB_FILES_PATH = "/datahub/";
-    public static final String DEFAULT_CONFIGURATION_FILE_PATH = DATAHUB_FILES_PATH + "assets/configuration/default.toml";
+    public static final String DEFAULT_CONFIGURATION_FILE_PATH = "/config/simplest-default.toml";
 
     @Autowired
     SourceRepository sourceRepository;
 
     @GetMapping("/datahub/status")
     public ResponseEntity<String> getDatahubStatus() throws IOException {
-        File configFile = FileUtils.getFileFromJar(DEFAULT_CONFIGURATION_FILE_PATH);
-        String defaultConfig = FileUtils.readFromInputStream(new FileInputStream(configFile));
+        InputStream configStream = getClass().getResourceAsStream(DEFAULT_CONFIGURATION_FILE_PATH);
+        String defaultConfig = FileUtils.readFromInputStream(configStream);
         JSONObject body = new JSONObject();
         body.put("defaultConfig", defaultConfig);
 
@@ -185,7 +185,11 @@ public class DatahubController {
     InputStream readConfiguration(String portalName) throws IOException {
         String configuration = getPortalConfiguration(portalName);
         configuration = configuration.replaceAll("\ngeonetwork4_api_url\\s?=.+", "\n")
-                .replace("[global]", "[global]\ngeonetwork4_api_url = \"/geonetwork/" + portalName + "/api\"");
+                    .replaceAll("\nweb_component_embedder_url\\s?=.+", "\n")
+                    .replace("[global]", 
+                        "[global]\n" +
+                        "geonetwork4_api_url = \"/geonetwork/" + portalName + "/api\"\n" +
+                        "web_component_embedder_url = \"/geonetwork/" + portalName + "/datahub/wc-embedder.html\"");
         return new ByteArrayInputStream(configuration.getBytes());
     }
 
@@ -205,8 +209,8 @@ public class DatahubController {
         }
         // 3. fallback: read from default.toml file in resource
         else {
-            File defaultConfig = FileUtils.getFileFromJar(DEFAULT_CONFIGURATION_FILE_PATH);
-            return FileUtils.readFromInputStream(new FileInputStream(defaultConfig));
+            InputStream configStream = getClass().getResourceAsStream(DEFAULT_CONFIGURATION_FILE_PATH);
+            return FileUtils.readFromInputStream(configStream);
         }
     }
 
