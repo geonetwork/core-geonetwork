@@ -544,8 +544,9 @@ public class MetadataWorkflowApi {
 
         // --- check permission to change status based on the target status
         boolean canChangeStatus = false;
-        if (status.getStatus() == Integer.parseInt(StatusValue.Status.SUBMITTED)) {
-            // For SUBMITTED status, allow editors to submit records for review
+        if (status.getStatus() == Integer.parseInt(StatusValue.Status.SUBMITTED) ||
+            status.getStatus() == Integer.parseInt(StatusValue.Status.DRAFT)) {
+            // For SUBMITTED or DRAFT status, allow editors to submit records for review or cancel the submission
             canChangeStatus = accessManager.canEdit(context, String.valueOf(metadata.getId()));
         } else if (status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED)) {
             // For APPROVED status, only reviewers can approve
