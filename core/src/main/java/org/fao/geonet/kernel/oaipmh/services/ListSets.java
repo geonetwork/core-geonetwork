@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -25,7 +25,6 @@ package org.fao.geonet.kernel.oaipmh.services;
 
 import jeeves.server.context.ServiceContext;
 
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.oaipmh.OaiPmhService;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -35,7 +34,6 @@ import org.fao.oaipmh.requests.ListSetsRequest;
 import org.fao.oaipmh.responses.AbstractResponse;
 import org.fao.oaipmh.responses.ListSetsResponse;
 import org.fao.oaipmh.responses.SetInfo;
-import org.jdom.Element;
 
 import java.util.List;
 

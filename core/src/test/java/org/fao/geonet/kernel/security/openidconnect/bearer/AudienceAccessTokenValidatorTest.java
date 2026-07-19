@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -40,7 +40,7 @@ public class AudienceAccessTokenValidatorTest {
     public  AudienceAccessTokenValidator   getValidator(){
         AudienceAccessTokenValidator validator = new AudienceAccessTokenValidator();
         validator.oidcConfiguration = new OIDCConfiguration();
-        validator.oidcConfiguration.setClientId(clientId);
+        validator.oidcConfiguration.getClientConfig().setClientId(clientId);
         return validator;
     }
 

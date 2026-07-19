@@ -1,6 +1,6 @@
 /*
  * =============================================================================
- * ===	Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * ===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * ===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * ===	and United Nations Environment Programme (UNEP)
  * ===
@@ -25,6 +25,9 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import org.fao.geonet.annotations.IndexIgnore;
+
 import java.util.Date;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -35,10 +38,13 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @XmlRootElement(name = "resource")
 @XmlAccessorType(XmlAccessType.FIELD)
+@JsonPropertyOrder(alphabetic=true)
 public interface MetadataResource {
 
+    @IndexIgnore
     String getId();
 
+    // Don't ignore url in the index as it is used to link the urls
     String getUrl();
 
     MetadataResourceVisibility getVisibility();
@@ -47,12 +53,16 @@ public interface MetadataResource {
 
     Date getLastModification();
 
+    @IndexIgnore
     String getFilename();
 
+    @IndexIgnore
     boolean isApproved();
 
+    @IndexIgnore // Metadata id is already in the index so no need to add it again.
     int getMetadataId();
 
+    @IndexIgnore // Metadata uuid is already in the index so no need to add it again.
     String getMetadataUuid();
 
     String getVersion();

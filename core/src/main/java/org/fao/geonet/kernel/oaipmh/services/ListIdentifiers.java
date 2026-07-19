@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -90,7 +90,7 @@ public class ListIdentifiers extends AbstractTokenLister {
     //---
     //---------------------------------------------------------------------------
 
-    private Header buildHeader(ServiceContext context, int id, String prefix) throws Exception {
+    private Header buildHeader(ServiceContext context, int id, String prefix) {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SchemaManager sm = gc.getBean(SchemaManager.class);
 
@@ -108,10 +108,8 @@ public class ListIdentifiers extends AbstractTokenLister {
 
         //--- try to disseminate format if not by schema then by conversion
 
-        if (!prefix.equals(schema)) {
-            if (!Lib.existsConverter(sm.getSchemaDir(schema), prefix)) {
-                return null;
-            }
+        if (!prefix.equals(schema) && (!Lib.existsConverter(sm.getSchemaDir(schema), prefix))) {
+            return null;
         }
 
         //--- build header and set some infos

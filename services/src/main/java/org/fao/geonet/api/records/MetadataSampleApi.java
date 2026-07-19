@@ -33,11 +33,9 @@ import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
-import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
@@ -50,6 +48,7 @@ import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
@@ -79,9 +78,6 @@ import static org.fao.geonet.api.ApiParams.*;
 @Controller("samplesAndTemplates")
 @ReadWriteController
 public class MetadataSampleApi {
-
-    @Autowired
-    LanguageUtils languageUtils;
 
     @Autowired
     DataManager dataManager;
@@ -290,7 +286,7 @@ public class MetadataSampleApi {
                             if (MetadataType.lookup(isTemplate) == MetadataType.TEMPLATE) {
                                 xml = dataManager.setUUID(schemaName, uuid, xml);
                             }
-                            dataManager.insertMetadata(context, metadata, xml, IndexingMode.full, true, UpdateDatestamp.NO, false, true);
+                            dataManager.insertMetadata(context, metadata, xml, IndexingMode.full, true, UpdateDatestamp.NO, false, DirectIndexSubmitter.INSTANCE);
                             report.addMetadataInfos(metadata,
                             String.format(
                             "Template for schema '%s' with UUID '%s' added.",

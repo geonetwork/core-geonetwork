@@ -8,4 +8,4 @@ This is a maintenance release with [lots of bug fixed](https://github.com/geonet
 -   RDF / [URI prefix can be customized and records URI resolves](https://github.com/geonetwork/core-geonetwork/pull/1616)
 -   Processing / Add capability to preview process results
 
-and more \... see [3.2.1 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.2.1+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.2.1+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.2.1 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.2.1+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.2.1+is%3Aclosed+is%3Apr) for full details.

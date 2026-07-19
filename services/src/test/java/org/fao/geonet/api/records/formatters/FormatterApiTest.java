@@ -85,6 +85,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
         data.add(new String[]{"iso19115-3.2018", "citation", "?format=text", "iso19115-3.2018", "text.txt"});
         data.add(new String[]{"iso19115-3.2018", "citation", "?format=html", "iso19115-3.2018", "html.html"});
         data.add(new String[]{"iso19115-3.2018", "citation", "?format=text&authorRoles=processor&publisherRoles=owner,custodian", "iso19115-3.2018", "text-custom-role.txt"});
+        data.add(new String[]{"iso19115-3.2018", "citation", "?format=text&withAffiliation=true&authorRoles=processor", "iso19115-3.2018", "text-with-affiliation.txt"});
 
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "dcat", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap", "", "iso19115-3.2018", "dataset-core.rdf"});
@@ -92,7 +93,10 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-geodcat-ap", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap-mobility", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap-hvd", "", "iso19115-3.2018", "dataset-core.rdf"});
+        data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-geodcat-ap-semiceu", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-service.xml", "dcat", "", "iso19115-3.2018", "service-core.rdf"});
+
+        data.add(new String[]{"iso19115-3.2018-datacite.xml", "datacite", "", "iso19115-3.2018", "out.xml"});
 
         data.add(new String[]{"iso19139-dcat-dataset.xml", "dcat", "", "iso19139", "dataset-core.rdf"});
 
@@ -301,7 +305,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
     }
 
     private void loadFile(String key, Element sampleMetadataXml) throws Exception {
-        AbstractMetadata metadata = injectMetadataInDbDoNotRefreshHeader(sampleMetadataXml, context);
+        AbstractMetadata metadata = injectMetadataInDb(sampleMetadataXml, context);
         testDataUuidBySchema.put(key, metadata.getUuid());
     }
 }

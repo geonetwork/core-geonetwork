@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -34,7 +34,7 @@ import java.sql.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 class DatabaseMetadataRetriever {
-    private NamedParameterJdbcTemplate jdbcTemplate;
+    private final NamedParameterJdbcTemplate jdbcTemplate;
 
     protected Logger log;
 
@@ -77,10 +77,10 @@ class DatabaseMetadataRetriever {
     /**
      * Retrieves and process each metadata with the harvester aligner.
      *
-     * @param cancelMonitor
-     * @param params
-     * @param aligner
-     * @throws Exception
+     * @param cancelMonitor if true stops the current metadata processing
+     * @param params        harvester parameters
+     * @param aligner       aligner to process the metadata
+     * @throws Exception    exception if an error occurs while retrieving or processing the metadata
      */
     public void processMetadata(AtomicBoolean cancelMonitor, DatabaseHarvesterParams params, DatabaseHarvesterAligner aligner) throws Exception {
         String metadataTable = params.getTableName();
@@ -90,7 +90,7 @@ class DatabaseMetadataRetriever {
         String filterOperator = params.getFilterOperator();
 
         String sqlOperator = "LIKE";
-        if (!StringUtils.isEmpty(filterOperator)) {
+        if (StringUtils.hasLength(filterOperator)) {
             if (filterOperator.equalsIgnoreCase("NOTLIKE")) {
                 sqlOperator = "NOT " + sqlOperator;
             }

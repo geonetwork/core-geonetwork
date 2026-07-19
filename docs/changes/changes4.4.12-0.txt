@@ -1,0 +1,59 @@
+================================================================================
+===
+=== GeoNetwork 4.4.12-SNAPSHOT: List of changes
+===
+================================================================================
+- Formatter limits (#9408)
+- Transifex updates for GeoNetwork 4.4.12 (#9358)
+- Fix GeoNetwork and SFTP harvester NullPointerException when RecordInfo schema is null (#9404)
+- Escape HTML content (#9385)
+- Bump github/codeql-action/upload-sarif from 4.36.2 to 4.36.3 (#9402)
+- Fix CSW harvester NullPointerException when RecordInfo schema is null (#9403)
+- EsHttpProxy / Unify process source node information for search endpoints (#9365)
+- Map viewer / Sanitize layer attribution information and map popover
+- UI / Fix signin form action when signinAPI or signinUrl missing from auth config
+- Update IntillJ instructions
+- Bump org.apache.logging.log4j:log4j-core from 2.24.3 to 2.25.4 (#9360)
+- Bump actions/cache from 5 to 6 (#9395)
+- Bump actions/setup-java from 4.2.1 to 5.4.0 (#9394)
+- Bump actions/checkout from 3.1.0 to 7.0.0 (#9393)
+- Bump actions/setup-python from 5 to 6 (#9392)
+- Bump github/codeql-action from 4.36.2 to 4.36.3 (#9391)
+- Bump org.postgresql:postgresql from 42.7.3 to 42.7.11 (#9387)
+- Bump actions/upload-artifact from 4.3.1 to 7.0.1 (#9327)
+- Bump advanced-security/maven-dependency-submission-action from 4 to 5 (#9325)
+- Bump ossf/scorecard-action from 2.3.1 to 2.4.3 (#9324)
+- Bump github/codeql-action from 2.2.4 to 4.36.2 (#9323)
+- Bump actions/cache from 4 to 5 (#9326)
+- Bump jackson.version from 2.18.2 to 2.22.0 (#9361)
+- Update ace editor to version 1.44.0 (#9376)
+- Update proj4 to version 2.20.9 (#9375)
+- Update moment to 2.30.1 and moment-timezone to 0.6.2 (#9372)
+- Update OpenLayers to version 10.9.0 (#9374)
+- Update jquery-migrate to version 3.6.0 (#9373)
+- MSearch / Fix invalid query (#9369)
+- Update lodash to version 4.18.1 (#9370)
+- Administrator user can't publish / unpublish metadata. (#9362)
+- Build / Doc error / Fix wrong path (#9368)
+- User management / User edit should enable the Save button when selecting the 'Is Administrator' checkbox
+- Setting to enable / disable OAI-PMH service
+- OAI-PMH / Apply privileges filter on ListRecords, ListIdentifiers and GetRecord
+- docs: workshop corrections and clarifications
+- Fix encoding issue in security.md preventing html documentation generation when building datahub-integration plugin.
+- Index / add Swedish (swe) to Elasticsearch records mapping (#9355)
+- Code quality fixes (#9348)
+- Metadata editor / add a configuration to define mandatory keywords from a thesaurus (#9354)
+- Fix delete users with metadata user feedback entries associated (#9334)
+- Map viewer / WFS filter / remove unused SLD API endpoints (#9343)
+- Validate inline UI configuration before initialization (#9337)
+- Ensure consistent access control to formatter admin API (#9346)
+- Align frontend and backend publication checks (#9300)
+- Metadata editor / fix generate thumbnail from metadata layer when the map background layer is a WMTS layer (#9267)
+- Standard / ISO19115-3 / Add missing translations for codelists in French
+- Fix Dublin Core keywords indexing error. (#9329)
+- GeoNetwork4 harvester / fix NPE when dateStamp is absent from search response (#9320)
+- CSW GetRecords fails when requesting an outputSchema not supported by a metadata schema. (#6941)
+- Doc / Add missing page in mkdocs nav.
+- Update version to 4.4.12-SNAPSHOT
+- Update version to 4.4.11-0
+- Update version to 4.4.11-0

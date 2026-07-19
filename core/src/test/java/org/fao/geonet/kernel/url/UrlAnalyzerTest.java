@@ -11,6 +11,8 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.LinkRepository;
 import org.fao.geonet.repository.LinkStatusRepository;
@@ -42,8 +44,8 @@ import java.util.stream.Stream;
 import static org.fao.geonet.kernel.UpdateDatestamp.NO;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.contains;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 
 public class UrlAnalyzerTest extends AbstractCoreIntegrationTest {
@@ -187,7 +189,7 @@ public class UrlAnalyzerTest extends AbstractCoreIntegrationTest {
         SimpleJpaRepository metadataLinkRepository = new SimpleJpaRepository<MetadataLink, Integer>(MetadataLink.class, entityManager);
         List<MetadataLink> metadataLinkList = metadataLinkRepository.findAll();
         assertEquals(6, metadataLinkList.size());
-        dataManager.deleteMetadata(context, md.getId() + "");
+        dataManager.deleteMetadata(context, md.getId() + "", DirectDeletionSubmitter.INSTANCE);
 
         linkRepository.findAll().stream().forEach(toTest::purgeMetataLink);
 
@@ -301,7 +303,7 @@ public class UrlAnalyzerTest extends AbstractCoreIntegrationTest {
                 false,
                 NO,
                 false,
-                false);
+            DirectIndexSubmitter.INSTANCE);
 
         return dbInsertedMetadata;
     }

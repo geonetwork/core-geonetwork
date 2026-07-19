@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -22,6 +22,7 @@
  */
 package org.fao.geonet.kernel.security.openidconnect;
 
+import org.fao.geonet.kernel.security.openidconnect.bearer.GeonetworkClientServiceAccountRegistrationProvider;
 import org.junit.Test;
 
 import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProviderTest.keycloakConfig;
@@ -37,9 +38,9 @@ public class GeonetworkClientRegistrationRepositoryTest {
     @Test
     public void testRepo() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
-        configuration.setClientId("clientid");
-        configuration.setClientSecret("clientsecret");
-        configuration.setScopes("");//use all scopes
+        configuration.getClientConfig().setClientId("clientid");
+        configuration.getClientConfig().setClientSecret("clientsecret");
+        configuration.getClientConfig().setScopes("");//use all scopes
         GeonetworkClientRegistrationProvider clientRegistrationProvider = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
             configuration
@@ -48,6 +49,33 @@ public class GeonetworkClientRegistrationRepositoryTest {
         GeonetworkClientRegistrationRepository out = new GeonetworkClientRegistrationRepository(clientRegistrationProvider);
 
         assertEquals(clientRegistrationProvider.getClientRegistration(),
-            out.findByRegistrationId(GeonetworkClientRegistrationProvider.CLIENTREGISTRATION_NAME));
+            out.findByRegistrationId(GeonetworkClientRegistrationProvider.CLIENT_REGISTRATION_NAME));
+    }
+
+    @Test
+    public void testRepoServiceAccount() throws Exception {
+        OIDCConfiguration configuration = new OIDCConfiguration();
+        configuration.getClientConfig().setClientId("clientid");
+        configuration.getClientConfig().setClientSecret("clientsecret");
+        configuration.getClientConfig().setScopes("");//use all scopes
+        configuration.getServiceAccountConfig().setClientId("clientid");
+        configuration.getServiceAccountConfig().setClientSecret("clientsecret");
+        configuration.getServiceAccountConfig().setScopes("");//use all scopes
+        GeonetworkClientRegistrationProvider clientRegistrationProvider = new GeonetworkClientRegistrationProvider(
+            string2InputStream(keycloakConfig),
+            configuration
+        );
+        GeonetworkClientServiceAccountRegistrationProvider clientServiceAccountRegistrationProvider = new GeonetworkClientServiceAccountRegistrationProvider(
+            string2InputStream(keycloakConfig),
+            configuration
+        );
+
+        GeonetworkClientRegistrationRepository out = new GeonetworkClientRegistrationRepository(clientRegistrationProvider, clientServiceAccountRegistrationProvider);
+
+        assertEquals(clientRegistrationProvider.getClientRegistration(),
+            out.findByRegistrationId(GeonetworkClientRegistrationProvider.CLIENT_REGISTRATION_NAME));
+
+        assertEquals(clientServiceAccountRegistrationProvider.getClientRegistration(),
+            out.findByRegistrationId(GeonetworkClientServiceAccountRegistrationProvider.CLIENT_SERVICE_ACCOUNT_REGISTRATION_NAME));
     }
 }

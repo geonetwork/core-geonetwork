@@ -1,8 +1,8 @@
 # About
 
-GeoNetwork opensource is a catalog allowing visitors to search and discover spatial information. Visitors are can the included map viewer to preview datasets interactively.
+GeoNetwork opensource is a catalog allowing visitors to search and discover spatial information. Visitors can use the included map viewer to preview datasets interactively.
 
-GeoNetwork provides the tools to managing spatially referenced resources including record editing.
+GeoNetwork provides the tools for managing spatially referenced resources including record editing.
 
 The project is based on Open Standards both for data management, and interoperability between systems.
 

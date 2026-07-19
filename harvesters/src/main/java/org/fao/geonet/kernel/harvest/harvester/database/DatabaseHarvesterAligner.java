@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -53,13 +54,13 @@ import static org.fao.geonet.kernel.harvest.harvester.csw.Aligner.applyBatchEdit
 
 class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> implements IHarvester<HarvestResult> {
     private Logger log;
-    private ServiceContext context;
-    private DataManager dataMan;
-    private IMetadataManager metadataManager;
-    private IMetadataUtils metadataUtils;
-    private IMetadataIndexer metadataIndexer;
-    private IMetadataSchemaUtils metadataSchemaUtils;
-    private MetadataRepository metadataRepository;
+    private final ServiceContext context;
+    private final DataManager dataMan;
+    private final IMetadataManager metadataManager;
+    private final IMetadataUtils metadataUtils;
+    private final IMetadataIndexer metadataIndexer;
+    private final IMetadataSchemaUtils metadataSchemaUtils;
+    private final MetadataRepository metadataRepository;
     private HarvestResult result;
     private CategoryMapper localCateg;
     private GroupMapper localGroups;
@@ -164,15 +165,17 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
     private void deleteLocalMetadataNotInDatabase(List<Integer> idsForHarvestingResult) throws Exception {
         Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
         List<Integer> existingMetadata = metadataRepository.findIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
-        for (Integer existingId : existingMetadata) {
-            if (cancelMonitor.get()) {
-                return;
-            }
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
+            for (Integer existingId : existingMetadata) {
+                if (cancelMonitor.get()) {
+                    return;
+                }
 
-            if (!idsResultHs.contains(existingId)) {
-                log.debug("  Removing: " + existingId);
-                metadataManager.deleteMetadata(context, existingId.toString());
-                result.locallyRemoved++;
+                if (!idsResultHs.contains(existingId)) {
+                    log.debug("  Removing: " + existingId);
+                    metadataManager.deleteMetadata(context, existingId.toString(), submitter);
+                    result.locallyRemoved++;
+                }
             }
         }
     }
@@ -236,7 +239,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
 
             switch (params.getOverrideUuid()) {
                 case OVERRIDE:
-                    updateMetadata(metadataElement, Integer.toString(metadataUtils.findOneByUuid(uuid).getId()), true);
+                    updateMetadata(metadataElement, metadataUtils.findOneByUuid(uuid), true);
                     log.debug(String.format("Overriding record with uuid %s", uuid));
                     result.updatedMetadata++;
                     break;
@@ -245,7 +248,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
                     addMetadata(metadataElement, UUID.randomUUID().toString(), schema);
                     break;
                 case SKIP:
-                    log.debug(String.format("Skipping record with uuid %s", uuid));
+                    log.info(String.format("Skipping record with uuid %s", uuid));
                     result.uuidSkipped++;
                     break;
                 default:
@@ -253,14 +256,15 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
             }
         } else {
             //record exists and belongs to this harvester
-            updateMetadata(metadataElement, id, false);
+            updateMetadata(metadataElement, metadataUtils.findOne(id), false);
             result.updatedMetadata++;
         }
 
         return id;
     }
 
-    private void updateMetadata(Element xml, String id, boolean force) throws Exception {
+    private void updateMetadata(Element xml, AbstractMetadata originalMetadata, boolean force) throws Exception {
+        String id = Integer.toString(originalMetadata.getId());
         log.info("Updating metadata with id: " + id);
 
         //
@@ -288,6 +292,11 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
             String newSchema = metadataSchemaUtils.autodetectSchema(xml);
             updateSchema = (newSchema != null) && !newSchema.equals(schema);
             schema = newSchema;
+        } else {
+            if (!originalMetadata.getDataInfo().getSchemaId().equals(schema)) {
+                log.warning("  - Detected schema '" + schema + "' is different from the one of the metadata in the catalog '" + originalMetadata.getDataInfo().getSchemaId() + "'. Using the detected one.");
+                updateSchema = true;
+            }
         }
 
         applyBatchEdits(uuid, xml, schema, params.getBatchEdits(), context, log);
@@ -323,7 +332,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
         addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
         metadataManager.flush();
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
     }
 
     /**
@@ -385,13 +394,13 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
 
         return id;
     }

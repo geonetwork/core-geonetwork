@@ -84,7 +84,7 @@ public class ServiceManager {
     private List<ErrorPage> vErrorPipe = new ArrayList<ErrorPage>();
     private List<GuiService> vDefaultGui = new ArrayList<GuiService>();
     private String baseUrl;
-    private int maxUploadSize;
+    private long maxUploadSize;
     private String defaultLang;
     private String defaultContType;
     private boolean defaultLocal;
@@ -118,7 +118,7 @@ public class ServiceManager {
         defaultContType = type;
     }
 
-    public void setMaxUploadSize(int size) {
+    public void setMaxUploadSize(long size) {
         maxUploadSize = size;
     }
 
@@ -706,7 +706,7 @@ public class ServiceManager {
                             Path file;
                             try {
                                 //--- first we do the transformation
-                                file = Xml.transformFOP(dataDirectory.getUploadDir(), rootElem, styleSheet.toString());
+                                file = Xml.transformFOP(dataDirectory.getUploadDir(), rootElem, styleSheet);
                             } finally {
                                 timerContext.stop();
                             }

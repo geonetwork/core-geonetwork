@@ -68,6 +68,9 @@
       $scope.selectSource = function (source) {
         source.uiConfig = source.uiConfig && source.uiConfig.toString();
         source.groupOwner = source.groupOwner || null;
+        if (!source.datahubConfiguration) {
+          source.datahubConfiguration = $scope.defaultConfig;
+        }
         $scope.source = source;
         $scope.isNew = false;
         // Used to check if the logo has been updated
@@ -103,6 +106,7 @@
           .then(function (response) {
             $scope.datahubAvailable = true;
             $scope.defaultConfig = response.data.defaultConfig;
+            $scope.datahubVersion = response.data.datahubVersion;
           })
           .catch(function () {
             $scope.datahubAvailable = false;

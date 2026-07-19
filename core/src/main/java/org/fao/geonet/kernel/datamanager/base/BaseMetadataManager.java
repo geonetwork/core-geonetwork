@@ -23,6 +23,10 @@
 
 package org.fao.geonet.kernel.datamanager.base;
 
+import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Function;
 import com.google.common.base.Optional;
 import com.google.common.base.Predicate;
@@ -33,6 +37,7 @@ import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang.StringUtils;
+import co.elastic.clients.elasticsearch.core.SearchResponse;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Edit;
@@ -41,6 +46,7 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.events.history.RecordDeletedEvent;
 import org.fao.geonet.events.md.MetadataPreRemove;
+import org.fao.geonet.exceptions.TooManyMDsForThisSubTemplateException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.*;
@@ -50,6 +56,11 @@ import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.setting.SettingInfo;
@@ -88,6 +99,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -107,8 +119,6 @@ public class BaseMetadataManager implements IMetadataManager {
     private IMetadataSchemaUtils metadataSchemaUtils;
     @Autowired
     private GroupRepository groupRepository;
-    @Autowired
-    private MetadataStatusRepository metadataStatusRepository;
     @Autowired
     private MetadataValidationRepository metadataValidationRepository;
     @Autowired
@@ -145,6 +155,10 @@ public class BaseMetadataManager implements IMetadataManager {
 
     @Autowired
     private ApplicationContext _applicationContext;
+
+    @VisibleForTesting
+    public int maxMdsReferencingSubTemplate = 10000;
+
     @PersistenceContext
     private EntityManager _entityManager;
 
@@ -178,12 +192,9 @@ public class BaseMetadataManager implements IMetadataManager {
     /**
      * Refresh index if needed. Can also be called after GeoNetwork startup in
      * order to rebuild the lucene index
-     * t
      *
-     * @param force        Force reindexing all from scratch
-     * @param asynchronous
      **/
-    public void synchronizeDbWithIndex(ServiceContext context, Boolean force, Boolean asynchronous) throws Exception {
+    public void synchronizeDbWithIndex(ServiceContext context) throws Exception {
 
         // get lastchangedate of all metadata in index
         Map<String, String> docs = searchManager.getDocsChangeDate();
@@ -193,10 +204,10 @@ public class BaseMetadataManager implements IMetadataManager {
 
         LOGGER_DATA_MANAGER.debug("INDEX CONTENT:");
 
-        Sort sortByMetadataChangeDate = SortUtils.createSort(Sort.Direction.DESC, Metadata_.dataInfo, MetadataDataInfo_.changeDate);
+        Sort sortById = Sort.by(Sort.Direction.ASC, Metadata_.id.getName());
         int currentPage = 0;
         Page<Pair<Integer, ISODate>> results = metadataUtils.findAllIdsAndChangeDates(
-            PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
+            PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortById));
 
         // index all metadata in DBMS if needed
         while (results.getNumberOfElements() > 0) {
@@ -224,7 +235,7 @@ public class BaseMetadataManager implements IMetadataManager {
                     LOGGER_DATA_MANAGER.debug("- idxLastChange: {}", idxLastChange);
 
                     // date in index contains 't', date in DBMS contains 'T'
-                    if (force || !idxLastChange.equalsIgnoreCase(lastChange)) {
+                    if (!idxLastChange.equalsIgnoreCase(lastChange)) {
                         LOGGER_DATA_MANAGER.debug("-  will be indexed");
                         toIndex.add(id);
                     }
@@ -232,31 +243,29 @@ public class BaseMetadataManager implements IMetadataManager {
             }
 
             currentPage++;
-            results = metadataRepository.findIdsAndChangeDates(
-                PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortByMetadataChangeDate));
+            results = metadataUtils.findAllIdsAndChangeDates(
+                PageRequest.of(currentPage, METADATA_BATCH_PAGE_SIZE, sortById));
         }
 
         // if anything to index then schedule it to be done after servlet is
         // up so that any links to local fragments are resolvable
-        if (toIndex.size() > 0) {
-            if (asynchronous) {
-                Set<Integer> integerList = toIndex.stream().map(Integer::parseInt).collect(Collectors.toSet());
-                new BatchOpsMetadataReindexer(
-                    context.getBean(DataManager.class),
-                    integerList).process(settingManager.getSiteId(), false);
-            } else {
-                metadataIndexer.batchIndexInThreadPool(context, toIndex);
-            }
+        if (!toIndex.isEmpty()) {
+            Set<Integer> integerList = toIndex.stream().map(Integer::parseInt).collect(Collectors.toSet());
+            new BatchOpsMetadataReindexer(
+                context.getBean(DataManager.class),
+                integerList).process(settingManager.getSiteId(), false);
         }
 
-        if (docs.size() > 0) { // anything left?
+        if (!docs.isEmpty()) { // anything left?
             LOGGER_DATA_MANAGER.debug("INDEX HAS RECORDS THAT ARE NOT IN DB:");
         }
 
         // remove from index metadata not in DBMS
-        for (String id : docs.keySet()) {
-            getSearchManager().delete(String.format("+id:%s", id));
-            LOGGER_DATA_MANAGER.debug("- removed record ({}) from index", id);
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
+            for (String id : docs.keySet()) {
+                LOGGER_DATA_MANAGER.debug("- removing record ({}) from index", id);
+                getSearchManager().deleteByQuery(String.format("+id:%s", id), submitter);
+            }
         }
     }
 
@@ -335,18 +344,17 @@ public class BaseMetadataManager implements IMetadataManager {
      * Removes a metadata.
      */
     @Override
-    public void deleteMetadata(ServiceContext context, String metadataId) throws Exception {
+    public void deleteMetadata(ServiceContext context, String metadataId, IDeletionSubmitter submitter) throws Exception {
         AbstractMetadata findOne = metadataUtils.findOne(metadataId);
         if (findOne != null) {
             boolean isMetadata = findOne.getDataInfo().getType() == MetadataType.METADATA;
 
             deleteMetadataFromDB(context, metadataId);
+            // --- update search criteria
+            getSearchManager().deleteByUuid(findOne.getUuid(), submitter);
+        } else {
+            getSearchManager().deleteByQuery(String.format("+id:%s", metadataId), submitter);
         }
-
-        // --- update search criteria
-        getSearchManager().delete(String.format("+id:%s", metadataId));
-        // _entityManager.flush();
-        // _entityManager.clear();
     }
 
     /**
@@ -375,7 +383,7 @@ public class BaseMetadataManager implements IMetadataManager {
         RecordDeletedEvent recordDeletedEvent = new RecordDeletedEvent(
             metadata.getId(), metadata.getUuid(), new LinkedHashMap<>(),
             context.getUserSession().getUserIdAsInt(), metadata.getData());
-        deleteMetadata(context, metadataId);
+        deleteMetadata(context, metadataId, DirectDeletionSubmitter.INSTANCE);
         recordDeletedEvent.publish(ApplicationContextHolder.get());
     }
 
@@ -387,7 +395,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public void deleteMetadataGroup(ServiceContext context, String metadataId) throws Exception {
         deleteMetadataFromDB(context, metadataId);
-        getSearchManager().delete(String.format("+id:%s", metadataId));
+        getSearchManager().deleteByQuery(String.format("+id:%s", metadataId), DirectDeletionSubmitter.INSTANCE);
     }
 
     /**
@@ -428,13 +436,12 @@ public class BaseMetadataManager implements IMetadataManager {
         boolean isMetadata = templateMetadata.getDataInfo().getType() == MetadataType.METADATA;
         MetadataType type = MetadataType.lookup(isTemplate);
         setMetadataTitle(schema, xml, context.getLanguage(), !isMetadata);
-        if (isMetadata) {
-            xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
-
-            xml = duplicateMetadata(schema, xml, context);
-        } else if (type == MetadataType.SUB_TEMPLATE
+        if (type == MetadataType.SUB_TEMPLATE
             || type == MetadataType.TEMPLATE_OF_SUB_TEMPLATE) {
             xml.setAttribute("uuid", uuid);
+        } else {
+            xml = duplicateMetadata(schema, xml, context);
+            xml = updateFixedInfo(schema, Optional.<Integer>absent(), uuid, xml, parentUuid, UpdateDatestamp.NO, context);
         }
 
         final Metadata newMetadata = new Metadata();
@@ -464,7 +471,7 @@ public class BaseMetadataManager implements IMetadataManager {
         newMetadata.getMetadataCategories().addAll(filteredCategories);
 
         int finalId = insertMetadata(context, newMetadata, xml, IndexingMode.full, true, UpdateDatestamp.YES,
-            fullRightsForGroup, true).getId();
+            fullRightsForGroup, DirectIndexSubmitter.INSTANCE).getId();
 
         return String.valueOf(finalId);
     }
@@ -569,7 +576,7 @@ public class BaseMetadataManager implements IMetadataManager {
         boolean fullRightsForGroup = false;
 
         int finalId = insertMetadata(context, newMetadata, metadataXml, indexingMode, ufo, UpdateDatestamp.NO,
-            fullRightsForGroup, true).getId();
+            fullRightsForGroup, DirectIndexSubmitter.INSTANCE).getId();
 
         return String.valueOf(finalId);
     }
@@ -577,7 +584,7 @@ public class BaseMetadataManager implements IMetadataManager {
     @Override
     public AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml,
                                            IndexingMode indexingMode, boolean updateFixedInfo, UpdateDatestamp updateDatestamp,
-                                           boolean fullRightsForGroup, boolean forceRefreshReaders) throws Exception {
+                                           boolean fullRightsForGroup, IIndexSubmitter indexSubmittor) throws Exception {
         final String schema = newMetadata.getDataInfo().getSchemaId();
 
         // Check if the schema is allowed by settings
@@ -616,7 +623,7 @@ public class BaseMetadataManager implements IMetadataManager {
         metadataOperations.copyDefaultPrivForGroup(context, stringId, groupId, fullRightsForGroup);
 
         if (indexingMode != IndexingMode.none) {
-            metadataIndexer.indexMetadata(stringId, forceRefreshReaders, indexingMode);
+            metadataIndexer.indexMetadata(stringId, indexSubmittor, indexingMode);
         }
 
         return savedMetadata;
@@ -651,19 +658,7 @@ public class BaseMetadataManager implements IMetadataManager {
             String schema = metadataSchemaUtils.getMetadataSchema(id);
 
             // Inflate metadata
-            Path inflateStyleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.INFLATE_METADATA);
-            if (Files.exists(inflateStyleSheet)) {
-                // --- setup environment
-                Element env = new Element("env");
-                env.addContent(new Element("lang").setText(srvContext.getLanguage()));
-
-                // add original metadata to result
-                Element result = new Element("root");
-                result.addContent(metadataXml);
-                result.addContent(env);
-
-                metadataXml = Xml.transform(result, inflateStyleSheet);
-            }
+            metadataXml = inflateMetadata(metadataXml, schema, srvContext.getLanguage());
 
             if (withEditorValidationErrors) {
                 final Pair<Element, String> versionAndReport = metadataValidator
@@ -742,7 +737,6 @@ public class BaseMetadataManager implements IMetadataManager {
         // when invoked from harvesters, session is null?
         UserSession session = context.getUserSession();
         if (session != null) {
-            session.removeProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
         }
         String schema = metadataSchemaUtils.getMetadataSchema(metadataId);
 
@@ -787,21 +781,14 @@ public class BaseMetadataManager implements IMetadataManager {
             if (indexingMode != IndexingMode.none) {
                 // Delete old record if UUID changed
                 if (uuidBeforeUfo != null && !uuidBeforeUfo.equals(uuid)) {
-                    getSearchManager().delete(String.format("+uuid:\"%s\"", uuidBeforeUfo));
+                    getSearchManager().deleteByUuid(uuidBeforeUfo, DirectDeletionSubmitter.INSTANCE);
                 }
-                metadataIndexer.indexMetadata(metadataId, true, indexingMode);
+                metadataIndexer.indexMetadata(metadataId, DirectIndexSubmitter.INSTANCE, indexingMode);
+                if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
+                    indexMdsReferencingSubTemplate(context, metadata);
+                }
             }
         }
-
-//		  TODO: TODOES Searhc for related records with an XLink pointing to this subtemplate
-//        if (metadata.getDataInfo().getType() == MetadataType.SUB_TEMPLATE) {
-//            MetaSearcher searcher = searcherForReferencingMetadata(context, metadata);
-//            Map<Integer, AbstractMetadata> result = ((LuceneSearcher) searcher).getAllMdInfo(context, 500);
-//            for (Integer id : result.keySet()) {
-//                IndexingList list = context.getBean(IndexingList.class);
-//                list.add(id);
-//            }
-//        }
 
         Log.trace(Geonet.DATA_MANAGER, "Finishing update of record with id " + metadataId);
         // Return an up to date metadata record
@@ -1350,4 +1337,49 @@ public class BaseMetadataManager implements IMetadataManager {
         return this.searchManager.query(query.toString(), null, 0, 0).hits().total().value() > 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Element inflateMetadata(Element metadataXml, String schema, String lang) throws Exception {
+        // Resolve the path to the XSLT stylesheet based on the schema.
+        Path styleSheet = metadataSchemaUtils.getSchemaDir(schema).resolve(Geonet.File.INFLATE_METADATA);
+
+        // If the stylesheet does not exist, return the original metadata.
+        if (!Files.exists(styleSheet)) {
+            return metadataXml; // No stylesheet to apply, return original metadata
+        }
+
+        // Create an environment element to pass additional parameters to the transformation.
+        Element env = new Element("env");
+        env.addContent(new Element("lang").setText(lang)); // Add the language parameter.
+
+        // Prepare the root element containing the metadata and the environment.
+        Element result = new Element("root");
+        result.addContent(metadataXml); // Add the original metadata.
+        result.addContent(env); // Add the environment.
+
+        // Apply the XSLT transformation and return the transformed metadata.
+        return Xml.transform(result, styleSheet);
+    }
+
+    private void indexMdsReferencingSubTemplate(ServiceContext context, AbstractMetadata subTemplate) throws Exception {
+        String query = String.format("xlink:*%s*", subTemplate.getUuid());
+        SearchResponse response = this.searchManager.query(query, null, Set.of("id"),0, maxMdsReferencingSubTemplate);
+        if (response.hits().total().value() > maxMdsReferencingSubTemplate) {
+            LOGGER_DATA_MANAGER.warn("Too many mds referencing subtemplate {}. Max allowed is {}.", subTemplate.getUuid(), maxMdsReferencingSubTemplate);
+            throw new TooManyMDsForThisSubTemplateException("To avoid running out of resources, this exception is thrown when the maximum number of subtemplates referencing a metadata record has been reached (" + maxMdsReferencingSubTemplate + ").");
+        }
+        Stream<Hit<?>> hits = response.hits().hits().stream();
+        List<String> toIndex = hits
+            .map(Hit::source)
+            .filter(ObjectNode.class::isInstance)
+            .map(ObjectNode.class::cast)
+            .map(x -> x.get("id"))
+            .filter(Objects::nonNull)
+            .map(JsonNode::asText)
+            .collect(Collectors.toList());
+
+        metadataIndexer.batchIndexInThreadPool(context, toIndex, TransactionManager.transactionInitiatedByJeeves.get());
+    }
 }

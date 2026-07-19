@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -57,6 +57,7 @@ import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -66,8 +67,6 @@ import org.jdom.xpath.XPath;
 import javax.transaction.Transactional;
 import javax.transaction.Transactional.TxType;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -215,7 +214,7 @@ public class Aligner extends BaseAligner<CswParams> {
                             addMetadata(ri, UUID.randomUUID().toString());
                             break;
                         case SKIP:
-                            log.debug("Skipping record with uuid " + ri.uuid);
+                            log.info("Skipping record with uuid " + ri.uuid);
                             result.uuidSkipped++;
                             break;
                         default:
@@ -256,15 +255,16 @@ public class Aligner extends BaseAligner<CswParams> {
             return result;
         }
 
-        for (String uuid : localUuids.getUUIDs()) {
-            if (!records.contains(uuid)) {
-                String id = localUuids.getID(uuid);
-                log.debug("  - Removing old metadata with local id:" + id);
-                metadataManager.deleteMetadata(context, id);
-                result.locallyRemoved++;
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
+            for (String uuid : localUuids.getUUIDs()) {
+                if (!records.contains(uuid)) {
+                    String id = localUuids.getID(uuid);
+                    log.debug("  - Removing old metadata with local id:" + id);
+                    metadataManager.deleteMetadata(context, id, submitter);
+                    result.locallyRemoved++;
+                }
             }
         }
-        dataMan.forceIndexChanges();
 
         return result;
     }
@@ -309,7 +309,7 @@ public class Aligner extends BaseAligner<CswParams> {
         // If the xslfilter process changes the metadata uuid,
         // use that uuid (newMdUuid) for the new metadata to add to the catalogue.
         String newMdUuid = null;
-        if (!params.xslfilter.equals("")) {
+        if (!params.xslfilter.isEmpty()) {
             md = applyXSLTProcessToMetadata(context, md, processName, processParams, log);
             schema = dataMan.autodetectSchema(md);
             // Get new uuid if modified by XSLT process
@@ -365,13 +365,13 @@ public class Aligner extends BaseAligner<CswParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
         result.addedMetadata++;
     }
 
@@ -435,7 +435,7 @@ public class Aligner extends BaseAligner<CswParams> {
             } else {
                 log.debug("  - Updating local metadata for uuid:" + ri.uuid);
                 if (updatingLocalMetadata(ri, id, force)) {
-                    metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+                    metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
                     result.updatedMetadata++;
                 }
             }
@@ -467,6 +467,11 @@ public class Aligner extends BaseAligner<CswParams> {
             String newSchema = dataMan.autodetectSchema(md);
             updateSchema = !newSchema.equals(schema);
             schema = newSchema;
+        } else {
+            if (!schema.equals(ri.schema)) {
+                log.warning("  - Detected schema '" + schema + "' is different from the one of the metadata in the catalog '" + ri.schema + "'. Using the detected one.");
+                updateSchema = true;
+            }
         }
 
         applyBatchEdits(ri.uuid, md, schema, params.getBatchEdits(), context, log);
@@ -547,7 +552,7 @@ public class Aligner extends BaseAligner<CswParams> {
 
                 params.getValidate().validate(dataMan, context, response, groupIdVal);
             } catch (Exception e) {
-                log.info("Ignoring invalid metadata with uuid " + uuid);
+                log.info("Ignoring invalid metadata with uuid " + uuid, e);
                 result.doesNotValidate++;
                 return null;
             }

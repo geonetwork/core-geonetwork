@@ -6,6 +6,7 @@ Harvesting is the process of ingesting metadata from remote sources and storing 
 
 The following sources can be harvested:
 
+-   [GeoNetwork 4.X Harvester](harvesting-geonetwork-4.md)
 -   [GeoNetwork 2.1-3.X Harvester](harvesting-geonetwork.md)
 -   [GeoNetwork 2.0 Harvester](harvesting-geonetwork-2.md)
 -   [Harvesting CSW services](harvesting-csw.md)
@@ -18,7 +19,9 @@ The following sources can be harvested:
 -   [GeoPortal REST Harvesting](harvesting-geoportal.md)
 -   [THREDDS Harvesting](harvesting-thredds.md)
 -   [WFS GetFeature Harvesting](harvesting-wfs-features.md)
+-   [SFTP Server Harvesting](harvesting-sftp.md)
 -   [Database Harvesting](harvesting-database.md)
+-   [Simple URL harvesting (STAC Collection)](harvesting-stac.md)
 
 ## Mechanism overview
 
@@ -43,7 +46,7 @@ Harvested metadata are (by default) not editable for the following reasons:
 1.  The harvesting is periodic so any local change to harvested metadata will be lost during the next run.
 2.  The change date may be used to keep track of changes so if the metadata gets changed, the harvesting mechanism may be compromised.
 
-Metadata properties (like categories, privileges etc\...) on harvested metadata records can be updated but will be updated on next run.
+Metadata properties (like categories, privileges etc.) on harvested metadata records can be updated but will be updated on next run.
 
 !!! note
 
@@ -131,7 +134,7 @@ sudo cp jssecacerts $JAVA_HOME/jre/lib/security/jssecacerts
 
 To use the script, the Java compiler must be installed and the file [InstallCert.java](https://github.com/escline/InstallCert), must be downloaded and placed in the same directory as the script.
 
-The script will add the certificate to the JVM keystore, if you run it as follows::
+The script will add the certificate to the JVM keystore, if you run it as follows:
 
     $ ./ssl_key_import.sh https_server_name 443
 

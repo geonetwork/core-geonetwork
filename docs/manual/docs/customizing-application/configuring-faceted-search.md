@@ -10,7 +10,7 @@ Facets also known as aggregation in Elasticsearch are used to provide simple sea
 
     ![](img/agg-search.png)
 
-All facet configurations are stored in the user interface configuration (see [User Interface Configuration](../administrator-guide/configuring-the-catalog/user-interface-configuration.md)). The configuration are defined using JSON following Elasticsearch API (See <https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html>).
+All facet configurations are stored in the user interface configuration (see [User Interface Configuration](../administrator-guide/configuring-the-catalog/user-interface-configuration.md)). The configurations are defined using JSON following the [Elasticsearch Aggregations API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html).
 
 By default, the facet configurations are defined as (see `web-ui/src/main/resources/catalog/js/CatController.js`). The home page display on the left side `th_httpinspireeceuropaeutheme-theme_tree.key` and `cl_topic.key` and on the right side, the last facet defined `resourceType`.
 
@@ -226,7 +226,7 @@ Aggregations can be collapsed by default and visible to users depending on roles
 
 ## Hierarchical aggregation based on separator (Experimental)
 
-A tree field which contains a URI eg. <http://www.ifremer.fr/thesaurus/sextant/theme#52> but with a translation which contains a hierarchy with a custom separator `/Regulation and Management/Technical and Management Zonations/Sensitive Zones`
+A tree field which contains a URI, e.g. `http://www.ifremer.fr/thesaurus/sextant/theme#52`, but with a translation which contains a hierarchy with a custom separator `/Regulation and Management/Technical and Management Zonations/Sensitive Zones`
 
 ``` js
 "th_sextant-theme_tree.key": {

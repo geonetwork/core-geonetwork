@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -76,7 +76,7 @@ public class ListMetadataFormats implements OaiPmhService {
         return res;
     }
 
-    private MetadataFormat getSchemaInfo(ServiceContext context, SchemaManager sm, String name) throws IOException, JDOMException {
+    private MetadataFormat getSchemaInfo(ServiceContext context, SchemaManager sm, String name) {
         MetadataFormat mf = new MetadataFormat();
         mf.prefix = name;
         mf.schema = "";
@@ -104,7 +104,7 @@ public class ListMetadataFormats implements OaiPmhService {
         @SuppressWarnings("unchecked")
         List<Element> defaultSchemas = elem.getChildren();
 
-        List<MetadataFormat> defMdfs = new ArrayList<MetadataFormat>();
+        List<MetadataFormat> defMdfs = new ArrayList<>();
         for (Element schema : defaultSchemas) {
             defMdfs.add(new MetadataFormat(schema.getAttributeValue("prefix"), schema.getAttributeValue("schemaLocation"), schema.getAttributeValue("nsUrl")));
         }

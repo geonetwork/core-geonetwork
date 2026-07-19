@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2021 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,15 +23,24 @@
 package org.fao.geonet.api.users;
 
 
+import com.google.common.collect.Lists;
 import com.google.gson.Gson;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.users.model.PasswordResetDto;
 import org.fao.geonet.api.users.model.UserDto;
+import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.userfeedback.UserFeedback;
+import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,17 +49,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -60,14 +64,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * Test class for UsersApi.
- *
+ * This test class is designed to validate the functionality and behavior of the Users API.
+ * It contains setup and test methods for various use cases related to user management,
+ * including creation, deletion, updating, and retrieval of user accounts and their associated data.
  */
 public class UsersApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private WebApplicationContext wac;
 
     private MockMvc mockMvc;
+
+    @Autowired
+    private UserFeedbackRepository userFeedbackRepository;
 
     private MockHttpSession mockHttpSession;
 
@@ -83,8 +91,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(get("/srv/api/users")
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(7)))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
@@ -97,8 +105,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(get("/srv/api/users/222")
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
@@ -110,8 +118,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(get("/srv/api/users/1")
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
@@ -127,12 +135,65 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(get("/srv/api/users/" + editorUser.getId() + "/groups")
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[0].id.groupId", is(sampleGroup.getId())))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void deleteUserWithFeedback() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        // 1. Create a user to delete
+        User userToDelete = new User()
+            .setUsername("user-with-feedback")
+            .setProfile(Profile.Editor)
+            .setEnabled(true);
+        userToDelete.getSecurity().setPassword("Password123!");
+        userToDelete = _userRepo.save(userToDelete);
+
+        // 2. Create feedback entries
+        UserFeedback feedback1 = new UserFeedback();
+        feedback1.setUuid(UUID.randomUUID().toString());
+        feedback1.setAuthorId(userToDelete);
+        feedback1.setCommentText("Feedback from author");
+        feedback1.setStatus(UserFeedback.UserRatingStatus.PUBLISHED);
+        userFeedbackRepository.save(feedback1);
+
+        UserFeedback feedback2 = new UserFeedback();
+        feedback2.setUuid(UUID.randomUUID().toString());
+        feedback2.setApprover(userToDelete);
+        feedback2.setCommentText("Feedback to be approved");
+        feedback2.setStatus(UserFeedback.UserRatingStatus.PUBLISHED);
+        userFeedbackRepository.save(feedback2);
+
+        // 3. Delete the user
+        this.mockMvc.perform(delete("/srv/api/users/" + userToDelete.getId())
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(204));
+
+        // 4. Verify user is deleted
+        Assert.assertFalse(_userRepo.findById(userToDelete.getId()).isPresent());
+
+        // Flush and clear the persistence context so the assertions below read
+        // from the database instead of returning the stale managed instances
+        // cached before the nullify bulk updates ran.
+        _entityManager.flush();
+        _entityManager.clear();
+
+        // 5. Verify feedback entries still exist and author/approver are null
+        UserFeedback updatedFeedback1 = userFeedbackRepository.findByUuid(feedback1.getUuid());
+        Assert.assertNotNull(updatedFeedback1);
+        Assert.assertNull(updatedFeedback1.getAuthorId());
+
+        UserFeedback updatedFeedback2 = userFeedbackRepository.findByUuid(feedback2.getUuid());
+        Assert.assertNotNull(updatedFeedback2);
+        Assert.assertNull(updatedFeedback2.getApprover());
     }
 
     @Test
@@ -145,8 +206,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(delete("/srv/api/users/" + userToDelete.getId())
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 
         userToDelete = _userRepo.findOneByUsername("testuser-editor");
@@ -164,8 +225,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 404 is returned
         this.mockMvc.perform(delete("/srv/api/users/222")
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
@@ -181,8 +242,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 400 is returned and a message indicating that a user can't delete himself
         this.mockMvc.perform(delete("/srv/api/users/" + user.getId())
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
             .andExpect(jsonPath("$.message", is("You cannot delete yourself from the user database")))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
@@ -211,8 +272,8 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 400 is returned and a message indicating that a user can't delete himself
         this.mockMvc.perform(delete("/srv/api/users/" + userToDelete.getId())
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
             .andExpect(jsonPath("$.message", is("You don't have rights to delete this user because the user is not part of your group")))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
@@ -238,10 +299,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         this.mockMvc.perform(put("/srv/api/users")
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
 
         User userCreated = _userRepo.findOneByUsername(user.getUsername());
@@ -267,10 +328,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 400 is returned and a message indicating that username is required
         this.mockMvc.perform(put("/srv/api/users")
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.message", is("username is a required parameter for newuser operation")))
             .andExpect(status().is(400));
     }
@@ -295,10 +356,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 400 is returned and a message indicating that username is duplicated
         this.mockMvc.perform(put("/srv/api/users")
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.message", is("Users with username " + user.getUsername()
                 + " ignore case already exists")))
             .andExpect(status().is(400));
@@ -325,14 +386,44 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 400 is returned and a message indicating that username is duplicated
         this.mockMvc.perform(put("/srv/api/users")
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.message", is("Users with username " + user.getUsername()
                 + " ignore case already exists")))
             .andExpect(status().is(400));
 
+    }
+
+    @Test
+    public void createUserUsernameTooLong() throws Exception {
+        String username = StringUtils.repeat("a", UsersApi.MAX_USERNAME_LENGTH + 1);
+        UserDto user = new UserDto();
+        user.setName("new");
+        user.setUsername(username);
+        user.setProfile(Profile.Editor.name());
+        user.setGroupsEditor(Collections.singletonList("2"));
+        user.setEmail(Collections.singletonList("mail@test.com"));
+        user.setPassword("Password1$");
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        // Check 400 is returned and a message indicating that username is required
+        this.mockMvc.perform(put("/srv/api/users")
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(jsonPath("$.message",
+                is(String.format("username size should be less or equals than %d characters", UsersApi.MAX_USERNAME_LENGTH))))
+            .andExpect(status().is(400));
     }
 
     @Test
@@ -352,10 +443,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         String json = gson.toJson(passwordReset);
 
         this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
             .andExpect(jsonPath("$.message", is("The old password is not valid.")));
 
@@ -393,10 +484,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Try to update the password of admin user from a user with Editor profile
         this.mockMvc.perform(post("/srv/api/users/" + admin.getId() + "/actions/forget-password")
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.message", is("You don't have rights to do this")))
             .andExpect(status().is(400));
     }
@@ -420,10 +511,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 400 is returned and a message indicating that passwords should be equal
         this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .content(json)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .content(json)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.message", is("Passwords should be equal")))
             .andExpect(status().is(400));
     }
@@ -447,10 +538,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 400 is returned and a message indicating that passwords should be equal
         this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .content(json)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .content(json)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.message", is("The old password is not valid.")))
             .andExpect(status().is(400));
     }
@@ -473,10 +564,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 404 is returned
         this.mockMvc.perform(post("/srv/api/users/" + userId + "/actions/forget-password")
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .content(json)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .content(json)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.message", is("User not found")))
             .andExpect(status().is(404));
     }
@@ -499,10 +590,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         String json = gson.toJson(passwordReset);
 
         this.mockMvc.perform(post("/srv/api/users/" + user.getId() + "/actions/forget-password")
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .content(json)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .content(json)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
     }
 
@@ -594,10 +685,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 400 is returned and a message indicating that username is duplicated
         this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.message", is("Another user with username "
                 + "'testuser-editor' ignore case already exists")))
             .andExpect(status().is(400));
@@ -629,10 +720,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 400 is returned and a message indicating that username is duplicated
         this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(jsonPath("$.message", is("Another user with username 'testuser-editor' ignore case already exists")))
             .andExpect(status().is(400));
     }
@@ -663,10 +754,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 400 is returned and a message indicating that username is duplicated
         this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(204));
     }
 
@@ -696,10 +787,10 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         // Check 400 is returned and a message indicating that username is duplicated
         this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
-            .content(json)
-            .contentType(API_JSON_EXPECTED_ENCODING)
-            .session(this.mockHttpSession)
-            .accept(MediaType.parseMediaType("application/json")))
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(400))
             .andExpect(jsonPath("$.message", is("Another user with username 'testuser-editor' ignore case already exists")));
     }
@@ -777,5 +868,310 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         UserGroup userGroupEditor2 = new UserGroup().setGroup(sampleGroup)
             .setProfile(Profile.Editor).setUser(testUserEditor);
         _userGroupRepo.save(userGroupEditor2);
+    }
+
+    @Test
+    public void addUserInvalid() throws Exception {
+        List<String> invalidNames = Lists.newArrayList(
+            // Starting with special characters
+            "-invalidName",
+            "_invalidName",
+            ".invalidName",
+            ":invalidName",
+            "@invalidName",
+
+            // Ending with special characters
+            "invalidName-",
+            "invalidName_",
+            "invalidName.",
+            "invalidName:",
+            "invalidName@",
+
+            // Consecutive special characters
+            "invalid--name",
+            "invalid__name",
+            "invalid..name",
+            "invalid::name",
+            "invalid@@name",
+            "invalid-_name",
+            "invalid._name",
+            "invalid@:name",
+
+            // Special characters only
+            "-",
+            "_",
+            ".",
+            ":",
+            "@",
+            "--",
+
+            // Empty or whitespace
+            "invalid name",  // space in the middle
+            " invalidName",  // starting with space
+            "invalidName ",  // ending with space
+
+            // Non-ASCII characters
+            "ínvalidName",
+            "invälidName",
+            "invalid名前",
+            "usuário",
+            "用户",
+            "użytkownik",
+
+            // Special symbols not allowed
+            "invalid!name",
+            "invalid#name",
+            "invalid$name",
+            "invalid%name",
+            "invalid&name",
+            "invalid*name",
+            "invalid(name",
+            "invalid)name",
+            "invalid+name",
+            "invalid=name",
+            "invalid[name",
+            "invalid]name",
+            "invalid{name",
+            "invalid}name",
+            "invalid|name",
+            "invalid\\name",
+            "invalid/name",
+            "invalid?name",
+            "invalid<name",
+            "invalid>name",
+            "invalid,name",
+            "invalid;name",
+            "invalid'name",
+            "invalid\"name",
+            "invalid~name",
+            "invalid`name"
+        );
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        for (String username : invalidNames) {
+            User userToAdd = _userRepo.findOneByUsername(username);
+            Assert.assertNull(userToAdd);
+
+            UserDto user = new UserDto();
+            user.setUsername(username);
+            user.setName("new");
+            user.setProfile(Profile.Editor.name());
+            user.setGroupsEditor(Collections.singletonList("2"));
+            user.setEmail(Collections.singletonList("mail@test.com"));
+            user.setPassword("Password7$");
+            user.setEnabled(true);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+
+
+            this.mockMvc.perform(put("/srv/api/users")
+                    .content(json)
+                    .contentType(API_JSON_EXPECTED_ENCODING)
+                    .session(this.mockHttpSession)
+                    .accept(MediaType.parseMediaType("application/json")))
+                .andDo(result -> {
+                    if (result.getResponse().getStatus() != 400) {
+                        System.err.println(username + " has been accepted as group name and it shouldn't");
+                    }
+                })
+                .andExpect(status().is(400))
+                .andExpect(jsonPath("$.message", is(Params.USERNAME
+                    + " may only contain alphanumeric characters or single hyphens, single colons, "
+                    + "single at signs or single dots. "
+                    + "Cannot begin or end with a hyphen, colon, at sign or dot.")));
+        }
+    }
+
+
+    @Test
+    public void updateInvalidUsername() throws Exception {
+        List<String> invalidNames = Lists.newArrayList(
+            // Starting with special characters
+            "-invalidName",
+            "_invalidName",
+            ".invalidName",
+            ":invalidName",
+            "@invalidName",
+
+            // Ending with special characters
+            "invalidName-",
+            "invalidName_",
+            "invalidName.",
+            "invalidName:",
+            "invalidName@",
+
+            // Consecutive special characters
+            "invalid--name",
+            "invalid__name",
+            "invalid..name",
+            "invalid::name",
+            "invalid@@name",
+            "invalid-_name",
+            "invalid._name",
+            "invalid@:name",
+
+            // Special characters only
+            "-",
+            "_",
+            ".",
+            ":",
+            "@",
+            "--",
+
+            // Empty or whitespace
+            "invalid name",  // space in the middle
+            " invalidName",  // starting with space
+            "invalidName ",  // ending with space
+
+            // Non-ASCII characters
+            "ínvalidName",
+            "invälidName",
+            "invalid名前",
+            "usuário",
+            "用户",
+            "użytkownik",
+
+            // Special symbols not allowed
+            "invalid!name",
+            "invalid#name",
+            "invalid$name",
+            "invalid%name",
+            "invalid&name",
+            "invalid*name",
+            "invalid(name",
+            "invalid)name",
+            "invalid+name",
+            "invalid=name",
+            "invalid[name",
+            "invalid]name",
+            "invalid{name",
+            "invalid}name",
+            "invalid|name",
+            "invalid\\name",
+            "invalid/name",
+            "invalid?name",
+            "invalid<name",
+            "invalid>name",
+            "invalid,name",
+            "invalid;name",
+            "invalid'name",
+            "invalid\"name",
+            "invalid~name",
+            "invalid`name"
+        );
+
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull("The user must exists before running this test", userToUpdate);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        for (String username : invalidNames) {
+
+            UserDto user = new UserDto();
+            user.setUsername(username);
+            user.setName("new");
+            user.setProfile(Profile.Editor.name());
+            user.setGroupsEditor(Collections.singletonList("2"));
+            user.setEmail(Collections.singletonList("mail@test.com"));
+            user.setPassword("Password7$");
+            user.setEnabled(true);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+
+
+            this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+                    .content(json)
+                    .contentType(API_JSON_EXPECTED_ENCODING)
+                    .session(this.mockHttpSession)
+                    .accept(MediaType.parseMediaType("application/json")))
+                .andDo(result -> {
+                    if (result.getResponse().getStatus() != 400) {
+                        System.err.println(username + " has been accepted as username and it shouldn't");
+                    }
+                })
+                .andExpect(status().is(400))
+                .andExpect(jsonPath("$.message", is(Params.USERNAME
+                    + " may only contain alphanumeric characters or single hyphens, single colons, "
+                    + "single at signs or single dots. "
+                    + "Cannot begin or end with a hyphen, colon, at sign or dot.")));
+        }
+    }
+
+    /**
+     * Tests the update of a user's username with a variety of valid formats.
+     * <p>
+     * This method retrieves an existing user, modifies their username, and verifies
+     * that the username can be successfully updated for each valid format. The test
+     * ensures that the application accepts allowed usernames and no errors occur
+     * during the update process.
+     *
+     * @throws Exception if any errors occur during the test execution, including failed assertions,
+     *                   HTTP status mismatches, or unexpected exceptions.
+     */
+    @Test
+    public void updateSomeValidUsernames() throws Exception {
+        List<String> validNames = Lists.newArrayList(
+            "validname",
+            "valid-name",
+            "valid.name",
+            "valid:name",
+            "valid@name",
+            "valid-name123",
+            "valid.name456",
+            "valid:name789",
+            "valid@name000",
+            "123validname",
+            "456valid-name",
+            "789valid.name",
+            "000valid:name",
+            "abc123def",
+            "abc-123-def",
+            "abc.123.def",
+            "abc:123:def",
+            "abc@123@def",
+            "abcdefghijklmnop",
+            "a1b2c3d4e5f6g7h8"
+        );
+
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull("The user must exists before running this test", userToUpdate);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        for (String username : validNames) {
+
+            UserDto user = new UserDto();
+            user.setUsername(username);
+            user.setName("new");
+            user.setProfile(Profile.Editor.name());
+            user.setGroupsEditor(Collections.singletonList("2"));
+            user.setEmail(Collections.singletonList("mail@test.com"));
+            user.setPassword("Password7$");
+            user.setEnabled(true);
+
+            Gson gson = new Gson();
+            String json = gson.toJson(user);
+
+
+            this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+                    .content(json)
+                    .contentType(API_JSON_EXPECTED_ENCODING)
+                    .session(this.mockHttpSession)
+                    .accept(MediaType.parseMediaType("application/json")))
+                .andDo(result -> {
+                    if (result.getResponse().getStatus() == 400) {
+                        System.err.println(username + " hasn't been accepted as group name and it should");
+                    }
+                })
+                .andExpect(status().is(204))
+                .andExpect(content().string(""));
+        }
+
     }
 }

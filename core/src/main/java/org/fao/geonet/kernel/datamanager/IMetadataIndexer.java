@@ -23,15 +23,16 @@
 
 package org.fao.geonet.kernel.datamanager;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
 import jeeves.server.context.ServiceContext;
+import org.springframework.transaction.TransactionStatus;
 
 /**
  * Interface to handle all indexing operations
@@ -48,11 +49,6 @@ public interface IMetadataIndexer {
      * @throws Exception
      */
     public void init(ServiceContext context, Boolean force) throws Exception;
-
-    /**
-     * Force the index to wait until all changes are processed and the next reader obtained will get the latest data.
-     */
-    void forceIndexChanges() throws IOException;
 
     /**
      * Remove the records that matches the specification
@@ -78,11 +74,14 @@ public interface IMetadataIndexer {
     void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds);
 
     /**
-     * Is the platform currently indexing?
+     * Index multiple metadata in a separate thread. Wait until the current transaction commits before starting threads (to make sure that
+     * all metadata are committed).
      *
-     * @return
+     * @param context context object
+     * @param metadataIds the metadata ids to index
+     * @param transactionStatus status of transaction which must complete before indexation take place
      */
-    boolean isIndexing();
+    void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds, TransactionStatus transactionStatus);
 
     /**
      * Index the list of records passed as parameter in order.
@@ -92,7 +91,7 @@ public interface IMetadataIndexer {
      */
     void indexMetadata(List<String> metadataIds) throws Exception;
 
-    void indexMetadata(String metadataId, boolean forceRefreshReaders, IndexingMode indexingMode) throws Exception;
+    void indexMetadata(String metadataId, IIndexSubmitter indexSubmittor, IndexingMode indexingMode) throws Exception;
 
     void indexMetadataPrivileges(String uuid, int id) throws Exception;
 

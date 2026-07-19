@@ -156,7 +156,7 @@
 
             <header>
               <h1>
-                <i class="fa fa-fw gn-icon-{$type}"/>
+                <i class="fa fa-fw gn-icon-{$type}"></i>
                 <xsl:copy-of select="$title"/>
                 <xsl:if test="$root = 'div'">
                   <span class="text-muted badge"
@@ -309,7 +309,7 @@
                   <i class="fa fa-fw fa-link"></i>
                   <span><xsl:value-of select="$schemaStrings/associatedResources"/></span>
                 </h2>
-                <div gn-related="md"
+                <div gn-related="mdView.current.record"
                      data-user="user"
                      data-layout="card"
                      data-types="{$sideRelated}">
@@ -570,7 +570,10 @@
       </xsl:if>
     </xsl:variable>
 
-    <xsl:for-each select="$nodes">
+    <!-- The matching nodes when using evaluate loose their context, re-calculate it -->
+    <xsl:variable name="originalNodes" select="$metadata//*[some $n in $nodes/* satisfies deep-equal(., $n)]"/>
+
+    <xsl:for-each select="$originalNodes">
       <xsl:apply-templates mode="render-field">
         <xsl:with-param name="fieldName" select="$fieldName"/>
         <xsl:with-param name="collapsible" select="$collapsible"/>

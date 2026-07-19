@@ -67,7 +67,6 @@
       $q,
       gnLangs
     ) {
-      $scope.formAction = "../../signin#" + $location.url();
       $scope.registrationStatus = null;
       $scope.sendPassword = false;
       $scope.password = null;

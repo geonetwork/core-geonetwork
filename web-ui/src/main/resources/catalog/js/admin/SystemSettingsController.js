@@ -170,7 +170,6 @@
       $scope.defaultConfigId = "srv";
 
       $scope.loadTplReport = null;
-      $scope.atomFeedType = "";
 
       $scope.isGroupPublicationNotificationLevel = false;
       $scope.isGroupLocalRatingNotificationLevel = false;

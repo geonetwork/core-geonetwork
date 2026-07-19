@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -27,8 +27,10 @@
   goog.require("gn_category");
   goog.require("gn_popup");
   goog.require("gn_share");
+  goog.require("gn_anonymous_access");
 
   var module = angular.module("gn_mdactions_service", [
+    "gn_anonymous_access",
     "gn_share",
     "gn_category",
     "gn_popup"
@@ -45,6 +47,7 @@
     "gnGlobalSettings",
     "gnUtilityService",
     "gnShareService",
+    "gnAnonymousAccessService",
     "gnPopup",
     "gnMdFormatter",
     "$translate",
@@ -63,6 +66,7 @@
       gnGlobalSettings,
       gnUtilityService,
       gnShareService,
+      gnAnonymousAccessService,
       gnPopup,
       gnMdFormatter,
       $translate,
@@ -74,6 +78,8 @@
       var windowName = "geonetwork";
       var windowOption = "";
       var translations = null;
+      var selectedMetadataTypes = [];
+
       $translate([
         "metadataPublished",
         "metadataUnpublished",
@@ -90,6 +96,55 @@
           type: "success"
         });
       };
+
+      $rootScope.$on("metadataSelectedClear", function (event, args) {
+        selectedMetadataTypes = [];
+      });
+
+      $rootScope.$on("metadataSelected", function (event, args) {
+        var selectedMetadata;
+        if (angular.isArray(args)) {
+          selectedMetadata = args;
+        } else {
+          selectedMetadata = [args];
+        }
+
+        for (var j = 0; j < selectedMetadata.length; j++) {
+          var resourceType = selectedMetadata[j]["resourceType"][0];
+          var index = _.findIndex(selectedMetadataTypes, function (o) {
+            return o.type === resourceType;
+          });
+
+          if (index == -1) {
+            selectedMetadataTypes.push({ type: resourceType, count: 1 });
+          } else {
+            selectedMetadataTypes[index].count = selectedMetadataTypes[index].count + 1;
+          }
+        }
+      });
+
+      $rootScope.$on("metadataUnselected", function (event, args) {
+        var index = _.findIndex(selectedMetadataTypes, function (o) {
+          return o.type === args["resourceType"][0];
+        });
+
+        if (index > -1) {
+          selectedMetadataTypes[index].count = selectedMetadataTypes[index].count - 1;
+
+          if (selectedMetadataTypes[index].count === 0) {
+            selectedMetadataTypes.splice(index, 1);
+          }
+        }
+      });
+
+      $rootScope.$on("metadataSelectedAll", function (event, args) {
+        var keys = Object.keys(args.data);
+        var values = Object.values(args.data);
+
+        for (var i = 0; i < keys.length; i++) {
+          selectedMetadataTypes.push({ type: keys[i], count: values[i] });
+        }
+      });
 
       var callBatch = function (service) {
         return gnHttp.callService(service).then(function (data) {
@@ -142,6 +197,10 @@
           );
       };
 
+      this.getSelectedMetadataTypes = function () {
+        return selectedMetadataTypes;
+      };
+
       /**
        * Export as PDF (one or selection). If params is search object, we check
        * for sortBy and sortOrder to process the print. If it is a string
@@ -186,11 +245,14 @@
        * one metadata, else export the whole selection.
        * @param {string} uuid
        */
-      this.metadataMEF = function (uuid, bucket, approved) {
+      this.metadataMEF = function (uuid, bucket, approved, includeAttachments) {
         var url = "../api/records/zip?";
         url += angular.isDefined(uuid) ? "&uuids=" + uuid : "";
         url += angular.isDefined(bucket) ? "&bucket=" + bucket : "";
         url += angular.isDefined(approved) ? "&approved=" + approved : "";
+        url += angular.isDefined(includeAttachments)
+          ? "&includeAttachments=" + includeAttachments
+          : "";
 
         location.replace(url);
       };
@@ -250,7 +312,7 @@
               gnUtilityService.openModal(
                 {
                   title: translations.metadataValidated,
-                  content: '<div gn-batch-report="processReport"></div>',
+                  content: '<div gn-batch-validation-report="processReport"></div>',
                   className: "gn-validation-popup",
                   onCloseCallback: function () {
                     $rootScope.$broadcast("operationOnSelectionStop");
@@ -389,6 +451,18 @@
           },
           scope,
           "StatusUpdated"
+        );
+      };
+
+      this.deleteBatch = function (bucket, resourceType, scope) {
+        gnUtilityService.openModal(
+          {
+            title: "batchDeleteTitle",
+            content:
+              '<div gn-metadata-batch-delete selection-bucket="' + bucket + '"></div>'
+          },
+          scope,
+          "MetadataDeleted"
         );
       };
 
@@ -559,6 +633,55 @@
               });
             }
           );
+      };
+
+      this.createAnonymousAccess = function (md, scope) {
+        return gnAnonymousAccessService
+          .create(angular.isDefined(md) ? md.uuid : undefined)
+          .then(
+            function (response) {
+              scope.$broadcast("AnonymousAccessCreated");
+              scope.hash = response;
+              scope.uuid = md.uuid;
+
+              // A hash is returned
+              gnUtilityService.openModal(
+                {
+                  title: $translate.instant("anonymousAccessTo", {
+                    title: md.resourceTitle
+                  }),
+                  content:
+                    '<div gn-anonymous-access="uuid" gn-anonymous-access-hash="hash"></div>',
+                  onCloseCallback: function () {
+                    scope.hash = null;
+                  }
+                },
+                scope,
+                "AnonymousAccessDone"
+              );
+            },
+            function (response) {
+              gnAlertService.addAlert({
+                msg: $translate.instant("anonymousAccessCreatedError", {
+                  errorDescription: response.data.description
+                }),
+                type: "danger"
+              });
+            }
+          );
+      };
+
+      this.deleteAnonymousAccess = function (md, scope) {
+        return gnAnonymousAccessService
+          .delete(angular.isDefined(md) ? md.uuid : undefined)
+          .then(function (response) {
+            scope.$broadcast("AnonymousAccessDeleted");
+            $rootScope.$broadcast("StatusUpdated", {
+              msg: $translate.instant("anonymousAccessDeleted"),
+              timeout: 2,
+              type: "success"
+            });
+          });
       };
 
       this.assignGroup = function (metadataId, groupId) {

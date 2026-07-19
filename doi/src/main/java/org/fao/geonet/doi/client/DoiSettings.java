@@ -41,5 +41,8 @@ public class DoiSettings {
     public static final String SETTING_PUBLICATION_DOI_LANDING_PAGE_TEMPLATE =
         "system/publication/doi/doilandingpagetemplate";
 
+    public static final String SETTING_PUBLICATION_DOI_MAIL_NOTIFICATION =
+        "system/publication/doi/doimailnotification";
+
     protected static final String LOGGER_NAME = "geonetwork.doi";
 }

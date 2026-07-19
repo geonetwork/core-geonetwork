@@ -35,7 +35,9 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizeRequest;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+
 import java.io.IOException;
 import java.time.Instant;
 
@@ -52,6 +54,9 @@ public class SessionExpirationFilter implements Filter {
      */
     @Autowired
     private OAuth2AuthorizedClientManager authorizedClientManager;
+
+    @Autowired
+    private OAuth2AuthorizedClientRepository authorizedClientRepository;
 
     private static final org.slf4j.Logger log = LoggerFactory.getLogger(SessionExpirationFilter.class);
 
@@ -80,27 +85,35 @@ public class SessionExpirationFilter implements Filter {
             final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication instanceof OAuth2AuthenticationToken) {
                 OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
-                OidcUser principal = (OidcUser) oauth2Token.getPrincipal();
 
-                if (principal.getExpiresAt() != null && principal.getExpiresAt().isBefore(Instant.now())) {
-                    try {
-                        OAuth2AuthorizedClient authorizedClient = authorizedClientManager.authorize(
-                            OAuth2AuthorizeRequest.withClientRegistrationId(oauth2Token.getAuthorizedClientRegistrationId())
-                                .principal(oauth2Token)
-                                .build()
-                        );
+                OAuth2AuthorizedClient authorizedClient = authorizedClientRepository.loadAuthorizedClient(
+                    oauth2Token.getAuthorizedClientRegistrationId(), oauth2Token, httpRequest);
 
-                        if (authorizedClient == null || authorizedClient.getAccessToken() == null) {
-                            log.warn("Session '{}' for subject '{}', user '{}' is expired due to terminated/expired authentication server session.", httpSession.getId(), principal.getSubject(), principal.getPreferredUsername());
+                if (authorizedClient != null) {
+                    final OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
+
+                    if (accessToken != null && accessToken.getExpiresAt() != null && accessToken.getExpiresAt().isBefore(Instant.now())) {
+                        try {
+                            authorizedClient = authorizedClientManager.authorize(
+                                OAuth2AuthorizeRequest.withClientRegistrationId(oauth2Token.getAuthorizedClientRegistrationId())
+                                    .principal(oauth2Token)
+                                    .build()
+                            );
+
+                            if (authorizedClient == null || authorizedClient.getAccessToken() == null) {
+                                log.warn("Session '{}' for user '{}' is expired due to terminated/expired authentication server session.",
+                                    httpSession.getId(), oauth2Token.getPrincipal().getName());
+                                httpRequest.logout();
+                                SecurityContextHolder.getContext().setAuthentication(null);
+                                httpSession.invalidate();
+                            }
+                        } catch (ClientAuthorizationException e) {
+                            log.warn("Authorization exception occurred for session '{}' for user '{}'.",
+                                httpSession.getId(), oauth2Token.getPrincipal().getName(), e);
                             httpRequest.logout();
                             SecurityContextHolder.getContext().setAuthentication(null);
                             httpSession.invalidate();
                         }
-                    } catch (ClientAuthorizationException e) {
-                        log.warn("Authorization exception occurred for session '{}' for user '{}'.", httpSession.getId(), principal.getPreferredUsername(), e);
-                        httpRequest.logout();
-                        SecurityContextHolder.getContext().setAuthentication(null);
-                        httpSession.invalidate();
                     }
                 }
             }

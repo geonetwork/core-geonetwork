@@ -123,7 +123,8 @@
                 class="form-control"
                 data-ng-disabled="!user.isAdministratorOrMore()"
                 data-ng-model="groupSelected.name"
-                data-ng-maxlength="255"
+                data-ng-pattern="/^[a-zA-Z0-9]+([_\-]{1}[a-zA-Z0-9]+)*$/"
+                data-ng-maxlength="32"
                 data-ng-required="true"
               />
               <p class="help-block" data-translate="">groupNameHelp</p>
@@ -134,6 +135,13 @@
                   data-translate=""
                   >groupNameMaxlength</span
                 >
+              </p>
+              <p
+                class="help-block"
+                ng-if="gnGroupEdit.name.$error.pattern"
+                data-translate=""
+              >
+                patternGroupName
               </p>
             </div>
 
@@ -260,6 +268,20 @@
               </div>
             </div>
             <div
+              class="form-group"
+              data-ng-class="gnGroupEdit.type.$error.type  ? 'has-error' : ''"
+            >
+              <label class="control-label" data-translate="">groupType</label>
+              <select
+                class="form-control"
+                name="type"
+                data-ng-model="groupSelected.type"
+                data-ng-options="t.id as (t.label | translate) for t in groupTypes"
+              ></select>
+              <p class="help-block" data-translate="">groupTypeHelp</p>
+            </div>
+            <div
+              class="form-group"
               data-ng-class="gnGroupEdit.minimumProfileForPrivileges.$error.minimumProfileForPrivileges  ? 'has-error' : ''"
             >
               <label class="control-label" data-translate=""
@@ -268,12 +290,15 @@
               <select
                 class="form-control"
                 name="minimumProfileForPrivileges"
+                data-ng-disabled="groupSelected.type == 'SystemPrivilege'"
                 data-ng-model="groupSelected.minimumProfileForPrivileges"
               >
-                <option value="">{{'noRestrictions' | translate }}</option>
-                <option value="Editor">{{'Editor' | translate}}</option>
-                <option value="Reviewer">{{'Reviewer' | translate}}</option>
-                <option value="Administrator">{{'Administrator' | translate}}</option>
+                <option data-ng-value="null">{{'noRestrictions' | translate }}</option>
+                <option data-ng-value="'Editor'">{{'Editor' | translate}}</option>
+                <option data-ng-value="'Reviewer'">{{'Reviewer' | translate}}</option>
+                <option data-ng-value="'Administrator'">
+                  {{'Administrator' | translate}}
+                </option>
               </select>
               <p class="help-block" data-translate="">minimumProfileForPrivilegesHelp</p>
             </div>
@@ -327,7 +352,7 @@
         </div>
 
         <!-- Display users of the group -->
-        <div data-ng-hide="!groupusers">
+        <div data-ng-hide="groupusers.length < 1">
           <h3><span data-translate="">usersInGroup</span> {{groupSelected.name}}</h3>
         </div>
 

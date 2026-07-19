@@ -22,11 +22,185 @@
  */
 package org.fao.geonet.util;
 
+import org.apache.commons.text.StringEscapeUtils;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.domain.MetadataResourceContainer;
+
+import org.fao.geonet.utils.Xml;
+import org.owasp.esapi.reference.DefaultEncoder;
+import org.w3c.dom.Node;
+
+import java.io.IOException;
+import java.util.List;
+
 public class XslUtil {
+    public static Boolean IS_INSPIRE_ENABLED = false;
+
     public static String twoCharLangCode(String iso3code) {
-        return iso3code.substring(0, 2);
+        return twoCharLangCode(iso3code, iso3code.substring(0, 2));
     }
     public static String threeCharLangCode(String iso2code) {
         return "fre";
     }
+
+    public static String getSettingValue(String key) {
+        switch (key) {
+            case "system/metadata/validation/removeSchemaLocation":
+                return "false";
+            case "system/inspire/enable":
+                return IS_INSPIRE_ENABLED.toString();
+            default:
+                return "true";
+        }
+    }
+
+    public static String twoCharLangCode(String iso3code, String defaultValue) {
+        switch (iso3code) {
+            case "fre":
+                return "fr";
+            case "ita":
+                return "it";
+            case "eng":
+                return "en";
+            case "ger":
+                return "de";
+            case "roh":
+                return "rm";
+            default:
+                return defaultValue;
+        }
+    }
+
+    public static String escapeForJson(String value) {
+        return StringEscapeUtils.escapeJson(value);
+    }
+
+    public static String getIsoLanguageLabel(String code, String language) {
+        return "dutch";
+    }
+
+    public static String getIndexField(Object appName, Object uuid, Object field, Object lang) {
+        return "";
+    }
+
+    public static String getDefaultUrl(String uuid, String language) {
+        return "www.geonet.org";
+    }
+
+    public static String getSiteUrl() {
+        return "";
+    }
+
+    public static String getCodelistTranslation(Object codelist, Object value, Object langCode) {
+        return String.format("%s--%s--%s", codelist, value, langCode);
+    }
+
+
+    public static List<String> getKeywordHierarchy(String keyword, String thesaurusId, String langCode) {
+        return List.of();
+    }
+
+    public static String getBuildNumber() {
+        return "buildNumber-666";
+    }
+
+
+    public static String encodeForJavaScript(String str) {
+        return DefaultEncoder.getInstance().encodeForJavaScript(str);
+    }
+
+    public static boolean isDisableLoginForm() {
+        return false;
+    }
+
+    public static boolean isShowLoginAsLink() {
+        return false;
+    }
+
+    public static boolean isUserProfileUpdateEnabled() {
+        return true;
+    }
+
+    public static boolean isUserGroupUpdateEnabled() {
+        return true;
+    }
+
+    public static String getUiConfigurationJsonProperty(String key, String path) {
+        return key + "-" + path;
+    }
+
+    public static String getWebAnalyticsService() {
+        return "";
+    }
+
+    public static String getWebAnalyticsJavascriptCode() {
+        return "";
+    }
+
+    public static String getUiConfiguration(String key) {
+        return "{}";
+    }
+
+    public static String getSecurityProvider() {
+        return "";
+    }
+
+    public static boolean isAuthenticated() {
+        return false;
+    }
+
+    public static String gmlToGeoJson(String gml, Boolean applyPrecisionModel, Integer numberOfDecimals) {
+        return "";
+    }
+
+    public static Node getUrlContent(String surl) {
+        return null;
+    }
+
+    public static Node getRecord(String uuid) {
+        return null;
+    }
+
+    public static String getKeywordUri(String keyword, String thesaurusId, String langCode) {
+        return "";
+    }
+
+    public static String getThesaurusIdByTitle(String title) {
+        return "";
+    }
+
+    public static MetadataResourceContainer getResourceContainerDescription(String metadataUuid, Boolean approved) throws Exception {
+        return null;
+    }
+
+    public static Store.ResourceManagementExternalProperties getResourceManagementExternalProperties() {
+        return null;
+    }
+
+    public static String escapeForEcmaScript(String value) {
+        return StringEscapeUtils.escapeEcmaScript(value);
+    }
+
+    public static String iso639_2T_to_iso639_2B(String iso639_2T) {
+        return iso639_2T;
+    }
+
+    public static String xmlToJson(Object xml) {
+        try {
+            return Xml.getJSON(xml.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String getLanguage() {
+        return getDefaultLangCode();
+    }
+
+    public static String getDefaultLangCode() {
+        return "eng";
+    }
+
+    public static String toUiConfigArg(String config)  { return config; }
 }

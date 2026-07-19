@@ -246,6 +246,7 @@
           wrapper: "@",
           thesaurusKey: "@",
           keywords: "@",
+          keywordIds: "@",
           transformations: "@",
           currentTransformation: "@",
           lang: "@",
@@ -259,8 +260,7 @@
           browsable: "@",
           required: "@"
         },
-        templateUrl:
-          "../../catalog/components/thesaurus/" + "partials/keywordselector.html",
+        templateUrl: "../../catalog/components/thesaurus/partials/keywordselector.html",
         link: function (scope, element, attrs) {
           $compile(element.contents())(scope);
           // pick up skos browser directive with compiler
@@ -286,7 +286,9 @@
           scope.foundKeywords = [];
           scope.selected = [];
           scope.initialKeywords = [];
-          if (scope.keywords) {
+          if (scope.keywordIds) {
+            scope.initialKeywords = scope.keywordIds.split(",");
+          } else if (scope.keywords) {
             var buffer = "";
             for (var i = 0; i < scope.keywords.length; i++) {
               var next = scope.keywords.charAt(i);

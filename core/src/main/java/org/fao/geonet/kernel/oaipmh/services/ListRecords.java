@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -98,9 +98,7 @@ public class ListRecords extends AbstractTokenLister {
         // and we do not want to stop because of one error
         try {
             return GetRecord.buildRecordStat(context, (Specification<Metadata>)hasMetadataId(id), prefix);
-        } catch (IdDoesNotExistException e) {
-            return null;
-        } catch (CannotDisseminateFormatException e2) {
+        } catch (IdDoesNotExistException | CannotDisseminateFormatException e) {
             return null;
         } catch (Exception e3) {
             throw e3;
