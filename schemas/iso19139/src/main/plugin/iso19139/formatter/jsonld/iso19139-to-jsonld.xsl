@@ -5,15 +5,11 @@
   xmlns:mdb="http://standards.iso.org/iso/19115/-3/mdb/2.0"
   xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0"
   xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:gn-fn-iso19139="http://geonetwork-opensource.org/xsl/functions/profiles/iso19139"
-  xmlns:gn-fn-iso19115-3.2018="http://geonetwork-opensource.org/xsl/functions/profiles/iso19115-3.2018"
   exclude-result-prefixes="#all"
   version="2.0">
 
   <xsl:import href="../../../iso19115-3.2018/convert/ISO19139/fromISO19139.xsl"/>
   <xsl:import href="../../../iso19115-3.2018/formatter/jsonld/iso19115-3.2018-to-jsonld.xsl"/>
-
-  <xsl:output method="text"/>
 
   <xsl:template name="iso19139toJsonLD" as="xs:string*">
     <xsl:param name="record" as="node()"/>
