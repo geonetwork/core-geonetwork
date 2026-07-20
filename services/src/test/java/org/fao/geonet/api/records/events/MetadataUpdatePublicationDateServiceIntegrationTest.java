@@ -79,7 +79,7 @@ public class MetadataUpdatePublicationDateServiceIntegrationTest extends Abstrac
         // Ensure no publication date exists
         assertEquals(0, Xml.selectNodes(initialXml, "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']", ns).size());
 
-        ISODate pubDate = new ISODate("2026-07-02T10:00:00");
+        ISODate pubDate = new ISODate("2026-07-02");
         service.addPublicationDate(metadataRecord, pubDate);
         entityManager.flush();
         entityManager.clear();
@@ -88,7 +88,7 @@ public class MetadataUpdatePublicationDateServiceIntegrationTest extends Abstrac
         Element updatedXml = updatedRecord.getXmlData(false);
 
         assertEquals(1, Xml.selectNodes(updatedXml, "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']", ns).size());
-        Element dateText = (Element) Xml.selectSingle(updatedXml, "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']/cit:CI_Date/cit:date/gco:DateTime", ns);
+        Element dateText = (Element) Xml.selectSingle(updatedXml, "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']/cit:CI_Date/cit:date/gco:Date", ns);
         assertNotNull(dateText);
         assertEquals(pubDate.toString(), dateText.getText());
     }
@@ -98,7 +98,7 @@ public class MetadataUpdatePublicationDateServiceIntegrationTest extends Abstrac
         AbstractMetadata metadataRecord = repository.findOne(metadata.getId());
 
         // 1. Add a publication date first
-        ISODate pubDate = new ISODate("2026-07-02T10:00:00");
+        ISODate pubDate = new ISODate("2026-07-02");
         service.addPublicationDate(metadataRecord, pubDate);
         entityManager.flush();
         entityManager.clear();

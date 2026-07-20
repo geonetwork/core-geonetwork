@@ -56,13 +56,13 @@ public class PublicationDateRemoveProcessTest extends XslProcessTest {
         Element dateInfo = new Element("dateInfo", inputElement.getNamespace());
         Element ciDate = new Element("CI_Date", cit);
         Element dateEl = new Element("date", cit);
-        Element dateTime = new Element("DateTime", gco).setText("2026-07-02T10:00:00");
+        Element date = new Element("Date", gco).setText("2026-07-02");
         Element dateType = new Element("dateType", cit);
         Element ciDateTypeCode = new Element("CI_DateTypeCode", cit)
                 .setAttribute("codeList", "codeListLocation#CI_DateTypeCode")
                 .setAttribute("codeListValue", "publication");
 
-        dateEl.addContent(dateTime);
+        dateEl.addContent(date);
         dateType.addContent(ciDateTypeCode);
         ciDate.addContent(dateEl);
         ciDate.addContent(dateType);

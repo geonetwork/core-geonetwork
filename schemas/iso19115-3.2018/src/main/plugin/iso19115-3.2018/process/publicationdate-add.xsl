@@ -52,7 +52,7 @@ Stylesheet used to add a publication date of a metadata record.
           <mdb:dateInfo>
             <cit:CI_Date>
               <cit:date>
-                <gco:DateTime><xsl:value-of select="$publicationDate"/></gco:DateTime>
+                <gco:Date><xsl:value-of select="$publicationDate"/></gco:Date>
               </cit:date>
               <cit:dateType>
                 <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication"/>

@@ -56,7 +56,7 @@ public class MetadataUpdatePublicationDateService {
             new XsltMetadataProcessingReport(process);
 
         Map<String, String[]> params = new HashMap<>();
-        params.put("publicationDate", new String[]{publicationDate.toString()});
+        params.put("publicationDate", new String[]{publicationDate.getDateAsString()});
         try {
             XslProcessUtils.process(context, String.valueOf(md.getId()), process, true, true, true, report, "", params);
         } catch (Exception e) {

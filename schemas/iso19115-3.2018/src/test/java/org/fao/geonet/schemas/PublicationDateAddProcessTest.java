@@ -62,7 +62,7 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
 
         // Add publication date
         Map<String, Object> params = new HashMap<>();
-        String newDate = "2026-07-02T09:23:00";
+        String newDate = "2026-07-02";
         params.put("publicationDate", newDate);
 
         Element resultElement = Xml.transform(inputElement, xslFile, params);
@@ -72,7 +72,7 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
             resultString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(ns)
         );
         assertThat(
-            resultString, hasXPath("//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']//gco:DateTime/text()", equalTo(newDate)).withNamespaceContext(ns)
+            resultString, hasXPath("//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']//gco:Date/text()", equalTo(newDate)).withNamespaceContext(ns)
         );
     }
 
@@ -82,7 +82,7 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
 
         // 1. Add a publication date first
         Map<String, Object> params = new HashMap<>();
-        params.put("publicationDate", "2020-01-01T00:00:00");
+        params.put("publicationDate", "2020-01-01");
         Element midElement = Xml.transform(inputElement, xslFile, params);
         String midString = Xml.getString(midElement);
 
@@ -91,7 +91,7 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
         );
 
         // 2. Replace it with a new one
-        String newDate = "2026-07-02T09:23:00";
+        String newDate = "2026-07-02";
         params.put("publicationDate", newDate);
         Element resultElement = Xml.transform(midElement, xslFile, params);
         String resultString = Xml.getString(resultElement);
@@ -100,7 +100,7 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
             resultString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(ns)
         );
         assertThat(
-            resultString, hasXPath("//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']//gco:DateTime/text()", equalTo(newDate)).withNamespaceContext(ns)
+            resultString, hasXPath("//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']//gco:Date/text()", equalTo(newDate)).withNamespaceContext(ns)
         );
     }
 
@@ -110,12 +110,12 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
         Element inputElement = Xml.loadFile(xmlFile);
 
         Map<String, Object> params = new HashMap<>();
-        params.put("publicationDate", "2020-01-01T00:00:00");
+        params.put("publicationDate", "2020-01-01");
         Element midElement = Xml.transform(inputElement, xslFile, params);
 
         // Add another publication date manually at metadata level (mdb:dateInfo).
         // The transformed root element is mdb:MD_Metadata.
-        midElement.addContent(newDateInfo(midElement.getNamespace(), "publication", "2021-01-01T00:00:00"));
+        midElement.addContent(newDateInfo(midElement.getNamespace(), "publication", "2021-01-01"));
 
         String midStringWithTwo = Xml.getString(midElement);
         assertThat(
@@ -132,7 +132,7 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
             resultString, hasXPath("count(//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication'])", equalTo("1")).withNamespaceContext(ns)
         );
         assertThat(
-            resultString, hasXPath("//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']//gco:DateTime/text()", equalTo(newDate)).withNamespaceContext(ns)
+            resultString, hasXPath("//mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']//gco:Date/text()", equalTo(newDate)).withNamespaceContext(ns)
         );
     }
 
@@ -148,7 +148,7 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
 
         // Add a metadata date with a CI_DateTypeCode that has no codeListValue attribute.
         // The loaded root element is mdb:MD_Metadata.
-        inputElement.addContent(newDateInfo(inputElement.getNamespace(), null, "2019-05-05T00:00:00"));
+        inputElement.addContent(newDateInfo(inputElement.getNamespace(), null, "2019-05-05"));
 
         String inputString = Xml.getString(inputElement);
         assertThat(
@@ -157,7 +157,7 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
 
         // Add the publication date
         Map<String, Object> params = new HashMap<>();
-        params.put("publicationDate", "2026-07-02T09:23:00");
+        params.put("publicationDate", "2026-07-02");
         Element resultElement = Xml.transform(inputElement, xslFile, params);
         String resultString = Xml.getString(resultElement);
 
@@ -183,7 +183,7 @@ public class PublicationDateAddProcessTest extends XslProcessTest {
         Element ciDate = new Element("CI_Date", citNs);
 
         Element dateVal = new Element("date", citNs);
-        Element dateTimeEl = new Element("DateTime", gcoNs);
+        Element dateTimeEl = new Element("Date", gcoNs);
         dateTimeEl.setText(dateTime);
         dateVal.addContent(dateTimeEl);
         ciDate.addContent(dateVal);
