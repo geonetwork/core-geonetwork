@@ -250,7 +250,10 @@
                 .then(
                   function (response) {
                     $rootScope.$broadcast("gnFileStoreUploadDone");
-                    if (angular.isFunction(scope.afterUploadCb())) {
+                    if (
+                      scope.afterUploadCb &&
+                      angular.isFunction(scope.afterUploadCb())
+                    ) {
                       scope.afterUploadCb()(response.data);
                     }
                   },
