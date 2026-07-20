@@ -277,8 +277,7 @@ public class DoiServersApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Remove a DOI server",
-        operationId = "deleteDoiServer"
+        summary = "Remove a DOI server"
     )
     @DeleteMapping(
         value = "/{doiServerId}",

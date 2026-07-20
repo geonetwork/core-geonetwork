@@ -218,7 +218,6 @@ public class HarvestersApi {
         value = "/properties/{property}",
         method = RequestMethod.GET
     )
-    @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Property does not exist."),
