@@ -258,7 +258,7 @@
                     }
                   },
                   function (response) {
-                    var message = response.data.message || "";
+                    var message = (response.data && response.data.message) || "";
                     var errorMessage =
                       {
                         uploadNetworkErrorException: $translate.instant(
