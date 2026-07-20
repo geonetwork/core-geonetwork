@@ -281,7 +281,10 @@
                       timeout: 0,
                       type: "danger"
                     });
-                    if (angular.isFunction(scope.afterUploadErrorCb)) {
+                    if (
+                      scope.afterUploadErrorCb &&
+                      angular.isFunction(scope.afterUploadErrorCb())
+                    ) {
                       scope.afterUploadErrorCb()(message);
                     }
                   }
