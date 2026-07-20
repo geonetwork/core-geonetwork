@@ -111,6 +111,10 @@ By default, the record view toolbar uses the following menu order:
  "gn-recordview-display-menu"]
 ```
 
+If the **Record View custom menu items** list is empty, only this default menu order is used and static pages are not automatically added.
+
+Use the static page identifier directly (for example `documentation`) when inserting custom pages. The `gn-` prefix is reserved for built-in menu entries and custom page identifiers using that prefix are ignored.
+
 As with the top toolbar, insert a page as a simple menu using the page identifier or as a submenu using an object:
 
 ``` json
