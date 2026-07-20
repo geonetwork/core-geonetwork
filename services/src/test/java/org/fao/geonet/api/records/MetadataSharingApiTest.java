@@ -40,13 +40,18 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.UserRepositoryTest;
+import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.Namespace;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +62,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,6 +71,7 @@ import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -75,6 +83,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  **/
 public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     private static final int SAMPLE_GROUP_ID = 2;
+
+    /**
+     * Selects the metadata-level publication date (mdb:dateInfo) added by the
+     * ISO19115-3.2018 {@code publicationdate-add} process. This does not match the
+     * resource-level publication date carried in the sample's identification info.
+     */
+    private static final String PUBLICATION_DATE_INFO_XPATH =
+        "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']";
+
     @Autowired
     private WebApplicationContext wac;
 
@@ -89,6 +106,9 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private SettingManager settingManager;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private User editorUser;
     private User reviewerUser;
@@ -629,6 +649,100 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
             .setUser(user));
 
         return user;
+    }
+
+    /**
+     * When {@code system/metadataprivs/publication/managepublicationdate} is enabled, publishing an
+     * ISO19115-3.2018 record must set the metadata-level publication date in the stored XML using the
+     * schema's {@code publicationdate-add} process.
+     */
+    @Test
+    public void publishIso191153UpdatesPublicationDateWhenManageEnabled() throws Exception {
+        settingManager.setValue(Settings.SYSTEM_METADATAPRIVS_PUBLICATION_MANAGEPUBLICATIONDATE, true);
+        // Do not let validation block publication of the sample record; this test targets the publication date only.
+        settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD, true);
+
+        int isoId = injectIso191153Record();
+        String isoUuid = metadataRepository.findById(isoId).get().getUuid();
+
+        List<Namespace> ns = new ArrayList<>(ISO19115_3_2018SchemaPlugin.allNamespaces);
+
+        // The sample has no metadata-level publication date before publishing.
+        Element beforeXml = metadataRepository.findById(isoId).get().getXmlData(false);
+        assertEquals(0, Xml.selectNodes(beforeXml, PUBLICATION_DATE_INFO_XPATH, ns).size());
+
+        String expectedDate = new ISODate().getDateAsString();
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(reviewerUser);
+        mockMvc.perform(put("/srv/api/records/" + isoUuid + "/publish")
+                .session(mockHttpSession))
+            .andExpect(status().isNoContent());
+
+        // Re-read the stored record from the database.
+        entityManager.flush();
+        entityManager.clear();
+        Element afterXml = metadataRepository.findById(isoId).get().getXmlData(false);
+
+        assertEquals("A single metadata-level publication date should be present after publishing",
+            1, Xml.selectNodes(afterXml, PUBLICATION_DATE_INFO_XPATH, ns).size());
+        Element publicationDate = (Element) Xml.selectSingle(afterXml,
+            PUBLICATION_DATE_INFO_XPATH + "/cit:CI_Date/cit:date/gco:Date", ns);
+        assertNotNull("Publication date value should be set", publicationDate);
+        assertEquals("Publication date should be the date of publication (today)",
+            expectedDate, publicationDate.getText());
+    }
+
+    /**
+     * When {@code system/metadataprivs/publication/managepublicationdate} is disabled, publishing an
+     * ISO19115-3.2018 record must leave the stored XML untouched (no publication date added).
+     */
+    @Test
+    public void publishIso191153DoesNotUpdatePublicationDateWhenManageDisabled() throws Exception {
+        settingManager.setValue(Settings.SYSTEM_METADATAPRIVS_PUBLICATION_MANAGEPUBLICATIONDATE, false);
+        settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD, true);
+
+        int isoId = injectIso191153Record();
+        String isoUuid = metadataRepository.findById(isoId).get().getUuid();
+
+        List<Namespace> ns = new ArrayList<>(ISO19115_3_2018SchemaPlugin.allNamespaces);
+
+        Element beforeXml = metadataRepository.findById(isoId).get().getXmlData(false);
+        int dateInfoCountBefore = Xml.selectNodes(beforeXml, "mdb:dateInfo", ns).size();
+        assertEquals(0, Xml.selectNodes(beforeXml, PUBLICATION_DATE_INFO_XPATH, ns).size());
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(reviewerUser);
+        mockMvc.perform(put("/srv/api/records/" + isoUuid + "/publish")
+                .session(mockHttpSession))
+            .andExpect(status().isNoContent());
+
+        // The record is published ...
+        List<OperationAllowed> ops = operationAllowedRepository.findAllById_MetadataId(isoId);
+        assertTrue("Record should be published",
+            ops.stream().anyMatch(op -> op.getId().getGroupId() == ReservedGroup.all.getId()));
+
+        // ... but its XML must not gain a publication date, and its dateInfo blocks are unchanged.
+        entityManager.flush();
+        entityManager.clear();
+        Element afterXml = metadataRepository.findById(isoId).get().getXmlData(false);
+
+        assertEquals("No publication date should be added when the setting is disabled",
+            0, Xml.selectNodes(afterXml, PUBLICATION_DATE_INFO_XPATH, ns).size());
+        assertEquals("The metadata dateInfo blocks should be unchanged when the setting is disabled",
+            dateInfoCountBefore, Xml.selectNodes(afterXml, "mdb:dateInfo", ns).size());
+    }
+
+    /**
+     * Injects an ISO19115-3.2018 sample record owned by {@code editorUser} in the sample group so that
+     * {@code reviewerUser} (a Reviewer in that group) can publish it.
+     */
+    private int injectIso191153Record() throws Exception {
+        Metadata md = (Metadata) injectMetadataInDb(getSampleISO19115MetadataXml(), context);
+        md.getSourceInfo().setOwner(editorUser.getId());
+        md.getSourceInfo().setGroupOwner(SAMPLE_GROUP_ID);
+        metadataRepository.save(md);
+        return md.getId();
     }
 
     /**
