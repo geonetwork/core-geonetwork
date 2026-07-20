@@ -41,6 +41,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.PageIdentity;
+import org.fao.geonet.languages.LocaleMessages;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.page.PageRepository;
@@ -83,6 +84,7 @@ public class PagesAPI {
     private static final String PAGE_DELETED = "Page removed";
     private static final String ERROR_FILE = "File not valid";
     private static final String ERROR_CREATE = "Wrong parameters are provided";
+    private static final String RESERVED_STATIC_PAGE_PREFIX = "gn-";
 
     private final PageRepository pageRepository;
     private final GroupRepository groupRepository;
@@ -176,6 +178,15 @@ public class PagesAPI {
 
         if (language != null) {
             checkValidLanguage(language);
+        }
+
+        if (pageId != null && pageId.startsWith(RESERVED_STATIC_PAGE_PREFIX)) {
+            throw new IllegalArgumentException(
+                LocaleMessages.getMessageForLocale(
+                    "api.exception.invalidStaticPageIdReservedPrefix",
+                    new String[]{pageId, RESERVED_STATIC_PAGE_PREFIX},
+                    null,
+                    "apiMessages"));
         }
 
         if (!StringUtils.isBlank(link)) {
