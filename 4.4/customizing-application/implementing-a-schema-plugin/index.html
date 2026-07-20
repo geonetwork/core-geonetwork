@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -35,7 +35,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1842,6 +1842,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Creating schematrons to describe MCP conditions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-parameters-in-schematron-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available parameters in schematron rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
         
           <li class="md-nav__item">
@@ -2525,6 +2542,23 @@
       
     </span>
   </a>
+  
+    <nav class="md-nav" aria-label="Creating schematrons to describe MCP conditions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-parameters-in-schematron-rules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available parameters in schematron rules
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
         
@@ -3677,6 +3711,39 @@ schema
 </span><span id="__span-44-16"><a id="__codelineno-44-16" name="__codelineno-44-16" href="#__codelineno-44-16"></a>
 </span><span id="__span-44-17"><a id="__codelineno-44-17" name="__codelineno-44-17" href="#__codelineno-44-17"></a><span class="nt">&lt;/strings&gt;</span>
 </span></code></pre></div>
+<h5 id="available-parameters-in-schematron-rules">Available parameters in schematron rules</h5>
+<p>When GeoNetwork executes a compiled schematron, the following parameters are automatically passed to the XSL and can be referenced inside <code>&lt;sch:rule&gt;</code> blocks using <code>$paramName</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lang</code></td>
+<td>string</td>
+<td>The two or three letter language code of the current user session (e.g. <code>eng</code>). Use this to return localised messages.</td>
+</tr>
+<tr>
+<td><code>rule</code></td>
+<td>string</td>
+<td>The file name of the compiled schematron XSL (e.g. <code>schematron-rules-iso.xsl</code>).</td>
+</tr>
+<tr>
+<td><code>thesaurusDir</code></td>
+<td>string</td>
+<td>Absolute path to the GeoNetwork thesaurus directory. Useful for rules that need to validate against controlled vocabularies.</td>
+</tr>
+<tr>
+<td><code>metadataId</code></td>
+<td>integer</td>
+<td>The internal database identifier of the metadata record being validated. Useful for rules that need to look up related information. <strong>Note:</strong> When validating external metadata (metadata not saved to the database), this parameter is set to <code>-1</code>. Attempts to query the database using this value will return empty results.</td>
+</tr>
+</tbody>
+</table>
 <p>Procedure for adding schematron rules, working within the schematrons directory:</p>
 <ol>
 <li>Place your schematron rules in 'rules'. Naming convention is 'schematron-rules-<suffix>.sch' eg. <code>schematron-rules-iso-mcp.sch</code>. Place localized strings for the rule assertions into 'rules/loc/<language_prefix>'.</li>
@@ -3980,7 +4047,7 @@ schema-ident.xml  schema.xsd  schema  schematron/schematron-rules-iso-mcp.sch
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
