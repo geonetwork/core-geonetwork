@@ -60,7 +60,7 @@
     "@type" : "CreativeWork",
     "name" : ""
   }, " https://creativecommons.org/licenses/by-nd/4.0/ " ],
-  "citeAs" : " @misc{{uuid},\n      author = {Bertin Stéphane (UMR 6538 Geo-Ocean)},\n      publisher = {Sextant (Ifremer)},\n      title = {Paramètres moyens état de mer du SNO DYNALIT - La Palue & Lostmarc'h},\n      year = {2025},\n      url = {http://localhost:8080/srv/api/records/{uuid}}\n      } ",
+  "citeAs" : " @misc{{uuid},\n      author = {Bertin Stéphane},\n      publisher = {Sextant},\n      title = {Paramètres moyens état de mer du SNO DYNALIT - La Palue & Lostmarc'h},\n      year = {2025},\n      url = {http://localhost:8080/srv/api/records/{uuid}}\n      } ",
   "keywords" : [ "/Milieu physique/Hydrodynamique côtière", "Caractéristiques géographiques océanographiques", "Vagues", "IR-ILICO", "/Données d'observation/in-situ", "SNO-Dynalit" ],
   "publisher" : [ {
     "@id" : "sextant@ifremer.fr",
