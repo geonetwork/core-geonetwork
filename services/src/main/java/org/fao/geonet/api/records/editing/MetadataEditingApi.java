@@ -456,12 +456,13 @@ public class MetadataEditingApi {
             }
 
             boolean automaticUnpublishInvalidMd = sm.getValueAsBool(METADATA_WORKFLOW_AUTOMATIC_UNPUBLISH_INVALID_MD);
+            boolean metadataTypeRequiresValidation = metadata.getDataInfo().getType().requiresValidation;
             boolean isUnpublished = false;
 
             // Unpublish the metadata automatically if the setting
             // automaticUnpublishInvalidMd is enabled and
             // the metadata becomes invalid
-            if (automaticUnpublishInvalidMd) {
+            if (automaticUnpublishInvalidMd && metadataTypeRequiresValidation) {
                 final OperationAllowedRepository operationAllowedRepo = context
                     .getBean(OperationAllowedRepository.class);
 
