@@ -56,7 +56,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
@@ -164,7 +163,7 @@ public class Importer {
 
                 Map<String, Pair<String, Element>> mdFiles = new HashMap<>();
                 for (Path file : metadataXmlFiles) {
-                    if (file != null && java.nio.file.Files.isRegularFile(file)) {
+                    if (file != null && Files.isRegularFile(file)) {
                         Element metadata = Xml.loadFile(file);
 
                         // Important folder name to identify metadata should be ../../
@@ -188,7 +187,7 @@ public class Importer {
                     }
                 }
 
-                if (mdFiles.size() == 0) {
+                if (mdFiles.isEmpty()) {
                     throw new BadFormatEx(uuid + " / No valid metadata file found" + ((lastUnknownMetadataFolderName == null) ?
                         "" :
                         (" in " + lastUnknownMetadataFolderName)) + ".");
@@ -360,7 +359,7 @@ public class Importer {
 
                 if (validate) {
                     Integer groupIdVal = null;
-                    if (org.apache.commons.lang.StringUtils.isNotEmpty(groupId)) {
+                    if (StringUtils.isNotEmpty(groupId)) {
                         groupIdVal = Integer.parseInt(groupId);
                     }
 
@@ -413,14 +412,14 @@ public class Importer {
                         } else {
                             final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
                             final Set<OperationAllowed> allowedSet = addOperations(context, accessManager, metadataOperations, privileges,
-                                featureCatalogMetadataId, Integer.valueOf(groupId));
+                                featureCatalogMetadataId, Integer.parseInt(groupId));
                             allowedRepository.saveAll(allowedSet);
                             metadata1.getSourceInfo().setGroupOwner(Integer.valueOf(groupId));
                         }
                     });
                 }
 
-                final int iMetadataId = Integer.valueOf(metadataIdMap.get(index));
+                final int iMetadataId = Integer.parseInt(metadataIdMap.get(index));
 
                 final String finalPopularity = popularity;
                 final String finalRating = rating;
@@ -428,10 +427,10 @@ public class Importer {
                 metadataManager.update(iMetadataId, metadata2 -> {
                     final MetadataDataInfo dataInfo = metadata2.getDataInfo();
                     if (finalPopularity != null) {
-                        dataInfo.setPopularity(Integer.valueOf(finalPopularity));
+                        dataInfo.setPopularity(Integer.parseInt(finalPopularity));
                     }
                     if (finalRating != null) {
-                        dataInfo.setRating(Integer.valueOf(finalRating));
+                        dataInfo.setRating(Integer.parseInt(finalRating));
                     }
                     dataInfo.setType(isTemplate[0]);
 
@@ -448,7 +447,7 @@ public class Importer {
                     } else {
                         final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
                         final Set<OperationAllowed> allowedSet = addOperations(context, accessManager, metadataOperations, privileges, iMetadataId,
-                            Integer.valueOf(groupId));
+                            Integer.parseInt(groupId));
                         allowedRepository.saveAll(allowedSet);
                     }
                 });
@@ -548,7 +547,7 @@ public class Importer {
             if (sourceName == null)
                 sourceName = "???";
 
-            if (source == null || source.trim().length() == 0)
+            if (source == null || source.trim().isEmpty())
                 throw new Exception("Missing siteId parameter from info.xml file");
 
             // --- only update sources table if source is not current site
@@ -566,7 +565,7 @@ public class Importer {
         SettingManager settingManager = gc.getBean(SettingManager.class);
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 
-        String metadataId = "";
+        String metadataId;
         if (metadataExist && uuidAction == MEFLib.UuidAction.NOTHING) {
             throw new UnAuthorizedException("Record already exists. Change the import mode to overwrite or generating a new UUID.", null);
         } else if (metadataExist && uuidAction == MEFLib.UuidAction.OVERWRITE) {

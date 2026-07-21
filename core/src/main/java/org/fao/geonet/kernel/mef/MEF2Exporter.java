@@ -36,10 +36,10 @@ import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
-import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
@@ -93,7 +93,6 @@ class MEF2Exporter {
 
         Path file = Files.createTempFile("mef-", ".mef");
         EsSearchManager searchManager = context.getBean(EsSearchManager.class);
-        String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
         try (
             FileSystem zipFs = ZipUtil.createZipFs(file)
         ) {
@@ -141,8 +140,8 @@ class MEF2Exporter {
 
                 final SearchResponse result = searchManager.query("+id:" + id, null, from, size);
 
-                String mdSchema = null, mdTitle = null, mdAbstract = null, isHarvested = null;
-                MetadataType mdType = null;
+                String mdSchema, mdTitle, mdAbstract, isHarvested;
+                MetadataType mdType;
 
                 List<Hit> hits = result.hits().hits();
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -235,7 +234,6 @@ class MEF2Exporter {
         String xmlDocumentAsString = recordAndMetadataForExport.two();
 
         String id = "" + record.getId();
-        String isTemp = record.getDataInfo().getType().codeString;
 
         final Path metadataXmlDir = metadataRootDir.resolve(MD_DIR);
         Files.createDirectories(metadataXmlDir);
