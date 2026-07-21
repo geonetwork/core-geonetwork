@@ -42,7 +42,6 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.*;
-import org.fao.geonet.api.records.model.MetadataPublicationNotificationInfo;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.config.IPublicationConfig;
 import org.fao.geonet.config.PublicationOption;
@@ -54,11 +53,11 @@ import org.fao.geonet.events.history.RecordOwnerChangeEvent;
 import org.fao.geonet.events.history.RecordPrivilegesChangeEvent;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.datamanager.*;
-import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
-import org.fao.geonet.api.records.model.GroupOperations;
-import org.fao.geonet.api.records.model.GroupPrivilege;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.metadata.MetadataPublicationService;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.languages.FeedbackLanguages;
@@ -70,7 +69,6 @@ import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -231,7 +229,7 @@ public class MetadataSharingApi {
         throws Exception {
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.getRecord(metadataUuid);
         Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
         checkUserProfileToPublishMetadata(groupOwner, userSession);
 
@@ -239,11 +237,11 @@ public class MetadataSharingApi {
             publicationType = DEFAULT_PUBLICATION_TYPE_NAME;
         }
 
-        metadataPublicationService.shareMetadataWithReservedGroup(serviceContext, metadata, true, publicationType);
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        metadataPublicationService.shareMetadataWithReservedGroup(serviceContext, metadata, true, publicationType, locale);
 
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
         if (publicationOption.isPresent()) {
-            metadata = ApiUtils.getRecord(metadataUuid);
             publicationConfig.processMetadata(serviceContext, publicationOption.get(), metadata.getId(), true);
         }
     }
@@ -280,7 +278,7 @@ public class MetadataSharingApi {
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
 
         // Get the id of the group that owns the metadata record identified by the uuid
-        AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        AbstractMetadata metadata = ApiUtils.getRecord(metadataUuid);
         Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
         checkUserProfileToUnpublishMetadata(groupOwner, userSession);
 
@@ -288,11 +286,11 @@ public class MetadataSharingApi {
             publicationType = DEFAULT_PUBLICATION_TYPE_NAME;
         }
 
-        metadataPublicationService.shareMetadataWithReservedGroup(serviceContext, metadata, false, publicationType);
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        metadataPublicationService.shareMetadataWithReservedGroup(serviceContext, metadata, false, publicationType, locale);
 
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationType);
         if (publicationOption.isPresent()) {
-            metadata = ApiUtils.getRecord(metadataUuid);
             publicationConfig.processMetadata(serviceContext, publicationOption.get(), metadata.getId(), false);
         }
     }
@@ -360,7 +358,7 @@ public class MetadataSharingApi {
         boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
 
         metadataPublicationService.setOperations(sharing, dataManager, context, appContext, metadata, operationMap,
-            privileges, ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, null,
+            privileges, ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, null, request.getLocale(),
             metadataListToNotifyPublication, notifyByEmail);
         metadataIndexer.indexMetadataPrivileges(metadata.getUuid(), metadata.getId());
 
@@ -405,7 +403,7 @@ public class MetadataSharingApi {
             StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME;
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
-        MetadataProcessingReport metadataProcessingReport = metadataPublicationService.shareSelection(serviceContext, records, true, publicationTypeToUse);
+        MetadataProcessingReport metadataProcessingReport = metadataPublicationService.shareSelection(serviceContext, records, true, publicationTypeToUse, request);
 
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
         if (publicationOption.isPresent()) {
@@ -453,7 +451,7 @@ public class MetadataSharingApi {
         String publicationTypeToUse =
             StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME;
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
-        MetadataProcessingReport metadataProcessingReport = metadataPublicationService.shareSelection(serviceContext, records, false, publicationTypeToUse);
+        MetadataProcessingReport metadataProcessingReport = metadataPublicationService.shareSelection(serviceContext, records, false, publicationTypeToUse, request);
 
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
         if (publicationOption.isPresent()) {
@@ -502,7 +500,7 @@ public class MetadataSharingApi {
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
-        return metadataPublicationService.shareSelection(serviceContext, records, sharing);
+        return metadataPublicationService.shareSelection(serviceContext, records, sharing, request);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -651,7 +649,7 @@ public class MetadataSharingApi {
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
 
-        checkGroupIsWorkspace(groupIdentifier, locale);
+        metadataPublicationService.checkGroupIsWorkspace(groupIdentifier, locale);
 
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
 
@@ -788,6 +786,7 @@ public class MetadataSharingApi {
             sourceUsr,
             skipAllReservedGroup,
             metadataProcessingReport,
+            request.getLocale(),
             metadataListToNotifyPublication,
             notifyByEmail
         );
@@ -941,7 +940,7 @@ public class MetadataSharingApi {
         // If the group is reserved, there is no need to check if it's a workspace as the group will not be changed.
         // This is required for transferring ownership to an administrator
         if (!ReservedGroup.isReserved(groupIdentifier)) {
-            checkGroupIsWorkspace(groupIdentifier, locale);
+            metadataPublicationService.checkGroupIsWorkspace(groupIdentifier, locale);
         }
 
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -1020,7 +1019,7 @@ public class MetadataSharingApi {
         // If the group is reserved, there is no need to check if it's a workspace as the group will not be changed.
         // This is required for transferring ownership to an administrator
         if (!ReservedGroup.isReserved(groupIdentifier)) {
-            checkGroupIsWorkspace(groupIdentifier, locale);
+            metadataPublicationService.checkGroupIsWorkspace(groupIdentifier, locale);
         }
 
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
@@ -1229,38 +1228,5 @@ public class MetadataSharingApi {
         } else {
             return accessManager.isProfileOrMoreOnGroup(context.getUserSession(), minimumProfileForPrivileges, group.getId());
         }
-    }
-
-    /**
-     * Checks if the given group is of type Workspace.
-     *
-     * @param groupId the identifier of the group to check
-     * @param locale  the locale to use for error messages
-     * @throws ResourceNotFoundException if the group is not found
-     * @throws IllegalArgumentException  if the group is not of type Workspace
-     */
-    private void checkGroupIsWorkspace(Integer groupId, Locale locale) throws ResourceNotFoundException {
-        if (!groupIsType(groupId, GroupType.Workspace, locale)) {
-            throw new IllegalArgumentException(messages.getMessage("api.groups.group_not_workspace", new
-                Object[]{groupId}, locale));
-        }
-    }
-
-    /**
-     * Checks if the given group is of the specified type.
-     *
-     * @param groupId   the identifier of the group to check
-     * @param groupType the type to check against
-     * @param locale    the locale to use for error messages
-     * @return true if the group is of the specified type, false otherwise
-     * @throws ResourceNotFoundException if the group is not found
-     */
-    private boolean groupIsType(Integer groupId, GroupType groupType, Locale locale) throws ResourceNotFoundException {
-        Group group = groupRepository.findById(groupId).orElse(null);
-        if (group == null) {
-            throw new ResourceNotFoundException(messages.getMessage("api.groups.group_not_found", new
-                Object[]{groupId}, locale));
-        }
-        return group.getType() == groupType;
     }
 }

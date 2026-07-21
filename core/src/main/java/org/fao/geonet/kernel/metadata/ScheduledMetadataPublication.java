@@ -47,6 +47,7 @@ import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.transaction.TransactionStatus;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Task checking on a regular basis the list of records
@@ -107,7 +108,7 @@ public class ScheduledMetadataPublication extends QuartzJobBean {
                             // Publish the metadata
                             AbstractMetadata metadata = metadataUtils.findOne(metadataId);
                             if (metadata != null) {
-                                metadataPublicationService.shareMetadataWithReservedGroup(serviceContext, metadata, true, "default");
+                                metadataPublicationService.shareMetadataWithReservedGroup(serviceContext, metadata, true, "default", new Locale(Geonet.DEFAULT_LANGUAGE));
                             } else {
                                 Log.warning(Geonet.GEONETWORK, "Can not schedule publish the metadata with ID: " + metadataId + " because it does not exist.");
                             }
