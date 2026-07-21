@@ -275,25 +275,6 @@
                   JSON.parse(md.isHarvested) === false
                 );
               }
-            },
-            scheduledPublicationTask: {
-              isVisible: function (md) {
-                return scope.isScheduledPublicationEnable && md && !md.isPublished();
-              },
-              isApplicable: function (md) {
-                // TODO: Would be good to return why a task is not applicable as tooltip
-                return (
-                  md &&
-                  !md.isPublished() &&
-                  md.isTemplate === "n" &&
-                  JSON.parse(md.isHarvested) === false
-                );
-              },
-              dueDate: function (md) {
-                return md && md.publicationDateForResource
-                  ? md.publicationDateForResource[0]
-                  : null;
-              }
             }
           };
 
@@ -425,8 +406,6 @@
 
           gnConfigService.load().then(function () {
             scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
-            scope.isScheduledPublicationEnable =
-              gnConfig["metadata.publication.enableScheduledPublication"];
             scope.isMdWorkflowAssistEnable =
               gnGlobalSettings.gnCfg.mods.workflowHelper.enabled;
             scope.workFlowApps =

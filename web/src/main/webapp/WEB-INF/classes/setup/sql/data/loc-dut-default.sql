@@ -532,7 +532,6 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'dut','Record ver
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'dut','Record geïmporteerd.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'dut','Record hersteld.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'dut','DOI aangevraagd.');
-INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'dut','Scheduled publication');
 
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'dut','Voorkeursrecords');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'dut','Favorieten lijst');

@@ -94,9 +94,6 @@
         if (filter.uuid) {
           filters.push("uuid=" + filter.uuid);
         }
-        if (filter.statusId) {
-          filters.push("statusIds=" + filter.statusId);
-        }
         if (filter.dateFromFilter) {
           filters.push(
             "dateFrom=" + $filter("date")(filter.dateFromFilter, "yyyy-MM-dd")
