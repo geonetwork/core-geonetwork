@@ -967,8 +967,6 @@
     "metadata/publication/profilePublishMetadata-help": "Profile required to publish metadata, evaluated in the record owner group (Reviewer or Administrator). The default value is Reviewer.",
     "metadata/publication/profileUnpublishMetadata": "Required profile to un-publish metadata",
     "metadata/publication/profileUnpublishMetadata-help": "Profile required to un-publish metadata, evaluated in the record owner group (Reviewer or Administrator). The default value is Reviewer.",
-    "metadata/publication/enableScheduledPublication": "Enable scheduled publication",
-    "metadata/publication/enableScheduledPublication-help": "If disabled, the scheduled publication task is not available and the scheduled publication process is not executed.",
     "metadata/history": "Metadata History",
     "metadata/history/accesslevel": "Select the minimum user profile allowed to view metadata history",
     "metadata/history/accesslevel-help": "Select the user profile allowed to view metadata history (Registered User, Editor or Administrator). The Registered User configuration can view the history with view permission granted to the metadata record. The Editor configuration can view the history with editing permission granted to the metadata record. The default value is Editor.",

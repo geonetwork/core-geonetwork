@@ -49,6 +49,7 @@ public interface MetadataStatusRepositoryCustom {
      */
     @Nonnull
     List<MetadataStatus> findAllByMetadataIdAndByType(int metadataId, StatusValueType type, Sort sort);
+
     /**
      * Find all the MetadataStatus objects corresponding to a search
      */

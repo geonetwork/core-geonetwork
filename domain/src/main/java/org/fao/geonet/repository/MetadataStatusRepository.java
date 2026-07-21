@@ -29,7 +29,6 @@ import javax.annotation.Nonnull;
 
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.MetadataStatus;
-import org.fao.geonet.domain.StatusValueType;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -53,10 +52,6 @@ public interface MetadataStatusRepository extends GeonetRepository<MetadataStatu
      */
     @Nonnull
     List<MetadataStatus> findAllByMetadataId(int metadataId, Sort sort);
-
-    @Nonnull
-    @Query("SELECT s FROM MetadataStatus s WHERE s.statusValue.name = 'scheduledPublicationTask' and s.dueDate <= ?1 AND s.closeDate IS NULL")
-    List<MetadataStatus> findMetadataStatusForScheduledPublication(ISODate dueDate);
 
     /**
      * Find the MetadataStatus objects by the associated metadata id, status id, user id and change date.
@@ -104,7 +99,7 @@ public interface MetadataStatusRepository extends GeonetRepository<MetadataStatu
     @Transactional
     @Query(value="DELETE FROM MetadataStatus s WHERE s.id.metadataId = ?1")
     int deleteAllById_MetadataId(Integer metadataId);
-
+    
     /**
      * Delete all the entities that are related to the indicated user.
      *
