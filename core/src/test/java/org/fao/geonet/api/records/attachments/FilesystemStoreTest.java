@@ -30,6 +30,7 @@ import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.jdom.Element;
@@ -39,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -46,6 +48,8 @@ public class FilesystemStoreTest extends AbstractCoreIntegrationTest {
 
     @Autowired
     protected IMetadataManager metadataManager;
+    @Autowired
+    protected IMetadataUtils metadataUtils;
     @Autowired
     protected SettingManager settingManager;
 
@@ -100,6 +104,51 @@ public class FilesystemStoreTest extends AbstractCoreIntegrationTest {
         // context, metadataUuid, visibility, path, approved)
         filesystemStore.getResourceDescription(context, "nonExistingUuid",
             MetadataResourceVisibility.PUBLIC, "existingResource.jpg", true);
+    }
+
+    /**
+     * #9433 - the {@code approved} flag returned for each resource must reflect whether the record
+     * is a draft (i.e. whether an approved copy exists), not merely the {@code approved} request
+     * parameter. Requesting {@code approved=true} must not mark a draft record's resources as
+     * approved.
+     */
+    @Test
+    public void getResourcesApprovedFlagReflectsDraftState() throws Exception {
+        ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+
+        String uuid = "9433-uuid";
+        String mdId = metadataManager.insertMetadata(
+            context, "iso19139", new Element("MD_Metadata"), uuid,
+            context.getUserSession().getUserIdAsInt(), "" + ReservedGroup.all.getId(),
+            "sourceid", "n", "doctype", null,
+            new ISODate().getDateAndTime(), new ISODate().getDateAndTime(), false, IndexingMode.none);
+
+        FilesystemStore store = new FilesystemStore();
+        store.settingManager = this.settingManager;
+
+        try (InputStream file = getClass().getResourceAsStream("existingResource.jpg")) {
+            store.putResource(context, uuid, "existingResource.jpg", file, new Date(),
+                MetadataResourceVisibility.PUBLIC, true);
+        }
+
+        // The approved flag must follow the record's actual draft state, not the request parameter.
+        boolean isDraft = metadataUtils.isMetadataDraft(Integer.parseInt(mdId));
+        assertEquals("approvedCopyExists must be the inverse of the record's draft state",
+            !isDraft, AbstractStore.approvedCopyExists(uuid));
+
+        List<MetadataResource> resources = store.getResources(context, uuid, Sort.name, null, true);
+        assertFalse("The uploaded resource must be listed", resources.isEmpty());
+        assertEquals("Even with approved=true, the approved flag must reflect the draft state (#9433)",
+            !isDraft, resources.get(0).isApproved());
+
+        // approved=false is always resolved as not approved.
+        assertFalse("approved=false must never resolve to approved",
+            AbstractStore.resolveApproved(uuid, false));
+
+        // An unknown record has no approved copy.
+        assertFalse("No approved copy exists for an unknown record",
+            AbstractStore.approvedCopyExists("9433-missing-uuid"));
     }
 
     @Test
