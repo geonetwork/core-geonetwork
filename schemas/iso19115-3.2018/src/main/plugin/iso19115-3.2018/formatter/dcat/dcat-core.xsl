@@ -239,28 +239,71 @@
   </xsl:template>
 
 
-  <xsl:template mode="iso19115-3-to-dcat"
-                match="mdb:dateInfo/*/cit:date
-                      |cit:CI_Citation/cit:date/*/cit:date
-                      |mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime">
+  <!-- Gets a list of date nodes and outputs the most recent date
+     based on the dateType. The dateType is used to determine the dcat element name.
+
+     If no matching dcat element name is found, a warning is logged.
+  -->
+  <xsl:template name="iso19115-3-to-dcat-date-info">
+    <xsl:param name="values"
+               as="node()*" />
     <xsl:param name="dateType"
-                  as="xs:string?"
-                  select="../cit:dateType/*/@codeListValue"/>
+               as="xs:string" />
     <xsl:variable name="dcatElementName"
                   as="xs:string?"
                   select="$isoDateTypeToDcatCommonNames[. = $dateType]/@key"/>
 
     <xsl:choose>
       <xsl:when test="string($dcatElementName)">
-        <xsl:call-template name="rdf-date">
-          <xsl:with-param name="nodeName" select="$dcatElementName"/>
-        </xsl:call-template>
+
+        <xsl:for-each select="$values/*">
+          <xsl:sort select="." order="descending" />
+
+          <xsl:if test="string($dcatElementName) and position() = 1">
+            <xsl:call-template name="rdf-date">
+              <xsl:with-param name="nodeName" select="$dcatElementName"/>
+            </xsl:call-template>
+          </xsl:if>
+        </xsl:for-each>
       </xsl:when>
       <xsl:otherwise>
         <xsl:message>WARNING: Unmatched date type <xsl:value-of select="$dateType"/>. If needed, add this type in dcat-variables.xsl and add the element to map to in isoDateTypeToDcatCommonNames.</xsl:message>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+  <!--
+  Process all dates having a corresponding dublin core element name corresponding to an ISO date type code
+  Keep only the most recent date for each type.
+  -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:dateInfo[*/cit:dateType/*/@codeListValue = $isoDateTypeToDcatCommonNames/text()]
+                             |cit:CI_Citation/cit:date[*/cit:dateType/*/@codeListValue = $isoDateTypeToDcatCommonNames/text()]"
+                priority="10">
+
+    <xsl:variable name="dateType" select="current()/*/cit:dateType/*/@codeListValue"/>
+
+    <xsl:variable name="dcatElementName"
+                         as="xs:string"
+                         select="$isoDateTypeToDcatCommonNames[text() = $dateType]/@key"/>
+
+    <xsl:variable name="allIsoDateTypeForDublinCoreType"
+                        as="xs:string*"
+                        select="$isoDateTypeToDcatCommonNames[@key = $dcatElementName]/text()"/>
+
+    <xsl:variable name="allDates" as="xs:string*"
+                         select="../*[name() = current()/name()][*/cit:dateType/*/@codeListValue = $allIsoDateTypeForDublinCoreType]/*/cit:date/*/text()"/>
+
+    <xsl:for-each select="current()/*/cit:date/*[text() = max($allDates)]">
+      <xsl:call-template name="rdf-date">
+        <xsl:with-param name="nodeName" select="$dcatElementName"/>
+      </xsl:call-template>
+    </xsl:for-each>
+  </xsl:template>
+
+  <!-- Ignore dates not handled by previous template (having a known dublin core type -->
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:dateInfo|cit:CI_Citation/cit:date"/>
 
 
   <!--
@@ -372,14 +415,14 @@
           </xsl:when>
           <xsl:otherwise>
             <rdf:type rdf:resource="http://purl.org/dc/terms/Standard"/>
-            <xsl:for-each select="*/mdq:specification/*">
-              <xsl:for-each select="cit:title">
+            <xsl:for-each select="*/mdq:specification">
+              <xsl:for-each select="cit:CI_Citation/cit:title">
                 <xsl:call-template name="rdf-localised">
                   <xsl:with-param name="nodeName" select="'rdfs:label'"/>
                 </xsl:call-template>
               </xsl:for-each>
               <xsl:apply-templates mode="iso19115-3-to-dcat"
-                                   select="cit:date/*[cit:dateType/*/@codeListValue = $isoDateTypeToDcatCommonNames/text()]/cit:date"/>
+                                   select="cit:CI_Citation/cit:date"/>
             </xsl:for-each>
           </xsl:otherwise>
         </xsl:choose>
