@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -387,7 +387,6 @@ public class Importer {
                     int userid = context.getUserSession().getUserIdAsInt();
                     String group = null;
                     String docType = null;
-                    String title = null;
                     String category = null;
                     boolean ufo = false;
                     String fcId = metadataManager
@@ -397,18 +396,28 @@ public class Importer {
                     if (Log.isDebugEnabled(Geonet.MEF))
                         Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
 
-                    // Create database relation between metadata and feature
-                    // catalog
-                    String mdId = metadataIdMap.get(index);
-
-                    final MetadataRelationRepository relationRepository = context.getBean(MetadataRelationRepository.class);
-                    final MetadataRelation relation = new MetadataRelation();
-                    relation.setId(new MetadataRelationId(Integer.valueOf(mdId), Integer.valueOf(fcId)));
-
-                    relationRepository.save(relation);
-
+                    // The metadata to feature catalogue association is kept in the
+                    // metadata feature catalogue citation.
                     metadataIdMap.add(fcId);
-                    // TODO : privileges not handled for feature catalog ...
+
+                    final int featureCatalogMetadataId = Integer.parseInt(fcId);
+                    final Element finalFeatureCatalogCategs = categs;
+                    metadataManager.update(featureCatalogMetadataId, metadata1 -> {
+                        addCategoriesToMetadata(metadata1, finalFeatureCatalogCategs, context);
+
+                        if (StringUtils.isEmpty(groupId)) {
+                            Group ownerGroup = addPrivileges(context, accessManager, metadataOperations, featureCatalogMetadataId, privileges);
+                            if (ownerGroup != null) {
+                                metadata1.getSourceInfo().setGroupOwner(ownerGroup.getId());
+                            }
+                        } else {
+                            final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
+                            final Set<OperationAllowed> allowedSet = addOperations(context, accessManager, metadataOperations, privileges,
+                                featureCatalogMetadataId, Integer.valueOf(groupId));
+                            allowedRepository.saveAll(allowedSet);
+                            metadata1.getSourceInfo().setGroupOwner(Integer.valueOf(groupId));
+                        }
+                    });
                 }
 
                 final int iMetadataId = Integer.valueOf(metadataIdMap.get(index));
@@ -416,35 +425,31 @@ public class Importer {
                 final String finalPopularity = popularity;
                 final String finalRating = rating;
                 final Element finalCategs = categs;
-                final String finalGroupId = groupId;
-                metadataManager.update(iMetadataId, new Updater<AbstractMetadata>() {
-                    @Override
-                    public void apply(@Nonnull final AbstractMetadata metadata) {
-                        final MetadataDataInfo dataInfo = metadata.getDataInfo();
-                        if (finalPopularity != null) {
-                            dataInfo.setPopularity(Integer.valueOf(finalPopularity));
+                metadataManager.update(iMetadataId, metadata2 -> {
+                    final MetadataDataInfo dataInfo = metadata2.getDataInfo();
+                    if (finalPopularity != null) {
+                        dataInfo.setPopularity(Integer.valueOf(finalPopularity));
+                    }
+                    if (finalRating != null) {
+                        dataInfo.setRating(Integer.valueOf(finalRating));
+                    }
+                    dataInfo.setType(isTemplate[0]);
+
+                    metadata2.getHarvestInfo().setHarvested(false);
+
+                    addCategoriesToMetadata(metadata2, finalCategs, context);
+
+
+                    if (StringUtils.isEmpty(groupId)) {
+                        Group ownerGroup = addPrivileges(context, accessManager, metadataOperations, iMetadataId, privileges);
+                        if (ownerGroup != null) {
+                            metadata2.getSourceInfo().setGroupOwner(ownerGroup.getId());
                         }
-                        if (finalRating != null) {
-                            dataInfo.setRating(Integer.valueOf(finalRating));
-                        }
-                        dataInfo.setType(isTemplate[0]);
-
-                        metadata.getHarvestInfo().setHarvested(false);
-
-                        addCategoriesToMetadata(metadata, finalCategs, context);
-
-
-                        if (finalGroupId == null || finalGroupId.equals("")) {
-                            Group ownerGroup = addPrivileges(context, accessManager, metadataOperations, iMetadataId, privileges);
-                            if (ownerGroup != null) {
-                                metadata.getSourceInfo().setGroupOwner(ownerGroup.getId());
-                            }
-                        } else {
-                            final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
-                            final Set<OperationAllowed> allowedSet = addOperations(context, accessManager, metadataOperations, privileges, iMetadataId,
-                                Integer.valueOf(finalGroupId));
-                            allowedRepository.saveAll(allowedSet);
-                        }
+                    } else {
+                        final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
+                        final Set<OperationAllowed> allowedSet = addOperations(context, accessManager, metadataOperations, privileges, iMetadataId,
+                            Integer.valueOf(groupId));
+                        allowedRepository.saveAll(allowedSet);
                     }
                 });
 
@@ -486,6 +491,13 @@ public class Importer {
         return metadataIdMap;
     }
 
+    /**
+     * Add categories to metadata.
+     *
+     * @param metadata the metadata
+     * @param finalCategs the final categories.
+     * @param context the context
+     */
     public static void addCategoriesToMetadata(AbstractMetadata metadata, Element finalCategs, ServiceContext context) {
         if (finalCategs != null) {
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
