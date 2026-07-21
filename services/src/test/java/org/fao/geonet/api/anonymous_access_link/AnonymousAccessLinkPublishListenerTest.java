@@ -53,7 +53,7 @@ public class AnonymousAccessLinkPublishListenerTest extends AbstractServiceInteg
 
 	@Test
 	public void createAnonymousAccessLink() throws Exception {
-		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context);
 		anonymousAccessLinkService.createAnonymousAccessLink(md.getUuid());
 
 		baseMetadataOperations.setOperation(context, md.getId(), ReservedGroup.all.getId(), ReservedOperation.view.getId());
@@ -63,7 +63,7 @@ public class AnonymousAccessLinkPublishListenerTest extends AbstractServiceInteg
 
 	@Test
 	public void createAnonymousAccessLinkDoesNotOperateForPublishedMd() throws Exception {
-		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context);
 		baseMetadataOperations.setOperation(context, md.getId(), ReservedGroup.all.getId(), ReservedOperation.view.getId());
 
 		AnonymousAccessLinkDto created = anonymousAccessLinkService.createAnonymousAccessLink(md.getUuid());

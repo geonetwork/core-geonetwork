@@ -44,6 +44,7 @@ import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 import org.fao.geonet.kernel.harvest.harvester.UUIDMapper;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.jdom.Element;
 
@@ -180,16 +181,17 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
 
         // localUuids could be unset in case of previous errors
         if (localUuids != null) {
-            for (String uuid : localUuids.getUUIDs()) {
-                if (!records.contains(uuid)) {
-                    String id = localUuids.getID(uuid);
-                    log.debug("  - Removing old metadata with local id:" + id);
-                    metadataManager.deleteMetadata(context, id);
-                    result.locallyRemoved ++;
+            try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
+                for (String uuid : localUuids.getUUIDs()) {
+                    if (!records.contains(uuid)) {
+                        String id = localUuids.getID(uuid);
+                        log.debug("  - Removing old metadata with local id:" + id);
+                        metadataManager.deleteMetadata(context, id, submitter);
+                        result.locallyRemoved++;
+                    }
                 }
             }
         }
-        dataMan.forceIndexChanges();
 
         return result;
     }
@@ -252,13 +254,13 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
         result.addedMetadata++;
     }
 
@@ -303,7 +305,7 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
         metadata.getCategories().clear();
         addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
         result.updatedMetadata++;
         return true;
     }

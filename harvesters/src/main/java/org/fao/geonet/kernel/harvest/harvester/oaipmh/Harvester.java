@@ -351,7 +351,6 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             }
         }
 
-        dataMan.forceIndexChanges();
         log.info("End of alignment for : " + params.getName());
     }
 
@@ -429,7 +428,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
@@ -437,7 +436,7 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
 
         metadataManager.flush();
 
-        dataMan.indexMetadata(id, Math.random() < 0.01);
+        dataMan.indexMetadata(id, batchingIndexSubmitter);
         result.addedMetadata++;
     }
 
@@ -614,9 +613,9 @@ class Harvester extends BaseAligner<OaiPmhParams> implements IHarvester<HarvestR
             addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
             metadataManager.flush();
-            dataMan.indexMetadata(id, Math.random() < 0.01);
+            dataMan.indexMetadata(id, batchingIndexSubmitter);
             result.updatedMetadata++;
-            metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+            metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
             result.updatedMetadata++;
         }
     }

@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.12-SNAPSHOT</version>
+    <version>4.4.13-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -726,6 +726,12 @@
               <transportPort>9300</transportPort>
               <httpPort>9200</httpPort>
               <environmentVariables><ES_JAVA_OPTS>-Xmx2g</ES_JAVA_OPTS></environmentVariables>
+              <instanceSettings>
+                <properties>
+                  <!-- Problem with elastic - if you don't have enough disk space (90+% full), it will NOT start. -->
+                  <cluster.routing.allocation.disk.threshold_enabled>false</cluster.routing.allocation.disk.threshold_enabled>
+                </properties>
+              </instanceSettings>
             </configuration>
             <executions>
               <execution>

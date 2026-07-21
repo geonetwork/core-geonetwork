@@ -24,7 +24,7 @@
 (function () {
   goog.provide("gn_gfi_directive");
 
-  var module = angular.module("gn_gfi_directive", ["angular.filter"]);
+  var module = angular.module("gn_gfi_directive", ["angular.filter", "ngSanitize"]);
 
   var gfiTemplateURL = "../../catalog/components/viewer/gfi/partials/gfi-popup.html";
 
@@ -32,7 +32,8 @@
 
   module.directive("gnVectorFeatureToolTip", [
     "gnDebounce",
-    function (gnDebounce) {
+    "$sanitize",
+    function (gnDebounce, $sanitize) {
       return {
         restrict: "A",
         scope: {
@@ -82,7 +83,7 @@
               });
               tooltipContent += "</ul>";
               info.popover("hide");
-              info.data("bs.popover").options.content = tooltipContent;
+              info.data("bs.popover").options.content = $sanitize(tooltipContent);
               info.popover("show");
             } else {
               info.popover("hide");

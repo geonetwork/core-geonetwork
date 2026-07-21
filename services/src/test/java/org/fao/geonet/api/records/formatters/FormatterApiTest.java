@@ -93,6 +93,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-geodcat-ap", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap-mobility", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-dcat-ap-hvd", "", "iso19115-3.2018", "dataset-core.rdf"});
+        data.add(new String[]{"iso19115-3.2018-dcat-dataset.xml", "eu-geodcat-ap-semiceu", "", "iso19115-3.2018", "dataset-core.rdf"});
         data.add(new String[]{"iso19115-3.2018-dcat-service.xml", "dcat", "", "iso19115-3.2018", "service-core.rdf"});
 
         data.add(new String[]{"iso19115-3.2018-datacite.xml", "datacite", "", "iso19115-3.2018", "out.xml"});
@@ -304,7 +305,7 @@ public class FormatterApiTest extends AbstractServiceIntegrationTest {
     }
 
     private void loadFile(String key, Element sampleMetadataXml) throws Exception {
-        AbstractMetadata metadata = injectMetadataInDbDoNotRefreshHeader(sampleMetadataXml, context);
+        AbstractMetadata metadata = injectMetadataInDb(sampleMetadataXml, context);
         testDataUuidBySchema.put(key, metadata.getUuid());
     }
 }
