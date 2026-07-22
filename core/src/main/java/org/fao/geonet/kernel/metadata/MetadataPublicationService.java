@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -714,7 +714,7 @@ public class MetadataPublicationService {
      * @param groupId the group owner of the metadata to publish
      * @param userSession the user session for authorization checks
      */
-    private void checkUserProfileToPublishMetadata(Integer groupId, UserSession userSession) {
+    public void checkUserProfileToPublishMetadata(Integer groupId, UserSession userSession) {
         if (userSession.getProfile() == Profile.Administrator) {
             return; // Administrators are always allowed to publish metadata
         }
@@ -748,7 +748,7 @@ public class MetadataPublicationService {
      * @param userSession the user session for authorization checks
      *
      */
-    private void checkUserProfileToUnpublishMetadata(Integer groupId, UserSession userSession) {
+    public void checkUserProfileToUnpublishMetadata(Integer groupId, UserSession userSession) {
         if (userSession.getProfile() == Profile.Administrator) {
             return; // Administrators are always allowed to unpublish metadata
         }
@@ -775,7 +775,6 @@ public class MetadataPublicationService {
         }
     }
 
-
     /**
      * Checks if the user can change the privileges for the group.
      *
@@ -783,26 +782,7 @@ public class MetadataPublicationService {
      * @param group   The {@link Group} to change the privileges for.
      * @return True if the user can change the privileges for the group, false otherwise.
      */
-    /**
-     * Checks if the group is a system privilege group, for which privileges must never be set directly.
-     *
-     * @param groupId The group identifier to check.
-     * @return True if the group exists and is of type {@link GroupType#SystemPrivilege}, false otherwise.
-     */
-    private boolean isSystemPrivilegeGroup(Integer groupId) {
-        return groupRepository.findById(groupId)
-            .map(group -> group.getType() == GroupType.SystemPrivilege)
-            .orElse(false);
-    }
-
-    /**
-     * Checks if the user can change the privileges for the group.
-     *
-     * @param context The {@link ServiceContext} object.
-     * @param group   The {@link Group} to change the privileges for.
-     * @return True if the user can change the privileges for the group, false otherwise.
-     */
-    private boolean canUserChangePrivilegesForGroup(final ServiceContext context, Group group) {
+    public boolean canUserChangePrivilegesForGroup(final ServiceContext context, Group group) {
         Profile minimumProfileForPrivileges = group.getMinimumProfileForPrivileges();
         if (minimumProfileForPrivileges == null) {
             return true;
