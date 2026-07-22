@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.transaction.TransactionManager;
 import jeeves.transaction.TransactionTask;
+import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -112,12 +113,19 @@ public class ScheduledMetadataPublication extends QuartzJobBean {
                             } else {
                                 Log.warning(Geonet.GEONETWORK, "Can not schedule publish the metadata with ID: " + metadataId + " because it does not exist.");
                             }
-
-                            // Mark the status as closed
-                            status.setCloseDate(new ISODate());
-                            metadataStatusRepository.save(status);
                         } catch (Exception e) {
                             Log.error(Geonet.GEONETWORK, "Error publishing metadata with ID with scheduled publication: " + metadataId, e);
+                            // Record the failure reason on the task. The task is closed regardless of the
+                            // outcome (see the finally block) so that a record that keeps failing to publish
+                            // is not retried on every subsequent run, logging the same error indefinitely.
+                            // The record must be rescheduled once the underlying issue is resolved.
+                            status.setChangeMessage(StringUtils.abbreviate(
+                                "Scheduled publication failed: " + e.getMessage(), 2048));
+                        } finally {
+                            // Close the task regardless of success or failure so it is not picked up again
+                            // by the next scheduled run.
+                            status.setCloseDate(new ISODate());
+                            metadataStatusRepository.save(status);
                         }
                     });
                     return null;
