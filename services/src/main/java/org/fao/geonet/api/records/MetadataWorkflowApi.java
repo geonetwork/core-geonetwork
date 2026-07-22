@@ -47,6 +47,7 @@ import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.*;
 import org.fao.geonet.api.records.model.MetadataPublicationNotificationInfo;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.kernel.metadata.MetadataPublicationService;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
@@ -162,6 +163,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     MetadataPublicationMailNotifier metadataPublicationMailNotifier;
+
+    @Autowired
+    MetadataPublicationService metadataPublicationService;
 
     @Autowired
     RoleHierarchy roleHierarchy;
@@ -553,6 +557,12 @@ public class MetadataWorkflowApi {
         } else if (status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED)) {
             // For APPROVED status, only reviewers can approve
             canChangeStatus = accessManager.hasReviewPermission(context, metadata);
+        } else if ("scheduledPublicationTask".equals(metadataStatusValue.getStatusValue().getName())) {
+            // A scheduled publication is performed later by a background job that runs with
+            // administrator privileges. Require the same authorization as an immediate publication,
+            // so a user cannot schedule a publication that they are not allowed to perform themselves.
+            metadataPublicationService.checkUserCanPublishMetadata(context, metadata);
+            canChangeStatus = true;
         } else {
             // For other statuses, only owners can change status
             canChangeStatus = accessManager.isOwner(context, String.valueOf(metadata.getId()));
