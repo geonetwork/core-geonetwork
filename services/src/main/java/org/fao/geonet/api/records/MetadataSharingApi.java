@@ -45,7 +45,6 @@ import org.fao.geonet.api.records.model.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.config.IPublicationConfig;
 import org.fao.geonet.config.PublicationOption;
-import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
 import org.fao.geonet.events.history.RecordGroupOwnerChangeEvent;
@@ -65,7 +64,6 @@ import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.util.MetadataPublicationMailNotifier;
-import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -231,7 +229,7 @@ public class MetadataSharingApi {
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         AbstractMetadata metadata = ApiUtils.getRecord(metadataUuid);
         Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
-        checkUserProfileToPublishMetadata(groupOwner, userSession);
+        metadataPublicationService.checkUserProfileToPublishMetadata(groupOwner, userSession);
 
         if (StringUtils.isEmpty(publicationType)) {
             publicationType = DEFAULT_PUBLICATION_TYPE_NAME;
@@ -280,7 +278,7 @@ public class MetadataSharingApi {
         // Get the id of the group that owns the metadata record identified by the uuid
         AbstractMetadata metadata = ApiUtils.getRecord(metadataUuid);
         Integer groupOwner = metadata.getSourceInfo().getGroupOwner();
-        checkUserProfileToUnpublishMetadata(groupOwner, userSession);
+        metadataPublicationService.checkUserProfileToUnpublishMetadata(groupOwner, userSession);
 
         if (StringUtils.isEmpty(publicationType)) {
             publicationType = DEFAULT_PUBLICATION_TYPE_NAME;
@@ -586,7 +584,7 @@ public class MetadataSharingApi {
                 groupPrivilege.setUserProfile(userGroupProfile);
 
                 // Restrict changing privileges for groups with a required profile for setting privileges set
-                groupPrivilege.setRestricted(!canUserChangePrivilegesForGroup(context, g));
+                groupPrivilege.setRestricted(!metadataPublicationService.canUserChangePrivilegesForGroup(context, g));
 
                 //--- get all operations that this group can do on given metadata
                 Specification<OperationAllowed> hasGroupIdAndMetadataId =
@@ -874,7 +872,7 @@ public class MetadataSharingApi {
             groupPrivilege.setReserved(g.isReserved());
             groupPrivilege.setRecordPrivilege(g.getType() == GroupType.RecordPrivilege);
             // Restrict changing privileges for groups with a required profile for setting privileges set
-            groupPrivilege.setRestricted(!canUserChangePrivilegesForGroup(context, g));
+            groupPrivilege.setRestricted(!metadataPublicationService.canUserChangePrivilegesForGroup(context, g));
             groupPrivilege.setUserGroup(userGroups.contains(g.getId()));
 
             Map<String, Boolean> operations = new HashMap<>(allOperations.size());
@@ -1151,86 +1149,4 @@ public class MetadataSharingApi {
         }
     }
 
-    /**
-     * Checks if the user profile is allowed to publish metadata.
-     *
-     * @param groupId the group owner of the metadata to publish
-     * @param userSession the user session for authorization checks
-     */
-    private void checkUserProfileToPublishMetadata(Integer groupId, UserSession userSession) {
-        if (userSession.getProfile() == Profile.Administrator) {
-            return; // Administrators are always allowed to publish metadata
-        }
-        if (groupId == null) {
-            throw new NotAllowedException("Publication of metadata is not allowed. Metadata without group owner cannot be published.");
-        }
-        Profile defaultProfileForPublishing = Profile.Reviewer;
-        String configuredProfileForPublishing = sm.getValue(Settings.METADATA_PUBLISH_USERPROFILE);
-        Profile requiredProfileForPublishing;
-        try {
-            requiredProfileForPublishing = Profile.valueOf(configuredProfileForPublishing);
-        } catch (IllegalArgumentException | NullPointerException e) {
-            if (e instanceof IllegalArgumentException) {
-                Log.error(Geonet.SETTINGS, "Invalid profile configured for publishing. Using default value: " + defaultProfileForPublishing);
-            }
-            requiredProfileForPublishing = defaultProfileForPublishing;
-        }
-
-        boolean canUserPublishForGroup = accessManager.isProfileOnGroup(userSession, requiredProfileForPublishing, groupId);
-
-        if (!canUserPublishForGroup) {
-            throw new NotAllowedException(String.format(
-                "Publication of metadata is not allowed. User must have the %s profile in the record owner group.", requiredProfileForPublishing));
-        }
-    }
-
-    /**
-     * Checks if the user profile is allowed to unpublish metadata.
-     *
-     * @param groupId the group owner of the metadata to unpublish
-     * @param userSession the user session for authorization checks
-     *
-     */
-    private void checkUserProfileToUnpublishMetadata(Integer groupId, UserSession userSession) {
-        if (userSession.getProfile() == Profile.Administrator) {
-            return; // Administrators are always allowed to unpublish metadata
-        }
-        if (groupId == null) {
-            throw new NotAllowedException("Unpublication of metadata is not allowed. Metadata without group owner cannot be unpublished.");
-        }
-        Profile defaultProfileForUnpublishing = Profile.Reviewer;
-        String configuredProfileForUnpublishing = sm.getValue(Settings.METADATA_UNPUBLISH_USERPROFILE);
-        Profile requiredProfileForUnpublishing;
-        try {
-            requiredProfileForUnpublishing = Profile.valueOf(configuredProfileForUnpublishing);
-        } catch (IllegalArgumentException | NullPointerException e) {
-            if (e instanceof IllegalArgumentException) {
-                Log.error(Geonet.SETTINGS, "Invalid profile configured for unpublishing. Using default value: " + defaultProfileForUnpublishing);
-            }
-            requiredProfileForUnpublishing = defaultProfileForUnpublishing;
-        }
-
-        boolean canUserUnpublishForGroup = accessManager.isProfileOnGroup(userSession, requiredProfileForUnpublishing, groupId);
-
-        if (!canUserUnpublishForGroup) {
-            throw new NotAllowedException(String.format(
-                "Unpublication of metadata is not allowed. User must have the %s profile in the record owner group.", requiredProfileForUnpublishing));
-        }
-    }
-
-    /**
-     * Checks if the user can change the privileges for the group.
-     *
-     * @param context The {@link ServiceContext} object.
-     * @param group   The {@link Group} to change the privileges for.
-     * @return True if the user can change the privileges for the group, false otherwise.
-     */
-    private boolean canUserChangePrivilegesForGroup(final ServiceContext context, Group group) {
-        Profile minimumProfileForPrivileges = group.getMinimumProfileForPrivileges();
-        if (minimumProfileForPrivileges == null) {
-            return true;
-        } else {
-            return accessManager.isProfileOrMoreOnGroup(context.getUserSession(), minimumProfileForPrivileges, group.getId());
-        }
-    }
 }
