@@ -340,6 +340,7 @@ public class MetadataSharingApi {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
         ServiceContext context = ApiUtils.createServiceContext(request);
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         Locale[] feedbackLocales = feedbackLanguages.getLocales(request.getLocale());
 
         //--- in case of owner, privileges for groups 0,1 and GUEST are disabled
@@ -358,7 +359,7 @@ public class MetadataSharingApi {
         boolean notifyByEmail = StringUtils.isNoneEmpty(sm.getValue(SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL));
 
         metadataPublicationService.setOperations(sharing, dataManager, context, appContext, metadata, operationMap,
-            privileges, ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, null, request.getLocale(),
+            privileges, ApiUtils.getUserSession(session).getUserIdAsInt(), skipAllReservedGroup, null, locale,
             metadataListToNotifyPublication, notifyByEmail);
         metadataIndexer.indexMetadataPrivileges(metadata.getUuid(), metadata.getId());
 
@@ -403,7 +404,8 @@ public class MetadataSharingApi {
             StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME;
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
-        MetadataProcessingReport metadataProcessingReport = metadataPublicationService.shareSelection(serviceContext, records, true, publicationTypeToUse, request);
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        MetadataProcessingReport metadataProcessingReport = metadataPublicationService.shareSelection(serviceContext, records, true, publicationTypeToUse, locale);
 
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
         if (publicationOption.isPresent()) {
@@ -451,7 +453,8 @@ public class MetadataSharingApi {
         String publicationTypeToUse =
             StringUtils.isNotEmpty(publicationType) ? publicationType : DEFAULT_PUBLICATION_TYPE_NAME;
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
-        MetadataProcessingReport metadataProcessingReport = metadataPublicationService.shareSelection(serviceContext, records, false, publicationTypeToUse, request);
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        MetadataProcessingReport metadataProcessingReport = metadataPublicationService.shareSelection(serviceContext, records, false, publicationTypeToUse, locale);
 
         java.util.Optional<PublicationOption> publicationOption = publicationConfig.getPublicationOptionConfiguration(publicationTypeToUse);
         if (publicationOption.isPresent()) {
@@ -500,7 +503,8 @@ public class MetadataSharingApi {
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
         Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
-        return metadataPublicationService.shareSelection(serviceContext, records, sharing, request);
+        Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
+        return metadataPublicationService.shareSelection(serviceContext, records, sharing, locale);
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -786,7 +790,7 @@ public class MetadataSharingApi {
             sourceUsr,
             skipAllReservedGroup,
             metadataProcessingReport,
-            request.getLocale(),
+            locale,
             metadataListToNotifyPublication,
             notifyByEmail
         );
