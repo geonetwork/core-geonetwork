@@ -47,6 +47,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.scheduling.quartz.QuartzJobBean;
 import org.springframework.transaction.TransactionStatus;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Locale;
 
@@ -98,8 +101,16 @@ public class ScheduledMetadataPublication extends QuartzJobBean {
             false, new TransactionTask<Void>() {
                 @Override
                 public Void doInTransaction(TransactionStatus transaction) throws Throwable {
-                    // Get current date without time part
-                    ISODate now = new ISODate(new ISODate().getDateAsString() + "T24:00:00.000Z");
+                    // Cutoff for the records to publish, computed explicitly in UTC so it does not
+                    // depend on the server's default time zone: the end of the current day (UTC).
+                    // Combined with the "dueDate <= cutoff" query, records scheduled for the current
+                    // day (UTC) or earlier are published, while records due the next day are not
+                    // published early. Due dates are date-only, so second precision is sufficient.
+                    ISODate now = new ISODate(LocalDate.now(ZoneOffset.UTC)
+                        .atTime(LocalTime.MAX)
+                        .atOffset(ZoneOffset.UTC)
+                        .toInstant()
+                        .toEpochMilli());
 
                     List<MetadataStatus> metadataStatusList = metadataStatusRepository.findMetadataStatusForScheduledPublication(now);
                     metadataStatusList.forEach(status -> {
