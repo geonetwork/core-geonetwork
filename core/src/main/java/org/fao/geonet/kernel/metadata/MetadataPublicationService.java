@@ -682,6 +682,32 @@ public class MetadataPublicationService {
 
 
     /**
+     * Verifies that the user is authorized to publish the given metadata, applying the same
+     * authorization rules used for an immediate publication: the user must have review permission
+     * on the record and must have the configured publication profile on the record's group owner.
+     *
+     * <p>This is intended to guard scheduled publication requests: the scheduled publication
+     * job performs the publication later while running with administrator privileges, so a user
+     * must not be able to schedule a publication that they would not be allowed to perform
+     * themselves.</p>
+     *
+     * @param context  the current service context
+     * @param metadata the metadata to be published
+     * @throws NotAllowedException if the user is not allowed to publish the metadata
+     * @throws Exception           if the review permission look-up fails
+     */
+    public void checkUserCanPublishMetadata(ServiceContext context, AbstractMetadata metadata) throws Exception {
+        // Same review-permission gate enforced for an immediate publication.
+        if (!accessManager.hasReviewPermission(context, Integer.toString(metadata.getId()))) {
+            throw new NotAllowedException(String.format(
+                "Publication of metadata %s is not allowed. User does not have review permission on the record.",
+                metadata.getUuid()));
+        }
+        // Same configured publication-profile gate enforced for an immediate publication.
+        checkUserProfileToPublishMetadata(metadata.getSourceInfo().getGroupOwner(), context.getUserSession());
+    }
+
+    /**
      * Checks if the user profile is allowed to publish metadata.
      *
      * @param groupId the group owner of the metadata to publish
