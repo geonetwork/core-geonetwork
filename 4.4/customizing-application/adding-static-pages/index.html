@@ -1934,6 +1934,17 @@
 <p><strong>Page section</strong>: Section of the page to display the link. Currently implemented sections are <code>TOP</code> (top menu of the main page), <code>FOOTER</code> (footer of the main page), and <code>RECORD_VIEW_MENU</code> (toolbar shown on the record view page).</p>
 </li>
 <li>
+<p><strong>Workflow visibility (<code>RECORD_VIEW_MENU</code> only)</strong>: Controls whether a page is shown for each workflow state.</p>
+</li>
+<li>
+<p><code>showWhenWorkflowDisabled</code></p>
+</li>
+<li><code>showOnApproved</code></li>
+<li><code>showOnNonApproved</code></li>
+</ul>
+<p>These options default to <code>true</code> (backward compatible).</p>
+<ul>
+<li>
 <p><strong>Status</strong>: Defines which users can see the link.</p>
 <ul>
 <li><strong>Visible only to the administrator</strong></li>
@@ -1990,6 +2001,8 @@
 </span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-download-menu&quot;</span><span class="p">,</span>
 </span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-display-menu&quot;</span><span class="p">]</span>
 </span></code></pre></div>
+<p>If the <strong>Record View custom menu items</strong> list is empty, only this default menu order is used and static pages are not automatically added.</p>
+<p>Use the static page identifier directly (for example <code>documentation</code>) when inserting custom pages. The <code>gn-</code> prefix is reserved for built-in menu entries and custom page identifiers using that prefix are ignored.</p>
 <p>As with the top toolbar, insert a page as a simple menu using the page identifier or as a submenu using an object:</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">[</span><span class="s2">&quot;gn-recordview-edit-menu&quot;</span><span class="p">,</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w"> </span><span class="p">{</span><span class="nt">&quot;quickSearch&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>

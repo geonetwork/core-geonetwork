@@ -3123,7 +3123,8 @@
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-download-menu&quot;</span><span class="p">,</span>
 </span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-display-menu&quot;</span><span class="p">]</span>
 </span></code></pre></div>
-<p>Custom static pages can be inserted between these default entries. Static pages used there must be created for the <code>RECORD_VIEW_MENU</code> section. See <a href="../../../customizing-application/adding-static-pages/">Adding static pages</a>.</p>
+<p>If this list is empty, only those default entries are shown and static pages are not added automatically.</p>
+<p>Custom static pages can be inserted between these default entries. Static pages used there must be created for the <code>RECORD_VIEW_MENU</code> section and referenced by page identifier (for example <code>documentation</code>). The <code>gn-</code> prefix is reserved for built-in entries and should not be used for custom page identifiers. See <a href="../../../customizing-application/adding-static-pages/">Adding static pages</a>.</p>
 <p>The <code>gn-recordview-manage-menu</code> entry contains record management actions and is only shown to users with editor privileges or above. The <code>gn-recordview-download-menu</code> entry contains download and export actions and is available whenever a record is displayed.</p>
 </li>
 </ul>
