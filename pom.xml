@@ -1691,7 +1691,7 @@
     <spring.version>5.3.39</spring.version>
     <spring.security.version>5.8.16</spring.security.version>
     <spring.jpa.version>2.7.18</spring.jpa.version>
-    <springboot.version>2.7.0</springboot.version>
+    <springboot.version>2.7.12</springboot.version>
     <springdoc.version>1.8.0</springdoc.version>
     <keycloak.version>18.0.2</keycloak.version>
     <hibernate.version>5.6.15.Final</hibernate.version>
