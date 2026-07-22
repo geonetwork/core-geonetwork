@@ -62,7 +62,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -201,13 +200,14 @@ public class MetadataPublicationService {
      * @param records                   Metadata list of uuids to share.
      * @param publish                   Sharing type: publish/unpublish the metadata records.
      * @param publicationTypeToUse      Publication type to use for the sharing, used to retrieve the publication configuration.
+     * @param locale                    Locale used to resolve localised messages.
      * @return Report with the results.
      */
-    public MetadataProcessingReport shareSelection(ServiceContext serviceContext, Set<String> records, boolean publish, String publicationTypeToUse, HttpServletRequest request) {
+    public MetadataProcessingReport shareSelection(ServiceContext serviceContext, Set<String> records, boolean publish, String publicationTypeToUse, Locale locale) {
         SharingParameter sharing = buildSharingForPublicationConfig(publish,
             publicationTypeToUse);
 
-        return shareSelection(serviceContext, records, sharing, request);
+        return shareSelection(serviceContext, records, sharing, locale);
     }
 
     /**
@@ -216,9 +216,10 @@ public class MetadataPublicationService {
      * @param serviceContext        Service context.
      * @param records               Metadata list of uuids to share.
      * @param sharing               SharingParameter object containing the privileges to apply.
+     * @param locale                Locale used to resolve localised messages.
      * @return
      */
-    public MetadataProcessingReport shareSelection(ServiceContext serviceContext, Set<String> records, SharingParameter sharing, HttpServletRequest request) {
+    public MetadataProcessingReport shareSelection(ServiceContext serviceContext, Set<String> records, SharingParameter sharing, Locale locale) {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         try {
@@ -260,7 +261,7 @@ public class MetadataPublicationService {
 
                             if (md != null) {
                                setOperations(sharing, dataManager, serviceContext, appContext, md, operationMap,
-                                    allGroupPrivileges, serviceContext.getUserSession().getUserIdAsInt(), skipAllReservedGroup, report, request.getLocale(),
+                                    allGroupPrivileges, serviceContext.getUserSession().getUserIdAsInt(), skipAllReservedGroup, report, locale,
                                     metadataListToNotifyPublication, notifyByEmail);
 
                                 report.incrementProcessedRecords();
@@ -268,7 +269,7 @@ public class MetadataPublicationService {
                                 report.addMetadataId(metadata.getId());
                             } else {
                                 setOperations(sharing, dataManager, serviceContext, appContext, metadata, operationMap,
-                                    privileges, serviceContext.getUserSession().getUserIdAsInt(), skipAllReservedGroup, report, request.getLocale(),
+                                    privileges, serviceContext.getUserSession().getUserIdAsInt(), skipAllReservedGroup, report, locale,
                                     metadataListToNotifyPublication, notifyByEmail);
 
                                 report.incrementProcessedRecords();
@@ -278,7 +279,7 @@ public class MetadataPublicationService {
 
                         } else {
                             setOperations(sharing, dataManager, serviceContext, appContext, metadata, operationMap,
-                                privileges, serviceContext.getUserSession().getUserIdAsInt(), skipAllReservedGroup, report, request.getLocale(),
+                                privileges, serviceContext.getUserSession().getUserIdAsInt(), skipAllReservedGroup, report, locale,
                                 metadataListToNotifyPublication, notifyByEmail);
 
                             report.incrementProcessedRecords();
