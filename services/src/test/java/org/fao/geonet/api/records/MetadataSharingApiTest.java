@@ -32,6 +32,10 @@ import org.fao.geonet.api.records.model.SharingResponse;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.GroupType;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.MetadataValidationId;
+import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
@@ -44,7 +48,9 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepositoryTest;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
@@ -86,6 +92,12 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private MetadataStatusRepository metadataStatusRepository;
+
+    @Autowired
+    private MetadataValidationRepository metadataValidationRepository;
+
+    @Autowired
+    private StatusValueRepository statusValueRepository;
 
     @Autowired
     private SettingManager settingManager;
@@ -642,5 +654,42 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
             .setGroup(adminGroup)
             .setProfile(Profile.UserAdmin)
             .setUser(user));
+    }
+
+    /**
+     * Verifies that publishing a TEMPLATE succeeds even when invalid and {@code allowPublishInvalidMd} is {@code false}.
+     * Templates are exempt from validation checks during publish operations.
+     */
+    @Test
+    public void publishInvalidTemplateSucceedsWhenPublishInvalidMdDisabled() throws Exception {
+        // Disable publishing of invalid metadata.
+        settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD, false);
+
+        // Change the metadata type to TEMPLATE.
+        Metadata template = metadataRepository.findById(metadataId).get();
+        template.getDataInfo().setType(MetadataType.TEMPLATE);
+        metadataRepository.save(template);
+
+        // Persist a required, INVALID validation record so the check would fail for normal metadata.
+        MetadataValidation invalidValidation = new MetadataValidation()
+            .setId(new MetadataValidationId(metadataId, "xsd"))
+            .setStatus(MetadataValidationStatus.INVALID)
+            .setRequired(true)
+            .setNumTests(1)
+            .setNumFailures(1);
+        metadataValidationRepository.save(invalidValidation);
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(reviewerUser);
+
+        // Publishing the template must succeed (HTTP 204) despite the invalid validation record.
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/publish")
+                .session(mockHttpSession))
+            .andExpect(status().isNoContent());
+
+        // Confirm publication privileges were actually granted.
+        List<OperationAllowed> ops = operationAllowedRepository.findAllById_MetadataId(metadataId);
+        boolean published = ops.stream().anyMatch(op -> ReservedGroup.isReserved(op.getId().getGroupId()));
+        assertTrue("Template should be published even when it has an invalid validation record", published);
     }
 }
