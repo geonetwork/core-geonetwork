@@ -172,7 +172,23 @@
     <property name="startDelay" value="60000"/>
   </bean>
 
+  <!-- Task for scheduled metadata publication -->
+  <bean name="scheduledMetadataPublicationTaskJob"
+        class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+    <property name="jobClass"
+              value="org.fao.geonet.kernel.metadata.ScheduledMetadataPublication"/>
+  </bean>
 
+  <!-- Scheduling of the scheduled metadata publication task -->
+  <bean id="scheduledMetadataPublicationTaskTrigger"
+        class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="jobDetail" ref="scheduledMetadataPublicationTaskJob"/>
+    <property name="cronExpression" value="${scheduledMetadataPublication.frequency}"/>
+    <property name="startDelay" value="60000"/>
+  </bean>
+
+  <bean id="metadataPublicationService"
+        class="org.fao.geonet.kernel.metadata.MetadataPublicationService" />
 
   <bean id="gnBackgroundJobScheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
     <property name="schedulerName" value="gnBackgroundJobScheduler"/>
@@ -185,6 +201,7 @@
         <ref bean="indexingTaskTrigger"/>
         <ref bean="watchListNotificationTaskTrigger"/>
         <ref bean="backupMetadataCronTrigger" />
+        <ref bean="scheduledMetadataPublicationTaskTrigger" />
       </list>
     </property>
     <property name="quartzProperties">

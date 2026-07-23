@@ -153,6 +153,7 @@ public class Settings {
     public static final String METADATA_DELETE_BACKUPOPTIONS = "metadata/delete/backupOptions";
     public static final String METADATA_PUBLISH_USERPROFILE = "metadata/publication/profilePublishMetadata";
     public static final String METADATA_UNPUBLISH_USERPROFILE = "metadata/publication/profileUnpublishMetadata";
+    public static final String METADATA_PUBLICATION_ENABLE_SCHEDULED_PUBLICATION = "metadata/publication/enableScheduledPublication";
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
     public static final String METADATA_VCS = "metadata/vcs/enable";
     public static final String METADATA_ZIPEXPORT_ATTACHMENTSSIZELIMIT = "metadata/zipExport/attachmentsSizeLimit";
