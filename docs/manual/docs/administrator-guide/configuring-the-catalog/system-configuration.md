@@ -360,9 +360,17 @@ Allows to configure the zip export of metadata records and their attachments.
 
 The following settings control what metadata can be published when the metadata workflow is active. They are found under `Administration` --> `Settings` --> `Metadata Workflow`.
 
--   **Allow publication of invalid metadata** When disabled, only metadata that passes all required XSD and schematron validation rules can be published. When enabled, metadata can be published regardless of its validation status. Templates are always exempt from this check, as they are typically incomplete by design.
--   **Allow submission/approval of invalid metadata** When disabled, records must be valid before they can move to `Submitted` or `Approved` workflow status. When enabled, records can be submitted or approved even if validation fails. Templates are always exempt from this check, as they are typically incomplete by design.
--   **Allow publication of non-approved metadata** When disabled, only metadata with an `Approved` workflow status can be published. When enabled, metadata can be published regardless of its workflow status.
+-   **Allow publication of invalid metadata**  
+    When enabled, metadata records can be published regardless of its validation status.  
+    When disabled, only records that passe all required XSD and schematron validation rules can be published.  
+    *This setting applies to metadata records only, metadata templates exempt from this check, as they are incomplete by design.*
+-   **Allow submission/approval of invalid metadata**   
+    When enabled, records can be submitted or approved even when validation fails.  
+    When disabled, records must be valid before they can move to `Submitted` or `Approved` workflow status.  
+    *This setting applies to metadata records only, metadata templates exempt from this check, as they are incomplete by design.*
+-   **Allow publication of non-approved metadata**  
+    When enabled, metadata records and templates can be published regardless of its workflow status.  
+    When disabled, only metadata records and templates with an `Approved` workflow status can be published. 
 
 ## Harvesting
 
