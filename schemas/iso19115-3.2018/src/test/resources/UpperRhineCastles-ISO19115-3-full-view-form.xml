@@ -2175,6 +2175,8 @@
                         <tocPage name="metadata/pdfReport/tocPage" position="12502" datatype="2" datatypeName="BOOLEAN">false</tocPage>
                     </pdfReport>
                     <publication name="metadata/publication" position="12021">
+                        <allowPublishInvalidMd name="metadata/publication/allowPublishInvalidMd" position="100006" datatype="2" datatypeName="BOOLEAN">true</allowPublishInvalidMd>
+                        <automaticUnpublishInvalidMd name="metadata/publication/automaticUnpublishInvalidMd" position="100007" datatype="2" datatypeName="BOOLEAN">false</automaticUnpublishInvalidMd>
                         <profilePublishMetadata name="metadata/publication/profilePublishMetadata" position="12021" datatype="0" datatypeName="STRING">Reviewer</profilePublishMetadata>
                         <profileUnpublishMetadata name="metadata/publication/profileUnpublishMetadata" position="12022" datatype="0" datatypeName="STRING">Reviewer</profileUnpublishMetadata>
                     </publication>
@@ -2188,14 +2190,14 @@
                         <enable name="metadata/vcs/enable" position="9161" datatype="2" datatypeName="BOOLEAN">false</enable>
                     </vcs>
                     <workflow name="metadata/workflow" position="100006">
-                        <allowPublishInvalidMd name="metadata/workflow/allowPublishInvalidMd" position="100006" datatype="2" datatypeName="BOOLEAN">true</allowPublishInvalidMd>
                         <allowPublishNonApprovedMd name="metadata/workflow/allowPublishNonApprovedMd" position="100005" datatype="2" datatypeName="BOOLEAN">true</allowPublishNonApprovedMd>
                         <allowSubmitApproveInvalidMd name="metadata/workflow/allowSubmitApproveInvalidMd" position="100004" datatype="2" datatypeName="BOOLEAN">true</allowSubmitApproveInvalidMd>
-                        <automaticUnpublishInvalidMd name="metadata/workflow/automaticUnpublishInvalidMd" position="100007" datatype="2" datatypeName="BOOLEAN">false</automaticUnpublishInvalidMd>
                         <draftWhenInGroup name="metadata/workflow/draftWhenInGroup" position="100003" datatype="0" datatypeName="STRING" />
                         <enable name="metadata/workflow/enable" position="100002" datatype="2" datatypeName="BOOLEAN">false</enable>
-                        <forceValidationOnMdSave name="metadata/workflow/forceValidationOnMdSave" position="100008" datatype="2" datatypeName="BOOLEAN">false</forceValidationOnMdSave>
                     </workflow>
+                    <save name="metadata/save" position="100008">
+                        <forceValidationOnMdSave name="metadata/save/forceValidationOnMdSave" position="100008" datatype="2" datatypeName="BOOLEAN">false</forceValidationOnMdSave>
+                    </save>
                 </metadata>
                 <region name="region" position="9590">
                     <getmap name="region/getmap" position="9590">

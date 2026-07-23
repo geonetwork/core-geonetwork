@@ -83,8 +83,8 @@ import java.util.*;
 
 import static jeeves.guiservices.session.Get.getSessionAsXML;
 import static org.fao.geonet.api.ApiParams.*;
-import static org.fao.geonet.kernel.setting.Settings.METADATA_WORKFLOW_AUTOMATIC_UNPUBLISH_INVALID_MD;
-import static org.fao.geonet.kernel.setting.Settings.METADATA_WORKFLOW_FORCE_VALIDATION_ON_MD_SAVE;
+import static org.fao.geonet.kernel.setting.Settings.METADATA_PUBLICATION_AUTOMATIC_UNPUBLISH_INVALID_MD;
+import static org.fao.geonet.kernel.setting.Settings.METADATA_SAVE_FORCE_VALIDATION_ON_MD_SAVE;
 import static org.fao.geonet.repository.specification.OperationAllowedSpecs.*;
 import static org.springframework.data.jpa.domain.Specification.where;
 
@@ -373,7 +373,7 @@ public class MetadataEditingApi {
         if (terminate) {
             Log.trace(Geonet.DATA_MANAGER, " > Closing editor");
 
-            boolean forceValidationOnMdSave = sm.getValueAsBool(METADATA_WORKFLOW_FORCE_VALIDATION_ON_MD_SAVE);
+            boolean forceValidationOnMdSave = sm.getValueAsBool(METADATA_SAVE_FORCE_VALIDATION_ON_MD_SAVE);
 
             boolean reindex = false;
 
@@ -454,7 +454,7 @@ public class MetadataEditingApi {
                 reindex = true;
             }
 
-            boolean automaticUnpublishInvalidMd = sm.getValueAsBool(METADATA_WORKFLOW_AUTOMATIC_UNPUBLISH_INVALID_MD);
+            boolean automaticUnpublishInvalidMd = sm.getValueAsBool(METADATA_PUBLICATION_AUTOMATIC_UNPUBLISH_INVALID_MD);
             boolean isUnpublished = false;
 
             // Unpublish the metadata automatically if the setting
