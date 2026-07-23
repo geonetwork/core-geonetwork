@@ -31,6 +31,17 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
@@ -43,6 +54,9 @@ import org.fao.geonet.api.records.model.related.AssociatedRecord;
 import org.fao.geonet.api.records.model.related.RelatedItemOrigin;
 import org.fao.geonet.api.records.model.related.RelatedItemType;
 import org.fao.geonet.constants.Geonet;
+
+import static org.fao.geonet.api.records.MetadataVersionsUtils.*;
+
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.Source;
@@ -53,8 +67,14 @@ import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import static org.fao.geonet.kernel.search.EsFilterBuilder.buildPermissionsFilter;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_RELATED;
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_RELATED_SCRIPTED;
+import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_UUID;
+import static org.fao.geonet.kernel.search.EsSearchManager.RELATED_INDEX_FIELDS;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
@@ -72,12 +92,6 @@ import org.jdom.output.DOMOutputter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static org.fao.geonet.kernel.search.EsFilterBuilder.buildPermissionsFilter;
-import static org.fao.geonet.kernel.search.EsSearchManager.*;
 import org.w3c.dom.Node;
 
 
@@ -96,6 +110,7 @@ public class MetadataUtils {
         private Set<String> expectedRecords = new HashSet<>();
         private Set<String> remoteRecords = new HashSet<>();
         private Map<String, Map<String, String>> recordsProperties = new HashMap<>();
+        private List<String> orderedRecords = new ArrayList<>();
 
         public RelatedTypeDetails(String query) {
             this.query = query;
@@ -115,6 +130,15 @@ public class MetadataUtils {
             this.expectedRecords = expectedRecords;
             this.recordsProperties = recordsProperties;
             this.remoteRecords = remoteRecords;
+        }
+
+        public RelatedTypeDetails(String query, Set<String> expectedRecords, Map<String, Map<String, String>> recordsProperties,
+                                  Set<String> remoteRecords, List<String> orderedRecords) {
+            this.query = query;
+            this.expectedRecords = expectedRecords;
+            this.recordsProperties = recordsProperties;
+            this.remoteRecords = remoteRecords;
+            this.orderedRecords = orderedRecords;
         }
 
         public String getQuery() {
@@ -144,6 +168,10 @@ public class MetadataUtils {
         public Set<String> getRemoteRecords() {
             return remoteRecords;
         }
+
+        public List<String> getOrderedRecords() {
+            return orderedRecords;
+        }
     }
 
 
@@ -158,37 +186,41 @@ public class MetadataUtils {
         try {
             Map<RelatedItemType, List<AssociatedRecord>> associated = MetadataUtils.getAssociated(context, metadataEntity, RelatedItemType.values(), 0, 100);
             for (Map.Entry<RelatedItemType, List<AssociatedRecord>> entry : associated.entrySet()) {
-                for (AssociatedRecord record : entry.getValue()) {
+                for (AssociatedRecord associatedRecord : entry.getValue()) {
                     Element relation = new Element(entry.getKey().name());
-                    relation.setAttribute("uuid", record.getUuid());
-                    relation.setAttribute("origin", record.getOrigin());
-                    if (record.getProperties() != null) {
-                        if (record.getProperties().get("associationType") != null) {
-                            relation.setAttribute("associationType", record.getProperties().get("associationType"));
+                    relation.setAttribute("uuid", associatedRecord.getUuid());
+                    relation.setAttribute("origin", associatedRecord.getOrigin());
+                    if (associatedRecord.getProperties() != null) {
+                        if (associatedRecord.getProperties().get("associationType") != null) {
+                            relation.setAttribute("associationType", associatedRecord.getProperties().get("associationType"));
                         }
-                        if (record.getProperties().get("initiativeType") != null) {
-                            relation.setAttribute("initiativeType", record.getProperties().get("initiativeType"));
+                        if (associatedRecord.getProperties().get("initiativeType") != null) {
+                            relation.setAttribute("initiativeType", associatedRecord.getProperties().get("initiativeType"));
                         }
-                        if (record.getProperties().get("resourceTitle") != null) {
-                            relation.setAttribute("resourceTitle", record.getProperties().get("resourceTitle"));
+                        if (associatedRecord.getProperties().get("resourceTitle") != null) {
+                            relation.setAttribute("resourceTitle", associatedRecord.getProperties().get("resourceTitle"));
                         }
-                        if (record.getProperties().get("url") != null) {
-                            relation.setAttribute("url", record.getProperties().get("url"));
+                        if (associatedRecord.getProperties().get("url") != null) {
+                            relation.setAttribute("url", associatedRecord.getProperties().get("url"));
                         }
                     }
-                    relation.addContent(Xml.getXmlFromJSON(record.getRecord().toPrettyString()));
+                    relation.addContent(Xml.getXmlFromJSON(associatedRecord.getRecord().toPrettyString()));
                     relations.addContent(relation);
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            LOGGER.warn(String.format("An error occurred when getting associated records for metadata with uuid %s: %s",
+                metadataUuid, e.getMessage()), e);
+            return null;
         }
 
         DOMOutputter outputter = new DOMOutputter();
         try {
             return outputter.output(new Document(relations));
         } catch (JDOMException e) {
-            throw new RuntimeException(e);
+            LOGGER.warn(String.format("An error occurred when converting associated records as XML for metadata with uuid %s: %s",
+            metadataUuid, e.getMessage()), e);
+            return null;
         }
     }
 
@@ -214,6 +246,7 @@ public class MetadataUtils {
         // For each type, store a query and expected list of uuids.
         Map<RelatedItemType, RelatedTypeDetails> queries = new HashMap<>();
         Set<String> allSearchedUuids = new HashSet<>();
+        RelatedTypeDetails versionsDetails = null;
 
 
         // We have 3 types of links
@@ -228,8 +261,19 @@ public class MetadataUtils {
         // brothers&sisters
         //
         // * All of them could be remote records
-        Arrays.stream(types).forEach(type -> {
-            if (type == RelatedItemType.associated
+        for (RelatedItemType type : types) {
+            if (type == RelatedItemType.versions) {
+                if (versionsDetails == null) {
+                    versionsDetails = getAllVersions(searchMan, md.getUuid());
+                }
+                queries.put(type, versionsDetails);
+            } else if (type == RelatedItemType.nextVersion || type == RelatedItemType.previousVersion) {
+                if (versionsDetails == null) {
+                    versionsDetails = getAllVersions(searchMan, md.getUuid());
+                }
+                queries.put(type, getNextOrPrevious(
+                    versionsDetails, md.getUuid(), type == RelatedItemType.nextVersion));
+            } else if (type == RelatedItemType.associated
                 || type == RelatedItemType.hasfeaturecats
                 || type == RelatedItemType.services
                 || type == RelatedItemType.hassources) {
@@ -326,7 +370,7 @@ public class MetadataUtils {
                     ));
                 allSearchedUuids.addAll(isComposedOfList);
             }
-        });
+        }
 
 
         Map<RelatedItemType, List<AssociatedRecord>> associated =
@@ -396,6 +440,15 @@ public class MetadataUtils {
             }
 
             buildRemoteRecords(mapper, relatedTypeDetails, records);
+            records = reorderIndexDocBasedOnOrderedRecords(records, relatedTypeDetails.getOrderedRecords());
+
+            // If the current record is the only version, empty list is returned.
+            if (entry.getKey() == RelatedItemType.versions
+                && records.size() == 1
+                && md.getUuid().equals(records.get(0).getUuid())) {
+                records = new ArrayList<>();
+            }
+
             associated.put(entry.getKey(), records);
         }
 

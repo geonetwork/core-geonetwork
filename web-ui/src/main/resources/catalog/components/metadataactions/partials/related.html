@@ -11,6 +11,7 @@
     data-ng-repeat="(type, items) in relations track by $index"
     data-ng-if="layout !== 'card'
                    && layout !== 'title'
+                   && layout !== 'versions'
                    && type && type !== 'thumbnails'"
   >
     <div
@@ -247,6 +248,66 @@
           >showLess</span
         >
       </button>
+    </ul>
+  </div>
+
+  <div
+    data-ng-repeat="(type, versions) in relations track by $index"
+    data-ng-if="layout === 'versions'
+                  && type && type == 'versions'"
+    data-ng-init="mainType = config.getType(md, type);
+                    badge = config.getBadgeLabel(mainType, md);
+                    icon = config.getClassIcon(mainType);"
+  >
+    <h3>
+      <i class="fa fa-fw gn-icon-association-versions"></i>
+      {{'versions' | translate}}
+    </h3>
+
+    <ul class="gn-related-list list-group">
+      <li class="list-group-item flex flex-row" data-ng-repeat="version in versions">
+        <div class="flex-grow">
+          <a
+            data-ng-hide="md._id === version._id"
+            href=""
+            title="{{version.resourceTitle}}"
+            gn-metadata-open="version"
+            gn-formatter="formatter.defaultUrl"
+          >
+            {{version.resourceTitle}}
+            <span
+              data-ng-if="version.cl_status[0].key"
+              class="gn-status gn-status-{{version.cl_status[0].key}} gn-status-table"
+            >
+              {{version.cl_status[0].key | translate}}
+            </span>
+            <br />
+            <span data-ng-if="version.resourceEdition" class="text-muted"
+              >{{'resourceEdition' | translate}} {{version.resourceEdition}}</span
+            >
+          </a>
+
+          <span data-ng-show="md._id === version._id">
+            {{version.resourceTitle}}
+            <span
+              data-ng-if="version.cl_status[0].key"
+              class="gn-status gn-status-{{version.cl_status[0].key}} gn-status-table"
+            >
+              {{version.cl_status[0].key | translate}}
+            </span>
+            <br />
+            <span data-ng-if="version.resourceEdition" class="text-muted"
+              >{{'resourceEdition' | translate}} {{version.resourceEdition}}</span
+            >
+          </span>
+        </div>
+        <div
+          data-ng-repeat="date in version.resourceDate | filter: {type: 'publication'}"
+          data-gn-humanize-time="{{date.date}}"
+        >
+          {{date.date}}
+        </div>
+      </li>
     </ul>
   </div>
 </div>

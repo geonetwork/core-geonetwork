@@ -45,7 +45,9 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.*;
+import org.fao.geonet.api.records.model.MetadataPublicationNotificationInfo;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.kernel.metadata.MetadataPublicationService;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
@@ -161,6 +163,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     MetadataPublicationMailNotifier metadataPublicationMailNotifier;
+
+    @Autowired
+    MetadataPublicationService metadataPublicationService;
 
     @Autowired
     RoleHierarchy roleHierarchy;
@@ -428,7 +433,7 @@ public class MetadataWorkflowApi {
                 AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
                 if (metadata == null) {
                     report.incrementNullRecords();
-                } else if (!accessManager.isOwner(
+                } else if (!accessManager.canEdit(
                     ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
                     report.addNotEditableMetadataId(metadata.getId());
                 } else {
@@ -518,9 +523,8 @@ public class MetadataWorkflowApi {
                 .withDescriptionKey("exception.resourceNotEnabled.workflow.description");
         }
 
-        // If the metadata workflow status is unset and the new status is a workflow status, workflow is being enabled
-        if (metadataStatusValue.getStatusValue().getType() == StatusValueType.workflow
-            && metadataStatus.getStatus(metadata.getId()) == null) {
+        // If the metadata workflow status is unset and the new status is DRAFT, workflow is being enabled
+        if (metadataStatusValue.getStatusValue().getType() == StatusValueType.workflow && metadataStatus.getStatus(metadata.getId()) == null) {
             // Retrieve the group owner ID from the metadata source information
             Integer groupOwnerId = metadata.getSourceInfo().getGroupOwner();
 
@@ -544,8 +548,27 @@ public class MetadataWorkflowApi {
             }
         }
 
-        // --- only allow the owner of the record to set its status
-        if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
+        // --- check permission to change status based on the target status
+        boolean canChangeStatus = false;
+        if (status.getStatus() == Integer.parseInt(StatusValue.Status.SUBMITTED) ||
+            status.getStatus() == Integer.parseInt(StatusValue.Status.DRAFT)) {
+            // For SUBMITTED or DRAFT status, allow editors to submit records for review or cancel the submission
+            canChangeStatus = accessManager.canEdit(context, String.valueOf(metadata.getId()));
+        } else if (status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED)) {
+            // For APPROVED status, only reviewers can approve
+            canChangeStatus = accessManager.hasReviewPermission(context, metadata);
+        } else if ("scheduledPublicationTask".equals(metadataStatusValue.getStatusValue().getName())) {
+            // A scheduled publication is performed later by a background job that runs with
+            // administrator privileges. Require the same authorization as an immediate publication,
+            // so a user cannot schedule a publication that they are not allowed to perform themselves.
+            metadataPublicationService.checkUserCanPublishMetadata(context, metadata);
+            canChangeStatus = true;
+        } else {
+            // For other statuses, only owners can change status
+            canChangeStatus = accessManager.isOwner(context, String.valueOf(metadata.getId()));
+        }
+
+        if (!canChangeStatus) {
             throw new SecurityException(
                 messages.getString("api.metadata.status.errorSetStatusNotAllowed"));
         }
