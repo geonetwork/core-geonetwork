@@ -84,7 +84,7 @@
                           <xsl:otherwise>
                             <img class="gn-logo"
                                  alt="{$i18n/siteLogo}"
-                                 src="{/root/gui/nodeUrl}../images/logos/{$env//system/site/siteId}.png"/>
+                                 src="{/root/gui/nodeUrl}api/site/logo"/>
                             <xsl:if test="$isShowGNName">
                               <xsl:value-of select="$env//system/site/name"/>
                             </xsl:if>

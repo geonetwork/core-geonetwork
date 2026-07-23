@@ -84,6 +84,7 @@ import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
@@ -94,6 +95,8 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static org.fao.geonet.resources.ResourceFilter.DEFAULT_LOGO;
 
 
 /**
@@ -301,7 +304,7 @@ public class Geonetwork implements ApplicationHandler {
         // Creates a default site logo, only if the logo image doesn't exists
         // This can happen if the application has been updated with a new version preserving the database and
         // images/logos folder is not copied from old application
-        createSiteLogo(settingMan.getSiteId(), context, context.getAppPath());
+        createSiteLogo(settingMan.getSiteId(), context, sourceRepository);
 
         //-- Initialize the proxy configuration if required
         Lib.net.setupProxy(settingMan);
@@ -520,13 +523,24 @@ public class Geonetwork implements ApplicationHandler {
     /**
      * Creates a default site logo, only if the logo image doesn't exists
      */
-    private void createSiteLogo(String nodeUuid, ServiceContext context, Path appPath) {
+    private void createSiteLogo(String nodeUuid, ServiceContext context, SourceRepository sourceRepository) {
         try {
             final Resources resources = context.getBean(Resources.class);
             Path logosDir = resources.locateLogosDir(context);
-            Path logo = logosDir.resolve(nodeUuid + ".png");
-            if (!Files.exists(logo)) {
-                resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + "GN3.png", nodeUuid);
+            String logoFile = null;
+            try (DirectoryStream<Path> logos = Files.newDirectoryStream(logosDir, nodeUuid + ".*")) {
+                for (Path logo : logos) {
+                    logoFile = logo.getFileName().toString();
+                    break;
+                }
+            }
+            if (StringUtils.isBlank(logoFile)) {
+                logoFile = resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + DEFAULT_LOGO, nodeUuid);
+            }
+            Source source = sourceRepository.findOneByUuid(nodeUuid);
+            if (source != null) {
+                source.setLogo(logoFile);
+                sourceRepository.save(source);
             }
         } catch (Throwable e) {
             logger.error("      Error when setting the logo: " + e.getMessage());

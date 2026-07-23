@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -32,12 +32,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.LogoUtils;
 import org.fao.geonet.api.exception.NoResultsFoundException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.HarvestHistory;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Source;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.resources.Resources;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -52,14 +51,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -169,6 +166,37 @@ public class HarvestersApi {
         historyRepository.save(history);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get harvester logo image.",
+        description = LogoUtils.API_GET_LOGO_NOTE
+    )
+    @GetMapping(
+        value = "/{harvesterUuid}/logo"
+    )
+    public void getHarvesterLogo(
+        @Parameter(
+            description = "The harvester UUID"
+        )
+        @PathVariable
+        String harvesterUuid,
+        @Parameter(hidden = true) WebRequest webRequest,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) throws ResourceNotFoundException, IOException {
+        Source source = sourceRepository.findOneByUuid(harvesterUuid);
+        if (source == null || source.getType() != SourceType.harvester) {
+            throw new ResourceNotFoundException(String.format(
+                "Harvester with UUID '%s' not found.",
+                harvesterUuid));
+        }
+
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        Resources resources = serviceContext.getBean(Resources.class);
+        try (Resources.ResourceHolder image = LogoUtils.getImage(resources, serviceContext, source.getLogo())) {
+            LogoUtils.writeImageOrTransparentLogo(webRequest, response, image);
+        }
     }
 
 

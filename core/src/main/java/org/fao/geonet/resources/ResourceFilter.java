@@ -28,8 +28,10 @@ import com.google.common.collect.Sets;
 import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.repository.SourceRepository;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.MediaType;
 import org.springframework.web.context.request.ServletWebRequest;
@@ -40,7 +42,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
+
+import static com.google.common.net.MediaType.SVG_UTF_8;
 
 /**
  * Servlet for serving up resources located in GeoNetwork data directory. For example, this solves a
@@ -52,8 +57,10 @@ import java.util.concurrent.ConcurrentMap;
  * User: jeichar Date: 1/17/12 Time: 4:03 PM
  */
 public class ResourceFilter implements Filter {
+    public static final String DEFAULT_LOGO = "GN3.png";
     private static final int FIVE_DAYS = 60 * 60 * 24 * 5;
     private static final int SIX_HOURS = 60 * 60 * 6;
+    public static final String IMAGES_LOGOS_FOLDER = "images/logos/";
     private FilterConfig config;
     private ServletContext servletContext;
     private volatile Pair<byte[], Long> defaultImage;
@@ -94,13 +101,17 @@ public class ResourceFilter implements Filter {
             this.siteId = applicationContext.getBean(SettingManager.class).getSiteId();
             this.resourcesDir = resources.locateResourcesDir(servletContext, applicationContext);
             this.schemaPublicationDir = applicationContext.getBean(GeonetworkDataDirectory.class).getSchemaPublicationDir();
-            if (defaultImage == null) {
-                defaultImage = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".png", new byte[0], -1);
-            }
+            SourceRepository sourceRepository =  applicationContext.getBean(SourceRepository.class);
             this.nodeId = applicationContext.getBean(NodeInfo.class).getId();
+            if (defaultImage == null) {
+                Optional<Source> catalogues = sourceRepository.findById(this.nodeId);
+                String defaultImageName = IMAGES_LOGOS_FOLDER + (
+                    catalogues.isPresent() ? catalogues.get().getLogo() :  DEFAULT_LOGO);
+                defaultImage = resources.loadResource(resourcesDir, servletContext, appPath, defaultImageName, new byte[0], -1);
+            }
             if (!faviconMap.containsKey(nodeId)) {
                 final byte[] defaultImageBytes = defaultImage.one();
-                addFavIcon(nodeId, resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".ico",
+                addFavIcon(nodeId, resources.loadResource(resourcesDir, servletContext, appPath, IMAGES_LOGOS_FOLDER + siteId + ".ico",
                                                           defaultImageBytes, -1));
             }
 
@@ -136,8 +147,16 @@ public class ResourceFilter implements Filter {
 
                 httpServletResponse.setContentType(contentType);
                 httpServletResponse.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
-                if (filename.equals("images/logos/" + siteId + ".ico")) {
-                    favicon = resources.loadResource(resourcesDir, servletContext, appPath, "images/logos/" + siteId + ".ico", favicon.one(),
+                if (contentType.equals(SVG_UTF_8.toString())) {
+                    // SVG images may embed scripts which would run if the file is opened
+                    // as a top level document. Neutralize any active content to avoid
+                    // stored XSS while keeping the image usable in <img> tags.
+                    httpServletResponse.setHeader("X-Content-Type-Options", "nosniff");
+                    httpServletResponse.setHeader("Content-Security-Policy",
+                        "default-src 'none'; style-src 'unsafe-inline'; sandbox");
+                }
+                if (filename.equals(IMAGES_LOGOS_FOLDER + siteId + ".ico")) {
+                    favicon = resources.loadResource(resourcesDir, servletContext, appPath, IMAGES_LOGOS_FOLDER + siteId + ".ico", favicon.one(),
                                                      favicon.two());
                     addFavIcon(nodeId, favicon);
 
@@ -186,6 +205,8 @@ public class ResourceFilter implements Filter {
             contentType = MediaType.APPLICATION_XML_VALUE;
         } else if(ext.equals("txt")) {
             contentType = MediaType.TEXT_PLAIN_VALUE;
+        } else if (ext.equals("svg")) {
+            contentType = SVG_UTF_8.toString();
         } else {
             contentType = "image/" + ext;
         }

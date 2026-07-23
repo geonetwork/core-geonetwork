@@ -323,7 +323,7 @@
                           <fo:external-graphic padding-left="4pt"
                                                content-width="9pt">
                             <xsl:attribute name="src">url('<xsl:value-of
-                              select="concat($baseURL, 'images/logos/', $source , '.png')"
+                              select="concat($baseURL, 'srv/api/sources/', $source , '/logo')"
                             />')"
                             </xsl:attribute>
                           </fo:external-graphic>
