@@ -1961,6 +1961,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#harvesting" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3195,6 +3206,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata workflow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#harvesting" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3529,6 +3551,21 @@ type=&quot;application/opensearchdescription+xml&quot; title=&quot;Open Search 
 <p>Allows to configure the zip export of metadata records and their attachments.</p>
 <ul>
 <li><strong>Total size of attachments allowed in zip export (MB)</strong> Maximum total size of attachments allowed in zip export (in MB). If the total size of attachments linked to the selected metadata is above this value, exporting as zip (with attachments) is not allowed. Leave empty for no limit.</li>
+</ul>
+<h2 id="metadata-workflow">Metadata workflow</h2>
+<p>The following settings control what metadata can be published when the metadata workflow is active. They are found under <code>Administration</code> &rarr; <code>Settings</code> &rarr; <code>Metadata Workflow</code>.</p>
+<ul>
+<li><strong>Allow publication of invalid metadata</strong><br />
+    When enabled, metadata records can be published regardless of its validation status.<br />
+    When disabled, only records that passe all required XSD and schematron validation rules can be published.<br />
+<em>This setting applies to metadata records only, metadata templates exempt from this check, as they are incomplete by design.</em></li>
+<li><strong>Allow submission/approval of invalid metadata</strong> <br />
+    When enabled, records can be submitted or approved even when validation fails.<br />
+    When disabled, records must be valid before they can move to <code>Submitted</code> or <code>Approved</code> workflow status.<br />
+<em>This setting applies to metadata records only, metadata templates exempt from this check, as they are incomplete by design.</em></li>
+<li><strong>Allow publication of non-approved metadata</strong><br />
+    When enabled, metadata records and templates can be published regardless of its workflow status.<br />
+    When disabled, only metadata records and templates with an <code>Approved</code> workflow status can be published. </li>
 </ul>
 <h2 id="harvesting">Harvesting</h2>
 <p><em>Allow editing on harvested records</em>: Enables/Disables editing of harvested records in the catalogue. By default, harvested records cannot be edited.</p>
