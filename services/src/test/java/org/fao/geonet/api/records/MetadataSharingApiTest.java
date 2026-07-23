@@ -27,7 +27,6 @@ import com.google.gson.Gson;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.records.model.GroupOperations;
 import org.fao.geonet.api.records.model.GroupPrivilege;
-import org.fao.geonet.api.records.model.MetadataStatusParameter;
 import org.fao.geonet.api.records.model.SharingParameter;
 import org.fao.geonet.api.records.model.SharingResponse;
 import org.fao.geonet.domain.Group;
