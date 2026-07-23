@@ -30,7 +30,6 @@ import javax.annotation.Nullable;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -41,8 +40,9 @@ import java.util.Map;
 public class IndexedMetadataResourceExternalManagementProperties extends MetadataResourceExternalManagementProperties {
     /**
      * Additional properties for indexing.
+     * Null when there are no additional properties, so it is excluded from serialization.
      */
-    private Map<String, Object> additionalProperties = new HashMap<>();
+    private Map<String, Object> additionalProperties = null;
 
     /**
      * Constructor for IndexedMetadataResourceExternalManagementProperties.
@@ -50,11 +50,11 @@ public class IndexedMetadataResourceExternalManagementProperties extends Metadat
      * @param id                The identifier of the metadata resource.
      * @param url               The URL of the metadata resource.
      * @param validationStatus  The validation status of the metadata resource.
-     * @param additionalProperties Additional properties for indexing (can be null).
+     * @param additionalProperties Additional properties for indexing (can be null or empty).
      */
     public IndexedMetadataResourceExternalManagementProperties(@Nonnull String id, @Nonnull String url, @Nonnull ValidationStatus validationStatus, @Nullable Map<String, Object> additionalProperties) {
         super(id, url, validationStatus);
-        if (additionalProperties != null) {
+        if (additionalProperties != null && !additionalProperties.isEmpty()) {
             this.additionalProperties = additionalProperties;
         }
     }
