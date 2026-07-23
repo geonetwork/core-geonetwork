@@ -427,6 +427,22 @@
         }
       };
 
+      this.buildKnnQuery = function(params, any, luceneQueryString) {
+        if (gnGlobalSettings.gnCfg.mods.search.knn && any && any.length > 0) {
+          params.knn = angular.copy(gnGlobalSettings.gnCfg.mods.search.knn, {});
+          params.knn.query_vector = any;
+          params.min_score = 0.75;
+          if (luceneQueryString) {
+            params.knn.filter = {
+              query_string: {
+                query: luceneQueryString
+              }
+            }
+          }
+          // params.explain = true;
+        }
+      }
+
       this.generateEsRequest = function (
         p,
         searchState,
@@ -476,6 +492,7 @@
 
         var queryHook = query.function_score.query.bool;
         this.buildQueryClauses(queryHook, p, luceneQueryString, searchState);
+        this.buildKnnQuery(params, p.any, luceneQueryString)
 
         if (p.from) {
           params.from = p.from - 1;
