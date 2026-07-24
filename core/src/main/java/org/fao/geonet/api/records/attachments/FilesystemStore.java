@@ -80,7 +80,7 @@ public class FilesystemStore extends AbstractStore {
 
     @Override
     public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
-                                               String filter, Boolean approved) throws Exception {
+                                               String filter, Boolean approved, boolean includeAdditionalIndexedProperties) throws Exception {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
 
         Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
