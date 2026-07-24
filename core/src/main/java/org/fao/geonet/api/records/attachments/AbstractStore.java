@@ -35,6 +35,7 @@ import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.LimitedInputStream;
 import org.slf4j.Logger;
@@ -82,13 +83,17 @@ public abstract class AbstractStore implements Store {
     @Override
     public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, Sort sort, String filter, Boolean approved)
             throws Exception {
-        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        // The requested approved version may not exist (e.g. a record that only has a draft or
+        // working copy). Resolve the version that actually exists so resources are not reported as
+        // approved when no approved copy exists (see issue #9433).
+        boolean effectiveApproved = resolveApproved(metadataUuid, approved);
+        int metadataId = getAndCheckMetadataId(metadataUuid, effectiveApproved);
         boolean canEdit = getAccessManager(context).canEdit(context, String.valueOf(metadataId));
 
         List<MetadataResource> resourceList = new ArrayList<>(
-                getResources(context, metadataUuid, MetadataResourceVisibility.PUBLIC, filter, approved));
+                getResources(context, metadataUuid, MetadataResourceVisibility.PUBLIC, filter, effectiveApproved));
         if (canEdit) {
-            resourceList.addAll(getResources(context, metadataUuid, MetadataResourceVisibility.PRIVATE, filter, approved));
+            resourceList.addAll(getResources(context, metadataUuid, MetadataResourceVisibility.PRIVATE, filter, effectiveApproved));
         }
 
         if (sort == Sort.name) {
@@ -106,33 +111,68 @@ public abstract class AbstractStore implements Store {
     @Override
     public final ResourceHolder getResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved)
             throws Exception {
+        // Resolve the version that actually exists so a draft/working copy is served (and reported
+        // as not approved) instead of failing when no approved copy exists (see issue #9433).
+        boolean effectiveApproved = resolveApproved(metadataUuid, approved);
         try {
-            return getResource(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, approved);
+            return getResource(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, effectiveApproved);
         } catch (ResourceNotFoundException ignored) {
         }
-        return getResource(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, approved);
+        return getResource(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, effectiveApproved);
     }
 
     @Override
     public final MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
+        boolean effectiveApproved = resolveApproved(metadataUuid, approved);
         try {
-            return getResourceMetadata(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, approved);
+            return getResourceMetadata(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, effectiveApproved);
         } catch (ResourceNotFoundException ignored) {
         }
-        return getResourceMetadata(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, approved);
+        return getResourceMetadata(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, effectiveApproved);
     }
 
     @Override
     public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, String resourceId, Boolean approved, long start, long end) throws Exception {
+        boolean effectiveApproved = resolveApproved(metadataUuid, approved);
         try {
-            return getResourceWithRange(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, approved, start, end);
+            return getResourceWithRange(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, effectiveApproved, start, end);
         } catch (ResourceNotFoundException ignored) {
         }
-        return getResourceWithRange(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, approved, start, end);
+        return getResourceWithRange(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, effectiveApproved, start, end);
     }
 
     protected static AccessManager getAccessManager(final ServiceContext context) {
         return ApplicationContextHolder.get().getBean(AccessManager.class);
+    }
+
+    /**
+     * Resolves the effective approved state for a read request. The result is {@code true} only
+     * when the caller asked for the approved version <em>and</em> an approved copy of the record
+     * actually exists. When {@code approved=true} is requested for a record that has never been
+     * approved (only a draft or working copy exists), this returns {@code false} so the draft is
+     * resolved and its resources are reported as not approved (see issue #9433).
+     */
+    protected static boolean resolveApproved(String metadataUuid, Boolean approved) throws Exception {
+        return Boolean.TRUE.equals(approved) && approvedCopyExists(metadataUuid);
+    }
+
+    /**
+     * Returns {@code true} when an approved copy of the record exists, i.e. the record is not a
+     * draft (see issue #9433). The internal metadata id is resolved from the draft table when a
+     * draft/working copy exists, otherwise from the approved metadata table, and its draft state
+     * is evaluated with {@link IMetadataUtils#isMetadataDraft(int)} (which returns {@code true}
+     * when the record is a draft).
+     */
+    protected static boolean approvedCopyExists(String metadataUuid) throws Exception {
+        final ApplicationContext appContext = ApplicationContextHolder.get();
+        AbstractMetadata metadata = appContext.getBean(MetadataDraftRepository.class).findOneByUuid(metadataUuid);
+        if (metadata == null) {
+            metadata = appContext.getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
+        }
+        if (metadata == null) {
+            return false;
+        }
+        return !appContext.getBean(IMetadataUtils.class).isMetadataDraft(metadata.getId());
     }
 
     public static int getAndCheckMetadataId(String metadataUuid, Boolean approved) throws Exception {
