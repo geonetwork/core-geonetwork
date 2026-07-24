@@ -311,6 +311,11 @@ public abstract class AbstractStore implements Store {
         }
     }
 
+    @Override
+    public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception {
+        throw new UnsupportedOperationException("renameResource is not supported by " + getClass().getSimpleName());
+    }
+
     protected String getFilename(final String metadataUuid, final String resourceId) {
         // It's not always clear when we get a resourceId or a filename
         String prefix = metadataUuid + "/attachments/";
