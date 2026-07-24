@@ -159,6 +159,7 @@
           elementRef: "@",
           id: "@",
           tagName: "@",
+          assumeGmlNs: "@",
           indeterminatePosition: "@",
           required: "@",
           hideTime: "@",
@@ -358,14 +359,26 @@
                 scope.dateTime = "";
               }
 
+              //if we don't know what this namespace is (findNamespaceUri returns undefined),
+              //then we don't add it!
+              var elementNSDef = "";
+              var namespaceURI = gnSchemaManagerService.findNamespaceUri(
+                namespace,
+                gnCurrentEdit.schema
+              );
+              if (namespaceURI !== undefined) {
+                elementNSDef = " xmlns:" + namespace + '="' + namespaceURI + '"';
+              }
+
+              //if data-assume-gml-ns is set, then don't put in the NS declaration
+              if (scope.assumeGmlNs === "true" && namespace === "gml") {
+                elementNSDef = "";
+              }
+
               scope.xmlSnippet =
                 "<" +
                 tag +
-                " xmlns:" +
-                namespace +
-                '="' +
-                gnSchemaManagerService.findNamespaceUri(namespace, gnCurrentEdit.schema) +
-                '"' +
+                elementNSDef +
                 attribute +
                 ">" +
                 scope.dateTime +

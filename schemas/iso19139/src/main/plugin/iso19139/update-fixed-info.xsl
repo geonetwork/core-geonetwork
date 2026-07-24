@@ -752,6 +752,9 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- Delete empty temporal elements -->
+  <xsl:template match="gmd:temporalElement[count(*) = 0]"/>
+
   <!-- ================================================================= -->
   <!-- copy everything else as is -->
 
