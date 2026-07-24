@@ -160,6 +160,41 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void testRenameResource() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        getStore().delResources(context, metadataUuid, true);
+
+        String filename = "record-with-old-links.xml";
+        String newFilename = "renamed-record.xml";
+        MultipartFile file = new MockMultipartFile(filename,
+            filename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, filename)
+            ));
+        getStore().putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+
+        MetadataResource renamedResource = getStore().renameResource(context, metadataUuid, filename, newFilename, true);
+        assertEquals("Renamed resource id is correct",
+            metadataUuid + "/attachments/" + newFilename,
+            renamedResource.getId());
+        assertEquals("Renamed resource URL is correct",
+            "http://localhost:8080/srv/api/records/" + metadataUuid + "/attachments/" + newFilename,
+            renamedResource.getUrl());
+
+        List<MetadataResource> resourcesList =
+            getStore().getResources(context, metadataUuid, Sort.name, null, true);
+        assertEquals("1 resource for record after rename", 1, resourcesList.size());
+        assertEquals("Resource in list has new filename", newFilename, resourcesList.get(0).getFilename());
+
+        getStore().delResources(context, metadataUuid, true);
+    }
+
+    @Test
     public void testPutResourceFromURL() throws Exception {
         final ServiceContext context = createServiceContext();
         loginAsAdmin(context);
