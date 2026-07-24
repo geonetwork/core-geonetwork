@@ -226,9 +226,10 @@ public class FilesystemStore extends AbstractStore {
     public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         checkResourceId(newName);
-        try (ResourceHolder filePath = getResource(context, metadataUuid, resourceId, approved)) {
+        try (ResourceHolder resourceHolder = getResource(context, metadataUuid, resourceId, approved)) {
+            Path currentFilePath = getResourcePath(resourceHolder.getResource(), context);
             Path newFilePath = getPath(context, metadataId, MetadataResourceVisibility.PRIVATE, newName, approved);
-            Files.move(filePath.getPath(), newFilePath, StandardCopyOption.REPLACE_EXISTING);
+            Files.move(currentFilePath, newFilePath, StandardCopyOption.REPLACE_EXISTING);
             return getResourceDescription(context, metadataUuid, MetadataResourceVisibility.PRIVATE, newFilePath, approved);
         } catch (IOException e) {
             Log.error(Geonet.RESOURCES,

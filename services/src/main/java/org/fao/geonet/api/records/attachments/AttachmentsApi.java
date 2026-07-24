@@ -50,6 +50,7 @@ import org.fao.geonet.events.history.AttachmentDeletedEvent;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.util.FileMimetypeChecker;
@@ -403,7 +404,7 @@ public class AttachmentsApi {
             // Update the metadata references to the resource
             metadata.setData(metadata.getData().replaceAll(metadataResourceToUpdate.getMetadata().getUrl(), metadataResource.getUrl()));
             metadataManager.save(metadata);
-            metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
+            metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
 
         }
         if (visibility != null) {
