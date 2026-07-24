@@ -16,6 +16,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+/**
+ * Responsible for transformations to `application/pdf`, `text/html`, and `text/json`.
+ */
 class PdfOrHtmlResponseWriter {
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
