@@ -55,6 +55,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -313,7 +314,21 @@ public abstract class AbstractStore implements Store {
 
     @Override
     public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception {
-        throw new UnsupportedOperationException("renameResource is not supported by " + getClass().getSimpleName());
+        int metadataId = canEdit(context, metadataUuid, approved);
+        checkResourceId(newName);
+        try (ResourceHolder resourceHolder = getResource(context, metadataUuid, resourceId, approved)) {
+            MetadataResource metadataResource = resourceHolder.getMetadata();
+            MetadataResourceVisibility visibility = metadataResource != null ? metadataResource.getVisibility() : MetadataResourceVisibility.PRIVATE;
+            Date changeDate = metadataResource != null ? metadataResource.getLastModification() : null;
+            try (InputStream is = resourceHolder.getResource().getInputStream()) {
+                MetadataResource newResource = putResource(context, metadataUuid, newName, is, changeDate, visibility, approved);
+                delResource(context, metadataUuid, visibility, resourceId, approved);
+                return newResource;
+            }
+        } catch (Exception e) {
+            log.error("Unable to rename resource '{}' for metadata {} ({}). {}", resourceId, metadataId, metadataUuid, e.getMessage(), e);
+            throw e;
+        }
     }
 
     protected String getFilename(final String metadataUuid, final String resourceId) {

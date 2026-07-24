@@ -217,6 +217,45 @@ public class S3Store extends AbstractStore {
     }
 
     @Override
+    public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception {
+        int metadataId = canEdit(context, metadataUuid, approved);
+        checkResourceId(newName);
+
+        String sourceKey = null;
+        ObjectMetadata objectMetadata = null;
+        MetadataResourceVisibility sourceVisibility = null;
+        for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
+            final String key = getKey(metadataUuid, metadataId, visibility, resourceId);
+            try {
+                objectMetadata = s3.getClient().getObjectMetadata(s3.getBucket(), key);
+                sourceKey = key;
+                sourceVisibility = visibility;
+                break;
+            } catch (AmazonServiceException ignored) {
+                // ignored
+            }
+        }
+
+        if (sourceKey != null) {
+            final String destKey = getKey(metadataUuid, metadataId, sourceVisibility, newName);
+            if (sourceKey.equals(destKey)) {
+                return createResourceDescription(metadataUuid, sourceVisibility, newName, objectMetadata.getContentLength(),
+                                                 objectMetadata.getLastModified(), metadataId, approved);
+            }
+            final CopyObjectResult copyResult = s3.getClient().copyObject(
+                s3.getBucket(), sourceKey, s3.getBucket(), destKey);
+            s3.getClient().deleteObject(s3.getBucket(), sourceKey);
+            return createResourceDescription(metadataUuid, sourceVisibility, newName, objectMetadata.getContentLength(),
+                                             copyResult.getLastModifiedDate(), metadataId, approved);
+        } else {
+            throw new ResourceNotFoundException(
+                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                    .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                    .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+        }
+    }
+
+    @Override
     public String delResources(final ServiceContext context, final int metadataId) throws Exception {
         try {
             final ListObjectsV2Result objects = s3.getClient().listObjectsV2(
