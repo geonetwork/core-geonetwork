@@ -249,7 +249,11 @@ Note: this option is only available for databases that have been tested. Those d
 
 ## Metadata Privileges
 
-*Only set privileges to user's groups*: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator). At the moment this option cannot be disabled and is likely to be deprecated in the next version of GeoNetwork.
+- **Only set privileges to user's groups**: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator).
+- **Publication by users reviewer in record group only**: Allow publication by administrator and reviewer member of record group. If disabled, then also all users reviewer in group with editing rights can publish/unpublish a record.
+- **Manage the publication date automatically**: When enabled the publication date of the metadata is set automatically when the metadata is published and removed when the metadata is unpublished.
+- **Notification level when a metadata is published / unpublished**: Define which users to alert when a metadata is published / unpublished.
+- **Groups to notify when a metadata is published / unpublished**: List of groups, separated by the char |, to notify when a metadata is published / unpublished (for 'Notify the group(s) emails' notification level).
 
 ## Metadata create
 
