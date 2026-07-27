@@ -445,10 +445,6 @@ public class UsersApi {
 
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
 
-        if (Profile.Administrator.equals(profile)) {
-            checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
-        }
-
         // TODO: CheckAccessRights
 
         if (!myProfile.getProfileAndAllChildren().contains(profile)) {
@@ -567,10 +563,6 @@ public class UsersApi {
                 userDto.getId(), userIdentifier));
         }
 
-        if (Profile.Administrator.equals(profile)) {
-            checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
-        }
-
         // TODO: CheckAccessRights
 
         Optional<User> userOptional = userRepository.findById(userIdentifier);
@@ -578,6 +570,8 @@ public class UsersApi {
             throw new IllegalArgumentException(String.format("No user found with id: %d", userIdentifier));
         }
         User user = userOptional.get();
+
+        checkIfAtLeastOneAdminIsEnabled(userIdentifier, user, profile, userDto.isEnabled(), userRepository);
 
         // Check no duplicated username and if we are adding a duplicate existing name with other case combination
         List<User> usersWithUsernameIgnoreCase = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
@@ -995,24 +989,29 @@ public class UsersApi {
     }
 
     /**
-     * Check if removing userDto from the admins there are still at least one user administrator in the system. .
+     * Check that the update keeps at least one enabled administrator in the system, whether the
+     * account is being disabled or moved to a lower profile.
      *
-     * @param userDto        the user to check.
+     * @param userIdentifier the identifier of the user being updated.
+     * @param user           the user being updated, as currently stored.
+     * @param newProfile     the profile the update would set.
+     * @param enabled        the enabled state the update would set.
      * @param userRepository user repository to retrieve users from.
-     * @throws IllegalArgumentException thrown if userDto is the last administrator user in the system.
+     * @throws IllegalArgumentException thrown if the user is the last enabled administrator in the system.
      */
-    private void checkIfAtLeastOneAdminIsEnabled(UserDto userDto, UserRepository userRepository) {
-        // Check at least 1 administrator is enabled
-        if (StringUtils.isNotEmpty(userDto.getId()) && (!userDto.isEnabled())) {
-            List<User> adminEnabledList = userRepository.findAll(
-                Specification.where(UserSpecs.hasProfile(Profile.Administrator)).and(UserSpecs.hasEnabled(true)));
-            if (adminEnabledList.size() == 1) {
-                User adminUser = adminEnabledList.get(0);
-                if (adminUser.getId() == Integer.parseInt(userDto.getId())) {
-                    throw new IllegalArgumentException(
-                        "Trying to disable all administrator users is not allowed");
-                }
-            }
+    private void checkIfAtLeastOneAdminIsEnabled(int userIdentifier, User user, Profile newProfile, boolean enabled,
+                                                 UserRepository userRepository) {
+        if (!Profile.Administrator.equals(user.getProfile())) {
+            return;
+        }
+        if (enabled && Profile.Administrator.equals(newProfile)) {
+            return;
+        }
+        List<User> adminEnabledList = userRepository.findAll(
+            Specification.where(UserSpecs.hasProfile(Profile.Administrator)).and(UserSpecs.hasEnabled(true)));
+        if (adminEnabledList.size() == 1 && adminEnabledList.get(0).getId() == userIdentifier) {
+            throw new IllegalArgumentException(
+                "Trying to disable all administrator users is not allowed");
         }
     }
 }
