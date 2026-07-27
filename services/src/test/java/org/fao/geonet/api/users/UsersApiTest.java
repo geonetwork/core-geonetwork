@@ -835,6 +835,128 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         Assert.assertEquals(Profile.Reviewer, userAfter.getProfile());
     }
 
+    @Test
+    public void updateUserWithGroupNotAdministeredByTheCaller() throws Exception {
+        User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
+        Assert.assertNotNull(userAdmin);
+
+        // Part of the sample group, which testuser-useradmin administers
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+
+        Group testGroup = _groupRepo.findByName("test");
+        Assert.assertNotNull(testGroup);
+
+        UserDto user = new UserDto();
+        user.setId(Integer.toString(userToUpdate.getId()));
+        user.setUsername(userToUpdate.getUsername());
+        user.setName(userToUpdate.getName());
+        user.setProfile(Profile.UserAdmin.name());
+        // Group administered by somebody else
+        user.setGroupsUserAdmin(Collections.singletonList(Integer.toString(testGroup.getId())));
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(userAdmin);
+
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(400))
+            .andExpect(jsonPath("$.message", is(
+                "You don't have rights to assign a user to the group " + testGroup.getId())));
+
+        List<Integer> groupIds = _userGroupRepo.findGroupIds(hasUserId(userToUpdate.getId()));
+        Assert.assertFalse(groupIds.contains(testGroup.getId()));
+    }
+
+    @Test
+    public void updateOwnAccountKeepsGroupAssignments() throws Exception {
+        User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
+        Assert.assertNotNull(userAdmin);
+
+        Group testGroup = _groupRepo.findByName("test");
+        Assert.assertNotNull(testGroup);
+
+        List<Integer> groupIdsBefore = _userGroupRepo.findGroupIds(hasUserId(userAdmin.getId()));
+        Assert.assertFalse(groupIdsBefore.contains(testGroup.getId()));
+
+        UserDto user = new UserDto();
+        user.setId(Integer.toString(userAdmin.getId()));
+        user.setUsername(userAdmin.getUsername());
+        user.setName("a new name");
+        user.setProfile(Profile.UserAdmin.name());
+        // Asking for a group the caller does not administer
+        user.setGroupsUserAdmin(Collections.singletonList(Integer.toString(testGroup.getId())));
+        user.setEmail(new ArrayList(userAdmin.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(userAdmin);
+
+        // The update itself is accepted
+        this.mockMvc.perform(put("/srv/api/users/" + userAdmin.getId())
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(204));
+
+        Assert.assertEquals("a new name", _userRepo.findOneByUsername("testuser-useradmin").getName());
+
+        // but the group assignments are the ones already stored
+        List<Integer> groupIdsAfter = _userGroupRepo.findGroupIds(hasUserId(userAdmin.getId()));
+        Assert.assertFalse(groupIdsAfter.contains(testGroup.getId()));
+        Assert.assertEquals(groupIdsBefore, groupIdsAfter);
+    }
+
+    @Test
+    public void createUserWithGroupNotAdministeredByTheCaller() throws Exception {
+        User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
+        Assert.assertNotNull(userAdmin);
+
+        Group testGroup = _groupRepo.findByName("test");
+        Assert.assertNotNull(testGroup);
+
+        UserDto user = new UserDto();
+        user.setUsername("newuser-othergroup");
+        user.setName("new");
+        user.setProfile(Profile.UserAdmin.name());
+        user.setGroupsUserAdmin(Collections.singletonList(Integer.toString(testGroup.getId())));
+        user.setEmail(Collections.singletonList("mail@test.com"));
+        user.setPassword("Password7$");
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(userAdmin);
+
+        this.mockMvc.perform(put("/srv/api/users")
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(400))
+            .andExpect(jsonPath("$.message", is(
+                "You don't have rights to assign a user to the group " + testGroup.getId())));
+
+        Assert.assertNull(_userRepo.findOneByUsername("newuser-othergroup"));
+    }
+
     /**
      * Create sample data for the tests.
      */
