@@ -586,8 +586,19 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        if (!Profile.Administrator.equals(myProfile) && !Profile.UserAdmin.equals(myProfile) && !myUserId.equals(Integer.toString(userIdentifier))) {
+        boolean isSelfUpdate = myUserId.equals(Integer.toString(userIdentifier));
+
+        if (!Profile.Administrator.equals(myProfile) && !Profile.UserAdmin.equals(myProfile) && !isSelfUpdate) {
             throw new IllegalArgumentException("You don't have rights to do this");
+        }
+
+        // The record to update is identified by the path variable. Reject a body carrying a
+        // different identifier rather than letting the two disagree.
+        if (StringUtils.isNotEmpty(userDto.getId())
+            && !userDto.getId().equals(Integer.toString(userIdentifier))) {
+            throw new IllegalArgumentException(String.format(
+                "The user identifier in the request body (%s) does not match the one in the path (%d)",
+                userDto.getId(), userIdentifier));
         }
 
         if (Profile.Administrator.equals(profile)) {
@@ -598,7 +609,7 @@ public class UsersApi {
 
         Optional<User> userOptional = userRepository.findById(userIdentifier);
         if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException(String.format("No user found with id: %s", userDto.getId()));
+            throw new IllegalArgumentException(String.format("No user found with id: %d", userIdentifier));
         }
         User user = userOptional.get();
 
@@ -644,8 +655,7 @@ public class UsersApi {
                 hasProfile(myProfile)).and(hasUserId(Integer.parseInt(myUserId))));
 
             List<UserGroup> usergroups =
-                userGroupRepository.findAll(Specification.where(
-                    hasUserId(Integer.parseInt(userDto.getId()))));
+                userGroupRepository.findAll(Specification.where(hasUserId(userIdentifier)));
 
             List<Integer> userToUpdateGroupIds = usergroups.stream()
                 .map(ug -> ug.getId().getGroupId())

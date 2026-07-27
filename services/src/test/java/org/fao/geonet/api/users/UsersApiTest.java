@@ -795,6 +795,46 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$.message", is("Another user with username 'testuser-editor' ignore case already exists")));
     }
 
+    @Test
+    public void updateUserWithIdentifierNotMatchingThePath() throws Exception {
+        User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
+        Assert.assertNotNull(userAdmin);
+
+        // Not part of any group administered by testuser-useradmin
+        User userToUpdate = _userRepo.findOneByUsername("testuser-reviewer");
+        Assert.assertNotNull(userToUpdate);
+
+        UserDto user = new UserDto();
+        // The body claims to be about the caller, the path points at somebody else
+        user.setId(Integer.toString(userAdmin.getId()));
+        user.setUsername(userToUpdate.getUsername());
+        user.setName(userToUpdate.getName());
+        user.setProfile(Profile.UserAdmin.name());
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(userAdmin);
+
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(400))
+            .andExpect(jsonPath("$.message", is(String.format(
+                "The user identifier in the request body (%d) does not match the one in the path (%d)",
+                userAdmin.getId(), userToUpdate.getId()))));
+
+        // The target is left untouched
+        User userAfter = _userRepo.findOneByUsername("testuser-reviewer");
+        Assert.assertEquals(Profile.Reviewer, userAfter.getProfile());
+    }
+
     /**
      * Create sample data for the tests.
      */
