@@ -352,8 +352,7 @@ public class UsersApi {
             }
 
             final int iMyUserId = Integer.parseInt(myUserId);
-            final List<Integer> groupIdsSessionUser = userGroupRepository
-                .findGroupIds(where(hasUserId(iMyUserId)));
+            final List<Integer> groupIdsSessionUser = getGroupIdsWhereUserIsUserAdmin(iMyUserId);
 
             final List<Integer> groupIdsUserToDelete = userGroupRepository
                 .findGroupIds(where(hasUserId(userIdentifier)));

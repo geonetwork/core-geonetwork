@@ -56,6 +56,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
+import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserIdAndProfile;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
@@ -286,6 +287,65 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().is(400))
             .andExpect(jsonPath("$.message", is("You don't have rights to delete this user because the user is not part of your group")))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void deleteUserInGroupNotAdministeredByTheCaller() throws Exception {
+        Group testGroup = _groupRepo.findByName("test");
+        Assert.assertNotNull(testGroup);
+
+        // The caller administers the sample group, and is only an editor of the test group
+        final User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
+        Assert.assertNotNull(userAdmin);
+        _userGroupRepo.save(new UserGroup().setGroup(testGroup)
+            .setProfile(Profile.Editor).setUser(userAdmin));
+
+        // The user to delete belongs to the test group only, so the two share a group
+        // without the caller administering it
+        final User userToDelete = _userRepo.findOneByUsername("testuser-reviewer");
+        Assert.assertNotNull(userToDelete);
+        Assert.assertTrue(CollectionUtils.isNotEmpty(CollectionUtils.intersection(
+            _userGroupRepo.findGroupIds(hasUserId(userAdmin.getId())),
+            _userGroupRepo.findGroupIds(hasUserId(userToDelete.getId())))));
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(userAdmin);
+
+        this.mockMvc.perform(delete("/srv/api/users/" + userToDelete.getId())
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(400))
+            .andExpect(jsonPath("$.message", is("You don't have rights to delete this user because the user is not part of your group")))
+            .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
+
+        Assert.assertTrue(_userRepo.findById(userToDelete.getId()).isPresent());
+    }
+
+    @Test
+    public void deleteUserInGroupAdministeredByTheCaller() throws Exception {
+        Group sampleGroup = _groupRepo.findByName("sample");
+        Assert.assertNotNull(sampleGroup);
+
+        final User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
+        Assert.assertNotNull(userAdmin);
+        Assert.assertTrue(_userGroupRepo.findGroupIds(
+            hasUserIdAndProfile(userAdmin.getId(), Profile.UserAdmin)).contains(sampleGroup.getId()));
+
+        // Member of the sample group, which the caller administers
+        final User userToDelete = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToDelete);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(userAdmin);
+
+        this.mockMvc.perform(delete("/srv/api/users/" + userToDelete.getId())
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(204));
+
+        Assert.assertFalse(_userRepo.findById(userToDelete.getId()).isPresent());
     }
 
 
