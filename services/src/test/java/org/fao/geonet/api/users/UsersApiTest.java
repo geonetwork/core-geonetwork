@@ -69,6 +69,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * including creation, deletion, updating, and retrieval of user accounts and their associated data.
  */
 public class UsersApiTest extends AbstractServiceIntegrationTest {
+    /**
+     * An identifier the generator cannot reach, so that it stays unused whatever the number
+     * of users the tests create.
+     */
+    private static final int NON_EXISTING_USER_ID = Integer.MAX_VALUE;
+
     @Autowired
     private WebApplicationContext wac;
 
@@ -104,7 +110,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
         this.mockHttpSession = loginAsAdmin();
 
-        this.mockMvc.perform(get("/srv/api/users/222")
+        this.mockMvc.perform(get("/srv/api/users/" + NON_EXISTING_USER_ID)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
@@ -216,7 +222,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void deleteNonExistingUser() throws Exception {
-        Optional<User> userToDelete = _userRepo.findById(222);
+        Optional<User> userToDelete = _userRepo.findById(NON_EXISTING_USER_ID);
         Assert.assertFalse(userToDelete.isPresent());
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
@@ -224,7 +230,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         this.mockHttpSession = loginAsAdmin();
 
         // Check 404 is returned
-        this.mockMvc.perform(delete("/srv/api/users/222")
+        this.mockMvc.perform(delete("/srv/api/users/" + NON_EXISTING_USER_ID)
                 .session(this.mockHttpSession)
                 .accept(MediaType.parseMediaType("application/json")))
             .andExpect(status().is(404))
