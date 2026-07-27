@@ -542,8 +542,19 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        if (!Profile.Administrator.equals(myProfile) && !Profile.UserAdmin.equals(myProfile) && !myUserId.equals(Integer.toString(userIdentifier))) {
+        boolean isSelfUpdate = myUserId.equals(Integer.toString(userIdentifier));
+
+        if (!Profile.Administrator.equals(myProfile) && !Profile.UserAdmin.equals(myProfile) && !isSelfUpdate) {
             throw new IllegalArgumentException("You don't have rights to do this");
+        }
+
+        // The record to update is identified by the path variable. Reject a body carrying a
+        // different identifier rather than letting the two disagree.
+        if (StringUtils.isNotEmpty(userDto.getId())
+            && !userDto.getId().equals(Integer.toString(userIdentifier))) {
+            throw new IllegalArgumentException(String.format(
+                "The user identifier in the request body (%s) does not match the one in the path (%d)",
+                userDto.getId(), userIdentifier));
         }
 
         if (Profile.Administrator.equals(profile)) {
@@ -552,11 +563,11 @@ public class UsersApi {
 
         // TODO: CheckAccessRights
 
-        User user = userRepository.findById(userIdentifier).get();
-        if (user == null) {
-            throw new IllegalArgumentException("No user found with id: "
-                + userDto.getId());
+        Optional<User> userOptional = userRepository.findById(userIdentifier);
+        if (!userOptional.isPresent()) {
+            throw new IllegalArgumentException(String.format("No user found with id: %d", userIdentifier));
         }
+        User user = userOptional.get();
 
         // Check no duplicated username and if we are adding a duplicate existing name with other case combination
         List<User> usersWithUsernameIgnoreCase = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
@@ -600,8 +611,7 @@ public class UsersApi {
                 hasProfile(myProfile)).and(hasUserId(Integer.parseInt(myUserId))));
 
             List<UserGroup> usergroups =
-                userGroupRepository.findAll(Specification.where(
-                    hasUserId(Integer.parseInt(userDto.getId()))));
+                userGroupRepository.findAll(Specification.where(hasUserId(userIdentifier)));
 
             List<Integer> userToUpdateGroupIds = usergroups.stream()
                 .map(ug -> ug.getId().getGroupId())
