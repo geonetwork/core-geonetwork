@@ -571,6 +571,30 @@ public class UsersApi {
         }
         User user = userOptional.get();
 
+        // Check the caller is entitled to act on this record before validating the request
+        // itself, so that the validation errors say nothing about users they cannot see.
+        List<Integer> myUserAdminGroups = Collections.emptyList();
+        List<UserGroup> userToUpdateGroups = Collections.emptyList();
+
+        if (!Profile.Administrator.equals(myProfile) && !isSelfUpdate) {
+            // A useradmin never administers an administrator, whatever groups they share
+            if (Profile.Administrator.equals(user.getProfile())) {
+                throw new IllegalArgumentException("You don't have rights to do this");
+            }
+
+            myUserAdminGroups = getGroupIdsWhereUserIsUserAdmin(Integer.parseInt(myUserId));
+            userToUpdateGroups = userGroupRepository.findAll(hasUserId(userIdentifier));
+
+            List<Integer> userToUpdateGroupIds = userToUpdateGroups.stream()
+                .map(ug -> ug.getId().getGroupId())
+                .collect(Collectors.toList());
+
+            // UserAdmin can't update users that are not in the groups administered
+            if (myUserAdminGroups.stream().noneMatch(userToUpdateGroupIds::contains)) {
+                throw new IllegalArgumentException("You don't have rights to do this");
+            }
+        }
+
         checkIfAtLeastOneAdminIsEnabled(userIdentifier, user, profile, userDto.isEnabled(), userRepository);
 
         // Check no duplicated username and if we are adding a duplicate existing name with other case combination
@@ -618,25 +642,6 @@ public class UsersApi {
         } else {
             // A useradmin only sees part of the catalog, so the update is restricted to the
             // groups they administer and the groups they cannot see are left untouched.
-            List<Integer> myUserAdminGroups = getGroupIdsWhereUserIsUserAdmin(Integer.parseInt(myUserId));
-
-            List<UserGroup> usergroups =
-                userGroupRepository.findAll(Specification.where(hasUserId(userIdentifier)));
-
-            List<Integer> userToUpdateGroupIds = usergroups.stream()
-                .map(ug -> ug.getId().getGroupId())
-                .collect(Collectors.toList());
-
-            Set<Integer> groupsInCommon = myUserAdminGroups.stream()
-                .distinct()
-                .filter(userToUpdateGroupIds::contains)
-                .collect(Collectors.toSet());
-
-            // UserAdmin can't update users that are not in the groups administered
-            if (groupsInCommon.isEmpty()) {
-                throw new IllegalArgumentException("You don't have rights to do this");
-            }
-
             List<GroupElem> requestedGroups = new LinkedList<>();
             requestedGroups.addAll(processGroups(userDto.getGroupsRegisteredUser(), Profile.RegisteredUser));
             requestedGroups.addAll(processGroups(userDto.getGroupsEditor(), Profile.Editor));
@@ -653,7 +658,7 @@ public class UsersApi {
             groups.addAll(requestedGroups);
 
             //keep unknown groups as is
-            for (UserGroup ug : usergroups) {
+            for (UserGroup ug : userToUpdateGroups) {
                 if (!myUserAdminGroups.contains(ug.getGroup().getId())) {
                     groups.add(new GroupElem(ug.getProfile().name(),
                         ug.getGroup().getId()));
