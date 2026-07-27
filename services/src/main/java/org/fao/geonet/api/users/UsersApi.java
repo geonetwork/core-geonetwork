@@ -98,7 +98,6 @@ import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
-import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserIdAndProfile;
 import static org.springframework.data.jpa.domain.Specification.where;
@@ -532,6 +531,17 @@ public class UsersApi {
         groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
         groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
 
+        // Assignments can only be made on the groups administered by the caller
+        if (!Profile.Administrator.equals(myProfile)) {
+            List<Integer> myUserAdminGroups = getGroupIdsWhereUserIsUserAdmin(Integer.parseInt(session.getUserId()));
+            for (GroupElem requestedGroup : groups) {
+                if (!myUserAdminGroups.contains(requestedGroup.getId())) {
+                    throw new IllegalArgumentException(
+                        "You don't have rights to assign a user to the group " + requestedGroup.getId());
+                }
+            }
+        }
+
         User user = new User();
         if (userDto.getPassword() != null) {
             user.getSecurity().setPassword(
@@ -643,16 +653,22 @@ public class UsersApi {
 
         List<GroupElem> groups = new LinkedList<>();
 
-        groups.addAll(processGroups(userDto.getGroupsRegisteredUser(), Profile.RegisteredUser));
-        groups.addAll(processGroups(userDto.getGroupsEditor(), Profile.Editor));
-        groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
-        groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
-
-        //If it is an useradmin updating,
-        //maybe we don't know all the groups the user is part of
-        if (!Profile.Administrator.equals(myProfile)) {
-            List<Integer> myUserAdminGroups = userGroupRepository.findGroupIds(Specification.where(
-                hasProfile(myProfile)).and(hasUserId(Integer.parseInt(myUserId))));
+        if (Profile.Administrator.equals(myProfile)) {
+            groups.addAll(processGroups(userDto.getGroupsRegisteredUser(), Profile.RegisteredUser));
+            groups.addAll(processGroups(userDto.getGroupsEditor(), Profile.Editor));
+            groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
+            groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
+        } else if (isSelfUpdate) {
+            // Only an administrator may change group assignments on their own account. For
+            // everybody else the existing assignments are kept, so that editing one's own
+            // details through the UI does not alter them.
+            for (UserGroup ug : userGroupRepository.findAll(Specification.where(hasUserId(userIdentifier)))) {
+                groups.add(new GroupElem(ug.getProfile().name(), ug.getGroup().getId()));
+            }
+        } else {
+            // A useradmin only sees part of the catalog, so the update is restricted to the
+            // groups they administer and the groups they cannot see are left untouched.
+            List<Integer> myUserAdminGroups = getGroupIdsWhereUserIsUserAdmin(Integer.parseInt(myUserId));
 
             List<UserGroup> usergroups =
                 userGroupRepository.findAll(Specification.where(hasUserId(userIdentifier)));
@@ -670,6 +686,21 @@ public class UsersApi {
             if (groupsInCommon.isEmpty()) {
                 throw new IllegalArgumentException("You don't have rights to do this");
             }
+
+            List<GroupElem> requestedGroups = new LinkedList<>();
+            requestedGroups.addAll(processGroups(userDto.getGroupsRegisteredUser(), Profile.RegisteredUser));
+            requestedGroups.addAll(processGroups(userDto.getGroupsEditor(), Profile.Editor));
+            requestedGroups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
+            requestedGroups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
+
+            // Assignments can only be made on the groups administered by the caller
+            for (GroupElem requestedGroup : requestedGroups) {
+                if (!myUserAdminGroups.contains(requestedGroup.getId())) {
+                    throw new IllegalArgumentException(
+                        "You don't have rights to assign a user to the group " + requestedGroup.getId());
+                }
+            }
+            groups.addAll(requestedGroups);
 
             //keep unknown groups as is
             for (UserGroup ug : usergroups) {
