@@ -1006,6 +1006,27 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void deleteAdministratorByUserAdminNotAllowed() throws Exception {
+        User administrator = createAdministratorInGroup("sample");
+
+        User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
+        Assert.assertNotNull(userAdmin);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(userAdmin);
+
+        this.mockMvc.perform(delete("/srv/api/users/" + administrator.getId())
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(400))
+            .andExpect(jsonPath("$.message", is(
+                "You don't have rights to delete this user because the user is not part of your group")));
+
+        Assert.assertTrue(_userRepo.findById(administrator.getId()).isPresent());
+    }
+
+    @Test
     public void updateAdministratorByUserAdminNotAllowed() throws Exception {
         // An administrator that also carries group memberships, as happens when the account
         // was promoted from a lower profile

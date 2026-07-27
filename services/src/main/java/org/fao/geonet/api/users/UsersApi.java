@@ -314,6 +314,13 @@ public class UsersApi {
 
 
         if (myProfile == Profile.UserAdmin) {
+            // A useradmin never administers an administrator, whatever groups they share
+            Optional<User> userToCheck = userRepository.findById(userIdentifier);
+            if (userToCheck.isPresent() && Profile.Administrator.equals(userToCheck.get().getProfile())) {
+                throw new IllegalArgumentException(
+                    "You don't have rights to delete this user because the user is not part of your group");
+            }
+
             final int iMyUserId = Integer.parseInt(myUserId);
             final List<Integer> groupIdsSessionUser = userGroupRepository
                 .findGroupIds(where(hasUserId(iMyUserId)));
