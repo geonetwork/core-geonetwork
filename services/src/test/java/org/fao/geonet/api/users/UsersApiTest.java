@@ -922,6 +922,47 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void updateLastEnabledAdministratorToLowerProfile() throws Exception {
+        User administrator = null;
+        int enabledAdministrators = 0;
+        for (User u : _userRepo.findAllByProfile(Profile.Administrator)) {
+            if (u.isEnabled()) {
+                enabledAdministrators++;
+                administrator = u;
+            }
+        }
+        Assert.assertEquals("the test data is expected to hold a single enabled administrator",
+            1, enabledAdministrators);
+
+        UserDto user = new UserDto();
+        user.setId(Integer.toString(administrator.getId()));
+        user.setUsername(administrator.getUsername());
+        user.setName(administrator.getName());
+        // Demoting the last administrator leaves the catalog without one
+        user.setProfile(Profile.UserAdmin.name());
+        user.setEmail(new ArrayList(administrator.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAsAdmin();
+
+        this.mockMvc.perform(put("/srv/api/users/" + administrator.getId())
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(400))
+            .andExpect(jsonPath("$.message", is("Trying to disable all administrator users is not allowed")));
+
+        Assert.assertEquals(Profile.Administrator,
+            _userRepo.findById(administrator.getId()).get().getProfile());
+    }
+
+    @Test
     public void createUserWithGroupNotAdministeredByTheCaller() throws Exception {
         User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
         Assert.assertNotNull(userAdmin);
