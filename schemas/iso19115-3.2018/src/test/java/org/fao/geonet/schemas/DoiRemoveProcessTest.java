@@ -23,8 +23,8 @@
 
 package org.fao.geonet.schemas;
 
-import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
-import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
+import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018Namespaces;
+import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.xpath.XPath;
@@ -42,10 +42,10 @@ public class DoiRemoveProcessTest extends XslProcessTest {
     public DoiRemoveProcessTest() {
         super();
         this.setXslFilename("process/doi-remove.xsl");
-        this.setXmlFilename("schemas/xsl/process/input_with_doi.xml");
-        this.setNs(ISO19139SchemaPlugin.allNamespaces);
-        this.getNs().put("gmx", ISO19139Namespaces.GMX.getURI());
-        this.getNs().put("xlink", ISO19139Namespaces.XLINK.getURI());
+        this.setXmlFilename("input_with_doi.xml");
+        this.setNs(ISO19115_3_2018SchemaPlugin.allNamespaces);
+        this.getNs().put("gcx", ISO19115_3_2018Namespaces.GCX.getURI());
+        this.getNs().put("xlink", ISO19115_3_2018Namespaces.XLINK.getURI());
     }
 
     @Test
@@ -61,9 +61,9 @@ public class DoiRemoveProcessTest extends XslProcessTest {
         String doi = "https://doi.org/11.1111/da165110-88fd-11da-a88f-000d939bc5d8";
 
         // 1. Verify preconditions
-        assertThat(inputString, hasXPath("count(//gmd:transferOptions)", equalTo("2")).withNamespaceContext(ns));
-        assertThat(inputString, hasXPath("count(//gmd:onLine[*/gmd:linkage/gmd:URL = '" + doi + "'])", equalTo("1")).withNamespaceContext(ns));
-        assertThat(inputString, hasXPath("count(//gmd:identifier[*/gmd:code/gmx:Anchor/@xlink:href = '" + doi + "'])", equalTo("1")).withNamespaceContext(ns));
+        assertThat(inputString, hasXPath("count(//mrd:transferOptions)", equalTo("2")).withNamespaceContext(ns));
+        assertThat(inputString, hasXPath("count(//mrd:onLine[*/cit:linkage/gco:CharacterString = '" + doi + "'])", equalTo("1")).withNamespaceContext(ns));
+        assertThat(inputString, hasXPath("count(//cit:identifier[*/mcc:code/gcx:Anchor/@xlink:href = '" + doi + "'])", equalTo("1")).withNamespaceContext(ns));
 
 
         // 2. Run the process
@@ -74,9 +74,9 @@ public class DoiRemoveProcessTest extends XslProcessTest {
         String resultString = Xml.getString(resultElement);
 
         // 3. Verify it is removed
-        assertThat(resultString, hasXPath("count(//gmd:transferOptions)", equalTo("1")).withNamespaceContext(ns));
-        assertThat(resultString, hasXPath("count(//gmd:onLine[*/gmd:linkage/gmd:URL = '" + doi + "'])", equalTo("0")).withNamespaceContext(ns));
-        assertThat(resultString, hasXPath("count(//gmd:identifier[*/gmd:code/gmx:Anchor/@xlink:href = '" + doi + "'])", equalTo("0")).withNamespaceContext(ns));
+        assertThat(resultString, hasXPath("count(//mrd:transferOptions)", equalTo("1")).withNamespaceContext(ns));
+        assertThat(resultString, hasXPath("count(//mrd:onLine[*/cit:linkage/gco:CharacterString = '" + doi + "'])", equalTo("0")).withNamespaceContext(ns));
+        assertThat(resultString, hasXPath("count(//cit:identifier[*/mcc:code/gcx:Anchor/@xlink:href = '" + doi + "'])", equalTo("0")).withNamespaceContext(ns));
     }
 
     @Test
@@ -86,17 +86,17 @@ public class DoiRemoveProcessTest extends XslProcessTest {
         String doi = "https://doi.org/11.1111/da165110-88fd-11da-a88f-000d939bc5d8";
 
         // 1. Add a new gmd:onLine in the gmd:transferOptions of the DOI resource
-        XPath xpath = XPath.newInstance(".//gmd:transferOptions/gmd:MD_DigitalTransferOptions[gmd:onLine/*/gmd:linkage/gmd:URL = '" + doi + "']");
+        XPath xpath = XPath.newInstance(".//mrd:transferOptions/mrd:MD_DigitalTransferOptions[mrd:onLine/*/cit:linkage/gco:CharacterString = '" + doi + "']");
         Element el = (Element) xpath.selectSingleNode(inputElement);
-        Element newOnline = new  Element("onLine", "gmd", this.getNs().get("gmd") );
+        Element newOnline = new  Element("onLine", "mrd", this.getNs().get("mrd") );
         el.addContent(newOnline);
 
         String inputString = Xml.getString(inputElement);
 
         // 1. Verify preconditions
-        assertThat(inputString, hasXPath("count(//gmd:transferOptions)", equalTo("2")).withNamespaceContext(ns));
-        assertThat(inputString, hasXPath("count(//gmd:onLine[*/gmd:linkage/gmd:URL = '" + doi + "'])", equalTo("1")).withNamespaceContext(ns));
-        assertThat(inputString, hasXPath("count(//gmd:identifier[*/gmd:code/gmx:Anchor/@xlink:href = '" + doi + "'])", equalTo("1")).withNamespaceContext(ns));
+        assertThat(inputString, hasXPath("count(//mrd:transferOptions)", equalTo("2")).withNamespaceContext(ns));
+        assertThat(inputString, hasXPath("count(//mrd:onLine[*/cit:linkage/gco:CharacterString = '" + doi + "'])", equalTo("1")).withNamespaceContext(ns));
+        assertThat(inputString, hasXPath("count(//cit:identifier[*/mcc:code/gcx:Anchor/@xlink:href = '" + doi + "'])", equalTo("1")).withNamespaceContext(ns));
 
 
         // 2. Run the process
@@ -107,9 +107,9 @@ public class DoiRemoveProcessTest extends XslProcessTest {
         String resultString = Xml.getString(resultElement);
 
         // 3. Verify it is removed the DOI resource, but the gmd:transferOptions is not removed as has an additional gmd:onLine
-        assertThat(resultString, hasXPath("count(//gmd:transferOptions)", equalTo("2")).withNamespaceContext(ns));
-        assertThat(resultString, hasXPath("count(//gmd:onLine[*/gmd:linkage/gmd:URL = '" + doi + "'])", equalTo("0")).withNamespaceContext(ns));
-        assertThat(resultString, hasXPath("count(//gmd:identifier[*/gmd:code/gmx:Anchor/@xlink:href = '" + doi + "'])", equalTo("0")).withNamespaceContext(ns));
+        assertThat(resultString, hasXPath("count(//mrd:transferOptions)", equalTo("2")).withNamespaceContext(ns));
+        assertThat(resultString, hasXPath("count(//mrd:onLine[*/cit:linkage/gco:CharacterString = '" + doi + "'])", equalTo("0")).withNamespaceContext(ns));
+        assertThat(resultString, hasXPath("count(//cit:identifier[*/mcc:code/gcx:Anchor/@xlink:href = '" + doi + "'])", equalTo("0")).withNamespaceContext(ns));
     }
 
 }
