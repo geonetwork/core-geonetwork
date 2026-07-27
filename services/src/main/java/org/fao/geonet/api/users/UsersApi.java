@@ -528,22 +528,11 @@ public class UsersApi {
                 + userDto.getUsername() + " ignore case already exists");
         }
 
-        List<GroupElem> groups = new LinkedList<>();
+        List<GroupElem> groups = collectRequestedGroups(userDto);
 
-        groups.addAll(processGroups(userDto.getGroupsRegisteredUser(), Profile.RegisteredUser));
-        groups.addAll(processGroups(userDto.getGroupsEditor(), Profile.Editor));
-        groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
-        groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
-
-        // Assignments can only be made on the groups administered by the caller
         if (!Profile.Administrator.equals(myProfile)) {
-            List<Integer> myUserAdminGroups = getGroupIdsWhereUserIsUserAdmin(Integer.parseInt(session.getUserId()));
-            for (GroupElem requestedGroup : groups) {
-                if (!myUserAdminGroups.contains(requestedGroup.getId())) {
-                    throw new IllegalArgumentException(
-                        "You don't have rights to assign a user to the group " + requestedGroup.getId());
-                }
-            }
+            checkGroupsAreAdministeredBy(groups,
+                getGroupIdsWhereUserIsUserAdmin(Integer.parseInt(session.getUserId())));
         }
 
         User user = new User();
@@ -647,7 +636,7 @@ public class UsersApi {
             }
         }
 
-        checkIfAtLeastOneAdminIsEnabled(userIdentifier, user, profile, userDto.isEnabled(), userRepository);
+        checkIfAtLeastOneAdminIsEnabled(user, profile, userDto.isEnabled());
 
         // Check no duplicated username and if we are adding a duplicate existing name with other case combination
         List<User> usersWithUsernameIgnoreCase = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
@@ -680,33 +669,19 @@ public class UsersApi {
         List<GroupElem> groups = new LinkedList<>();
 
         if (Profile.Administrator.equals(myProfile)) {
-            groups.addAll(processGroups(userDto.getGroupsRegisteredUser(), Profile.RegisteredUser));
-            groups.addAll(processGroups(userDto.getGroupsEditor(), Profile.Editor));
-            groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
-            groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
+            groups.addAll(collectRequestedGroups(userDto));
         } else if (isSelfUpdate) {
             // Only an administrator may change group assignments on their own account. For
             // everybody else the existing assignments are kept, so that editing one's own
             // details through the UI does not alter them.
-            for (UserGroup ug : userGroupRepository.findAll(Specification.where(hasUserId(userIdentifier)))) {
+            for (UserGroup ug : userGroupRepository.findAll(hasUserId(userIdentifier))) {
                 groups.add(new GroupElem(ug.getProfile().name(), ug.getGroup().getId()));
             }
         } else {
             // A useradmin only sees part of the catalog, so the update is restricted to the
             // groups they administer and the groups they cannot see are left untouched.
-            List<GroupElem> requestedGroups = new LinkedList<>();
-            requestedGroups.addAll(processGroups(userDto.getGroupsRegisteredUser(), Profile.RegisteredUser));
-            requestedGroups.addAll(processGroups(userDto.getGroupsEditor(), Profile.Editor));
-            requestedGroups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
-            requestedGroups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
-
-            // Assignments can only be made on the groups administered by the caller
-            for (GroupElem requestedGroup : requestedGroups) {
-                if (!myUserAdminGroups.contains(requestedGroup.getId())) {
-                    throw new IllegalArgumentException(
-                        "You don't have rights to assign a user to the group " + requestedGroup.getId());
-                }
-            }
+            List<GroupElem> requestedGroups = collectRequestedGroups(userDto);
+            checkGroupsAreAdministeredBy(requestedGroups, myUserAdminGroups);
             groups.addAll(requestedGroups);
 
             //keep unknown groups as is
@@ -995,6 +970,34 @@ public class UsersApi {
     }
 
 
+    /**
+     * Collect the group assignments carried by the request, all profiles together.
+     */
+    private List<GroupElem> collectRequestedGroups(UserDto userDto) {
+        List<GroupElem> groups = new LinkedList<>();
+        groups.addAll(processGroups(userDto.getGroupsRegisteredUser(), Profile.RegisteredUser));
+        groups.addAll(processGroups(userDto.getGroupsEditor(), Profile.Editor));
+        groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
+        groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
+        return groups;
+    }
+
+    /**
+     * Check that the requested assignments only concern groups the caller administers.
+     *
+     * @param requestedGroups     the assignments carried by the request.
+     * @param administeredGroupIds the groups the caller is user administrator of.
+     * @throws IllegalArgumentException thrown on the first group outside that list.
+     */
+    private void checkGroupsAreAdministeredBy(List<GroupElem> requestedGroups, List<Integer> administeredGroupIds) {
+        for (GroupElem requestedGroup : requestedGroups) {
+            if (!administeredGroupIds.contains(requestedGroup.getId())) {
+                throw new IllegalArgumentException(
+                    "You don't have rights to assign a user to the group " + requestedGroup.getId());
+            }
+        }
+    }
+
     private List<GroupElem> processGroups(List<String> groupsToProcessList, Profile profile) {
         List<GroupElem> groups = new LinkedList<>();
         for (String g : groupsToProcessList) {
@@ -1061,15 +1064,12 @@ public class UsersApi {
      * Check that the update keeps at least one enabled administrator in the system, whether the
      * account is being disabled or moved to a lower profile.
      *
-     * @param userIdentifier the identifier of the user being updated.
-     * @param user           the user being updated, as currently stored.
-     * @param newProfile     the profile the update would set.
-     * @param enabled        the enabled state the update would set.
-     * @param userRepository user repository to retrieve users from.
+     * @param user       the user being updated, as currently stored.
+     * @param newProfile the profile the update would set.
+     * @param enabled    the enabled state the update would set.
      * @throws IllegalArgumentException thrown if the user is the last enabled administrator in the system.
      */
-    private void checkIfAtLeastOneAdminIsEnabled(int userIdentifier, User user, Profile newProfile, boolean enabled,
-                                                 UserRepository userRepository) {
+    private void checkIfAtLeastOneAdminIsEnabled(User user, Profile newProfile, boolean enabled) {
         if (!Profile.Administrator.equals(user.getProfile())) {
             return;
         }
@@ -1078,7 +1078,7 @@ public class UsersApi {
         }
         List<User> adminEnabledList = userRepository.findAll(
             Specification.where(UserSpecs.hasProfile(Profile.Administrator)).and(UserSpecs.hasEnabled(true)));
-        if (adminEnabledList.size() == 1 && adminEnabledList.get(0).getId() == userIdentifier) {
+        if (adminEnabledList.size() == 1 && adminEnabledList.get(0).getId() == user.getId()) {
             throw new IllegalArgumentException(
                 "Trying to disable all administrator users is not allowed");
         }

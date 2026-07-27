@@ -27,8 +27,10 @@ import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.apache.commons.collections.CollectionUtils;
@@ -892,7 +894,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         Group testGroup = _groupRepo.findByName("test");
         Assert.assertNotNull(testGroup);
 
-        List<Integer> groupIdsBefore = _userGroupRepo.findGroupIds(hasUserId(userAdmin.getId()));
+        Set<Integer> groupIdsBefore = new HashSet<>(_userGroupRepo.findGroupIds(hasUserId(userAdmin.getId())));
         Assert.assertFalse(groupIdsBefore.contains(testGroup.getId()));
 
         UserDto user = new UserDto();
@@ -923,7 +925,7 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         Assert.assertEquals("a new name", _userRepo.findOneByUsername("testuser-useradmin").getName());
 
         // but the group assignments are the ones already stored
-        List<Integer> groupIdsAfter = _userGroupRepo.findGroupIds(hasUserId(userAdmin.getId()));
+        Set<Integer> groupIdsAfter = new HashSet<>(_userGroupRepo.findGroupIds(hasUserId(userAdmin.getId())));
         Assert.assertFalse(groupIdsAfter.contains(testGroup.getId()));
         Assert.assertEquals(groupIdsBefore, groupIdsAfter);
     }
@@ -970,63 +972,6 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    public void createUserWithGroupNotAdministeredByTheCaller() throws Exception {
-        User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
-        Assert.assertNotNull(userAdmin);
-
-        Group testGroup = _groupRepo.findByName("test");
-        Assert.assertNotNull(testGroup);
-
-        UserDto user = new UserDto();
-        user.setUsername("newuser-othergroup");
-        user.setName("new");
-        user.setProfile(Profile.UserAdmin.name());
-        user.setGroupsUserAdmin(Collections.singletonList(Integer.toString(testGroup.getId())));
-        user.setEmail(Collections.singletonList("mail@test.com"));
-        user.setPassword("Password7$");
-        user.setEnabled(true);
-
-        Gson gson = new Gson();
-        String json = gson.toJson(user);
-
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-
-        this.mockHttpSession = loginAs(userAdmin);
-
-        this.mockMvc.perform(put("/srv/api/users")
-                .content(json)
-                .contentType(API_JSON_EXPECTED_ENCODING)
-                .session(this.mockHttpSession)
-                .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(status().is(400))
-            .andExpect(jsonPath("$.message", is(
-                "You don't have rights to assign a user to the group " + testGroup.getId())));
-
-        Assert.assertNull(_userRepo.findOneByUsername("newuser-othergroup"));
-    }
-
-    @Test
-    public void deleteAdministratorByUserAdminNotAllowed() throws Exception {
-        User administrator = createAdministratorInGroup("sample");
-
-        User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
-        Assert.assertNotNull(userAdmin);
-
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-
-        this.mockHttpSession = loginAs(userAdmin);
-
-        this.mockMvc.perform(delete("/srv/api/users/" + administrator.getId())
-                .session(this.mockHttpSession)
-                .accept(MediaType.parseMediaType("application/json")))
-            .andExpect(status().is(400))
-            .andExpect(jsonPath("$.message", is(
-                "You don't have rights to delete this user because the user is not part of your group")));
-
-        Assert.assertTrue(_userRepo.findById(administrator.getId()).isPresent());
-    }
-
-    @Test
     public void updateAdministratorByUserAdminNotAllowed() throws Exception {
         // An administrator that also carries group memberships, as happens when the account
         // was promoted from a lower profile
@@ -1061,6 +1006,27 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         User after = _userRepo.findById(administrator.getId()).get();
         Assert.assertEquals(Profile.Administrator, after.getProfile());
         Assert.assertTrue(after.isEnabled());
+    }
+
+    @Test
+    public void deleteAdministratorByUserAdminNotAllowed() throws Exception {
+        User administrator = createAdministratorInGroup("sample");
+
+        User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
+        Assert.assertNotNull(userAdmin);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(userAdmin);
+
+        this.mockMvc.perform(delete("/srv/api/users/" + administrator.getId())
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(400))
+            .andExpect(jsonPath("$.message", is(
+                "You don't have rights to delete this user because the user is not part of your group")));
+
+        Assert.assertTrue(_userRepo.findById(administrator.getId()).isPresent());
     }
 
     @Test
@@ -1194,6 +1160,42 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .setProfile(Profile.Editor).setUser(administrator));
 
         return administrator;
+    }
+
+    @Test
+    public void createUserWithGroupNotAdministeredByTheCaller() throws Exception {
+        User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
+        Assert.assertNotNull(userAdmin);
+
+        Group testGroup = _groupRepo.findByName("test");
+        Assert.assertNotNull(testGroup);
+
+        UserDto user = new UserDto();
+        user.setUsername("newuser-othergroup");
+        user.setName("new");
+        user.setProfile(Profile.UserAdmin.name());
+        user.setGroupsUserAdmin(Collections.singletonList(Integer.toString(testGroup.getId())));
+        user.setEmail(Collections.singletonList("mail@test.com"));
+        user.setPassword("Password7$");
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(userAdmin);
+
+        this.mockMvc.perform(put("/srv/api/users")
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(400))
+            .andExpect(jsonPath("$.message", is(
+                "You don't have rights to assign a user to the group " + testGroup.getId())));
+
+        Assert.assertNull(_userRepo.findOneByUsername("newuser-othergroup"));
     }
 
     /**
