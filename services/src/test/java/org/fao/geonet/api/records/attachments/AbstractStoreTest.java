@@ -53,6 +53,11 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by francois on 19/01/16.
  */
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.springframework.mock.web.MockHttpServletRequest;
+import static org.junit.Assert.assertNotNull;
+
 public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
 
     protected static String resources =
@@ -61,6 +66,10 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
     protected IMetadataUtils metadataUtils;
     @Autowired
     private MetadataRepository _metadataRepo;
+    @Autowired
+    protected IMetadataManager metadataManager;
+    @Autowired
+    protected IMetadataIndexer metadataIndexer;
 
     protected abstract Store getStore();
 
@@ -192,6 +201,50 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
         assertEquals("Resource in list has new filename", newFilename, resourcesList.get(0).getFilename());
 
         getStore().delResources(context, metadataUuid, true);
+    }
+
+    @Test
+    public void testAttachmentsApiPatchResourceRename() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        getStore().delResources(context, metadataUuid, true);
+
+        String filename = "record-with-old-links.xml";
+        String newFilename = "api-renamed-record.xml";
+        MultipartFile file = new MockMultipartFile(filename,
+            filename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, filename)
+            ));
+        getStore().putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+
+        AttachmentsApi api = new AttachmentsApi(getStore(), metadataManager, metadataIndexer);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setMethod("PATCH");
+        request.setRequestURI("/srv/api/records/" + metadataUuid + "/attachments/" + filename);
+
+        MetadataResource result = api.patchResource(metadataUuid, filename, null, newFilename, true, request);
+        assertNotNull("Renamed metadata resource should not be null", result);
+        assertEquals("Renamed resource filename is updated", newFilename, result.getFilename());
+
+        getStore().delResources(context, metadataUuid, true);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAttachmentsApiPatchResourceValidation() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        AttachmentsApi api = new AttachmentsApi(getStore(), metadataManager, metadataIndexer);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+
+        api.patchResource(metadataUuid, "somefile.xml", null, null, true, request);
     }
 
     @Test

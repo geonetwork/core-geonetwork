@@ -101,13 +101,9 @@ public class AttachmentsApi {
     private final ApplicationContext appContext = ApplicationContextHolder.get();
     private Store store;
 
-    @Autowired
-    FileMimetypeChecker fileMimetypeChecker;
-    @Autowired
-    SettingManager settingManager;
-    @Autowired
+    private FileMimetypeChecker fileMimetypeChecker;
+    private SettingManager settingManager;
     private IMetadataManager metadataManager;
-    @Autowired
     private IMetadataIndexer metadataIndexer;
 
     public AttachmentsApi() {
@@ -115,6 +111,24 @@ public class AttachmentsApi {
 
     public AttachmentsApi(Store store) {
         this.store = store;
+    }
+
+    public AttachmentsApi(Store store, IMetadataManager metadataManager, IMetadataIndexer metadataIndexer) {
+        this.store = store;
+        this.metadataManager = metadataManager;
+        this.metadataIndexer = metadataIndexer;
+    }
+
+    @Autowired
+    public AttachmentsApi(
+        FileMimetypeChecker fileMimetypeChecker,
+        SettingManager settingManager,
+        IMetadataManager metadataManager,
+        IMetadataIndexer metadataIndexer) {
+        this.fileMimetypeChecker = fileMimetypeChecker;
+        this.settingManager = settingManager;
+        this.metadataManager = metadataManager;
+        this.metadataIndexer = metadataIndexer;
     }
 
     /**

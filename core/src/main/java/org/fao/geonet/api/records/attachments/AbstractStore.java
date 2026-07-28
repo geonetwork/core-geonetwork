@@ -326,8 +326,8 @@ public abstract class AbstractStore implements Store {
                 return newResource;
             }
         } catch (Exception e) {
-            log.error("Unable to rename resource '{}' for metadata {} ({}). {}", resourceId, metadataId, metadataUuid, e.getMessage(), e);
-            throw e;
+            throw new Exception(String.format("Unable to rename resource '%s' for metadata %d (%s): %s",
+                resourceId, metadataId, metadataUuid, e.getMessage()), e);
         }
     }
 
