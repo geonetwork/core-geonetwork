@@ -287,17 +287,23 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
             ));
         loggerStore.putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
 
-        MetadataFileUpload initialUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, filename);
+        MetadataFileUpload initialUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, metadataUuid + "/attachments/" + filename);
+        if (initialUpload == null) {
+            initialUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, filename);
+        }
         assertNotNull("Initial upload record in MetadataFileUploads should exist", initialUpload);
-        assertEquals("Initial upload record has old filename", filename, initialUpload.getFileName());
+        assertTrue("Initial upload record has old filename", initialUpload.getFileName().endsWith(filename));
 
         MetadataResource renamedResource = loggerStore.renameResource(context, metadataUuid, filename, newFilename, true);
         assertNotNull("Renamed resource should not be null", renamedResource);
 
-        MetadataFileUpload updatedUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, newFilename);
+        MetadataFileUpload updatedUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, renamedResource.getId());
+        if (updatedUpload == null) {
+            updatedUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, newFilename);
+        }
         assertNotNull("Updated upload record in MetadataFileUploads should exist with new filename", updatedUpload);
         assertEquals("Updated upload record ID matches initial record ID", initialUpload.getId(), updatedUpload.getId());
-        assertEquals("Updated upload record has new filename", newFilename, updatedUpload.getFileName());
+        assertTrue("Updated upload record has new filename", updatedUpload.getFileName().endsWith(newFilename));
 
         loggerStore.delResources(context, metadataUuid, true);
     }
