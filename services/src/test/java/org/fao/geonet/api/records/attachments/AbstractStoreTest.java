@@ -251,6 +251,22 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
         api.patchResource(metadataUuid, "somefile.xml", null, null, true, request);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testRenameResourceExceedsMaxLength() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        StringBuilder longName = new StringBuilder();
+        for (int i = 0; i < 260; i++) {
+            longName.append("a");
+        }
+        longName.append(".xml");
+
+        getStore().renameResource(context, metadataUuid, "somefile.xml", longName.toString(), true);
+    }
+
     @Test
     public void testResourceLoggerStoreRenameUploadRecord() throws Exception {
         final ServiceContext context = createServiceContext();

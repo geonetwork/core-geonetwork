@@ -344,8 +344,14 @@ public abstract class AbstractStore implements Store {
     }
 
     protected void checkResourceId(final String resourceId) {
+        if (resourceId == null) {
+            throw new IllegalArgumentException("Resource identifier cannot be null.");
+        }
         if (resourceId.contains("..") || resourceId.startsWith("/") || resourceId.startsWith("file:/")) {
             throw new SecurityException(String.format("Invalid resource identifier '%s'.", resourceId));
+        }
+        if (resourceId.length() > 255) {
+            throw new IllegalArgumentException(String.format("Resource identifier '%s' exceeds maximum allowed length of 255 characters.", resourceId));
         }
     }
 
