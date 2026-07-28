@@ -53,6 +53,8 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by francois on 19/01/16.
  */
+import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -70,6 +72,8 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
     protected IMetadataManager metadataManager;
     @Autowired
     protected IMetadataIndexer metadataIndexer;
+    @Autowired
+    protected MetadataFileUploadRepository uploadRepository;
 
     protected abstract Store getStore();
 
@@ -245,6 +249,41 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
         MockHttpServletRequest request = new MockHttpServletRequest();
 
         api.patchResource(metadataUuid, "somefile.xml", null, null, true, request);
+    }
+
+    @Test
+    public void testResourceLoggerStoreRenameUploadRecord() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataIdStr = importMetadata(context);
+        int metadataId = Integer.parseInt(metadataIdStr);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataIdStr);
+
+        Store loggerStore = new ResourceLoggerStore(getStore());
+
+        String filename = "record-with-old-links.xml";
+        String newFilename = "logger-renamed-record.xml";
+        MultipartFile file = new MockMultipartFile(filename,
+            filename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, filename)
+            ));
+        loggerStore.putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+
+        MetadataFileUpload initialUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, filename);
+        assertNotNull("Initial upload record in MetadataFileUploads should exist", initialUpload);
+        assertEquals("Initial upload record has old filename", filename, initialUpload.getFileName());
+
+        MetadataResource renamedResource = loggerStore.renameResource(context, metadataUuid, filename, newFilename, true);
+        assertNotNull("Renamed resource should not be null", renamedResource);
+
+        MetadataFileUpload updatedUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, newFilename);
+        assertNotNull("Updated upload record in MetadataFileUploads should exist with new filename", updatedUpload);
+        assertEquals("Updated upload record ID matches initial record ID", initialUpload.getId(), updatedUpload.getId());
+        assertEquals("Updated upload record has new filename", newFilename, updatedUpload.getFileName());
+
+        loggerStore.delResources(context, metadataUuid, true);
     }
 
     @Test

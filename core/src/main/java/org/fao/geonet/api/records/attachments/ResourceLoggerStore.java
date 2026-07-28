@@ -295,10 +295,38 @@ public class ResourceLoggerStore extends AbstractStore {
 
     }
 
+    /**
+     * Stores a file upload rename request in the MetadataFileUploads table.
+     */
+    private void storeRenameRequest(final String metadataUuid, final String resourceId, final String newName, Boolean approved) throws Exception {
+        final ConfigurableApplicationContext context = ApplicationContextHolder.get();
+        final int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+
+        MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
+        String oldFileName = getFilename(metadataUuid, resourceId);
+        String newFileName = getFilename(metadataUuid, newName);
+
+        try {
+            MetadataFileUpload metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, oldFileName);
+            if (metadataFileUpload != null) {
+                metadataFileUpload.setFileName(newFileName);
+                repo.save(metadataFileUpload);
+            }
+        } catch (Exception ex) {
+            Log.debug(Geonet.RESOURCES, String.format(
+                "No references in MetadataFileUploads repository for metadata '%s', resource '%s' when renaming to '%s'.",
+                metadataUuid, oldFileName, newFileName));
+        }
+    }
+
     @Override
     public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception {
         if (decoratedStore != null) {
-            return decoratedStore.renameResource(context, metadataUuid, resourceId, newName, approved);
+            MetadataResource renamedResource = decoratedStore.renameResource(context, metadataUuid, resourceId, newName, approved);
+            if (renamedResource != null) {
+                storeRenameRequest(metadataUuid, resourceId, newName, approved);
+            }
+            return renamedResource;
         }
 
         return null;
