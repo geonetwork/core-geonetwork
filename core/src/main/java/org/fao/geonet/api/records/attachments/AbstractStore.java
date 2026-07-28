@@ -66,8 +66,8 @@ public abstract class AbstractStore implements Store {
     protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_ESCAPED_SEPARATOR = "\\:";
     private static final Logger log = LoggerFactory.getLogger(AbstractStore.class);
 
-    @Value("${api.params.maxUploadSize}")
-    protected long maxUploadSize;
+    @Value("${api.params.maxUploadSize:104857600}")
+    protected long maxUploadSize = 104857600L;
 
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,

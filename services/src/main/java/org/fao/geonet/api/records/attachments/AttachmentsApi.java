@@ -412,14 +412,18 @@ public class AttachmentsApi {
 
         MetadataResource metadataResource = null;
         if (newResourceName != null) {
-            Store.ResourceHolder metadataResourceToUpdate = store.getResource(context, metadataUuid, resourceId, approved);
-            metadataResource = store.renameResource(context, metadataUuid, resourceId, newResourceName, approved);
+            try (Store.ResourceHolder metadataResourceToUpdate = store.getResource(context, metadataUuid, resourceId, approved)) {
+                metadataResource = store.renameResource(context, metadataUuid, resourceId, newResourceName, approved);
 
-            // Update the metadata references to the resource
-            metadata.setData(metadata.getData().replaceAll(metadataResourceToUpdate.getMetadata().getUrl(), metadataResource.getUrl()));
-            metadataManager.save(metadata);
-            metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
-
+                if (metadataResourceToUpdate != null && metadataResourceToUpdate.getMetadata() != null
+                    && metadataResource != null && metadata != null && metadata.getData() != null) {
+                    // Update the metadata references to the resource
+                    metadata.setData(metadata.getData().replaceAll(metadataResourceToUpdate.getMetadata().getUrl(), metadataResource.getUrl()));
+                    metadataManager.save(metadata);
+                    metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
+                }
+            }
+            resourceId = newResourceName;
         }
         if (visibility != null) {
             metadataResource = store.patchResourceStatus(context, metadataUuid, resourceId, visibility, approved);
