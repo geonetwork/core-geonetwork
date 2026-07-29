@@ -283,7 +283,7 @@
                   select="*/mcc:codeSpace/*/text()"/>
     <xsl:variable name="isUrn"
                   as="xs:boolean"
-                  select="starts-with($codeSpace, 'urn:')"/>
+                  select="$codeSpace = 'urn' or starts-with($codeSpace, 'urn:')"/>
     <xsl:variable name="separator"
                   as="xs:string"
                   select="if ($isUrn) then ':' else '/'"/>
