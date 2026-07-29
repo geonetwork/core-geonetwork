@@ -66,6 +66,14 @@ public interface UserFeedbackRepository extends JpaRepository<UserFeedback, UUID
     List<UserFeedback> findByMetadata_UuidAndStatusOrderByCreationDateDesc(String metadataUuid, UserRatingStatus status, Pageable p);
 
     /**
+     * Find child feedback entries for a parent feedback uuid.
+     *
+     * @param parentUuid the parent feedback uuid
+     * @return the list
+     */
+    List<UserFeedback> findByParent_Uuid(String parentUuid);
+
+    /**
      * Find by metadata uuid order by date desc.
      *
      * @param metadataUuid the metadata uuid

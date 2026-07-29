@@ -211,10 +211,6 @@ public class UserFeedbackAPI {
 
             // Check permission for metadata
             final AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-            if (metadata == null) {
-                printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-                return null;
-            }
 
             final UserSession session = ApiUtils.getUserSession(httpSession);
 
@@ -222,7 +218,7 @@ public class UserFeedbackAPI {
 
             // showing not published comments only to logged users (maybe better
             // restrict to Reviewers)
-            if (session != null && session.isAuthenticated()) {
+            if (session.isAuthenticated()) {
                 published = false;
             }
 
