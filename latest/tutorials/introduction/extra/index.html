@@ -1935,8 +1935,33 @@
 <p>If installed, you can access Kibana from the GeoNetwork admin interface. To access the Kibana interface you need to be logged in as administrator.</p>
 <p>Read more about the usage of Kibana at the <a href="https://www.elastic.co/guide/en/kibana/current/introduction.html">Kibana introduction</a>.</p>
 <h2 id="search-engines">Search engines</h2>
-<p>Search engines provide a good mechanism for wide data discovery for public portals. The process of having catalogue content ingested by search engine crawlers requires some attention. The search engine expects to find robots.txt, at the root of the domain. Robots.txt contains a reference to the sitemap /srv/api/sitemap. Alternatively you can register the sitemap manually at individual search engines.</p>
-<p>GeoNetwork includes on any html representation of a metadata record a representation of that record in schema.org encoded as json-ld. This enables the search engine to extract the information in a structured way.</p>
+<p>Search engines provide a good mechanism for wide data discovery for public portals. The process of having catalogue content ingested by search engine crawlers requires some attention. The search engine expects to find <code>robots.txt</code>, at the root of the domain. The catalogue provide a <code>robots.txt</code> file at http://localhost:8080/geonetwork/srv/api/robots.txt. </p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>User-agent:<span class="w"> </span>*
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>Disallow:<span class="w"> </span>/geonetwork/catalog/
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>Disallow:<span class="w"> </span>/geonetwork/static/
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>Sitemap:<span class="w"> </span>http://localhost:8080/geonetwork/srv/api/sitemap
+</span></code></pre></div>
+<p>This file contains references to the sitemap which register all record landing pages available for indexing. The sitemap is paginated if needed. For better indexing, you may need to register the sitemap manually at individual search engines.</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&lt;urlset</span><span class="w"> </span><span class="na">xmlns=</span><span class="s">&quot;http://www.sitemaps.org/schemas/sitemap/0.9&quot;</span><span class="w"> </span><span class="na">xmlns:xsi=</span><span class="s">&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</span><span class="w"> </span><span class="na">xmlns:dct=</span><span class="s">&quot;http://purl.org/dc/terms/&quot;</span><span class="w"> </span><span class="na">xsi:schemaLocation=</span><span class="s">&quot;http://www.sitemaps.org/schemas/sitemap/0.9 https://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&lt;url&gt;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&lt;loc&gt;</span>http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8?language=all<span class="nt">&lt;/loc&gt;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">    </span><span class="nt">&lt;lastmod&gt;</span>2024-06-04<span class="nt">&lt;/lastmod&gt;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">  </span><span class="nt">&lt;/url&gt;</span>
+</span></code></pre></div>
+<p>GeoNetwork includes a representation of the sitemap record in <a href="https://schema.org/">schema.org</a> (Structured Data for the Web) framework:</p>
+<ul>
+<li>
+<p>Published metadata record accessed through sitemap / GeoNetwork API as HTML include <a href="https://en.wikipedia.org/wiki/JSON-LD"><code>json-ld</code></a> linked data (embedded JSON in the HTML page as a script element). </p>
+</li>
+<li>
+<p>The included <code>json-ld</code> uses vocabulary from schema.org and also the <a href="https://docs.mlcommons.org/croissant/">Croissant extension</a> for machine learning.</p>
+<blockquote>
+<p>Croissant 🥐 is a high-level format for machine learning datasets that combines metadata, resource file descriptions, data structure, and default ML semantics into a single file; it works with existing datasets to make them easier to find, use, and support with tools. Croissant builds on schema.org, and its Dataset vocabulary, a widely used format to represent datasets on the Web, and make them searchable.</p>
+</blockquote>
+<p>Croissant is used to cover data model aspects (ISO19110) and additional details about distributions not covered by schema.org.</p>
+</li>
+</ul>
+<p>This enables the search engine to extract the information in a structured way.</p>
 
 
 
