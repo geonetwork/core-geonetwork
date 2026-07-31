@@ -3398,8 +3398,15 @@ that can request an account. If not configured any email address is allowed.</p>
 <li><strong>Automatic Fixes</strong>: Enabled by default. It is recommended you do not use the metadata editor when auto-fixing is disabled. See <a href="http://trac.osgeo.org/geonetwork/ticket/368">ticket #368</a> for more details.</li>
 </ul>
 <h2 id="search_stats_config">Search Statistics</h2>
-<p>Enables/disables search statistics capture. Search statistics are stored in the database and can be queried using the <code>Search Statistics</code> page.</p>
-<p>There is very little compute overhead involved in storing search statistics as they are written to the database in a background thread. However database storage for a very busy site must be carefully planned.</p>
+<div class="admonition warning">
+<p class="admonition-title">Not currently functional</p>
+<p>This setting has no effect. Search statistics capture was removed when the catalog migrated from Lucene to Elasticsearch, with the intention of rebuilding it on top of Elasticsearch and Kibana. That work has not been completed, so enabling this option does not collect any data and there is no <code>Search Statistics</code> page to query.</p>
+<p>See <a href="https://github.com/geonetwork/core-geonetwork/issues/4499">issue #4499</a> for the current status.</p>
+<p>To collect usage statistics in the meantime, configure a web analytics service using <code>WEB-INF/config.properties</code>:</p>
+<div class="language-properties highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="na">analytics.web.service</span><span class="o">=</span><span class="s">matomo</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="na">analytics.web.jscode</span><span class="o">=</span><span class="s">&lt;tracking code provided by the analytics service&gt;</span>
+</span></code></pre></div>
+</div>
 <h2 id="open-archive-initiative-oai-pmh-provider">Open Archive Initiative (OAI-PMH) Provider</h2>
 <p>Options in this group control the way in which the OAI Server responds to OAIPMH harvest requests from remote sites.</p>
 <ul>
