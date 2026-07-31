@@ -42,10 +42,10 @@ import java.nio.charset.StandardCharsets;
 
 @Component
 public class SemanticUtils {
-    @Value("${semantic.server.url:http://localhost:11434/v1/embeddings}")
+    @Value("${semantic.server.url:}")
     private String semanticServerUrl;
 
-    @Value("${semantic.server.model:bge-m3}")
+    @Value("${semantic.server.model:}")
     private String semanticServerModel;
 
     @Value("${semantic.server.apikey:}")
@@ -53,6 +53,15 @@ public class SemanticUtils {
 
     public String buildEmbedding(String text) {
         if (StringUtils.isBlank(text)) {
+            return "";
+        }
+
+        if(StringUtils.isBlank(semanticServerUrl)) {
+            return "";
+        }
+
+        if(StringUtils.isBlank(semanticServerModel)) {
+            Log.error(Geonet.GEONETWORK, "When configuring a semantic server, you must provide a supported model. Check semantic.server.model in config.properties.");
             return "";
         }
 
