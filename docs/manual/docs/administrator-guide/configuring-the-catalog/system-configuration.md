@@ -175,9 +175,18 @@ For each metadata schema, the catalog has an XSL transformation (`update-fixed-i
 
 ## Search Statistics {#search_stats_config}
 
-Enables/disables search statistics capture. Search statistics are stored in the database and can be queried using the `Search Statistics` page.
+!!! warning "Not currently functional"
 
-There is very little compute overhead involved in storing search statistics as they are written to the database in a background thread. However database storage for a very busy site must be carefully planned.
+    This setting has no effect. Search statistics capture was removed when the catalog migrated from Lucene to Elasticsearch, with the intention of rebuilding it on top of Elasticsearch and Kibana. That work has not been completed, so enabling this option does not collect any data and there is no `Search Statistics` page to query.
+
+    See [issue #4499](https://github.com/geonetwork/core-geonetwork/issues/4499) for the current status.
+
+    To collect usage statistics in the meantime, configure a web analytics service using ```WEB-INF/config.properties```:
+
+    ```properties
+    analytics.web.service=matomo
+    analytics.web.jscode=<tracking code provided by the analytics service>
+    ```
 
 ## Open Archive Initiative (OAI-PMH) Provider
 
