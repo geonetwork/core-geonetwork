@@ -29,9 +29,14 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.IO;
 import org.jdom.Element;
 import org.junit.Test;
@@ -43,6 +48,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static junit.framework.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
@@ -56,6 +64,10 @@ import static org.junit.Assert.assertTrue;
 public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
     @Autowired
     MetadataRepository _metadataRepo;
+    @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private OperationAllowedRepository operationAllowedRepository;
 
     @Test
     public void testDoImportMefVersion1() throws Exception {
@@ -70,6 +82,38 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
 
         assertNotNull(metadata);
         assertEquals(admin.getId(), metadata.getSourceInfo().getOwner().intValue());
+        assertEquals(1, metadata.getCategories().size());
+        assertEquals("datasets", metadata.getCategories().iterator().next().getName());
+
+        final Group sampleGroup = groupRepository.findByName("sample");
+        final Group allGroup = groupRepository.findByName("all");
+        final Group intranetGroup = groupRepository.findByName("intranet");
+
+        assertNotNull(sampleGroup);
+        assertNotNull(allGroup);
+        assertNotNull(intranetGroup);
+
+        assertEquals(Set.of(
+                ReservedOperation.view.getId(),
+                ReservedOperation.download.getId(),
+                ReservedOperation.notify.getId(),
+                ReservedOperation.dynamic.getId(),
+                ReservedOperation.featured.getId()),
+            getAllowedOperationsForGroup(metadata.getId(), sampleGroup.getId()));
+
+        assertEquals(Set.of(
+                ReservedOperation.view.getId(),
+                ReservedOperation.download.getId(),
+                ReservedOperation.dynamic.getId(),
+                ReservedOperation.featured.getId()),
+            getAllowedOperationsForGroup(metadata.getId(), allGroup.getId()));
+
+        assertEquals(Set.of(
+                ReservedOperation.view.getId(),
+                ReservedOperation.download.getId(),
+                ReservedOperation.dynamic.getId(),
+                ReservedOperation.featured.getId()),
+            getAllowedOperationsForGroup(metadata.getId(), intranetGroup.getId()));
     }
 
     @Test
@@ -91,6 +135,64 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
             assertNotNull(metadata);
             assertEquals(admin.getId(), metadata.getSourceInfo().getOwner().intValue());
         }
+    }
+
+    @Test
+    public void testDoImportMefVersion2WithRelatedFeatureCatalogueInheritsCategoriesAndPrivileges() throws Exception {
+        ServiceContext context = createServiceContext();
+
+        final Path resource = IO.toPath(MEFLibIntegrationTest.class.getResource("mef2-related-fc.mef").toURI());
+        final User admin = loginAsAdmin(context);
+
+        Element params = new Element("request");
+        final List<String> metadataIds = MEFLib.doImport(params, context, resource, getStyleSheets());
+        assertEquals(2, metadataIds.size());
+
+        final List<AbstractMetadata> importedMetadata = metadataIds.stream()
+            .map(Integer::parseInt)
+            .map(id -> _metadataRepo.findById(id).get())
+            .collect(Collectors.toList());
+
+        final Optional<AbstractMetadata> featureCatalogue = importedMetadata.stream()
+            .filter(md -> "iso19110".equals(md.getDataInfo().getSchemaId()))
+            .findFirst();
+
+        assertTrue("Imported MEF should include an iso19110 feature catalogue record", featureCatalogue.isPresent());
+
+        final AbstractMetadata featureCatalogueRecord = featureCatalogue.get();
+        assertEquals(admin.getId(), featureCatalogueRecord.getSourceInfo().getOwner().intValue());
+        assertEquals(1, featureCatalogueRecord.getCategories().size());
+        assertEquals("datasets", featureCatalogueRecord.getCategories().iterator().next().getName());
+
+        final Group sampleGroup = groupRepository.findByName("sample");
+        final Group allGroup = groupRepository.findByName("all");
+        final Group intranetGroup = groupRepository.findByName("intranet");
+
+        assertNotNull(sampleGroup);
+        assertNotNull(allGroup);
+        assertNotNull(intranetGroup);
+
+        assertEquals(Set.of(
+                ReservedOperation.view.getId(),
+                ReservedOperation.download.getId(),
+                ReservedOperation.notify.getId(),
+                ReservedOperation.dynamic.getId(),
+                ReservedOperation.featured.getId()),
+            getAllowedOperationsForGroup(featureCatalogueRecord.getId(), sampleGroup.getId()));
+
+        assertEquals(Set.of(
+                ReservedOperation.view.getId(),
+                ReservedOperation.download.getId(),
+                ReservedOperation.dynamic.getId(),
+                ReservedOperation.featured.getId()),
+            getAllowedOperationsForGroup(featureCatalogueRecord.getId(), allGroup.getId()));
+
+        assertEquals(Set.of(
+                ReservedOperation.view.getId(),
+                ReservedOperation.download.getId(),
+                ReservedOperation.dynamic.getId(),
+                ReservedOperation.featured.getId()),
+            getAllowedOperationsForGroup(featureCatalogueRecord.getId(), intranetGroup.getId()));
     }
 
     @Test
@@ -184,5 +286,14 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
         public List<String> getMefFilesToLoad() {
             return mefFilesToLoad;
         }
+    }
+
+    private Set<Integer> getAllowedOperationsForGroup(int metadataId, int groupId) {
+        return operationAllowedRepository.findAllById_MetadataId(metadataId)
+            .stream()
+            .map(OperationAllowed::getId)
+            .filter(id -> id.getGroupId() == groupId)
+            .map(id -> id.getOperationId())
+            .collect(Collectors.toSet());
     }
 }

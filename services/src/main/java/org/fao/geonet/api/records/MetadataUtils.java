@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -81,7 +81,6 @@ import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataValidationSpecs;
-import org.fao.geonet.services.relations.Get;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
@@ -713,12 +712,9 @@ public class MetadataUtils {
             relatedRecords.addContent(calculateResults("\"" + uuid + "\"", "hassources", from, to, null, portalFilter));
         }
 
-        // Relation table is preserved for backward compatibility but should not be used anymore.
+        // Feature catalogues associated through the feature catalogue citation.
         if (listOfTypes.isEmpty() ||
             listOfTypes.contains(RelatedItemType.related)) {
-            // Related records could be feature catalogue defined in relation table
-            relatedRecords.addContent(new Element("related").addContent(Get.getRelation(iId, "full", context)));
-            // Or feature catalogue define in feature catalogue citation
             relatedRecords.addContent(calculateResults("\"" + uuid + "\"", "hasfeaturecats", from, to, null, portalFilter));
         }
 

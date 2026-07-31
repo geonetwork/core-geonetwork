@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -25,9 +25,11 @@ package org.fao.geonet.api.records;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.ZipUtil;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.SourceRepository;
@@ -45,10 +47,16 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.FileSystem;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -105,6 +113,34 @@ public class MetadataAssociatedApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(MediaType.APPLICATION_XML))
             .andExpect(xpath("/apiError/code").string("resource_not_found"));
 
+    }
+
+    @Test
+    public void exportMef2IncludesReferencedFeatureCatalogue() throws Exception {
+        loginAsAdmin(context);
+
+        // Load a sample where a dataset references a feature catalogue through
+        // its feature catalogue citation.
+        final MEFLibIntegrationTest.ImportMetadata importMetadata =
+            new MEFLibIntegrationTest.ImportMetadata(this, context);
+        importMetadata.getMefFilesToLoad().add("/org/fao/geonet/api/records/samples/related-test.zip");
+        importMetadata.invoke();
+
+        final String datasetUuid = "87e54d56-323f-4201-88ac-7ac7f9d8ee25";
+
+        Path mef = MEFLib.doMEF2Export(context, Collections.singleton(datasetUuid), "full",
+            false, getStyleSheets(), false, false, false, false, false, false);
+        try (FileSystem zipFs = ZipUtil.openZipFs(mef)) {
+            // The feature catalogue resolved from the citation is included in the export.
+            Path featureCatalogue = zipFs.getPath(datasetUuid, "applschema", "metadata.xml");
+            assertTrue(Files.exists(featureCatalogue));
+
+            // And it is the referenced feature catalogue record, not the dataset itself.
+            String content = new String(Files.readAllBytes(featureCatalogue), StandardCharsets.UTF_8);
+            assertTrue(content.contains("FC_FeatureCatalogue"));
+        } finally {
+            Files.delete(mef);
+        }
     }
 
     @Test
