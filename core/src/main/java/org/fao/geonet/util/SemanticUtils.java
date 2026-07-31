@@ -43,45 +43,53 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class SemanticUtils {
     @Value("${semantic.server.url:}")
-    private String semanticServerUrl;
+    private String serverUrl;
 
     @Value("${semantic.server.model:}")
-    private String semanticServerModel;
+    private String serverModel;
+
+    @Value("${semantic.server.model_type:}")
+    private String serverModelType;
 
     @Value("${semantic.server.apikey:}")
-    private String semanticServerApiKey;
+    private String serverApiKey;
 
     public String buildEmbedding(String text) {
         if (StringUtils.isBlank(text)) {
             return "";
         }
 
-        if(StringUtils.isBlank(semanticServerUrl)) {
+        if(StringUtils.isBlank(serverUrl)) {
             return "";
         }
 
-        if(StringUtils.isBlank(semanticServerModel)) {
+        if(StringUtils.isBlank(serverModel)) {
             Log.error(Geonet.GEONETWORK, "When configuring a semantic server, you must provide a supported model. Check semantic.server.model in config.properties.");
             return "";
         }
 
+
         HttpURLConnection connection = null;
         try {
-            URL url = new URL(semanticServerUrl);
+            URL url = new URL(serverUrl);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setConnectTimeout(10_000);
             connection.setReadTimeout(30_000);
             connection.setRequestProperty("Content-Type", "application/json");
-            if (StringUtils.isNotBlank(semanticServerApiKey)) {
-                connection.setRequestProperty("Authorization", "Bearer " + semanticServerApiKey);
+            if (StringUtils.isNotBlank(serverApiKey)) {
+                connection.setRequestProperty("Authorization", "Bearer " + serverApiKey);
             }
             connection.setDoOutput(true);
 
             ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode payload = objectMapper.createObjectNode();
-            payload.put("model", semanticServerModel);
+            payload.put("model", serverModel);
             payload.put("input", text);
+
+            if(StringUtils.isNotBlank(serverModelType)) {
+                payload.put("input_type", serverModelType);
+            }
 
             try (OutputStream outputStream = connection.getOutputStream()) {
                 outputStream.write(objectMapper.writeValueAsBytes(payload));
@@ -137,4 +145,38 @@ public class SemanticUtils {
 
         return null;
     }
+
+
+    public String getServerUrl() {
+        return serverUrl;
+    }
+
+    public void setServerUrl(String serverUrl) {
+        this.serverUrl = serverUrl;
+    }
+
+    public String getServerModel() {
+        return serverModel;
+    }
+
+    public void setServerModel(String serverModel) {
+        this.serverModel = serverModel;
+    }
+
+    public String getServerModelType() {
+        return serverModelType;
+    }
+
+    public void setServerModelType(String serverModelType) {
+        this.serverModelType = serverModelType;
+    }
+
+    public String getServerApiKey() {
+        return serverApiKey;
+    }
+
+    public void setServerApiKey(String serverApiKey) {
+        this.serverApiKey = serverApiKey;
+    }
+
 }
