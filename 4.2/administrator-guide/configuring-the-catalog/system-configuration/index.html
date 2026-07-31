@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -35,7 +35,7 @@
       
     
     
-      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -3064,8 +3064,11 @@ that can request an account. If not configured any email address is allowed.</p>
 <li><strong>Automatic Fixes</strong>: Enabled by default. It is recommended you do not use the metadata editor when auto-fixing is disabled. See <a href="http://trac.osgeo.org/geonetwork/ticket/368">http://trac.osgeo.org/geonetwork/ticket/368</a> for more details.</li>
 </ul>
 <h2 id="search_stats_config">Search Statistics</h2>
-<p>Enables/disables search statistics capture. Search statistics are stored in the database and can be queried using the <code>Search Statistics</code> page.</p>
-<p>There is very little compute overhead involved in storing search statistics as they are written to the database in a background thread. However database storage for a very busy site must be carefully planned.</p>
+<div class="admonition warning">
+<p class="admonition-title">Not currently functional</p>
+<p>This setting has no effect. Search statistics capture was removed when the catalog migrated from Lucene to Elasticsearch, with the intention of rebuilding it on top of Elasticsearch and Kibana. That work has not been completed, so enabling this option does not collect any data and there is no <code>Search Statistics</code> page to query.</p>
+<p>See <a href="https://github.com/geonetwork/core-geonetwork/issues/4499">issue #4499</a> for the current status.</p>
+</div>
 <h2 id="open-archive-initiative-oai-pmh-provider">Open Archive Initiative (OAI-PMH) Provider</h2>
 <p>Options in this group control the way in which the OAI Server responds to OAIPMH harvest requests from remote sites.</p>
 <ul>
@@ -3344,7 +3347,7 @@ type=&quot;application/opensearchdescription+xml&quot; title=&quot;Open Search 
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>

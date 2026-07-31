@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
     
     
       
@@ -35,7 +35,7 @@
       
     
     
-      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
       
         
         <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
@@ -1512,7 +1512,7 @@
 <h2 id="memory">Memory</h2>
 <p>GeoNetwork is a memory intensive application. Consider to provide at least 2GB, but 4GB is probably better. But don't go higher than 6GB. Read more about memory in Java applications at the <a href="https://docs.geoserver.org/stable/en/user/production/container.html">geoserver documentation</a>. If you're setting up an instance of Elastic Search, consider to provide at least 8GB to Elastic.</p>
 <h2 id="scaling">Scaling</h2>
-<p>GeoNetwork currently has challenges to be set up in a load balanced/fail over configuration. The search index is stored in memory and will not be aware of changes on records done in other nodes. An option to optimise this is introducing a master-minion model; modifications are done in master, minion harvest master at intervals. Each minion will have a local database. Typical aspects stored in the database, like groups, settings, user feedback and search statistics will not be synchronised between nodes. The data folder can be shared between nodes by using a network share.</p>
+<p>GeoNetwork currently has challenges to be set up in a load balanced/fail over configuration. The search index is stored in memory and will not be aware of changes on records done in other nodes. An option to optimise this is introducing a master-minion model; modifications are done in master, minion harvest master at intervals. Each minion will have a local database. Typical aspects stored in the database, like groups, settings and user feedback will not be synchronised between nodes. The data folder can be shared between nodes by using a network share.</p>
 <h2 id="geonetwork-and-docker">GeoNetwork and Docker</h2>
 <p>Docker is a popular virtualisation technology for hosting services. Conventions from Docker can also be used in other cloud environments. As GeoNetwork community we maintain a <a href="https://hub.docker.com/_/geonetwork">docker image on docker hub</a>. Note that for each version there is also a postgres tag which uses a remote postgres database. A best practices for Docker is to parameterise GeoNetwork using environment variables which are injected from docker machine or an orchestration.</p>
 <h2 id="web-proxy">Web Proxy</h2>
@@ -1736,7 +1736,7 @@
       <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
       
     
   </body>
