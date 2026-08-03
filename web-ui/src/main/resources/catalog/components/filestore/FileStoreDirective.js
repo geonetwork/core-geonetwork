@@ -368,6 +368,7 @@
             scope.cancelEditResource = function (r, index) {
               delete r.filename_edit;
               scope.duplicatedFilename = false;
+              scope.editingResource = false;
               updateVisibilityEditingPanel(index, false);
             };
 
