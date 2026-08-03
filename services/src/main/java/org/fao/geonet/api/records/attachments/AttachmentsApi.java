@@ -398,8 +398,8 @@ public class AttachmentsApi {
     public MetadataResource patchResource(
         @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
         @Parameter(description = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
-        @Parameter(description = "The visibility", required = true, example = "public") @RequestParam(required = false) MetadataResourceVisibility visibility,
-        @Parameter(description = "The visibility", required = true, example = "public") @RequestParam(required = false) String newResourceName,
+        @Parameter(description = "The visibility", example = "public") @RequestParam(required = false) MetadataResourceVisibility visibility,
+        @Parameter(description = "The new resource name") @RequestParam(required = false) String newResourceName,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
@@ -412,16 +412,14 @@ public class AttachmentsApi {
 
         MetadataResource metadataResource = null;
         if (newResourceName != null) {
-            try (Store.ResourceHolder metadataResourceToUpdate = store.getResource(context, metadataUuid, resourceId, approved)) {
-                metadataResource = store.renameResource(context, metadataUuid, resourceId, newResourceName, approved);
+            MetadataResource previousResource = store.getResourceMetadata(context, metadataUuid, resourceId, approved);
+            metadataResource = store.renameResource(context, metadataUuid, resourceId, newResourceName, approved);
 
-                if (metadataResourceToUpdate != null && metadataResourceToUpdate.getMetadata() != null
-                    && metadataResource != null && metadata != null && metadata.getData() != null) {
-                    // Update the metadata references to the resource
-                    metadata.setData(metadata.getData().replaceAll(metadataResourceToUpdate.getMetadata().getUrl(), metadataResource.getUrl()));
-                    metadataManager.save(metadata);
-                    metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
-                }
+            if (previousResource != null && metadataResource != null && metadata != null && metadata.getData() != null) {
+                // Update the metadata references to the resource
+                metadata.setData(metadata.getData().replace(previousResource.getUrl(), metadataResource.getUrl()));
+                metadataManager.save(metadata);
+                metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
             }
             resourceId = newResourceName;
         }

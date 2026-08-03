@@ -479,5 +479,6 @@
     "indexingIssues": "Indexing issues",
     "indexingErrors": "Errors",
     "indexingWarnings": "Warnings",
-    "fileStoreDuplicatedFilename": "The filename is already used in the file store."
+    "fileStoreDuplicatedFilename": "The filename is already used in the file store.",
+    "renameResource": "Rename resource"
 }

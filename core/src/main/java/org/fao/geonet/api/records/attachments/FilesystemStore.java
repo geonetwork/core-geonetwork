@@ -227,15 +227,19 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         checkResourceId(newName);
         try (ResourceHolder resourceHolder = getResource(context, metadataUuid, resourceId, approved)) {
+            MetadataResourceVisibility visibility = resourceHolder.getMetadata().getVisibility();
             Path currentFilePath = getResourcePath(resourceHolder.getResource(), context);
-            Path newFilePath = getPath(context, metadataId, MetadataResourceVisibility.PRIVATE, newName, approved);
-            Files.move(currentFilePath, newFilePath, StandardCopyOption.REPLACE_EXISTING);
-            return getResourceDescription(context, metadataUuid, MetadataResourceVisibility.PRIVATE, newFilePath, approved);
+            Path newFilePath = getPath(context, metadataId, visibility, newName, approved);
+            if (Files.exists(newFilePath)) {
+                throw new ResourceAlreadyExistException(
+                    String.format("A resource with name '%s' and status '%s' already exists for metadata '%d'.", newName, visibility, metadataId));
+            }
+            Files.move(currentFilePath, newFilePath);
+            return getResourceDescription(context, metadataUuid, visibility, newFilePath, approved);
         } catch (IOException e) {
-            Log.error(Geonet.RESOURCES,
-                String.format("Unable to rename resource '%s' for metadata %d (%s). %s", resourceId, metadataId, metadataUuid, e.getMessage()));
+            throw new IOException(
+                String.format("Unable to rename resource '%s' for metadata %d (%s). %s", resourceId, metadataId, metadataUuid, e.getMessage()), e);
         }
-        return null;
     }
 
 

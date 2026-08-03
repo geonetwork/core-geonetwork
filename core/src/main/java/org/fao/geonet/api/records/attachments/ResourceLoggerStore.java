@@ -309,13 +309,13 @@ public class ResourceLoggerStore extends AbstractStore {
         MetadataFileUpload metadataFileUpload = null;
         try {
             metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, fullResourceId);
-        } catch (Exception ex) {
+        } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
             try {
                 metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, resourceId);
-            } catch (Exception ex2) {
+            } catch (org.springframework.dao.EmptyResultDataAccessException ex2) {
                 try {
                     metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, oldFileName);
-                } catch (Exception ex3) {
+                } catch (org.springframework.dao.EmptyResultDataAccessException ex3) {
                     Log.debug(Geonet.RESOURCES, String.format(
                         "No references in MetadataFileUploads repository for metadata '%s', resource '%s' when renaming to '%s'.",
                         metadataUuid, resourceId, renamedResource.getId()));

@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.InputStreamLimitExceededException;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataResource;
@@ -320,11 +321,27 @@ public abstract class AbstractStore implements Store {
             MetadataResource metadataResource = resourceHolder.getMetadata();
             MetadataResourceVisibility visibility = metadataResource != null ? metadataResource.getVisibility() : MetadataResourceVisibility.PRIVATE;
             Date changeDate = metadataResource != null ? metadataResource.getLastModification() : null;
+            MetadataResource newResource;
             try (InputStream is = resourceHolder.getResource().getInputStream()) {
-                MetadataResource newResource = putResource(context, metadataUuid, newName, is, changeDate, visibility, approved);
-                delResource(context, metadataUuid, visibility, resourceId, approved);
-                return newResource;
+                newResource = putResource(context, metadataUuid, newName, is, changeDate, visibility, approved);
             }
+            try {
+                delResource(context, metadataUuid, visibility, resourceId, approved);
+            } catch (Exception deleteException) {
+                // Roll back the newly created copy so a failed rename doesn't leave the resource duplicated
+                try {
+                    delResource(context, metadataUuid, visibility, newName, approved);
+                } catch (Exception rollbackException) {
+                    log.error(String.format(
+                        "Unable to roll back resource '%s' created while renaming '%s' for metadata %d (%s): %s",
+                        newName, resourceId, metadataId, metadataUuid, rollbackException.getMessage()), rollbackException);
+                }
+                throw deleteException;
+            }
+            return newResource;
+        } catch (SecurityException | IllegalArgumentException | ResourceNotFoundException | ResourceAlreadyExistException e) {
+            // Rethrow as-is so the original exception type (and its mapped HTTP status) is preserved.
+            throw e;
         } catch (Exception e) {
             throw new Exception(String.format("Unable to rename resource '%s' for metadata %d (%s): %s",
                 resourceId, metadataId, metadataUuid, e.getMessage()), e);

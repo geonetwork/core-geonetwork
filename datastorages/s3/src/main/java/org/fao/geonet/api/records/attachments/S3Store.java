@@ -27,6 +27,7 @@ package org.fao.geonet.api.records.attachments;
 import com.amazonaws.AmazonServiceException;
 import com.amazonaws.services.s3.model.*;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
@@ -241,6 +242,14 @@ public class S3Store extends AbstractStore {
             if (sourceKey.equals(destKey)) {
                 return createResourceDescription(metadataUuid, sourceVisibility, newName, objectMetadata.getContentLength(),
                                                  objectMetadata.getLastModified(), metadataId, approved);
+            }
+            try {
+                s3.getClient().getObjectMetadata(s3.getBucket(), destKey);
+                throw new ResourceAlreadyExistException(
+                    String.format("A resource with name '%s' and status '%s' already exists for metadata '%s'.",
+                        newName, sourceVisibility, metadataUuid));
+            } catch (AmazonServiceException ignored) {
+                // destination does not exist, safe to proceed
             }
             final CopyObjectResult copyResult = s3.getClient().copyObject(
                 s3.getBucket(), sourceKey, s3.getBucket(), destKey);
