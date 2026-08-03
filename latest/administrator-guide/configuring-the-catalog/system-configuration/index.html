@@ -3469,7 +3469,13 @@ type=&quot;application/opensearchdescription+xml&quot; title=&quot;Open Search 
 <p><em>Number of processing threads</em> The maximum number of processing threads that can be allocated to an indexing task.</p>
 <p>Note: this option is only available for databases that have been tested. Those databases are PostGIS and Oracle. You should also carefully consider how many connections to the database you allocate in the database configuration as each thread could tie up one database connection for the duration of a long indexing session (for example). See the advanced configuration for more details of how to configure the number of connections in the database connection pool.</p>
 <h2 id="metadata-privileges">Metadata Privileges</h2>
-<p><em>Only set privileges to user's groups</em>: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator). At the moment this option cannot be disabled and is likely to be deprecated in the next version of GeoNetwork.</p>
+<ul>
+<li><strong>Only set privileges to user's groups</strong>: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator).</li>
+<li><strong>Publication by users reviewer in record group only</strong>: Allow publication by administrator and reviewer member of record group. If disabled, then also all users reviewer in group with editing rights can publish/unpublish a record.</li>
+<li><strong>Manage the publication date automatically</strong>: When enabled the publication date of the metadata is set automatically when the metadata is published and removed when the metadata is unpublished.</li>
+<li><strong>Notification level when a metadata is published / unpublished</strong>: Define which users to alert when a metadata is published / unpublished.</li>
+<li><strong>Groups to notify when a metadata is published / unpublished</strong>: List of groups, separated by the char |, to notify when a metadata is published / unpublished (for 'Notify the group(s) emails' notification level).</li>
+</ul>
 <h2 id="metadata-create">Metadata create</h2>
 <h3 id="generate-uuid">Generate UUID</h3>
 <p>When enabled, GeoNetwork automatically assigns a <strong>random UUID</strong> to each new metadata record.</p>
