@@ -43,8 +43,6 @@ public final class LogoUtils {
         + " Modified response. If modified returns the image. If there is "
         + "no logo then returns a transparent 1x1 px PNG image.";
 
-    private static final int SIX_HOURS = 60 * 60 * 6;
-
     private static final String TRANSPARENT_1_X_1_PNG_BASE64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII";
 
     private static final byte[] TRANSPARENT_1_X_1_PNG = org.apache.commons.codec.binary.Base64.decodeBase64(TRANSPARENT_1_X_1_PNG_BASE64);
@@ -72,14 +70,13 @@ public final class LogoUtils {
                                                    Resources.ResourceHolder image) throws IOException {
         if (image != null) {
             FileTime lastModifiedTime = image.getLastModifiedTime();
-            response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS * 1000L);
             if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
                 return;
             }
             response.setContentType(AttachmentsApi.getFileContentType(image.getPath().getFileName().toString()));
             response.setContentLength((int) Files.size(image.getPath()));
-            response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
             addLogoSecurityHeaders(response);
+            addLogoCacheHeaders(response);
             FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());
             return;
         }
@@ -89,9 +86,13 @@ public final class LogoUtils {
         }
         response.setContentType("image/png");
         response.setContentLength(TRANSPARENT_1_X_1_PNG.length);
-        response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
         addLogoSecurityHeaders(response);
+        addLogoCacheHeaders(response);
         response.getOutputStream().write(TRANSPARENT_1_X_1_PNG);
+    }
+
+    private static void addLogoCacheHeaders(HttpServletResponse response) {
+        response.setHeader("Cache-Control", "no-cache, public, must-revalidate");
     }
 
     /**
