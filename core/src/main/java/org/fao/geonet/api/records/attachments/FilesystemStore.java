@@ -222,6 +222,26 @@ public class FilesystemStore extends AbstractStore {
         return new FilesystemStoreResourceContainer(metadataUuid, metadataId, metadataUuid, settingManager.getNodeURL() + "api/records/", approved);
     }
 
+    @Override
+    public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception {
+        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        checkResourceId(newName);
+        try (ResourceHolder resourceHolder = getResource(context, metadataUuid, resourceId, approved)) {
+            MetadataResourceVisibility visibility = resourceHolder.getMetadata().getVisibility();
+            Path currentFilePath = getResourcePath(resourceHolder.getResource(), context);
+            Path newFilePath = getPath(context, metadataId, visibility, newName, approved);
+            if (Files.exists(newFilePath)) {
+                throw new ResourceAlreadyExistException(
+                    String.format("A resource with name '%s' and status '%s' already exists for metadata '%d'.", newName, visibility, metadataId));
+            }
+            Files.move(currentFilePath, newFilePath);
+            return getResourceDescription(context, metadataUuid, visibility, newFilePath, approved);
+        } catch (IOException e) {
+            throw new IOException(
+                String.format("Unable to rename resource '%s' for metadata %d (%s). %s", resourceId, metadataId, metadataUuid, e.getMessage()), e);
+        }
+    }
+
 
     @Override
     public MetadataResource putResource(final ServiceContext context, final String metadataUuid, final String filename,

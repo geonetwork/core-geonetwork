@@ -30,6 +30,7 @@ import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.InputStreamLimitExceededException;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.MetadataResource;
@@ -55,6 +56,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -65,8 +67,8 @@ public abstract class AbstractStore implements Store {
     protected static final String RESOURCE_MANAGEMENT_EXTERNAL_PROPERTIES_ESCAPED_SEPARATOR = "\\:";
     private static final Logger log = LoggerFactory.getLogger(AbstractStore.class);
 
-    @Value("${api.params.maxUploadSize}")
-    protected long maxUploadSize;
+    @Value("${api.params.maxUploadSize:104857600}")
+    protected long maxUploadSize = 104857600L;
 
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
@@ -323,6 +325,41 @@ public abstract class AbstractStore implements Store {
         }
     }
 
+    @Override
+    public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception {
+        int metadataId = canEdit(context, metadataUuid, approved);
+        checkResourceId(newName);
+        try (ResourceHolder resourceHolder = getResource(context, metadataUuid, resourceId, approved)) {
+            MetadataResource metadataResource = resourceHolder.getMetadata();
+            MetadataResourceVisibility visibility = metadataResource != null ? metadataResource.getVisibility() : MetadataResourceVisibility.PRIVATE;
+            Date changeDate = metadataResource != null ? metadataResource.getLastModification() : null;
+            MetadataResource newResource;
+            try (InputStream is = resourceHolder.getResource().getInputStream()) {
+                newResource = putResource(context, metadataUuid, newName, is, changeDate, visibility, approved);
+            }
+            try {
+                delResource(context, metadataUuid, visibility, resourceId, approved);
+            } catch (Exception deleteException) {
+                // Roll back the newly created copy so a failed rename doesn't leave the resource duplicated
+                try {
+                    delResource(context, metadataUuid, visibility, newName, approved);
+                } catch (Exception rollbackException) {
+                    log.error(String.format(
+                        "Unable to roll back resource '%s' created while renaming '%s' for metadata %d (%s): %s",
+                        newName, resourceId, metadataId, metadataUuid, rollbackException.getMessage()), rollbackException);
+                }
+                throw deleteException;
+            }
+            return newResource;
+        } catch (SecurityException | IllegalArgumentException | ResourceNotFoundException | ResourceAlreadyExistException e) {
+            // Rethrow as-is so the original exception type (and its mapped HTTP status) is preserved.
+            throw e;
+        } catch (Exception e) {
+            throw new Exception(String.format("Unable to rename resource '%s' for metadata %d (%s): %s",
+                resourceId, metadataId, metadataUuid, e.getMessage()), e);
+        }
+    }
+
     protected String getFilename(final String metadataUuid, final String resourceId) {
         // It's not always clear when we get a resourceId or a filename
         String prefix = metadataUuid + "/attachments/";
@@ -336,8 +373,14 @@ public abstract class AbstractStore implements Store {
     }
 
     protected void checkResourceId(final String resourceId) {
+        if (resourceId == null) {
+            throw new IllegalArgumentException("Resource identifier cannot be null.");
+        }
         if (resourceId.contains("..") || resourceId.startsWith("/") || resourceId.startsWith("file:/")) {
             throw new SecurityException(String.format("Invalid resource identifier '%s'.", resourceId));
+        }
+        if (resourceId.length() > 255) {
+            throw new IllegalArgumentException(String.format("Resource identifier '%s' exceeds maximum allowed length of 255 characters.", resourceId));
         }
     }
 

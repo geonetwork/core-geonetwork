@@ -304,4 +304,52 @@ public class ResourceLoggerStore extends AbstractStore {
         }
 
     }
+
+    /**
+     * Stores a file upload rename request in the MetadataFileUploads table.
+     */
+    private void storeRenameRequest(final String metadataUuid, final String resourceId, final MetadataResource renamedResource, Boolean approved) throws Exception {
+        final ConfigurableApplicationContext context = ApplicationContextHolder.get();
+        final int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+
+        MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
+        String oldFileName = getFilename(metadataUuid, resourceId);
+        String fullResourceId = metadataUuid + "/attachments/" + oldFileName;
+
+        MetadataFileUpload metadataFileUpload = null;
+        try {
+            metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, fullResourceId);
+        } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+            try {
+                metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, resourceId);
+            } catch (org.springframework.dao.EmptyResultDataAccessException ex2) {
+                try {
+                    metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, oldFileName);
+                } catch (org.springframework.dao.EmptyResultDataAccessException ex3) {
+                    Log.debug(Geonet.RESOURCES, String.format(
+                        "No references in MetadataFileUploads repository for metadata '%s', resource '%s' when renaming to '%s'.",
+                        metadataUuid, resourceId, renamedResource.getId()));
+                }
+            }
+        }
+
+        if (metadataFileUpload != null) {
+            String targetName = metadataFileUpload.getFileName().contains("/") ? renamedResource.getId() : renamedResource.getFilename();
+            metadataFileUpload.setFileName(targetName);
+            repo.save(metadataFileUpload);
+        }
+    }
+
+    @Override
+    public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception {
+        if (decoratedStore != null) {
+            MetadataResource renamedResource = decoratedStore.renameResource(context, metadataUuid, resourceId, newName, approved);
+            if (renamedResource != null) {
+                storeRenameRequest(metadataUuid, resourceId, renamedResource, approved);
+            }
+            return renamedResource;
+        }
+
+        return null;
+    }
 }
