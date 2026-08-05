@@ -34,22 +34,22 @@ public enum MetadataType {
     /**
      * Indicates the associated {@link Metadata} entity is a normal metadata.
      */
-    METADATA('n'),
+    METADATA('n', true),
     /**
      * Indicates the associated {@link Metadata} entity is a template metadata.
      */
-    TEMPLATE('y'),
+    TEMPLATE('y', false),
     /**
      * Indicates the associated {@link Metadata} entity is a sub-template metadata. <p></p> A
      * sub-template is a metadata fragment that can be inserted into another metadata.  It can also
      * be shared as an xlink in multiple metadata to reduce duplication.
      */
-    SUB_TEMPLATE('s'),
+    SUB_TEMPLATE('s', false),
 
     /**
      * Indicates the associated {@link Metadata} entity is a template of sub template.
      */
-    TEMPLATE_OF_SUB_TEMPLATE('t');
+    TEMPLATE_OF_SUB_TEMPLATE('t', false);
 
     /**
      * The code (for backwards compatibility) of the metadatatype.
@@ -59,10 +59,22 @@ public enum MetadataType {
      * Same as {@link #code} expect as a string instead of a char.
      */
     public final String codeString;
+    /**
+     * Indicates if the metadata type requires validation.
+     * Templates do not require validation as they are incomplete by design.
+     */
+    public final boolean requiresValidation;
 
-    private MetadataType(final char code) {
+    /**
+     * Constructor for the enum.
+     *
+     * @param code               the code of the metadata type.
+     * @param requiresValidation indicates if the metadata type requires validation.
+     */
+    MetadataType(final char code, final boolean requiresValidation) {
         this.code = code;
         this.codeString = String.valueOf(code);
+        this.requiresValidation = requiresValidation;
     }
 
     @Nonnull

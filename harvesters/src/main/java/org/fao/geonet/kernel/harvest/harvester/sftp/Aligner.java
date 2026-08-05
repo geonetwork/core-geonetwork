@@ -139,28 +139,7 @@ public class Aligner extends BaseAligner<SftpParams> {
                         md = HarvesterUtil.processMetadata(null, md, processName, processParams);
                     }
 
-                    String schema = metadataSchemaUtils.autodetectSchema(md, null);
-                    String uuid = metadataUtils.extractUUID(schema, md);
-                    String modified = metadataUtils.extractDateModified(schema, md);
-
-                    boolean valid = true;
-                    try {
-                        Integer groupIdVal = null;
-                        if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
-                            groupIdVal = getGroupOwner();
-                        }
-
-                        params.getValidate().validate(context.getBean(DataManager.class), context, md, groupIdVal);
-                    } catch (Exception e) {
-                        log.info("Ignoring invalid metadata with uuid " + uuid);
-                        result.doesNotValidate++;
-                        valid = false;
-                    }
-
-                    if (valid) {
-                        RecordInfo ri = new RecordInfo(uuid, modified, schema, null);
-                        insertOrUpdate(ri, md, errors);
-                    }
+                    alignRecord(md, errors);
                 } catch (SchemaMatchConflictException | NoSchemaMatchesException e) {
                     log.info("  - Metadata skipped due to unknown schema. Remote file:" + remotefilePath);
                     result.unknownSchema++;
@@ -193,10 +172,80 @@ public class Aligner extends BaseAligner<SftpParams> {
         return result;
     }
 
-    private void insertOrUpdate(RecordInfo ri, Element md, Collection<HarvestError> errors) {
-        try {
-            String id = metadataUtils.getMetadataId(ri.uuid);
+    /**
+     * Aligns a single harvested record: resolves its UUID collision state, validates it unless it
+     * is going to be skipped because of a UUID collision (see issue #9432), then inserts, updates
+     * or skips it according to the configured collision policy. A record that already exists from
+     * another source under the {@code SKIP} policy is counted as {@code uuidSkipped} without being
+     * validated (so an invalid colliding record does not end up as {@code doesNotValidate}).
+     */
+    void alignRecord(Element md, Collection<HarvestError> errors) throws Exception {
+        String schema = metadataSchemaUtils.autodetectSchema(md, null);
+        String uuid = metadataUtils.extractUUID(schema, md);
+        String modified = metadataUtils.extractDateModified(schema, md);
 
+        // Resolve the existing record id once and reuse it for both the collision
+        // decision below and insertOrUpdate(), avoiding a second lookup (see #9432).
+        String existingId = getExistingMetadataId(uuid);
+
+        // Resolve the UUID collision state before validating (see issue #9432): a record
+        // that already exists in the catalogue from another source and whose collision
+        // policy is SKIP must be skipped without validation. insertOrUpdate() still
+        // applies the SKIP action and counts it as uuidSkipped.
+        boolean collisionFromOtherSource = isCollisionFromOtherSource(existingId, uuid);
+
+        boolean valid = true;
+        if (!params.isSkippedByUuidCollision(collisionFromOtherSource)) {
+            try {
+                Integer groupIdVal = null;
+                if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                    groupIdVal = getGroupOwner();
+                }
+
+                params.getValidate().validate(context.getBean(DataManager.class), context, md, groupIdVal);
+            } catch (Exception e) {
+                log.info("Ignoring invalid metadata with uuid " + uuid);
+                result.doesNotValidate++;
+                valid = false;
+            }
+        }
+
+        if (valid) {
+            RecordInfo ri = new RecordInfo(uuid, modified, schema, null);
+            insertOrUpdate(ri, md, existingId, errors);
+        }
+    }
+
+    /**
+     * Resolves the id of an existing catalogue record with the given UUID, or {@code null} when no
+     * such record exists. The lookup is wrapped so a failure falls back to the normal
+     * validate/insert path rather than aborting the harvest (see issue #9432).
+     */
+    private String getExistingMetadataId(String uuid) {
+        try {
+            return metadataUtils.getMetadataId(uuid);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns {@code true} when the record already exists in the catalogue from another source (it
+     * exists but does not belong to this harvester). Combined with the SKIP collision policy (see
+     * {@link AbstractParams#isSkippedByUuidCollision(boolean)}) this lets the record be skipped
+     * without validation (see issue #9432); {@link #insertOrUpdate} still applies the collision
+     * policy and updates the counters.
+     *
+     * @param existingId the id of the existing record (see {@link #getExistingMetadataId}), or
+     *                   {@code null} when it does not exist.
+     * @param uuid       the record UUID.
+     */
+    private boolean isCollisionFromOtherSource(String existingId, String uuid) {
+        return existingId != null && localUuids.getID(uuid) == null;
+    }
+
+    private void insertOrUpdate(RecordInfo ri, Element md, String id, Collection<HarvestError> errors) {
+        try {
             if (id == null) {
                 //record doesn't exist (so it doesn't belong to this harvester)
                 log.debug("Adding record with uuid " + ri.uuid);

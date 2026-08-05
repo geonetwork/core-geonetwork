@@ -183,6 +183,7 @@
     "linkUrl": "URL to remove",
     "fileStore": "Metadata file store",
     "filestoreUploadAFile": "or upload a new file",
+    "filestoreUploadFromUrl": "or upload a file from a URL",
     "filestoreChooseAFile": "or choose a file from the filestore",
     "openResource": "Open resource",
     "linkMetadata": "Link metadata",
@@ -477,5 +478,7 @@
     "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record.",
     "indexingIssues": "Indexing issues",
     "indexingErrors": "Errors",
-    "indexingWarnings": "Warnings"
+    "indexingWarnings": "Warnings",
+    "fileStoreDuplicatedFilename": "The filename is already used in the file store.",
+    "renameResource": "Rename resource"
 }

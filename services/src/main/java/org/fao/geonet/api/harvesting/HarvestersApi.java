@@ -41,14 +41,12 @@ import org.fao.geonet.domain.Source;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.harvest.Common;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -106,7 +104,7 @@ public class HarvestersApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
-    public HttpEntity<HttpStatus> assignHarvestedRecordToSource(
+    public ResponseEntity<Void> assignHarvestedRecordToSource(
         @Parameter(
             description = "The harvester UUID"
         )
@@ -170,7 +168,7 @@ public class HarvestersApi {
         history.setParams(harvester.getParams().getNodeElement());
         historyRepository.save(history);
 
-        return new HttpEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
@@ -182,7 +180,6 @@ public class HarvestersApi {
             value = "/{harvesterUuid}/reindex",
             method = RequestMethod.POST
     )
-    @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Reindexing was successful"),
@@ -190,7 +187,7 @@ public class HarvestersApi {
             @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
             @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    public ResponseEntity<HttpStatus> reindexHarvester(
+    public ResponseEntity<Void> reindexHarvester(
             @Parameter(
                     description = "The harvester UUID"
             )
@@ -221,14 +218,13 @@ public class HarvestersApi {
         value = "/properties/{property}",
         method = RequestMethod.GET
     )
-    @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Property does not exist."),
         @ApiResponse(responseCode = "404", description = "A property with that value already exist."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    public ResponseEntity<HttpStatus> checkHarvesterPropertyExist(
+    public ResponseEntity<Void> checkHarvesterPropertyExist(
         @Parameter(
             description = "The harvester property to check"
         )

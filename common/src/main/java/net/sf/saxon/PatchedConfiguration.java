@@ -24,6 +24,7 @@
 package net.sf.saxon;
 
 import net.sf.saxon.expr.XPathContext;
+import net.sf.saxon.functions.Evaluate;
 import net.sf.saxon.functions.StandardFunction;
 import net.sf.saxon.functions.SystemFunction;
 import net.sf.saxon.functions.VendorFunctionLibrary;
@@ -31,6 +32,7 @@ import net.sf.saxon.pattern.NodeKindTest;
 import net.sf.saxon.type.BuiltInAtomicType;
 import net.sf.saxon.type.Type;
 import net.sf.saxon.value.Value;
+import net.sf.saxon.expr.StaticProperty;
 
 public class PatchedConfiguration extends Configuration {
 
@@ -53,15 +55,15 @@ public class PatchedConfiguration extends Configuration {
         protected void init() {
             super.init();
             //override
-            StandardFunction.Entry e = this.register("evaluate", DisabledEvaluate.class, 0, 1, 10, Type.ITEM_TYPE, 57344);
-            StandardFunction.arg(e, 0, BuiltInAtomicType.STRING, 16384, (Value)null);
-            e = this.register("evaluate-node", DisabledEvaluate.class, 3, 1, 1, Type.ITEM_TYPE, 57344);
-            StandardFunction.arg(e, 0, Type.NODE_TYPE, 16384, (Value)null);
-            e = this.register("eval", DisabledEvaluate.class, 2, 1, 10, Type.ITEM_TYPE, 57344);
-            StandardFunction.arg(e, 0, BuiltInAtomicType.ANY_ATOMIC, 16384, (Value)null);
-            e = this.register("expression", DisabledEvaluate.class, 1, 1, 2, BuiltInAtomicType.ANY_ATOMIC, 16384);
-            StandardFunction.arg(e, 0, BuiltInAtomicType.STRING, 16384, (Value)null);
-            StandardFunction.arg(e, 1, NodeKindTest.ELEMENT, 16384, (Value)null);
+            StandardFunction.Entry e = this.register("evaluate", DisabledEvaluate.class, Evaluate.EVALUATE, 1, 10, Type.ITEM_TYPE, StaticProperty.ALLOWS_ZERO_OR_MORE);
+            StandardFunction.arg(e, 0, BuiltInAtomicType.STRING, StaticProperty.EXACTLY_ONE, (Value)null);
+            e = this.register("evaluate-node", DisabledEvaluate.class, Evaluate.EVALUATE_NODE, 1, 1, Type.ITEM_TYPE, StaticProperty.ALLOWS_ZERO_OR_MORE);
+            StandardFunction.arg(e, 0, Type.NODE_TYPE, StaticProperty.EXACTLY_ONE, (Value)null);
+            e = this.register("eval", DisabledEvaluate.class, Evaluate.EVAL, 1, 10, Type.ITEM_TYPE, StaticProperty.ALLOWS_ZERO_OR_MORE);
+            StandardFunction.arg(e, 0, BuiltInAtomicType.ANY_ATOMIC, StaticProperty.EXACTLY_ONE, (Value)null);
+            e = this.register("expression", DisabledEvaluate.class, Evaluate.EXPRESSION, 1, 2, BuiltInAtomicType.ANY_ATOMIC, StaticProperty.EXACTLY_ONE);
+            StandardFunction.arg(e, 0, BuiltInAtomicType.STRING, StaticProperty.EXACTLY_ONE, (Value)null);
+            StandardFunction.arg(e, 1, NodeKindTest.ELEMENT, StaticProperty.EXACTLY_ONE, (Value)null);
         }
 
     }

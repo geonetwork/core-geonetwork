@@ -291,7 +291,7 @@ public class DoiServersApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteMapserver(
+    public void deleteDoiServer(
         @Parameter(description = API_PARAM_DOISERVER_IDENTIFIER,
             required = true
         )

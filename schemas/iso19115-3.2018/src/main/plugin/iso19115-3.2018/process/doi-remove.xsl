@@ -22,6 +22,15 @@
                               */cit:linkage/gco:CharacterString = $doi]"
                 priority="2"/>
 
+  <!-- Remove transferOptions whose only content is the DOI link being removed -->
+  <xsl:template match="mrd:transferOptions[
+      not(*/mrd:onLine[not(*/cit:linkage/gco:CharacterString = $doi)]) and
+      not(*/mrd:offLine) and
+      not(*/mrd:unitsOfDistribution) and
+      not(*/mrd:transferFrequency) and
+      not(*/mrd:distributionFormat) and
+      not(*/mrd:transferSize)]"/>
+
   <xsl:template match="cit:identifier[*/mcc:code/gcx:Anchor/@xlink:href = $doi]"
                 priority="2"/>
 
