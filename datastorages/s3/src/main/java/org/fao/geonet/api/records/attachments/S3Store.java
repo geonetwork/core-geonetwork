@@ -196,7 +196,7 @@ public class S3Store extends AbstractStore {
 
         String sourceKey = null;
         ObjectMetadata metadata = null;
-        for (MetadataResourceVisibility sourceVisibility: MetadataResourceVisibility.values()) {
+        for (MetadataResourceVisibility sourceVisibility: visibilityCandidates(metadataUuid, approved, resourceId)) {
             final String key = getKey(metadataUuid, metadataId, sourceVisibility, resourceId);
             try {
                 metadata = s3.getClient().getObjectMetadata(s3.getBucket(), key);
@@ -233,7 +233,7 @@ public class S3Store extends AbstractStore {
         String sourceKey = null;
         ObjectMetadata objectMetadata = null;
         MetadataResourceVisibility sourceVisibility = null;
-        for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
+        for (MetadataResourceVisibility visibility : visibilityCandidates(metadataUuid, approved, resourceId)) {
             final String key = getKey(metadataUuid, metadataId, visibility, resourceId);
             try {
                 objectMetadata = s3.getClient().getObjectMetadata(s3.getBucket(), key);
@@ -297,7 +297,7 @@ public class S3Store extends AbstractStore {
             throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
 
-        for (MetadataResourceVisibility visibility: MetadataResourceVisibility.values()) {
+        for (MetadataResourceVisibility visibility: visibilityCandidates(metadataUuid, approved, resourceId)) {
             if (tryDelResource(metadataUuid, metadataId, visibility, resourceId)) {
                 return String.format("Metadata resource '%s' removed.", resourceId);
             }

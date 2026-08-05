@@ -259,7 +259,7 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
         String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
 
         StringBuilder longName = new StringBuilder();
-        for (int i = 0; i < 260; i++) {
+        for (int i = 0; i < MetadataFileUpload.FILENAME_MAX_LENGTH + 1; i++) {
             longName.append("a");
         }
         longName.append(".xml");
@@ -287,20 +287,16 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
             ));
         loggerStore.putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
 
-        MetadataFileUpload initialUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, metadataUuid + "/attachments/" + filename);
-        if (initialUpload == null) {
-            initialUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, filename);
-        }
+        // ResourceLoggerStore now consistently logs the bare filename (never the composite
+        // "uuid/attachments/filename" id), so a single direct lookup is enough.
+        MetadataFileUpload initialUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, filename);
         assertNotNull("Initial upload record in MetadataFileUploads should exist", initialUpload);
         assertTrue("Initial upload record has old filename", initialUpload.getFileName().endsWith(filename));
 
         MetadataResource renamedResource = loggerStore.renameResource(context, metadataUuid, filename, newFilename, true);
         assertNotNull("Renamed resource should not be null", renamedResource);
 
-        MetadataFileUpload updatedUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, renamedResource.getId());
-        if (updatedUpload == null) {
-            updatedUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, newFilename);
-        }
+        MetadataFileUpload updatedUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, newFilename);
         assertNotNull("Updated upload record in MetadataFileUploads should exist with new filename", updatedUpload);
         assertEquals("Updated upload record ID matches initial record ID", initialUpload.getId(), updatedUpload.getId());
         assertTrue("Updated upload record has new filename", updatedUpload.getFileName().endsWith(newFilename));

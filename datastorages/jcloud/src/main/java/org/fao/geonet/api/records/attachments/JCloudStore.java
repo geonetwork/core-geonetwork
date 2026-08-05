@@ -568,7 +568,7 @@ public class JCloudStore extends AbstractStore {
 
         String sourceKey = null;
         StorageMetadata storageMetadata;
-        for (MetadataResourceVisibility sourceVisibility : MetadataResourceVisibility.values()) {
+        for (MetadataResourceVisibility sourceVisibility : visibilityCandidates(metadataUuid, approved, resourceId)) {
             final String key = getKey(context, metadataUuid, metadataId, sourceVisibility, resourceId);
             try {
                 storageMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(jCloudConfiguration.getContainerName(), key);
@@ -640,7 +640,7 @@ public class JCloudStore extends AbstractStore {
         throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
 
-        for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
+        for (MetadataResourceVisibility visibility : visibilityCandidates(metadataUuid, approved, resourceId)) {
             if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId)) {
                 return String.format("Metadata resource '%s' removed.", resourceId);
             }

@@ -38,6 +38,7 @@ import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.LimitedInputStream;
 import org.slf4j.Logger;
@@ -122,6 +123,14 @@ public abstract class AbstractStore implements Store {
     @Override
     public final ResourceHolder getResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved)
             throws Exception {
+        MetadataResourceVisibility visibility = resolveVisibility(metadataUuid, approved, resourceId);
+        if (visibility != null) {
+            try {
+                return getResource(context, metadataUuid, visibility, resourceId, approved);
+            } catch (ResourceNotFoundException ignored) {
+                // Tracked visibility didn't match reality (eg. stale/backfill-pending row) - fall through to probing both.
+            }
+        }
         try {
             return getResource(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, approved);
         } catch (ResourceNotFoundException ignored) {
@@ -131,6 +140,14 @@ public abstract class AbstractStore implements Store {
 
     @Override
     public final MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
+        MetadataResourceVisibility visibility = resolveVisibility(metadataUuid, approved, resourceId);
+        if (visibility != null) {
+            try {
+                return getResourceMetadata(context, metadataUuid, visibility, resourceId, approved);
+            } catch (ResourceNotFoundException ignored) {
+                // Tracked visibility didn't match reality (eg. stale/backfill-pending row) - fall through to probing both.
+            }
+        }
         try {
             return getResourceMetadata(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, approved);
         } catch (ResourceNotFoundException ignored) {
@@ -140,11 +157,63 @@ public abstract class AbstractStore implements Store {
 
     @Override
     public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, String resourceId, Boolean approved, long start, long end) throws Exception {
+        MetadataResourceVisibility visibility = resolveVisibility(metadataUuid, approved, resourceId);
+        if (visibility != null) {
+            try {
+                return getResourceWithRange(context, metadataUuid, visibility, resourceId, approved, start, end);
+            } catch (ResourceNotFoundException ignored) {
+                // Tracked visibility didn't match reality (eg. stale/backfill-pending row) - fall through to probing both.
+            }
+        }
         try {
             return getResourceWithRange(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, approved, start, end);
         } catch (ResourceNotFoundException ignored) {
         }
         return getResourceWithRange(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, approved, start, end);
+    }
+
+    /**
+     * Resolve a resource's tracked visibility from the MetadataFileUploads ledger (now the
+     * source of truth for access, populated on every put/patch - see {@link ResourceLoggerStore}),
+     * so operations that aren't given an explicit visibility can go straight to the right
+     * location instead of probing both.
+     *
+     * @return the tracked visibility, or {@code null} if there is no tracking row (eg. legacy
+     * data predating this ledger) - callers must fall back to probing both visibilities in that case.
+     */
+    protected MetadataResourceVisibility resolveVisibility(String metadataUuid, Boolean approved, String resourceId) {
+        try {
+            int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+            String filename = getFilename(metadataUuid, resourceId);
+            MetadataFileUploadRepository repo = ApplicationContextHolder.get().getBean(MetadataFileUploadRepository.class);
+            return repo.findByMetadataIdAndFileNameNotDeleted(metadataId, filename).getAccess();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * {@link MetadataResourceVisibility#values()}, reordered so the tracked visibility (if any -
+     * see {@link #resolveVisibility}) comes first. A drop-in replacement for {@code values()} in
+     * a "probe every visibility until one matches" loop: the common case now finds the resource
+     * on the first attempt instead of unconditionally starting from {@code PUBLIC}, while a
+     * stale/missing tracking row still falls back to trying every visibility, unchanged.
+     */
+    protected MetadataResourceVisibility[] visibilityCandidates(String metadataUuid, Boolean approved, String resourceId) {
+        MetadataResourceVisibility resolved = resolveVisibility(metadataUuid, approved, resourceId);
+        MetadataResourceVisibility[] all = MetadataResourceVisibility.values();
+        if (resolved == null) {
+            return all;
+        }
+        MetadataResourceVisibility[] ordered = new MetadataResourceVisibility[all.length];
+        ordered[0] = resolved;
+        int i = 1;
+        for (MetadataResourceVisibility v : all) {
+            if (v != resolved) {
+                ordered[i++] = v;
+            }
+        }
+        return ordered;
     }
 
     protected static AccessManager getAccessManager(final ServiceContext context) {
