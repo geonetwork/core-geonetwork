@@ -47,6 +47,7 @@ import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.http.HttpResponseException;
+import org.jclouds.io.ContentMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -214,8 +215,21 @@ public class JCloudStore extends AbstractStore {
                     validationStatus);
         }
 
+        String mimeType = null;
+        if (storageMetadata instanceof BlobMetadata) {
+            ContentMetadata contentMetadata = ((BlobMetadata) storageMetadata).getContentMetadata();
+            if (contentMetadata != null) {
+                mimeType = contentMetadata.getContentType();
+            }
+        }
+        // Plain StorageMetadata (as returned when listing) does not carry the Content-Type; avoid
+        // an extra blobMetadata() round trip per listed object and detect from the filename.
+        if (mimeType == null || mimeType.isEmpty()) {
+            mimeType = MimeTypeDetector.detect(filename);
+        }
+
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
-            settingManager.getNodeURL() + "api/records/", visibility, storageMetadata.getSize(), changedDate, versionValue, metadataResourceExternalManagementProperties, approved);
+            settingManager.getNodeURL() + "api/records/", visibility, storageMetadata.getSize(), changedDate, versionValue, metadataResourceExternalManagementProperties, approved, mimeType);
     }
 
     protected static String getFilename(final String key) {
@@ -378,6 +392,7 @@ public class JCloudStore extends AbstractStore {
                 Blob blob = jCloudConfiguration.getClient().getBlobStore().blobBuilder(key)
                     .payload(is)
                     .contentLength(contentLength)
+                    .contentType(MimeTypeDetector.detect(filename))
                     .userMetadata(properties)
                     .build();
 

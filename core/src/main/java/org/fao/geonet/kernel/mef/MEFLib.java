@@ -327,12 +327,14 @@ public class MEFLib {
         info.addContent(buildInfoCategories(md));
         info.addContent(buildInfoPrivileges(context, md));
 
-        info.addContent(buildInfoFiles("public", pubResources));
-        if (priResources != null) {
-            info.addContent(buildInfoFiles("private", priResources));
-        } else {
-            info.addContent(new Element("private"));
+        List<MetadataResource> allResources = new ArrayList<>();
+        if (pubResources != null) {
+            allResources.addAll(pubResources);
         }
+        if (priResources != null) {
+            allResources.addAll(priResources);
+        }
+        info.addContent(buildInfoFiles("store", allResources));
 
         return Xml.getString(new Document(info));
     }
@@ -504,6 +506,12 @@ public class MEFLib {
                 Element el = new Element("file");
                 el.setAttribute("name", resource.getFilename());
                 el.setAttribute("changeDate", date);
+                if (resource.getVisibility() != null) {
+                    el.setAttribute("access", resource.getVisibility().toString());
+                }
+                if (resource.getMimeType() != null && !resource.getMimeType().isEmpty()) {
+                    el.setAttribute("mimetype", resource.getMimeType());
+                }
 
                 root.addContent(el);
             }
@@ -523,6 +531,43 @@ public class MEFLib {
         }
 
         throw new Exception("File not found in info.xml : " + fileName);
+    }
+
+    /**
+     * Get the {@code <file>} elements for a given access level ("public" or "private") from an
+     * {@code <info>} element, for use as a {@code changeDate} lookup table (see
+     * {@link #getChangeDate}) by {@link MEFVisitor}/{@link MEF2Visitor}.
+     * <p>
+     * Supports both the MEF 3.0 unified {@code <store>} format (info.xml version "3.0"), where
+     * files are filtered by their own {@code access} attribute, and the pre-3.0
+     * {@code <public>}/{@code <private>} format, for archives written before this format existed.
+     * A record's physical zip layout (separate {@code public/}/{@code private/} folders) is
+     * unchanged between the two formats, so this is purely about locating the changeDate/mimetype
+     * metadata for a given file - it does not affect which physical folder is read.
+     * <p>
+     * Also used directly by {@link org.fao.geonet.kernel.harvest.harvester.geonet.BaseGeoNetworkAligner},
+     * which parses info.xml independently of the visitor classes above.
+     */
+    public static List<Element> getFilesElement(Element info, String access) {
+        Element store = info.getChild("store");
+        if (store != null) {
+            List<Element> files = new ArrayList<>();
+            @SuppressWarnings("unchecked")
+            List<Element> children = store.getChildren("file");
+            for (Element file : children) {
+                if (access.equals(file.getAttributeValue("access"))) {
+                    files.add(file);
+                }
+            }
+            return files;
+        }
+        Element legacy = info.getChild(access);
+        if (legacy != null) {
+            @SuppressWarnings("unchecked")
+            List<Element> children = legacy.getChildren();
+            return children;
+        }
+        return new ArrayList<>();
     }
 
     public static void backupRecord(AbstractMetadata metadata, ServiceContext context) {

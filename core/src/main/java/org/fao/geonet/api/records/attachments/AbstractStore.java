@@ -33,6 +33,7 @@ import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
@@ -379,8 +380,9 @@ public abstract class AbstractStore implements Store {
         if (resourceId.contains("..") || resourceId.startsWith("/") || resourceId.startsWith("file:/")) {
             throw new SecurityException(String.format("Invalid resource identifier '%s'.", resourceId));
         }
-        if (resourceId.length() > 255) {
-            throw new IllegalArgumentException(String.format("Resource identifier '%s' exceeds maximum allowed length of 255 characters.", resourceId));
+        if (resourceId.length() > MetadataFileUpload.FILENAME_MAX_LENGTH) {
+            throw new IllegalArgumentException(String.format("Resource identifier '%s' exceeds maximum allowed length of %d characters.",
+                resourceId, MetadataFileUpload.FILENAME_MAX_LENGTH));
         }
     }
 

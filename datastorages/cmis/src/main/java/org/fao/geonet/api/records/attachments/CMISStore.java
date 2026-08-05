@@ -165,8 +165,13 @@ public class CMISStore extends AbstractStore {
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
             getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, document.getVersionLabel(), document.getVersionSeriesId(), document.getType(), validationStatus);
 
+        String mimeType = document.getContentStreamMimeType();
+        if (mimeType == null || mimeType.isEmpty()) {
+            mimeType = MimeTypeDetector.detect(filename);
+        }
+
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
-            settingManager.getNodeURL() + "api/records/", visibility, document.getContentStreamLength(), document.getLastModificationDate().getTime(), versionValue, metadataResourceExternalManagementProperties, approved);
+            settingManager.getNodeURL() + "api/records/", visibility, document.getContentStreamLength(), document.getLastModificationDate().getTime(), versionValue, metadataResourceExternalManagementProperties, approved, mimeType);
     }
 
     protected static String getFilename(final String key) {

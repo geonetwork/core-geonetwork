@@ -95,7 +95,8 @@ public class FilesystemStore extends AbstractStore {
                 MetadataResource resource = new FilesystemStoreResource(metadataUuid, metadataId, path.getFileName().toString(),
                                                                         settingManager.getNodeURL() + "api/records/", visibility,
                                                                         Files.size(path),
-                                                                        new Date(Files.getLastModifiedTime(path).toMillis()), approved);
+                                                                        new Date(Files.getLastModifiedTime(path).toMillis()), null, null,
+                                                                        approved, MimeTypeDetector.detect(path, path.getFileName().toString()));
                 resourceList.add(resource);
             }
         } catch (IOException ignored) {
@@ -194,7 +195,8 @@ public class FilesystemStore extends AbstractStore {
             long fileSize = Files.size(filePath);
             result = new FilesystemStoreResource(metadataUuid, metadataId, filePath.getFileName().toString(),
                 settingManager.getNodeURL() + "api/records/", visibility, fileSize,
-                new Date(Files.getLastModifiedTime(filePath).toMillis()), approved);
+                new Date(Files.getLastModifiedTime(filePath).toMillis()), null, null, approved,
+                MimeTypeDetector.detect(filePath, filePath.getFileName().toString()));
         } catch (IOException e) {
             Log.error(Geonet.RESOURCES, "Error getting size of file " + filePath + ": "
                 + e.getMessage(), e);

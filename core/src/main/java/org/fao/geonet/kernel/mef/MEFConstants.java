@@ -32,7 +32,12 @@ class MEFConstants {
     static final String DIR_PRIVATE = "private/";
     static final String FILE_METADATA = "metadata.xml";
     static final String FILE_INFO = "info.xml";
-    static final String VERSION = "1.1";
+    /**
+     * Bumped to a new major version because info.xml now describes attachments with a single
+     * {@code <store>} element (per-file {@code access}/{@code mimetype} attributes) instead of
+     * separate {@code <public>}/{@code <private>} elements.
+     */
+    static final String VERSION = "3.0";
     static final String MD_DIR = "metadata/";
     static final String SCHEMA = "applschema/";
     static final String FS = "/";

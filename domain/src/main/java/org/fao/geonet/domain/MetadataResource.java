@@ -57,6 +57,9 @@ public interface MetadataResource {
     String getFilename();
 
     @IndexIgnore
+    String getMimeType();
+
+    @IndexIgnore
     boolean isApproved();
 
     @IndexIgnore // Metadata id is already in the index so no need to add it again.

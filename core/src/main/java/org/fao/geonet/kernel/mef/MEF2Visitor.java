@@ -126,23 +126,18 @@ public class MEF2Visitor implements IVisitor {
     public void handleBin(Path file, IMEFVisitor v, Element info, int index)
         throws Exception {
 
-        List<Element> pubFiles = null;
-        List<Element> prvFiles = null;
-
-        if (info.getChildren().size() != 0) {
-            @SuppressWarnings("unchecked")
-            List<Element> tmpPub = info.getChild("public").getChildren();
-            pubFiles = tmpPub;
-            @SuppressWarnings("unchecked")
-            List<Element> tmpPrv = info.getChild("private").getChildren();
-            prvFiles = tmpPrv;
-        }
+        // Reads either the MEF 3.0 unified <store> element (filtered by each file's own
+        // "access" attribute) or the pre-3.0 <public>/<private> elements; never null (unlike
+        // the previous info.getChild("public").getChildren() call, which NPE'd whenever
+        // info.xml had other children - eg. <general> - but no <public> element).
+        List<Element> pubFiles = MEFLib.getFilesElement(info, "public");
+        List<Element> prvFiles = MEFLib.getFilesElement(info, "private");
 
         Path publicFile = file.resolve(MEFConstants.DIR_PUBLIC);
         Path privateFile = file.resolve(MEFConstants.DIR_PRIVATE);
 
         // Handle public binaries files
-        if (Files.exists(publicFile) && pubFiles != null && pubFiles.size() != 0) {
+        if (Files.exists(publicFile) && !pubFiles.isEmpty()) {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(publicFile)) {
                 for (Path path : paths) {
                     String fileName = path.getFileName().toString();
@@ -156,7 +151,7 @@ public class MEF2Visitor implements IVisitor {
         }
 
         // Handle private binaries files
-        if (Files.exists(privateFile) && prvFiles != null && prvFiles.size() != 0) {
+        if (Files.exists(privateFile) && !prvFiles.isEmpty()) {
             try (DirectoryStream<Path> paths = Files.newDirectoryStream(privateFile)) {
                 for (Path path : paths) {
                     String fileName = path.getFileName().toString();

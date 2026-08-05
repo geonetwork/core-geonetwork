@@ -34,7 +34,6 @@ import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
@@ -94,25 +93,12 @@ public class MEFVisitor implements IVisitor {
     public void handleBin(Path mefFile, IMEFVisitor v, Element info, int index)
         throws Exception {
 
-        // yes they must be registered but make sure we don't crash if the
-        // public/private elements don't exist
-        List<Element> pubFiles;
-        if (info.getChild("public") != null) {
-            @SuppressWarnings("unchecked")
-            List<Element> tmp = info.getChild("public").getChildren();
-            pubFiles = tmp;
-        } else {
-            pubFiles = new ArrayList<>();
-        }
-        List<Element> prvFiles;
-        if (info.getChild("private") != null) {
-            @SuppressWarnings("unchecked")
-            List<Element> tmp = info.getChild("private").getChildren();
-            prvFiles = tmp;
-        } else {
-            prvFiles = new ArrayList<>();
-        }
-
+        // Reads either the MEF 3.0 unified <store> element (filtered by access) or the pre-3.0
+        // <public>/<private> elements; either way, this is only a changeDate lookup table -
+        // files must be registered here, but which physical folder (public/ or private/) is read
+        // below is unaffected by the info.xml format.
+        List<Element> pubFiles = MEFLib.getFilesElement(info, "public");
+        List<Element> prvFiles = MEFLib.getFilesElement(info, "private");
 
         try (FileSystem zipFs = ZipUtil.openZipFs(mefFile)) {
             Path pubPath = zipFs.getPath(DIR_PUBLIC);

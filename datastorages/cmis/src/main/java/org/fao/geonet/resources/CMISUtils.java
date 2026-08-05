@@ -23,10 +23,8 @@
 
 package org.fao.geonet.resources;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 
 import java.util.Date;
@@ -52,6 +50,7 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedExce
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.records.attachments.MimeTypeDetector;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
@@ -230,7 +229,8 @@ public class CMISUtils {
         }
 
         int isLength = is.available();
-        ContentStream contentStream = cmisConfiguration.getClient().getObjectFactory().createContentStream(key, isLength, Files.probeContentType(new File(key).toPath()), is);
+        ContentStream contentStream = cmisConfiguration.getClient().getObjectFactory().createContentStream(key, isLength,
+            MimeTypeDetector.detect(filenameKey), is);
 
         Document doc;
         if (cmisObject != null) {

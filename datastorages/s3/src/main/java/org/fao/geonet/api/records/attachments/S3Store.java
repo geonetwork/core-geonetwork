@@ -77,8 +77,11 @@ public class S3Store extends AbstractStore {
             final String filename = getFilename(key);
             Path keyPath = new File(filename).toPath().getFileName();
             if (matcher.matches(keyPath)) {
+                // S3ObjectSummary does not carry the object's Content-Type; avoid an extra
+                // getObjectMetadata round trip per listed object and detect from the filename.
                 MetadataResource resource = createResourceDescription(metadataUuid, visibility, filename, object.getSize(),
-                                                                      object.getLastModified(), metadataId, approved);
+                                                                      object.getLastModified(), metadataId, approved,
+                                                                      MimeTypeDetector.detect(filename));
                 resourceList.add(resource);
             }
         }
@@ -89,9 +92,11 @@ public class S3Store extends AbstractStore {
     }
 
     private MetadataResource createResourceDescription(final String metadataUuid,
-            final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, int metadataId, boolean approved) {
+            final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, int metadataId,
+            boolean approved, String mimeType) {
         return new FilesystemStoreResource(metadataUuid, metadataId, getFilename(metadataUuid, resourceId),
-                                           settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, approved);
+                                           settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, null, null,
+                                           approved, mimeType);
     }
 
     private static String getFilename(final String key) {
@@ -109,7 +114,8 @@ public class S3Store extends AbstractStore {
                 s3.getBucket(), getKey(metadataUuid, metadataId, visibility, resourceId));
             return new S3ResourceHolder(object, createResourceDescription(metadataUuid, visibility, resourceId,
                                                                             object.getObjectMetadata().getContentLength(),
-                                                                            object.getObjectMetadata().getLastModified(), metadataId, approved));
+                                                                            object.getObjectMetadata().getLastModified(), metadataId, approved,
+                                                                            object.getObjectMetadata().getContentType()));
         } catch (AmazonServiceException ignored) {
             throw new ResourceNotFoundException(
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -127,7 +133,7 @@ public class S3Store extends AbstractStore {
                 s3.getBucket(), getKey(metadataUuid, metadataId, visibility, resourceId));
             return createResourceDescription(metadataUuid, visibility, resourceId,
                 objectMetadata.getContentLength(),
-                objectMetadata.getLastModified(), metadataId, approved);
+                objectMetadata.getLastModified(), metadataId, approved, objectMetadata.getContentType());
         } catch (AmazonServiceException ignored) {
             throw new ResourceNotFoundException(
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -146,7 +152,7 @@ public class S3Store extends AbstractStore {
             // We use getInstanceLength here to get the full length of the object not the length of the range
             return new S3ResourceHolder(object, createResourceDescription(metadataUuid, metadataResourceVisibility, resourceId,
                 object.getObjectMetadata().getInstanceLength(),
-                object.getObjectMetadata().getLastModified(), metadataId, approved));
+                object.getObjectMetadata().getLastModified(), metadataId, approved, object.getObjectMetadata().getContentType()));
         } catch (AmazonServiceException ignored) {
             throw new ResourceNotFoundException(
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -176,9 +182,11 @@ public class S3Store extends AbstractStore {
         if (changeDate != null) {
             metadata.setLastModified(changeDate);
         }
+        String mimeType = MimeTypeDetector.detect(filename);
+        metadata.setContentType(mimeType);
         final PutObjectResult putAnswer = s3.getClient().putObject(s3.getBucket(), key, is, metadata);
         return createResourceDescription(metadataUuid, visibility, filename, putAnswer.getMetadata().getContentLength(),
-                                         putAnswer.getMetadata().getLastModified(), metadataId, approved);
+                                         putAnswer.getMetadata().getLastModified(), metadataId, approved, mimeType);
     }
 
     @Override
@@ -198,7 +206,7 @@ public class S3Store extends AbstractStore {
                 } else {
                     // already the good visibility
                     return createResourceDescription(metadataUuid, visibility, resourceId, metadata.getContentLength(),
-                                                     metadata.getLastModified(), metadataId, approved);
+                                                     metadata.getLastModified(), metadataId, approved, metadata.getContentType());
                 }
             } catch (AmazonServiceException ignored) {
                 // ignored
@@ -210,7 +218,7 @@ public class S3Store extends AbstractStore {
                 s3.getBucket(), sourceKey, s3.getBucket(), destKey);
             s3.getClient().deleteObject(s3.getBucket(), sourceKey);
             return createResourceDescription(metadataUuid, visibility, resourceId, metadata.getContentLength(),
-                                             copyResult.getLastModifiedDate(), metadataId, approved);
+                                             copyResult.getLastModifiedDate(), metadataId, approved, metadata.getContentType());
         } else {
             throw new ResourceNotFoundException(
                     String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
@@ -241,7 +249,7 @@ public class S3Store extends AbstractStore {
             final String destKey = getKey(metadataUuid, metadataId, sourceVisibility, newName);
             if (sourceKey.equals(destKey)) {
                 return createResourceDescription(metadataUuid, sourceVisibility, newName, objectMetadata.getContentLength(),
-                                                 objectMetadata.getLastModified(), metadataId, approved);
+                                                 objectMetadata.getLastModified(), metadataId, approved, objectMetadata.getContentType());
             }
             try {
                 s3.getClient().getObjectMetadata(s3.getBucket(), destKey);
@@ -255,7 +263,7 @@ public class S3Store extends AbstractStore {
                 s3.getBucket(), sourceKey, s3.getBucket(), destKey);
             s3.getClient().deleteObject(s3.getBucket(), sourceKey);
             return createResourceDescription(metadataUuid, sourceVisibility, newName, objectMetadata.getContentLength(),
-                                             copyResult.getLastModifiedDate(), metadataId, approved);
+                                             copyResult.getLastModifiedDate(), metadataId, approved, objectMetadata.getContentType());
         } else {
             throw new ResourceNotFoundException(
                     String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -329,7 +337,7 @@ public class S3Store extends AbstractStore {
         try {
             final ObjectMetadata metadata = s3.getClient().getObjectMetadata(s3.getBucket(), key);
             return createResourceDescription(metadataUuid, visibility, filename, metadata.getContentLength(),
-                                             metadata.getLastModified(), metadataId, approved);
+                                             metadata.getLastModified(), metadataId, approved, metadata.getContentType());
         } catch (AmazonServiceException e) {
             return null;
         }

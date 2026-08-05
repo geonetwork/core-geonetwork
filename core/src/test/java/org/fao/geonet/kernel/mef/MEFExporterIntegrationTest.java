@@ -27,12 +27,18 @@ import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.ZipUtil;
+import org.fao.geonet.api.records.attachments.Store;
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.jdom.Element;
 import org.junit.Test;
 
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -68,6 +74,54 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
             assertTrue(isEmptyDir(zipFs.getPath("private")));
             assertTrue(Files.exists(zipFs.getPath("public")));
             assertTrue(isEmptyDir(zipFs.getPath("public")));
+        } finally {
+            Files.delete(path);
+        }
+    }
+
+    /**
+     * End-to-end verification of the MEF 3.0 writer (unified {@code <store>} element,
+     * MEFLib#buildInfoFile) together with the reader's backward-compat branch
+     * (MEFLib#getFilesElement, used by MEFVisitor/MEF2Visitor): export a record with public and
+     * private attachments (producing a fresh, MEF-3.0-format archive), wipe its resources, then
+     * re-import that same archive and confirm the resources come back with the correct
+     * visibility - proving the reader correctly understood the writer's own {@code <store>}
+     * output, not just the legacy {@code <public>}/{@code <private>} format.
+     */
+    @Test
+    public void testExportThenReimportRoundTripsAttachments() throws Exception {
+        ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+
+        final MEFLibIntegrationTest.ImportMetadata importMetadata = new MEFLibIntegrationTest.ImportMetadata(this, context);
+        importMetadata.getMefFilesToLoad().clear();
+        importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
+        importMetadata.invoke();
+
+        final String uuid = "da165110-88fd-11da-a88f-000d939bc5d8";
+        final Store store = context.getBean("resourceStore", Store.class);
+
+        Path path = MEFExporter.doExport(context, uuid, MEFLib.Format.FULL, false, false, false, false, true, true);
+        try (FileSystem zipFs = ZipUtil.openZipFs(path)) {
+            String infoXml = new String(Files.readAllBytes(zipFs.getPath("info.xml")));
+            assertTrue("Exported info.xml should use the MEF 3.0 <store> element", infoXml.contains("<store>"));
+            assertFalse("Exported info.xml should not use the legacy <public> element", infoXml.contains("<public>"));
+
+            // Wipe the resources so re-importing is the only way they can come back.
+            store.delResources(context, uuid, true);
+            List<MetadataResource> afterWipe = store.getResources(context, uuid, MetadataResourceVisibility.PUBLIC, null, true);
+            assertTrue("Resources should be gone after delResources", afterWipe.isEmpty());
+
+            Element params = new Element("request");
+            params.addContent(new Element("uuidAction").setText("overwrite"));
+            MEFLib.doImport(params, context, path, getStyleSheets());
+
+            List<MetadataResource> publicResources = store.getResources(context, uuid, MetadataResourceVisibility.PUBLIC, null, true);
+            List<MetadataResource> privateResources = store.getResources(context, uuid, MetadataResourceVisibility.PRIVATE, null, true);
+            // Fixture has thumbnail.gif + thumbnail_s.gif (public) and basins.zip + a stray
+            // .DS_Store (private) - matches the physical zip contents, not an assumption.
+            assertEquals(2, publicResources.size());
+            assertEquals(2, privateResources.size());
         } finally {
             Files.delete(path);
         }
