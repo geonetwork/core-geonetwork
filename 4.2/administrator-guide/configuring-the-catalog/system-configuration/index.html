@@ -1670,6 +1670,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#languages-and-translations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Languages and translations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#application-banner" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2718,6 +2729,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#languages-and-translations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Languages and translations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#application-banner" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3029,6 +3051,24 @@ that can request an account. If not configured any email address is allowed.</p>
 <p><img alt="" src="../img/application-feedback-link.png" /></p>
 <p><img alt="" src="../img/application-feedback.png" /></p>
 <p>It requires an email server configured.</p>
+<h2 id="languages-and-translations">Languages and translations</h2>
+<p>Go to <code>Admin console</code> &rarr; <code>Settings</code> &rarr; <code>Languages and translations</code> to manage the languages registered in the catalog and to add or override any translation used in the user interface.</p>
+<p>The <code>Registered languages in database</code> panel lists the languages stored in the database, used for database entities such as group names or portal titles. This is not the list of languages offered to catalog users, which is configured separately (see <a href="../user-interface-configuration/">User Interface Configuration</a>).</p>
+<p>The <code>Manage translations</code> panel lets an administrator add a translation for any key used by the application, or override an existing one, without rebuilding the application. This is useful, for example, to configure the <a href="#application-banner">Application banner</a> message below, to correct a wording, or to translate a label that has no translation yet in your language.</p>
+<ul>
+<li><strong>Table mode</strong> Enter the key to translate in the <code>Add a new translation for</code> field and click <code>Add</code>. This creates one translation field per registered language for that key.</li>
+</ul>
+<p><img alt="" src="../img/manage-translations-add-key.png" /></p>
+<p><img alt="" src="../img/manage-translations-key-rows.png" /></p>
+<ul>
+<li><strong>JSON mode</strong> Provides direct access to the same data as a JSON array, which can be useful to review or edit several translations at once.</li>
+</ul>
+<p><img alt="" src="../img/manage-translations-json-mode.png" /></p>
+<p>Once the translations are entered, click <code>Save all translations</code> to persist them.</p>
+<div class="admonition tip">
+<p class="admonition-title">Finding the key of an untranslated string</p>
+<p>When the interface has no translation for a key, it displays the raw key instead of a readable label, for example <code>SortBy-resourceTitleObject.default.sortAsc</code> in a sort-by dropdown. If you come across this, copy the text exactly as shown and use it as the key in the <code>Manage translations</code> panel to add the missing translation.</p>
+</div>
 <h2 id="application-banner">Application banner</h2>
 <p>In certain situations it can be useful to display a banner in the application to inform users, for example to announce a maintenance window or an outage.</p>
 <p>Enabling this setting displays a banner in the public pages of the application.</p>
@@ -3036,7 +3076,7 @@ that can request an account. If not configured any email address is allowed.</p>
 <li><strong>Enable</strong> If set, the application banner is displayed with the message configured.</li>
 </ul>
 <p><img alt="" src="../img/application-banner-config.png" /></p>
-<p>To configure the banner message, go to <code>Admin console</code> &rarr; <code>Settings</code> &rarr; <code>Languages and translations</code> and add a translation entry with the key <strong>application-banner</strong>.</p>
+<p>To configure the banner message, go to <code>Admin console</code> &rarr; <code>Settings</code> &rarr; <code>Languages and translations</code> and add a translation entry with the key <strong>application-banner</strong>. See <a href="#languages-and-translations">Languages and translations</a> above for details.</p>
 <p><img alt="" src="../img/application-banner-config2.png" /></p>
 <p>The banner is shown at the top of the public search page.</p>
 <p><img alt="" src="../img/application-banner2.png" /></p>
