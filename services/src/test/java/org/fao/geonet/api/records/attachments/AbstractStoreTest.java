@@ -173,6 +173,60 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void testNestedPathResource() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        getStore().delResources(context, metadataUuid, true);
+
+        String nestedFilename = "folder1/subfolder/nested-file.xml";
+        String sourceFilename = "record-with-old-links.xml";
+        MultipartFile file = new MockMultipartFile(nestedFilename,
+            nestedFilename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, sourceFilename)
+            ));
+        getStore().putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+
+        List<MetadataResource> resourcesList =
+            getStore().getResources(context, metadataUuid, Sort.name, null, true);
+        assertEquals("1 resource for record", 1, resourcesList.size());
+
+        MetadataResource resource = resourcesList.get(0);
+        assertEquals("Nested filename is preserved through listing",
+            nestedFilename, resource.getFilename());
+        assertEquals("Resource id is correct",
+            metadataUuid + "/attachments/" + nestedFilename,
+            resource.getId());
+
+        try (Store.ResourceHolder holder = getStore().getResource(context, metadataUuid,
+                MetadataResourceVisibility.PUBLIC, nestedFilename, true)) {
+            assertNotNull("Resource is fetchable by its nested filename", holder);
+            assertEquals("Fetched resource's filename is preserved",
+                nestedFilename, holder.getMetadata().getFilename());
+        }
+
+        MetadataResource patchedResource = getStore().patchResourceStatus(context, metadataUuid, nestedFilename,
+                                                                      MetadataResourceVisibility.PRIVATE, true);
+        assertEquals("Patched resource type is correct",
+            MetadataResourceVisibility.PRIVATE,
+            patchedResource.getVisibility());
+        assertEquals("Nested filename is preserved through a visibility change",
+            nestedFilename, patchedResource.getFilename());
+
+        getStore().delResource(context, metadataUuid, MetadataResourceVisibility.PRIVATE, nestedFilename, true);
+
+        resourcesList =
+            getStore().getResources(context, metadataUuid, Sort.name, null, true);
+        assertEquals("0 resource for record",
+            0,
+            resourcesList.size());
+    }
+
+    @Test
     public void testRenameResource() throws Exception {
         final ServiceContext context = createServiceContext();
         loginAsAdmin(context);

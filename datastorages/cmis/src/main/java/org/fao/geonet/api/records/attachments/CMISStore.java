@@ -111,7 +111,13 @@ public class CMISStore extends AbstractStore {
                 if (object instanceof Document) {
                     Path keyPath = new File(cmisFilePath).toPath().getFileName();
                     if (matcher.matches(keyPath)) {
-                        final String filename = getFilename(cmisFilePath);
+                        // cmisFilePath is relative to the visibility folder and always starts
+                        // with the folder delimiter (eg. "/file.png", or "/sub/file.png" for a
+                        // nested-path resource); keep the whole relative path - not just the
+                        // last segment - so subfolder structure is preserved.
+                        String delimiter = cmisConfiguration.getFolderDelimiter();
+                        final String filename = cmisFilePath.startsWith(delimiter)
+                            ? cmisFilePath.substring(delimiter.length()) : cmisFilePath;
                         MetadataResource resource = createResourceDescription(context, metadataUuid, visibility, filename, object, metadataId, approved);
                         resourceList.add(resource);
                     }
@@ -571,17 +577,22 @@ public class CMISStore extends AbstractStore {
             Map<String, Document> sourceDocumentMap = cmisUtils.getCmisObjectMap(sourceParentFolder, null, oc);
 
 
+            String delimiter = cmisConfiguration.getFolderDelimiter();
             for (Map.Entry<String, Document> sourceEntry : sourceDocumentMap.entrySet()) {
                 Document sourceDocument = sourceEntry.getValue();
+                // The map key is relative to sourceParentFolder and always starts with the
+                // folder delimiter; keep the whole relative path (not just sourceDocument's own
+                // bare name) so a nested-path resource's subfolder is preserved on copy.
+                String sourceKey = sourceEntry.getKey();
+                String relativeFilename = sourceKey.startsWith(delimiter) ? sourceKey.substring(delimiter.length()) : sourceKey;
 
-
-                Log.info(Geonet.RESOURCES, String.format("Copying %s to %s" , sourceResourceTypeDir+cmisConfiguration.getFolderDelimiter()+sourceDocument.getName(), targetResourceTypeDir));
+                Log.info(Geonet.RESOURCES, String.format("Copying %s to %s" , sourceResourceTypeDir + delimiter + relativeFilename, targetResourceTypeDir));
                 // Get cmis properties from the source document
                 Map<String, Object> sourceProperties = getProperties(sourceDocument);
 
                 setCmisMetadataUUIDPrimary(sourceProperties, targetUuid);
 
-                putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
+                putResource(context, targetUuid, relativeFilename, sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
 
             }
         } catch (CmisObjectNotFoundException | ResourceNotFoundException e) {

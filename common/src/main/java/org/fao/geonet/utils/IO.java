@@ -256,6 +256,24 @@ public final class IO {
         return fileSystem.getPath(firstPart, more);
     }
 
+    /**
+     * Join a relative {@link Path}'s segments with "/", regardless of the filesystem's own
+     * separator. Used to derive a resource's nested-path-aware filename (eg. "sub/file.png")
+     * from a path relative to its storage root, in a form that's consistent across platforms
+     * and matches the "/"-separated convention used elsewhere for resource identifiers
+     * (eg. {@code MetadataResource#getId()}).
+     */
+    public static String toUnixStylePath(Path relativePath) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < relativePath.getNameCount(); i++) {
+            if (i > 0) {
+                sb.append('/');
+            }
+            sb.append(relativePath.getName(i));
+        }
+        return sb.toString();
+    }
+
     public static Path toPath(URI uri) {
         try {
             return Paths.get(uri);

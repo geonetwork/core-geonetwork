@@ -46,7 +46,12 @@
               title="{{'clickToAddResource' | translate}}"
               data-ng-click="setResource(r)"
             >
-              {{r.id.split('/').splice(2).join('/') | decodeURIComponent}}
+              <span
+                data-ng-repeat="segment in (r.id.split('/').splice(2).join('/') | decodeURIComponent).split('/') track by $index"
+              >
+                <i class="fa fa-angle-right text-muted" data-ng-if="!$first"></i>
+                {{segment}}
+              </span>
             </a>
 
             <div id="resource_edit_{{$index}}" class="hidden">

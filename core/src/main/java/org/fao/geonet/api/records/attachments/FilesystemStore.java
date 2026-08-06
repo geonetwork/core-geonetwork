@@ -45,9 +45,10 @@ import org.springframework.core.io.Resource;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.FileSystem;
 import java.nio.file.attribute.FileTime;
@@ -55,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
  * A FileSystemStore store resources files in the catalog data directory. Each metadata record as a directory in the data directory
@@ -90,9 +92,19 @@ public class FilesystemStore extends AbstractStore {
         if (filter == null) {
             filter = FilesystemStore.DEFAULT_FILTER;
         }
-        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(resourceTypeDir, filter)) {
-            for (Path path: directoryStream) {
-                MetadataResource resource = new FilesystemStoreResource(metadataUuid, metadataId, path.getFileName().toString(),
+        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + filter);
+
+        // Resources may live in subfolders (nested paths): walk the whole tree rather than
+        // listing just the top level, matching the filter against each file's own name as
+        // before, but using the path relative to resourceTypeDir - not just the file's own
+        // name - as the resource filename, so subfolder structure is preserved.
+        try (Stream<Path> paths = Files.walk(resourceTypeDir)) {
+            for (Path path : (Iterable<Path>) paths.filter(Files::isRegularFile)::iterator) {
+                if (!matcher.matches(path.getFileName())) {
+                    continue;
+                }
+                String relativeFilename = IO.toUnixStylePath(resourceTypeDir.relativize(path));
+                MetadataResource resource = new FilesystemStoreResource(metadataUuid, metadataId, relativeFilename,
                                                                         settingManager.getNodeURL() + "api/records/", visibility,
                                                                         Files.size(path),
                                                                         new Date(Files.getLastModifiedTime(path).toMillis()), null, null,
@@ -113,11 +125,12 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         checkResourceId(resourceId);
 
+        String filename = getFilename(metadataUuid, resourceId);
         final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
-                resolve(getFilename(metadataUuid, resourceId));
+                resolve(filename);
 
         if (Files.exists(resourceFile)) {
-            return new FilesystemResourceHolder(resourceFile, getResourceDescription(context, metadataUuid, visibility, resourceFile, approved));
+            return new FilesystemResourceHolder(resourceFile, getResourceDescription(context, metadataUuid, visibility, filename, resourceFile, approved));
         } else {
             throw new ResourceNotFoundException(
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -131,11 +144,12 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         checkResourceId(resourceId);
 
+        String filename = getFilename(metadataUuid, resourceId);
         final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
-            resolve(getFilename(metadataUuid, resourceId));
+            resolve(filename);
 
         if (Files.exists(resourceFile)) {
-            return getResourceDescription(context, metadataUuid, visibility, resourceFile, approved);
+            return getResourceDescription(context, metadataUuid, visibility, filename, resourceFile, approved);
         } else {
             throw new ResourceNotFoundException(
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -174,7 +188,7 @@ public class FilesystemStore extends AbstractStore {
     public MetadataResource getResourceDescription(final ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
                                                    String filename, Boolean approved) throws Exception {
         Path path = getPath(context, metadataUuid, visibility, filename, approved);
-        return getResourceDescription(context, metadataUuid, visibility, path, approved);
+        return getResourceDescription(context, metadataUuid, visibility, filename, path, approved);
     }
 
     /**
@@ -182,18 +196,22 @@ public class FilesystemStore extends AbstractStore {
      * @param context the service context.
      * @param metadataUuid the uuid of the owner metadata record.
      * @param visibility is the resource is public or not.
+     * @param filename the resource's filename (may include nested-path subfolder segments),
+     *                 already resolved relative to {@code filePath} - not re-derived from
+     *                 {@code filePath} since {@link Path#getFileName()} would only give the last segment.
      * @param filePath the path to the resource.
      * @param approved if the metadata draft has been approved or not
      * @return the resource description or {@code null} if there is any problem accessing the file.
      */
     private MetadataResource getResourceDescription(final ServiceContext context, final String metadataUuid,
-                                                    final MetadataResourceVisibility visibility, final Path filePath, Boolean approved) {
+                                                    final MetadataResourceVisibility visibility, final String filename,
+                                                    final Path filePath, Boolean approved) {
         FilesystemStoreResource result = null;
 
         try {
             int metadataId = getAndCheckMetadataId(metadataUuid, approved);
             long fileSize = Files.size(filePath);
-            result = new FilesystemStoreResource(metadataUuid, metadataId, filePath.getFileName().toString(),
+            result = new FilesystemStoreResource(metadataUuid, metadataId, filename,
                 settingManager.getNodeURL() + "api/records/", visibility, fileSize,
                 new Date(Files.getLastModifiedTime(filePath).toMillis()), null, null, approved,
                 MimeTypeDetector.detect(filePath, filePath.getFileName().toString()));
@@ -237,7 +255,7 @@ public class FilesystemStore extends AbstractStore {
                     String.format("A resource with name '%s' and status '%s' already exists for metadata '%d'.", newName, visibility, metadataId));
             }
             Files.move(currentFilePath, newFilePath);
-            return getResourceDescription(context, metadataUuid, visibility, newFilePath, approved);
+            return getResourceDescription(context, metadataUuid, visibility, newName, newFilePath, approved);
         } catch (IOException e) {
             throw new IOException(
                 String.format("Unable to rename resource '%s' for metadata %d (%s). %s", resourceId, metadataId, metadataUuid, e.getMessage()), e);
@@ -262,7 +280,7 @@ public class FilesystemStore extends AbstractStore {
             IO.touch(filePath, FileTime.from(changeDate.getTime(), TimeUnit.MILLISECONDS));
         }
 
-        return getResourceDescription(context, metadataUuid, visibility, filePath, approved);
+        return getResourceDescription(context, metadataUuid, visibility, filename, filePath, approved);
     }
 
     private Path getPath(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String fileName,
@@ -341,19 +359,23 @@ public class FilesystemStore extends AbstractStore {
             // already the wanted visibility
             return resourceHolder.getMetadata();
         }
-        final Path newFolderPath = ensureDirectory(context, metadataId, resourceId, visibility);
-        Path newFilePath = newFolderPath.resolve(resourceHolder.getMetadata().getFilename());
+        String filename = resourceHolder.getMetadata().getFilename();
+        final Path newFolderPath = ensureDirectory(context, metadataId, filename, visibility);
+        Path newFilePath = newFolderPath.resolve(filename);
         Files.move(getResourcePath(resourceHolder.getResource(), context), newFilePath);
-        return getResourceDescription(context, metadataUuid, visibility, newFilePath, approved);
+        return getResourceDescription(context, metadataUuid, visibility, filename, newFilePath, approved);
     }
 
     private Path ensureDirectory(final ServiceContext context, final int metadataId, final String resourceId,
                                  final MetadataResourceVisibility visibility) throws IOException {
         final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         final Path newFolderPath = metadataDir.resolve(visibility.toString());
-        if (!Files.exists(newFolderPath)) {
+        // resourceId may contain subfolder segments (nested paths); make sure their parent
+        // directories exist too, not just the top-level public/private folder.
+        final Path targetParent = newFolderPath.resolve(resourceId).getParent();
+        if (!Files.exists(targetParent)) {
             try {
-                Files.createDirectories(newFolderPath);
+                Files.createDirectories(targetParent);
             } catch (Exception e) {
                 throw new IOException(
                         String.format("Can't create folder '%s' to store resource with name '%s' for metadata '%d'.", visibility,

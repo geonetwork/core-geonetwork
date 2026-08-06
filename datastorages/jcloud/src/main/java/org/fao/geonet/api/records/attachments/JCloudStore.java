@@ -114,7 +114,10 @@ public class JCloudStore extends AbstractStore {
             FileSystems.getDefault().getPathMatcher("glob:" + filter);
 
         ListContainerOptions opts = new ListContainerOptions();
-        opts.delimiter(jCloudConfiguration.getFolderDelimiter()).prefix(resourceTypeDir);
+        // Recursive (not delimiter-based) listing, so resources in subfolders (nested paths) are
+        // returned too, not just those directly under resourceTypeDir - matches the convention
+        // already used by delResources()/copyResources() in this same class.
+        opts.prefix(resourceTypeDir).recursive();
 
         // Page through the data
         String marker = null;
@@ -129,7 +132,11 @@ public class JCloudStore extends AbstractStore {
                 // Only add to the list if it is a blob, and it matches the filter.
                 Path keyPath = new File(storageMetadata.getName()).toPath().getFileName();
                 if (storageMetadata.getType() == StorageType.BLOB && matcher.matches(keyPath)){
-                    final String filename = getFilename(storageMetadata.getName());
+                    // Keep the blob's path relative to resourceTypeDir (subfolders included),
+                    // not just its last segment, so nested-path resources round-trip correctly.
+                    String blobName = storageMetadata.getName();
+                    final String filename = blobName.startsWith(resourceTypeDir)
+                        ? blobName.substring(resourceTypeDir.length()) : getFilename(blobName);
                     MetadataResource resource = createResourceDescription(context, metadataUuid, visibility, filename, storageMetadata, metadataId, approved, includeAdditionalIndexedProperties);
                     resourceList.add(resource);
                 }

@@ -30,11 +30,11 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
 import java.io.InputStream;
-import java.nio.file.DirectoryStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
@@ -103,22 +103,25 @@ public class MEFVisitor implements IVisitor {
         try (FileSystem zipFs = ZipUtil.openZipFs(mefFile)) {
             Path pubPath = zipFs.getPath(DIR_PUBLIC);
             if (Files.isDirectory(pubPath)) {
-                try (DirectoryStream<Path> paths = Files.newDirectoryStream(pubPath)) {
-                    for (Path path : paths) {
-                        String simpleName = path.getFileName().toString();
+                // Resources may live in subfolders (nested paths): walk the whole tree, using
+                // the path relative to pubPath - not just the file's own name - as the resource
+                // name, so it matches the "/"-separated names registered in info.xml.
+                try (Stream<Path> paths = Files.walk(pubPath)) {
+                    for (Path path : (Iterable<Path>) paths.filter(Files::isRegularFile)::iterator) {
+                        String relativeName = IO.toUnixStylePath(pubPath.relativize(path));
                         try (InputStream isb = IO.newInputStream(path)) {
-                            v.handlePublicFile(simpleName, MEFLib.getChangeDate(pubFiles, simpleName), isb, 0);
+                            v.handlePublicFile(relativeName, MEFLib.getChangeDate(pubFiles, relativeName), isb, 0);
                         }
                     }
                 }
             }
             Path priPath = zipFs.getPath(DIR_PRIVATE);
             if (Files.isDirectory(priPath)) {
-                try (DirectoryStream<Path> paths = Files.newDirectoryStream(priPath)) {
-                    for (Path path : paths) {
-                        String simpleName = path.getFileName().toString();
+                try (Stream<Path> paths = Files.walk(priPath)) {
+                    for (Path path : (Iterable<Path>) paths.filter(Files::isRegularFile)::iterator) {
+                        String relativeName = IO.toUnixStylePath(priPath.relativize(path));
                         try (InputStream isb = IO.newInputStream(path)) {
-                            v.handlePrivateFile(simpleName, MEFLib.getChangeDate(prvFiles, simpleName), isb, 0);
+                            v.handlePrivateFile(relativeName, MEFLib.getChangeDate(prvFiles, relativeName), isb, 0);
                         }
                     }
                 }

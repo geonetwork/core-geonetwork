@@ -152,12 +152,16 @@ public abstract class StoreUtils {
         final Store store = context.getBean("resourceStore", Store.class);
         Files.createDirectories(destinationDir);
         for (MetadataResource resource: resources) {
+            // A resource's filename may include subfolder segments (nested paths); make sure
+            // its parent directory exists too, not just destinationDir itself.
+            Path targetPath = destinationDir.resolve(resource.getFilename());
+            Files.createDirectories(targetPath.getParent());
             try (
               Store.ResourceHolder holder = store.getResource(context, metadataUuid, resource.getVisibility(),
                     resource.getFilename(), approved);
               InputStream inputStream = holder.getResource().getInputStream();
             ) {
-                Files.copy(inputStream, destinationDir.resolve(resource.getFilename()));
+                Files.copy(inputStream, targetPath);
             }
         }
     }

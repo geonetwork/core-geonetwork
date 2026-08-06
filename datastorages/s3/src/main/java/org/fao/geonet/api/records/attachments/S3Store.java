@@ -71,10 +71,13 @@ public class S3Store extends AbstractStore {
         PathMatcher matcher =
                 FileSystems.getDefault().getPathMatcher("glob:" + filter);
 
+        final String resourceTypeDirPrefix = resourceTypeDir + "/";
         final ListObjectsV2Result objects = s3.getClient().listObjectsV2(s3.getBucket(), resourceTypeDir);
         for (S3ObjectSummary object: objects.getObjectSummaries()) {
             final String key = object.getKey();
-            final String filename = getFilename(key);
+            // Keep the key's path relative to resourceTypeDir (subfolders included), not just its
+            // last segment, so nested-path resources round-trip correctly through listing.
+            final String filename = key.startsWith(resourceTypeDirPrefix) ? key.substring(resourceTypeDirPrefix.length()) : getFilename(key);
             Path keyPath = new File(filename).toPath().getFileName();
             if (matcher.matches(keyPath)) {
                 // S3ObjectSummary does not carry the object's Content-Type; avoid an extra

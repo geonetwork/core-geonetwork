@@ -446,7 +446,11 @@ public abstract class AbstractStore implements Store {
         if (resourceId == null) {
             throw new IllegalArgumentException("Resource identifier cannot be null.");
         }
-        if (resourceId.contains("..") || resourceId.startsWith("/") || resourceId.startsWith("file:/")) {
+        // A resource id may contain "/"-separated subfolders (nested paths), but must still be a
+        // single relative file reference: no ".." traversal, no absolute/scheme-prefixed path, no
+        // empty path segment ("//"), and no trailing slash (a directory, not a file).
+        if (resourceId.contains("..") || resourceId.startsWith("/") || resourceId.startsWith("file:/")
+                || resourceId.endsWith("/") || resourceId.contains("//")) {
             throw new SecurityException(String.format("Invalid resource identifier '%s'.", resourceId));
         }
         if (resourceId.length() > MetadataFileUpload.FILENAME_MAX_LENGTH) {

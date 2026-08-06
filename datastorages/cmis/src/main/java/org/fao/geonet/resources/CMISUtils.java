@@ -198,12 +198,15 @@ public class CMISUtils {
         Map<String, Document> documentMap = new HashMap<>();
         for (CmisObject cmisObject : folder.getChildren(oc)) {
             if (cmisObject instanceof Folder) {
-                documentMap.putAll(getCmisObjectMap((Folder) cmisObject, baseFolder + cmisConfiguration.getFolderDelimiter() + cmisObject.getName(), suffixlessKeyFilename));
-                return documentMap;
-            } else {
-                if (cmisObject instanceof Document && (suffixlessKeyFilename == null || cmisObject.getName().startsWith(suffixlessKeyFilename))) {
-                    documentMap.put(baseFolder + cmisConfiguration.getFolderDelimiter() + cmisObject.getName(), (Document) cmisObject);
-                }
+                // Recurse into the same 4-arg overload directly (not the 3-arg one, which
+                // silently discards oc/suffixlessKeyFilename and rebuilds its own context), and
+                // keep iterating our own siblings afterwards - a subfolder's presence must not
+                // stop the rest of this folder's children (including further subfolders) from
+                // being visited too, or nested-path resources go missing from listings.
+                documentMap.putAll(getCmisObjectMap((Folder) cmisObject,
+                    baseFolder + cmisConfiguration.getFolderDelimiter() + cmisObject.getName(), oc, suffixlessKeyFilename));
+            } else if (cmisObject instanceof Document && (suffixlessKeyFilename == null || cmisObject.getName().startsWith(suffixlessKeyFilename))) {
+                documentMap.put(baseFolder + cmisConfiguration.getFolderDelimiter() + cmisObject.getName(), (Document) cmisObject);
             }
         }
         return documentMap;
