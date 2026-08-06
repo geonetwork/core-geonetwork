@@ -1198,7 +1198,7 @@
                     scope.params.linkType = typeConfig;
                     scope.params.protocol = null;
                     scope.params.mimeType = "";
-                    scope.mimeTypeStrategy = "mimeType";
+                    scope.params.mimeTypeStrategy = "mimeType";
                     scope.params.name = "";
                     scope.params.desc = "";
                     initMultilingualFields();
