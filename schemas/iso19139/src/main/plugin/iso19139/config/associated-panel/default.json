@@ -2,6 +2,7 @@
   "config": {
     "display": "radio",
     "types": [{
+      "default": true,
       "label": "addOnlinesrc",
       "sources": {
         "filestore": true
@@ -19,6 +20,14 @@
           "isMultilingual": false,
           "required": true,
           "tooltip": "gmd:URL"
+        },
+        "mimeType": {
+          "isMultilingual": false,
+          "tooltip": "gmd:MimeFileType"
+        },
+        "mimeTypeStrategy": {
+          "isMultilingual": false,
+          "value": "mimeType"
         },
         "name": {"tooltip": "gmd:name"},
         "desc": {"tooltip": "gmd:description"},
