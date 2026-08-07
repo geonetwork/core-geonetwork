@@ -1258,6 +1258,44 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         Assert.assertNull(_userRepo.findOneByUsername("newuser-othergroup"));
     }
 
+    @Test
+    public void createUserWithGroupAdministeredByTheCaller() throws Exception {
+        User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
+        Assert.assertNotNull(userAdmin);
+
+        Group sampleGroup = _groupRepo.findByName("sample");
+        Assert.assertNotNull(sampleGroup);
+
+        UserDto user = new UserDto();
+        user.setUsername("newuser-samplegroup");
+        user.setName("new");
+        user.setProfile(Profile.Editor.name());
+        user.setGroupsEditor(Collections.singletonList(Integer.toString(sampleGroup.getId())));
+        user.setEmail(Collections.singletonList("mail@test.com"));
+        user.setPassword("Password7$");
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(userAdmin);
+
+        this.mockMvc.perform(put("/srv/api/users")
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(204));
+
+        User created = _userRepo.findOneByUsername("newuser-samplegroup");
+        Assert.assertNotNull(created);
+        Assert.assertTrue(_userGroupRepo.findAll(hasUserId(created.getId())).stream()
+            .anyMatch(ug -> ug.getGroup().getId() == sampleGroup.getId()
+                && Profile.Editor.equals(ug.getProfile())));
+    }
+
     /**
      * Create sample data for the tests.
      */

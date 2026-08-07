@@ -984,7 +984,7 @@ public class UsersApi {
     /**
      * Check that the requested assignments only concern groups the caller administers.
      *
-     * @param requestedGroups     the assignments carried by the request.
+     * @param requestedGroups      the assignments carried by the request.
      * @param administeredGroupIds the groups the caller is user administrator of.
      * @throws IllegalArgumentException thrown on the first group outside that list.
      */
