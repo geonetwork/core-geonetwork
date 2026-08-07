@@ -62,7 +62,7 @@ public class UserFeedbackDatabaseServiceTest {
     private UserRepository userRepository;
 
     @InjectMocks
-    private UserFeedbackDatabaseService service = new UserFeedbackDatabaseService();
+    private UserFeedbackDatabaseService service;
 
     @Before
     public void setUp() {
