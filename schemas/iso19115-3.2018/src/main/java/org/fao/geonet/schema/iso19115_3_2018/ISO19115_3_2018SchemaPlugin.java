@@ -67,7 +67,9 @@ public class ISO19115_3_2018SchemaPlugin
             .add(ISO19115_3_2018Namespaces.GCO)
             .add(ISO19115_3_2018Namespaces.MDB)
             .add(ISO19115_3_2018Namespaces.GEX)
+            .add(ISO19115_3_2018Namespaces.MCC)
             .add(ISO19115_3_2018Namespaces.MRC)
+            .add(ISO19115_3_2018Namespaces.MRD)
             .add(ISO19115_3_2018Namespaces.MRL)
             .add(ISO19115_3_2018Namespaces.LAN)
             .add(ISO19115_3_2018Namespaces.MRI)
@@ -245,9 +247,6 @@ public class ISO19115_3_2018SchemaPlugin
 
 
     private AssociatedResource metadataRefAsAssociatedResource(Element sibling) {
-        Element ref = sibling.getChild("metadataReference", ISO19115_3_2018Namespaces.MRI);
-        String sibUuid = ref.getAttributeValue("uuidref");
-
         String associationType = sibling.getChild("associationType", ISO19115_3_2018Namespaces.MRI)
             .getChild("DS_AssociationTypeCode", ISO19115_3_2018Namespaces.MRI)
             .getAttributeValue("codeListValue");
@@ -259,6 +258,13 @@ public class ISO19115_3_2018SchemaPlugin
                 .getAttributeValue("codeListValue");
         }
 
+        Element ref = sibling.getChild("metadataReference", ISO19115_3_2018Namespaces.MRI);
+
+        if (ref == null) {
+            return new AssociatedResource("", initType, associationType, "", "");
+        }
+
+        String sibUuid = ref.getAttributeValue("uuidref");
         String title = ref.getAttributeValue("title", XLINK);
         String url = ref.getAttributeValue("href", XLINK);
         return new AssociatedResource(sibUuid, initType, associationType, url, title);

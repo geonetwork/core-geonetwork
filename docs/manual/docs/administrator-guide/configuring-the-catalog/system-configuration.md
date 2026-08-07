@@ -124,6 +124,30 @@ Enabling the setting, displays in the application footer a link to a page that a
 
 It requires an email server configured.
 
+## Languages and translations
+
+Go to `Admin console` --> `Settings` --> `Languages and translations` to manage the languages registered in the catalog and to add or override any translation used in the user interface.
+
+The `Registered languages in database` panel lists the languages stored in the database, used for database entities such as group names or portal titles. This is not the list of languages offered to catalog users, which is configured separately (see [User Interface Configuration](user-interface-configuration.md)).
+
+The `Manage translations` panel lets an administrator add a translation for any key used by the application, or override an existing one, without rebuilding the application. This is useful, for example, to configure the [Application banner](#application-banner) message below, to correct a wording, or to translate a label that has no translation yet in your language.
+
+-   **Table mode** Enter the key to translate in the `Add a new translation for` field and click `Add`. This creates one translation field per registered language for that key.
+
+![](img/manage-translations-add-key.png)
+
+![](img/manage-translations-key-rows.png)
+
+-   **JSON mode** Provides direct access to the same data as a JSON array, which can be useful to review or edit several translations at once.
+
+![](img/manage-translations-json-mode.png)
+
+Once the translations are entered, click `Save all translations` to persist them.
+
+!!! tip "Finding the key of an untranslated string"
+
+    When the interface has no translation for a key, it displays the raw key instead of a readable label, for example `SortBy-resourceTitleObject.default.sortAsc` in a sort-by dropdown. If you come across this, copy the text exactly as shown and use it as the key in the `Manage translations` panel to add the missing translation.
+
 ## Application banner
 
 In certain situations it can be useful to display a banner in the application to inform users, for example to announce a maintenance window or an outage.
@@ -134,7 +158,7 @@ Enabling this setting displays a banner in the public pages of the application.
 
 ![](img/application-banner-config.png)
 
-To configure the banner message, go to `Admin console` --> `Settings` --> `Languages and translations` and add a translation entry with the key **application-banner**.
+To configure the banner message, go to `Admin console` --> `Settings` --> `Languages and translations` and add a translation entry with the key **application-banner**. See [Languages and translations](#languages-and-translations) above for details.
 
 ![](img/application-banner-config2.png)
 
@@ -175,9 +199,18 @@ For each metadata schema, the catalog has an XSL transformation (`update-fixed-i
 
 ## Search Statistics {#search_stats_config}
 
-Enables/disables search statistics capture. Search statistics are stored in the database and can be queried using the `Search Statistics` page.
+!!! warning "Not currently functional"
 
-There is very little compute overhead involved in storing search statistics as they are written to the database in a background thread. However database storage for a very busy site must be carefully planned.
+    This setting has no effect. Search statistics capture was removed when the catalog migrated from Lucene to Elasticsearch, with the intention of rebuilding it on top of Elasticsearch and Kibana. That work has not been completed, so enabling this option does not collect any data and there is no `Search Statistics` page to query.
+
+    See [issue #4499](https://github.com/geonetwork/core-geonetwork/issues/4499) for the current status.
+
+    To collect usage statistics in the meantime, configure a web analytics service using ```WEB-INF/config.properties```:
+
+    ```properties
+    analytics.web.service=matomo
+    analytics.web.jscode=<tracking code provided by the analytics service>
+    ```
 
 ## Open Archive Initiative (OAI-PMH) Provider
 
@@ -249,7 +282,11 @@ Note: this option is only available for databases that have been tested. Those d
 
 ## Metadata Privileges
 
-*Only set privileges to user's groups*: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator). At the moment this option cannot be disabled and is likely to be deprecated in the next version of GeoNetwork.
+- **Only set privileges to user's groups**: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator).
+- **Publication by users reviewer in record group only**: Allow publication by administrator and reviewer member of record group. If disabled, then also all users reviewer in group with editing rights can publish/unpublish a record.
+- **Manage the publication date automatically**: When enabled the publication date of the metadata is set automatically when the metadata is published and removed when the metadata is unpublished.
+- **Notification level when a metadata is published / unpublished**: Define which users to alert when a metadata is published / unpublished.
+- **Groups to notify when a metadata is published / unpublished**: List of groups, separated by the char |, to notify when a metadata is published / unpublished (for 'Notify the group(s) emails' notification level).
 
 ## Metadata create
 
@@ -376,6 +413,22 @@ This setting applies whether or not the metadata approval workflow is enabled.
 Allows to configure the zip export of metadata records and their attachments.
 
 -   **Total size of attachments allowed in zip export (MB)** Maximum total size of attachments allowed in zip export (in MB). If the total size of attachments linked to the selected metadata is above this value, exporting as zip (with attachments) is not allowed. Leave empty for no limit.
+
+## Metadata workflow
+
+The following settings control what metadata can be published when the metadata workflow is active. They are found under `Administration` --> `Settings` --> `Metadata Workflow`.
+
+-   **Allow publication of invalid metadata**  
+    When enabled, metadata records can be published regardless of its validation status.  
+    When disabled, only records that passe all required XSD and schematron validation rules can be published.  
+    *This setting applies to metadata records only, metadata templates exempt from this check, as they are incomplete by design.*
+-   **Allow submission/approval of invalid metadata**   
+    When enabled, records can be submitted or approved even when validation fails.  
+    When disabled, records must be valid before they can move to `Submitted` or `Approved` workflow status.  
+    *This setting applies to metadata records only, metadata templates exempt from this check, as they are incomplete by design.*
+-   **Allow publication of non-approved metadata**  
+    When enabled, metadata records and templates can be published regardless of its workflow status.  
+    When disabled, only metadata records and templates with an `Approved` workflow status can be published. 
 
 ## Harvesting
 

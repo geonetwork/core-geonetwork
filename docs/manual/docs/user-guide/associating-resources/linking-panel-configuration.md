@@ -20,7 +20,8 @@ For distribution, configuration has the following properties:
 * `icon` is the icon class.
 * `fileStoreFilter` is a regular expression to filter files available in the metadata store
 * `process` is the XSL process to be applied when the resource is added
-* `fields` defines the fields to populate for the resource and their properties (eg. visible or not, multilingual or not, default value)
+* `fields` defines the fields to populate for the resource and their properties (eg. visible or not, multilingual or not, default value). Some entries are options passed to the
+  process rather than inputs shown to the user, see [MIME type encoding](#mime-type-encoding)
 
 Example:
 
@@ -50,7 +51,43 @@ Example:
       },
 ```
 
+### MIME type encoding
 
+When a distribution type declares a `mimeType` field, the editor shows an input for the resource
+MIME type. `mimeTypeStrategy` controls how the `onlinesrc-add` process encodes it in the record.
+
+With `"mimeTypeStrategy": {"value": "mimeType"}` the protocol element carries the MIME type in a
+`type` attribute, using `gmx:MimeFileType` in ISO19139 and `gcx:MimeFileType` in ISO19115-3:
+
+```xml
+<gmd:protocol>
+  <gmx:MimeFileType type="image/tiff">WWW:DOWNLOAD-1.0-http--download</gmx:MimeFileType>
+</gmd:protocol>
+```
+
+With `"mimeTypeStrategy": {"value": "protocol"}` the MIME type is appended to the protocol,
+separated by a colon:
+
+```xml
+<gmd:protocol>
+  <gco:CharacterString>WWW:DOWNLOAD-1.0-http--download:image/tiff</gco:CharacterString>
+</gmd:protocol>
+```
+
+`mimeTypeStrategy` is an option passed to the process rather than a field the user fills in, so
+it only takes a `value`:
+
+```json
+        "fields": {
+          "url": {"isMultilingual": false},
+          "protocol": {"isMultilingual": false},
+          "mimeType": {"isMultilingual": false},
+          "mimeTypeStrategy": {"value": "mimeType"}
+        }
+```
+
+If `mimeTypeStrategy` is declared without a `value`, `mimeType` is used. If it is not declared at
+all, the process default applies and the MIME type is appended to the protocol.
 
 ## Associated resources
 

@@ -109,6 +109,7 @@ public class Settings {
     public static final String SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES = "system/harvester/disabledHarvesterTypes";
     public static final String SYSTEM_METADATAPRIVS_USERGROUPONLY = "system/metadataprivs/usergrouponly";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY = "system/metadataprivs/publicationbyrevieweringroupowneronly";
+    public static final String SYSTEM_METADATAPRIVS_PUBLICATION_MANAGEPUBLICATIONDATE = "system/metadataprivs/publication/managepublicationdate";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATIONNOTIFICATION_EMAILS = "system/metadataprivs/publication/notificationEmails";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL = "system/metadataprivs/publication/notificationLevel";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS = "system/metadataprivs/publication/notificationGroups";

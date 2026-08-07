@@ -25,6 +25,8 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 ## General options
 
 -   **Humanize dates**: check this box to show dates in a human-friendly format. If not set, the full date will be shown.
+-   **Date format**: Define the format for dates using Moment.js syntax (e.g. `DD-MM-YYYY`).
+-   **Timezone**: Define the timezone to use for displaying dates. Default is `Browser` timezone.
 
 ![](img/ui-settings-humanizedate.png)
 
@@ -32,6 +34,9 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 
 -   **Footer**: Select this checkbox to determine whether the GeoNetwork footer is shown. If not set, no footer will be visible.
 -   **Social bar**: Select this check box to show the social media bar in the footer.
+-   **Show application info and links**: If enabled, shows information about the application version and links to the GeoNetwork website and documentation in the footer.
+-   **Footer custom menu items**: List of static page IDs associated with the footer section to display.
+-   **RSS feeds**: List of RSS feeds links to display when the OGC API Records service is enabled.
 
 ![](img/ui-settings-footer.png)
 
@@ -39,6 +44,11 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 
 -   **Top toolbar**: Select this check box to determine whether the GeoNetwork top toolbar will be shown. If not set, no toolbar will be visible.
 -   **List of languages**: Choose the languages from the list that should be available for translating the interface strings (available from the dropdown list in the top toolbar). If only one language remains, then no dropdown will be shown. Note that additional languages can be added, if translations are available, by selecting the `+` button below the list and adding the appropriate ISO codes.
+-   **Fluid header layout**: If enabled, the header uses the full width of the browser.
+-   **Show the catalog name in the Top menu**: If enabled, the name of the catalog will be shown in the top toolbar.
+-   **Is header fixed**: If enabled, the header will remain fixed at the top of the page when scrolling.
+-   **Show portal switcher**: If enabled, the portal switcher is displayed in the header (if multiple portals are available).
+-   **Header custom menu items**: Use this setting to control the order of the default menu items and any static pages configured for the header. The default menus are: `gn-site-name-menu`, `gn-portal-switcher`, `gn-search-menu`, `gn-map-menu`, `gn-contribute-menu`, `gn-admin-menu`.
 
 ![](img/ui-settings-toptoolbar.png)
 
@@ -51,6 +61,10 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 
 -   **Home page**: Select this check box to determine whether the Logo and Link to the Home Page are visible in the top toolbar. If not set, no logo and link is shown.
 -   **Application URL**: Define the URL for the home page. In the majority of cases this can be left as the default.
+-   **Show search box**: Select this check box to determine whether the search box is visible on the home page.
+-   **Show social bar in footer**: Select this check box to show the social media bar in the footer of the home page.
+-   **Show mosaic**: Select this check box to determine whether the featured records mosaic is visible on the home page.
+-   **Show maps**: Select this check box to determine whether the maps panel is visible on the home page.
 -   **Fluid container for Home and Search**: Select this check box to determine whether the search box is full width in the browser page or if it is fixed width and centred.
 
 ![](img/ui-settings-homepage.png)
@@ -60,6 +74,10 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 -   **Search application**: Select this check box to determine whether the search application is visible in the top toolbar. If not set, no link is shown.
 -   **Application URL**: Define the URL for the search application. In the majority of cases this can be left as the default.
 -   **Number of records per page**: Define the options to determine the number of records shown per page of results, and the default.
+-   **Search language strategy**: Define how the search should handle multilingual content (e.g., search in UI language, search in all languages, etc.).
+-   **Autocompletion configuration**: Define the configuration for the search autocompletion (JSON).
+-   **Display status in footer**: Define for which record statuses a status label should be displayed in the results footer.
+-   **Show batch dropdown**: Select this check box to show the batch action dropdown in the search results.
 -   **Facet configuration**: See [Configuring faceted search](../../customizing-application/configuring-faceted-search.md). The configurations are defined using JSON following the [Elasticsearch Aggregations API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html).
 
 ![](img/ui-settings-searchpage.png)
@@ -113,6 +131,12 @@ This section describes how an administrator can configure the different maps in 
 
 -   **Map Application**: The initial checkbox allows the main map tab to be disabled. In this case there will be no map tab shown in the top toolbar but the mini map and extent map described above will still be visible.
 -   **Application URL**: This defines the URL for the map tab. In the majority of cases this can be left as the default.
+-   **Single tile WMS**: If enabled, WMS layers are requested as a single tile instead of multiple tiles.
+-   **User preference persistence**: This option determines the behaviour of cookies related to the map. The various options are listed below ('', 'sessionStorage', or 'localStorage').
+-   **WPS sources**: Define the sources for WPS services (e.g., 'url', 'recent').
+-   **Default tool**: Define the tool that is active by default in the map viewer.
+-   **Default tool after map load**: Define the tool that is opened after the map is loaded.
+-   **Auto fit on layer**: If enabled, the map automatically fits the extent of the loaded layers.
 
 ### External viewer
 
@@ -123,7 +147,6 @@ This section describes how an administrator can configure the different maps in 
 
 ![](img/ui-settings-mappage.png)
 
--   **User preference persistence**: This option determines the behaviour of cookies related to the map. The various options are listed below.
 -   **Bing Map Key**: If this option is filled in, then it is possible to use Bing Maps as base layers within the map application. You must get your own key for this to work.
 
 ![](img/ui-settings-mappage2.png)
@@ -215,8 +238,18 @@ This section defines the configuration for the map shown when editing a record. 
 
 ## Record View
 
--   **Record view**:
 -   **Show Social bar**: If enabled, the social media bar is enabled in record view.
+-   **Is default contact view enabled**: If enabled, shows the default contact view for records.
+-   **Show Status watermark**: Define for which record statuses a watermark should be displayed in the background of the record view.
+-   **Show Status top bar**: Define for which record statuses a status bar should be displayed at the top of the record view.
+-   **Show Citation**: If enabled, shows the record citation. You can also define a condition (JSON) for when to show it.
+-   **Sort keywords alphabetically**: If enabled, keywords are sorted alphabetically in the record view.
+-   **Thesaurus keywords to highlight**: Choose thesaurus that you want keywords to be displayed as badges.
+-   **Location thesaurus**: Choose thesaurus for location keywords.
+-   **Internal thesaurus**: Choose thesaurus for internal keywords.
+-   **Collection table config**: Define the configuration for the collection table (labels and columns).
+-   **Distribution config**: Define the configuration for the distribution section (layout and sections).
+-   **Related records facets config**: Define the configuration for facets of related records.
 -   **Record View custom menu items**: Use this setting to control the order of the default record view actions and any static pages configured for the record view toolbar. By default, the record view toolbar uses the following menu keys:
 
     ``` json
@@ -242,27 +275,31 @@ This section defines the configuration for the map shown when editing a record. 
 -   **Fluid container for the Editor**: If enabled, the editor application will have a full width container. If disabled it will have a fixed width and centered container.
 -   **New metadata page layout**: Choose from the options for the layout of the `add new metadata` page. The default is `Horizontal` but a vertical layout can be chosen, or a custom layout based on a supplied template.
 -   **Editor page indent type**: Choose from the options for the indent style when editing a record. The default is for minimal indents, select `Colored indents` to use the style shown below:
+-   **Workflow search record types**: Define which record types to include in the workflow search (e.g., 'n' for metadata, 'e' for entries).
+-   **Facets configuration**: Define the configuration for facets in the editor board. See [Configuring faceted search](../../customizing-application/configuring-faceted-search.md). The configurations are defined using JSON following the [Elasticsearch Aggregations API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html).
+
+## Workflow assist
+
+- **List of workflow assist applications**: Configure external applications to assist in the workflow.
 
 ![](img/ui-settings-indent.png)
 
+## Cookie Warning
+
+-   **Cookie Warning**: If enabled, shows a cookie warning to users.
+-   **Cookie warning more info link**: Define the URL for the "More info" link in the cookie warning.
+-   **Cookie warning reject link**: Define the URL for the "Reject" link in the cookie warning.
+
 ## Admin console
 
--   **Admin console**:
+-   **Admin console**: If enabled the admin pages are available to users with the appropriate privileges. If not enabled the admin tab is not shown in the top toolbar.
 -   **Application URL**: Set the application URL for the admin console. In general this should be left as the default.
+-   **Facets configuration**: Define the configuration for facets in the admin console. See [Configuring faceted search](../../customizing-application/configuring-faceted-search.md). The configurations are defined using JSON following the [Elasticsearch Aggregations API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html).
 
-## Sign in application
+## Authentication
 
--   **Sign in application**:
--   **Application URL**: Set the application URL for the sign in page. In general this should be left as the default.
-
-## Sign out application
-
--   **Application URL**: Set the application URL for the sign out. In general this should be left as the default.
-
-## Search application
-
--   **Search application**:
--   **Application URL**: Set the application URL for the search page. In general this should be left as the default.
+-   **Sign in application URL**: Set the application URL for the sign in page. In general this should be left as the default.
+-   **Sign out application URL**: Set the application URL for the sign out. In general this should be left as the default.
 
 ## JSON Configuration
 

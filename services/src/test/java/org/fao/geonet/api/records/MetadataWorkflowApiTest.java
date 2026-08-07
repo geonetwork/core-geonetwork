@@ -5,10 +5,13 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.records.model.MetadataBatchSubmitParameter;
+import org.fao.geonet.api.records.model.MetadataStatusParameter;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.SelectionManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
 import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
@@ -38,20 +41,22 @@ public class MetadataWorkflowApiTest  extends AbstractServiceIntegrationTest {
     @Autowired
     MetadataStatusRepository metadataStatusRepo;
     @Autowired
-    StatusValueRepository statusValueRepo;
-    @Autowired
     private SettingManager settingManager;
+    @Autowired
+    private MetadataRepository metadataRepository;
+    @Autowired
+    private MetadataValidationRepository metadataValidationRepository;
     @Autowired
     private StatusValueRepository statusValueRepository;
 
     private String uuid;
     private String uuid2;
-    private ServiceContext context;
+    private int metadataId;
 
 
     @Before
     public void setUp() throws Exception {
-        context = createServiceContext();
+        ServiceContext context = createServiceContext();
         loginAsAdmin(context);
         settingManager.setValue(Settings.METADATA_WORKFLOW_ENABLE, true);
         settingManager.setValue(Settings.METADATA_WORKFLOW_DRAFT_WHEN_IN_GROUP, ".*");
@@ -59,6 +64,7 @@ public class MetadataWorkflowApiTest  extends AbstractServiceIntegrationTest {
         AbstractMetadata metadata = injectMetadataInDb(getSampleMetadataXml(), context);
         injectStatusForMetadata(metadata, DRAFT);
         uuid = metadata.getUuid();
+        metadataId = metadata.getId();
         AbstractMetadata metadata2 = injectMetadataInDb(getSampleMetadataXml(), context);
         injectStatusForMetadata(metadata2, APPROVED);
         uuid2 = metadata2.getUuid();
@@ -105,6 +111,45 @@ public class MetadataWorkflowApiTest  extends AbstractServiceIntegrationTest {
             .andExpect(status().is2xxSuccessful())
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING))
             .andExpect(jsonPath("$.numberOfRecordsProcessed").value(1));
+    }
+
+    @Test
+    public void testApproveInvalidTemplateSucceedsWhenAllowInvalidSubmissionApprovalDisabled() throws Exception {
+        settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD, false);
+
+        Metadata templateMetadata = metadataRepository.findOneByUuid(uuid);
+        templateMetadata.getDataInfo().setType(MetadataType.TEMPLATE);
+        metadataRepository.save(templateMetadata);
+
+        MetadataValidation invalidValidation = new MetadataValidation()
+            .setId(new MetadataValidationId(metadataId, "xsd"))
+            .setStatus(MetadataValidationStatus.INVALID)
+            .setRequired(true)
+            .setNumTests(1)
+            .setNumFailures(1);
+        metadataValidationRepository.save(invalidValidation);
+
+        MetadataStatusParameter statusParameter = new MetadataStatusParameter();
+        statusParameter.setStatus(Integer.parseInt(APPROVED));
+        statusParameter.setChangeMessage("approve template in test");
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
+        Gson gson = new Gson();
+        String json = gson.toJson(statusParameter);
+
+        mockMvc.perform(put("/srv/api/records/" + uuid + "/status")
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .accept(MediaType.parseMediaType("application/json"))
+                .session(mockHttpSession))
+            .andExpect(status().isCreated());
+
+        boolean approvedStatusCreated = metadataStatusRepo.findAllByMetadataId(metadataId, org.springframework.data.domain.Sort.unsorted()).stream()
+            .map(MetadataStatus::getStatusValue)
+            .map(StatusValue::getId)
+            .anyMatch(id -> id == Integer.parseInt(APPROVED));
+        Assert.isTrue(approvedStatusCreated);
     }
 
     private void injectStatusForMetadata(AbstractMetadata metadata, String status) {
