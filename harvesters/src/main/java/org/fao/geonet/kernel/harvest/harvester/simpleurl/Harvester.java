@@ -218,13 +218,12 @@ class Harvester implements IHarvester<HarvestResult> {
     private void collectRecordsFromJson(JsonNode jsonObj,
                                         Map<String, Element> uuids,
                                         Aligner aligner) {
-        JsonNode nodes = jsonObj.at(params.loopElement);
+        List<JsonNode> nodes = selectJsonRecords(jsonObj, params.loopElement);
         log.debug(String.format("%d records found in JSON response.", nodes.size()));
 
         SimpleUrlPathMode mode = params.recordIdPathMode;
         if (mode == null || mode == SimpleUrlPathMode.AUTO) {
-            // auto or unset means we choose JSONPOINTER
-            mode = SimpleUrlPathMode.JSONPOINTER;
+            mode = determineJsonPathMode(params.recordIdPath);
         }
 
         Function<JsonNode, String> uuidExtractor;
@@ -255,6 +254,62 @@ class Harvester implements IHarvester<HarvestResult> {
                 log.warning(String.format("Failed to parse JSON source URL. Error is: %s", e.getMessage()));
             }
         }
+    }
+
+    @VisibleForTesting
+    SimpleUrlPathMode determineJsonPathMode(String pathExpression) {
+        if (StringUtils.isEmpty(pathExpression) || pathExpression.startsWith("/")) {
+            return SimpleUrlPathMode.JSONPOINTER;
+        }
+        if (pathExpression.startsWith("$")) {
+            return SimpleUrlPathMode.JSONPATH;
+        }
+
+        try {
+            JsonPointer.compile(pathExpression);
+            return SimpleUrlPathMode.JSONPOINTER;
+        } catch (IllegalArgumentException e) {
+            try {
+                JsonPath.compile(pathExpression);
+                return SimpleUrlPathMode.JSONPATH;
+            } catch (Exception e2) {
+                throw new IllegalStateException(String.format(
+                    "Path '%s' is neither a valid JSON Pointer nor JSON Path.", pathExpression), e2);
+            }
+        }
+    }
+
+    @VisibleForTesting
+    List<JsonNode> selectJsonRecords(JsonNode jsonObj, String loopPath) {
+        SimpleUrlPathMode mode = determineJsonPathMode(loopPath);
+        if (mode == SimpleUrlPathMode.JSONPOINTER) {
+            JsonPointer pointer = JsonPointer.compile(loopPath);
+            return toJsonNodeListFromIterableNode(jsonObj.at(pointer));
+        }
+
+        JsonPath path = JsonPath.compile(loopPath);
+        Configuration configuration = Configuration.defaultConfiguration()
+            .jsonProvider(new JacksonJsonNodeJsonProvider())
+            .mappingProvider(new JacksonMappingProvider());
+        JsonNode selected = path.read(jsonObj, configuration);
+
+        if (selected == null || selected.isNull() || selected.isMissingNode()) {
+            return Collections.emptyList();
+        }
+        if (selected instanceof ArrayNode) {
+            return toJsonNodeListFromIterableNode(selected);
+        }
+        return Collections.singletonList(selected);
+    }
+
+    private List<JsonNode> toJsonNodeListFromIterableNode(JsonNode node) {
+        if (node == null || node.isNull() || node.isMissingNode()) {
+            return Collections.emptyList();
+        }
+
+        List<JsonNode> result = new ArrayList<>();
+        node.forEach(result::add);
+        return result;
     }
 
     private Function<JsonNode, String> buildJsonPointerExtractor() {

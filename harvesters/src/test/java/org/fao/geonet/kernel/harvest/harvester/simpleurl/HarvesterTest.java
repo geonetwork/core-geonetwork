@@ -1,5 +1,7 @@
 package org.fao.geonet.kernel.harvest.harvester.simpleurl;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.fao.geonet.utils.Log;
 import org.junit.Test;
 
@@ -55,5 +57,29 @@ public class HarvesterTest {
         params.url = "http://dados.gov.br/api/3/action/package_search?q=&rows=2&start=0";
         list = harvester.buildListOfUrl(params, 8);
         assertEquals(4, list.size());
+    }
+
+    @Test
+    public void test_determineJsonPathMode() {
+        final SimpleUrlParams params = new SimpleUrlParams(null);
+        final Harvester harvester = new Harvester(null, Log.createLogger("TEST"), null, params, new ArrayList<>());
+
+        assertEquals(SimpleUrlPathMode.JSONPOINTER, harvester.determineJsonPathMode("/records/0/id"));
+        assertEquals(SimpleUrlPathMode.JSONPATH, harvester.determineJsonPathMode("$.records[0].id"));
+    }
+
+    @Test
+    public void test_selectJsonRecords_supportsJsonPointerAndJsonPath() throws Exception {
+        final SimpleUrlParams params = new SimpleUrlParams(null);
+        final Harvester harvester = new Harvester(null, Log.createLogger("TEST"), null, params, new ArrayList<>());
+        final ObjectMapper objectMapper = new ObjectMapper();
+
+        JsonNode json = objectMapper.readTree("{\"records\":[{\"id\":\"a\"},{\"id\":\"b\"}]}");
+
+        List<JsonNode> pointerNodes = harvester.selectJsonRecords(json, "/records");
+        assertEquals(2, pointerNodes.size());
+
+        List<JsonNode> pathNodes = harvester.selectJsonRecords(json, "$.records[*]");
+        assertEquals(2, pathNodes.size());
     }
 }
