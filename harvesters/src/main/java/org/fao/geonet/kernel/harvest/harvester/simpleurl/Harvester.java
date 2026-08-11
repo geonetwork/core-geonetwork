@@ -218,13 +218,14 @@ class Harvester implements IHarvester<HarvestResult> {
     private void collectRecordsFromJson(JsonNode jsonObj,
                                         Map<String, Element> uuids,
                                         Aligner aligner) {
-        List<JsonNode> nodes = selectJsonRecords(jsonObj, params.loopElement);
-        log.debug(String.format("%d records found in JSON response.", nodes.size()));
 
         SimpleUrlPathMode mode = params.recordIdPathMode;
         if (mode == null || mode == SimpleUrlPathMode.AUTO) {
             mode = determineJsonPathMode(params.recordIdPath);
         }
+
+        List<JsonNode> nodes = selectJsonRecords(jsonObj, mode, params.loopElement);
+        log.debug(String.format("%d records found in JSON response.", nodes.size()));
 
         Function<JsonNode, String> uuidExtractor;
         if (mode == SimpleUrlPathMode.JSONPOINTER) {
@@ -280,8 +281,7 @@ class Harvester implements IHarvester<HarvestResult> {
     }
 
     @VisibleForTesting
-    List<JsonNode> selectJsonRecords(JsonNode jsonObj, String loopPath) {
-        SimpleUrlPathMode mode = determineJsonPathMode(loopPath);
+    List<JsonNode> selectJsonRecords(JsonNode jsonObj, SimpleUrlPathMode mode, String loopPath) {
         if (mode == SimpleUrlPathMode.JSONPOINTER) {
             JsonPointer pointer = JsonPointer.compile(loopPath);
             return toJsonNodeListFromIterableNode(jsonObj.at(pointer));
