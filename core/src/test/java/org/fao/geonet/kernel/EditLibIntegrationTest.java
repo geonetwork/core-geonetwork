@@ -774,6 +774,31 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(att, Xml.selectString(metadataElement, attXPath, Arrays.asList(GMD, GCO)));
     }
 
+    /**
+     * gfc:FC_AssociationRole and gfc:FC_FeatureAssociation mutually reference each other's
+     * property types (FC_AssociationRole -> relation -> FC_FeatureAssociation -> roleName ->
+     * FC_AssociationRole -> ...), causing EditLib.fillElement() to recurse infinitely
+     * (StackOverflowError / Saxon "Too many nested function calls") when a user picks
+     * "Association role" (or "Binding", "Bound association role", "Bound feature attribute")
+     * from the "Property description" dropdown when editing a feature catalogue record.
+     */
+    @Test
+    public void testAddElement_FeatureCatalogueAssociationRoleDoesNotRecurseInfinitely() throws Exception {
+        MetadataSchema schema = _schemaManager.getSchema("iso19115-3.2018");
+        Namespace gfc = Namespace.getNamespace("gfc", "http://standards.iso.org/iso/19110/gfc/1.1");
+
+        EditLib editLib = new EditLib(_schemaManager);
+
+        final Element featureType = new Element("FC_FeatureType", gfc);
+        Element carrierOfCharacteristics = editLib.addElement(schema, featureType, "gfc:carrierOfCharacteristics");
+
+        Element associationRole = new Element("FC_AssociationRole", gfc);
+        carrierOfCharacteristics.addContent(associationRole);
+        editLib.fillElement(schema.getName(), carrierOfCharacteristics, associationRole);
+
+        assertEquals("FC_AssociationRole", associationRole.getName());
+    }
+
 
     @Test
     public void testAddElementFromXpath_Extent() throws Exception {
