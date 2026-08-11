@@ -33,35 +33,35 @@
     <description></description>
   </element>
   <element name="gfc:FC_FeatureAttribute">
-    <label>Attribute</label>
+    <label>Attribuut</label>
   </element>
   <element name="gfc:name">
-    <label>Name</label>
-    <description>Feature catalogue name</description>
+    <label>Naam</label>
+    <description>Naam van de functiecatalogus</description>
   </element>
   <element name="gfc:scope">
-    <label>Scope</label>
-    <description>Scope definition</description>
+    <label>Toepassingsgebied</label>
+    <description>Definitie van het toepassingsgebied</description>
   </element>
   <element name="gfc:versionNumber">
-    <label>Version</label>
-    <description>Catalogue version</description>
+    <label>Versie</label>
+    <description>Catalogusversie</description>
   </element>
   <element name="gfc:versionDate">
-    <label>Date</label>
-    <description>Catalogue date</description>
+    <label>Datum</label>
+    <description>Catalogusdatum</description>
   </element>
   <element name="gfc:producer">
-    <label>Catalogue producer</label>
-    <description>Catalogue responsible</description>
+    <label>Catalogusmaker</label>
+    <description>Verantwoordelijke voor de catalogus</description>
   </element>
   <element name="gfc:featureType">
     <label>Property description</label>
     <description>Property description</description>
   </element>
   <element name="gfc:isAbstract">
-    <label>Abstract</label>
-    <description>Is this element an abstract element ?</description>
+    <label>Abstracte feature</label>
+    <description>Is dit element een abstract element?</description>
   </element>
   <element name="gfc:FC_FeatureType">
     <label>Attribute table description</label>
@@ -76,7 +76,7 @@
     <description>Association, attribute, operation, ...</description>
   </element>
   <element name="gfc:definition">
-    <label>Definition</label>
+    <label>Definitie</label>
     <description>Property definition</description>
   </element>
   <element name="gfc:fieldOfApplication">
@@ -100,16 +100,16 @@
     <description>Upper cardinality</description>
   </element>
   <element name="gfc:cardinality">
-    <label>Cardinalities</label>
-    <description>Cardinalities</description>
+    <label>Kardinaliteit</label>
+    <description>Kardinaliteit</description>
   </element>
   <element name="gfc:label">
     <label>Label</label>
     <description/>
   </element>
   <element name="gfc:listedValue">
-    <label>Codelist</label>
-    <description>List of values for this element.</description>
+    <label>Codelijst</label>
+    <description>Lijst met waarden voor dit element.</description>
   </element>
   <element name="gfc:constrainedBy">
     <label>Constrained by</label>
@@ -180,7 +180,7 @@
     <description></description>
   </element>
   <element name="gfc:FC_ListedValue">
-    <label>Codelist</label>
+    <label>Codelijst</label>
     <description></description>
   </element>
   <element name="gfc:valueType">
@@ -188,7 +188,7 @@
     <description></description>
   </element>
   <element name="gfc:memberName">
-    <label>Member name</label>
+    <label>Naam</label>
     <description></description>
   </element>
   <element name="gfc:FC_Constraint">
@@ -238,20 +238,20 @@
   </element>
   <!-- ==================================================== -->
   <element name="gmx:name">
-    <label>Name</label>
-    <description>Feature catalogue name</description>
+    <label>Naam</label>
+    <description>Naam van de functiecatalogus</description>
   </element>
   <element name="gmx:scope">
-    <label>Scope</label>
-    <description>Scope definition</description>
+    <label>Toepassingsgebied</label>
+    <description>Definitie van het toepassingsgebied</description>
   </element>
   <element name="gmx:versionNumber">
-    <label>Version</label>
-    <description>Catalogue version</description>
+    <label>Versie</label>
+    <description>Catalogusversie</description>
   </element>
   <element name="gmx:versionDate">
-    <label>Date</label>
-    <description>Catalogue date</description>
+    <label>Datum</label>
+    <description>Catalogusdatum</description>
   </element>
   <element name="gmx:fieldOfApplication">
     <label>Field of application</label>
