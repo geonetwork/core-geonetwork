@@ -7,7 +7,7 @@ Read instructions about [default view customization](../../../customizing-applic
 -   Understand view settings.
 -   Be able to customize the default view.
 
-## Exercices
+## Exercises
 
 -   Propose 4 hits per page options for search result list : 2, 5, 10, 20.
 
@@ -18,7 +18,7 @@ Read instructions about [default view customization](../../../customizing-applic
 -   Change full map configuration
 
     -   play with initial extent
-    -   change brackground layer list
+    -   change background layer list
     -   add WMS layers to the default map
 
 -   Change default location for map search

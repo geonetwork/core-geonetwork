@@ -139,6 +139,7 @@ public class XmlSerializerIntegrationTest extends AbstractCoreIntegrationTest {
 
     @Test
     public void testInternalSelectHidingWithheldSettingsDisabled() throws Exception {
+        loginAsAnonymous();
         setSchemaFilters(false, true);
         assertHiddenElements(false, false);
     }

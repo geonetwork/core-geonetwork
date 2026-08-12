@@ -194,7 +194,7 @@
                   if (cell.is("th")) {
                     return cell.find(".th-inner").text();
                   } else if (cell.is("td") && cell.children("a").length > 0) {
-                    return cell.find("a").context.innerHTML.match(/href="([^"]*)/)[1];
+                    return cell.find("a").attr("href");
                   }
                   return htmlData;
                 }

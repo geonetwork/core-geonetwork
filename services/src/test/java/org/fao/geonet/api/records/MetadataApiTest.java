@@ -30,6 +30,7 @@ import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
@@ -98,7 +99,7 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
 
     private void createTestData() throws Exception {
         loginAsAdmin(context);
-        AbstractMetadata metadata = injectMetadataInDb(getSampleMetadataXml(), context, true);
+        AbstractMetadata metadata = injectMetadataInDb(getSampleMetadataXml(), context);
         id = metadata.getId();
         uuid = metadata.getUuid();
 
@@ -106,11 +107,11 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         Element metadataWithSubtemplate = getSample("kernel/vicinityMap.xml");
         Attribute href = (Attribute) Xml.selectElement(metadataWithSubtemplate, "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:pointOfContact").getAttributes().get(0);
         href.setValue(href.getValue().replace("@contact_uuid@", subtemplate.getUuid()));
-        mdWithSubtemplateUuid = injectMetadataInDb(metadataWithSubtemplate, context, true).getUuid();
+        mdWithSubtemplateUuid = injectMetadataInDb(metadataWithSubtemplate, context).getUuid();
 
 
 
-        metadataIndexer.indexMetadata(String.valueOf(id), true, IndexingMode.full);
+        metadataIndexer.indexMetadata(String.valueOf(id), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
 
         Source subportal = new Source();
         subportal.setName("external");

@@ -12,4 +12,4 @@ GeoNetwork 4.0.4 release is a minor release with some changes:
 -   [Index health check improvements](https://github.com/geonetwork/core-geonetwork/pull/5612)
 -   [Add proxy for microservice eg. OGC API Records](https://github.com/geonetwork/core-geonetwork/pull/5604)
 
-and more \... see [4.0.4 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.4+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.4+is%3Aclosed) for full details.
+and more ... see [4.0.4 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.4+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.4+is%3Aclosed) for full details.

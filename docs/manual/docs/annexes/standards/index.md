@@ -1,6 +1,6 @@
 # Standards
 
-The catalog support the following standards:
+The catalog supports the following standards:
 
 ![](img/standardlist.png)
 
@@ -13,4 +13,4 @@ ISO19110 can be used to encode feature catalogue (but ISO19115-3 is recommended)
 
 Dublin core (for CSW only) is only used to test OGC CSW testsuites.
 
-Others standards and community profiles are available on <https://github.com/metadata101>.
+Other standards and community profiles are available on [GitHub (metadata101)](https://github.com/metadata101).

@@ -214,6 +214,93 @@
         };
       }
     ])
+    .directive("gnDataUploaderFromUrl", [
+      "gnCurrentEdit",
+      "$rootScope",
+      "$http",
+      "$translate",
+      "gnUrlUtils",
+      function (gnCurrentEdit, $rootScope, $http, $translate, gnUrlUtils) {
+        return {
+          restrict: "A",
+          templateUrl:
+            "../../catalog/components/filestore/partials/dataUploaderFromUrl.html",
+          scope: {
+            btnLabel: "=?gnDataUploaderButton",
+            isOverview: "=?isOverview",
+            visibility: "@?",
+            afterUploadCb: "&?",
+            afterUploadErrorCb: "&?"
+          },
+          link: function (scope, element, attrs) {
+            scope.uuid = undefined;
+            scope.gnCurrentEdit = gnCurrentEdit;
+            scope.lang = scope.$parent.lang;
+            scope.id = Math.random();
+            scope.fileTypes = scope.fileTypes || "*.*";
+            scope.visibility = scope.visibility || "public";
+
+            scope.uploadFromUrl = function () {
+              var params = gnUrlUtils.toKeyValue({
+                url: scope.url,
+                visibility: scope.visibility
+              });
+              $http
+                .put("../api/records/" + gnCurrentEdit.uuid + "/attachments?" + params)
+                .then(
+                  function (response) {
+                    $rootScope.$broadcast("gnFileStoreUploadDone");
+                    if (
+                      scope.afterUploadCb &&
+                      angular.isFunction(scope.afterUploadCb())
+                    ) {
+                      scope.afterUploadCb()(response.data);
+                    }
+                  },
+                  function (response) {
+                    var message = (response.data && response.data.message) || "";
+                    var errorMessage =
+                      {
+                        uploadNetworkErrorException: $translate.instant(
+                          "uploadNetworkErrorException",
+                          { file: scope.url }
+                        ),
+                        ResourceAlreadyExistException: $translate.instant(
+                          "uploadedResourceAlreadyExistException",
+                          { file: scope.url }
+                        ),
+                        uploadedResourceSizeExceededException: $translate.instant(
+                          "uploadedResourceSizeExceededException",
+                          { file: scope.url }
+                        )
+                      }[message] || message;
+
+                    $rootScope.$broadcast("StatusUpdated", {
+                      title: $translate.instant("resourceUploadError"),
+                      error: { message: errorMessage },
+                      timeout: 0,
+                      type: "danger"
+                    });
+                    if (
+                      scope.afterUploadErrorCb &&
+                      angular.isFunction(scope.afterUploadErrorCb())
+                    ) {
+                      scope.afterUploadErrorCb()(message);
+                    }
+                  }
+                );
+            };
+
+            var unregisterWatch = scope.$watch("gnCurrentEdit.uuid", function (n, o) {
+              if ((n && angular.isUndefined(scope.uuid)) || (n && n != o)) {
+                scope.uuid = n;
+                unregisterWatch();
+              }
+            });
+          }
+        };
+      }
+    ])
     .directive("gnFileStore", [
       "gnFileStoreService",
       "gnOnlinesrc",
@@ -259,7 +346,64 @@
             scope.gnCurrentEdit = gnCurrentEdit;
             scope.selectOptions = { current: undefined };
             scope.metadataResources = [];
+            scope.editingResource = false;
 
+            function updateVisibilityEditingPanel(index, editing) {
+              if (editing) {
+                $("#resource_" + index).addClass("hidden");
+                $("#resource_edit_" + index).removeClass("hidden");
+              } else {
+                $("#resource_" + index).removeClass("hidden");
+                $("#resource_edit_" + index).addClass("hidden");
+              }
+            }
+            scope.editResource = function (r, index) {
+              r.filename_edit = r.filename;
+              scope.editingResource = true;
+              scope.duplicatedFilename = false;
+
+              updateVisibilityEditingPanel(index, true);
+            };
+
+            scope.cancelEditResource = function (r, index) {
+              delete r.filename_edit;
+              scope.duplicatedFilename = false;
+              scope.editingResource = false;
+              updateVisibilityEditingPanel(index, false);
+            };
+
+            scope.saveEditResource = function (r, index) {
+              // TODO: check if the resource is already in the list and update it in the backend
+
+              gnfilestoreService.get(scope.gnCurrentEdit.uuid, "").then(function (data) {
+                var files = data.data;
+                var fileNameExists = false;
+                for (var i = 0; i < files.length; i++) {
+                  if (files[i].filename == r.filename_edit) {
+                    fileNameExists = true;
+                    break;
+                  }
+                }
+
+                if (!fileNameExists) {
+                  scope.duplicatedFilename = false;
+
+                  gnfilestoreService
+                    .updateResourceName(scope.gnCurrentEdit.uuid, r, r.filename_edit)
+                    .then(function (response) {
+                      scope.editingResource = false;
+                      updateVisibilityEditingPanel(index, false);
+                      scope.loadMetadataResources();
+
+                      // Refresh the onlinesrc service to update the resource list and the metadata form
+                      // with the new resource name.
+                      gnOnlinesrc.refresh();
+                    });
+                } else {
+                  scope.duplicatedFilename = true;
+                }
+              });
+            };
             scope.setResource = function (r) {
               scope.selectCallback({ selected: r });
             };

@@ -1,6 +1,6 @@
 # Search Service
 
-GeoNetwork provides a access to ***Elasticsearch*** `/srv/api/search/records/_search` and `/srv/api/search/records/_msearch` end-points. These endpoints accept `POST` requests, with request body containing an Elasticsearch JSON query.
+GeoNetwork provides access to ***Elasticsearch*** `/srv/api/search/records/_search` and `/srv/api/search/records/_msearch` end-points. These endpoints accept `POST` requests, with request body containing an Elasticsearch JSON query.
 
 Reference
 

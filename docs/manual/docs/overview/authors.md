@@ -10,7 +10,7 @@ The GeoNetwork project roadmap is managed using a proposal process, with the Geo
 
 Active maintainers in the GeoNetwork project have taken on responsibility for reviewing community contributions, making releases, handling security vulnerability reports.
 
-This dedication is reflected in community trust, and a Leadership role with oppertunity to vote on roadmap proposals:
+This dedication is reflected in community trust, and a Leadership role with opportunity to vote on roadmap proposals:
 
 * [David Blasby](https://github.com/davidblasby): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Adavidblasby)
 * [Jose García](https://github.com/josegar74): [Active Maintainer](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+is%3Aclosed+reviewed-by%3Ajosegar74)
@@ -91,7 +91,7 @@ Roles reflect increased project access as indicated by the GitHub Teams below:
 
 !!! note
    
-    Developers are expected remain active, meeting responsibilities to review pull requests, address security vulnerabilities, and vote on roadmap proposals.
+    Developers are expected to remain active, meeting responsibilities to review pull requests, address security vulnerabilities, and vote on roadmap proposals.
     
     We understand that life can get in the way of community participation – you are welcome to rejoin as your availability permits you to meet the responsibilities.
 

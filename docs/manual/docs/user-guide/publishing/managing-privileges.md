@@ -4,11 +4,11 @@ To manage privileges to your metadata record and any attached data, you will nee
 
 For example, you can specify that the metadata and related services are visible to all (Internet users) or just to internal users only (Intranet). Privileges are assigned on a per group basis. Depending on the user profile (Guest, Registered User, Editor, Admin etc.) access to these functions may differ on a per user basis.
 
-!!! Note
+!!! note
 
     The privileges panel uses colour coding to identify different group types:
 
-    - **Blue rows** — [Reserved groups](../../administrator-guide/managing-users-and-groups/creating-group.md) (All, Intranet, Guest). Only Administrators and Reviewers can edit these privileges.
+    - **Blue rows** — [Reserved groups](../../administrator-guide/managing-users-and-groups/creating-group.md) (All, Intranet, Guest). Editing these privileges requires the configured publication profile on the record owner group (default: Reviewer). Administrators are always allowed.
     - **Yellow rows** — [Record Privilege Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#2-record-privilege-group). These groups can be assigned privileges on specific records but cannot own metadata.
     - **No highlight** — Standard [Workspace Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#1-workspace-group).
 
@@ -79,13 +79,18 @@ A *reviewer* / *editor* can edit a metadata if:
 
 ## Setting Privileges on a metadata record
 
-A button to access the Privileges page for a metadata record displays in the search results or when you are viewing the record for:
+
+To publish or unpublish metadata, you can use the Publish button in the metadata record view.
+
+![](img/publish.png)
+
+For more detailed sharing options, you can use the Privileges button in the metadata record view displayed for:
 
 -   All Administrators
--   All Reviewers that are member of one of the groups assigned to the metadata owner.
+-   Users who meet the configured publication profile in the metadata owner group (default: Reviewer).
 -   The Owner of the metadata
 
-Only Administrators and Reviewers can edit privileges for the All and Intranet groups.
+Only users meeting the configured publication profile in the metadata owner group can edit privileges for reserved groups (All, Intranet, Guest). By default this is Reviewer.
 
 ## Setting Privileges on a selected set of metadata records
 
@@ -99,3 +104,24 @@ The following rules apply:
 -   [System Privilege Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#3-system-privilege-group) are not shown
 -   the privileges specified will only be applied to records that the user has ownership or administration rights on - any other records will be skipped
 -   the current records privileges will be reset and replaced by the selected privilege
+
+
+
+# Schedule publication
+
+Record not yet published can be scheduled for publication:
+
+![](img/schedulepublication-button.png)
+
+By default, if a publication date of the resource is set, this date is proposed but user can select another date:
+
+![](img/schedulepublication-panel.png)
+
+Once scheduled, the task can be canceled from the record view:
+
+![](img/schedulepublication-cancel.png)
+
+The history panel in the admin console report the status of the task.
+
+![](img/schedulepublication-admin.png)
+

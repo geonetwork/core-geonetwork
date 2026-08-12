@@ -1,0 +1,53 @@
+================================================================================
+===
+=== GeoNetwork : List of changes
+===
+================================================================================
+- Transifex updates for GeoNetwork 4.4.11
+- Remove duplicated old version of markdown-page-generator-plugin plugin. (#9315)
+- docs: full documentation review (grammar, markup, links) (#9292)
+- Elasticsearch / Proxy / More robust aggregations processing (#9311)
+- API / Create metadata / Apply duplicate before update fixed info (#9294)
+- Harden login redirect URL validation (#9307)
+- Elasticsearch / Proxy / More robust filter processing (#9302)
+- Library updates (#9299)
+- Use version 2.5.2 of markdown-page-generator-plugin plugin, compatible with Java 11 (#9306)
+- Library / Update GeoTools (#9289)
+- GN4 harvester / ignore unknown fields when deserializing sources and groups (#9297)
+- Release / Generate sha256 instead of md5 (#9301)
+- Fix typos in cookie warning reject link help text (#9296)
+- Metadata editor / close the service link dialogue box when linking it to the service metadata (#9290)
+- docs: fix grammar, links and markup in authentication-mode.md
+- Add MD_SecurityConstraintsUserNote search capability (#8004)
+- Modal dialog is never dismissed. (#9287)
+- Standard / ISO19115.3/2018 / Full view formatter / Do not display extent if none available (#9282)
+- Fix remove user selection is using the wrong api (#9280)
+- Re-implement anonymous link code which was removed accidentally (#9276)
+- Fix add to user selection for logged users. (#9273)
+- Update backport action version and token secret
+- Metadata import / help text for the category field (#9265)
+- Fix history is not updated when removing all privileges (#9269)
+- Fix isReviewer in manage record menu (#9271)
+- Add new static page status so that administrators respect the group restriction (#9263)
+- ISO19139 / Add missing namespaces to doi remove process (#9261)
+- Add support for top-level submenu icons
+- docs: add upgrade guidance section to OAI-PMH API page
+- Build / Remove duplicate log4j-slf4j-impl dependency (#9264)
+- Batch editing - In XPATH replace mode don't try to add a node if doesn't exist (#8350)
+- Split mdactionmenu into download and manage menus
+- docs: add documentation for application banner feature (#9262)
+- Sort geographic extent autocomplete suggestions alphabetically (#9253)
+- Setting / fix setting editable method. (#9257)
+- Add helper text for static page link
+- Fix OSM background map image not displayed in metadata full view (#9247)
+- Improve privileges panel UI for record privilege groups (#9240)
+- Update docs and helper text
+- Translate sub-menu top-level label
+- Do not set humanized date when not set (#9189)
+- Fix creating a new setting in Java code (#9242)
+- Changelog for 4.2.15
+- Update README with new badges
+- Change GeoCat link alt text for clarity
+- Update email and website domains in CITATION.cff
+- Update GeoCat link from geocat.net to geocat.com
+- Update version to 4.4.11-SNAPSHOT

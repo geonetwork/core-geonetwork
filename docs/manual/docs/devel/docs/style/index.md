@@ -1,6 +1,6 @@
 # Style Guide
 
-Writing style guide to help creating consistent documentation for GeoNetwork.
+Writing style guide to help create consistent documentation for GeoNetwork.
 
 This style guide is useful as a reference when reviewing pull-requests for documentation. 
 
@@ -141,10 +141,10 @@ mvn clean install \
     -DskipTests
 ```
 ```
-BUIILD SUCCESS
+BUILD SUCCESS
 ```
 
-It is helpful to seperate out input from output, so that the command can be easily copied as shown above.
+It is helpful to separate out input from output, so that the command can be easily copied as shown above.
 
 ## Terminology conventions
 
@@ -158,9 +158,9 @@ The online help is used by a wide range of organisations and is intended to be r
 
 With this in mind please avoid using "metadata expert" language when writing online help.  Indeed many visitors may not have a geospatial background and will be pleased to find a map.
 
-* Try and avoid using the word `catalogue`, as this is really just a `web site` or `site` for visitors
-* Try and avoid using the word `metadata`, as really this is a site providing a `list` of `information` 
-* Try and avoid using the word `metadata`, if you really need to use `record` (as is done in our advanced search screen)
+* Try to avoid using the word `catalogue`, as this is really just a `web site` or `site` for visitors
+* Try to avoid using the word `metadata`, as really this is a site providing a `list` of `information` 
+* Try to avoid using the word `metadata`, if you really need to use `record` (as is done in our advanced search screen)
 * Avoid mentioning `schema` or `iso19139` as this is expert knowledge, at best `standard` or `national standard` may be appropriate.
 * Avoid mentioning `GeoNetwork`
 
@@ -172,9 +172,9 @@ Examples:
 
 ### User-Guide
 
-The readers of the user-gude are operators responsible for the editing, review and publication of metadata records.
+The readers of the user-guide are operators responsible for the editing, review, and publication of metadata records.
 
-In addition administrators are responsible for the publication and security (including user management). This also incudes defining sub-portals to make it easier for teams to manage and publish distinct content.
+In addition, administrators are responsible for publication and security (including user management). This also includes defining sub-portals to make it easier for teams to manage and publish distinct content.
 
 Preferred terminology:
 

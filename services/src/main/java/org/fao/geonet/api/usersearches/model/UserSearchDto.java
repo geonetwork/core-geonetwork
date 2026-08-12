@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -205,11 +205,11 @@ public class UserSearchDto implements Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         UserSearchDto that = (UserSearchDto) o;
         return id == that.id &&
-            featuredType == that.featuredType &&
+            Objects.equals(featuredType, that.featuredType) &&
             creatorId == that.creatorId &&
-            url.equals(that.url) &&
-            creationDate.equals(that.creationDate) &&
-            creator.equals(that.creator) &&
+            Objects.equals(url, that.url) &&
+            Objects.equals(creationDate, that.creationDate) &&
+            Objects.equals(creator, that.creator) &&
             Objects.equals(logo, that.logo) &&
             names.equals(that.names) &&
             Objects.equals(groups, that.groups);

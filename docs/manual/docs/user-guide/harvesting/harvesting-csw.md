@@ -18,7 +18,7 @@ Provide the following information:
 - **Schedule**: Scheduling options to execute the harvester. If disabled, the harvester must be run manually from the harvester page. If enabled, a scheduling expression using cron syntax should be configured ([See examples](https://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger)).
 
 - **Configure connection to OGC CSW 2.0.2**
-    - *Service URL*: The URL of the capabilities document of the CSW server to be harvested. eg. <http://geonetwork-site.com/srv/eng/csw?service=CSW&request=GetCapabilities&version=2.0.2>. This document is used to discover the location of the services to call to query and retrieve metadata.
+    - *Service URL*: The URL of the capabilities document of the CSW server to be harvested. eg. `http://geonetwork-site.com/srv/eng/csw?service=CSW&request=GetCapabilities&version=2.0.2`. This document is used to discover the location of the services to call to query and retrieve metadata.
     - *Remote authentication*: If checked, provide credentials for basic HTTP authentication on the CSW server.
     - *API Key authentication*:  
       Optionally, provide an API Key for authentication and specify the header name.  

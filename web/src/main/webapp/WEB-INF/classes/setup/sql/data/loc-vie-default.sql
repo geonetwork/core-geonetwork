@@ -532,6 +532,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'vie','Record del
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'vie','Record imported.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'vie','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'vie','DOI creation requested.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'vie','Scheduled publication');
 
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'vie','Preferred records');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'vie','Watch list');

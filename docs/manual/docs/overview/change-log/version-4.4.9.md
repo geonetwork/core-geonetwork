@@ -43,4 +43,4 @@ Improvements:
 * [Add an email notification to the corresponding task owner when a DOI publication is requested](https://github.com/geonetwork/core-geonetwork/pull/8721)
 
 
-and more \... see [4.4.9-0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.4.9+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.4.9+is%3Aclosed) for full details.
+and more ... see [4.4.9-0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.4.9+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.4.9+is%3Aclosed) for full details.

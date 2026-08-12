@@ -32,4 +32,4 @@
 -   Fixed rendering of the menubar on small screens ([issue 2934](https://github.com/geonetwork/core-geonetwork/issues/2934))
 -   Fixed favicon uploading ([issue 2992](https://github.com/geonetwork/core-geonetwork/issues/2992))
 
-and more \... see [3.4.4 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.4.4+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.4.4+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.4.4 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.4.4+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.4.4+is%3Aclosed+is%3Apr) for full details.

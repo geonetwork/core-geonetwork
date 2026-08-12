@@ -43,7 +43,7 @@ Use records in the catalogue that include a saved map:
 
 1. From the **Map** viewer, press **Add layer** control, and change to **Map** tab.
 
-   This tab lists records that include saved Map.
+   This tab lists records that include a saved map.
 
 2. Use the **Search** field to locate the record to display.
 
@@ -75,7 +75,7 @@ Use web mapping service:
 
    ![Add layers services](img/add_services.png)
 
-2. To browse contents of a Web Map Service, supply a the service description URL
+2. To browse contents of a Web Map Service, supply the service description URL
    (known as ``GetCapabilities`` document).
    
    **type a WMS service URL:**
@@ -117,14 +117,14 @@ Use **`KML`** files on the map.
 1.  From the **Map** viewer, press **Manage layers** control
 
     ![Manage layers](img/manage_layers.png)
-    *Manager layers*
+    *Manage layers*
     
 2. Placing the cursor over a layer shows **Move layer up**, **Move layer down**, and **Remove layer** button.
     
     ![Move layers up](img/manage_order.png)
     *Move layer up*
     
-3. Use these buttons to mange the layer order, and remove layers.
+3. Use these buttons to manage the layer order and remove layers.
 
 
 ## Legend
@@ -148,13 +148,13 @@ Use a Web Processing Service to perform analysis and display the result.
 
 1.  From the **Map** viewer, press **Maps** control
 
-2.  Press ***Download --> OGC context (XML)** button
+2.  Press **Download --> OGC context (XML)** button
 
 ### Load map
 
 1.  From the **Map** viewer, press **Maps** control
 
-2.  Press ***Load --> From file** button.
+2.  Press **Load --> From file** button.
     
     Select a previously downloaded OGC context file.
 
@@ -162,7 +162,7 @@ Use a Web Processing Service to perform analysis and display the result.
 
 1.  From the **Map** viewer, press **Maps** control
 
-2.  Press ***Load --> Default map** button.
+2.  Press **Load --> Default map** button.
 
 
 ## Print

@@ -28,4 +28,4 @@
 
 > -   [Improvements and accesibility fixes](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.10.4+is%3Aclosed+is%3Apr+%5Ba11y%5D)
 
-and more \... see [3.10.4 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.10.4+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.10.4+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.10.4 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.10.4+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.10.4+is%3Aclosed+is%3Apr) for full details.

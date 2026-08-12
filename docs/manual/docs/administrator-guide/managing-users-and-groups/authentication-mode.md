@@ -850,7 +850,7 @@ sample:RegisteredUser
 
 A similar setup is described for GeoServer in the [GeoServer documentation](https://docs.geoserver.org/latest/en/user/community/oidc/oauth2/keycloak/).
 
-## Configurating JWT/JSON Headers {#jwt-headers}
+## Configuring JWT/JSON Headers {#jwt-headers}
 
 The JWT Headers module provides a security module for header based security. It is equivalent to GeoServer's JWT Headers Module (both GeoServer and GeoNetwork share a code library to make them equivalent). 
 

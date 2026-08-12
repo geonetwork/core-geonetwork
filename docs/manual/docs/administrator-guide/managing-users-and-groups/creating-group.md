@@ -2,11 +2,11 @@
 
 The administrator can create new groups of users. User groups could correspond to logical units within an organisation, for example `Fisheries`, `Agriculture`, `Land`, `Water`, `Health` and so on.
 
-To create new groups you should be logged on with an account that has administrative privileges.
+To create new groups, you should be logged on with an account that has administrative privileges.
 
 1.  Select *Users and groups* from the *Admin console* drop down, then select *Manage groups*.
 
-2.  Click *+New group*. You may want to remove the *Sample* group;
+2.  Click *+New group*. You may want to remove the *Sample* group.
 
 3.  Fill out the details. The email address will be used to send feedback on data downloads when they occur for resources that are part of the Group.
 
@@ -60,7 +60,7 @@ The table below summarizes the operations allowed for each group type:
 | **Record Privilege**    |                               |                                 |                                   |                     ✔                     |           ✔           |
 | **System Privilege**    |                               |                                 |                                   |                                           |                       |
 
-!!! Note
+!!! note
 
     - **Workspace Group**: Provides the most flexibility and is the default choice for most use cases.
     - **Record Privilege Group**: Focused on access control without ownership.
@@ -70,7 +70,7 @@ The table below summarizes the operations allowed for each group type:
 
 This setting allows administrators to control the minimum user profile required to assign privileges for a group. It provides enhanced control over who can manage sensitive privileges for users within the group.
 
-!!! Note
+!!! note
 
     This setting is unset and disabled when the group is a **System Privilege Group**. System privilege groups do not have profiles and cannot have privileges assigned to them.
 

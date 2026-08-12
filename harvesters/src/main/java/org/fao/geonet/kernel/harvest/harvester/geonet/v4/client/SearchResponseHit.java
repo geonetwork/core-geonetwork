@@ -65,4 +65,12 @@ public class SearchResponseHit {
         this.changeDate = changeDate;
         this.source = source;
     }
+
+    @Override
+    public String toString() {
+        return "uuid=" + uuid
+            + ", schema=" + schema
+            + ", changeDate=" + changeDate
+            + ", source=" + source;
+    }
 }

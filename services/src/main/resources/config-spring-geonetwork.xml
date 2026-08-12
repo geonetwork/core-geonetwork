@@ -123,6 +123,10 @@
         class="org.fao.geonet.api.records.formatters.cache.FormatterCacheDeletionListener"/>
   <bean id="anonymousAccessLinkPublishListener"
         class="org.fao.geonet.api.anonymous_access_link.AnonymousAccessLinkPublishListener"/>
+  <bean id="metadataUpdatePublicationDateListener"
+        class="org.fao.geonet.api.records.events.MetadataUpdatePublicationDateListener"/>
+  <bean id="metadataRemovePublicationDateListener"
+        class="org.fao.geonet.api.records.events.MetadataRemovePublicationDateListener"/>
 
   <bean id="processingReportRegistry"
         class="org.fao.geonet.api.processing.report.registry.ProcessingReportRegistry"/>

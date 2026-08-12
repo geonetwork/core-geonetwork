@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -173,7 +173,7 @@ public class UserFeedbackUtils {
         Map<Integer, Integer> ratings = new HashMap<>();
         for (final Rating rating : ratingList) {
             Integer id = rating.getCategory().getId();
-            if (id == RatingCriteria.AVERAGE_ID) {
+            if (id.equals(AVERAGE_ID)) {
                 userfeedbackDto.setRatingAVG(rating.getRating());
             } else {
                 ratings.put(id, rating.getRating());
@@ -243,7 +243,7 @@ public class UserFeedbackUtils {
                                     ? value
                                     : (ratingAverages.get(criteriaId) + value) / 2);
                         }
-                        if (criteriaId == AVERAGE_ID) {
+                        if (criteriaId.equals(AVERAGE_ID)) {
                             ratingCount++;
                         }
                     }
