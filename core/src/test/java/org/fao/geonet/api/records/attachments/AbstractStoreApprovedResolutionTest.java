@@ -40,29 +40,34 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Unit tests for the approved-version resolution used by the attachments store (issue #9433).
+ * Unit tests for the approved-version resolution used by the attachments store (issues #9433, #9473).
  *
  * <p>The {@code approved} flag reported for a resource must reflect whether an approved copy of the
  * record actually exists (i.e. the resolved record is not a draft), not merely the {@code approved}
- * request parameter. The internal id is taken from the draft table when a draft/working copy
- * exists, otherwise from the approved metadata table, and its draft state is evaluated with
- * {@link IMetadataUtils#isMetadataDraft(int)}. These tests cover the decision in isolation;
- * {@link FilesystemStoreTest} covers the end-to-end store behaviour.</p>
+ * request parameter. The internal id is always taken from the approved metadata table: a
+ * {@code MetadataDraft} row can only exist alongside a {@code Metadata} row for the same UUID (its
+ * {@code approvedVersion} association is a mandatory foreign key), so looking up the approved table
+ * directly still resolves the approved record even while a working copy is being edited (#9473). Its
+ * draft state is evaluated with {@link IMetadataUtils#isMetadataDraft(int)}. These tests cover the
+ * decision in isolation; {@link FilesystemStoreTest} covers the end-to-end store behaviour.</p>
  *
  * <p>{@link Proxy}-backed beans and a real {@link StaticApplicationContext} are used instead of
  * Mockito so the test has no bytecode-instrumentation dependency.</p>
  */
 public class AbstractStoreApprovedResolutionTest {
 
-    // Approved record: present in the approved table (id 1), not a draft.
+    // Approved record, never edited since: present in the approved table (id 1), not a draft.
     private static final String APPROVED_UUID = "approved-uuid";
     private static final int APPROVED_ID = 1;
-    // Working copy: present in the draft table (id 2), is a draft.
-    private static final String DRAFT_TABLE_UUID = "draft-table-uuid";
-    private static final int DRAFT_TABLE_ID = 2;
-    // New, never-approved record: present in the approved table (id 3) but with draft state.
+    // Approved record currently being edited: present in the approved table (id 2, not a draft) AND
+    // in the draft table (id 3, a working copy) at the same time. This is the scenario #9473 fixes:
+    // an approved copy must still be reported as existing while a working copy is being edited.
+    private static final String WORKING_COPY_UUID = "working-copy-uuid";
+    private static final int WORKING_COPY_APPROVED_ID = 2;
+    private static final int WORKING_COPY_DRAFT_ID = 3;
+    // New, never-approved record: present in the approved table (id 4) but with draft state.
     private static final String DRAFT_STATUS_UUID = "draft-status-uuid";
-    private static final int DRAFT_STATUS_ID = 3;
+    private static final int DRAFT_STATUS_ID = 4;
     // Unknown record: absent from both tables.
     private static final String MISSING_UUID = "missing-uuid";
 
@@ -70,7 +75,7 @@ public class AbstractStoreApprovedResolutionTest {
     public void setUp() {
         MetadataDraftRepository draftRepository = proxy(MetadataDraftRepository.class, (proxy, method, args) -> {
             if ("findOneByUuid".equals(method.getName())) {
-                return DRAFT_TABLE_UUID.equals(args[0]) ? (MetadataDraft) new MetadataDraft().setId(DRAFT_TABLE_ID) : null;
+                return WORKING_COPY_UUID.equals(args[0]) ? (MetadataDraft) new MetadataDraft().setId(WORKING_COPY_DRAFT_ID) : null;
             }
             return objectMethodDefault(proxy, method, args);
         });
@@ -79,6 +84,9 @@ public class AbstractStoreApprovedResolutionTest {
             if ("findOneByUuid".equals(method.getName())) {
                 if (APPROVED_UUID.equals(args[0])) {
                     return (Metadata) new Metadata().setId(APPROVED_ID);
+                }
+                if (WORKING_COPY_UUID.equals(args[0])) {
+                    return (Metadata) new Metadata().setId(WORKING_COPY_APPROVED_ID);
                 }
                 if (DRAFT_STATUS_UUID.equals(args[0])) {
                     return (Metadata) new Metadata().setId(DRAFT_STATUS_ID);
@@ -91,8 +99,8 @@ public class AbstractStoreApprovedResolutionTest {
         IMetadataUtils metadataUtils = proxy(IMetadataUtils.class, (proxy, method, args) -> {
             if ("isMetadataDraft".equals(method.getName())) {
                 int id = (Integer) args[0];
-                // The working copy and the never-approved record are drafts; the approved one is not.
-                return id == DRAFT_TABLE_ID || id == DRAFT_STATUS_ID;
+                // The working copy and the never-approved record are drafts; the approved ones are not.
+                return id == WORKING_COPY_DRAFT_ID || id == DRAFT_STATUS_ID;
             }
             return objectMethodDefault(proxy, method, args);
         });
@@ -116,10 +124,11 @@ public class AbstractStoreApprovedResolutionTest {
     }
 
     @Test
-    public void noApprovedCopyWhenOnlyAWorkingCopyExists() throws Exception {
-        // The id is taken from the draft table first; that draft is not approved.
-        assertFalse("A working copy resolved from the draft table is a draft, so no approved copy",
-            AbstractStore.approvedCopyExists(DRAFT_TABLE_UUID));
+    public void approvedCopyExistsWhenWorkingCopyCoexistsWithApprovedRecord() throws Exception {
+        // Regression test for #9473: a working copy being edited must not hide the approved
+        // record that is still present in the approved table under the same UUID.
+        assertTrue("An approved record still has an approved copy while a working copy is being edited",
+            AbstractStore.approvedCopyExists(WORKING_COPY_UUID));
     }
 
     @Test
@@ -139,8 +148,8 @@ public class AbstractStoreApprovedResolutionTest {
     public void resolveApprovedIsTrueOnlyWhenApprovedCopyExists() throws Exception {
         assertTrue("approved=true must be honoured when an approved copy exists",
             AbstractStore.resolveApproved(APPROVED_UUID, true));
-        assertFalse("approved=true must NOT be honoured for a draft/working copy (#9433)",
-            AbstractStore.resolveApproved(DRAFT_TABLE_UUID, true));
+        assertTrue("approved=true must be honoured for an approved record even while a working copy exists (#9473)",
+            AbstractStore.resolveApproved(WORKING_COPY_UUID, true));
         assertFalse("approved=true must NOT be honoured for a never-approved record (#9433)",
             AbstractStore.resolveApproved(DRAFT_STATUS_UUID, true));
     }
