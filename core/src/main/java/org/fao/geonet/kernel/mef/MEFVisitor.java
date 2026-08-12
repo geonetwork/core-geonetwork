@@ -38,6 +38,7 @@ import java.util.stream.Stream;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_STORE;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 
@@ -87,20 +88,40 @@ public class MEFVisitor implements IVisitor {
     }
 
     /**
-     * Check binary files structure. Binary files are stored in the public or private folders. All
-     * binary files MUST be registered in the information document (ie. info.xml).
+     * Check binary files structure. Binary files are stored flat in the store folder (MEF 3.0+)
+     * or split across the legacy public/private folders (pre-3.0). All binary files MUST be
+     * registered in the information document (ie. info.xml).
      */
     public void handleBin(Path mefFile, IMEFVisitor v, Element info, int index)
         throws Exception {
 
         // Reads either the MEF 3.0 unified <store> element (filtered by access) or the pre-3.0
-        // <public>/<private> elements; either way, this is only a changeDate lookup table -
-        // files must be registered here, but which physical folder (public/ or private/) is read
-        // below is unaffected by the info.xml format.
+        // <public>/<private> elements; either way, this is only a changeDate lookup table.
         List<Element> pubFiles = MEFLib.getFilesElement(info, "public");
         List<Element> prvFiles = MEFLib.getFilesElement(info, "private");
 
         try (FileSystem zipFs = ZipUtil.openZipFs(mefFile)) {
+            // MEF 3.0+ layout: every resource - public and private alike - lives flat under
+            // store/, so which handler to call is decided per file from its own registration in
+            // pubFiles/prvFiles, not from where it physically is.
+            Path storePath = zipFs.getPath(DIR_STORE);
+            if (Files.isDirectory(storePath)) {
+                try (Stream<Path> paths = Files.walk(storePath)) {
+                    for (Path path : (Iterable<Path>) paths.filter(Files::isRegularFile)::iterator) {
+                        String relativeName = IO.toUnixStylePath(storePath.relativize(path));
+                        try (InputStream isb = IO.newInputStream(path)) {
+                            if (MEFLib.isRegisteredFile(pubFiles, relativeName)) {
+                                v.handlePublicFile(relativeName, MEFLib.getChangeDate(pubFiles, relativeName), isb, 0);
+                            } else {
+                                v.handlePrivateFile(relativeName, MEFLib.getChangeDate(prvFiles, relativeName), isb, 0);
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Legacy (pre-3.0) layout: separate public/ and private/ folders, kept for archives
+            // written before the flat store/ folder existed.
             Path pubPath = zipFs.getPath(DIR_PUBLIC);
             if (Files.isDirectory(pubPath)) {
                 // Resources may live in subfolders (nested paths): walk the whole tree, using

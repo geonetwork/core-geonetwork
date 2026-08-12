@@ -257,13 +257,11 @@ class MEF2Exporter {
 
         final Store store = context.getBean("resourceStore", Store.class);
 
-        // Get the paths to the public and private resources directories
-        Path publicResourcesPath = metadataRootDir.resolve("public");
-        Path privateResourcesPath = metadataRootDir.resolve("private");
-
-        // Create the resources directories
-        Files.createDirectories(publicResourcesPath);
-        Files.createDirectories(privateResourcesPath);
+        // Every resource - public and private alike - lives in a single flat store/ directory
+        // under the record's folder; visibility is recorded per-file in info.xml's <store>
+        // element (see MEFLib#buildInfoFiles), not by which directory a file is in.
+        Path resourcesPath = metadataRootDir.resolve(DIR_STORE);
+        Files.createDirectories(resourcesPath);
 
         // Add the resources if the specified format allows it
         List<MetadataResource> publicResources = List.of();
@@ -273,7 +271,7 @@ class MEF2Exporter {
                 // Include public resources only for PARTIAL and FULL formats so the info file matches the MEF contents.
                 publicResources = store.getResources(context, metadata.getUuid(),
                     MetadataResourceVisibility.PUBLIC, null, true);
-                StoreUtils.extract(context, metadata.getUuid(), publicResources, publicResourcesPath, true);
+                StoreUtils.extract(context, metadata.getUuid(), publicResources, resourcesPath, true);
             }
 
             if (format == Format.FULL) {
@@ -281,7 +279,7 @@ class MEF2Exporter {
                     Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
                     privateResources = store.getResources(context, metadata.getUuid(),
                         MetadataResourceVisibility.PRIVATE, null, true);
-                    StoreUtils.extract(context, metadata.getUuid(), privateResources, privateResourcesPath, true);
+                    StoreUtils.extract(context, metadata.getUuid(), privateResources, resourcesPath, true);
                 } catch (Exception e) {
                     // Current user could not download private data
                 }

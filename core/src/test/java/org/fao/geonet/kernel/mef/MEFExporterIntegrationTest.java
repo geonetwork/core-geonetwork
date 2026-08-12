@@ -59,9 +59,13 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         try (FileSystem zipFs = ZipUtil.openZipFs(path)) {
             assertTrue(Files.exists(zipFs.getPath("metadata.xml")));
             assertTrue(Files.exists(zipFs.getPath("info.xml")));
-            assertTrue(Files.exists(zipFs.getPath("private/basins.zip")));
-            assertTrue(Files.exists(zipFs.getPath("public/thumbnail.gif")));
-            assertTrue(Files.exists(zipFs.getPath("public/thumbnail_s.gif")));
+            // Public and private resources alike live flat under store/ - visibility is recorded
+            // per-file in info.xml's <store> element, not by a public/private physical split.
+            assertTrue(Files.exists(zipFs.getPath("store/basins.zip")));
+            assertTrue(Files.exists(zipFs.getPath("store/thumbnail.gif")));
+            assertTrue(Files.exists(zipFs.getPath("store/thumbnail_s.gif")));
+            assertFalse("No legacy public/ folder in a freshly-exported archive", Files.exists(zipFs.getPath("public")));
+            assertFalse("No legacy private/ folder in a freshly-exported archive", Files.exists(zipFs.getPath("private")));
         } finally {
             Files.delete(path);
         }
@@ -70,10 +74,8 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         try (FileSystem zipFs = ZipUtil.openZipFs(path)) {
             assertTrue(Files.exists(zipFs.getPath("metadata.xml")));
             assertTrue(Files.exists(zipFs.getPath("info.xml")));
-            assertTrue(Files.exists(zipFs.getPath("private")));
-            assertTrue(isEmptyDir(zipFs.getPath("private")));
-            assertTrue(Files.exists(zipFs.getPath("public")));
-            assertTrue(isEmptyDir(zipFs.getPath("public")));
+            assertTrue(Files.exists(zipFs.getPath("store")));
+            assertTrue(isEmptyDir(zipFs.getPath("store")));
         } finally {
             Files.delete(path);
         }

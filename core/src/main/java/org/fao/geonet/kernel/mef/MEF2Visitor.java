@@ -134,6 +134,27 @@ public class MEF2Visitor implements IVisitor {
         List<Element> pubFiles = MEFLib.getFilesElement(info, "public");
         List<Element> prvFiles = MEFLib.getFilesElement(info, "private");
 
+        // MEF 3.0+ layout: every resource - public and private alike - lives flat under
+        // store/, so which handler to call is decided per file from its own registration in
+        // pubFiles/prvFiles, not from where it physically is.
+        Path storeFile = file.resolve(MEFConstants.DIR_STORE);
+        if (Files.exists(storeFile) && (!pubFiles.isEmpty() || !prvFiles.isEmpty())) {
+            try (Stream<Path> paths = Files.walk(storeFile)) {
+                for (Path path : (Iterable<Path>) paths.filter(Files::isRegularFile)::iterator) {
+                    String fileName = IO.toUnixStylePath(storeFile.relativize(path));
+                    try (InputStream in = IO.newInputStream(path)) {
+                        if (MEFLib.isRegisteredFile(pubFiles, fileName)) {
+                            v.handlePublicFile(fileName, MEFLib.getChangeDate(pubFiles, fileName), in, index);
+                        } else {
+                            v.handlePrivateFile(fileName, MEFLib.getChangeDate(prvFiles, fileName), in, index);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Legacy (pre-3.0) layout: separate public/ and private/ folders, kept for archives
+        // written before the flat store/ folder existed.
         Path publicFile = file.resolve(MEFConstants.DIR_PUBLIC);
         Path privateFile = file.resolve(MEFConstants.DIR_PRIVATE);
 

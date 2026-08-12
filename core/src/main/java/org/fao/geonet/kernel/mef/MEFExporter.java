@@ -42,6 +42,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_STORE;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 
@@ -131,13 +132,11 @@ class MEFExporter {
             byte[] binData = xmlDocumentAsString.getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_METADATA), binData);
 
-            // Get the paths to the public and private resources directories
-            Path publicResourcesPath = zipFs.getPath("public");
-            Path privateResourcesPath = zipFs.getPath("private");
-
-            // Create the resources directories
-            Files.createDirectories(publicResourcesPath);
-            Files.createDirectories(privateResourcesPath);
+            // Every resource - public and private alike - lives in a single flat store/
+            // directory; visibility is recorded per-file in info.xml's <store> element (see
+            // MEFLib#buildInfoFiles), not by which directory a file is in.
+            Path resourcesPath = zipFs.getPath(DIR_STORE);
+            Files.createDirectories(resourcesPath);
 
             // Add the resources if the specified format allows it
             List<MetadataResource> publicResources = List.of();
@@ -145,7 +144,7 @@ class MEFExporter {
             if (includeAttachments) {
                 if (format == Format.PARTIAL || format == Format.FULL) {
                     publicResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PUBLIC, null, approved);
-                    StoreUtils.extract(context, record.getUuid(), publicResources, publicResourcesPath, approved);
+                    StoreUtils.extract(context, record.getUuid(), publicResources, resourcesPath, approved);
                 }
 
                 if (format == Format.FULL) {
@@ -153,7 +152,7 @@ class MEFExporter {
 
                     try {
                         Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
-                        StoreUtils.extract(context, record.getUuid(), privateResources, privateResourcesPath, approved);
+                        StoreUtils.extract(context, record.getUuid(), privateResources, resourcesPath, approved);
                     } catch (Exception e) {
                         // Current user could not download private data
                         Log.warning(Geonet.MEF,

@@ -534,6 +534,22 @@ public class MEFLib {
     }
 
     /**
+     * Whether a file with the given name is registered in the given {@code <file>} element list
+     * (from {@link #getFilesElement}). Used by {@link MEFVisitor}/{@link MEF2Visitor} to decide
+     * which handler (public/private) to invoke for a resource read from the flat, visibility-less
+     * {@code store/} folder introduced with MEF 3.0, since the folder itself no longer implies
+     * visibility the way the legacy {@code public/}/{@code private/} folders did.
+     */
+    static boolean isRegisteredFile(List<Element> files, String fileName) {
+        for (Element file : files) {
+            if (fileName.equals(file.getAttributeValue("name"))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Get the {@code <file>} elements for a given access level ("public" or "private") from an
      * {@code <info>} element, for use as a {@code changeDate} lookup table (see
      * {@link #getChangeDate}) by {@link MEFVisitor}/{@link MEF2Visitor}.
@@ -541,9 +557,12 @@ public class MEFLib {
      * Supports both the MEF 3.0 unified {@code <store>} format (info.xml version "3.0"), where
      * files are filtered by their own {@code access} attribute, and the pre-3.0
      * {@code <public>}/{@code <private>} format, for archives written before this format existed.
-     * A record's physical zip layout (separate {@code public/}/{@code private/} folders) is
-     * unchanged between the two formats, so this is purely about locating the changeDate/mimetype
-     * metadata for a given file - it does not affect which physical folder is read.
+     * <p>
+     * A version-3.0 archive's physical zip layout is a single flat {@code store/} folder (see
+     * {@link MEFConstants#DIR_STORE}); a pre-3.0 archive still uses separate {@code public/}/
+     * {@code private/} folders (see {@link MEFConstants#DIR_PUBLIC}/{@link MEFConstants#DIR_PRIVATE}).
+     * This method itself is only about locating the changeDate/mimetype metadata for a given
+     * file - {@link MEFVisitor}/{@link MEF2Visitor} decide which physical folder(s) to read.
      * <p>
      * Also used directly by {@link org.fao.geonet.kernel.harvest.harvester.geonet.BaseGeoNetworkAligner},
      * which parses info.xml independently of the visitor classes above.

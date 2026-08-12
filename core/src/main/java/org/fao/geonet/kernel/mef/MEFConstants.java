@@ -30,6 +30,14 @@ class MEFConstants {
 
     static final String DIR_PUBLIC = "public/";
     static final String DIR_PRIVATE = "private/";
+    /**
+     * The flat, visibility-less directory introduced alongside the MEF 3.0 unified
+     * {@code <store>} element: every resource - public and private alike - lives here, with its
+     * own {@code access} attribute (not its physical location) saying which visibility it is.
+     * {@link #DIR_PUBLIC}/{@link #DIR_PRIVATE} remain as the legacy, pre-3.0 layout, kept for
+     * reading archives written before this existed.
+     */
+    static final String DIR_STORE = "store/";
     static final String FILE_METADATA = "metadata.xml";
     static final String FILE_INFO = "info.xml";
     /**
