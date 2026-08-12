@@ -26,6 +26,7 @@ package org.fao.geonet.api.records.attachments;
 import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.AbstractCoreIntegrationTest;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -49,6 +50,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Created by francois on 19/01/16.
@@ -224,6 +226,40 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
         assertEquals("0 resource for record",
             0,
             resourcesList.size());
+    }
+
+    /**
+     * Now that visibility (public/private) is tracked in the database rather than always
+     * implied by which folder/prefix a file is stored under, that tracked value must be checked
+     * against the visibility the caller is asking for - otherwise a caller could read an
+     * actually-private resource by simply asking for the public one, bypassing the
+     * {@code canDownload} check for its real visibility. This is the regression this test
+     * guards against.
+     */
+    @Test(expected = ResourceNotFoundException.class)
+    public void testResourceRejectsVisibilityMismatch() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        getStore().delResources(context, metadataUuid, true);
+
+        String filename = "record-with-old-links.xml";
+        MultipartFile file = new MockMultipartFile(filename,
+            filename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, filename)
+            ));
+        getStore().putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+
+        // Tracked as public - asking for it as private must behave as if it doesn't exist,
+        // exactly as an actually-private resource can't be read today by asking for the public one.
+        try (Store.ResourceHolder ignored = getStore().getResource(context, metadataUuid,
+                MetadataResourceVisibility.PRIVATE, filename, true)) {
+            fail("A resource tracked as public must not be returned when asked for as private");
+        }
     }
 
     @Test

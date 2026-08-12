@@ -59,7 +59,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -214,6 +216,23 @@ public abstract class AbstractStore implements Store {
             }
         }
         return ordered;
+    }
+
+    /**
+     * Batch-load the tracked access for every logged upload of a metadata record, keyed by
+     * filename, for callers that need to check many files at once (eg. {@code getResources}
+     * once a store stops using a per-visibility folder/prefix and must otherwise ask the
+     * database once per file). Untracked or soft-deleted rows are simply absent from the map.
+     */
+    protected Map<String, MetadataResourceVisibility> loadTrackedAccessByFilename(int metadataId) {
+        MetadataFileUploadRepository repo = ApplicationContextHolder.get().getBean(MetadataFileUploadRepository.class);
+        Map<String, MetadataResourceVisibility> result = new HashMap<>();
+        for (MetadataFileUpload upload : repo.findAllByMetadataIdNotDeleted(metadataId)) {
+            if (upload.getAccess() != null) {
+                result.put(upload.getFileName(), upload.getAccess());
+            }
+        }
+        return result;
     }
 
     protected static AccessManager getAccessManager(final ServiceContext context) {

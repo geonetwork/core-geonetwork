@@ -73,13 +73,20 @@ public class FilesystemStoreTest extends AbstractCoreIntegrationTest {
         FilesystemStore filesystemStore = new FilesystemStore();
         filesystemStore.settingManager = this.settingManager;
 
-        MetadataResource resource = filesystemStore.getResourceDescription(context, "uuid", MetadataResourceVisibility.PUBLIC, "test.jpg", true);
+        // Visibility is tracked in the database now rather than always implied by which folder
+        // a file is in, so a round trip needs the same decorator production actually uses
+        // (resourceStore, a ResourceLoggerStore wrapping this store) to record it - a bare,
+        // manually-constructed FilesystemStore alone can't round-trip its own writes anymore.
+        ResourceLoggerStore store = new ResourceLoggerStore(filesystemStore);
+        _applicationContext.getAutowireCapableBeanFactory().autowireBean(store);
+
+        MetadataResource resource = store.getResourceDescription(context, "uuid", MetadataResourceVisibility.PUBLIC, "test.jpg", true);
         assertNull("Non exising resource must be null", resource);
 
         try (InputStream file = this.getClass().getResourceAsStream("existingResource.jpg")) {
-            filesystemStore.putResource(context, "uuid", "existingResource.jpg", file, new Date(),
+            store.putResource(context, "uuid", "existingResource.jpg", file, new Date(),
                 MetadataResourceVisibility.PUBLIC, true);
-            resource = filesystemStore.getResourceDescription(context, "uuid",
+            resource = store.getResourceDescription(context, "uuid",
                 MetadataResourceVisibility.PUBLIC, "existingResource.jpg", true);
             assertNotNull("Existing resource must not return null", resource);
             assertEquals("The file size doesn't match the expected one", 6416, resource.getSize());
