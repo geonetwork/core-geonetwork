@@ -2220,6 +2220,16 @@
         return gnConfig["metadata.workflow.allowPublishNonApprovedMd"];
       };
 
+      // Whether the metadata type requires validation before it can be
+      // published. This mirrors the backend MetadataType.requiresValidation
+      // logic: templates and sub-templates are incomplete by design and are
+      // therefore never validated, so they must not be blocked from being
+      // published because they are "invalid". Only normal
+      // records (isTemplate === "n") require validation.
+      $scope.metadataTypeRequiresValidation = function (md) {
+        return !md.isTemplate || md.isTemplate === "n";
+      };
+
       $scope.getPublicationOptionClass = function (
         md,
         user,
@@ -2251,7 +2261,7 @@
       ) {
         var publicationOptionTitle = "";
         if (!md.isPublished(pubOption)) {
-          if (md.isValid()) {
+          if (!$scope.metadataTypeRequiresValidation(md) || md.isValid()) {
             publicationOptionTitle = "mdvalid";
           } else {
             if (
