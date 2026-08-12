@@ -34,7 +34,7 @@
                 xmlns:java-xsl-util="java:org.fao.geonet.util.XslUtil"
                 xmlns:saxon="http://saxon.sf.net/"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                version="2.0" xmlns:xst="http://www.w3.org/1999/XSL/Transform"
+                version="2.0"
                 extension-element-prefixes="saxon"
                 exclude-result-prefixes="#all">
 
@@ -309,6 +309,7 @@
 
     <xsl:variable name="element_ns_uri" select="namespace-uri()"/>
     <xsl:variable name="gml_is_32" select="$element_ns_uri = 'http://www.opengis.net/gml/3.2'"/>
+    <xsl:variable name="timeperiod_id" select="@*[local-name() = 'id']"/>
 
     <xsl:variable name="prefix_to_use">gml</xsl:variable>
 
@@ -348,10 +349,14 @@
         </key>
       </values>
       <snippet>
-        <gml:TimePeriod gml:id="">
+        <!-- Bind the wrapper to the record's actual gml namespace (old GML or GML 3.2)
+             rather than hardcoding GML 3.2, so editing begin/end position does not
+             silently change the namespace of an existing element. -->
+        <xsl:element name="gml:TimePeriod" namespace="{$element_ns_uri}" inherit-namespaces="no">
+          <xsl:attribute namespace="{$element_ns_uri}" name="gml:id"><xsl:value-of select="$timeperiod_id"/></xsl:attribute>
           {{beginPosition}}
           {{endPosition}}
-        </gml:TimePeriod>
+        </xsl:element>
       </snippet>
     </template>
     </xsl:variable>
