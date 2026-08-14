@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -22,6 +22,8 @@
  */
 package org.fao.geonet.index.es;
 
+import co.elastic.clients.transport.TransportException;
+import co.elastic.clients.transport.Version;
 import org.fao.geonet.index.IServerStatusChecker;
 import org.fao.geonet.index.State;
 import org.fao.geonet.index.Status;
@@ -69,6 +71,11 @@ public class EsServerStatusChecker
             } else {
                 this.status.setState(State.RED, "Index is down");
             }
+        } catch (TransportException e) {
+            this.status.setState(State.RED, String.format(
+                "Unable to read the status of the index at %s. The response can not be decoded by the Elasticsearch "
+                    + "client %s. Check that the index server version is compatible with this GeoNetwork version. "
+                    + "Error is %s", client.getServerUrl(), Version.VERSION, e.getMessage()));
         } catch (Exception e) {
             this.status.setState(State.UNINITIALIZED, String.format(
                 "Unable to revive connection to %s. Error is %s", client.getServerUrl(), e.getMessage()));

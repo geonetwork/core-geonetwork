@@ -41,6 +41,8 @@ import co.elastic.clients.json.JsonData;
 import co.elastic.clients.json.JsonpMapper;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
+import co.elastic.clients.transport.TransportException;
+import co.elastic.clients.transport.Version;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,6 +62,8 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.elasticsearch.client.Request;
+import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.fao.geonet.utils.Log;
@@ -85,6 +89,10 @@ public class EsRestClient implements InitializingBean {
     private ElasticsearchClient client;
 
     private ElasticsearchAsyncClient asyncClient;
+
+    private RestClient restClient;
+
+    private boolean healthDecodeFailureReported = false;
 
 
     private String serverUrl;
@@ -176,7 +184,7 @@ public class EsRestClient implements InitializingBean {
                 }
             }
 
-            RestClient restClient = builder.build();
+            restClient = builder.build();
 
             ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
 
@@ -527,9 +535,53 @@ public class EsRestClient implements InitializingBean {
 
     // TODO: check index exist too
     public String getServerStatus() throws IOException {
+        try {
+            HealthResponse response = client.cluster().health();
+            return response.status().toString();
+        } catch (TransportException e) {
+            // The typed client only decodes the health response of the server version it is built for.
+            // Any other version may return a response with missing or unknown properties, so read the
+            // status with the low level client which does not check the response against a model.
+            logHealthDecodeFailure(e);
+            try {
+                return getServerStatusUsingLowLevelClient();
+            } catch (Exception fallbackException) {
+                e.addSuppressed(fallbackException);
+                throw e;
+            }
+        }
+    }
 
-        HealthResponse response = client.cluster().health();
-        return response.status().toString();
+    /**
+     * Read the cluster status from the raw <code>_cluster/health</code> response.
+     */
+    private String getServerStatusUsingLowLevelClient() throws IOException {
+        Response response = restClient.performRequest(new Request("GET", "/_cluster/health"));
+        JsonNode status = new ObjectMapper().readTree(response.getEntity().getContent()).get("status");
+        if (status == null) {
+            throw new IOException(String.format(
+                "No status property found in the cluster health response from %s.", serverUrl));
+        }
+        return status.asText();
+    }
+
+    /**
+     * The status is checked on a regular basis, so only report the decoding error once.
+     * It is reported as an error because the default log configuration only reports
+     * errors for the index.
+     */
+    private void logHealthDecodeFailure(TransportException e) {
+        String message = String.format(
+            "Failed to decode the cluster health response returned by %s using the Elasticsearch client %s. "
+                + "Check that the index server version is compatible with this GeoNetwork version. "
+                + "Reading the cluster status using the low level client. Error is %s.",
+            serverUrl, Version.VERSION, e.getMessage());
+        if (healthDecodeFailureReported) {
+            Log.debug("geonetwork.index", message);
+        } else {
+            healthDecodeFailureReported = true;
+            Log.error("geonetwork.index", message);
+        }
     }
 
     public String getServerVersion() throws IOException, ElasticsearchException {
