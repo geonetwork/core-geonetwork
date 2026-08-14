@@ -23,6 +23,7 @@
 package org.fao.geonet.index.es;
 
 import co.elastic.clients.transport.TransportException;
+import co.elastic.clients.transport.Version;
 import co.elastic.clients.transport.http.TransportHttpClient;
 import co.elastic.clients.util.BinaryData;
 import org.fao.geonet.index.State;
@@ -35,6 +36,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class EsServerStatusCheckerTest {
@@ -74,6 +77,61 @@ public class EsServerStatusCheckerTest {
         assertTrue(status.getMessage(), status.getMessage().contains("index server version is compatible"));
     }
 
+    @Test
+    public void versionOfTheServerIsReportedWhenItIsNotTheVersionOfTheClient() {
+        String message = EsServerStatusChecker.versionMismatchMessage(SERVER_URL, "7.17.15");
+
+        assertNotNull(message);
+        assertTrue(message, message.contains("7.17.15"));
+        assertTrue(message, message.contains(Version.VERSION.toString()));
+    }
+
+    @Test
+    public void versionOfTheServerIsNotReportedWhenItIsSupported() {
+        assertNull(EsServerStatusChecker.versionMismatchMessage(SERVER_URL, Version.VERSION.toString()));
+        assertNull(EsServerStatusChecker.versionMismatchMessage(SERVER_URL,
+            Version.VERSION.major() + ".0.0"));
+    }
+
+    @Test
+    public void versionOfTheServerIsNotReportedWhenItCanNotBeRead() {
+        assertNull(EsServerStatusChecker.versionMismatchMessage(SERVER_URL, "unknown"));
+    }
+
+    /**
+     * The check runs every few seconds, the version of the server is only read once.
+     */
+    @Test
+    public void versionOfTheServerIsOnlyReadOnce() {
+        EsRestClientStub client = new EsRestClientStub("green", null);
+        EsServerStatusChecker checker = new EsServerStatusChecker();
+        checker.setStatus(new Status("index"));
+        checker.client = client;
+
+        checker.checkState();
+        checker.checkState();
+        checker.checkState();
+
+        assertEquals(1, client.serverVersionReads);
+    }
+
+    /**
+     * A server which can not be reached is checked again on the next run.
+     */
+    @Test
+    public void versionOfTheServerIsReadAgainWhenItCanNotBeRead() {
+        EsRestClientStub client = new EsRestClientStub("green", null);
+        client.serverVersionError = new IOException("Connection refused");
+        EsServerStatusChecker checker = new EsServerStatusChecker();
+        checker.setStatus(new Status("index"));
+        checker.client = client;
+
+        checker.checkState();
+        checker.checkState();
+
+        assertEquals(2, client.serverVersionReads);
+    }
+
     private Status check(EsRestClient client) {
         EsServerStatusChecker checker = new EsServerStatusChecker();
         checker.setStatus(new Status("index"));
@@ -92,6 +150,9 @@ public class EsServerStatusCheckerTest {
         private final String serverStatus;
         private final IOException error;
 
+        private IOException serverVersionError;
+        private int serverVersionReads = 0;
+
         EsRestClientStub(String serverStatus, IOException error) {
             this.serverStatus = serverStatus;
             this.error = error;
@@ -104,6 +165,15 @@ public class EsServerStatusCheckerTest {
                 throw error;
             }
             return serverStatus;
+        }
+
+        @Override
+        public String getServerVersion() throws IOException {
+            serverVersionReads++;
+            if (serverVersionError != null) {
+                throw serverVersionError;
+            }
+            return Version.VERSION.toString();
         }
     }
 
