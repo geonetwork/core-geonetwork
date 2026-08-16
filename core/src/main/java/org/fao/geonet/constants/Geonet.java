@@ -68,8 +68,6 @@ public final class Geonet {
     public static final String REGION = GEONETWORK + ".region";
     public static final String CSW_SEARCH = CSW + ".search";
     public static final String CSW_HARVEST = CSW + ".harvest";
-    public static final String SRU = GEONETWORK + ".sru";
-    public static final String SRU_SEARCH = SRU + ".search";
     public static final String USER_WATCHLIST = GEONETWORK + ".userwatchlist";
     public static final String OAI = GEONETWORK + ".oai";
     public static final String SECURITY = GEONETWORK + ".security";
@@ -112,7 +110,6 @@ public final class Geonet {
         public static final String SCHEMA_OASIS = "oasis-catalog.xml";
         public static final String SCHEMA_PLUGINS_CATALOG = "schemaplugin-uri-catalog.xml";
         public static final String SORT_HARVESTERS = "sort-harvesters.xsl";
-        public static final String JZKITAPPLICATIONCONTEXT = "JZkitApplicationContext.xml";
         public static final String INFLATE_METADATA = "inflate-metadata.xsl";
         public static final String LICENSE_ANNEX = "license-annex.html";
         public static final String LICENSE_ANNEX_XSL = "metadata-license-annex.xsl";
@@ -456,15 +453,6 @@ public final class Geonet {
          * Parameter name: {@value #UUID} - Text field that search for specific uuid given
          */
         public static final String UUID = "uuid";
-        /**
-         * Attrset used in Z39.50 search
-         */
-        public static final String ATTRSET = "attrset";
-        /**
-         * Parameter name: {@value #ZQUERY} - A Z3950 query as specified in the Z3950 harvester
-         */
-        public static final String ZQUERY = "zquery";
-
 
         public static final String RESULT_TYPE = "resultType";
 
