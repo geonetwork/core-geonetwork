@@ -127,26 +127,5 @@ public class SearchApi {
 
         // TODOES this is the proxy
         throw new NotImplementedException("Not implemented in ES");
-//        Element params = new Element("params");
-//        queryFields.forEach((k, v) -> params.addContent(new Element(k).setText(v)));
-//
-//        Element elData = SearchDefaults.getDefaultSearch(context, params);
-//
-//        LuceneSearcher searcher = null;
-//        Element model = new Element("search");
-//        model.addContent(params);
-//        try {
-//            searcher = (LuceneSearcher) searchMan.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
-//
-//            ServiceConfig config =  new ServiceConfig();
-//            searcher.search(context, elData, config);
-//            model.addContent(searcher.getSummary());
-//            if (queryFields.get("summaryOnly") == null) {
-//                model.addContent(searcher.present(context, params, config));
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return model;
     }
 }
