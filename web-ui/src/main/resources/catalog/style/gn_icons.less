@@ -104,6 +104,13 @@
 .gn-icon-registers:before {
   content: @fa-var-university;
 }
+// Kept for catalogues upgraded from GeoNetwork 2.8, which still carry the
+// z3950Servers category created by the v280 migration. Category icons are
+// rendered as gn-icon-{{category name}}, so without this the category shows
+// no glyph.
+.gn-icon-z3950Servers:before {
+  content: @fa-var-desktop;
+}
 .gn-icon-inspire:before {
   content: @fa-var-lemon;
 }
