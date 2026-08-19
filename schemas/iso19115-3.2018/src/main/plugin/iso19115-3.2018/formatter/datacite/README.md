@@ -1,7 +1,7 @@
-# Conversion from iso19115-3 to Datacite (version 4.6)
+# Conversion from iso19115-3 to Datacite (version 4.7)
 
-See http://schema.datacite.org/meta/kernel-4.6/
-or https://datacite-metadata-schema.readthedocs.io/_/downloads/en/4.6/pdf/
+See http://schema.datacite.org/meta/kernel-4.7/
+or https://datacite-metadata-schema.readthedocs.io/_/downloads/en/4.7/pdf/
 
 This conversion is used in the context of DOI creation.
 
