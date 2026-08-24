@@ -1666,6 +1666,7 @@
     <kb.platform>linux-x86_64</kb.platform>
     <kb.installer.extension>tar.gz</kb.installer.extension>
     <kb.port>5601</kb.port>
+    <!-- Set empty to disable Kibana dashboard. -->
     <kb.url>http://localhost:${kb.port}</kb.url>
 
 
