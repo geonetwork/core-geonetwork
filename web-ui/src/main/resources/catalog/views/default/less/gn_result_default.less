@@ -170,7 +170,9 @@
       color: #fff;
       background-color: #333 !important;
     }
-    .gallery {
+    // excludes the record-view mosaic (data-gn-record-mosaic), which needs to
+    // keep its own floated width/height from gn_metadata.less .gn-record-mosaic
+    .gallery:not(.gn-record-mosaic) {
       width: 100%;
       margin-top: 15px;
       margin-bottom: 15px;
