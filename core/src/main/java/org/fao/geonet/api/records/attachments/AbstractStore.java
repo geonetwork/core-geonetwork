@@ -37,7 +37,6 @@ import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.LimitedInputStream;
 import org.slf4j.Logger;
@@ -172,18 +171,14 @@ public abstract class AbstractStore implements Store {
     }
 
     /**
-     * Returns {@code true} when an approved copy of the record exists, i.e. the record is not a
-     * draft (see issue #9433). The internal metadata id is resolved from the draft table when a
-     * draft/working copy exists, otherwise from the approved metadata table, and its draft state
-     * is evaluated with {@link IMetadataUtils#isMetadataDraft(int)} (which returns {@code true}
-     * when the record is a draft).
+     * Returns {@code true} when an approved copy of the record exists, i.e. an entry exists in the
+     * {@code Metadata} table for this UUID and it is not itself a draft (see issue #9433).
+     * The draft state is evaluated with {@link IMetadataUtils#isMetadataDraft(int)} (which returns
+     * {@code true} when the record is a draft).
      */
     protected static boolean approvedCopyExists(String metadataUuid) throws Exception {
         final ApplicationContext appContext = ApplicationContextHolder.get();
-        AbstractMetadata metadata = appContext.getBean(MetadataDraftRepository.class).findOneByUuid(metadataUuid);
-        if (metadata == null) {
-            metadata = appContext.getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
-        }
+        AbstractMetadata metadata = appContext.getBean(MetadataRepository.class).findOneByUuid(metadataUuid);
         if (metadata == null) {
             return false;
         }
