@@ -11,10 +11,14 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -63,6 +67,24 @@ public class BaseUserUtilsTest {
     }
 
     @Test
+    public void getOrCreateGroup_noWarningWhenRequestedTypeIsNull() {
+        String groupName = "ExistingTypedGroup";
+        Group existingGroup = new Group();
+        existingGroup.setName(groupName);
+        existingGroup.setType(GroupType.Workspace);
+
+        when(groupRepository.findByName(groupName)).thenReturn(existingGroup);
+
+        String output = captureStdOut(() -> {
+            Group result = baseUserUtils.getOrCreateGroup(groupName); // no type requested
+            assertEquals(existingGroup, result);
+        });
+
+        assertFalse(output.contains("Using existing group type."));
+        verify(groupRepository, never()).save(any(Group.class));
+    }
+
+    @Test
     public void getOrCreateGroup_logsWarningWhenGroupTypeDiffers() {
         String groupName = "MismatchedGroup";
         GroupType existingType = GroupType.SystemPrivilege;
@@ -73,10 +95,26 @@ public class BaseUserUtilsTest {
 
         when(groupRepository.findByName(groupName)).thenReturn(existingGroup);
 
-        Group result = baseUserUtils.getOrCreateGroup(groupName, requestedType);
+        String output = captureStdOut(() -> {
+            Group result = baseUserUtils.getOrCreateGroup(groupName, requestedType);
+            assertEquals(existingGroup, result);
+        });
 
-        assertEquals(existingGroup, result);
+        assertTrue(output.contains("Warning: Group '" + groupName + "' exists with type '" + existingType +
+            "', but requested type is '" + requestedType + "'. Using existing group type."));
         verify(groupRepository, never()).save(any(Group.class));
+    }
+
+    private String captureStdOut(Runnable action) {
+        PrintStream originalOut = System.out;
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            System.setOut(new PrintStream(outputStream));
+            action.run();
+        } finally {
+            System.setOut(originalOut);
+        }
+        return outputStream.toString();
     }
 
     @Test

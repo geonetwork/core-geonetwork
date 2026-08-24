@@ -86,7 +86,7 @@ public class BaseUserUtils {
     public Group getOrCreateGroup(String groupName, GroupType newGroupType) {
         Group group = groupRepository.findByName(groupName);
 
-        if (group != null && group.getType() != null && !group.getType().equals(newGroupType)) {
+        if (group != null && group.getType() != null && newGroupType != null && !group.getType().equals(newGroupType)) {
             // Log a warning if the existing group's type differs from the requested type
             System.out.println("Warning: Group '" + groupName + "' exists with type '" + group.getType() +
                 "', but requested type is '" + newGroupType + "'. Using existing group type.");
