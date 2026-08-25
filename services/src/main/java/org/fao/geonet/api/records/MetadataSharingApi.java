@@ -945,6 +945,11 @@ public class MetadataSharingApi {
             metadataPublicationService.checkGroupIsWorkspace(groupIdentifier, locale);
         }
 
+        if (!userRepository.existsById(userIdentifier)) {
+            throw new ResourceNotFoundException(String.format(
+                "User with identifier '%s' not found.", userIdentifier));
+        }
+
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         try {
@@ -954,10 +959,11 @@ public class MetadataSharingApi {
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
+            boolean destinationAllowed = isTransferDestinationAllowed(groupIdentifier, userIdentifier, ApiUtils.getUserSession(session));
             for (String uuid : records) {
                 updateOwnership(groupIdentifier, userIdentifier,
                     report, dataManager, accessManager,
-                    serviceContext, listOfUpdatedRecords, uuid, session);
+                    serviceContext, listOfUpdatedRecords, uuid, session, destinationAllowed);
             }
             metadataManager.flush();
             metadataIndexer.indexMetadata(listOfUpdatedRecords);
@@ -1024,6 +1030,11 @@ public class MetadataSharingApi {
             metadataPublicationService.checkGroupIsWorkspace(groupIdentifier, locale);
         }
 
+        if (!userRepository.existsById(userIdentifier)) {
+            throw new ResourceNotFoundException(String.format(
+                "User with identifier '%s' not found.", userIdentifier));
+        }
+
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         ApiUtils.canEditRecord(metadataUuid, request);
@@ -1034,7 +1045,8 @@ public class MetadataSharingApi {
             List<String> listOfUpdatedRecords = new ArrayList<>();
             updateOwnership(groupIdentifier, userIdentifier,
                 report, dataManager, accessManager,
-                serviceContext, listOfUpdatedRecords, metadataUuid, session);
+                serviceContext, listOfUpdatedRecords, metadataUuid, session,
+                isTransferDestinationAllowed(groupIdentifier, userIdentifier, ApiUtils.getUserSession(session)));
             metadataManager.flush();
             metadataIndexer.indexMetadata(listOfUpdatedRecords);
 
@@ -1053,7 +1065,8 @@ public class MetadataSharingApi {
                                  AccessManager accessMan,
                                  ServiceContext serviceContext,
                                  List<String> listOfUpdatedRecords, String uuid,
-                                 HttpSession session) throws Exception {
+                                 HttpSession session,
+                                 boolean destinationAllowed) throws Exception {
         AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
         if (metadata == null) {
             report.incrementNullRecords();
@@ -1062,35 +1075,17 @@ public class MetadataSharingApi {
             report.addNotEditableMetadataId(metadata.getId());
         } else {
             UserSession callerSession = ApiUtils.getUserSession(session);
-            Profile callerProfile = callerSession.getProfile();
 
-            if (callerProfile == Profile.Editor || callerProfile == Profile.Reviewer) {
-                int callerUserId = callerSession.getUserIdAsInt();
-                Integer sourceUsr = metadata.getSourceInfo().getOwner();
-                Integer sourceGrp = metadata.getSourceInfo().getGroupOwner();
+            if (!canTransferOwnership(metadata, accessMan, callerSession)) {
+                report.addNotEditableMetadataId(metadata.getId());
+                return;
+            }
 
-                if (callerProfile == Profile.Editor) {
-                    if (!Objects.equals(sourceUsr, callerUserId)) {
-                        report.addNotEditableMetadataId(metadata.getId());
-                        return;
-                    }
-                } else {
-                    Set<Integer> reviewerGroups = accessMan.getReviewerGroups(callerSession);
-                    if (sourceGrp == null || !reviewerGroups.contains(sourceGrp)) {
-                        report.addNotEditableMetadataId(metadata.getId());
-                        return;
-                    }
-                }
-
-                if (!ReservedGroup.isReserved(groupIdentifier)) {
-                    List<Integer> myGroups = userGroupRepository.findGroupIds(
-                        UserGroupSpecs.hasUserId(callerUserId));
-                    if (!myGroups.contains(groupIdentifier)) {
-                        report.addMetadataInfos(metadata,
-                            "Transfer to group " + groupIdentifier + " is not allowed for your profile.");
-                        return;
-                    }
-                }
+            if (!destinationAllowed) {
+                report.addMetadataInfos(metadata,
+                    "Transfer to group " + groupIdentifier + " and user " + userIdentifier
+                        + " is not allowed for your profile.");
+                return;
             }
 
             // Retrieve the identifiers associated with the metadata uuid.
@@ -1181,4 +1176,70 @@ public class MetadataSharingApi {
         }
     }
 
+    /**
+     * Checks if the caller can transfer the ownership of the metadata, based on the caller profile:
+     * <ul>
+     *     <li>Editor: must be the owner of the metadata.</li>
+     *     <li>Reviewer: must be a reviewer of the metadata group owner.</li>
+     *     <li>Other profiles (Administrator, UserAdmin): always allowed, as they already passed
+     *     the {@link AccessManager#canEdit} check.</li>
+     * </ul>
+     *
+     * @param metadata      the metadata to transfer.
+     * @param accessMan     the access manager.
+     * @param callerSession the session of the user doing the transfer.
+     * @return {@code true} if the caller can transfer the metadata ownership, {@code false} otherwise.
+     * @throws Exception if the reviewer groups of the caller can't be retrieved.
+     */
+    private boolean canTransferOwnership(AbstractMetadata metadata, AccessManager accessMan, UserSession callerSession) throws Exception {
+        Profile callerProfile = callerSession.getProfile();
+
+        if (callerProfile == Profile.Editor || callerProfile == Profile.Reviewer) {
+            int callerUserId = callerSession.getUserIdAsInt();
+            Integer sourceUsr = metadata.getSourceInfo().getOwner();
+            Integer sourceGrp = metadata.getSourceInfo().getGroupOwner();
+
+            if (callerProfile == Profile.Editor) {
+                return Objects.equals(sourceUsr, callerUserId);
+            } else {
+                Set<Integer> reviewerGroups = accessMan.getReviewerGroups(callerSession);
+                return sourceGrp != null && reviewerGroups.contains(sourceGrp);
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if the caller can transfer the metadata ownership to the destination group and user, based on the caller profile:
+     * <ul>
+     *     <li>Editor / Reviewer: the destination group must be one of the caller groups and the new owner must be
+     *     a member of it. For a reserved group (group owner not changed), the new owner must be a member of one of
+     *     the caller groups.</li>
+     *     <li>Other profiles (Administrator, UserAdmin): always allowed.</li>
+     * </ul>
+     *
+     * @param groupIdentifier the destination group identifier.
+     * @param userIdentifier  the new owner identifier.
+     * @param callerSession   the session of the user doing the transfer.
+     * @return {@code true} if the caller can transfer the metadata ownership to the group and user, {@code false} otherwise.
+     */
+    private boolean isTransferDestinationAllowed(Integer groupIdentifier, Integer userIdentifier, UserSession callerSession) {
+        Profile callerProfile = callerSession.getProfile();
+
+        if (callerProfile != Profile.Editor && callerProfile != Profile.Reviewer) {
+            return true;
+        }
+
+        List<Integer> myGroups = userGroupRepository.findGroupIds(
+            UserGroupSpecs.hasUserId(callerSession.getUserIdAsInt()));
+        List<Integer> newOwnerGroups = userGroupRepository.findGroupIds(
+            UserGroupSpecs.hasUserId(userIdentifier));
+
+        if (ReservedGroup.isReserved(groupIdentifier)) {
+            return !Collections.disjoint(myGroups, newOwnerGroups);
+        }
+
+        return myGroups.contains(groupIdentifier) && newOwnerGroups.contains(groupIdentifier);
+    }
 }
