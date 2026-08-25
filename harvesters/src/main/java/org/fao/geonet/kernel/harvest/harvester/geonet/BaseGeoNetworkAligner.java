@@ -78,6 +78,7 @@ import org.fao.geonet.kernel.mef.IMEFVisitor;
 import org.fao.geonet.kernel.mef.IVisitor;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEF2Visitor;
+import org.fao.geonet.kernel.mef.MEF3Visitor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.kernel.search.IndexingMode;
@@ -331,11 +332,20 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
 
                     String fileType = "mef";
                     MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
-                    if (version != null && version.equals(MEFLib.Version.V2)) {
+                    if (version == MEFLib.Version.V2) {
                         fileType = "mef2";
+                    } else if (version == MEFLib.Version.V3) {
+                        fileType = "mef3";
                     }
 
-                    IVisitor visitor = fileType.equals("mef2") ? new MEF2Visitor() : new MEFVisitor();
+                    IVisitor visitor;
+                    if (fileType.equals("mef2")) {
+                        visitor = new MEF2Visitor();
+                    } else if (fileType.equals("mef3")) {
+                        visitor = new MEF3Visitor();
+                    } else {
+                        visitor = new MEFVisitor();
+                    }
 
                     //
                     MEFLib.visit(mefFile, visitor, new IMEFVisitor() {
@@ -839,11 +849,20 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
             mefFile = retrieveMEF(uuid);
             String fileType = "mef";
             MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
-            if (version != null && version.equals(MEFLib.Version.V2)) {
+            if (version == MEFLib.Version.V2) {
                 fileType = "mef2";
+            } else if (version == MEFLib.Version.V3) {
+                fileType = "mef3";
             }
 
-            IVisitor visitor = fileType.equals("mef2") ? new MEF2Visitor() : new MEFVisitor();
+            IVisitor visitor;
+            if (fileType.equals("mef2")) {
+                visitor = new MEF2Visitor();
+            } else if (fileType.equals("mef3")) {
+                visitor = new MEF3Visitor();
+            } else {
+                visitor = new MEFVisitor();
+            }
 
             MEFLib.visit(mefFile, visitor, new IMEFVisitor() {
                 public void handleMetadata(Element mdata, int index) throws Exception {

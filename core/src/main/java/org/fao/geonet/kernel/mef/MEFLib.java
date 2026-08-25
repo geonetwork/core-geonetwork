@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.mef;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_STORE;
 import static org.fao.geonet.kernel.mef.MEFConstants.FS;
 import static org.fao.geonet.kernel.mef.MEFConstants.VERSION;
 
@@ -144,6 +145,24 @@ public class MEFLib {
 
     // --------------------------------------------------------------------------
 
+    /**
+     * Create a MEF {@link Version#V3} archive: the same one-folder-per-record container as
+     * {@link #doMEF2Export}, but with each record's attachments written flat under a single
+     * {@code store} directory (see {@link MEF3Exporter}) instead of split across
+     * {@code public}/{@code private}.
+     */
+    public static Path doMEF3Export(ServiceContext context,
+                                    Set<String> uuids, String format, boolean skipUUID, Path stylePath, boolean resolveXlink,
+                                    boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation,
+                                    boolean approved, boolean includeAttachments)
+        throws Exception {
+        return MEF3Exporter.doExport(context, uuids, Format.parse(format),
+            skipUUID, stylePath, resolveXlink, removeXlinkAttribute,
+            skipError, addSchemaLocation, approved, includeAttachments);
+    }
+
+    // --------------------------------------------------------------------------
+
     public static void visit(Path mefFile, IVisitor visitor, IMEFVisitor v)
         throws Exception {
         visitor.visit(mefFile, v);
@@ -153,9 +172,14 @@ public class MEFLib {
 
     /**
      * Return MEF file version according to ZIP file content.
+     * <p>
+     * {@link Version#V2} and {@link Version#V3} share the same one-folder-per-record container,
+     * distinguished only by their attachment layout (legacy {@code public}/{@code private} split
+     * vs flat {@code store}) - telling them apart requires peeking at the first per-record folder
+     * found, since that's not visible from the zip root alone.
      *
      * @param mefFile mefFile to check version
-     * @return v1
+     * @return the MEF version the archive is written in
      */
     public static Version getMEFVersion(Path mefFile) {
         try (FileSystem fileSystem = ZipUtil.openZipFs(mefFile)) {
@@ -163,10 +187,17 @@ public class MEFLib {
             final Path infoXmlFile = fileSystem.getPath("info.xml");
             if (Files.exists(metadataXmlFile) || Files.exists(infoXmlFile)) {
                 return Version.V1;
-            } else {
-
-                return Version.V2;
             }
+
+            Path root = fileSystem.getRootDirectories().iterator().next();
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
+                for (Path recordDir : paths) {
+                    if (Files.isDirectory(recordDir)) {
+                        return Files.isDirectory(recordDir.resolve(DIR_STORE)) ? Version.V3 : Version.V2;
+                    }
+                }
+            }
+            return Version.V2;
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -535,7 +566,7 @@ public class MEFLib {
 
     /**
      * Whether a file with the given name is registered in the given {@code <file>} element list
-     * (from {@link #getFilesElement}). Used by {@link MEFVisitor}/{@link MEF2Visitor} to decide
+     * (from {@link #getFilesElement}). Used by {@link MEFVisitor}/{@link MEF3Visitor} to decide
      * which handler (public/private) to invoke for a resource read from the flat, visibility-less
      * {@code store/} folder introduced with MEF 3.0, since the folder itself no longer implies
      * visibility the way the legacy {@code public/}/{@code private/} folders did.
@@ -552,17 +583,17 @@ public class MEFLib {
     /**
      * Get the {@code <file>} elements for a given access level ("public" or "private") from an
      * {@code <info>} element, for use as a {@code changeDate} lookup table (see
-     * {@link #getChangeDate}) by {@link MEFVisitor}/{@link MEF2Visitor}.
+     * {@link #getChangeDate}) by {@link MEFVisitor}, {@link MEF2Visitor} and {@link MEF3Visitor}.
      * <p>
      * Supports both the MEF 3.0 unified {@code <store>} format (info.xml version "3.0"), where
      * files are filtered by their own {@code access} attribute, and the pre-3.0
      * {@code <public>}/{@code <private>} format, for archives written before this format existed.
-     * <p>
-     * A version-3.0 archive's physical zip layout is a single flat {@code store/} folder (see
-     * {@link MEFConstants#DIR_STORE}); a pre-3.0 archive still uses separate {@code public/}/
-     * {@code private/} folders (see {@link MEFConstants#DIR_PUBLIC}/{@link MEFConstants#DIR_PRIVATE}).
-     * This method itself is only about locating the changeDate/mimetype metadata for a given
-     * file - {@link MEFVisitor}/{@link MEF2Visitor} decide which physical folder(s) to read.
+     * This is independent of a record's physical attachment layout: a MEF 3.0-schema info.xml can
+     * be paired with either the flat {@code store/} folder (see {@link MEFConstants#DIR_STORE},
+     * read by {@link MEFVisitor}/{@link MEF3Visitor}) or the legacy {@code public/}/{@code private/}
+     * folders (see {@link MEFConstants#DIR_PUBLIC}/{@link MEFConstants#DIR_PRIVATE}, read by
+     * {@link MEFVisitor}/{@link MEF2Visitor}) - this method itself is only about locating the
+     * changeDate/mimetype metadata for a given file, not about which physical folder(s) to read.
      * <p>
      * Also used directly by {@link org.fao.geonet.kernel.harvest.harvester.geonet.BaseGeoNetworkAligner},
      * which parses info.xml independently of the visitor classes above.
@@ -731,7 +762,29 @@ public class MEFLib {
          *          +---- all private documents and thumbnails
          * </pre>
          */
-        V2(Constants.MEF_V2_ACCEPT_TYPE);
+        V2(Constants.MEF_V2_ACCEPT_TYPE),
+        /**
+         * Version 3 uses the same one-folder-per-record container as version 2, but each
+         * record's attachments - public and private alike - live in a single flat {@code store}
+         * directory instead of being split across {@code public}/{@code private}. Visibility is
+         * recorded per file via the {@code access} attribute on info.xml's unified
+         * {@code <store>} element (see {@link MEFLib#buildInfoFiles}), not by physical location.
+         *
+         * <pre>
+         * Root
+         * |
+         * + 0..n metadata
+         *   +--- metadata
+         *   |      +--- metadata.xml (ISO19139)
+         *   |      +--- (optional) metadata.profil.xml (ISO19139profil) Require a
+         * schema/convert/toiso19139.xsl to map to ISO.
+         *   +--- info.xml
+         *   +--- applschema ISO 19110 record
+         *   +--- store
+         *          +---- all public and private documents and thumbnails
+         * </pre>
+         */
+        V3(Constants.MEF_V3_ACCEPT_TYPE);
 
         String acceptType;
 
@@ -759,6 +812,7 @@ public class MEFLib {
         public static class Constants {
             public static final String MEF_V1_ACCEPT_TYPE = "application/x-gn-mef-1-zip";
             public static final String MEF_V2_ACCEPT_TYPE = "application/x-gn-mef-2-zip";
+            public static final String MEF_V3_ACCEPT_TYPE = "application/x-gn-mef-3-zip";
         }
     }
 

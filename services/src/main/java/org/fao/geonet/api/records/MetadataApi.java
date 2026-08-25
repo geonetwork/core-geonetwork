@@ -600,7 +600,7 @@ public class MetadataApi {
                 Log.info(Geonet.MEF, "Building MEF2 file with " + uuidsToExport.size()
                     + " records.");
 
-                file = MEFLib.doMEF2Export(serviceContext, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved, includeAttachments);
+                file = MEFLib.doMEF3Export(serviceContext, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved, includeAttachments);
 
                 response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
             }

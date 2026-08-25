@@ -294,7 +294,7 @@ public class CatalogApi {
             Log.info(Geonet.MEF, "Building MEF2 file with " + uuidList.size()
                 + " records.");
             try {
-                file = MEFLib.doMEF2Export(context, allowedUuid, format.toString(),
+                file = MEFLib.doMEF3Export(context, allowedUuid, format.toString(),
                     false, stylePath,
                     withXLinksResolved, withXLinkAttribute,
                     false, addSchemaLocation, approved, includeAttachments);

@@ -37,6 +37,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -84,7 +85,7 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
     /**
      * End-to-end verification of the MEF 3.0 writer (unified {@code <store>} element,
      * MEFLib#buildInfoFile) together with the reader's backward-compat branch
-     * (MEFLib#getFilesElement, used by MEFVisitor/MEF2Visitor): export a record with public and
+     * (MEFLib#getFilesElement, used by MEFVisitor, MEF2Visitor and MEF3Visitor): export a record with public and
      * private attachments (producing a fresh, MEF-3.0-format archive), wipe its resources, then
      * re-import that same archive and confirm the resources come back with the correct
      * visibility - proving the reader correctly understood the writer's own {@code <store>}
@@ -124,6 +125,94 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
             // .DS_Store (private) - matches the physical zip contents, not an assumption.
             assertEquals(2, publicResources.size());
             assertEquals(2, privateResources.size());
+        } finally {
+            Files.delete(path);
+        }
+    }
+
+    /**
+     * End-to-end verification of {@link MEF3Exporter} (the flat MEF 3.0 {@code store/} writer for
+     * the V2 multi-record container, invoked via {@link MEFLib#doMEF3Export}) together with
+     * {@link MEFLib#getMEFVersion}/{@link MEF3Visitor} (the matching reader): export a record
+     * with public and private attachments, confirm the physical zip layout is the flat
+     * {@code store/} folder and is detected as {@link MEFLib.Version#V3} - not the legacy
+     * {@code public/}/{@code private/} split still written by {@link MEF2Exporter} - wipe its
+     * resources, then re-import and confirm they come back with the correct visibility.
+     */
+    @Test
+    public void testMef3ExportThenReimportRoundTripsAttachments() throws Exception {
+        ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+
+        final MEFLibIntegrationTest.ImportMetadata importMetadata = new MEFLibIntegrationTest.ImportMetadata(this, context);
+        importMetadata.getMefFilesToLoad().clear();
+        importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
+        importMetadata.invoke();
+
+        final String uuid = "da165110-88fd-11da-a88f-000d939bc5d8";
+        final Store store = context.getBean("resourceStore", Store.class);
+
+        Path path = MEFLib.doMEF3Export(context, Set.of(uuid), "full", false, getStyleSheets(),
+            false, false, false, false, true, true);
+        try (FileSystem zipFs = ZipUtil.openZipFs(path)) {
+            assertTrue(Files.exists(zipFs.getPath(uuid + "/store/thumbnail.gif")));
+            assertTrue(Files.exists(zipFs.getPath(uuid + "/store/basins.zip")));
+            assertFalse("MEF3Exporter should not write the legacy public/ folder",
+                Files.exists(zipFs.getPath(uuid + "/public")));
+            assertFalse("MEF3Exporter should not write the legacy private/ folder",
+                Files.exists(zipFs.getPath(uuid + "/private")));
+
+            assertEquals("A flat store/ layout archive should be detected as MEF version 3",
+                MEFLib.Version.V3, MEFLib.getMEFVersion(path));
+
+            // Wipe the resources so re-importing is the only way they can come back.
+            store.delResources(context, uuid, true);
+            List<MetadataResource> afterWipe = store.getResources(context, uuid, MetadataResourceVisibility.PUBLIC, null, true);
+            assertTrue("Resources should be gone after delResources", afterWipe.isEmpty());
+
+            Element params = new Element("request");
+            params.addContent(new Element("uuidAction").setText("overwrite"));
+            MEFLib.doImport(params, context, path, getStyleSheets());
+
+            List<MetadataResource> publicResources = store.getResources(context, uuid, MetadataResourceVisibility.PUBLIC, null, true);
+            List<MetadataResource> privateResources = store.getResources(context, uuid, MetadataResourceVisibility.PRIVATE, null, true);
+            // Fixture has thumbnail.gif + thumbnail_s.gif (public) and basins.zip + a stray
+            // .DS_Store (private) - matches the physical zip contents, not an assumption.
+            assertEquals(2, publicResources.size());
+            assertEquals(2, privateResources.size());
+        } finally {
+            Files.delete(path);
+        }
+    }
+
+    /**
+     * Verifies {@link MEFLib#doMEF2Export} (still backed by {@link MEF2Exporter}) writes the
+     * legacy, pre-3.0 {@code public/}/{@code private/} layout, and that the result is correctly
+     * detected as {@link MEFLib.Version#V2} - guards the {@link MEF2Exporter}/{@link MEF3Exporter}
+     * template-method split (only {@link MEF2Exporter#getResourcesPath} should differ).
+     */
+    @Test
+    public void testMef2ExportWritesLegacyPublicPrivateLayout() throws Exception {
+        ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+
+        final MEFLibIntegrationTest.ImportMetadata importMetadata = new MEFLibIntegrationTest.ImportMetadata(this, context);
+        importMetadata.getMefFilesToLoad().clear();
+        importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
+        importMetadata.invoke();
+
+        final String uuid = "da165110-88fd-11da-a88f-000d939bc5d8";
+
+        Path path = MEFLib.doMEF2Export(context, Set.of(uuid), "full", false, getStyleSheets(),
+            false, false, false, false, true, true);
+        try (FileSystem zipFs = ZipUtil.openZipFs(path)) {
+            assertTrue(Files.exists(zipFs.getPath(uuid + "/public/thumbnail.gif")));
+            assertTrue(Files.exists(zipFs.getPath(uuid + "/private/basins.zip")));
+            assertFalse("MEF2Exporter should not write the flat store/ folder",
+                Files.exists(zipFs.getPath(uuid + "/store")));
+
+            assertEquals("A public/private layout archive should be detected as MEF version 2",
+                MEFLib.Version.V2, MEFLib.getMEFVersion(path));
         } finally {
             Files.delete(path);
         }

@@ -45,7 +45,15 @@ import java.util.stream.Stream;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
 
 /**
- * MEF version 2 visitor
+ * MEF version 2 visitor. Reads a MEF version 2 (multi-record) archive whose attachments use the
+ * legacy, pre-3.0 {@code public/}/{@code private/} folder split. Kept for backward compatibility
+ * with archives written before the flat MEF 3.0 {@code store/} layout existed - archives using
+ * that layout are {@link MEFLib.Version#V3} and read by {@link MEF3Visitor} instead (see
+ * {@link MEFLib#getMEFVersion}).
+ * <p>
+ * The record traversal in {@link #handleXml} is identical between the two formats; only
+ * {@link #handleBin} - which folder(s) to read a record's attachments from - differs, so
+ * {@link MEF3Visitor} extends this class and overrides just that method.
  */
 public class MEF2Visitor implements IVisitor {
 
@@ -134,27 +142,6 @@ public class MEF2Visitor implements IVisitor {
         List<Element> pubFiles = MEFLib.getFilesElement(info, "public");
         List<Element> prvFiles = MEFLib.getFilesElement(info, "private");
 
-        // MEF 3.0+ layout: every resource - public and private alike - lives flat under
-        // store/, so which handler to call is decided per file from its own registration in
-        // pubFiles/prvFiles, not from where it physically is.
-        Path storeFile = file.resolve(MEFConstants.DIR_STORE);
-        if (Files.exists(storeFile) && (!pubFiles.isEmpty() || !prvFiles.isEmpty())) {
-            try (Stream<Path> paths = Files.walk(storeFile)) {
-                for (Path path : (Iterable<Path>) paths.filter(Files::isRegularFile)::iterator) {
-                    String fileName = IO.toUnixStylePath(storeFile.relativize(path));
-                    try (InputStream in = IO.newInputStream(path)) {
-                        if (MEFLib.isRegisteredFile(pubFiles, fileName)) {
-                            v.handlePublicFile(fileName, MEFLib.getChangeDate(pubFiles, fileName), in, index);
-                        } else {
-                            v.handlePrivateFile(fileName, MEFLib.getChangeDate(prvFiles, fileName), in, index);
-                        }
-                    }
-                }
-            }
-        }
-
-        // Legacy (pre-3.0) layout: separate public/ and private/ folders, kept for archives
-        // written before the flat store/ folder existed.
         Path publicFile = file.resolve(MEFConstants.DIR_PUBLIC);
         Path privateFile = file.resolve(MEFConstants.DIR_PRIVATE);
 
