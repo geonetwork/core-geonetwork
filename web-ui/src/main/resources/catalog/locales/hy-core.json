@@ -373,6 +373,8 @@
     "createChild": "Ստեղծեք երեխա",
     "privileges": "Արտոնություններ",
     "whoCanAccess": "Ով ունի մուտք",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Գործողություններ",
     "reset": "Վերականգնել",
     "stop": "Դադարեցրեք",

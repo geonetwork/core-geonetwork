@@ -52,6 +52,6 @@ Let's say we want to create a custom view name `al`.
 
 ## Launch your view
 
-To see your new view, you can launch the ``catalog.search`` service with a new parameter view: <http://localhost:8080/geonetwork/srv/eng/catalog.search?view=geoportal>
+To see your new view, you can launch the ``catalog.search`` service with a new parameter view: `http://localhost:8080/geonetwork/srv/eng/catalog.search?view=geoportal`
 
 Or, go into admin settings page and set the `system/ui/defaultView` (*User interface configuration -> Choose the user interface to use*) to `geoportal`.

@@ -55,7 +55,7 @@
           ? mdView.current.record.related.aggregations_children
           :mdView.current.record.related.aggregations_siblings"
       data-type="'blocks'"
-      data-sort-by="resourceTitle"
+      data-sort-by="-lastResourceDate"
       data-title="{{'seriesComposedOf' | translate}}"
     ></div>
 
@@ -69,6 +69,7 @@
           :mdView.current.record.related.aggregations_siblings"
       labels="{{::viewConfig.collectionTableConfig.labels}}"
       columns="{{::viewConfig.collectionTableConfig.columns}}"
+      data-sort-by="-lastResourceDate"
     ></div>
   </div>
 </div>

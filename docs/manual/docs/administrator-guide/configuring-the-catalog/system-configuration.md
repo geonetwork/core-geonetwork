@@ -25,7 +25,7 @@ Since the settings form is a long form, the `save` button is repeated between th
 
 ## Catalog Server {#system-config-server}
 
--   **Host** The node's name or IP number (without <http://>). For example, they are used during metadata editing to create resource links and when returning the server's capabilities during a CSW request.
+-   **Host** The node's name or IP number (without `http://`). For example, they are used during metadata editing to create resource links and when returning the server's capabilities during a CSW request.
     -   If your node is publicly accessible from the Internet, you have to use the domain name.
     -   If your node is hidden inside your private network and you have a firewall or web server that redirects incoming requests to the node, you have to enter the public address of the firewall or web server. A typical configuration is to have an Apache web server on address A that is publicly accessible and redirects the requests to a Tomcat server on a private address B. In this case you have to enter A in the host parameter.
 -   **Port** The server's port number (usually 80 or 8080). If using HTTP, set it to 80.
@@ -78,7 +78,7 @@ This section configure the mail server to use.
 
 Additional settings are available to respect user language preference:
 
--  **Language for system generated emails** The ui language will be used when sending notification emails by default. To To override this behaviour and generate a multi-lingual notification email list the langauges to be used.
+-  **Language for system generated emails** The UI language will be used when sending notification emails by default. To override this behaviour and generate a multi-lingual notification email, list the languages to be used.
 
 -  **Translation follows text** Provide an introduction phrase indicating a multi-lingual notification follows.
 
@@ -124,6 +124,30 @@ Enabling the setting, displays in the application footer a link to a page that a
 
 It requires an email server configured.
 
+## Languages and translations
+
+Go to `Admin console` --> `Settings` --> `Languages and translations` to manage the languages registered in the catalog and to add or override any translation used in the user interface.
+
+The `Registered languages in database` panel lists the languages stored in the database, used for database entities such as group names or portal titles. This is not the list of languages offered to catalog users, which is configured separately (see [User Interface Configuration](user-interface-configuration.md)).
+
+The `Manage translations` panel lets an administrator add a translation for any key used by the application, or override an existing one, without rebuilding the application. This is useful, for example, to configure the [Application banner](#application-banner) message below, to correct a wording, or to translate a label that has no translation yet in your language.
+
+-   **Table mode** Enter the key to translate in the `Add a new translation for` field and click `Add`. This creates one translation field per registered language for that key.
+
+![](img/manage-translations-add-key.png)
+
+![](img/manage-translations-key-rows.png)
+
+-   **JSON mode** Provides direct access to the same data as a JSON array, which can be useful to review or edit several translations at once.
+
+![](img/manage-translations-json-mode.png)
+
+Once the translations are entered, click `Save all translations` to persist them.
+
+!!! tip "Finding the key of an untranslated string"
+
+    When the interface has no translation for a key, it displays the raw key instead of a readable label, for example `SortBy-resourceTitleObject.default.sortAsc` in a sort-by dropdown. If you come across this, copy the text exactly as shown and use it as the key in the `Manage translations` panel to add the missing translation.
+
 ## Application banner
 
 In certain situations it can be useful to display a banner in the application to inform users, for example to announce a maintenance window or an outage.
@@ -134,7 +158,7 @@ Enabling this setting displays a banner in the public pages of the application.
 
 ![](img/application-banner-config.png)
 
-To configure the banner message, go to `Admin console` --> `Settings` --> `Languages and translations` and add a translation entry with the key **application-banner**.
+To configure the banner message, go to `Admin console` --> `Settings` --> `Languages and translations` and add a translation entry with the key **application-banner**. See [Languages and translations](#languages-and-translations) above for details.
 
 ![](img/application-banner-config2.png)
 
@@ -171,19 +195,29 @@ The XLink resolver replaces the content of elements with an attribute @xlink:hre
 
 For each metadata schema, the catalog has an XSL transformation (`update-fixed-info.xsl`) that it can apply to a metadata record belonging to that schema. The aim of this transformation is to allow fixed schema, site and catalog information to be applied to a metadata record every time the metadata record is saved in the editor. As an example, this transformation is used to build and store the URL of any files uploaded and stored with the metadata record in the editor.
 
--   **Automatic Fixes**: Enabled by default. It is recommended you do not use the metadata editor when auto-fixing is disabled. See <http://trac.osgeo.org/geonetwork/ticket/368> for more details.
+-   **Automatic Fixes**: Enabled by default. It is recommended you do not use the metadata editor when auto-fixing is disabled. See [ticket #368](http://trac.osgeo.org/geonetwork/ticket/368) for more details.
 
 ## Search Statistics {#search_stats_config}
 
-Enables/disables search statistics capture. Search statistics are stored in the database and can be queried using the `Search Statistics` page.
+!!! warning "Not currently functional"
 
-There is very little compute overhead involved in storing search statistics as they are written to the database in a background thread. However database storage for a very busy site must be carefully planned.
+    This setting has no effect. Search statistics capture was removed when the catalog migrated from Lucene to Elasticsearch, with the intention of rebuilding it on top of Elasticsearch and Kibana. That work has not been completed, so enabling this option does not collect any data and there is no `Search Statistics` page to query.
+
+    See [issue #4499](https://github.com/geonetwork/core-geonetwork/issues/4499) for the current status.
+
+    To collect usage statistics in the meantime, configure a web analytics service using ```WEB-INF/config.properties```:
+
+    ```properties
+    analytics.web.service=matomo
+    analytics.web.jscode=<tracking code provided by the analytics service>
+    ```
 
 ## Open Archive Initiative (OAI-PMH) Provider
 
 Options in this group control the way in which the OAI Server responds to OAIPMH harvest requests from remote sites.
 
 -   **Datesearch**: OAI Harvesters may request records from GeoNetwork in a date range. GeoNetwork can use one of two date fields from the metadata to check for a match with this date range. The default choice is *Temporal extent*, which is the temporal extent from the metadata record. The other option, *Modification date*, uses the modification date of the metadata record in the GeoNetwork database. The modification date is the last time the metadata record was updated in or harvested by GeoNetwork.
+-   **Enable**: Enable or disable the OAI-PMH service. If disabled, the OAI-PMH API returns an error message.
 -   **Resumption Token Timeout**: Metadata records that match an OAI harvest search request are usually returned to the harvester in groups with a fixed size (eg. in groups of 10 records). With each group a resumption token is included so that the harvester can request the next group of records. The resumption token timeout is the time (in seconds) that GeoNetwork OAI server will wait for a resumption token to be used. If the timeout is exceeded GeoNetwork OAI server will drop the search results and refuse to recognize the resumption token. The aim of this feature is to ensure that resources in the GeoNetwork OAI server are released.
 -   **Cache size**: The maximum number of concurrent OAI harvests that the GeoNetwork OAI server can support.
 
@@ -248,7 +282,11 @@ Note: this option is only available for databases that have been tested. Those d
 
 ## Metadata Privileges
 
-*Only set privileges to user's groups*: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator). At the moment this option cannot be disabled and is likely to be deprecated in the next version of GeoNetwork.
+- **Only set privileges to user's groups**: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator).
+- **Publication by users reviewer in record group only**: Allow publication by administrator and reviewer member of record group. If disabled, then also all users reviewer in group with editing rights can publish/unpublish a record.
+- **Manage the publication date automatically**: When enabled the publication date of the metadata is set automatically when the metadata is published and removed when the metadata is unpublished.
+- **Notification level when a metadata is published / unpublished**: Define which users to alert when a metadata is published / unpublished.
+- **Groups to notify when a metadata is published / unpublished**: List of groups, separated by the char |, to notify when a metadata is published / unpublished (for 'Notify the group(s) emails' notification level).
 
 ## Metadata create
 
@@ -340,10 +378,12 @@ Allows to configure the user profile allowed to delete published metadata.
 
 ## Metadata publication
 
-Allows to configure the user profile allowed to publish and un-publish metadata.
+Allows to configure the required user profile to publish and un-publish metadata.
 
--   **Minimum user profile allowed to publish metadata** Minimum user profile allowed to publish metadata (`Reviewer` or `Administrator`). The default value is `Reviewer`.
--   **Minimum user profile allowed to un-publish metadata** Minimum user profile allowed to un-publish metadata (`Reviewer` or `Administrator`). The default value is `Reviewer`.
+The configured profile is evaluated on the metadata owner group (per-group role), not the user's global profile. The user must have exactly this profile in the record owner group. For example, with `Reviewer`, only users who are `Reviewer` in the owner group are allowed (not `UserAdmin`). Global `Administrator` is always allowed.
+
+-   **Required profile to publish metadata** Profile required to publish metadata, evaluated in the record owner group (`Reviewer` or `Administrator`). The default value is `Reviewer`.
+-   **Required profile to un-publish metadata** Profile required to un-publish metadata, evaluated in the record owner group (`Reviewer` or `Administrator`). The default value is `Reviewer`.
 
 ![](img/metadata-publication.png)
 
@@ -352,6 +392,22 @@ Allows to configure the user profile allowed to publish and un-publish metadata.
 Allows to configure the zip export of metadata records and their attachments.
 
 -   **Total size of attachments allowed in zip export (MB)** Maximum total size of attachments allowed in zip export (in MB). If the total size of attachments linked to the selected metadata is above this value, exporting as zip (with attachments) is not allowed. Leave empty for no limit.
+
+## Metadata workflow
+
+The following settings control what metadata can be published when the metadata workflow is active. They are found under `Administration` --> `Settings` --> `Metadata Workflow`.
+
+-   **Allow publication of invalid metadata**  
+    When enabled, metadata records can be published regardless of its validation status.  
+    When disabled, only records that passe all required XSD and schematron validation rules can be published.  
+    *This setting applies to metadata records only, metadata templates exempt from this check, as they are incomplete by design.*
+-   **Allow submission/approval of invalid metadata**   
+    When enabled, records can be submitted or approved even when validation fails.  
+    When disabled, records must be valid before they can move to `Submitted` or `Approved` workflow status.  
+    *This setting applies to metadata records only, metadata templates exempt from this check, as they are incomplete by design.*
+-   **Allow publication of non-approved metadata**  
+    When enabled, metadata records and templates can be published regardless of its workflow status.  
+    When disabled, only metadata records and templates with an `Approved` workflow status can be published. 
 
 ## Harvesting
 

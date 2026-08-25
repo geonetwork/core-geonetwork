@@ -8,7 +8,7 @@ For that, you can include default view content, or build your own application on
 
 UI design is based on shared widgets, logic and components. In AngularJS terms, we talk about `services` and `directives`.
 
-All components are stored in the folder [components](https://github.com/geonetwork/core-geonetwork/tree/develop/web-ui/src/main/resources/catalog/components)
+All components are stored in the folder [components](https://github.com/geonetwork/core-geonetwork/tree/main/web-ui/src/main/resources/catalog/components)
 
 ### Main page components
 

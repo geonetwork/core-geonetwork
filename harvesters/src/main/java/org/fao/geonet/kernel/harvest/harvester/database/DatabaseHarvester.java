@@ -64,8 +64,9 @@ public class DatabaseHarvester  extends AbstractHarvester<HarvestResult, Databas
     @Override
     protected void doHarvest(Logger l) throws Exception {
         log.info("Database harvester start");
-        DatabaseHarvesterAligner h = new DatabaseHarvesterAligner(cancelMonitor, log, context, params, errors);
-        result = h.harvest(log);
+        try (DatabaseHarvesterAligner h = new DatabaseHarvesterAligner(cancelMonitor, log, context, params, errors)) {
+            result = h.harvest(log);
+        }
         log.info("Database harvester end");
     }
 }

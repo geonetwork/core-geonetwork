@@ -42,4 +42,4 @@ Major changes:
 -   [Admin / Thesaurus / Improved form and add support for description](https://github.com/geonetwork/core-geonetwork/pull/6283)
 -   [Admin / Link analysis / Filter by HTTP status.](https://github.com/geonetwork/core-geonetwork/pull/6255) Those status gives more details, a link could be valid with an authorization required status.
 
-and more \... see [4.2.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.2.0+is%3Aclosed) for full details.
+and more ... see [4.2.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.2.0+is%3Aclosed) for full details.

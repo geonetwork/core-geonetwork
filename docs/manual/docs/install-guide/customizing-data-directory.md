@@ -12,7 +12,7 @@ The data directory also contains a number of support files used by the catalog f
 -   uploaded document attached to metadata records
 -   thumbnails
 
-It is a good idea to define an external data directory when going to production in order to make future updates easier. The data directory allows to run the WAR in readonly mode if needed.
+It is a good idea to define an external data directory when going to production in order to make future updates easier. The data directory allows the WAR to run in read-only mode if needed.
 
 ## Creating a new data directory
 
@@ -30,7 +30,7 @@ If the data directory is not set, the following message is displayed in the log 
 If the data directory is not accessible for the user, the log displays:
 
 ``` shell
-2015-12-16 08:09:17,723 WARN  [geonetwork.data.directory] -     - Data directory '/tmp/gndatadir' is not writable. Set read/write privileges to user starting the catalogue (ie. francois).
+2015-12-16 08:09:17,723 WARN  [geonetwork.data.directory] -     - Data directory '/tmp/gndatadir' is not writable. Set read/write privileges to user starting the catalogue (i.e. francois).
 2015-12-16 08:09:17,723 WARN  [geonetwork.data.directory] -     - Data directory provided could not be used. Using default location: /data/dev/gn/3.0.x/web/src/main/webapp/WEB-INF/data
 ```
 
@@ -54,15 +54,15 @@ For system environment variable use:
 Resolution order is:
 
 1.  <webappname>.dir
-    1.  Java environment variable (ie. -D<webappname>.dir=/a/data/dir)
-    2.  Servlet context parameter (ie. web.xml)
-    3.  Config.xml appHandler parameter (ie. config.xml)
-    4.  System environment variable (ie. <webappname>_dir=/a/data/dir). "." is not supported in env variables
+    1.  Java environment variable (i.e. -D<webappname>.dir=/a/data/dir)
+    2.  Servlet context parameter (i.e. web.xml)
+    3.  Config.xml appHandler parameter (i.e. config.xml)
+    4.  System environment variable (i.e. <webappname>_dir=/a/data/dir). "." is not supported in env variables
 2.  geonetwork.dir
-    1.  Java environment variable (ie. -Dgeonetwork.dir=/a/data/dir)
-    2.  Servlet context parameter (ie. web.xml)
-    3.  Config.xml appHandler parameter (ie. config.xml)
-    4.  System environment variable (ie. geonetwork_dir=/a/data/dir). "." is not supported in env variables
+    1.  Java environment variable (i.e. -Dgeonetwork.dir=/a/data/dir)
+    2.  Servlet context parameter (i.e. web.xml)
+    3.  Config.xml appHandler parameter (i.e. config.xml)
+    4.  System environment variable (i.e. geonetwork_dir=/a/data/dir). "." is not supported in env variables
 
 ## Java System Property
 

@@ -4,7 +4,7 @@
 
 From the **Admin console --> Settings** user can configure INSPIRE directive support.
 
-When enabled, the INSPIRE support activate the following:
+When enabled, the INSPIRE support activates the following:
 
 -   Enable indexing of INSPIRE themes and annexes (INSPIRE themes thesaurus MUST be added to the list of thesaurus from the INSPIRE Registry - see [Managing thesaurus](../managing-classification-systems/managing-thesaurus.md)).
 
@@ -170,7 +170,7 @@ From the `Admin console` --> `Settings` --> `Sources`, an administrator can crea
 
 ![image](img/inspire-portal.png)
 
-Once saved, the portal is accessible at <http://localhost:8080/geonetwork/inspire> and the CSW service at <http://localhost:8080/geonetwork/inspire/eng/csw>.
+Once saved, the portal is accessible at `http://localhost:8080/geonetwork/inspire` and the CSW service at `http://localhost:8080/geonetwork/inspire/eng/csw`.
 
 ## INSPIRE reference documents
 

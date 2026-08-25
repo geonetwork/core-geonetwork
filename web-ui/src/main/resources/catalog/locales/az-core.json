@@ -373,6 +373,8 @@
     "createChild": "Uşaq yaradın",
     "privileges": "İmtiyazlar",
     "whoCanAccess": "Kimin girişi var",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Tədbirlər",
     "reset": "Sıfırlayın",
     "stop": "Dayan",

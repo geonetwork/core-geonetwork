@@ -11,4 +11,4 @@
 -   [Oracle compatibility](https://github.com/geonetwork/core-geonetwork/pull/2777)
 -   [Avoid crawler to obtain a thread with a remanant context](https://github.com/geonetwork/core-geonetwork/pull/2859)
 
-and more \... see [3.4.3 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.4.3+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.4.3+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.4.3 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.4.3+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.4.3+is%3Aclosed+is%3Apr) for full details.

@@ -41,7 +41,7 @@ Finally we have to tell the wro4j library where our files will be. Edit the file
 </require>
 ```
 
-Now, if we build, deploy and enter GeoNetwork, we can use this new style called "custom": <http://localhost:8080/geonetwork/srv/eng/catalog.search?view=custom>
+Now, if we build, deploy and enter GeoNetwork, we can use this new style called "custom": `http://localhost:8080/geonetwork/srv/eng/catalog.search?view=custom`
 
 ## Import default style
 

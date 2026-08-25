@@ -373,6 +373,8 @@
     "createChild": "Skapa en delmängd",
     "privileges": "Rättigheter",
     "whoCanAccess": "Vem har tillgång",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Handlingar",
     "reset": "Återställ",
     "stop": "Stopp",

@@ -28,6 +28,7 @@ import co.elastic.clients.elasticsearch.core.search.Hit;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -36,7 +37,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import jeeves.constants.Jeeves;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.search.EsFilterBuilder;
+import org.fao.geonet.kernel.search.EsQueryFilterUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
 import org.fao.geonet.utils.Log;
@@ -109,8 +113,16 @@ public class Lib {
 
     public static List<Integer> search(ServiceContext context, Element params) throws Exception {
         EsSearchManager searchMan = context.getBean(EsSearchManager.class);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String permissionsFilter = EsFilterBuilder.build(
+            context, "metadata", false, context.getBean(NodeInfo.class));
 
         JsonNode esJsonQuery = createSearchQuery(params);
+        JsonNode queryStringFilter = EsQueryFilterUtils.buildQueryStringFilter(objectMapper, permissionsFilter);
+        ObjectNode wrappedSearchRequest = objectMapper.createObjectNode();
+        wrappedSearchRequest.set("query", esJsonQuery);
+        EsQueryFilterUtils.addFilterToQuery(objectMapper, wrappedSearchRequest, queryStringFilter);
+        esJsonQuery = wrappedSearchRequest.get("query");
 
         // Get results count
         SearchResponse queryResult = searchMan.query(
@@ -127,7 +139,6 @@ public class Lib {
 
         List<Integer> result;
 
-        ObjectMapper objectMapper = new ObjectMapper();
         result = ((List<Hit>) queryResult.hits().hits())
             .stream()
             .map(h -> Integer.parseInt(objectMapper.convertValue(h.source(), Map.class)

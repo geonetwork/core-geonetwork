@@ -32,6 +32,10 @@ import org.fao.geonet.api.records.model.SharingResponse;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.GroupType;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataType;
+import org.fao.geonet.domain.MetadataValidation;
+import org.fao.geonet.domain.MetadataValidationId;
+import org.fao.geonet.domain.MetadataValidationStatus;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.ReservedGroup;
@@ -40,13 +44,21 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.StatusValue;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
+import org.fao.geonet.repository.StatusValueRepository;
 import org.fao.geonet.repository.UserRepositoryTest;
+import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.Namespace;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +69,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +79,7 @@ import java.util.Map;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -77,6 +92,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  **/
 public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     private static final int SAMPLE_GROUP_ID = 2;
+
+    /**
+     * Selects the metadata-level publication date (mdb:dateInfo) added by the
+     * ISO19115-3.2018 {@code publicationdate-add} process. This does not match the
+     * resource-level publication date carried in the sample's identification info.
+     */
+    private static final String PUBLICATION_DATE_INFO_XPATH =
+        "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']";
+
     @Autowired
     private WebApplicationContext wac;
 
@@ -90,7 +114,16 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     private MetadataStatusRepository metadataStatusRepository;
 
     @Autowired
+    private MetadataValidationRepository metadataValidationRepository;
+
+    @Autowired
+    private StatusValueRepository statusValueRepository;
+
+    @Autowired
     private SettingManager settingManager;
+
+    @PersistenceContext
+    private EntityManager entityManager;
 
     private User editorUser;
     private User reviewerUser;
@@ -479,12 +512,319 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
 
         foreignGroup = _groupRepo.save(new Group().setName("foreignGroup"));
 
-        Metadata metadata = (Metadata) injectMetadataInDb(getSampleMetadataXml(), context, true);
+        Metadata metadata = (Metadata) injectMetadataInDb(getSampleMetadataXml(), context, IndexingMode.full);
         metadata.getSourceInfo().setOwner(editorUser.getId());
         metadata.getSourceInfo().setGroupOwner(SAMPLE_GROUP_ID);
         metadataRepository.save(metadata);
         metadataId = metadata.getId();
         metadataUuid = metadata.getUuid();
+    }
+
+    /**
+     * Regression test for issue documented in docs/issue-useradmin-publication.md (Symptom 1).
+     *
+     * <p>A user who is {@code UserAdmin} in one group AND has a
+     * {@code UserGroup(profile=Reviewer)} entry for the metadata's group owner MUST be
+     * allowed to change reserved-group (publication) privileges.
+     */
+    @Test
+    public void shareMetadataForPublicationAsUserAdminWithReviewerInGroup() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        // Create a user who is UserAdmin in a dedicated group (which sets their top-level profile
+        // to UserAdmin) and also holds Reviewer membership in the record's group owner.
+        User userAdminWithReviewer = UserRepositoryTest.newUser(_inc);
+        userAdminWithReviewer.setUsername("useradmin_reviewer");
+        userAdminWithReviewer.setProfile(Profile.UserAdmin);
+        _userRepo.save(userAdminWithReviewer);
+        grantUserAdminInNewGroup(userAdminWithReviewer, "useradmin-reviewer-admin-group");
+        Group sampleGroup = _groupRepo.findById(SAMPLE_GROUP_ID).get();
+        _userGroupRepo.save(new UserGroup()
+            .setGroup(sampleGroup)
+            .setProfile(Profile.Reviewer)
+            .setUser(userAdminWithReviewer));
+
+        MockHttpSession mockHttpSession = loginAs(userAdminWithReviewer);
+
+        checkMetadataHasNoPrivileges();
+
+        SharingParameter privilegesRequest = createPrivilegesRequest(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(privilegesRequest);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/sharing")
+                .session(mockHttpSession)
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent());
+
+        List<OperationAllowed> metadataOperations =
+            operationAllowedRepository.findAllById_MetadataId(metadataId);
+        boolean hasReservedGroupPrivileges = metadataOperations.stream()
+            .anyMatch(op -> ReservedGroup.isReserved(op.getId().getGroupId()));
+        assertTrue(
+            "UserAdmin who is also per-group Reviewer should be able to publish",
+            hasReservedGroupPrivileges);
+    }
+
+    /**
+     * Back-end side of issue documented in docs/issue-useradmin-publication.md (Symptom 2).
+     *
+     * <p>A user who is {@code UserAdmin} in one group but has NO
+     * {@code UserGroup(profile=Reviewer)} entry for the metadata's group owner MUST be
+     * blocked from changing reserved-group (publication) privileges with 403 Forbidden.
+     */
+    @Test
+    public void shareMetadataForPublicationAsUserAdminWithoutReviewerInGroup() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        // Create a user who is UserAdmin in a dedicated group (which sets their top-level profile
+        // to UserAdmin) but only holds Editor membership in the record's group owner.
+        User userAdminEditorOnly = UserRepositoryTest.newUser(_inc);
+        userAdminEditorOnly.setUsername("useradmin_editor");
+        userAdminEditorOnly.setProfile(Profile.UserAdmin);
+        _userRepo.save(userAdminEditorOnly);
+        grantUserAdminInNewGroup(userAdminEditorOnly, "useradmin-editor-admin-group");
+        Group sampleGroup = _groupRepo.findById(SAMPLE_GROUP_ID).get();
+        _userGroupRepo.save(new UserGroup()
+            .setGroup(sampleGroup)
+            .setProfile(Profile.Editor)
+            .setUser(userAdminEditorOnly));
+
+        MockHttpSession mockHttpSession = loginAs(userAdminEditorOnly);
+
+        SharingParameter privilegesRequest = createPrivilegesRequest(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(privilegesRequest);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/sharing")
+                .session(mockHttpSession)
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void publishMetadataAsUserAdminWithUserAdminInGroup() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        User userAdminInGroup = createUserAdminWithGroupProfile("useradmin_group_admin", Profile.UserAdmin);
+        MockHttpSession mockHttpSession = loginAs(userAdminInGroup);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/publish")
+                .session(mockHttpSession))
+            .andExpect(status().isForbidden());
+    }
+
+    @Test
+    public void unpublishMetadataAsUserAdminWithUserAdminInGroup() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        publishMetadata();
+
+        User userAdminInGroup = createUserAdminWithGroupProfile("useradmin_group_admin_unpublish", Profile.UserAdmin);
+        MockHttpSession mockHttpSession = loginAs(userAdminInGroup);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/unpublish")
+                .session(mockHttpSession))
+            .andExpect(status().isForbidden());
+
+        List<OperationAllowed> metadataOperations =
+            operationAllowedRepository.findAllById_MetadataId(metadataId);
+        boolean hasReservedGroupPrivileges = metadataOperations.stream()
+            .anyMatch(op -> ReservedGroup.isReserved(op.getId().getGroupId()));
+        assertTrue("Reserved-group publication privileges should remain set when unpublish is denied", hasReservedGroupPrivileges);
+    }
+
+    @Test
+    public void unpublishMetadataAsUserAdminWithoutRequiredGroupProfile() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        publishMetadata();
+
+        User userAdminEditorOnly = createUserAdminWithGroupProfile("useradmin_editor_unpublish", Profile.Editor);
+        MockHttpSession mockHttpSession = loginAs(userAdminEditorOnly);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/unpublish")
+                .session(mockHttpSession))
+            .andExpect(status().isForbidden());
+    }
+
+    /**
+     * Creates a user whose top-level profile is {@code UserAdmin} because they are
+     * {@code UserAdmin} in a dedicated group, and who additionally holds {@code groupProfile}
+     * membership in the sample group (group owner of the test record).
+     *
+     * <p>In GeoNetwork, {@code UserAdmin} is always a per-group role – not a standalone
+     * "global" profile. A user's top-level {@code profile} field simply reflects the highest
+     * role they hold in any of their groups. By giving the user an explicit
+     * {@code UserGroup(profile=UserAdmin)} in a separate group we honour that constraint.
+     */
+    private User createUserAdminWithGroupProfile(String username, Profile groupProfile) {
+        User user = UserRepositoryTest.newUser(_inc);
+        user.setUsername(username);
+        user.setProfile(Profile.UserAdmin);
+        _userRepo.save(user);
+
+        // Give the user UserAdmin membership in a dedicated group so the top-level
+        // UserAdmin profile is backed by a real per-group assignment.
+        grantUserAdminInNewGroup(user, username + "-admin-group");
+
+        Group sampleGroup = _groupRepo.findById(SAMPLE_GROUP_ID).get();
+        _userGroupRepo.save(new UserGroup()
+            .setGroup(sampleGroup)
+            .setProfile(groupProfile)
+            .setUser(user));
+
+        return user;
+    }
+
+    /**
+     * When {@code system/metadataprivs/publication/managepublicationdate} is enabled, publishing an
+     * ISO19115-3.2018 record must set the metadata-level publication date in the stored XML using the
+     * schema's {@code publicationdate-add} process.
+     */
+    @Test
+    public void publishIso191153UpdatesPublicationDateWhenManageEnabled() throws Exception {
+        settingManager.setValue(Settings.SYSTEM_METADATAPRIVS_PUBLICATION_MANAGEPUBLICATIONDATE, true);
+        // Do not let validation block publication of the sample record; this test targets the publication date only.
+        settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD, true);
+
+        int isoId = injectIso191153Record();
+        String isoUuid = metadataRepository.findById(isoId).get().getUuid();
+
+        List<Namespace> ns = new ArrayList<>(ISO19115_3_2018SchemaPlugin.allNamespaces);
+
+        // The sample has no metadata-level publication date before publishing.
+        Element beforeXml = metadataRepository.findById(isoId).get().getXmlData(false);
+        assertEquals(0, Xml.selectNodes(beforeXml, PUBLICATION_DATE_INFO_XPATH, ns).size());
+
+        String expectedDate = new ISODate().getDateAsString();
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(reviewerUser);
+        mockMvc.perform(put("/srv/api/records/" + isoUuid + "/publish")
+                .session(mockHttpSession))
+            .andExpect(status().isNoContent());
+
+        // Re-read the stored record from the database.
+        entityManager.flush();
+        entityManager.clear();
+        Element afterXml = metadataRepository.findById(isoId).get().getXmlData(false);
+
+        assertEquals("A single metadata-level publication date should be present after publishing",
+            1, Xml.selectNodes(afterXml, PUBLICATION_DATE_INFO_XPATH, ns).size());
+        Element publicationDate = (Element) Xml.selectSingle(afterXml,
+            PUBLICATION_DATE_INFO_XPATH + "/cit:CI_Date/cit:date/gco:Date", ns);
+        assertNotNull("Publication date value should be set", publicationDate);
+        assertEquals("Publication date should be the date of publication (today)",
+            expectedDate, publicationDate.getText());
+    }
+
+    /**
+     * When {@code system/metadataprivs/publication/managepublicationdate} is disabled, publishing an
+     * ISO19115-3.2018 record must leave the stored XML untouched (no publication date added).
+     */
+    @Test
+    public void publishIso191153DoesNotUpdatePublicationDateWhenManageDisabled() throws Exception {
+        settingManager.setValue(Settings.SYSTEM_METADATAPRIVS_PUBLICATION_MANAGEPUBLICATIONDATE, false);
+        settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD, true);
+
+        int isoId = injectIso191153Record();
+        String isoUuid = metadataRepository.findById(isoId).get().getUuid();
+
+        List<Namespace> ns = new ArrayList<>(ISO19115_3_2018SchemaPlugin.allNamespaces);
+
+        Element beforeXml = metadataRepository.findById(isoId).get().getXmlData(false);
+        int dateInfoCountBefore = Xml.selectNodes(beforeXml, "mdb:dateInfo", ns).size();
+        assertEquals(0, Xml.selectNodes(beforeXml, PUBLICATION_DATE_INFO_XPATH, ns).size());
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(reviewerUser);
+        mockMvc.perform(put("/srv/api/records/" + isoUuid + "/publish")
+                .session(mockHttpSession))
+            .andExpect(status().isNoContent());
+
+        // The record is published ...
+        List<OperationAllowed> ops = operationAllowedRepository.findAllById_MetadataId(isoId);
+        assertTrue("Record should be published",
+            ops.stream().anyMatch(op -> op.getId().getGroupId() == ReservedGroup.all.getId()));
+
+        // ... but its XML must not gain a publication date, and its dateInfo blocks are unchanged.
+        entityManager.flush();
+        entityManager.clear();
+        Element afterXml = metadataRepository.findById(isoId).get().getXmlData(false);
+
+        assertEquals("No publication date should be added when the setting is disabled",
+            0, Xml.selectNodes(afterXml, PUBLICATION_DATE_INFO_XPATH, ns).size());
+        assertEquals("The metadata dateInfo blocks should be unchanged when the setting is disabled",
+            dateInfoCountBefore, Xml.selectNodes(afterXml, "mdb:dateInfo", ns).size());
+    }
+
+    /**
+     * Injects an ISO19115-3.2018 sample record owned by {@code editorUser} in the sample group so that
+     * {@code reviewerUser} (a Reviewer in that group) can publish it.
+     */
+    private int injectIso191153Record() throws Exception {
+        Metadata md = (Metadata) injectMetadataInDb(getSampleISO19115MetadataXml(), context);
+        md.getSourceInfo().setOwner(editorUser.getId());
+        md.getSourceInfo().setGroupOwner(SAMPLE_GROUP_ID);
+        metadataRepository.save(md);
+        return md.getId();
+    }
+
+    /**
+     * Creates a new workspace group with the given name, saves it, and adds a
+     * {@code UserGroup(profile=UserAdmin)} entry for {@code user} in that group.
+     * This reflects the real-world constraint that {@code UserAdmin} is a per-group role.
+     */
+    private void grantUserAdminInNewGroup(User user, String groupName) {
+        Group adminGroup = _groupRepo.save(new Group().setName(groupName));
+        _userGroupRepo.save(new UserGroup()
+            .setGroup(adminGroup)
+            .setProfile(Profile.UserAdmin)
+            .setUser(user));
+    }
+
+    /**
+     * Verifies that publishing a TEMPLATE succeeds even when invalid and {@code allowPublishInvalidMd} is {@code false}.
+     * Templates are exempt from validation checks during publish operations.
+     */
+    @Test
+    public void publishInvalidTemplateSucceedsWhenPublishInvalidMdDisabled() throws Exception {
+        // Disable publishing of invalid metadata.
+        settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD, false);
+
+        // Change the metadata type to TEMPLATE.
+        Metadata template = metadataRepository.findById(metadataId).get();
+        template.getDataInfo().setType(MetadataType.TEMPLATE);
+        metadataRepository.save(template);
+
+        // Persist a required, INVALID validation record so the check would fail for normal metadata.
+        MetadataValidation invalidValidation = new MetadataValidation()
+            .setId(new MetadataValidationId(metadataId, "xsd"))
+            .setStatus(MetadataValidationStatus.INVALID)
+            .setRequired(true)
+            .setNumTests(1)
+            .setNumFailures(1);
+        metadataValidationRepository.save(invalidValidation);
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(reviewerUser);
+
+        // Publishing the template must succeed (HTTP 204) despite the invalid validation record.
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/publish")
+                .session(mockHttpSession))
+            .andExpect(status().isNoContent());
+
+        // Confirm publication privileges were actually granted.
+        List<OperationAllowed> ops = operationAllowedRepository.findAllById_MetadataId(metadataId);
+        boolean published = ops.stream().anyMatch(op -> ReservedGroup.isReserved(op.getId().getGroupId()));
+        assertTrue("Template should be published even when it has an invalid validation record", published);
     }
 
     @Test

@@ -334,6 +334,18 @@ e.g. only 2 INSPIRE themes:
 </thesaurusList>
 ```
 
+The `<thesaurus>` element supports the following attributes:
+
+| Attribute | Description |
+|-----------|-------------|
+| `key` | (Required) The thesaurus identifier (e.g. `external.theme.httpinspireeceuropaeutheme-theme`). |
+| `maxtags` | Maximum number of keywords that can be selected. Unlimited if not set. |
+| `orderById` | When `true`, keywords are ordered by their identifier instead of by label. Defaults to `false`. |
+| `fieldset` | When `false`, the widget is rendered as a simple field instead of being boxed in a fieldset. |
+| `browsable` | When `false`, the keyword browse/tree control is hidden and keywords can only be searched. Defaults to `true`. |
+| `transformations` | Comma-separated list of allowed encodings for the keywords (see `convert/thesaurus-transformation.xsl`). Falls back to the `defaultTransformation` defined on `<thesaurusList>` when empty. |
+| `mandatory` | When `true`, the field is flagged as required in the editor (displays the required indicator). Note this is a visual indicator only; it does not enforce keyword selection on save. Defaults to `false`. |
+
 ## Configuring the side panel {#creating-custom-editor-sidePanel}
 
 The side panel is configured by adding `<text>` elements or `<directive>` elements to the `<sidePanel>` element within a `<view>`.

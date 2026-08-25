@@ -210,6 +210,7 @@
     <axsl:param name="lang"/>
     <axsl:param name="thesaurusDir"/>
     <axsl:param name="rule"/>
+    <axsl:param name="metadataId"/>
 
     <!-- Retrieve localisation entries (one file specific to the rule, the other file is shared by all schematron). Fallback language is English. -->
     <axsl:variable name="loc">

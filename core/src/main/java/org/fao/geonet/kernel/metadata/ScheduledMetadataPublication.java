@@ -1,0 +1,168 @@
+//=============================================================================
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
+//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
+//===	and United Nations Environment Programme (UNEP)
+//===
+//===	This program is free software; you can redistribute it and/or modify
+//===	it under the terms of the GNU General Public License as published by
+//===	the Free Software Foundation; either version 2 of the License, or (at
+//===	your option) any later version.
+//===
+//===	This program is distributed in the hope that it will be useful, but
+//===	WITHOUT ANY WARRANTY; without even the implied warranty of
+//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+//===	General Public License for more details.
+//===
+//===	You should have received a copy of the GNU General Public License
+//===	along with this program; if not, write to the Free Software
+//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+//===
+//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+//===	Rome - Italy. email: geonetwork@osgeo.org
+//==============================================================================
+
+package org.fao.geonet.kernel.metadata;
+
+import jeeves.server.UserSession;
+import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
+import jeeves.transaction.TransactionManager;
+import jeeves.transaction.TransactionTask;
+import org.apache.commons.lang3.StringUtils;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.*;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataStatusRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.utils.Log;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.scheduling.quartz.QuartzJobBean;
+import org.springframework.transaction.TransactionStatus;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.util.List;
+import java.util.Locale;
+
+/**
+ * Task checking on a regular basis the list of records
+ * to be published.
+ */
+public class ScheduledMetadataPublication extends QuartzJobBean {
+    @Autowired
+    protected ServiceManager serviceManager;
+
+    @Autowired
+    private ConfigurableApplicationContext applicationContext;
+
+    @Autowired
+    private MetadataStatusRepository metadataStatusRepository;
+
+    @Autowired
+    private IMetadataUtils metadataUtils;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private MetadataPublicationService metadataPublicationService;
+
+    @Autowired
+    private SettingManager settingManager;
+
+    public ScheduledMetadataPublication() {
+    }
+
+    /**
+     * Checks the list of records scheduled to be published.
+     *
+     */
+    @Override
+    protected void executeInternal(JobExecutionContext jobContext) throws JobExecutionException {
+        if (!settingManager.getValueAsBool(Settings.METADATA_PUBLICATION_ENABLE_SCHEDULED_PUBLICATION, false)) {
+            return;
+        }
+        ApplicationContextHolder.set(this.applicationContext);
+        ServiceContext serviceContext = createServiceContext();
+
+        // Needed to trigger doBeforeCommit events
+        TransactionManager.runInTransaction("ScheduledMetadataPublication", ApplicationContextHolder.get(),
+            TransactionManager.TransactionRequirement.CREATE_NEW,
+            TransactionManager.CommitBehavior.ALWAYS_COMMIT,
+            false, new TransactionTask<Void>() {
+                @Override
+                public Void doInTransaction(TransactionStatus transaction) throws Throwable {
+                    // Cutoff for the records to publish, computed explicitly in UTC so it does not
+                    // depend on the server's default time zone: the end of the current day (UTC).
+                    // Combined with the "dueDate <= cutoff" query, records scheduled for the current
+                    // day (UTC) or earlier are published, while records due the next day are not
+                    // published early. Due dates are date-only, so second precision is sufficient.
+                    ISODate now = new ISODate(LocalDate.now(ZoneOffset.UTC)
+                        .atTime(LocalTime.MAX)
+                        .atOffset(ZoneOffset.UTC)
+                        .toInstant()
+                        .toEpochMilli());
+
+                    List<MetadataStatus> metadataStatusList = metadataStatusRepository.findMetadataStatusForScheduledPublication(now);
+                    metadataStatusList.forEach(status -> {
+                        int metadataId = status.getMetadataId();
+
+                        try {
+                            // Publish the metadata
+                            AbstractMetadata metadata = metadataUtils.findOne(metadataId);
+                            if (metadata != null) {
+                                metadataPublicationService.shareMetadataWithReservedGroup(serviceContext, metadata, true, "default", new Locale(Geonet.DEFAULT_LANGUAGE));
+                            } else {
+                                Log.warning(Geonet.GEONETWORK, "Can not schedule publish the metadata with ID: " + metadataId + " because it does not exist.");
+                            }
+                        } catch (Exception e) {
+                            Log.error(Geonet.GEONETWORK, "Error publishing metadata with ID with scheduled publication: " + metadataId, e);
+                            // Record the failure reason on the task. The task is closed regardless of the
+                            // outcome (see the finally block) so that a record that keeps failing to publish
+                            // is not retried on every subsequent run, logging the same error indefinitely.
+                            // The record must be rescheduled once the underlying issue is resolved.
+                            status.setChangeMessage(StringUtils.abbreviate(
+                                "Scheduled publication failed: " + e.getMessage(), 2048));
+                        } finally {
+                            // Close the task regardless of success or failure so it is not picked up again
+                            // by the next scheduled run.
+                            status.setCloseDate(new ISODate());
+                            metadataStatusRepository.save(status);
+                        }
+                    });
+                    return null;
+                }
+            }
+        );
+    }
+
+    private ServiceContext createServiceContext() {
+        ServiceContext serviceContext = serviceManager.createServiceContext("scheduledpublication", applicationContext);
+        serviceContext.setLanguage("eng");
+        loginAsAdmin(serviceContext);
+        serviceContext.setAsThreadLocal();
+
+        return serviceContext;
+    }
+
+    private void loginAsAdmin(ServiceContext serviceContext) {
+        final List<User> adminUsers = userRepository.findAll(
+            UserSpecs.hasProfile(Profile.Administrator),
+            PageRequest.of(0, 1)).getContent();
+        if (adminUsers.isEmpty()) {
+            throw new IllegalStateException("The system does not have an admin user");
+        }
+        UserSession session = new UserSession();
+        session.loginAs(adminUsers.get(0));
+        serviceContext.setUserSession(session);
+    }
+}

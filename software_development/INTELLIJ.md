@@ -46,9 +46,11 @@ It is especially good at working with large multi-module projects such as GeoNet
 
    * Profiles: `env-dev`
    
+   The working directory will be shown as the maven module name ``gn-web-app``: 
+   
    ![maven run configuration](intelij-maven-configuration.png)
    
-3. Add maven goal `proccess-resources` before launch.
+3. From **Before Launch** add a new maven goal, using `core-geonetwork/web` working directory, and  `process-resources` command line.
    
    ![maven process-resources goal](intelij-maven-resources.png)
 

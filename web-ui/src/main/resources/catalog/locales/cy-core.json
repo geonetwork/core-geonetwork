@@ -373,6 +373,8 @@
     "createChild": "Creu plentyn",
     "privileges": "Breintiau",
     "whoCanAccess": "Pwy sydd â mynediad",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Camau gweithredu",
     "reset": "Ailosod",
     "stop": "Stop",

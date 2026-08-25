@@ -201,4 +201,10 @@ public class XslUtil {
     public static String getDefaultLangCode() {
         return "eng";
     }
+
+    public static String toUiConfigArg(String config)  { return config; }
+
+    public static String html2text(String html, boolean substituteHtmlToTextLayoutElement) {
+        return html;
+    }
 }

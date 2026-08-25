@@ -16,7 +16,7 @@ Before you can use GeoNetwork on your own computer, you need to install it:
 
     *   [Installing using a ZIP file](installing-from-zip.md)
     *   [Installing from WAR file](installing-from-war-file.md)
-    *   [Installing with docker](installing-with-docker.md)
+    *   [Installing with Docker](installing-with-docker.md)
     *   [Building from Source Code](installing-from-source-code.md)
 
     !!! note

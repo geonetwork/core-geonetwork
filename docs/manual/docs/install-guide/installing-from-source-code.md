@@ -8,7 +8,7 @@ GeoNetwork 4.4 is a Java 11 application that runs as a servlet, which means that
 
 Please note that the commercial distribution of [Oracle JDK](https://www.oracle.com/technetwork/java/javase/downloads) no longer provides Java 11 for testing purposes.
 
-Because GeoNetwork is developed with Java 11 (LTS), it  won't run at all with earlier releases.
+Because GeoNetwork is developed with Java 11 (LTS), it won't run at all with earlier releases.
 
 -  GeoNetwork should not be developed with newer versions of Java.
 -  It  won't run at all with earlier releases.
@@ -25,7 +25,7 @@ We recommend the following stable releases of Tomcat:
 -   Apache Tomcat 9.0
 -   Apache Tomcat 8.5
 
-GeoNetwork cannot use the newer versions of Apache Tomcat 10 which are based on the Jakarata Enterprise Edition web application standard.
+GeoNetwork cannot use the newer versions of Apache Tomcat 10, which are based on the Jakarta Enterprise Edition web application standard.
 
 ### Database
 
@@ -50,7 +50,7 @@ The following tools are required to be installed to setup a development environm
 
 -   **Java 11** - Developing with GeoNetwork requires Java Development Kit (JDK) 11.
 -   **Maven** 3.1.0+ - GeoNetwork uses [Maven](https://maven.apache.org/) to manage the build process and the dependencies. Once is installed, you should have the mvn command in your path (on Windows systems, you have to open a shell to check).
--   **Git** - GeoNetwork source code is stored and versioned in [a Git repository on Github](https://github.com/geonetwork/core-geonetwork). Depending on your operating system a variety of Git clients are available. Please check the Git website for some [alternatives](https://git-scm.com/downloads/guis) and good [documentation](https://git-scm.com/documentation). More documentation can be found on the [Github website](https://help.github.com/).
+-   **Git** - GeoNetwork source code is stored and versioned in [a Git repository on Github](https://github.com/geonetwork/core-geonetwork). Depending on your operating system a variety of Git clients are available. Please check the Git website for some [alternatives](https://git-scm.com/downloads/guis) and good [documentation](https://git-scm.com/doc). More documentation can be found on the [Github website](https://help.github.com/).
 -   **Ant** - GeoNetwork uses [Ant](https://ant.apache.org/) to build the installer. Version 1.6.5 works but any other recent version should be OK. Once installed, you should have the Ant command in your path (on Windows systems, you have to open a shell to check).
 -   **mkdocs** - To build the GeoNetwork documentation in a nice format, [mkdocs](https://www.mkdocs.org) is used. Please note that if you don't have a Python interpreter on your system, Sphinx will not work, so you need to install [Python](https://www.python.org/downloads/).
 
@@ -87,7 +87,7 @@ mvn clean install -DskipTests
 
 ### Submodules
 
-GeoNetwork use submodules, these were initialized by the `--recursive` option when cloning the repository.
+GeoNetwork uses submodules, which were initialized by the `--recursive` option when cloning the repository.
 
 If you missed using `--recursive` run the following:
 

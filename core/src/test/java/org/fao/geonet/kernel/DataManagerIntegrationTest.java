@@ -41,6 +41,7 @@ import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmitter;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -74,11 +75,11 @@ public class DataManagerIntegrationTest extends AbstractDataManagerIntegrationTe
         ServiceContext serviceContext = createContextAndLogAsAdmin();
         long count = metadataRepository.count();
 
-        int mdId = injectMetadataInDbDoNotRefreshHeader(getSampleMetadataXml(), serviceContext).getId();
+        int mdId = injectMetadataInDb(getSampleMetadataXml(), serviceContext).getId();
 
         assertEquals(count + 1, metadataRepository.count());
 
-        metadataManager.deleteMetadata(serviceContext, String.valueOf(mdId));
+        metadataManager.deleteMetadata(serviceContext, String.valueOf(mdId), DirectDeletionSubmitter.INSTANCE);
 
         assertEquals(count, metadataRepository.count());
     }
