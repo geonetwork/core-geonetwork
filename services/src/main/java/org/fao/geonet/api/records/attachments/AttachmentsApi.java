@@ -41,10 +41,7 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.MetadataResource;
-import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.domain.MetadataResourceVisibilityConverter;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.events.history.AttachmentAddedEvent;
 import org.fao.geonet.events.history.AttachmentDeletedEvent;
 import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
@@ -105,6 +102,7 @@ public class AttachmentsApi {
     private SettingManager settingManager;
     private IMetadataManager metadataManager;
     private IMetadataIndexer metadataIndexer;
+    private AsyncResourceUploadService asyncResourceUploadService;
 
     public AttachmentsApi() {
     }
@@ -124,11 +122,13 @@ public class AttachmentsApi {
         FileMimetypeChecker fileMimetypeChecker,
         SettingManager settingManager,
         IMetadataManager metadataManager,
-        IMetadataIndexer metadataIndexer) {
+        IMetadataIndexer metadataIndexer,
+        AsyncResourceUploadService asyncResourceUploadService) {
         this.fileMimetypeChecker = fileMimetypeChecker;
         this.settingManager = settingManager;
         this.metadataManager = metadataManager;
         this.metadataIndexer = metadataIndexer;
+        this.asyncResourceUploadService = asyncResourceUploadService;
     }
 
     /**
@@ -263,6 +263,132 @@ public class AttachmentsApi {
         }
 
         return resource;
+    }
+
+    /**
+     * Creates and immediately returns a persistent asynchronous URL-upload task.
+     *
+     * @param metadataUuid UUID of the metadata record receiving the resource
+     * @param visibility visibility assigned to the stored resource
+     * @param url remote resource URL
+     * @param approved whether the approved metadata version should be used
+     * @param request current HTTP request
+     * @return a {@code 202 Accepted} response containing the new task
+     * @throws Exception if record authorization or task submission fails
+     */
+    @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource from a URL for a given metadata (asynchronous)",
+        description = "This endpoint is for large files that may take a long time to download and store. " +
+            "The request returns immediately with a 202 Accepted response and a task descriptor. " +
+            "Poll the task status via GET .../attachments/upload/tasks/{taskId} for progress and completion."
+    )
+    @PreAuthorize("hasAuthority('Editor')")
+    @RequestMapping(value = "/upload/tasks", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "202", description = "Attachment upload accepted for background processing.",
+            content = @Content(schema = @Schema(implementation = ResourceUploadTask.class))),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)
+    })
+    @ResponseBody
+    public ResponseEntity<ResourceUploadTask> createUploadTask(
+        @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+        @Parameter(description = "The sharing policy", example = "public") @RequestParam(required = false, defaultValue = "public") MetadataResourceVisibility visibility,
+        @Parameter(description = "The URL to load in the store") @RequestParam("url") URL url,
+        @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
+        @Parameter(hidden = true) HttpServletRequest request) throws Exception {
+        ServiceContext context = ApiUtils.createServiceContext(request);
+        ApiUtils.canEditRecord(metadataUuid, approved, request);
+
+        ResourceUploadTask task = asyncResourceUploadService.submit(store, context, metadataUuid, url, visibility, approved);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(task);
+    }
+
+    /**
+     * Returns one upload task visible to its owner or an administrator.
+     *
+     * @param metadataUuid UUID of the task's metadata record
+     * @param taskId upload task identifier
+     * @param request current HTTP request
+     * @return current persistent task state
+     * @throws Exception if authorization or task lookup fails
+     */
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get the status of an asynchronous resource upload",
+        description = "Poll this endpoint after starting an upload with PUT .../attachments?url=..&async=true.")
+    @PreAuthorize("hasAuthority('Editor')")
+    @RequestMapping(value = "/upload/tasks/{taskId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Upload task status."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT),
+        @ApiResponse(responseCode = "404", description = "Unknown or expired upload task.")})
+    @ResponseBody
+    public ResourceUploadTask getUploadTask(
+        @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+        @Parameter(description = "The upload task identifier", required = true) @PathVariable String taskId,
+        @Parameter(hidden = true) HttpServletRequest request) throws Exception {
+        ApiUtils.canEditRecord(metadataUuid, request);
+        return asyncResourceUploadService.getOwnedTaskOrThrow(metadataUuid, taskId, request);
+    }
+
+    /**
+     * Lists upload tasks visible to the current user for a metadata record.
+     *
+     * @param metadataUuid metadata record UUID
+     * @param request current HTTP request
+     * @return visible upload tasks ordered newest first
+     * @throws Exception if record authorization fails
+     */
+    @io.swagger.v3.oas.annotations.Operation(summary = "List the asynchronous resource upload tasks for a record")
+    @PreAuthorize("hasAuthority('Editor')")
+    @RequestMapping(value = "/upload/tasks", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Upload tasks for the record."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
+    @ResponseBody
+    public List<ResourceUploadTask> getUploadTasks(
+        @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+        @Parameter(hidden = true) HttpServletRequest request) throws Exception {
+        ApiUtils.canEditRecord(metadataUuid, request);
+        UserSession userSession = ApiUtils.getUserSession(request.getSession());
+        return asyncResourceUploadService.listUploadsForUser(metadataUuid, userSession);
+    }
+
+    /**
+     * Requests cancellation of an upload task visible to the current user.
+     *
+     * @param metadataUuid UUID of the task's metadata record
+     * @param taskId upload task identifier
+     * @param request current HTTP request
+     * @return {@code 200 OK} when accepted, or {@code 409 Conflict} when the
+     *         task has passed its cancellation boundary
+     * @throws Exception if authorization or task lookup fails
+     */
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Cancel an asynchronous resource upload"
+    )
+    @PreAuthorize("hasAuthority('Editor')")
+    @RequestMapping(
+        value = "/upload/tasks/{taskId}",
+        method = RequestMethod.DELETE,
+        produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Cancellation accepted; the task may still be stopping."),
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT),
+        @ApiResponse(responseCode = "404", description = "Unknown or expired upload task."),
+        @ApiResponse(responseCode = "409", description = "The upload is finalizing or has already finished.")
+    })
+    @ResponseBody
+    public ResponseEntity<Void> cancelUploadTask(
+        @PathVariable String metadataUuid,
+        @PathVariable String taskId,
+        HttpServletRequest request
+    ) throws Exception {
+        ApiUtils.canEditRecord(metadataUuid, request);
+
+        boolean result = asyncResourceUploadService.cancel(metadataUuid, taskId, request);
+
+        if (!result) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata resource")
@@ -512,3 +638,5 @@ public class AttachmentsApi {
         }
     }
 }
+
+
