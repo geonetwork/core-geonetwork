@@ -1,24 +1,23 @@
 package org.fao.geonet.kernel.security;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.GroupType;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.utils.Log;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.Collections;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -75,12 +74,13 @@ public class BaseUserUtilsTest {
 
         when(groupRepository.findByName(groupName)).thenReturn(existingGroup);
 
-        String output = captureStdOut(() -> {
+        try (MockedStatic<Log> logMock = mockStatic(Log.class)) {
             Group result = baseUserUtils.getOrCreateGroup(groupName); // no type requested
             assertEquals(existingGroup, result);
-        });
 
-        assertFalse(output.contains("Using existing group type."));
+            logMock.verifyNoInteractions();
+        }
+
         verify(groupRepository, never()).save(any(Group.class));
     }
 
@@ -95,26 +95,18 @@ public class BaseUserUtilsTest {
 
         when(groupRepository.findByName(groupName)).thenReturn(existingGroup);
 
-        String output = captureStdOut(() -> {
+        try (MockedStatic<Log> logMock = mockStatic(Log.class)) {
             Group result = baseUserUtils.getOrCreateGroup(groupName, requestedType);
             assertEquals(existingGroup, result);
-        });
 
-        assertTrue(output.contains("Warning: Group '" + groupName + "' exists with type '" + existingType +
-            "', but requested type is '" + requestedType + "'. Using existing group type."));
-        verify(groupRepository, never()).save(any(Group.class));
-    }
-
-    private String captureStdOut(Runnable action) {
-        PrintStream originalOut = System.out;
-        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try {
-            System.setOut(new PrintStream(outputStream));
-            action.run();
-        } finally {
-            System.setOut(originalOut);
+            logMock.verify(() -> Log.warning(
+                Geonet.SECURITY,
+                "Group '{}' exists with type '{}', but requested type is '{}'. Using existing group type.",
+                groupName, existingType, requestedType
+            ));
         }
-        return outputStream.toString();
+
+        verify(groupRepository, never()).save(any(Group.class));
     }
 
     @Test

@@ -22,11 +22,13 @@
  */
 package org.fao.geonet.kernel.security;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.GroupType;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -88,8 +90,9 @@ public class BaseUserUtils {
 
         if (group != null && group.getType() != null && newGroupType != null && !group.getType().equals(newGroupType)) {
             // Log a warning if the existing group's type differs from the requested type
-            System.out.println("Warning: Group '" + groupName + "' exists with type '" + group.getType() +
-                "', but requested type is '" + newGroupType + "'. Using existing group type.");
+            Log.warning(Geonet.SECURITY,
+                "Group '{}' exists with type '{}', but requested type is '{}'. Using existing group type.",
+                groupName, group.getType(), newGroupType);
         } else if (group == null) {
             group = new Group();
             group.setName(groupName);
