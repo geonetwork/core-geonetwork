@@ -204,9 +204,16 @@ public class AttachmentsApi {
         }
     }
 
+    // The "/{folder:.+}" mapping lets a client target a destination folder for the upload (eg.
+    // POST .../attachments/a/b), mirroring the {resourceId:.+} convention already used by
+    // GET/PATCH/DELETE below. This can never shadow/be shadowed by AttachmentsActionsApi's
+    // literal PUT .../attachments/print-thumbnail mapping: Spring MVC's handler-mapping
+    // comparator always prefers an exact literal path over a wildcard pattern, which is also
+    // exactly why that literal mapping has never conflicted with the {resourceId:.+} ones either.
     @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource for a given metadata")
     @PreAuthorize("hasAuthority('Editor')")
     @RequestMapping(method = RequestMethod.POST,
+        value = {"", "/{folder:.+}"},
         consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -215,6 +222,7 @@ public class AttachmentsApi {
     @ResponseBody
     public MetadataResource putResource(
         @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+        @Parameter(description = "The destination folder, if any (nested subfolders allowed, eg. 'a/b')") @PathVariable(required = false) String folder,
         @Parameter(description = "The sharing policy", example = "public") @RequestParam(required = false, defaultValue = "public") MetadataResourceVisibility visibility,
         @Parameter(description = "The file to upload") @RequestParam("file") MultipartFile file,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
@@ -224,13 +232,13 @@ public class AttachmentsApi {
         String supportedFileMimetypes = settingManager.getValue(Settings.METADATA_EDIT_SUPPORTEDFILEMIMETYPES);
         fileMimetypeChecker.checkValidMimeType(file, supportedFileMimetypes.split("\\|"));
 
-        MetadataResource resource = store.putResource(context, metadataUuid, file, visibility, approved);
+        MetadataResource resource = store.putResource(context, metadataUuid, file, folder, visibility, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null && file != null && !file.isEmpty()) {
             long metadataId = Long.parseLong(metadataIdString);
             UserSession userSession = ApiUtils.getUserSession(request.getSession());
-            new AttachmentAddedEvent(metadataId, userSession.getUserIdAsInt(), file.getOriginalFilename())
+            new AttachmentAddedEvent(metadataId, userSession.getUserIdAsInt(), resource.getFilename())
                 .publish(ApplicationContextHolder.get());
         }
 
@@ -240,6 +248,7 @@ public class AttachmentsApi {
     @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource from a URL for a given metadata")
     @PreAuthorize("hasAuthority('Editor')")
     @RequestMapping(method = RequestMethod.PUT,
+        value = {"", "/{folder:.+}"},
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment added."),
@@ -247,12 +256,13 @@ public class AttachmentsApi {
     @ResponseBody
     public MetadataResource putResourceFromURL(
         @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
+        @Parameter(description = "The destination folder, if any (nested subfolders allowed, eg. 'a/b')") @PathVariable(required = false) String folder,
         @Parameter(description = "The sharing policy", example = "public") @RequestParam(required = false, defaultValue = "public") MetadataResourceVisibility visibility,
         @Parameter(description = "The URL to load in the store") @RequestParam("url") URL url,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
-        MetadataResource resource = store.putResource(context, metadataUuid, url, visibility, approved);
+        MetadataResource resource = store.putResource(context, metadataUuid, url, folder, visibility, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
         if (metadataIdString != null && url != null) {

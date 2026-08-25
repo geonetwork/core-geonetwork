@@ -460,4 +460,78 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
             getStore().delResources(context, metadataUuid, true);
         }
     }
+
+    /**
+     * Guards the {@code /{folder:.+}} path segment added to the multipart upload endpoint
+     * (Phase 1 of the subfolder-upload workplan): the folder is prepended to the uploaded file's
+     * own filename, exercising the {@code Store.putResource(..., MultipartFile, String folder,
+     * ...)} overload directly (the same one {@code AttachmentsApi.putResource} now calls).
+     */
+    @Test
+    public void testPutResourceWithFolder() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        getStore().delResources(context, metadataUuid, true);
+
+        String folder = "a/b";
+        String filename = "record-with-old-links.xml";
+        MultipartFile file = new MockMultipartFile(filename,
+            filename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, filename)
+            ));
+        getStore().putResource(context, metadataUuid, file, folder, MetadataResourceVisibility.PUBLIC, true);
+
+        List<MetadataResource> resourcesList =
+            getStore().getResources(context, metadataUuid, Sort.name, null, true);
+        assertEquals("1 resource for record", 1, resourcesList.size());
+
+        MetadataResource resource = resourcesList.get(0);
+        String expectedFilename = folder + "/" + filename;
+        assertEquals("Folder is prepended to the uploaded filename",
+            expectedFilename, resource.getFilename());
+        assertEquals("Resource id carries the folder prefix",
+            metadataUuid + "/attachments/" + expectedFilename,
+            resource.getId());
+    }
+
+    /**
+     * Same as {@link #testPutResourceWithFolder}, but for the upload-from-URL endpoint, whose
+     * filename is only known after the URL is fetched - exercising the
+     * {@code Store.putResource(..., URL, String folder, ...)} overload.
+     */
+    @Test
+    public void testPutResourceFromURLWithFolder() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        getStore().delResources(context, metadataUuid, true);
+
+        String folder = "a/b";
+        String filename = "record-with-old-links.xml";
+        URL url = getMockUrl(filename, "");
+        try {
+            getStore().putResource(context, metadataUuid, url, folder, MetadataResourceVisibility.PUBLIC, true);
+
+            List<MetadataResource> resourcesList =
+                getStore().getResources(context, metadataUuid, Sort.name, null, true);
+            assertEquals("1 resource for record", 1, resourcesList.size());
+
+            MetadataResource resource = resourcesList.get(0);
+            String expectedFilename = folder + "/" + filename;
+            assertEquals("Folder is prepended to the filename derived from the URL",
+                expectedFilename, resource.getFilename());
+            assertEquals("Resource id carries the folder prefix",
+                metadataUuid + "/attachments/" + expectedFilename,
+                resource.getId());
+        } finally {
+            getStore().delResources(context, metadataUuid, true);
+        }
+    }
 }

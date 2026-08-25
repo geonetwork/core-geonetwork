@@ -252,6 +252,24 @@ public interface Store {
                                  MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
 
     /**
+     * Add a new resource from a file, under a destination folder.
+     *
+     *
+     * @param context
+     * @param metadataUuid               The metadata UUID
+     * @param file                       The resource file
+     * @param folder                     Optional destination folder (may contain "/"-separated
+     *                                   nested subfolders); the resource is stored as
+     *                                   {@code folder + "/" + file.getOriginalFilename()} when
+     *                                   provided, or under its own filename at the root otherwise
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     * @param approved   Put the approved version or not
+     * @return The resource description
+     */
+    MetadataResource putResource(ServiceContext context, String metadataUuid, MultipartFile file, @Nullable String folder,
+                                 MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
+
+    /**
      * Add a new resource from a file.
      *
      *
@@ -320,6 +338,25 @@ public interface Store {
      * @return The resource description
      */
     MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
+
+    /**
+     * Add a new resource from a URL, under a destination folder.
+     *
+     *
+     * @param context
+     * @param metadataUuid               The metadata UUID
+     * @param fileUrl                    The resource file URL
+     * @param folder                     Optional destination folder (may contain "/"-separated
+     *                                   nested subfolders); the resource is stored as
+     *                                   {@code folder + "/" + <filename derived from the URL>}
+     *                                   when provided, or under its derived filename at the root
+     *                                   otherwise
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     * @param approved   Return the approved version or not
+     * @return The resource description
+     */
+    MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl, @Nullable String folder,
+                                 MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
 
     /**
      * Change the resource sharing policy

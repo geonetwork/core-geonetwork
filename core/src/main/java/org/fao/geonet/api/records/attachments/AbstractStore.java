@@ -305,6 +305,12 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final MultipartFile file,
             final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
+        return putResource(context, metadataUuid, file, null, visibility, approved);
+    }
+
+    @Override
+    public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final MultipartFile file,
+            final String folder, final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
         if (org.apache.commons.lang3.StringUtils.contains(file.getOriginalFilename(),';')) {
             throw new NotAllowedException(String.format(
                 "Uploaded resource '%s' contains forbidden character ; for metadata '%s'.", file.getOriginalFilename(), metadataUuid));
@@ -313,8 +319,12 @@ public abstract class AbstractStore implements Store {
         if (fileSize > maxUploadSize) {
             throw new InputStreamLimitExceededException(maxUploadSize, fileSize);
         }
+        // The folder (if any) is just a "/"-separated path prefix, validated the same way as any
+        // other nested resourceId once combined - see checkResourceId, called downstream by the
+        // filename-based putResource below.
+        String filename = StringUtils.isNotEmpty(folder) ? folder + "/" + file.getOriginalFilename() : file.getOriginalFilename();
         try (LimitedInputStream is = new LimitedInputStream(file.getInputStream(), maxUploadSize, fileSize)) {
-            return putResource(context, metadataUuid, file.getOriginalFilename(), is, null, visibility, approved);
+            return putResource(context, metadataUuid, filename, is, null, visibility, approved);
         }
     }
 
@@ -340,6 +350,12 @@ public abstract class AbstractStore implements Store {
 
     @Override
     public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
+            MetadataResourceVisibility visibility, Boolean approved) throws Exception {
+        return putResource(context, metadataUuid, fileUrl, null, visibility, approved);
+    }
+
+    @Override
+    public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl, String folder,
             MetadataResourceVisibility visibility, Boolean approved) throws Exception {
 
         // Open a connection to the URL
@@ -368,6 +384,12 @@ public abstract class AbstractStore implements Store {
         }
         if (StringUtils.isEmpty(filename)) {
             filename = getFilenameFromUrl(fileUrl);
+        }
+        // The folder (if any) is just a "/"-separated path prefix, validated the same way as any
+        // other nested resourceId once combined - see checkResourceId, called downstream by the
+        // filename-based putResource below.
+        if (StringUtils.isNotEmpty(folder)) {
+            filename = folder + "/" + filename;
         }
 
         // Check if the content length is within the allowed limit
