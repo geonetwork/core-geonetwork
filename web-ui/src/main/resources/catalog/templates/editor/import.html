@@ -287,16 +287,46 @@
                     <span data-translate="">none</span>
                   </label>
                 </div>
+                <input
+                  class="hidden"
+                  type="radio"
+                  name="uuidProcessing"
+                  data-ng-model="params.uuidProcessing"
+                  value="OVERWRITE"
+                />
+                <input
+                  class="hidden"
+                  type="radio"
+                  name="uuidProcessing"
+                  data-ng-model="params.uuidProcessing"
+                  value="REMOVE_AND_REPLACE"
+                />
                 <div id="gn-import-action-list-overwrite-row" class="radio">
                   <label>
                     <input
                       id="gn-import-action-list-overwrite-radio"
                       type="radio"
-                      name="uuidProcessing"
-                      data-ng-model="params.uuidProcessing"
-                      value="OVERWRITE"
+                      form=""
+                      data-ng-model="uuidProcessingOverwriteGetSet"
+                      data-ng-model-options="{ getterSetter: true }"
+                      value="OVERWRITE_OR_REMOVE_AND_REPLACE"
                     />
                     <span data-translate="">overwrite</span>
+                  </label>
+                </div>
+                <div
+                  data-ng-if="params.uuidProcessing === 'OVERWRITE' || params.uuidProcessing === 'REMOVE_AND_REPLACE'"
+                  class="checkbox"
+                  style="margin-left: 20px"
+                >
+                  <label title="{{'overwriteReplaceRecordHint' | translate}}">
+                    <input
+                      id="gn-import-action-list-overwrite-replace-record"
+                      type="checkbox"
+                      data-ng-model="overwriteReplaceRecordGetSet"
+                      data-ng-model-options="{ getterSetter: true }"
+                    />
+                    <span data-translate="">overwriteReplaceRecord</span>
                   </label>
                 </div>
                 <div id="gn-import-action-list-generate-row" class="radio">
