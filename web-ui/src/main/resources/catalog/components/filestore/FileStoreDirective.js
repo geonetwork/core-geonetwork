@@ -72,6 +72,31 @@
     };
   }
 
+  /**
+   * Build the "/"-separated URL path segment for a destination folder, matching the
+   * POST/PUT .../attachments/{folder:.+} mapping on AttachmentsApi. Each path segment is
+   * encoded individually so the "/" separators of a multi-level folder (eg. "a/b") aren't
+   * escaped to %2F - mirrors how FilesystemStoreResource already builds nested-path URLs with
+   * Guava's urlFragmentEscaper, which also leaves "/" unescaped.
+   *
+   * @param {string} folder The destination folder ('' or falsy for the root).
+   * @return {string} '' at the root, otherwise "/" followed by the encoded folder path.
+   */
+  function gnFileStoreFolderUrlSegment(folder) {
+    if (!folder) {
+      return "";
+    }
+    return (
+      "/" +
+      folder
+        .split("/")
+        .map(function (segment) {
+          return encodeURIComponent(segment);
+        })
+        .join("/")
+    );
+  }
+
   angular
     .module("gn_filestore_directive", ["blueimp.fileupload"])
     /**
@@ -92,6 +117,7 @@
             uploadOptions: "=?",
             fileTypes: "=?",
             visibility: "@?",
+            folder: "@?",
             afterUploadCb: "&?",
             afterUploadErrorCb: "&?"
           },
@@ -138,7 +164,9 @@
                   url:
                     "../api/records/" +
                     gnCurrentEdit.uuid +
-                    "/attachments?visibility=" +
+                    "/attachments" +
+                    gnFileStoreFolderUrlSegment(scope.folder) +
+                    "?visibility=" +
                     (scope.visibility || "public"),
                   dropZone: $("#gn-upload-" + scope.id),
                   pasteZone: null,
@@ -156,6 +184,17 @@
                 scope.uuid = n;
                 uploadFile();
                 unregisterWatch();
+              }
+            });
+
+            // Rebuild the upload URL whenever the destination folder changes (eg. the user
+            // navigates to a different folder in gnFileStore while this widget stays mounted).
+            // Reassigning scope.filestoreUploadOptions to a new object (inside uploadFile) is
+            // what the fileUpload directive's own $watch (jquery.fileupload-angular.js) picks up
+            // to re-apply the option live to the underlying jQuery File Upload widget.
+            scope.$watch("folder", function (newValue, oldValue) {
+              if (newValue !== oldValue && angular.isDefined(scope.uuid)) {
+                uploadFile();
               }
             });
 
@@ -275,6 +314,7 @@
             btnLabel: "=?gnDataUploaderButton",
             isOverview: "=?isOverview",
             visibility: "@?",
+            folder: "@?",
             afterUploadCb: "&?",
             afterUploadErrorCb: "&?"
           },
@@ -292,7 +332,14 @@
                 visibility: scope.visibility
               });
               $http
-                .put("../api/records/" + gnCurrentEdit.uuid + "/attachments?" + params)
+                .put(
+                  "../api/records/" +
+                    gnCurrentEdit.uuid +
+                    "/attachments" +
+                    gnFileStoreFolderUrlSegment(scope.folder) +
+                    "?" +
+                    params
+                )
                 .then(
                   function (response) {
                     $rootScope.$broadcast("gnFileStoreUploadDone");
@@ -418,6 +465,41 @@
               scope.currentFolder =
                 lastSlash === -1 ? "" : scope.currentFolder.substring(0, lastSlash);
               updateFolderView();
+            };
+
+            // Folders aren't persisted objects (see the analysis report, design decision #1) -
+            // "creating" one just means browsing into it, so the next upload targets that
+            // destination; it only starts showing up for real once something's uploaded there.
+            //
+            // Kept as properties of one object (not bare scope properties) because the
+            // ng-model'd input lives inside an ng-if (layout !== 'select'), which creates a
+            // child scope: ng-model="newFolder.name" writes to the shared object found via the
+            // prototype chain, whereas ng-model="newFolderName" would instead create a new own
+            // property shadowing this scope's, invisible to createFolder() below.
+            scope.newFolder = { name: "", invalid: false };
+
+            // Mirrors the validation AbstractStore.checkResourceId applies server-side once the
+            // folder is combined with a filename, so the user gets immediate feedback instead of
+            // a failed upload.
+            function isValidFolderSegment(name) {
+              return (
+                !!name &&
+                name.indexOf("..") === -1 &&
+                name.indexOf("//") === -1 &&
+                name.charAt(0) !== "/" &&
+                name.charAt(name.length - 1) !== "/"
+              );
+            }
+
+            scope.createFolder = function () {
+              var name = (scope.newFolder.name || "").trim();
+              if (!isValidFolderSegment(name)) {
+                scope.newFolder.invalid = true;
+                return;
+              }
+              scope.newFolder.invalid = false;
+              scope.newFolder.name = "";
+              scope.openFolder(name);
             };
 
             function updateVisibilityEditingPanel(index, editing) {

@@ -173,15 +173,42 @@
       </tbody>
     </table>
 
+    <div class="gn-filestore-new-folder form-inline">
+      <input
+        type="text"
+        class="form-control"
+        data-ng-model="newFolder.name"
+        placeholder="{{'fileStoreNewFolderPlaceholder' | translate}}"
+        maxlength="255"
+      />
+      <a
+        class="btn btn-default"
+        data-ng-disabled="!newFolder.name"
+        data-ng-click="createFolder()"
+      >
+        <i class="fa fa-fw fa-folder-o"></i>
+        <span data-translate="">fileStoreCreateFolder</span>
+      </a>
+      <div
+        data-ng-show="newFolder.invalid"
+        data-translate=""
+        class="alert alert-danger"
+      >
+        fileStoreInvalidFolderName
+      </div>
+    </div>
+
     <div
       data-gn-data-uploader-button="'chooseOnlinesrc'"
       data-after-upload-cb="linkUploadedFileToRecord"
       data-upload-options="filestoreUploadOptions"
+      data-folder="{{currentFolder}}"
     ></div>
 
     <div
       data-gn-data-uploader-from-url=""
       data-after-upload-cb="linkUploadedFileToRecord"
+      data-folder="{{currentFolder}}"
     ></div>
   </div>
 </div>
