@@ -18,4 +18,9 @@ GeoNetwork 4.2.17 is a minor release.
 - [Harvester / Fix when updating records](https://github.com/geonetwork/core-geonetwork/pull/9405)
 - Java and JS library updates
 
+## Security Considerations
+
+* [CVE-2026-63219](https://github.com/geonetwork/core-geonetwork/security/advisories/GHSA-mh22-prqr-vf42)
+* [CVE-2026-58400](https://github.com/geonetwork/core-geonetwork/security/advisories/GHSA-x898-729x-cc3r)
+
 and more \... see [4.2.17-0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.17+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.2.17+is%3Aclosed) for full details.
