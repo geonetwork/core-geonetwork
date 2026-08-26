@@ -32,22 +32,37 @@ import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.lib.Lib;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FilesystemStoreTest extends AbstractStoreTest {
     @Autowired
     private FilesystemStore _store;
+    @Autowired
+    private WebApplicationContext wac;
 
     /**
      * Now that visibility is tracked in the database rather than always implied by which folder
@@ -130,5 +145,180 @@ public class FilesystemStoreTest extends AbstractStoreTest {
         assertFalse("Legacy file is migrated out of the old subfolder", Files.exists(legacyDir.resolve(filename)));
         Path flatPath = Lib.resource.getMetadataDir(context.getBean(GeonetworkDataDirectory.class), mdId).resolve(filename);
         assertTrue("Legacy file now lives in the flat layout", Files.exists(flatPath));
+    }
+
+    /**
+     * Phase 1b regression guard: {@code {resourceId:.+}} cannot span multiple "/"-separated URL
+     * segments under this app's {@code AntPathMatcher}-based routing, so a request for a
+     * genuinely nested resource (eg. the reported {@code GET .../attachments/data/file.pdf})
+     * 404'd even though the {@code Store} layer has always fully supported nested filenames. This
+     * dispatches real HTTP requests through {@link MockMvc} (unlike the Store-layer-only tests
+     * elsewhere in this class) specifically because that routing bug is invisible to a direct
+     * Java method call on {@link AttachmentsApi}.
+     */
+    @Test
+    public void testNestedPathResourceGetPatchDeleteViaHttp() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        getStore().delResources(context, metadataUuid, true);
+
+        String nestedFilename = "data/nested-http.xml";
+        MultipartFile file = new MockMultipartFile(nestedFilename,
+            nestedFilename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, "record-with-old-links.xml")
+            ));
+        getStore().putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession session = loginAsAdmin();
+        String url = "/srv/api/records/" + metadataUuid + "/attachments/" + nestedFilename;
+
+        mockMvc.perform(get(url).session(session))
+            .andExpect(status().isOk());
+
+        mockMvc.perform(patch(url).session(session)
+                .accept(MediaType.APPLICATION_JSON)
+                .param("visibility", "private"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.visibility").value("PRIVATE"));
+
+        mockMvc.perform(delete(url).session(session))
+            .andExpect(status().isNoContent());
+
+        List<MetadataResource> remaining = getStore().getResources(context, metadataUuid, Sort.name, null, true);
+        assertEquals("Nested resource is gone after the HTTP delete", 0, remaining.size());
+    }
+
+    /**
+     * Phase 1b regression guard, upload side: a single-segment folder (eg. {@code data}) happened
+     * to work before this fix, since one segment is exactly what a {@code {folder:.+}} path
+     * variable can match - which is why Phase 3's upload succeeded while the read-back that
+     * inspired Phase 1b failed. A multi-level folder never worked at all; this proves it does now.
+     */
+    @Test
+    public void testUploadIntoMultiLevelFolderViaHttp() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        getStore().delResources(context, metadataUuid, true);
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession session = loginAsAdmin();
+
+        MockMultipartFile file = new MockMultipartFile("file", "deep.xml", "application/xml",
+            Files.newInputStream(Paths.get(resources, "record-with-old-links.xml")));
+
+        mockMvc.perform(multipart("/srv/api/records/" + metadataUuid + "/attachments/a/b/c")
+                .file(file)
+                .session(session)
+                .accept(MediaType.APPLICATION_JSON)
+                .param("visibility", "public"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.filename").value("a/b/c/deep.xml"));
+
+        List<MetadataResource> uploaded = getStore().getResources(context, metadataUuid, Sort.name, null, true);
+        assertEquals(1, uploaded.size());
+        assertEquals("a/b/c/deep.xml", uploaded.get(0).getFilename());
+    }
+
+    /**
+     * Phase 1b regression guard: {@code getResource}/{@code delResource} were originally changed
+     * to map bare {@code /**}, which (like {@code {resourceId:.+}} before it) also matches the
+     * bare {@code .../attachments} URL with an empty tail - the same shape
+     * {@code getAllResources}/{@code delResources} map exactly. This turned out to actually
+     * dispatch to the wrong handler in this app: it registers two separate
+     * {@code RequestMappingHandlerMapping} beans (a pre-existing, unrelated quirk), so the two
+     * candidate mappings never even got compared against each other by Spring's usual
+     * pattern-specificity logic - whichever handler mapping bean got consulted first simply won,
+     * regardless of specificity. The fix was to require at least one path segment
+     * ({@code /*}{@code /**}, not {@code /**}) on {@code getResource}/{@code patchResource}/
+     * {@code delResource}, removing the overlap entirely rather than relying on comparator
+     * behavior. This test locks that outcome in against the real, fully-wired application
+     * context.
+     */
+    @Test
+    public void testBaseMappingsNotShadowedByWildcardResourceMappings() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession session = loginAsAdmin();
+        String baseUrl = "/srv/api/records/" + metadataUuid + "/attachments";
+
+        mockMvc.perform(get(baseUrl).session(session).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(handler().methodName("getAllResources"));
+
+        mockMvc.perform(delete(baseUrl).session(session).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNoContent())
+            .andExpect(handler().methodName("delResources"));
+    }
+
+    /**
+     * Companion to {@link #testAttachmentsApiPatchResourceValidation}: verifies the successful
+     * rename path via a real HTTP dispatch (the direct-Java-method-call version of this test
+     * that used to live in {@code AbstractStoreTest} stopped being meaningful once
+     * {@code patchResource} started reading {@code resourceId} from request attributes that only
+     * a genuine Spring MVC dispatch sets - see {@code AttachmentsApi#extractPathWithinMapping}).
+     */
+    @Test
+    public void testAttachmentsApiPatchResourceRename() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        getStore().delResources(context, metadataUuid, true);
+
+        String filename = "record-with-old-links.xml";
+        String newFilename = "api-renamed-record.xml";
+        MultipartFile file = new MockMultipartFile(filename,
+            filename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, filename)
+            ));
+        getStore().putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession session = loginAsAdmin();
+        String url = "/srv/api/records/" + metadataUuid + "/attachments/" + filename;
+
+        mockMvc.perform(patch(url).session(session)
+                .accept(MediaType.APPLICATION_JSON)
+                .param("newResourceName", newFilename))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.filename").value(newFilename));
+
+        getStore().delResources(context, metadataUuid, true);
+    }
+
+    /**
+     * {@code patchResource}'s own "either visibility or newResourceName must be provided"
+     * validation, exercised as an HTTP round trip: {@code IllegalArgumentException} is mapped to
+     * a 400 by {@code GlobalExceptionController}.
+     */
+    @Test
+    public void testAttachmentsApiPatchResourceValidation() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession session = loginAsAdmin();
+        String url = "/srv/api/records/" + metadataUuid + "/attachments/somefile.xml";
+
+        mockMvc.perform(patch(url).session(session).accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isBadRequest());
     }
 }

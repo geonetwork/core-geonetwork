@@ -29,6 +29,7 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -61,6 +62,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,6 +73,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.annotation.PostConstruct;
@@ -141,6 +144,25 @@ public class AttachmentsApi {
         return tika.detect(filename);
     }
 
+    private static final AntPathMatcher PATH_MATCHER = new AntPathMatcher();
+
+    /**
+     * Extract the "/"-separated tail captured by this method's own "/**" mapping - the resource
+     * identifier or destination folder. A {@code {var:.+}} path variable cannot span multiple
+     * "/"-separated segments under this app's {@link AntPathMatcher}-based routing (classic XML
+     * MVC config, Spring 5.3.x - {@code {var:.+}} only ever matches within a single segment,
+     * regardless of what its regex says), so a nested value like {@code a/b/file.pdf} has to be
+     * captured with {@code /**} and extracted here instead of via a normal {@code @PathVariable}.
+     *
+     * @return the matched tail, or an empty string if nothing followed the mapping's fixed
+     * prefix (eg. a request to the bare {@code .../attachments} URL).
+     */
+    private static String extractPathWithinMapping(HttpServletRequest request) {
+        String pathWithinMapping = (String) request.getAttribute(HandlerMapping.PATH_WITHIN_HANDLER_MAPPING_ATTRIBUTE);
+        String bestMatchingPattern = (String) request.getAttribute(HandlerMapping.BEST_MATCHING_PATTERN_ATTRIBUTE);
+        return PATH_MATCHER.extractPathWithinPattern(bestMatchingPattern, pathWithinMapping);
+    }
+
     public Store getStore() {
         return store;
     }
@@ -204,16 +226,19 @@ public class AttachmentsApi {
         }
     }
 
-    // The "/{folder:.+}" mapping lets a client target a destination folder for the upload (eg.
-    // POST .../attachments/a/b), mirroring the {resourceId:.+} convention already used by
-    // GET/PATCH/DELETE below. This can never shadow/be shadowed by AttachmentsActionsApi's
-    // literal PUT .../attachments/print-thumbnail mapping: Spring MVC's handler-mapping
-    // comparator always prefers an exact literal path over a wildcard pattern, which is also
-    // exactly why that literal mapping has never conflicted with the {resourceId:.+} ones either.
-    @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource for a given metadata")
+    // The "/**" mapping lets a client target a destination folder for the upload (eg.
+    // POST .../attachments/a/b), mirroring the "/**" convention used by GET/PATCH/DELETE below -
+    // see extractPathWithinMapping's javadoc for why {folder:.+} can't be used for this instead.
+    // This can never shadow/be shadowed by AttachmentsActionsApi's literal
+    // PUT .../attachments/print-thumbnail mapping: Spring MVC's handler-mapping comparator always
+    // prefers an exact literal path over a wildcard pattern, which is also exactly why that
+    // literal mapping has never conflicted with the wildcard ones here either.
+    @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource for a given metadata",
+        parameters = {@Parameter(name = "folder", in = ParameterIn.PATH, required = false,
+            description = "The destination folder, if any (nested subfolders allowed, eg. 'a/b')")})
     @PreAuthorize("hasAuthority('Editor')")
     @RequestMapping(method = RequestMethod.POST,
-        value = {"", "/{folder:.+}"},
+        value = "/**",
         consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -222,12 +247,13 @@ public class AttachmentsApi {
     @ResponseBody
     public MetadataResource putResource(
         @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
-        @Parameter(description = "The destination folder, if any (nested subfolders allowed, eg. 'a/b')") @PathVariable(required = false) String folder,
         @Parameter(description = "The sharing policy", example = "public") @RequestParam(required = false, defaultValue = "public") MetadataResourceVisibility visibility,
         @Parameter(description = "The file to upload") @RequestParam("file") MultipartFile file,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+        String folderPath = extractPathWithinMapping(request);
+        String folder = folderPath.isEmpty() ? null : folderPath;
 
         String supportedFileMimetypes = settingManager.getValue(Settings.METADATA_EDIT_SUPPORTEDFILEMIMETYPES);
         fileMimetypeChecker.checkValidMimeType(file, supportedFileMimetypes.split("\\|"));
@@ -245,10 +271,12 @@ public class AttachmentsApi {
         return resource;
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource from a URL for a given metadata")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Create a new resource from a URL for a given metadata",
+        parameters = {@Parameter(name = "folder", in = ParameterIn.PATH, required = false,
+            description = "The destination folder, if any (nested subfolders allowed, eg. 'a/b')")})
     @PreAuthorize("hasAuthority('Editor')")
     @RequestMapping(method = RequestMethod.PUT,
-        value = {"", "/{folder:.+}"},
+        value = "/**",
         produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment added."),
@@ -256,12 +284,13 @@ public class AttachmentsApi {
     @ResponseBody
     public MetadataResource putResourceFromURL(
         @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
-        @Parameter(description = "The destination folder, if any (nested subfolders allowed, eg. 'a/b')") @PathVariable(required = false) String folder,
         @Parameter(description = "The sharing policy", example = "public") @RequestParam(required = false, defaultValue = "public") MetadataResourceVisibility visibility,
         @Parameter(description = "The URL to load in the store") @RequestParam("url") URL url,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+        String folderPath = extractPathWithinMapping(request);
+        String folder = folderPath.isEmpty() ? null : folderPath;
         MetadataResource resource = store.putResource(context, metadataUuid, url, folder, visibility, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);
@@ -275,9 +304,18 @@ public class AttachmentsApi {
         return resource;
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata resource")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get a metadata resource",
+        parameters = {@Parameter(name = "resourceId", in = ParameterIn.PATH, required = true,
+            description = "The resource identifier (ie. filename); may contain nested folders (eg. 'a/b/file.pdf')")})
     // @PreAuthorize("permitAll")
-    @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.GET)
+    // "/*/**" (not "/**") deliberately requires at least one path segment: this app registers
+    // two separate RequestMappingHandlerMapping beans (a pre-existing, unrelated quirk - not
+    // investigated further here, see the analysis report), so a bare "/**" that also matches the
+    // empty tail can end up dispatched here instead of to getAllResources's exact-literal mapping
+    // for the bare .../attachments URL, in a registration-order-dependent way rather than via
+    // clean pattern-specificity comparison. Requiring a first segment removes the overlap
+    // entirely, regardless of that underlying quirk.
+    @RequestMapping(value = "/*/**", method = RequestMethod.GET)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Record attachment.",
             content = @Content(schema = @Schema(type = "string", format = "binary"))),
@@ -287,13 +325,13 @@ public class AttachmentsApi {
             + "User needs to be able to download the resource.")})
     public void getResource(
         @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
-        @Parameter(description = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "true") Boolean approved,
         @Parameter(description = "Size (only applies to images). From 1px to 2048px.", example = "200") @RequestParam(required = false) Integer size,
         @Parameter(hidden = true) HttpServletRequest request,
         @Parameter(hidden = true) HttpServletResponse response
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+        String resourceId = extractPathWithinMapping(request);
         ApiUtils.canViewRecord(metadataUuid, request);
 
         // Get the resource metadata
@@ -398,21 +436,28 @@ public class AttachmentsApi {
     }
 
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Update the metadata resource visibility and/or the resource name")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Update the metadata resource visibility and/or the resource name",
+        parameters = {@Parameter(name = "resourceId", in = ParameterIn.PATH, required = true,
+            description = "The resource identifier (ie. filename); may contain nested folders (eg. 'a/b/file.pdf')")})
     @PreAuthorize("hasAuthority('Editor')")
     @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Attachment updated."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
-    @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
+    // "/*/**", not "/**": there's no bulk/collection-level PATCH mapping on this controller to
+    // collide with, but a bare .../attachments PATCH has no valid meaning either way (nothing to
+    // patch) - requiring a first segment rejects it outright instead of reaching the method body
+    // with an empty resourceId. See getResource's mapping comment for the other reason "/**"
+    // alone is unsafe here (a pre-existing, unrelated duplicate-HandlerMapping-bean quirk).
+    @RequestMapping(value = "/*/**", method = RequestMethod.PATCH, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public MetadataResource patchResource(
         @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
-        @Parameter(description = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
         @Parameter(description = "The visibility", example = "public") @RequestParam(required = false) MetadataResourceVisibility visibility,
         @Parameter(description = "The new resource name") @RequestParam(required = false) String newResourceName,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+        String resourceId = extractPathWithinMapping(request);
 
         AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
 
@@ -439,18 +484,22 @@ public class AttachmentsApi {
         return metadataResource;
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Delete a metadata resource")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Delete a metadata resource",
+        parameters = {@Parameter(name = "resourceId", in = ParameterIn.PATH, required = true,
+            description = "The resource identifier (ie. filename); may contain nested folders (eg. 'a/b/file.pdf')")})
     @PreAuthorize("hasAuthority('Editor')")
-    @RequestMapping(value = "/{resourceId:.+}", method = RequestMethod.DELETE)
+    // "/*/**", not "/**": avoids colliding with delResources's exact mapping for the bare
+    // .../attachments URL - see getResource's mapping comment for why.
+    @RequestMapping(value = "/*/**", method = RequestMethod.DELETE)
     @ApiResponses(value = {@ApiResponse(responseCode = "204", description = "Attachment visibility removed.", content = {@Content(schema = @Schema(hidden = true))}),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT)})
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delResource(
         @Parameter(description = "The metadata UUID", required = true, example = "43d7c186-2187-4bcd-8843-41e575a5ef56") @PathVariable String metadataUuid,
-        @Parameter(description = "The resource identifier (ie. filename)", required = true) @PathVariable String resourceId,
         @Parameter(description = "Use approved version or not", example = "true") @RequestParam(required = false, defaultValue = "false") Boolean approved,
         @Parameter(hidden = true) HttpServletRequest request) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
+        String resourceId = extractPathWithinMapping(request);
         store.delResource(context, metadataUuid, resourceId, approved);
 
         String metadataIdString = ApiUtils.getInternalId(metadataUuid, approved);

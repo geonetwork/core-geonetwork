@@ -57,9 +57,6 @@ import static org.junit.Assert.fail;
  */
 import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
-import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.springframework.mock.web.MockHttpServletRequest;
 import static org.junit.Assert.assertNotNull;
 
 public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
@@ -70,10 +67,6 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
     protected IMetadataUtils metadataUtils;
     @Autowired
     private MetadataRepository _metadataRepo;
-    @Autowired
-    protected IMetadataManager metadataManager;
-    @Autowired
-    protected IMetadataIndexer metadataIndexer;
     @Autowired
     protected MetadataFileUploadRepository uploadRepository;
 
@@ -297,49 +290,15 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
         getStore().delResources(context, metadataUuid, true);
     }
 
-    @Test
-    public void testAttachmentsApiPatchResourceRename() throws Exception {
-        final ServiceContext context = createServiceContext();
-        loginAsAdmin(context);
-        String metadataId = importMetadata(context);
-        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
-
-        getStore().delResources(context, metadataUuid, true);
-
-        String filename = "record-with-old-links.xml";
-        String newFilename = "api-renamed-record.xml";
-        MultipartFile file = new MockMultipartFile(filename,
-            filename,
-            "application/xml",
-            Files.newInputStream(
-                Paths.get(resources, filename)
-            ));
-        getStore().putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
-
-        AttachmentsApi api = new AttachmentsApi(getStore(), metadataManager, metadataIndexer);
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setMethod("PATCH");
-        request.setRequestURI("/srv/api/records/" + metadataUuid + "/attachments/" + filename);
-
-        MetadataResource result = api.patchResource(metadataUuid, filename, null, newFilename, true, request);
-        assertNotNull("Renamed metadata resource should not be null", result);
-        assertEquals("Renamed resource filename is updated", newFilename, result.getFilename());
-
-        getStore().delResources(context, metadataUuid, true);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testAttachmentsApiPatchResourceValidation() throws Exception {
-        final ServiceContext context = createServiceContext();
-        loginAsAdmin(context);
-        String metadataId = importMetadata(context);
-        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
-
-        AttachmentsApi api = new AttachmentsApi(getStore(), metadataManager, metadataIndexer);
-        MockHttpServletRequest request = new MockHttpServletRequest();
-
-        api.patchResource(metadataUuid, "somefile.xml", null, null, true, request);
-    }
+    // testAttachmentsApiPatchResourceRename and testAttachmentsApiPatchResourceValidation used
+    // to live here, calling AttachmentsApi.patchResource(...) directly with a hand-built
+    // MockHttpServletRequest. That stopped being possible once patchResource started reading
+    // resourceId from HandlerMapping request attributes that only a real Spring MVC dispatch
+    // sets (see AttachmentsApi#extractPathWithinMapping) - which also means they were never
+    // exercising real HTTP routing in the first place. They're now real MockMvc round trips in
+    // FilesystemStoreTest, alongside the other AttachmentsApi routing tests added for the
+    // nested-path fix; routing is Store-implementation-agnostic, so there's no need to repeat
+    // them for every Store subclass here.
 
     @Test(expected = IllegalArgumentException.class)
     public void testRenameResourceExceedsMaxLength() throws Exception {
