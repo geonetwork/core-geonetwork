@@ -125,7 +125,10 @@
         autoUpload: false,
         done: uploadImportMdDone,
         fail: uploadImportMdError,
-        headers: { "X-XSRF-TOKEN": $rootScope.csrf, "Accept-Language": $scope.lang }
+        headers: {
+          "X-XSRF-TOKEN": $rootScope.csrf,
+          "Accept-Language": $scope.lang
+        }
       };
 
       var formatExceptionArray = function () {
