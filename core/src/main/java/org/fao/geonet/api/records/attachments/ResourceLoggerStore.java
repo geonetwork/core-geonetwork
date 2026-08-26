@@ -361,7 +361,18 @@ public class ResourceLoggerStore extends AbstractStore {
         }
 
         if (metadataFileUpload != null) {
-            String targetName = metadataFileUpload.getFileName().contains("/") ? renamedResource.getId() : renamedResource.getFilename();
+            // Some rows predate this table storing plain relative filenames and instead have their
+            // fileName column set to the full resourceId form (metadataUuid + "/attachments/" +
+            // filename, see AbstractStore#getFilename) - keep saving those in that same form so
+            // later lookups (which try that form first, above) keep finding them. Checking for "/"
+            // alone doesn't work to detect this any more: a plain relative filename for a resource
+            // in a subfolder also legitimately contains "/", which used to make this wrongly treat
+            // every nested-path rename as if it were one of these legacy rows and store
+            // renamedResource.getId() (metadataUuid + "/attachments/" + new path) into fileName
+            // instead of just the new relative path.
+            String legacyFullResourceIdPrefix = metadataUuid + "/attachments/";
+            String targetName = metadataFileUpload.getFileName().startsWith(legacyFullResourceIdPrefix)
+                ? renamedResource.getId() : renamedResource.getFilename();
             metadataFileUpload.setFileName(targetName);
             repo.save(metadataFileUpload);
         }

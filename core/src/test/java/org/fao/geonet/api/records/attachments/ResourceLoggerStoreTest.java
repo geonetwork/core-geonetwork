@@ -140,4 +140,79 @@ public class ResourceLoggerStoreTest {
             patchedResource, result);
         verify(metadataFileUploadRepository, never()).save(any());
     }
+
+    /**
+     * Regression test for a bug where renaming a resource in a subfolder stored the wrong value
+     * in the upload log's fileName column: instead of the new plain relative path (eg.
+     * {@code test/document-1.pdf}), it stored the composite resourceId form (eg.
+     * {@code uuid-1/attachments/test/document-1.pdf}). The old check for whether an existing row
+     * used the legacy composite-id format was "does the filename contain a '/'", which used to be
+     * a reliable signal but stopped being one once resources could legitimately live in
+     * subfolders - a plain relative path for a nested resource also contains "/". The fix checks
+     * for the actual legacy prefix ({@code metadataUuid + "/attachments/"}) instead, mirroring
+     * {@link AbstractStore#getFilename}'s own check for the same distinction.
+     */
+    @Test
+    public void renameResourceStoresPlainRelativePathForNestedResource() throws Exception {
+        String oldResourceId = "test/document.pdf";
+        String newName = "document-1.pdf";
+        String newRelativePath = "test/document-1.pdf";
+
+        MetadataResource renamedResource = mock(MetadataResource.class);
+        when(renamedResource.getFilename()).thenReturn(newRelativePath);
+        when(renamedResource.getId()).thenReturn(METADATA_UUID + "/attachments/" + newRelativePath);
+        when(decoratedStore.renameResource(CONTEXT, METADATA_UUID, oldResourceId, newName, true))
+            .thenReturn(renamedResource);
+
+        MetadataFileUpload existingUpload = new MetadataFileUpload();
+        existingUpload.setMetadataId(METADATA_ID);
+        existingUpload.setFileName(oldResourceId);
+        // storeRenameRequest tries the legacy composite-id form first; this row doesn't exist
+        // under that form, so it must fall through to the plain-relative-path lookup below.
+        when(metadataFileUploadRepository.findByMetadataIdAndFileNameNotDeleted(
+            METADATA_ID, METADATA_UUID + "/attachments/" + oldResourceId))
+            .thenThrow(new EmptyResultDataAccessException(1));
+        when(metadataFileUploadRepository.findByMetadataIdAndFileNameNotDeleted(METADATA_ID, oldResourceId))
+            .thenReturn(existingUpload);
+
+        MetadataResource result = resourceLoggerStore.renameResource(CONTEXT, METADATA_UUID, oldResourceId, newName, true);
+
+        assertEquals(renamedResource, result);
+        assertEquals("A nested resource's upload log entry should be renamed to the new plain relative path,"
+                + " not the composite resourceId form",
+            newRelativePath, existingUpload.getFileName());
+        verify(metadataFileUploadRepository).save(existingUpload);
+    }
+
+    /**
+     * Companion to {@link #renameResourceStoresPlainRelativePathForNestedResource}: a row that
+     * genuinely predates plain-relative-path storage (its fileName is the full legacy
+     * {@code metadataUuid/attachments/filename} form) should keep being written back in that same
+     * form, so later lookups that try that form first keep finding it.
+     */
+    @Test
+    public void renameResourceKeepsLegacyCompositeIdFormatForLegacyUploadRows() throws Exception {
+        String oldResourceId = "foo.txt";
+        String newName = "bar.txt";
+        String legacyOldFileName = METADATA_UUID + "/attachments/foo.txt";
+        String legacyNewFileName = METADATA_UUID + "/attachments/bar.txt";
+
+        MetadataResource renamedResource = mock(MetadataResource.class);
+        when(renamedResource.getFilename()).thenReturn(newName);
+        when(renamedResource.getId()).thenReturn(legacyNewFileName);
+        when(decoratedStore.renameResource(CONTEXT, METADATA_UUID, oldResourceId, newName, true))
+            .thenReturn(renamedResource);
+
+        MetadataFileUpload existingUpload = new MetadataFileUpload();
+        existingUpload.setMetadataId(METADATA_ID);
+        existingUpload.setFileName(legacyOldFileName);
+        when(metadataFileUploadRepository.findByMetadataIdAndFileNameNotDeleted(METADATA_ID, legacyOldFileName))
+            .thenReturn(existingUpload);
+
+        resourceLoggerStore.renameResource(CONTEXT, METADATA_UUID, oldResourceId, newName, true);
+
+        assertEquals("A legacy composite-id row should keep being stored in that same form",
+            legacyNewFileName, existingUpload.getFileName());
+        verify(metadataFileUploadRepository).save(existingUpload);
+    }
 }

@@ -336,8 +336,10 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
             ));
         loggerStore.putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
 
-        // ResourceLoggerStore now consistently logs the bare filename (never the composite
-        // "uuid/attachments/filename" id), so a single direct lookup is enough.
+        // ResourceLoggerStore consistently logs the bare relative filename (never the composite
+        // "uuid/attachments/filename" id) for rows it creates itself via putResource, so a single
+        // direct lookup is enough here. See testResourceLoggerStoreRenameUploadRecordForNestedResource
+        // below for the case where the rename logging used to get this wrong for nested resources.
         MetadataFileUpload initialUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, filename);
         assertNotNull("Initial upload record in MetadataFileUploads should exist", initialUpload);
         assertTrue("Initial upload record has old filename", initialUpload.getFileName().endsWith(filename));
@@ -349,6 +351,63 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
         assertNotNull("Updated upload record in MetadataFileUploads should exist with new filename", updatedUpload);
         assertEquals("Updated upload record ID matches initial record ID", initialUpload.getId(), updatedUpload.getId());
         assertTrue("Updated upload record has new filename", updatedUpload.getFileName().endsWith(newFilename));
+
+        loggerStore.delResources(context, metadataUuid, true);
+    }
+
+    /**
+     * Regression test for a bug where renaming a resource that lives in a subfolder stored the
+     * wrong value in {@code MetadataFileUploads.filename}: instead of the new plain relative path
+     * (eg. {@code test/document-1.pdf}), it stored the composite resourceId form (eg.
+     * {@code uuid/attachments/test/document-1.pdf}) - the file itself was still renamed correctly
+     * on disk, only the upload log entry was wrong. {@link #testResourceLoggerStoreRenameUploadRecord}
+     * above doesn't catch this, since it only renames a root-level resource - the bug was in
+     * {@code ResourceLoggerStore#storeRenameRequest} mistaking "the existing row's filename
+     * contains a '/'" for "this row uses the legacy composite-id format", which stopped being a
+     * reliable signal once resources could legitimately live in subfolders (whose plain relative
+     * path also contains "/").
+     */
+    @Test
+    public void testResourceLoggerStoreRenameUploadRecordForNestedResource() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataIdStr = importMetadata(context);
+        int metadataId = Integer.parseInt(metadataIdStr);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataIdStr);
+
+        Store loggerStore = new ResourceLoggerStore(getStore());
+
+        String filename = "test/nested-record.xml";
+        // Store#renameResource treats newName as the complete new resourceId, not a bare leaf
+        // name to combine with the old folder (see AbstractStore#renameResource and the report's
+        // "move to another folder" note) - the caller (the gnFileStore frontend, since this
+        // Phase 4/5 session) is responsible for reattaching the folder prefix before calling this.
+        String newFilename = "test/nested-record-renamed.xml";
+        String expectedNewRelativePath = "test/nested-record-renamed.xml";
+        MultipartFile file = new MockMultipartFile(filename,
+            filename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, "record-with-old-links.xml")
+            ));
+        loggerStore.putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+
+        MetadataFileUpload initialUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, filename);
+        assertNotNull("Initial upload record in MetadataFileUploads should exist", initialUpload);
+        assertEquals("Initial upload record has the plain relative path as its filename",
+            filename, initialUpload.getFileName());
+
+        MetadataResource renamedResource = loggerStore.renameResource(context, metadataUuid, filename, newFilename, true);
+        assertNotNull("Renamed resource should not be null", renamedResource);
+        assertEquals("Renamed resource keeps the original folder prefix",
+            expectedNewRelativePath, renamedResource.getFilename());
+
+        MetadataFileUpload updatedUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, expectedNewRelativePath);
+        assertNotNull("Updated upload record in MetadataFileUploads should exist under the new plain relative path",
+            updatedUpload);
+        assertEquals("Updated upload record ID matches initial record ID", initialUpload.getId(), updatedUpload.getId());
+        assertEquals("Updated upload record's filename is the plain relative path, not the composite resourceId form",
+            expectedNewRelativePath, updatedUpload.getFileName());
 
         loggerStore.delResources(context, metadataUuid, true);
     }
