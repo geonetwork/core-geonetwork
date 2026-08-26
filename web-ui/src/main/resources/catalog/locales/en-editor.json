@@ -192,6 +192,7 @@
     "fileStoreCreateFolder": "Set as upload destination",
     "fileStoreInvalidFolderName": "Invalid folder name. It must not contain '..', start or end with '/', or contain an empty segment ('//').",
     "fileStoreInvalidFilename": "Invalid file name. It must not be empty or contain '/'.",
+    "fileStoreEmptyFolder": "This folder has no files yet. Upload one, or set it as the upload destination first.",
     "openResource": "Open resource",
     "linkMetadata": "Link metadata",
     "setResourceStatus": "Change resource status. This will not update references which may be contained in the metadata document.",

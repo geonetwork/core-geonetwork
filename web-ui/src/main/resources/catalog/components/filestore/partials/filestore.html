@@ -28,6 +28,14 @@
       fileStoreNoFileMatching
     </div>
 
+    <div
+      class="alert alert-info"
+      data-ng-show="!filter && currentFolders.length === 0 && currentFiles.length === 0"
+      data-translate=""
+    >
+      fileStoreEmptyFolder
+    </div>
+
     <a
       class="btn btn-default btn-xs pull-right"
       data-ng-show="metadataResources.length > 0"
