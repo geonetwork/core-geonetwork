@@ -36,7 +36,7 @@
       <i class="fa fa-fw fa-refresh"></i>
     </a>
 
-    <div class="gn-filestore-current-folder" data-ng-if="currentFolder">
+    <div class="gn-filestore-current-folder" data-ng-if="currentFolder && !isFiltered">
       <i class="fa fa-fw fa-folder-open-o"></i>
       <span data-translate="">fileStoreCurrentFolder</span>:
       <strong>{{currentFolder}}</strong>
@@ -44,7 +44,7 @@
 
     <table class="table gn-data-store">
       <tbody>
-        <tr data-ng-if="currentFolder">
+        <tr data-ng-if="currentFolder && !isFiltered">
           <td colspan="10">
             <a
               href=""
@@ -90,7 +90,7 @@
                 class="btn btn-link"
                 title="{{'save' | translate}}"
                 data-ng-click="saveEditResource(r, $index)"
-                data-ng-disabled="r.filename_edit == r.filename"
+                data-ng-disabled="r.filename_edit == r._renameOriginalLeaf"
               >
                 <span class="fa fa-save"></span>
               </a>
@@ -109,6 +109,13 @@
                 class="alert alert-danger"
               >
                 fileStoreDuplicatedFilename
+              </div>
+              <div
+                data-ng-show="invalidFilename"
+                data-translate=""
+                class="alert alert-danger"
+              >
+                fileStoreInvalidFilename
               </div>
             </div>
           </td>

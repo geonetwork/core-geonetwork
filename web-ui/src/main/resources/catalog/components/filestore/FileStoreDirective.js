@@ -443,8 +443,29 @@
             scope.currentFolder = "";
             scope.currentFolders = [];
             scope.currentFiles = [];
+            scope.isFiltered = false;
 
+            // While a filter is active, gnfilestoreService.get() already searches the whole
+            // tree server-side (matched against each file's leaf name), so folder-grouping the
+            // result would hide matches outside the currently browsed folder. Show a flat list
+            // of every match instead, with its full relative path as the display name so folder
+            // context isn't lost now that a single currentFolder no longer applies; clearing the
+            // filter goes back to browsing currentFolder exactly where it was left, since it's
+            // never touched while filtered.
             function updateFolderView() {
+              scope.isFiltered = !!scope.filter;
+
+              if (scope.isFiltered) {
+                var matches = [];
+                angular.forEach(scope.metadataResources || [], function (r) {
+                  r._displayName = r.filename;
+                  matches.push(r);
+                });
+                scope.currentFolders = [];
+                scope.currentFiles = matches;
+                return;
+              }
+
               var grouped = gnFileStoreGroupByFolder(
                 scope.metadataResources,
                 scope.currentFolder
@@ -511,17 +532,40 @@
                 $("#resource_edit_" + index).addClass("hidden");
               }
             }
+            // A file's own folder is derived from its filename (everything before the last "/"),
+            // not from scope.currentFolder - rename works the same whether the file is reached
+            // by browsing into its folder or by a whole-tree filter match (see updateFolderView).
+            function folderPrefixOf(filename) {
+              var lastSlash = (filename || "").lastIndexOf("/");
+              return lastSlash === -1 ? "" : filename.substring(0, lastSlash);
+            }
+
+            function isValidLeafFilename(name) {
+              return !!name && name.indexOf("/") === -1;
+            }
+
             scope.editResource = function (r, index) {
-              r.filename_edit = r.filename;
+              // The rename box only ever edits the leaf filename - the folder prefix (if any) is
+              // kept alongside it and silently re-attached on save, so nested files aren't
+              // renamed by having the user retype their whole path.
+              r._renameFolderPrefix = folderPrefixOf(r.filename);
+              r.filename_edit = r._renameFolderPrefix
+                ? r.filename.substring(r._renameFolderPrefix.length + 1)
+                : r.filename;
+              r._renameOriginalLeaf = r.filename_edit;
               scope.editingResource = true;
               scope.duplicatedFilename = false;
+              scope.invalidFilename = false;
 
               updateVisibilityEditingPanel(index, true);
             };
 
             scope.cancelEditResource = function (r, index) {
               delete r.filename_edit;
+              delete r._renameFolderPrefix;
+              delete r._renameOriginalLeaf;
               scope.duplicatedFilename = false;
+              scope.invalidFilename = false;
               scope.editingResource = false;
               updateVisibilityEditingPanel(index, false);
             };
@@ -529,11 +573,28 @@
             scope.saveEditResource = function (r, index) {
               // TODO: check if the resource is already in the list and update it in the backend
 
+              var newLeafName = (r.filename_edit || "").trim();
+              if (!isValidLeafFilename(newLeafName)) {
+                scope.invalidFilename = true;
+                return;
+              }
+              scope.invalidFilename = false;
+
+              var newFullName = r._renameFolderPrefix
+                ? r._renameFolderPrefix + "/" + newLeafName
+                : newLeafName;
+
               gnfilestoreService.get(scope.gnCurrentEdit.uuid, "").then(function (data) {
                 var files = data.data;
                 var fileNameExists = false;
                 for (var i = 0; i < files.length; i++) {
-                  if (files[i].filename == r.filename_edit) {
+                  // Comparing full paths (folder prefix included) is what scopes this check to
+                  // files in the same folder as the one being renamed - a file with the same leaf
+                  // name in a different folder has a different full path and isn't a duplicate.
+                  if (
+                    files[i].filename == newFullName &&
+                    files[i].filename != r.filename
+                  ) {
                     fileNameExists = true;
                     break;
                   }
@@ -543,7 +604,7 @@
                   scope.duplicatedFilename = false;
 
                   gnfilestoreService
-                    .updateResourceName(scope.gnCurrentEdit.uuid, r, r.filename_edit)
+                    .updateResourceName(scope.gnCurrentEdit.uuid, r, newFullName)
                     .then(function (response) {
                       scope.editingResource = false;
                       updateVisibilityEditingPanel(index, false);
