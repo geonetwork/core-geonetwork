@@ -22,5 +22,11 @@ GeoNetwork 4.4.12 is a minor release.
 - [Admin user can't publish/unpublish metadata](https://github.com/geonetwork/core-geonetwork/pull/9362)
 - Java and JS library updates
 
+## Security Considerations
+
+* [CVE-2026-63219](https://github.com/geonetwork/core-geonetwork/security/advisories/GHSA-mh22-prqr-vf42)
+* [CVE-2026-55864](https://github.com/geonetwork/core-geonetwork/security/advisories/GHSA-5hx7-j24v-rffj)
+* [CVE-2026-57582](https://github.com/geonetwork/core-geonetwork/security/advisories/GHSA-5pq9-ppfw-p83j)
+* [CVE-2026-58400](https://github.com/geonetwork/core-geonetwork/security/advisories/GHSA-x898-729x-cc3r)
 
 and more \... see [4.4.12-0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.4.12+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.4.12+is%3Aclosed) for full details.
