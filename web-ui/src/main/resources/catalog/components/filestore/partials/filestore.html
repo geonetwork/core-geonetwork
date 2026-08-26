@@ -36,9 +36,37 @@
       <i class="fa fa-fw fa-refresh"></i>
     </a>
 
+    <div class="gn-filestore-current-folder" data-ng-if="currentFolder">
+      <i class="fa fa-fw fa-folder-open-o"></i>
+      <span data-translate="">fileStoreCurrentFolder</span>:
+      <strong>{{currentFolder}}</strong>
+    </div>
+
     <table class="table gn-data-store">
       <tbody>
-        <tr data-ng-repeat="r in metadataResources track by $index">
+        <tr data-ng-if="currentFolder">
+          <td colspan="10">
+            <a
+              href=""
+              title="{{'fileStoreFolderUp' | translate}}"
+              data-ng-click="openParentFolder()"
+            >
+              <i class="fa fa-fw fa-level-up"></i> ..
+            </a>
+          </td>
+        </tr>
+        <tr data-ng-repeat="folderName in currentFolders track by $index">
+          <td colspan="10">
+            <a
+              href=""
+              title="{{'fileStoreOpenFolder' | translate}}"
+              data-ng-click="openFolder(folderName)"
+            >
+              <i class="fa fa-fw fa-folder-o"></i> {{folderName}}
+            </a>
+          </td>
+        </tr>
+        <tr data-ng-repeat="r in currentFiles track by $index">
           <td>
             <a
               href=""
@@ -46,12 +74,7 @@
               title="{{'clickToAddResource' | translate}}"
               data-ng-click="setResource(r)"
             >
-              <span
-                data-ng-repeat="segment in (r.id.split('/').splice(2).join('/') | decodeURIComponent).split('/') track by $index"
-              >
-                <i class="fa fa-angle-right text-muted" data-ng-if="!$first"></i>
-                {{segment}}
-              </span>
+              {{r._displayName}}
             </a>
 
             <div id="resource_edit_{{$index}}" class="hidden">

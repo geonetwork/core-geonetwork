@@ -25,7 +25,53 @@
   goog.provide("gn_filestore_directive");
 
   /**
+   * Given the flat list of a record's attachments (each resource's `filename` may contain
+   * "/"-separated folders) and the folder currently being browsed, compute a single level of the
+   * folder tree: the immediate subfolders of currentFolder, and the files directly inside it.
+   * No HTTP call is needed for this - the full flat list is already loaded.
+   *
+   * Mutates each matched file resource in place to add a `_displayName` (its filename relative
+   * to currentFolder, with no further "/"), mirroring how the directive already stashes
+   * transient UI state (eg. `filename_edit`) directly on resource objects.
+   *
+   * @param {Array} resources The flat list of resources, each with a `.filename`.
+   * @param {string} currentFolder The folder being browsed ('' for the root).
+   * @return {{folders: Array<string>, files: Array}} Sorted immediate subfolder names, and the
+   *     resource objects that are files directly inside currentFolder.
    */
+  function gnFileStoreGroupByFolder(resources, currentFolder) {
+    var prefix = currentFolder ? currentFolder + "/" : "";
+    var folderNames = [];
+    var seenFolders = {};
+    var files = [];
+
+    angular.forEach(resources || [], function (r) {
+      var relativePath = r.filename || "";
+      if (prefix && relativePath.indexOf(prefix) !== 0) {
+        return;
+      }
+      var remainder = relativePath.substring(prefix.length);
+      var slashIndex = remainder.indexOf("/");
+      if (slashIndex === -1) {
+        r._displayName = remainder;
+        files.push(r);
+      } else {
+        var folderName = remainder.substring(0, slashIndex);
+        if (!seenFolders[folderName]) {
+          seenFolders[folderName] = true;
+          folderNames.push(folderName);
+        }
+      }
+    });
+
+    folderNames.sort();
+
+    return {
+      folders: folderNames,
+      files: files
+    };
+  }
+
   angular
     .module("gn_filestore_directive", ["blueimp.fileupload"])
     /**
@@ -347,6 +393,32 @@
             scope.selectOptions = { current: undefined };
             scope.metadataResources = [];
             scope.editingResource = false;
+            scope.currentFolder = "";
+            scope.currentFolders = [];
+            scope.currentFiles = [];
+
+            function updateFolderView() {
+              var grouped = gnFileStoreGroupByFolder(
+                scope.metadataResources,
+                scope.currentFolder
+              );
+              scope.currentFolders = grouped.folders;
+              scope.currentFiles = grouped.files;
+            }
+
+            scope.openFolder = function (folderName) {
+              scope.currentFolder = scope.currentFolder
+                ? scope.currentFolder + "/" + folderName
+                : folderName;
+              updateFolderView();
+            };
+
+            scope.openParentFolder = function () {
+              var lastSlash = scope.currentFolder.lastIndexOf("/");
+              scope.currentFolder =
+                lastSlash === -1 ? "" : scope.currentFolder.substring(0, lastSlash);
+              updateFolderView();
+            };
 
             function updateVisibilityEditingPanel(index, editing) {
               if (editing) {
@@ -413,6 +485,7 @@
                 .get(scope.uuid, scope.filter)
                 .then(function (response) {
                   scope.metadataResources = response.data;
+                  updateFolderView();
                 });
             };
             scope.setResourceStatus = function (r) {
@@ -469,6 +542,7 @@
             });
             scope.$watch("uuid", function (newValue, oldValue) {
               if (angular.isDefined(scope.uuid) && newValue != oldValue) {
+                scope.currentFolder = "";
                 scope.loadMetadataResources();
 
                 scope.queue = [];
