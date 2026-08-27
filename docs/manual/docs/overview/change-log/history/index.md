@@ -34,7 +34,7 @@ When available the maintenace series provides **time to upgrade** for our commun
 
 ### 4.2
 
-Be adivsed that GeoNetwork 4.2 series is nearing end-of-life. Production systems are advised to update to 4.4 above if they have not already done so.
+Be advised that GeoNetwork 4.2 series is nearing end-of-life. Production systems are advised to update to 4.4 above if they have not already done so.
 
 - [Version 4.2.17](../version-4.2.17.md)
 - [Version 4.2.16](../version-4.2.16.md)
