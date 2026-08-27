@@ -34,6 +34,7 @@ import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 
+import java.io.ByteArrayInputStream;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -286,6 +287,73 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         // .DS_Store (private) - matches the physical zip contents, not an assumption.
         assertEquals(2, publicResources.size());
         assertEquals(2, privateResources.size());
+    }
+
+    /**
+     * Regression guard for the fix excluding subfoldered resources from MEF v1/v2 exports (see
+     * MEFLib#excludeNestedResources): older GeoNetwork versions can't read a real subdirectory
+     * inside a v1/v2 archive's flat public/private layout, so a resource in a subfolder must be
+     * omitted from v1/v2 exports entirely, while v3 - whose store/ layout is only ever read by
+     * subfolder-aware code - keeps including it.
+     */
+    @Test
+    public void testNestedResourceExcludedFromV1AndV2ButNotV3() throws Exception {
+        ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+
+        final MEFLibIntegrationTest.ImportMetadata importMetadata = new MEFLibIntegrationTest.ImportMetadata(this, context);
+        importMetadata.getMefFilesToLoad().clear();
+        importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
+        importMetadata.invoke();
+
+        final String uuid = "da165110-88fd-11da-a88f-000d939bc5d8";
+        final Store store = context.getBean("resourceStore", Store.class);
+        store.putResource(context, uuid, "test/nested.txt", new ByteArrayInputStream("nested".getBytes()),
+            null, MetadataResourceVisibility.PUBLIC, true);
+
+        // V1: the nested resource must not appear in the ZIP or in info.xml, but the fixture's
+        // other public resources (unaffected by the exclusion) still do.
+        Path v1Path = MEFExporter.doExport(context, uuid, MEFLib.Format.FULL, false, false, false, false, true, true);
+        try (FileSystem zipFs = ZipUtil.openZipFs(v1Path)) {
+            assertFalse("Nested resource must not be written into MEF v1's public/ folder",
+                Files.exists(zipFs.getPath("public/test")));
+            assertTrue("Non-nested public resources must still be exported",
+                Files.exists(zipFs.getPath("public/thumbnail.gif")));
+            String infoXml = new String(Files.readAllBytes(zipFs.getPath("info.xml")));
+            assertFalse("Nested resource must not be registered in MEF v1's info.xml",
+                infoXml.contains("nested.txt"));
+        } finally {
+            Files.delete(v1Path);
+        }
+
+        // V2: same expectations as V1, via the multi-record exporter.
+        Path v2Path = MEFLib.doMEF2Export(context, Set.of(uuid), "full", false, getStyleSheets(),
+            false, false, false, false, true, true);
+        try (FileSystem zipFs = ZipUtil.openZipFs(v2Path)) {
+            assertFalse("Nested resource must not be written into MEF v2's public/ folder",
+                Files.exists(zipFs.getPath(uuid + "/public/test")));
+            assertTrue("Non-nested public resources must still be exported",
+                Files.exists(zipFs.getPath(uuid + "/public/thumbnail.gif")));
+            String infoXml = new String(Files.readAllBytes(zipFs.getPath(uuid + "/info.xml")));
+            assertFalse("Nested resource must not be registered in MEF v2's info.xml",
+                infoXml.contains("nested.txt"));
+        } finally {
+            Files.delete(v2Path);
+        }
+
+        // V3 (control): the exclusion must not leak into the modern, unified store/ layout -
+        // the nested resource is still fully exported here.
+        Path v3Path = MEFLib.doMEF3Export(context, Set.of(uuid), "full", false, getStyleSheets(),
+            false, false, false, false, true, true);
+        try (FileSystem zipFs = ZipUtil.openZipFs(v3Path)) {
+            assertTrue("MEF v3 must still export a resource in a subfolder",
+                Files.exists(zipFs.getPath(uuid + "/store/test/nested.txt")));
+            String infoXml = new String(Files.readAllBytes(zipFs.getPath(uuid + "/info.xml")));
+            assertTrue("MEF v3's info.xml must still register a resource in a subfolder",
+                infoXml.contains("test/nested.txt"));
+        } finally {
+            Files.delete(v3Path);
+        }
     }
 
     private static boolean isEmptyDir(Path dir) throws java.io.IOException {

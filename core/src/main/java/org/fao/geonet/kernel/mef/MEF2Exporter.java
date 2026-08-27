@@ -317,6 +317,12 @@ class MEF2Exporter {
                 // Include public resources only for PARTIAL and FULL formats so the info file matches the MEF contents.
                 publicResources = store.getResources(context, metadata.getUuid(),
                     MetadataResourceVisibility.PUBLIC, null, true);
+                // Resources in a subfolder break old GeoNetwork versions reading a legacy V1/V2
+                // archive (see MEFLib#excludeNestedResources) - not a concern for MEF3Exporter's
+                // unified store/ layout, which only ever needs to be read by subfolder-aware code.
+                if (!isUnifiedStoreLayout()) {
+                    publicResources = MEFLib.excludeNestedResources(metadata.getUuid(), MetadataResourceVisibility.PUBLIC, publicResources);
+                }
                 StoreUtils.extract(context, metadata.getUuid(), publicResources, publicResourcesPath, true);
             }
 
@@ -325,6 +331,9 @@ class MEF2Exporter {
                     Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
                     privateResources = store.getResources(context, metadata.getUuid(),
                         MetadataResourceVisibility.PRIVATE, null, true);
+                    if (!isUnifiedStoreLayout()) {
+                        privateResources = MEFLib.excludeNestedResources(metadata.getUuid(), MetadataResourceVisibility.PRIVATE, privateResources);
+                    }
                     StoreUtils.extract(context, metadata.getUuid(), privateResources, privateResourcesPath, true);
                 } catch (Exception e) {
                     // Current user could not download private data

@@ -147,12 +147,16 @@ class MEFExporter {
             List<MetadataResource> privateResources = List.of();
             if (includeAttachments) {
                 if (format == Format.PARTIAL || format == Format.FULL) {
-                    publicResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PUBLIC, null, approved);
+                    // Resources in a subfolder break old GeoNetwork versions reading a v1
+                    // archive (see MEFLib#excludeNestedResources).
+                    publicResources = MEFLib.excludeNestedResources(record.getUuid(), MetadataResourceVisibility.PUBLIC,
+                        store.getResources(context, record.getUuid(), MetadataResourceVisibility.PUBLIC, null, approved));
                     StoreUtils.extract(context, record.getUuid(), publicResources, publicResourcesPath, approved);
                 }
 
                 if (format == Format.FULL) {
-                    privateResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PRIVATE, null, approved);
+                    privateResources = MEFLib.excludeNestedResources(record.getUuid(), MetadataResourceVisibility.PRIVATE,
+                        store.getResources(context, record.getUuid(), MetadataResourceVisibility.PRIVATE, null, approved));
 
                     try {
                         Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);

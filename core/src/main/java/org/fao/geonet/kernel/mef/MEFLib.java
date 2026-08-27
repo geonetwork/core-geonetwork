@@ -392,6 +392,41 @@ public class MEFLib {
     }
 
     /**
+     * Filter out any resource whose name contains "/" (ie. lives in a subfolder). MEF versions 1
+     * and 2 write resources directly into a flat {@code public}/{@code private} directory inside
+     * the archive; a resource in a subfolder creates a real subdirectory there, which breaks
+     * GeoNetwork versions that predate subfolder support - they list that directory
+     * non-recursively with no check for a nested directory entry, and fail (eg.
+     * {@code .../public/test -> is a directory}) the moment they reach it. Such resources are
+     * simply omitted from a V1/V2 export rather than risk producing an archive an older version
+     * can't read at all; MEF version 3 ({@link MEF3Exporter}, the modern, recommended default) is
+     * unaffected and keeps exporting them normally.
+     *
+     * @param metadataUuid Used only for the warning logged when a resource is actually excluded.
+     * @param visibility   Used only for the warning logged when a resource is actually excluded.
+     */
+    static List<MetadataResource> excludeNestedResources(String metadataUuid,
+                                                          MetadataResourceVisibility visibility,
+                                                          List<MetadataResource> resources) {
+        if (resources == null || resources.isEmpty()) {
+            return resources;
+        }
+        List<MetadataResource> flatResources = new ArrayList<>(resources.size());
+        for (MetadataResource resource : resources) {
+            if (resource.getFilename() != null && resource.getFilename().contains("/")) {
+                Log.warning(Geonet.MEF, String.format(
+                    "Excluding %s resource '%s' of metadata '%s' from the MEF v1/v2 export - it "
+                        + "lives in a subfolder, which older GeoNetwork versions cannot read from "
+                        + "a v1/v2 archive. Export as MEF v3 to include it.",
+                    visibility, resource.getFilename(), metadataUuid));
+            } else {
+                flatResources.add(resource);
+            }
+        }
+        return flatResources;
+    }
+
+    /**
      * Build general section of info file.
      *
      * @param skipUUID If true, do not add uuid, site identifier and site name.
