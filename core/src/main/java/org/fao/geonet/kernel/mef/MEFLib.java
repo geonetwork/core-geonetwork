@@ -346,10 +346,22 @@ public class MEFLib {
 
     /**
      * Build an info file.
+     *
+     * @param unifiedStore Whether the caller physically writes attachments into a single flat
+     *                     {@code store} directory ({@link MEF3Exporter}) or splits them across
+     *                     {@code public}/{@code private} directories (legacy MEF1/MEF2 - see
+     *                     {@link MEFExporter}/{@link MEF2Exporter}). Must match the caller's
+     *                     actual physical layout: the info.xml file section shape (a single
+     *                     unified {@code <store>} element vs. separate {@code <public>}/
+     *                     {@code <private>} elements) needs to describe the same layout the ZIP
+     *                     itself was written with, or a reader relying on info.xml alone (eg.
+     *                     {@link org.fao.geonet.kernel.harvest.harvester.geonet.BaseGeoNetworkAligner})
+     *                     would look for files in the wrong place.
      */
     static String buildInfoFile(ServiceContext context, AbstractMetadata md,
                                 Format format, List<MetadataResource> pubResources,
-                                List<MetadataResource> priResources, boolean skipUUID)
+                                List<MetadataResource> priResources, boolean skipUUID,
+                                boolean unifiedStore)
         throws Exception {
         Element info = new Element("info");
         info.setAttribute("version", VERSION);
@@ -358,14 +370,23 @@ public class MEFLib {
         info.addContent(buildInfoCategories(md));
         info.addContent(buildInfoPrivileges(context, md));
 
-        List<MetadataResource> allResources = new ArrayList<>();
-        if (pubResources != null) {
-            allResources.addAll(pubResources);
+        if (unifiedStore) {
+            List<MetadataResource> allResources = new ArrayList<>();
+            if (pubResources != null) {
+                allResources.addAll(pubResources);
+            }
+            if (priResources != null) {
+                allResources.addAll(priResources);
+            }
+            info.addContent(buildInfoFiles("store", allResources));
+        } else {
+            info.addContent(buildInfoFiles("public", pubResources));
+            if (priResources != null) {
+                info.addContent(buildInfoFiles("private", priResources));
+            } else {
+                info.addContent(new Element("private"));
+            }
         }
-        if (priResources != null) {
-            allResources.addAll(priResources);
-        }
-        info.addContent(buildInfoFiles("store", allResources));
 
         return Xml.getString(new Document(info));
     }

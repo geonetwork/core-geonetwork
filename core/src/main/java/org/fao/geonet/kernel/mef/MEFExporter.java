@@ -42,7 +42,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.fao.geonet.kernel.mef.MEFConstants.DIR_STORE;
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 
@@ -132,11 +133,14 @@ class MEFExporter {
             byte[] binData = xmlDocumentAsString.getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_METADATA), binData);
 
-            // Every resource - public and private alike - lives in a single flat store/
-            // directory; visibility is recorded per-file in info.xml's <store> element (see
-            // MEFLib#buildInfoFiles), not by which directory a file is in.
-            Path resourcesPath = zipFs.getPath(DIR_STORE);
-            Files.createDirectories(resourcesPath);
+            // MEF version 1 uses the original, pre-3.0 layout: public and private resources are
+            // written into separate top-level directories, matching MEFLib.Version#V1's own
+            // documented format (a single record with no per-visibility "access" tracking in the
+            // filename/path itself - which directory a file is in *is* its visibility).
+            Path publicResourcesPath = zipFs.getPath(DIR_PUBLIC);
+            Files.createDirectories(publicResourcesPath);
+            Path privateResourcesPath = zipFs.getPath(DIR_PRIVATE);
+            Files.createDirectories(privateResourcesPath);
 
             // Add the resources if the specified format allows it
             List<MetadataResource> publicResources = List.of();
@@ -144,7 +148,7 @@ class MEFExporter {
             if (includeAttachments) {
                 if (format == Format.PARTIAL || format == Format.FULL) {
                     publicResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PUBLIC, null, approved);
-                    StoreUtils.extract(context, record.getUuid(), publicResources, resourcesPath, approved);
+                    StoreUtils.extract(context, record.getUuid(), publicResources, publicResourcesPath, approved);
                 }
 
                 if (format == Format.FULL) {
@@ -152,7 +156,7 @@ class MEFExporter {
 
                     try {
                         Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
-                        StoreUtils.extract(context, record.getUuid(), privateResources, resourcesPath, approved);
+                        StoreUtils.extract(context, record.getUuid(), privateResources, privateResourcesPath, approved);
                     } catch (Exception e) {
                         // Current user could not download private data
                         Log.warning(Geonet.MEF,
@@ -162,8 +166,11 @@ class MEFExporter {
             }
 
             // --- save info file
+            // Resources are split into the legacy public/private directories above, so info.xml
+            // must describe them the same way (unifiedStore = false) - separate <public>/
+            // <private> sections, not the unified MEF 3.0 <store> element.
             binData = MEFLib.buildInfoFile(context, record, format, publicResources, privateResources,
-                skipUUID).getBytes(Constants.ENCODING);
+                skipUUID, false).getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_INFO), binData);
         } catch (Exception e) {
             FileUtils.deleteQuietly(file.toFile());

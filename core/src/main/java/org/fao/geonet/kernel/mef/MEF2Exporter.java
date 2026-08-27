@@ -248,6 +248,17 @@ class MEF2Exporter {
     }
 
     /**
+     * Whether info.xml should describe this export's resources with the unified MEF 3.0
+     * {@code <store>} element or the legacy, pre-3.0 separate {@code <public>}/{@code <private>}
+     * elements - must match whichever physical layout {@link #getResourcesPath} actually writes
+     * to. {@link MEF2Exporter} uses the legacy split, so this is {@code false}; {@link MEF3Exporter}
+     * overrides it to {@code true}.
+     */
+    protected boolean isUnifiedStoreLayout() {
+        return false;
+    }
+
+    /**
      * Create a metadata folder according to MEF {@link Version} 2 specification. If current record
      * is based on an ISO profil, the stylesheet /convert/to19139.xsl is used to map to ISO. Both
      * files are included in MEF file. Export relevant information according to format parameter.
@@ -323,7 +334,7 @@ class MEF2Exporter {
 
         // --- save info file
         byte[] binData = MEFLib.buildInfoFile(context, record, format, publicResources,
-            privateResources, skipUUID).getBytes(Constants.ENCODING);
+            privateResources, skipUUID, isUnifiedStoreLayout()).getBytes(Constants.ENCODING);
 
         Files.write(metadataRootDir.resolve(FILE_INFO), binData);
     }

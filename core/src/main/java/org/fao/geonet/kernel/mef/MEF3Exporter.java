@@ -79,4 +79,9 @@ class MEF3Exporter extends MEF2Exporter {
         Files.createDirectories(path);
         return path;
     }
+
+    @Override
+    protected boolean isUnifiedStoreLayout() {
+        return true;
+    }
 }

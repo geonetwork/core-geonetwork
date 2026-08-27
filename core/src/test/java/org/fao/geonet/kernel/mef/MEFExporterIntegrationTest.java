@@ -30,6 +30,7 @@ import org.fao.geonet.ZipUtil;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 
@@ -41,6 +42,8 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
@@ -60,13 +63,13 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         try (FileSystem zipFs = ZipUtil.openZipFs(path)) {
             assertTrue(Files.exists(zipFs.getPath("metadata.xml")));
             assertTrue(Files.exists(zipFs.getPath("info.xml")));
-            // Public and private resources alike live flat under store/ - visibility is recorded
-            // per-file in info.xml's <store> element, not by a public/private physical split.
-            assertTrue(Files.exists(zipFs.getPath("store/basins.zip")));
-            assertTrue(Files.exists(zipFs.getPath("store/thumbnail.gif")));
-            assertTrue(Files.exists(zipFs.getPath("store/thumbnail_s.gif")));
-            assertFalse("No legacy public/ folder in a freshly-exported archive", Files.exists(zipFs.getPath("public")));
-            assertFalse("No legacy private/ folder in a freshly-exported archive", Files.exists(zipFs.getPath("private")));
+            // MEF version 1 uses the original, pre-3.0 layout: public and private resources are
+            // split into separate top-level directories - which directory a file is in *is* its
+            // visibility, unlike the unified store/ folder MEF 2/3 use.
+            assertTrue(Files.exists(zipFs.getPath("public/thumbnail.gif")));
+            assertTrue(Files.exists(zipFs.getPath("public/thumbnail_s.gif")));
+            assertTrue(Files.exists(zipFs.getPath("private/basins.zip")));
+            assertFalse("No unified store/ folder in a MEF version 1 archive", Files.exists(zipFs.getPath("store")));
         } finally {
             Files.delete(path);
         }
@@ -75,21 +78,22 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         try (FileSystem zipFs = ZipUtil.openZipFs(path)) {
             assertTrue(Files.exists(zipFs.getPath("metadata.xml")));
             assertTrue(Files.exists(zipFs.getPath("info.xml")));
-            assertTrue(Files.exists(zipFs.getPath("store")));
-            assertTrue(isEmptyDir(zipFs.getPath("store")));
+            assertTrue(Files.exists(zipFs.getPath("public")));
+            assertTrue(isEmptyDir(zipFs.getPath("public")));
+            assertTrue(Files.exists(zipFs.getPath("private")));
+            assertTrue(isEmptyDir(zipFs.getPath("private")));
         } finally {
             Files.delete(path);
         }
     }
 
     /**
-     * End-to-end verification of the MEF 3.0 writer (unified {@code <store>} element,
-     * MEFLib#buildInfoFile) together with the reader's backward-compat branch
-     * (MEFLib#getFilesElement, used by MEFVisitor, MEF2Visitor and MEF3Visitor): export a record with public and
-     * private attachments (producing a fresh, MEF-3.0-format archive), wipe its resources, then
-     * re-import that same archive and confirm the resources come back with the correct
-     * visibility - proving the reader correctly understood the writer's own {@code <store>}
-     * output, not just the legacy {@code <public>}/{@code <private>} format.
+     * End-to-end verification of the MEF version 1 writer (legacy {@code <public>}/{@code <private>}
+     * elements, MEFLib#buildInfoFile with {@code unifiedStore = false}) together with the reader
+     * (MEFVisitor#handleBin, which already supports both the legacy split layout and the flat MEF
+     * 3.0 {@code store/} layout): export a record with public and private attachments, wipe its
+     * resources, then re-import that same archive and confirm the resources come back with the
+     * correct visibility.
      */
     @Test
     public void testExportThenReimportRoundTripsAttachments() throws Exception {
@@ -107,8 +111,9 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         Path path = MEFExporter.doExport(context, uuid, MEFLib.Format.FULL, false, false, false, false, true, true);
         try (FileSystem zipFs = ZipUtil.openZipFs(path)) {
             String infoXml = new String(Files.readAllBytes(zipFs.getPath("info.xml")));
-            assertTrue("Exported info.xml should use the MEF 3.0 <store> element", infoXml.contains("<store>"));
-            assertFalse("Exported info.xml should not use the legacy <public> element", infoXml.contains("<public>"));
+            assertTrue("Exported info.xml should use the legacy <public> element", infoXml.contains("<public>"));
+            assertTrue("Exported info.xml should use the legacy <private> element", infoXml.contains("<private>"));
+            assertFalse("Exported info.xml should not use the unified MEF 3.0 <store> element", infoXml.contains("<store>"));
 
             // Wipe the resources so re-importing is the only way they can come back.
             store.delResources(context, uuid, true);
@@ -162,6 +167,23 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
             assertFalse("MEF3Exporter should not write the legacy private/ folder",
                 Files.exists(zipFs.getPath(uuid + "/private")));
 
+            // Read info.xml before MEFLib#getMEFVersion below - it opens its own zip filesystem
+            // view of this same path, and NIO's zip provider treats that as the same underlying
+            // filesystem as this test's own zipFs, so closing it (as getMEFVersion's try-with-
+            // resources does on exit) closes zipFs out from under this test too.
+            Element info = Xml.loadStream(Files.newInputStream(zipFs.getPath(uuid + "/info.xml")));
+            assertNotNull("info.xml should describe the flat layout with a unified <store> element",
+                info.getChild("store"));
+            assertNull("info.xml should not also have the legacy <public> element",
+                info.getChild("public"));
+            assertNull("info.xml should not also have the legacy <private> element",
+                info.getChild("private"));
+            List<Element> storeFiles = info.getChild("store").getChildren("file");
+            assertEquals("Both visibilities should be listed together under <store>",
+                4, storeFiles.size());
+            assertTrue("Each <store> file should carry its own access attribute",
+                storeFiles.stream().allMatch(f -> f.getAttributeValue("access") != null));
+
             assertEquals("A flat store/ layout archive should be detected as MEF version 3",
                 MEFLib.Version.V3, MEFLib.getMEFVersion(path));
 
@@ -210,6 +232,26 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
             assertTrue(Files.exists(zipFs.getPath(uuid + "/private/basins.zip")));
             assertFalse("MEF2Exporter should not write the flat store/ folder",
                 Files.exists(zipFs.getPath(uuid + "/store")));
+
+            // Regression guard: info.xml used to always get a unified MEF 3.0 <store> element
+            // (see MEFLib#buildInfoFile), even for a MEF2Exporter export whose physical layout is
+            // the legacy public/private split - an internally inconsistent archive whose info.xml
+            // didn't describe its own contents. It must match the physical layout asserted above.
+            // Read before MEFLib#getMEFVersion below - see the comment on that call in
+            // testMef3ExportThenReimportRoundTripsAttachments for why the order matters.
+            Element info = Xml.loadStream(Files.newInputStream(zipFs.getPath(uuid + "/info.xml")));
+            assertNull("A legacy public/private layout archive's info.xml should not have a unified <store> element",
+                info.getChild("store"));
+            assertNotNull("info.xml should have the legacy <public> element",
+                info.getChild("public"));
+            assertNotNull("info.xml should have the legacy <private> element",
+                info.getChild("private"));
+            List<Element> publicFiles = info.getChild("public").getChildren("file");
+            List<Element> privateFiles = info.getChild("private").getChildren("file");
+            // Fixture has thumbnail.gif + thumbnail_s.gif (public) and basins.zip + a stray
+            // .DS_Store (private) - matches testMef3ExportThenReimportRoundTripsAttachments.
+            assertEquals(2, publicFiles.size());
+            assertEquals(2, privateFiles.size());
 
             assertEquals("A public/private layout archive should be detected as MEF version 2",
                 MEFLib.Version.V2, MEFLib.getMEFVersion(path));
