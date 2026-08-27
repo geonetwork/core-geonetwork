@@ -390,4 +390,19 @@ public class ResourceLoggerStore extends AbstractStore {
 
         return null;
     }
+
+    @Override
+    public void migrateResourceToFlatLayout(ServiceContext context, MetadataResource resource) throws Exception {
+        if (decoratedStore != null) {
+            decoratedStore.migrateResourceToFlatLayout(context, resource);
+        }
+    }
+
+    @Override
+    public void deleteLegacyVisibilityFolderIfEmpty(ServiceContext context, int metadataId, MetadataResourceVisibility visibility)
+            throws Exception {
+        if (decoratedStore != null) {
+            decoratedStore.deleteLegacyVisibilityFolderIfEmpty(context, metadataId, visibility);
+        }
+    }
 }

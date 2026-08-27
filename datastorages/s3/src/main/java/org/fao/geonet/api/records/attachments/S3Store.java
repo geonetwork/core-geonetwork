@@ -57,6 +57,11 @@ import javax.annotation.Nullable;
  * the {@code <visibility>/} prefix below is the legacy layout, kept only as a read/write fallback
  * for objects that predate this and haven't been touched since (every put, rename, or visibility
  * change migrates an object to the flat key).
+ * <p>
+ * Unlike {@link FilesystemStore}/{@code CMISStore}, this class doesn't override
+ * {@link Store#deleteLegacyVisibilityFolderIfEmpty} - S3 has no real directory object backing a
+ * key prefix, so once every object under a legacy {@code <visibility>/} prefix has been migrated
+ * there's nothing left to physically delete; the inherited no-op default is already correct.
  */
 public class S3Store extends AbstractStore {
     @Autowired
@@ -371,6 +376,36 @@ public class S3Store extends AbstractStore {
         s3.getClient().deleteObject(s3.getBucket(), sourceKey);
         return createResourceDescription(metadataUuid, resolvedVisibility, newName, objectMetadata.getContentLength(),
                                          copyResult.getLastModifiedDate(), metadataId, approved, objectMetadata.getContentType());
+    }
+
+    @Override
+    public void migrateResourceToFlatLayout(ServiceContext context, MetadataResource resource) throws Exception {
+        int metadataId = resource.getMetadataId();
+        String metadataUuid = resource.getMetadataUuid();
+        String filename = resource.getFilename();
+
+        String flatKey = getFlatKey(metadataUuid, metadataId, filename);
+        if (s3.getClient().doesObjectExist(s3.getBucket(), flatKey)) {
+            // A flat object already occupies this name (eg. re-uploaded after the legacy copy
+            // was orphaned, or the same filename also exists under the other legacy visibility
+            // prefix). Leave the legacy copy in place rather than overwrite or lose data.
+            return;
+        }
+
+        String legacyKey = getLegacyKey(metadataUuid, metadataId, resource.getVisibility(), filename);
+        if (!s3.getClient().doesObjectExist(s3.getBucket(), legacyKey)) {
+            // Already flat, or this particular resource isn't a legacy one.
+            return;
+        }
+
+        try {
+            s3.getClient().copyObject(s3.getBucket(), legacyKey, s3.getBucket(), flatKey);
+            s3.getClient().deleteObject(s3.getBucket(), legacyKey);
+        } catch (AmazonServiceException e) {
+            Log.warning(Geonet.RESOURCES, String.format(
+                "Unable to migrate legacy resource '%s' for metadata %d (%s) to the flat layout: %s",
+                filename, metadataId, metadataUuid, e.getMessage()));
+        }
     }
 
     @Override

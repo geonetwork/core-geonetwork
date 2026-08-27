@@ -450,6 +450,42 @@ public class FilesystemStore extends AbstractStore {
         return getResourceDescription(context, metadataUuid, visibility, filename, newFilePath, approved);
     }
 
+    @Override
+    public void migrateResourceToFlatLayout(ServiceContext context, MetadataResource resource) throws Exception {
+        int metadataId = resource.getMetadataId();
+        String filename = resource.getFilename();
+        Path legacyPath = Lib.resource.getDir(resource.getVisibility().toString(), metadataId).resolve(filename);
+        if (!Files.exists(legacyPath)) {
+            // Already flat, or this particular resource isn't a legacy one.
+            return;
+        }
+        Path newFilePath = ensureDirectory(context, metadataId, filename).resolve(filename);
+        if (Files.exists(newFilePath)) {
+            // A flat file already occupies this name (eg. re-uploaded after the legacy copy was
+            // orphaned, or the same filename also exists under the other legacy visibility folder).
+            // Leave the legacy copy in place rather than overwrite or lose data.
+            return;
+        }
+        Files.move(legacyPath, newFilePath);
+    }
+
+    @Override
+    public void deleteLegacyVisibilityFolderIfEmpty(ServiceContext context, int metadataId, MetadataResourceVisibility visibility)
+            throws Exception {
+        Path legacyDir = Lib.resource.getDir(visibility.toString(), metadataId);
+        if (!Files.isDirectory(legacyDir)) {
+            return;
+        }
+        try (Stream<Path> entries = Files.list(legacyDir)) {
+            if (entries.findAny().isPresent()) {
+                // Not empty - a resource wasn't migrated (eg. a same-named flat file already
+                // existed, see migrateResourceToFlatLayout) or a nested subfolder is still there.
+                return;
+            }
+        }
+        Files.delete(legacyDir);
+    }
+
     private Path ensureDirectory(final ServiceContext context, final int metadataId, final String resourceId) throws IOException {
         final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
         // resourceId may contain subfolder segments (nested paths); make sure their parent

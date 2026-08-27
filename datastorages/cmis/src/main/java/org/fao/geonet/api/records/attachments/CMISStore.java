@@ -549,6 +549,80 @@ public class CMISStore extends AbstractStore {
     }
 
     @Override
+    public void migrateResourceToFlatLayout(ServiceContext context, MetadataResource resource) throws Exception {
+        int metadataId = resource.getMetadataId();
+        String metadataUuid = resource.getMetadataUuid();
+        String filename = resource.getFilename();
+
+        // Don't use caching for this process.
+        OperationContext oc = cmisUtils.createOperationContext();
+        oc.setCacheEnabled(false);
+
+        String flatKey = getFlatKey(context, metadataUuid, metadataId, filename);
+        try {
+            cmisConfiguration.getClient().getObjectByPath(flatKey, oc);
+            // A flat document already occupies this name (eg. re-uploaded after the legacy copy
+            // was orphaned, or the same filename also exists under the other legacy visibility
+            // folder). Leave the legacy copy in place rather than overwrite or lose data.
+            return;
+        } catch (CmisObjectNotFoundException ignored) {
+            // Nothing flat yet - proceed with the move.
+        }
+
+        String legacyKey = getLegacyKey(context, metadataUuid, metadataId, resource.getVisibility(), filename);
+        CmisObject sourceObject;
+        try {
+            sourceObject = cmisConfiguration.getClient().getObjectByPath(legacyKey, oc);
+        } catch (CmisObjectNotFoundException ignored) {
+            // Already flat, or this particular resource isn't a legacy one.
+            return;
+        }
+
+        int lastFolderDelimiterSourceKeyIndex = legacyKey.lastIndexOf(cmisConfiguration.getFolderDelimiter());
+        String parentSourceKey = legacyKey.substring(0, lastFolderDelimiterSourceKeyIndex);
+        Folder parentSourceFolder = cmisUtils.getFolderCache(parentSourceKey);
+        Folder parentDestFolder = cmisUtils.getFolderCache(getMetadataDir(context, metadataId), true, true);
+
+        try {
+            ((Document) sourceObject).move(parentSourceFolder, parentDestFolder, oc);
+            cmisUtils.invalidateFolderCache(parentSourceKey);
+        } catch (CmisPermissionDeniedException | CmisConstraintException e) {
+            Log.warning(Geonet.RESOURCES, String.format(
+                "Unable to migrate legacy resource '%s' for metadata %d (%s) to the flat layout: %s",
+                filename, metadataId, metadataUuid, e.getMessage()));
+        }
+    }
+
+    @Override
+    public void deleteLegacyVisibilityFolderIfEmpty(ServiceContext context, int metadataId, MetadataResourceVisibility visibility)
+            throws Exception {
+        String legacyFolderKey = getMetadataDir(context, metadataId) + cmisConfiguration.getFolderDelimiter() + visibility.toString();
+        Folder legacyFolder;
+        try {
+            legacyFolder = cmisUtils.getFolderCache(legacyFolderKey, true);
+        } catch (ResourceNotFoundException e) {
+            // No legacy folder for this visibility - nothing to do.
+            return;
+        }
+
+        OperationContext oc = cmisUtils.createOperationContext();
+        oc.setCacheEnabled(false);
+        if (legacyFolder.getChildren(oc).iterator().hasNext()) {
+            // Not empty - a resource wasn't migrated (eg. a same-named flat document already
+            // existed) or a nested subfolder is still there.
+            return;
+        }
+
+        try {
+            legacyFolder.delete();
+            cmisUtils.invalidateFolderCache(legacyFolderKey);
+        } catch (CmisPermissionDeniedException | CmisConstraintException e) {
+            Log.warning(Geonet.RESOURCES, String.format(
+                "Unable to remove empty legacy folder '%s' for metadata %d: %s", legacyFolderKey, metadataId, e.getMessage()));
+        }
+    }
+
+    @Override
     public String delResources(final ServiceContext context, final int metadataId) throws Exception {
         String folderKey = null;
         try {

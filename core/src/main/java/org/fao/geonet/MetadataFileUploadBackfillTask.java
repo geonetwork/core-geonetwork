@@ -56,12 +56,18 @@ import java.util.List;
  * the configured {@link Store}, filling in {@code access}/{@code mimetype} on existing tracking
  * rows that predate those columns (deriving {@code access} from which visibility the file is
  * physically found under, since that was the sole source of truth before this ledger existed),
- * and creating a tracking row for any physically-stored file that never had one at all.
+ * and creating a tracking row for any physically-stored file that never had one at all. For a
+ * filesystem-backed store, also physically migrates a resource still sitting in the legacy
+ * {@code public}/{@code private} folder layout into the flat layout (see
+ * {@link Store#migrateResourceToFlatLayout}), then removes each of those legacy folders once it's
+ * empty (see {@link Store#deleteLegacyVisibilityFolderIfEmpty}) - both a no-op for store
+ * implementations without such a legacy layout.
  * <p>
  * Idempotent and safe to interrupt/re-run: only rows missing {@code access} or {@code mimetype}
  * are touched, and - since Spring Data JPA commits each repository {@code save()} in its own
  * transaction rather than this task wrapping the whole run in one - progress already made survives
- * an interruption, so re-running simply skips everything already backfilled.
+ * an interruption, so re-running simply skips everything already backfilled. A file already moved
+ * to the flat layout is likewise left alone on a re-run.
  * <p>
  * Invoke via {@code PUT /{portal}/api/tools/migration/steps/org.fao.geonet.MetadataFileUploadBackfillTask}
  * (Administrator only). Not run automatically at startup, since walking every resource of every
@@ -121,8 +127,16 @@ public class MetadataFileUploadBackfillTask implements ContextAwareTask {
             for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
                 List<MetadataResource> resources = store.getResources(context, metadataUuid, visibility, null, true);
                 for (MetadataResource resource : resources) {
-                    backfillResource(uploadRepository, metadataId, visibility, resource);
+                    // A no-op for store implementations without a legacy per-visibility folder
+                    // layout (eg. S3/CMIS/JClouds); for a filesystem-backed store, physically
+                    // relocates a resource still sitting in the legacy layout to the flat one.
+                    store.migrateResourceToFlatLayout(context, resource);
+                    backfillResource(uploadRepository, metadataId, metadataUuid, visibility, resource);
                 }
+                // Once every resource of this visibility has been migrated, remove the legacy
+                // folder if that emptied it out - a no-op if it's still non-empty (eg. a resource
+                // was left behind because a same-named flat file already existed) or doesn't exist.
+                store.deleteLegacyVisibilityFolderIfEmpty(context, metadataId, visibility);
             }
             recordsProcessed++;
         } catch (Exception e) {
@@ -132,14 +146,9 @@ public class MetadataFileUploadBackfillTask implements ContextAwareTask {
         }
     }
 
-    private void backfillResource(MetadataFileUploadRepository uploadRepository, int metadataId,
+    private void backfillResource(MetadataFileUploadRepository uploadRepository, int metadataId, String metadataUuid,
                                   MetadataResourceVisibility visibility, MetadataResource resource) {
-        MetadataFileUpload upload;
-        try {
-            upload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, resource.getFilename());
-        } catch (EmptyResultDataAccessException e) {
-            upload = null;
-        }
+        MetadataFileUpload upload = findExistingUpload(uploadRepository, metadataId, metadataUuid, resource.getFilename());
 
         if (upload == null) {
             upload = new MetadataFileUpload();
@@ -158,6 +167,10 @@ public class MetadataFileUploadBackfillTask implements ContextAwareTask {
         }
 
         boolean changed = false;
+        if (upload.getFileName() != resource.getFilename()) {
+            upload.setFileName(resource.getFilename());
+            changed = true;
+        }
         if (upload.getAccess() == null) {
             upload.setAccess(visibility);
             changed = true;
@@ -169,6 +182,26 @@ public class MetadataFileUploadBackfillTask implements ContextAwareTask {
         if (changed) {
             uploadRepository.save(upload);
             rowsUpdated++;
+        }
+    }
+
+    /**
+     * Some rows predate the flat, plain-filename convention and instead have their {@code fileName}
+     * column set to the full legacy form ({@code metadataUuid + "/attachments/" + filename}) - see
+     * {@code ResourceLoggerStore#storeRenameRequest} for the same fallback used elsewhere for this
+     * same ambiguity. Falls back to that form only when the plain-filename lookup misses, so such a
+     * row is found and updated in place rather than mistaken for untracked and duplicated.
+     */
+    private MetadataFileUpload findExistingUpload(MetadataFileUploadRepository uploadRepository, int metadataId,
+                                                   String metadataUuid, String filename) {
+        try {
+            return uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, filename);
+        } catch (EmptyResultDataAccessException e) {
+            try {
+                return uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, metadataUuid + "/attachments/" + filename);
+            } catch (EmptyResultDataAccessException e2) {
+                return null;
+            }
         }
     }
 
