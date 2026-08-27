@@ -121,9 +121,12 @@ Prior to version 3.0, the store directory shown above was instead two separate p
 
 ### Nested folders {#nested-folders}
 
-Files in the store directory (or, for pre-3.0 archives, the public and private directories) may be organised into subfolders (eg. `store/images/thumbnail.png`). A reader must recursively walk the directory rather than assume a flat file listing. The file's name, as registered in info.xml (see below), is its path relative to the store directory (or, for pre-3.0 archives, relative to the public or private directory), with `/` as the separator regardless of the writer's operating system.
+Whether an attachment originally organised into a subfolder (eg. uploaded as `images/thumbnail.png`) actually appears as a real subfolder inside the archive depends on the container version:
 
-This applies to both the MEF v1 and MEF v2 container layouts described above; it is independent of the info.xml version.
+-   **MEF v3** (the unified store directory): a nested attachment keeps its real path, eg. `store/images/thumbnail.png`. A reader must recursively walk the store directory rather than assume a flat file listing. The file's name, as registered in info.xml (see below), is its path relative to the store directory, with `/` as the separator regardless of the writer's operating system.
+-   **MEF v1/v2** (the public/private directories): this layout predates subfolder support, and a reader old enough to only understand it can't be relied on to handle a real subdirectory there. A nested attachment is instead *flattened*: every `/` in its name is replaced with `__` (eg. `images/thumbnail.png` becomes `images__thumbnail.png`), and it's written directly inside public/private with no subfolder at all. The flattened name - not the original nested one - is what's registered in info.xml, and what any online resource link inside the record's own metadata.xml pointing at that attachment is rewritten to reference, so the archive stays internally consistent. In the rare case a flattened name collides with another file already using that exact name, a short numeric suffix is inserted before the file extension to tell them apart.
+
+A reader can always tell the two layouts apart structurally: a store directory means a nested path is possible; public/private directories mean every file name is already flat, `__` and all.
 
 ## The info.xml file
 
@@ -152,7 +155,7 @@ The root element must have the following children:
 
     Prior to version 3.0, this information was split across two separate elements, public and private, described below, matching the pre-3.0 physical layout's own public/private split (see [MEF v1 file format](#mef-v1-file-format)). A reader capable of reading version 3.0 must continue to support archives that use the pre-3.0 form, since the version policy in the introduction to this section only guarantees forward compatibility for readers, not that every writer has moved to the newer minor version.
 
-    -   *public* (pre-3.0): All metadata thumbnails (and any other public file) must be listed here, using the same file element and name/changeDate attributes described above (no access or mimetype attribute). The public element is optional but, if present, must contain all the files present in the metadata's public directory.
+    -   *public* (pre-3.0): All metadata thumbnails (and any other public file) must be listed here, using the same file element and name/changeDate attributes described above (no access or mimetype attribute). The public element is optional but, if present, must contain all the files present in the metadata's public directory. A file originally in a subfolder is registered under its flattened name (see [Nested folders](#nested-folders)), matching the flat name it's actually stored under.
     -   *private* (pre-3.0): This element has the same purpose and structure as the pre-3.0 public element but is related to maps and all other private files.
 
 Any other element or attribute should be ignored by readers that don't understand them. This allows actors to add custom attributes or subtrees to the XML.
