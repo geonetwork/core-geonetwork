@@ -43,6 +43,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.net.UrlEscapers;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
@@ -357,11 +358,15 @@ public class MEFLib {
      *                     itself was written with, or a reader relying on info.xml alone (eg.
      *                     {@link org.fao.geonet.kernel.harvest.harvester.geonet.BaseGeoNetworkAligner})
      *                     would look for files in the wrong place.
+     * @param flattenedResourceNames Only meaningful when {@code unifiedStore} is false - the
+     *                     name mapping from {@link #flattenResourceNames}, so a flattened
+     *                     resource is registered under the same name it was actually written
+     *                     under. Ignored (may be null) when {@code unifiedStore} is true.
      */
     static String buildInfoFile(ServiceContext context, AbstractMetadata md,
                                 Format format, List<MetadataResource> pubResources,
                                 List<MetadataResource> priResources, boolean skipUUID,
-                                boolean unifiedStore)
+                                boolean unifiedStore, Map<String, String> flattenedResourceNames)
         throws Exception {
         Element info = new Element("info");
         info.setAttribute("version", VERSION);
@@ -380,9 +385,9 @@ public class MEFLib {
             }
             info.addContent(buildInfoFiles("store", allResources));
         } else {
-            info.addContent(buildInfoFiles("public", pubResources));
+            info.addContent(buildInfoFiles("public", pubResources, flattenedResourceNames));
             if (priResources != null) {
-                info.addContent(buildInfoFiles("private", priResources));
+                info.addContent(buildInfoFiles("private", priResources, flattenedResourceNames));
             } else {
                 info.addContent(new Element("private"));
             }
@@ -392,38 +397,95 @@ public class MEFLib {
     }
 
     /**
-     * Filter out any resource whose name contains "/" (ie. lives in a subfolder). MEF versions 1
-     * and 2 write resources directly into a flat {@code public}/{@code private} directory inside
-     * the archive; a resource in a subfolder creates a real subdirectory there, which breaks
-     * GeoNetwork versions that predate subfolder support - they list that directory
-     * non-recursively with no check for a nested directory entry, and fail (eg.
-     * {@code .../public/test -> is a directory}) the moment they reach it. Such resources are
-     * simply omitted from a V1/V2 export rather than risk producing an archive an older version
-     * can't read at all; MEF version 3 ({@link MEF3Exporter}, the modern, recommended default) is
-     * unaffected and keeps exporting them normally.
+     * Compute a MEF v1/v2-safe flat name for each resource in the given list, replacing every
+     * "/" in a nested resource's name with "__" (eg. {@code test/document.pdf} becomes
+     * {@code test__document.pdf}), so it can be written directly into a flat public/private
+     * directory without creating any real subdirectory there. This matters because GeoNetwork
+     * versions that predate subfolder support list that directory non-recursively with no check
+     * for a nested directory entry, and fail (eg. {@code .../public/test -> is a directory}) the
+     * moment they reach one - flattening avoids ever writing one in the first place. MEF version 3
+     * ({@link MEF3Exporter}, the modern, recommended default) is unaffected by any of this and
+     * keeps exporting nested resources under their real path.
+     * <p>
+     * A name that doesn't need flattening (no "/") is still included in the returned map, mapped
+     * to itself, so callers can look up every resource's target name uniformly rather than special
+     * -casing the identity mapping. Only a genuine collision - two different original names that
+     * flatten (or already are) the exact same string, eg. a nested {@code test/document.pdf}
+     * flattening to the same name as an existing, unrelated top-level {@code test__document.pdf} -
+     * gets a disambiguating numeric suffix inserted before the file extension; expected to be rare
+     * in practice.
      *
-     * @param metadataUuid Used only for the warning logged when a resource is actually excluded.
-     * @param visibility   Used only for the warning logged when a resource is actually excluded.
+     * @return a map from each resource's original name to the name it should actually be written
+     * under (and referenced as, in both info.xml and any URL inside the record's own metadata.xml
+     * that points at it) for this export. Never null; empty if {@code resources} is null or empty.
      */
-    static List<MetadataResource> excludeNestedResources(String metadataUuid,
-                                                          MetadataResourceVisibility visibility,
-                                                          List<MetadataResource> resources) {
-        if (resources == null || resources.isEmpty()) {
-            return resources;
+    static Map<String, String> flattenResourceNames(List<MetadataResource> resources) {
+        Map<String, String> flattenedNames = new LinkedHashMap<>();
+        if (resources == null) {
+            return flattenedNames;
         }
-        List<MetadataResource> flatResources = new ArrayList<>(resources.size());
+        Set<String> usedNames = new HashSet<>();
         for (MetadataResource resource : resources) {
-            if (resource.getFilename() != null && resource.getFilename().contains("/")) {
-                Log.warning(Geonet.MEF, String.format(
-                    "Excluding %s resource '%s' of metadata '%s' from the MEF v1/v2 export - it "
-                        + "lives in a subfolder, which older GeoNetwork versions cannot read from "
-                        + "a v1/v2 archive. Export as MEF v3 to include it.",
-                    visibility, resource.getFilename(), metadataUuid));
-            } else {
-                flatResources.add(resource);
+            String originalName = resource.getFilename();
+            String candidate = originalName.replace("/", "__");
+            String finalName = candidate;
+            int suffix = 1;
+            while (!usedNames.add(finalName)) {
+                int dot = candidate.lastIndexOf('.');
+                finalName = dot > 0
+                    ? candidate.substring(0, dot) + "-" + suffix + candidate.substring(dot)
+                    : candidate + "-" + suffix;
+                suffix++;
             }
+            flattenedNames.put(originalName, finalName);
         }
-        return flatResources;
+        return flattenedNames;
+    }
+
+    /**
+     * Rewrite any reference, inside the given serialized record XML, to a resource whose name was
+     * changed by {@link #flattenResourceNames} - eg. a distribution link or thumbnail URL pointing
+     * at {@code .../attachments/test/document.pdf} gets rewritten to
+     * {@code .../attachments/test__document.pdf} - so the record's own online resource links still
+     * resolve correctly against the flattened layout a legacy MEF v1/v2 export actually writes to
+     * disk. Without this, a record that *links* (not just uploads) a nested attachment would
+     * export with a dangling reference in its own metadata.xml.
+     * <p>
+     * This is a plain string substitution, not schema-aware XPath rewriting: the exact old and new
+     * URLs are both fully known here (same base URL/UUID prefix as {@code resource.getUrl()}, only
+     * the escaped filename tail changes), so it works correctly regardless of which element or
+     * namespace happens to hold the link in any given metadata schema, without needing to parse
+     * the XML at all.
+     *
+     * @param xmlDocumentAsString The serialized record XML to rewrite.
+     * @param resources           The resources whose names were (possibly) changed.
+     * @param flattenedNames      The name mapping from {@link #flattenResourceNames}.
+     * @return The rewritten XML, or the original string unchanged if nothing needed rewriting.
+     */
+    static String rewriteFlattenedResourceUrls(String xmlDocumentAsString, List<MetadataResource> resources,
+                                               Map<String, String> flattenedNames) {
+        if (resources == null || flattenedNames == null || flattenedNames.isEmpty()) {
+            return xmlDocumentAsString;
+        }
+        for (MetadataResource resource : resources) {
+            String originalName = resource.getFilename();
+            String flattenedName = flattenedNames.get(originalName);
+            String oldUrl = resource.getUrl();
+            if (flattenedName == null || flattenedName.equals(originalName) || oldUrl == null) {
+                continue;
+            }
+            String escapedOldName = UrlEscapers.urlFragmentEscaper().escape(originalName);
+            if (!oldUrl.endsWith(escapedOldName)) {
+                // Unexpected URL shape (eg. a Store implementation building URLs differently
+                // than FilesystemStoreResource's baseUrl + uuid + "/attachments/" + escaped
+                // filename convention) - skip rather than risk a wrong substitution.
+                continue;
+            }
+            String escapedFlattenedName = UrlEscapers.urlFragmentEscaper().escape(flattenedName);
+            String newUrl = oldUrl.substring(0, oldUrl.length() - escapedOldName.length()) + escapedFlattenedName;
+            xmlDocumentAsString = xmlDocumentAsString.replace(oldUrl, newUrl);
+        }
+        return xmlDocumentAsString;
     }
 
     /**
@@ -583,6 +645,19 @@ public class MEFLib {
      * Build file section of info file.
      */
     static Element buildInfoFiles(String name, List<MetadataResource> resources) {
+        return buildInfoFiles(name, resources, null);
+    }
+
+    /**
+     * Build file section of info file.
+     *
+     * @param flattenedNames Optional name mapping from {@link #flattenResourceNames} - when a
+     *                       resource's original name is a key in this map, the corresponding
+     *                       value is registered as its {@code name} attribute instead of the
+     *                       resource's own {@link MetadataResource#getFilename()}. May be null,
+     *                       equivalent to an empty map (every resource keeps its own name).
+     */
+    static Element buildInfoFiles(String name, List<MetadataResource> resources, Map<String, String> flattenedNames) {
         Element root = new Element(name);
 
 
@@ -591,7 +666,10 @@ public class MEFLib {
                 String date = new ISODate(resource.getLastModification().getTime(), false).toString();
 
                 Element el = new Element("file");
-                el.setAttribute("name", resource.getFilename());
+                String filename = (flattenedNames != null && flattenedNames.containsKey(resource.getFilename()))
+                    ? flattenedNames.get(resource.getFilename())
+                    : resource.getFilename();
+                el.setAttribute("name", filename);
                 el.setAttribute("changeDate", date);
                 if (resource.getVisibility() != null) {
                     el.setAttribute("access", resource.getVisibility().toString());

@@ -52,6 +52,8 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -284,6 +286,51 @@ class MEF2Exporter {
         String id = "" + record.getId();
         String isTemp = record.getDataInfo().getType().codeString;
 
+        final Store store = context.getBean("resourceStore", Store.class);
+
+        Path publicResourcesPath = getResourcesPath(metadataRootDir, MetadataResourceVisibility.PUBLIC);
+        Path privateResourcesPath = getResourcesPath(metadataRootDir, MetadataResourceVisibility.PRIVATE);
+
+        // Add the resources if the specified format allows it. This has to happen before
+        // metadata.xml is written below: for a legacy (non-unified-store) export, a nested
+        // resource's stored name is flattened (see MEFLib#flattenResourceNames), and any
+        // reference to its original URL inside the record's own metadata.xml needs rewriting to
+        // match before that XML is serialized to disk.
+        List<MetadataResource> publicResources = List.of();
+        List<MetadataResource> privateResources = List.of();
+        Map<String, String> publicFlattenedNames = Collections.emptyMap();
+        Map<String, String> privateFlattenedNames = Collections.emptyMap();
+        if (includeAttachments) {
+            if (format == Format.PARTIAL || format == Format.FULL) {
+                // Include public resources only for PARTIAL and FULL formats so the info file matches the MEF contents.
+                publicResources = store.getResources(context, metadata.getUuid(),
+                    MetadataResourceVisibility.PUBLIC, null, true);
+                // Resources in a subfolder break old GeoNetwork versions reading a legacy V1/V2
+                // archive (see MEFLib#flattenResourceNames) - not a concern for MEF3Exporter's
+                // unified store/ layout, which only ever needs to be read by subfolder-aware code.
+                if (!isUnifiedStoreLayout()) {
+                    publicFlattenedNames = MEFLib.flattenResourceNames(publicResources);
+                    xmlDocumentAsString = MEFLib.rewriteFlattenedResourceUrls(xmlDocumentAsString, publicResources, publicFlattenedNames);
+                }
+                StoreUtils.extract(context, metadata.getUuid(), publicResources, publicResourcesPath, true, publicFlattenedNames);
+            }
+
+            if (format == Format.FULL) {
+                try {
+                    Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
+                    privateResources = store.getResources(context, metadata.getUuid(),
+                        MetadataResourceVisibility.PRIVATE, null, true);
+                    if (!isUnifiedStoreLayout()) {
+                        privateFlattenedNames = MEFLib.flattenResourceNames(privateResources);
+                        xmlDocumentAsString = MEFLib.rewriteFlattenedResourceUrls(xmlDocumentAsString, privateResources, privateFlattenedNames);
+                    }
+                    StoreUtils.extract(context, metadata.getUuid(), privateResources, privateResourcesPath, true, privateFlattenedNames);
+                } catch (Exception e) {
+                    // Current user could not download private data
+                }
+            }
+        }
+
         final Path metadataXmlDir = metadataRootDir.resolve(MD_DIR);
         Files.createDirectories(metadataXmlDir);
 
@@ -291,7 +338,7 @@ class MEF2Exporter {
             Files.write(metadataXmlDir.resolve(output.one()), output.two().getBytes(CHARSET));
         }
 
-        // --- save native metadata
+        // --- save native metadata (using the URL-rewritten string, if any resource was flattened)
         Files.write(metadataXmlDir.resolve(FILE_METADATA), xmlDocumentAsString.getBytes(CHARSET));
 
 
@@ -304,46 +351,11 @@ class MEF2Exporter {
             Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));
         }
 
-        final Store store = context.getBean("resourceStore", Store.class);
-
-        Path publicResourcesPath = getResourcesPath(metadataRootDir, MetadataResourceVisibility.PUBLIC);
-        Path privateResourcesPath = getResourcesPath(metadataRootDir, MetadataResourceVisibility.PRIVATE);
-
-        // Add the resources if the specified format allows it
-        List<MetadataResource> publicResources = List.of();
-        List<MetadataResource> privateResources = List.of();
-        if (includeAttachments) {
-            if (format == Format.PARTIAL || format == Format.FULL) {
-                // Include public resources only for PARTIAL and FULL formats so the info file matches the MEF contents.
-                publicResources = store.getResources(context, metadata.getUuid(),
-                    MetadataResourceVisibility.PUBLIC, null, true);
-                // Resources in a subfolder break old GeoNetwork versions reading a legacy V1/V2
-                // archive (see MEFLib#excludeNestedResources) - not a concern for MEF3Exporter's
-                // unified store/ layout, which only ever needs to be read by subfolder-aware code.
-                if (!isUnifiedStoreLayout()) {
-                    publicResources = MEFLib.excludeNestedResources(metadata.getUuid(), MetadataResourceVisibility.PUBLIC, publicResources);
-                }
-                StoreUtils.extract(context, metadata.getUuid(), publicResources, publicResourcesPath, true);
-            }
-
-            if (format == Format.FULL) {
-                try {
-                    Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
-                    privateResources = store.getResources(context, metadata.getUuid(),
-                        MetadataResourceVisibility.PRIVATE, null, true);
-                    if (!isUnifiedStoreLayout()) {
-                        privateResources = MEFLib.excludeNestedResources(metadata.getUuid(), MetadataResourceVisibility.PRIVATE, privateResources);
-                    }
-                    StoreUtils.extract(context, metadata.getUuid(), privateResources, privateResourcesPath, true);
-                } catch (Exception e) {
-                    // Current user could not download private data
-                }
-            }
-        }
-
         // --- save info file
+        Map<String, String> flattenedNames = new HashMap<>(publicFlattenedNames);
+        flattenedNames.putAll(privateFlattenedNames);
         byte[] binData = MEFLib.buildInfoFile(context, record, format, publicResources,
-            privateResources, skipUUID, isUnifiedStoreLayout()).getBytes(Constants.ENCODING);
+            privateResources, skipUUID, isUnifiedStoreLayout(), flattenedNames).getBytes(Constants.ENCODING);
 
         Files.write(metadataRootDir.resolve(FILE_INFO), binData);
     }

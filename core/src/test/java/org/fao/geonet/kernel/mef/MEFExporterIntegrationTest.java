@@ -290,14 +290,15 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
     }
 
     /**
-     * Regression guard for the fix excluding subfoldered resources from MEF v1/v2 exports (see
-     * MEFLib#excludeNestedResources): older GeoNetwork versions can't read a real subdirectory
-     * inside a v1/v2 archive's flat public/private layout, so a resource in a subfolder must be
-     * omitted from v1/v2 exports entirely, while v3 - whose store/ layout is only ever read by
-     * subfolder-aware code - keeps including it.
+     * Regression guard for flattening subfoldered resources in MEF v1/v2 exports (see
+     * MEFLib#flattenResourceNames): older GeoNetwork versions can't read a real subdirectory
+     * inside a v1/v2 archive's flat public/private layout, so a resource in a subfolder is
+     * written under a flattened name ("/" replaced with "__") instead - keeping the file, unlike
+     * the exclusion approach this superseded - while v3, whose store/ layout is only ever read by
+     * subfolder-aware code, keeps exporting the resource under its real nested path unchanged.
      */
     @Test
-    public void testNestedResourceExcludedFromV1AndV2ButNotV3() throws Exception {
+    public void testNestedResourceFlattenedForV1AndV2ButNotV3() throws Exception {
         ServiceContext context = createServiceContext();
         loginAsAdmin(context);
 
@@ -311,17 +312,21 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         store.putResource(context, uuid, "test/nested.txt", new ByteArrayInputStream("nested".getBytes()),
             null, MetadataResourceVisibility.PUBLIC, true);
 
-        // V1: the nested resource must not appear in the ZIP or in info.xml, but the fixture's
-        // other public resources (unaffected by the exclusion) still do.
+        // V1: the nested resource must be written flat, under "test__nested.txt", not as a real
+        // subdirectory - and the fixture's other public resources still export unaffected.
         Path v1Path = MEFExporter.doExport(context, uuid, MEFLib.Format.FULL, false, false, false, false, true, true);
         try (FileSystem zipFs = ZipUtil.openZipFs(v1Path)) {
-            assertFalse("Nested resource must not be written into MEF v1's public/ folder",
+            assertFalse("Flattened resource must not create a real public/test/ subdirectory",
                 Files.exists(zipFs.getPath("public/test")));
-            assertTrue("Non-nested public resources must still be exported",
+            assertTrue("Flattened resource must be written directly under public/",
+                Files.exists(zipFs.getPath("public/test__nested.txt")));
+            assertTrue("Non-nested public resources must still be exported unaffected",
                 Files.exists(zipFs.getPath("public/thumbnail.gif")));
             String infoXml = new String(Files.readAllBytes(zipFs.getPath("info.xml")));
-            assertFalse("Nested resource must not be registered in MEF v1's info.xml",
-                infoXml.contains("nested.txt"));
+            assertTrue("MEF v1's info.xml must register the resource under its flattened name",
+                infoXml.contains("test__nested.txt"));
+            assertFalse("MEF v1's info.xml must not still reference the pre-flatten nested name",
+                infoXml.contains("test/nested.txt"));
         } finally {
             Files.delete(v1Path);
         }
@@ -330,26 +335,30 @@ public class MEFExporterIntegrationTest extends AbstractCoreIntegrationTest {
         Path v2Path = MEFLib.doMEF2Export(context, Set.of(uuid), "full", false, getStyleSheets(),
             false, false, false, false, true, true);
         try (FileSystem zipFs = ZipUtil.openZipFs(v2Path)) {
-            assertFalse("Nested resource must not be written into MEF v2's public/ folder",
+            assertFalse("Flattened resource must not create a real public/test/ subdirectory",
                 Files.exists(zipFs.getPath(uuid + "/public/test")));
-            assertTrue("Non-nested public resources must still be exported",
+            assertTrue("Flattened resource must be written directly under public/",
+                Files.exists(zipFs.getPath(uuid + "/public/test__nested.txt")));
+            assertTrue("Non-nested public resources must still be exported unaffected",
                 Files.exists(zipFs.getPath(uuid + "/public/thumbnail.gif")));
             String infoXml = new String(Files.readAllBytes(zipFs.getPath(uuid + "/info.xml")));
-            assertFalse("Nested resource must not be registered in MEF v2's info.xml",
-                infoXml.contains("nested.txt"));
+            assertTrue("MEF v2's info.xml must register the resource under its flattened name",
+                infoXml.contains("test__nested.txt"));
+            assertFalse("MEF v2's info.xml must not still reference the pre-flatten nested name",
+                infoXml.contains("test/nested.txt"));
         } finally {
             Files.delete(v2Path);
         }
 
-        // V3 (control): the exclusion must not leak into the modern, unified store/ layout -
-        // the nested resource is still fully exported here.
+        // V3 (control): flattening must not leak into the modern, unified store/ layout - the
+        // nested resource is still fully exported here, under its real nested path.
         Path v3Path = MEFLib.doMEF3Export(context, Set.of(uuid), "full", false, getStyleSheets(),
             false, false, false, false, true, true);
         try (FileSystem zipFs = ZipUtil.openZipFs(v3Path)) {
-            assertTrue("MEF v3 must still export a resource in a subfolder",
+            assertTrue("MEF v3 must still export a resource in a subfolder under its real nested path",
                 Files.exists(zipFs.getPath(uuid + "/store/test/nested.txt")));
             String infoXml = new String(Files.readAllBytes(zipFs.getPath(uuid + "/info.xml")));
-            assertTrue("MEF v3's info.xml must still register a resource in a subfolder",
+            assertTrue("MEF v3's info.xml must still register the resource under its real nested path",
                 infoXml.contains("test/nested.txt"));
         } finally {
             Files.delete(v3Path);

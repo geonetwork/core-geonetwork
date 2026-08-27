@@ -278,4 +278,121 @@ public class MEFLibTest {
         List<Element> files = store.getChildren("file");
         assertTrue(files.isEmpty());
     }
+
+    @Test
+    public void buildInfoFiles_shouldUseFlattenedName_whenResourceIsInTheFlattenedNamesMap() {
+        MetadataResource resource = mock(MetadataResource.class);
+        when(resource.getFilename()).thenReturn("test/document.pdf");
+        when(resource.getLastModification()).thenReturn(new Date(0));
+        when(resource.getVisibility()).thenReturn(MetadataResourceVisibility.PUBLIC);
+
+        Element publicEl = MEFLib.buildInfoFiles("public", Collections.singletonList(resource),
+            Map.of("test/document.pdf", "test__document.pdf"));
+
+        List<Element> files = publicEl.getChildren("file");
+        assertEquals("test__document.pdf", files.get(0).getAttributeValue("name"));
+    }
+
+    /**
+     * Regression tests for {@link MEFLib#flattenResourceNames}, the MEF v1/v2 export helper that
+     * replaces "/" with "__" in a nested resource's name so it can be written into a flat
+     * public/private directory without creating a real subdirectory there.
+     */
+    @Test
+    public void flattenResourceNames_shouldReplaceSlashesWithDoubleUnderscore_whenNameIsNested() {
+        MetadataResource resource = mock(MetadataResource.class);
+        when(resource.getFilename()).thenReturn("a/b/document.pdf");
+
+        Map<String, String> flattened = MEFLib.flattenResourceNames(Collections.singletonList(resource));
+
+        assertEquals("a__b__document.pdf", flattened.get("a/b/document.pdf"));
+    }
+
+    @Test
+    public void flattenResourceNames_shouldMapNameToItself_whenNameIsNotNested() {
+        MetadataResource resource = mock(MetadataResource.class);
+        when(resource.getFilename()).thenReturn("document.pdf");
+
+        Map<String, String> flattened = MEFLib.flattenResourceNames(Collections.singletonList(resource));
+
+        assertEquals("document.pdf", flattened.get("document.pdf"));
+    }
+
+    @Test
+    public void flattenResourceNames_shouldReturnEmptyMap_whenResourceListIsNull() {
+        assertTrue(MEFLib.flattenResourceNames(null).isEmpty());
+    }
+
+    @Test
+    public void flattenResourceNames_shouldDisambiguateCollision_whenFlattenedNameAlreadyExists() {
+        // "test/document.pdf" flattens to the same string a genuinely different, unrelated
+        // resource is already literally named.
+        MetadataResource nested = mock(MetadataResource.class);
+        when(nested.getFilename()).thenReturn("test/document.pdf");
+        MetadataResource flatAlready = mock(MetadataResource.class);
+        when(flatAlready.getFilename()).thenReturn("test__document.pdf");
+
+        Map<String, String> flattened = MEFLib.flattenResourceNames(List.of(flatAlready, nested));
+
+        assertEquals("test__document.pdf", flattened.get("test__document.pdf"));
+        String disambiguated = flattened.get("test/document.pdf");
+        assertNotEquals("The colliding name must be disambiguated, not silently overwritten",
+            "test__document.pdf", disambiguated);
+        assertTrue("The disambiguated name should still end with the original extension",
+            disambiguated.endsWith(".pdf"));
+    }
+
+    /**
+     * Regression tests for {@link MEFLib#rewriteFlattenedResourceUrls}, which keeps a record's
+     * own online resource links (eg. a distribution link or thumbnail URL pointing at one of its
+     * own attachments) in sync with {@link MEFLib#flattenResourceNames}' renaming.
+     */
+    @Test
+    public void rewriteFlattenedResourceUrls_shouldRewriteUrl_whenResourceWasFlattened() {
+        MetadataResource resource = mock(MetadataResource.class);
+        when(resource.getFilename()).thenReturn("test/document.pdf");
+        when(resource.getUrl()).thenReturn("https://example.org/geonetwork/srv/api/records/uuid-1/attachments/test/document.pdf");
+
+        Map<String, String> flattenedNames = Map.of("test/document.pdf", "test__document.pdf");
+        String xml = "<gmd:URL>https://example.org/geonetwork/srv/api/records/uuid-1/attachments/test/document.pdf</gmd:URL>";
+
+        String rewritten = MEFLib.rewriteFlattenedResourceUrls(xml, List.of(resource), flattenedNames);
+
+        assertEquals("<gmd:URL>https://example.org/geonetwork/srv/api/records/uuid-1/attachments/test__document.pdf</gmd:URL>",
+            rewritten);
+    }
+
+    @Test
+    public void rewriteFlattenedResourceUrls_shouldRewriteEveryOccurrence_whenResourceIsLinkedMoreThanOnce() {
+        MetadataResource resource = mock(MetadataResource.class);
+        when(resource.getFilename()).thenReturn("test/document.pdf");
+        when(resource.getUrl()).thenReturn("https://example.org/attachments/test/document.pdf");
+
+        Map<String, String> flattenedNames = Map.of("test/document.pdf", "test__document.pdf");
+        String xml = "a=https://example.org/attachments/test/document.pdf;b=https://example.org/attachments/test/document.pdf";
+
+        String rewritten = MEFLib.rewriteFlattenedResourceUrls(xml, List.of(resource), flattenedNames);
+
+        assertEquals("a=https://example.org/attachments/test__document.pdf;b=https://example.org/attachments/test__document.pdf",
+            rewritten);
+    }
+
+    @Test
+    public void rewriteFlattenedResourceUrls_shouldLeaveXmlUnchanged_whenResourceWasNotFlattened() {
+        MetadataResource resource = mock(MetadataResource.class);
+        when(resource.getFilename()).thenReturn("document.pdf");
+        when(resource.getUrl()).thenReturn("https://example.org/attachments/document.pdf");
+
+        Map<String, String> flattenedNames = Map.of("document.pdf", "document.pdf");
+        String xml = "<gmd:URL>https://example.org/attachments/document.pdf</gmd:URL>";
+
+        assertEquals(xml, MEFLib.rewriteFlattenedResourceUrls(xml, List.of(resource), flattenedNames));
+    }
+
+    @Test
+    public void rewriteFlattenedResourceUrls_shouldReturnOriginalXml_whenFlattenedNamesIsEmpty() {
+        String xml = "<gmd:URL>https://example.org/attachments/test/document.pdf</gmd:URL>";
+
+        assertEquals(xml, MEFLib.rewriteFlattenedResourceUrls(xml, List.of(), Map.of()));
+    }
 }
