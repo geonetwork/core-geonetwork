@@ -17,6 +17,31 @@ In the paragraphs below, some terms should be intended as follows:
 2.  the term reader will be used to indicate any actor that can import metadata from a MEF file.
 3.  the term writer will be used to indicate any actor that can generate a MEF file.
 
+## Requesting a specific version via the API {#requesting-a-version}
+
+The catalog's REST API can export any of the three versions described below from the same two endpoints. Which version is returned is negotiated with the standard HTTP `Accept` header, using one of the following media types:
+
+| `Accept` header value       | Version returned |
+|------------------------------|-------------------|
+| `application/x-gn-mef-1-zip` | MEF v1            |
+| `application/x-gn-mef-2-zip` | MEF v2            |
+| `application/x-gn-mef-3-zip` | MEF v3            |
+
+If the `Accept` header is missing, or set to anything else (eg. a generic `application/zip`, or `*/*`), the export defaults to MEF v3 - the current, recommended version. The response's `Content-Type` header always reflects the version actually returned, so a client can confirm what it received without inspecting the file itself.
+
+Two endpoints support this negotiation:
+
+-   `GET /{portal}/api/records/{metadataUuid}/formatters/zip` - export a single record. Supports all three versions.
+-   `GET /{portal}/api/records/zip` - export a selection of records (via a `uuids` parameter, or the current search selection) as a single file. Only MEF v2 and v3 are supported here, since a v1 archive can only ever hold one record; requesting v1 on this endpoint returns an error.
+
+For example, to download a single record as a MEF v2 archive (the legacy public/private layout):
+
+``` text
+curl -H "Accept: application/x-gn-mef-2-zip" \
+     "https://my-catalog.example.org/geonetwork/srv/api/records/0619abc0-708b-eeda-8202-000d98959033/formatters/zip" \
+     -o record.zip
+```
+
 ## MEF v1 file format
 
 A MEF file is simply a ZIP file which contains the following files:
