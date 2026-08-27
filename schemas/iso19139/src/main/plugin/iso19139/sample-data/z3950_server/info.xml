@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<info version="1.0">
+  <general>
+    <createDate>2010-02-02T00:00:00</createDate>
+    <changeDate>2010-02-02T00:00:00</changeDate>
+    <schema>iso19139</schema>
+    <isTemplate>false</isTemplate>
+    <localId>30</localId>
+    <format>full</format>
+  </general>
+  <categories>
+    <category name="datasets" />
+    <category name="z3950Servers" />
+  </categories>
+  <privileges>
+    <group name="sample">
+      <operation name="view" />
+      <operation name="download" />
+      <operation name="notify" />
+      <operation name="dynamic" />
+      <operation name="featured" />
+    </group>
+    <group name="all">
+      <operation name="view" />
+      <operation name="download" />
+      <operation name="dynamic" />
+      <operation name="featured" />
+    </group>
+    <group name="intranet">
+      <operation name="view" />
+      <operation name="download" />
+      <operation name="dynamic" />
+      <operation name="featured" />
+    </group>
+  </privileges>
+</info>
