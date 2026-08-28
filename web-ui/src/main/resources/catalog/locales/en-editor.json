@@ -117,7 +117,8 @@
     "createMetadataUniformResourceName": "Metadata Uniform Resource Name",
     "createNewMetadata": "Add a new record",
     "createSmall": "Create small",
-    "cantAddLinkToDataset": "Can't add link to target dataset. You probably can't edit that record. Updating the service only.",
+    "cantAddLinkToDataset": "You cannot add the link to the target dataset, as you will likely be unable to edit the service record. The dataset will be updated to include the link to the service as a distribution, if you have selected that option in the dialogue box.",
+    "cantAddLinkToService": "You cannot add the link to the target service in the dataset, as you will likely be unable to edit the dataset record.",
     "current": "current",
     "datasetFound": "Dataset found and added to map preview",
     "datasetNotFound": "Dataset not found - 404",
@@ -182,6 +183,7 @@
     "linkUrl": "URL to remove",
     "fileStore": "Metadata file store",
     "filestoreUploadAFile": "or upload a new file",
+    "filestoreUploadFromUrl": "or upload a file from a URL",
     "filestoreChooseAFile": "or choose a file from the filestore",
     "openResource": "Open resource",
     "linkMetadata": "Link metadata",
@@ -476,5 +478,7 @@
     "metadataDuplicatedField-identifier": "The metadata resource identifier is used in another metadata record.",
     "indexingIssues": "Indexing issues",
     "indexingErrors": "Errors",
-    "indexingWarnings": "Warnings"
+    "indexingWarnings": "Warnings",
+    "fileStoreDuplicatedFilename": "The filename is already used in the file store.",
+    "renameResource": "Rename resource"
 }

@@ -111,7 +111,7 @@
 
         <script src="{$uiResourcesPath}lib/base64.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/jquery-3.7.1.js?v={$buildNumber}"></script>
-        <script src="{$uiResourcesPath}lib/jquery-migrate-3.4.1.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery-migrate-3.6.0.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/moment-with-locales.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/moment-timezone-with-data-1970-2030.min.js?v={$buildNumber}"></script>

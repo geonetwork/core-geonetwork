@@ -11,7 +11,7 @@ In order to share metadata between organisations, common metadata models, such a
 *   Metadata is "data about data":
     
     * Common Metadata models are recipes used to create records that can be shared between organizations.
-    * Metadata Profiles adapt a common metadata model for an organization, domain, or specific use.
+    * Metadata Profiles adapt a common metadatamodel for an organization, domain, or specific use.
 
 
 ## Metadata in the spatial domain
@@ -42,7 +42,7 @@ Catalogues can be populated in three ways:
     
     *  https://data.bev.gv.at
     *  https://catalogue.ec.gc.ca
-    *  Many others in [gallery](/annexes/gallery)
+    *  Many others in [gallery](../../../annexes/gallery/index.md)
     
     Answer the following questons:
     

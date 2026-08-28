@@ -74,8 +74,9 @@ public class OgcWxSHarvester extends AbstractHarvester<HarvestResult, OgcWxSPara
     //---------------------------------------------------------------------------
 
     public void doHarvest(Logger log) throws Exception {
-        Harvester h = new Harvester(cancelMonitor, log, context, params);
-        result = h.harvest(log);
+        try (Harvester h = new Harvester(cancelMonitor, log, context, params)) {
+            result = h.harvest(log);
+        }
     }
 }
 

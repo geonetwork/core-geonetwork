@@ -1847,6 +1847,12 @@
           <row>
             <xsl:for-each select="col">
               <col>
+                <!-- Copy the multilingual attribute if defined -->
+                <xsl:variable name="multilingual" select="@multilingual" />
+                <xsl:if test="string($multilingual)">
+                  <xsl:attribute name="multilingual" select="$multilingual" />
+                </xsl:if>
+
                 <xsl:choose>
                   <xsl:when test="@use != ''">
                     <xsl:copy-of select="@use|directiveAttributes"/>

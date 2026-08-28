@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,8 +29,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.FeatureNotEnabledException;
 import org.fao.geonet.kernel.oaipmh.OaiPmhDispatcher;
 import org.fao.geonet.kernel.oaipmh.OaiPmhParams;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.jdom.Element;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +58,9 @@ public class OaiPmhApi {
     @Autowired
     private OaiPmhDispatcher oaiPmhDispatcher;
 
+    @Autowired
+    private SettingManager settingManager;
+
     @Operation(
         summary = "OAI-PMH server endpoint",
         description = "[More information](https://docs.geonetwork-opensource.org/4.4/api/oai-pmh/)")
@@ -68,7 +74,13 @@ public class OaiPmhApi {
     public Element dispatch(
         @ParameterObject final OaiPmhParams oaiPmhParams,
         final HttpServletRequest request
-    ) {
+    ) throws Exception {
+        if (!settingManager.getValueAsBool(Settings.SYSTEM_OAI_ENABLE, true)) {
+            throw new FeatureNotEnabledException("OAI-PMH service is disabled")
+                .withMessageKey("exception.resourceNotEnabled.oaipmh")
+                .withDescriptionKey("exception.resourceNotEnabled.oaipmh.description");
+        }
+
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
         // Set the service name, used in OaiPmhDispatcher to build the oaiphm endpoint URL
         serviceContext.setService("api/oaipmh");

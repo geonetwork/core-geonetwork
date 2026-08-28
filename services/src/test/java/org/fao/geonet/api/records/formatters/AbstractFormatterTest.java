@@ -34,6 +34,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.repository.MetadataRepository;
@@ -97,7 +98,7 @@ public abstract class AbstractFormatterTest extends AbstractServiceIntegrationTe
         metadata.setHarvestInfo(harvestInfo);
         metadata.setData(xml);
         this.id = dataManager.insertMetadata(serviceContext, metadata, metadata.getXmlData(false), IndexingMode.full, false,
-            UpdateDatestamp.NO, false, false).getId();
+            UpdateDatestamp.NO, false, DirectIndexSubmitter.INSTANCE).getId();
     }
 
     public boolean isHarvested() {

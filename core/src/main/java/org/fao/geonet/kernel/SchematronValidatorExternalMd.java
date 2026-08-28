@@ -57,6 +57,9 @@ public class SchematronValidatorExternalMd extends AbstractSchematronValidator {
             List<ApplicableSchematron> applicableSchematron = getApplicableSchematronList(md, metadataSchema, groupOwnerId);
 
             for (ApplicableSchematron applicable : applicableSchematron) {
+                // Pass -1 as metadataId for external validation since the metadata is not in the database.
+                // Schematron rules can reference the metadataId parameter, but attempting to look up metadata
+                // using -1 will return empty results.
                 runSchematron(lang, schemaDir, validations, schemaTronXmlOut, -1, md, applicable);
             }
         } catch (Throwable e) {

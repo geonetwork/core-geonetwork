@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2015 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -30,8 +30,6 @@ import org.apache.camel.model.dataformat.JaxbDataFormat;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.w3c.dom.Document;
 
-import javax.xml.bind.JAXBContext;
-
 /**
  * Created by francois on 28/10/15.
  */
@@ -39,7 +37,7 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
     public static final String LOGGER_NAME = "geonetwork.harvest.wfs.features";
     public static final String MESSAGE_HARVEST_WFS_FEATURES = "harvest-wfs-features";
     public static final String MESSAGE_DELETE_WFS_FEATURES = "delete-wfs-features";
-    public static final String HARVEST_WFS_FEATURES_QUEUE_URI = "activemq:queue:" + MESSAGE_HARVEST_WFS_FEATURES + "?concurrentConsumers=5";
+    public static final String HARVEST_WFS_FEATURES_SEDA_URI = "seda:harvest-wfs-features?concurrentConsumers=5&blockWhenFull=true";
 
     private boolean startsFromXMLConfigurationFile = false;
 
@@ -96,18 +94,18 @@ public class WFSHarvesterRouteBuilder extends RouteBuilder {
          * types and the WFSDatastore.
          * This bean will be pass to next Route.
          */
-        from(HARVEST_WFS_FEATURES_QUEUE_URI)
+        from(HARVEST_WFS_FEATURES_SEDA_URI)
                 .id("harvest-wfs-start-from-message")
-                .log(LoggingLevel.INFO, LOGGER_NAME, "Harvest features message received.")
+                .log(LoggingLevel.INFO, LOGGER_NAME, "Harvest features message received via SEDA.")
                 .log(LoggingLevel.INFO, LOGGER_NAME, "${body}")
                 .setProperty("configuration", simple("${body.parameters}"))
                 .beanRef("WFSFeatureIndexer", "initialize(*, true)")
                 .to("direct:delete-wfs-featuretype-features")
                 .to("direct:index-wfs");
 
-        from("activemq:queue:" + MESSAGE_DELETE_WFS_FEATURES + "?concurrentConsumers=5")
+        from("seda:" + MESSAGE_DELETE_WFS_FEATURES + "?concurrentConsumers=5")
                 .id("harvest-wfs-delete-features-from-message")
-                .log(LoggingLevel.INFO, LOGGER_NAME, "Delete features message received.")
+                .log(LoggingLevel.INFO, LOGGER_NAME, "Delete features message received via SEDA.")
                 .setProperty("url", simple("${body.parameters.url}"))
                 .setProperty("typeName", simple("${body.parameters.typeName}"))
                 .to("direct:delete-wfs-featuretype-features");

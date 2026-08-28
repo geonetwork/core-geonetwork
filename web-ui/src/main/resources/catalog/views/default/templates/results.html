@@ -131,7 +131,10 @@
               <i class="fa fa-fw fa-chevron-up"></i>
             </button>
           </div>
-          <div class="col-xs-12 col-sm-6 text-center">
+          <div
+            class="col-xs-12 col-sm-6 text-center"
+            data-ng-show="searchResults.records.length > 0"
+          >
             <div
               class=""
               data-gn-pagination="paginationInfo"

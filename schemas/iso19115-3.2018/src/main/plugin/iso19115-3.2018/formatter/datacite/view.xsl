@@ -73,7 +73,7 @@
 
   <xsl:template match="/">
     <datacite:resource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                       xsi:schemaLocation="http://datacite.org/schema/kernel-4 https://schema.datacite.org/meta/kernel-4.6/metadata.xsd">
+                       xsi:schemaLocation="http://datacite.org/schema/kernel-4 https://schema.datacite.org/meta/kernel-4.7/metadata.xsd">
       <xsl:apply-templates select="$metadata"
                            mode="toDatacite"/>
 
@@ -654,12 +654,12 @@ eg.
 
     <xsl:variable name="isoAssociatedTypesToDcatCommonNames"
                   as="node()*">
-      <entry associationType="crossReference" initiativeType="collection">isPartOf</entry>
-      <entry associationType="partOfSeamlessDatabase">isPartOf</entry>
-      <entry associationType="series">isPartOf</entry>
-      <entry associationType="crossReference">references</entry>
-      <entry associationType="isComposedOf">hasPart</entry>
-      <entry associationType="revisionOf">isVersionOf</entry>
+      <entry associationType="crossReference" initiativeType="collection">IsPartOf</entry>
+      <entry associationType="partOfSeamlessDatabase">IsPartOf</entry>
+      <entry associationType="series">IsPartOf</entry>
+      <entry associationType="crossReference">References</entry>
+      <entry associationType="isComposedOf">HasPart</entry>
+      <entry associationType="revisionOf">IsVersionOf</entry>
     </xsl:variable>
 
     <xsl:if test="$associations/relations/*">
@@ -681,22 +681,22 @@ eg.
           <xsl:variable name="relationType" as="xs:string">
             <xsl:choose>
               <xsl:when test="local-name() = 'parent'">
-                isPartOf
+                IsPartOf
               </xsl:when>
               <xsl:when test="local-name() = 'children'">
-                hasPart
+                HasPart
               </xsl:when>
               <xsl:when test="local-name() = 'brothersAndSisters'">
-                references
+                References
               </xsl:when>
               <xsl:when test="local-name() = 'sources'">
-                isDerivedFrom
+                IsDerivedFrom
               </xsl:when>
               <xsl:when test="local-name() = 'datasets'">
-                hasPart
+                HasPart
               </xsl:when>
               <xsl:when test="local-name() = 'services'">
-                isPublishedIn
+                IsPublishedIn
               </xsl:when>
               <xsl:when test="local-name() = 'siblings' and not(@uuid = (../children/@uuid))">
                 <xsl:variable name="associationType"
@@ -715,11 +715,11 @@ eg.
                           then $dcTypeForAssociationAndInitiative
                           else if ($dcTypeForAssociation)
                           then $dcTypeForAssociation
-                          else 'references'"/>
+                          else 'References'"/>
 
                 <xsl:value-of select="$elementType"/>
               </xsl:when>
-              <xsl:otherwise>references</xsl:otherwise>
+              <xsl:otherwise>References</xsl:otherwise>
             </xsl:choose>
           </xsl:variable>
 

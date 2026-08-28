@@ -29,6 +29,14 @@ To add new static pages go to **Admin Console** -->  **Settings** -->  **Static 
 
 - **Page section**: Section of the page to display the link. Currently implemented sections are `TOP` (top menu of the main page), `FOOTER` (footer of the main page), and `RECORD_VIEW_MENU` (toolbar shown on the record view page).
 
+- **Workflow visibility (`RECORD_VIEW_MENU` only)**: Controls whether a page is shown for each workflow state.
+
+  - `showWhenWorkflowDisabled`
+  - `showOnApproved`
+  - `showOnNonApproved`
+
+  These options default to `true` (backward compatible).
+
 - **Status**: Defines which users can see the link.
 
     - **Visible only to the administrator**
@@ -103,6 +111,10 @@ By default, the record view toolbar uses the following menu order:
  "gn-recordview-display-menu"]
 ```
 
+If the **Record View custom menu items** list is empty, only this default menu order is used and static pages are not automatically added.
+
+Use the static page identifier directly (for example `documentation`) when inserting custom pages. The `gn-` prefix is reserved for built-in menu entries and custom page identifiers using that prefix are ignored.
+
 As with the top toolbar, insert a page as a simple menu using the page identifier or as a submenu using an object:
 
 ``` json
@@ -123,4 +135,3 @@ As with the top toolbar, insert a page as a simple menu using the page identifie
 ## Change the static pages order in the footer
 
 The order of the footer pages can be configured in **Admin Console** -->  **Settings** -->  **User interface**, in the **Footer custom menu items** section.
-
