@@ -21,8 +21,7 @@
                            select="mdb:metadataIdentifier
                                   |mdb:identificationInfo/*/mri:citation/*/cit:title
                                   |mdb:identificationInfo/*/mri:abstract
-                                  |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'creation']/cit:date
-                                  |mdb:dateInfo/*[cit:dateType/*/@codeListValue = 'revision']/cit:date"/>
+                                  |mdb:dateInfo"/>
       <xsl:copy-of select="$additionalProperties"/>
     </xsl:variable>
 
