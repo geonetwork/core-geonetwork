@@ -22,7 +22,7 @@ But the most interesting feature of harvesters is the scheduler. You can define 
 
 GeoNetwork can also harvest from CSW catalogs. The process is quite similar, but instead of choosing the GeoNetwork type of harvester, we chose the **OGC CSW 2.0.2** harvester type.
 
-For this tutorial, we are going to use the following catalog: `http://nationaalgeoregister.nl/geonetwork/srv/eng/csw`
+For this tutorial, we are going to use the following catalog: `https://nationaalgeoregister.nl/geonetwork/srv/eng/csw`
 
 While the harvester is running, there will be an animated circle. Once the harvester has finished, the number of records harvested will be shown.
 
