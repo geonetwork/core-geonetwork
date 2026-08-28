@@ -3500,8 +3500,8 @@ that can request an account. If not configured any email address is allowed.</p>
 </ul>
 <p>In above URLs {UUID} is the fileidentifier of the download service metadata.</p>
 <p>In the service feed of your download service make sure to add the GeoNetwork OpenSearch endpoint as the OpenSearchDescription for the service:</p>
-<div class="language-text highlight"><pre><span></span><code>&lt;link rel=&quot;search&quot; href=&quot;http://SERVER/geonetwork/opensearch/eng/{uuid}/OpenSearchDescription.xml&quot; 
-type=&quot;application/opensearchdescription+xml&quot; title=&quot;Open Search document for INSPIRE Download service&quot;/&gt;
+<div class="language-text highlight"><pre><span></span><code>&lt;link rel="search" href="http://SERVER/geonetwork/opensearch/eng/{uuid}/OpenSearchDescription.xml" 
+type="application/opensearchdescription+xml" title="Open Search document for INSPIRE Download service"/&gt;
 </code></pre></div>
 <p>The INSPIRE Atom/OpenSearch implementation can be verified with the Atom tests in Esdin Test Framework (<a href="http://elfproject.eu/documentation/geotool/etf">http://elfproject.eu/documentation/geotool/etf</a>) or INSPIRE metadata validator (<a href="http://inspire-geoportal.ec.europa.eu/validator2">http://inspire-geoportal.ec.europa.eu/validator2</a>).</p>
 <h2 id="multi-threaded-indexing">Multi-Threaded Indexing</h2>

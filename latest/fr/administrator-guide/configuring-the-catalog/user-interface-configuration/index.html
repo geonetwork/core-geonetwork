@@ -3120,9 +3120,9 @@
 </ul>
 <p>Examples of layers:</p>
 <p>This WMS layer will be shown but only when the map is on <code>EPSG:4326</code>:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;wms&quot;</span><span class="p">,</span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;OI.OrthoimageCoverage&quot;</span><span class="p">,</span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="s2">&quot;OI.OrthoimageCoverage&quot;</span><span class="p">,</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">&quot;url&quot;</span><span class="p">:</span><span class="s2">&quot;http://www.ign.es/wms-inspire/pnoa-ma?request=GetCapabilities&amp;service=WMS&quot;</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">&quot;projectionList&quot;</span><span class="p">:[</span><span class="s2">&quot;EPSG:4326&quot;</span><span class="p">]}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"wms"</span><span class="p">,</span><span class="nt">"title"</span><span class="p">:</span><span class="s2">"OI.OrthoimageCoverage"</span><span class="p">,</span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"OI.OrthoimageCoverage"</span><span class="p">,</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">"url"</span><span class="p">:</span><span class="s2">"http://www.ign.es/wms-inspire/pnoa-ma?request=GetCapabilities&amp;service=WMS"</span><span class="p">,</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">"projectionList"</span><span class="p">:[</span><span class="s2">"EPSG:4326"</span><span class="p">]}</span>
 </span></code></pre></div>
 <h3 id="search-map-configuration">Search Map Configuration</h3>
 <p>This section defines the configuration for the mini map shown on the search page. It uses the same options as in <a href="./#user-interface-config-viewermap">Viewer Map Configuration</a>.</p>
@@ -3150,11 +3150,11 @@
 <li><strong>Related records facets config</strong>: Define the configuration for facets of related records.</li>
 <li>
 <p><strong>Record View custom menu items</strong>: Use this setting to control the order of the default record view actions and any static pages configured for the record view toolbar. By default, the record view toolbar uses the following menu keys:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">[</span><span class="s2">&quot;gn-recordview-edit-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-delete-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-manage-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-download-menu&quot;</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w"> </span><span class="s2">&quot;gn-recordview-display-menu&quot;</span><span class="p">]</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">[</span><span class="s2">"gn-recordview-edit-menu"</span><span class="p">,</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w"> </span><span class="s2">"gn-recordview-delete-menu"</span><span class="p">,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w"> </span><span class="s2">"gn-recordview-manage-menu"</span><span class="p">,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w"> </span><span class="s2">"gn-recordview-download-menu"</span><span class="p">,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w"> </span><span class="s2">"gn-recordview-display-menu"</span><span class="p">]</span>
 </span></code></pre></div>
 <p>If this list is empty, only those default entries are shown and static pages are not added automatically.</p>
 <p>Custom static pages can be inserted between these default entries. Static pages used there must be created for the <code>RECORD_VIEW_MENU</code> section and referenced by page identifier (for example <code>documentation</code>). The <code>gn-</code> prefix is reserved for built-in entries and should not be used for custom page identifiers. See <a href="../../../customizing-application/adding-static-pages/">Adding static pages</a>.</p>

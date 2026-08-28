@@ -2718,10 +2718,10 @@
 <li>narrower terms</li>
 </ul>
 <p>For example, a concept <code>ABLETTE</code> could be defined as follow with a label in French and English, linked to broader concept:</p>
-<div class="language-text highlight"><pre><span></span><code>&lt;skos:Concept rdf:about=&quot;http://www.oieau.org/concept#c4fc54576dc00227b82a709287ac3681&quot;&gt;
-    &lt;skos:prefLabel xml:lang=&quot;fr&quot;&gt;ABLETTE&lt;/skos:prefLabel&gt;
-    &lt;skos:prefLabel xml:lang=&quot;en&quot;&gt;BLEAK&lt;/skos:prefLabel&gt;
-    &lt;skos:broader rdf:resource=&quot;http://www.oieau.org/concept#9f25ece36d04776e09492c66627cccb9&quot;/&gt;
+<div class="language-text highlight"><pre><span></span><code>&lt;skos:Concept rdf:about="http://www.oieau.org/concept#c4fc54576dc00227b82a709287ac3681"&gt;
+    &lt;skos:prefLabel xml:lang="fr"&gt;ABLETTE&lt;/skos:prefLabel&gt;
+    &lt;skos:prefLabel xml:lang="en"&gt;BLEAK&lt;/skos:prefLabel&gt;
+    &lt;skos:broader rdf:resource="http://www.oieau.org/concept#9f25ece36d04776e09492c66627cccb9"/&gt;
 &lt;/skos:Concept&gt;
 </code></pre></div>
 <p>GeoNetwork supports multilingual thesauri (e.g. Agrovoc). Search and editing takes place in the current user interface language (i.e. if the interface is in English, when editing metadata, GeoNetwork will only search for concept in English).</p>
@@ -2748,7 +2748,7 @@
 <li>lineage and references to related register items</li>
 </ul>
 <p>An example of a register item from register of the NASA GCMD (Global Change Master Directory) science keywords is shown below.</p>
-<div class="language-text highlight"><pre><span></span><code>&lt;grg:RE_RegisterItem uuid=&quot;d1e7&quot;&gt;
+<div class="language-text highlight"><pre><span></span><code>&lt;grg:RE_RegisterItem uuid="d1e7"&gt;
    &lt;grg:itemIdentifier&gt;
       &lt;gco:Integer&gt;7&lt;/gco:Integer&gt;
    &lt;/grg:itemIdentifier&gt;
@@ -2761,16 +2761,16 @@
    &lt;grg:dateAccepted&gt;
       &lt;gco:Date&gt;2006&lt;/gco:Date&gt;
    &lt;/grg:dateAccepted&gt;
-   &lt;grg:definition gco:nilReason=&quot;missing&quot;/&gt;
-   &lt;grg:itemClass xlink:href=&quot;#Item_Class&quot;/&gt;
+   &lt;grg:definition gco:nilReason="missing"/&gt;
+   &lt;grg:itemClass xlink:href="#Item_Class"/&gt;
    &lt;grg:specificationLineage&gt;
       &lt;grg:RE_Reference&gt;
          &lt;grg:itemIdentifierAtSource&gt;
             &lt;gco:CharacterString&gt;5&lt;/gco:CharacterString&gt;
          &lt;/grg:itemIdentifierAtSource&gt;
          &lt;grg:similarity&gt;
-            &lt;grg:RE_SimilarityToSource codeListValue=&quot;generalization&quot;
-               codeList=&quot;http://ww.../lists.xml#RE_SimilarityToSource&quot;/&gt;
+            &lt;grg:RE_SimilarityToSource codeListValue="generalization"
+               codeList="http://ww.../lists.xml#RE_SimilarityToSource"/&gt;
          &lt;/grg:similarity&gt;
       &lt;/grg:RE_Reference&gt;
    &lt;/grg:specificationLineage&gt;

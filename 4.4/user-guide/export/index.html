@@ -1892,8 +1892,8 @@
 <li>the content of each element is laid out in comma separated form. Where there is more than one child element in the brief element (eg. for geoBox), the content from each child element is separated using '###'.</li>
 </ul>
 <p>An example of an ISO metadata record in CSV format is shown as follows:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>&quot;schema&quot;,&quot;uuid&quot;,&quot;id&quot;,&quot;title&quot;,&quot;metadatacreationdate&quot;,&quot;geoBox&quot;
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>&quot;iso19115-3.2018&quot;,&quot;27b5f8b8-053a-11ea-aa46-02000a08f492&quot;,&quot;1312&quot;,&quot;S2A_MSIL1C_20161218T102432_N0204_R065_T32TMS_20161218T102606&quot;,&quot;2019-11-12T10:49:52,&quot;7.691141905380134###9.128266945124432###45.958258688896564###46.95363733424615&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>"schema","uuid","id","title","metadatacreationdate","geoBox"
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>"iso19115-3.2018","27b5f8b8-053a-11ea-aa46-02000a08f492","1312","S2A_MSIL1C_20161218T102432_N0204_R065_T32TMS_20161218T102606","2019-11-12T10:49:52,"7.691141905380134###9.128266945124432###45.958258688896564###46.95363733424615"
 </span></code></pre></div>
 <p>It is possible to override the brief summary of metadata elements by creating a special template in the presentation XSLT of the metadata schema. As an example of how to do this, we will override the brief summary for the iso19115-3.2018 schema and replace it with other possible useful information.</p>
 <p>In the case of iso19115-3.2018 there are the two files to be modified:</p>
@@ -1902,14 +1902,14 @@
 <li>geonetwork/xslt/services/csv/csv-search.xsl</li>
 </ol>
 <p>For example, to export the following elements:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&quot;uuid&quot;,&quot;title&quot;,&quot;cloud_coverage_percentage&quot;,&quot;category&quot;,&quot;date-creation&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>"uuid","title","cloud_coverage_percentage","category","date-creation"
 </span></code></pre></div>
 <p>in the first file, it is necessary to proceed as in the following:</p>
 <ul>
 <li>
 <p>to comment the elements <code>id, title, abstract</code> except</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&lt;uuid&gt;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">      </span><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;gn:info/uuid&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">      </span><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">"gn:info/uuid"</span><span class="nt">/&gt;</span>
 </span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">&lt;/uuid&gt;</span>
 </span></code></pre></div>
 </li>
@@ -1919,43 +1919,43 @@
 </span></code></pre></div>
 <p>For example:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">&lt;title&gt;</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">   </span><span class="nt">&lt;xsl:copy-of</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;mdb:identificationInfo/*/mri:citation/*/cit:title&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">   </span><span class="nt">&lt;xsl:copy-of</span><span class="w"> </span><span class="na">select=</span><span class="s">"mdb:identificationInfo/*/mri:citation/*/cit:title"</span><span class="nt">/&gt;</span>
 </span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="nt">&lt;/title&gt;</span>
 </span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">&lt;cloud_coverage_percentage&gt;</span>
-</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">   </span><span class="nt">&lt;xsl:copy-of</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;mdb:contentInfo/mrc:MD_ImageDescription/mrc:cloudCoverPercentage/gco:Real&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="w">   </span><span class="nt">&lt;xsl:copy-of</span><span class="w"> </span><span class="na">select=</span><span class="s">"mdb:contentInfo/mrc:MD_ImageDescription/mrc:cloudCoverPercentage/gco:Real"</span><span class="nt">/&gt;</span>
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nt">&lt;/cloud_coverage_percentage&gt;</span>
 </span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="nt">&lt;category&gt;</span>
-</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">  </span><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">"mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue"</span><span class="nt">/&gt;</span>
 </span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="nt">&lt;/category&gt;</span>
 </span></code></pre></div>
 </li>
 </ul>
 <p>About cloud coverage percentage, in particular, please remember to add the namespace if missing:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>xmlns:mrc=&quot;http://standards.iso.org/iso/19115/-3/mrc/2.0&quot;
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>xmlns:mrc="http://standards.iso.org/iso/19115/-3/mrc/2.0"
 </span></code></pre></div>
 <p>If not interested in other information, please comment all other lines except:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">&lt;xsl:copy-of</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;gn:info&quot;</span><span class="nt">/&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">&lt;xsl:copy-of</span><span class="w"> </span><span class="na">select=</span><span class="s">"gn:info"</span><span class="nt">/&gt;</span>
 </span></code></pre></div>
 <p>because it is used to sort results by schema.</p>
 <p>About the second file, <em>csv-search.xsl</em>, to avoid printing automatically the 3 columns:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>&quot;schema&quot;,&quot;uuid&quot;,&quot;id&quot;,
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>"schema","uuid","id",
 </span></code></pre></div>
 <p>you have to comment the following lines:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">&lt;xsl:text&gt;</span>&quot;schema&quot;<span class="nt">&lt;/xsl:text&gt;</span>
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;$sep&quot;</span><span class="nt">/&gt;</span>
-</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">&lt;xsl:text&gt;</span>&quot;uuid&quot;<span class="nt">&lt;/xsl:text&gt;</span>
-</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;$sep&quot;</span><span class="nt">/&gt;</span>
-</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nt">&lt;xsl:text&gt;</span>&quot;id&quot;<span class="nt">&lt;/xsl:text&gt;</span>
-</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;$sep&quot;</span><span class="nt">/&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="nt">&lt;xsl:text&gt;</span>"schema"<span class="nt">&lt;/xsl:text&gt;</span>
+</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">"$sep"</span><span class="nt">/&gt;</span>
+</span><span id="__span-8-3"><a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a><span class="nt">&lt;xsl:text&gt;</span>"uuid"<span class="nt">&lt;/xsl:text&gt;</span>
+</span><span id="__span-8-4"><a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">"$sep"</span><span class="nt">/&gt;</span>
+</span><span id="__span-8-5"><a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="nt">&lt;xsl:text&gt;</span>"id"<span class="nt">&lt;/xsl:text&gt;</span>
+</span><span id="__span-8-6"><a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">"$sep"</span><span class="nt">/&gt;</span>
 </span></code></pre></div>
 <p>and</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;concat(&#39;&amp;quot;&#39;, $metadata/geonet:info/schema, &#39;&amp;quot;&#39;, $sep,</span>
-</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="s">&#39;&amp;quot;&#39;, $metadata/geonet:info/uuid, &#39;&amp;quot;&#39;, $sep,</span>
-</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="s">&#39;&amp;quot;&#39;, $metadata/geonet:info/id, &#39;&amp;quot;&#39;, $sep)&quot;</span><span class="nt">/&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">"concat('&amp;quot;', $metadata/geonet:info/schema, '&amp;quot;', $sep,</span>
+</span><span id="__span-9-2"><a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a><span class="s">'&amp;quot;', $metadata/geonet:info/uuid, '&amp;quot;', $sep,</span>
+</span><span id="__span-9-3"><a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="s">'&amp;quot;', $metadata/geonet:info/id, '&amp;quot;', $sep)"</span><span class="nt">/&gt;</span>
 </span></code></pre></div>
 <p>These changes will create the desired output:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>&quot;uuid&quot;,&quot;title&quot;,&quot;cloud_coverage_percentage&quot;,&quot;category&quot;,&quot;date-creation&quot;
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>&quot;c94da70e-066e-11ea-aa22-02000a08f492&quot;,&quot;S2A_MSIL1C_20180320T101021_N0206_R022_T33TUM_20180320T122057&quot;,&quot;36.0368&quot;,&quot;dataset&quot;,&quot;2018-03-20T12:20:57&quot;,
+<div class="language-text highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>"uuid","title","cloud_coverage_percentage","category","date-creation"
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>"c94da70e-066e-11ea-aa22-02000a08f492","S2A_MSIL1C_20180320T101021_N0206_R022_T33TUM_20180320T122057","36.0368","dataset","2018-03-20T12:20:57",
 </span></code></pre></div>
 
 

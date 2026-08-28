@@ -2117,14 +2117,14 @@
 <p>It will be stored in <code>$searchView</code> XSLT variable.</p>
 <h2 id="loading-the-view">Loading the view</h2>
 <p>The view is loaded from (See <code>web/src/main/webapp/xslt/ui-search/search.xsl</code>):</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;div</span><span class="w"> </span><span class="na">data-ng-include=</span><span class="s">&quot;&#39;{$uiResourcesPath}views/{$searchView}/templates/index.html&#39;&quot;</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="na">class=</span><span class="s">&quot;gn-full&quot;</span><span class="nt">&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;div</span><span class="w"> </span><span class="na">data-ng-include=</span><span class="s">"'{$uiResourcesPath}views/{$searchView}/templates/index.html'"</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="na">class=</span><span class="s">"gn-full"</span><span class="nt">&gt;</span>
 </span></code></pre></div>
 <p>The view main template is loaded through the AngularJS directive <code>ng-include</code> and will point on the path <code>/web-ui/src/main/resources/catalog/views/${view}/templates/index.html</code>.</p>
 <p>For the default view, you can find this template in <code>web-ui/src/main/resources/catalog/views/default/templates/index.html</code>.</p>
 <h2 id="loading-the-javascript">Loading the javascript</h2>
 <p>To init AngularJS main module you have to use the directive <code>ng-app</code> and point on your main AngularJS module.</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&lt;html</span><span class="w"> </span><span class="na">ng-app=</span><span class="s">&quot;{$angularModule}&quot;</span><span class="w"> </span><span class="na">lang=</span><span class="s">&quot;{$lang}&quot;</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;ng-app&quot;</span><span class="nt">&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&lt;html</span><span class="w"> </span><span class="na">ng-app=</span><span class="s">"{$angularModule}"</span><span class="w"> </span><span class="na">lang=</span><span class="s">"{$lang}"</span><span class="w"> </span><span class="na">id=</span><span class="s">"ng-app"</span><span class="nt">&gt;</span>
 </span></code></pre></div>
 <p>In the case of the search page (<code>catalog.search</code>), the <code>$angularApp</code> variable equals <code>gn_search</code>. And for the <code>default</code> view the <code>$angularModule</code> equals <code>gn_search_default</code>.</p>
 <p>So, by default, the main AngularJS module is loaded here from <code>gn_search_default</code> module declared here (See <code>web-ui/src/main/resources/catalog/views/default/module.js</code>.</p>
