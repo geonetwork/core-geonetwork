@@ -427,7 +427,7 @@
       <dependency>
         <groupId>org.jsoup</groupId>
         <artifactId>jsoup</artifactId>
-        <version>1.15.3</version>
+        <version>1.23.1</version>
       </dependency>
 
       <!-- universal character set detector -->
@@ -523,6 +523,11 @@
         <groupId>commons-digester</groupId>
         <artifactId>commons-digester</artifactId>
         <version>1.6</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.11.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -1711,7 +1716,7 @@
     <jackson.version>2.22.0</jackson.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
-    <log4j2.version>2.25.4</log4j2.version>
+    <log4j2.version>2.25.5</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>4.22</xbean.version>
     <jolokia.version>1.7.2</jolokia.version>

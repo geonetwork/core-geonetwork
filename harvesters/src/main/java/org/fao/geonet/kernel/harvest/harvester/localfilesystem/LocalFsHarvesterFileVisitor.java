@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -253,7 +253,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> implements Aut
         processXmlData(file, xml);
     }
 
-    private void processXmlData(Path file, Element rawXml) throws Exception {
+    void processXmlData(Path file, Element rawXml) throws Exception {
         Path filePath = file.toAbsolutePath().normalize();
 
         Element xml = rawXml;
@@ -275,62 +275,68 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> implements Aut
             return;
         }
 
-        try {
-            Integer groupIdVal = null;
-            if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
-                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
-            }
-
-            params.getValidate().validate(dataMan, context, xml, groupIdVal);
-        } catch (Exception e) {
-            harvester.getLogger().error("Cannot validate XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
-            result.doesNotValidate++;
-            return;
-        }
-
         String uuid = getUuidFromFile(xml, filePath, schema);
         if (StringUtils.isEmpty(uuid)) {
             result.badFormat++;
             return;
         }
 
+        String id = dataMan.getMetadataId(uuid);
+
+        // Resolve the UUID collision state before validating (see issue #9432): a record that
+        // already exists and belongs to another source and whose collision policy is SKIP must be
+        // counted as skipped without being validated. Validate only when the record will actually
+        // be inserted or updated; the SKIP case is handled in the collision switch below.
+        final AbstractMetadata existingMetadata = (id != null) ? repo.findOne(id) : null;
+        boolean collisionFromOtherSource = existingMetadata != null
+            && !params.getUuid().equals(existingMetadata.getHarvestInfo().getUuid());
+
+        if (!params.isSkippedByUuidCollision(collisionFromOtherSource)) {
+            try {
+                Integer groupIdVal = null;
+                if (StringUtils.isNotEmpty(params.getOwnerIdGroup())) {
+                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                }
+
+                params.getValidate().validate(dataMan, context, xml, groupIdVal);
+            } catch (Exception e) {
+                harvester.getLogger().error("Cannot validate XML from file {}, ignoring. Error was: {}", filePath, e.getMessage());
+                result.doesNotValidate++;
+                return;
+            }
+        }
+
         Aligner.applyBatchEdits(uuid, xml, schema, params.getBatchEdits(), context, null);
 
-        String id = dataMan.getMetadataId(uuid);
         if (id == null) {
             String createDate = getCreateDate(file, xml, schema, uuid);
 
             id = addMetadata(xml, schema, uuid, createDate);
-        } else {
-            final AbstractMetadata metadata = repo.findOne(id);
-            if (!params.getUuid().equals(metadata.getHarvestInfo().getUuid())) {
-                // Metadata exists and belongs to another source (local node or other harvester)
-                switch (params.getOverrideUuid()) {
-                    case OVERRIDE:
-                        updateMetadata(file, filePath, xml, schema, id, metadata, true);
-                        break;
-                    case RANDOM:
-                        harvester.getLogger().debug("Generating random uuid for remote record with uuid " + metadata.getUuid());
-                        String createDate = getCreateDate(file, xml, schema, uuid);
-                        String newUuid = UUID.randomUUID().toString();
-                        id = addMetadata(xml, schema, newUuid, createDate);
+        } else if (collisionFromOtherSource) {
+            // Metadata exists and belongs to another source (local node or other harvester)
+            switch (params.getOverrideUuid()) {
+                case OVERRIDE:
+                    updateMetadata(file, filePath, xml, schema, id, existingMetadata, true);
+                    break;
+                case RANDOM:
+                    harvester.getLogger().debug("Generating random uuid for remote record with uuid " + existingMetadata.getUuid());
+                    String createDate = getCreateDate(file, xml, schema, uuid);
+                    String newUuid = UUID.randomUUID().toString();
+                    id = addMetadata(xml, schema, newUuid, createDate);
 
-                        break;
-                    case SKIP:
-                        harvester.getLogger().info("Skipping record with uuid " + metadata.getUuid());
-                        result.uuidSkipped++;
-                        result.unchangedMetadata++;
+                    break;
+                case SKIP:
+                    harvester.getLogger().info("Skipping record with uuid " + existingMetadata.getUuid());
+                    result.uuidSkipped++;
+                    result.unchangedMetadata++;
 
-                        break;
-                    default:
-                        // Do nothing
-                        break;
-                }
-            } else {
-                //record exists and belongs to this harvester
-                updateMetadata(file, filePath, xml, schema, id, metadata, false);
+                    break;
+                default:
+                    break;
             }
-
+        } else {
+            //record exists and belongs to this harvester
+            updateMetadata(file, filePath, xml, schema, id, existingMetadata, false);
         }
         listOfRecords.add(Integer.valueOf(id));
     }
