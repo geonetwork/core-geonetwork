@@ -32,7 +32,9 @@ import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.sources.ServiceRequest;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.domain.Profile;
@@ -41,13 +43,19 @@ import org.fao.geonet.domain.SourceType;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.UpdateDatestamp;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin;
+import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
@@ -79,6 +87,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static java.lang.Math.round;
@@ -109,6 +118,12 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     protected UserGroupRepository _userGroupRepo;
     @Autowired
     protected GroupRepository _groupRepo;
+    @Autowired
+    private SchemaManager schemaManager;
+    @Autowired
+    private IMetadataManager metadataManager;
+    @Autowired
+    private SourceRepository sourceRepository;
 
     protected static Element createServiceConfigParam(String name, String value) {
         return new Element("param")
@@ -359,4 +374,50 @@ public abstract class AbstractCoreIntegrationTest extends AbstractSpringDataTest
     public boolean resetLuceneIndex() {
         return true;
     }
+
+    protected AbstractMetadata injectMetadataInDbDoNotRefreshHeader(Element sampleMetadataXml, ServiceContext context) throws Exception {
+        return injectMetadataOrSubtemplateInDb(sampleMetadataXml, context, MetadataType.METADATA, IndexingMode.none);
+    }
+
+    protected AbstractMetadata injectMetadataInDb(Element element, ServiceContext serviceContext) throws Exception {
+        return injectMetadataOrSubtemplateInDb(element, serviceContext, MetadataType.METADATA, IndexingMode.none);
+    }
+
+    protected AbstractMetadata injectMetadataInDb(Element element, ServiceContext serviceContext, IndexingMode indexingMode) throws Exception {
+        return injectMetadataOrSubtemplateInDb(element, serviceContext, MetadataType.METADATA, indexingMode);
+    }
+
+    protected AbstractMetadata insertTemplateResourceInDb(Element element, ServiceContext serviceContext) throws Exception {
+        return injectMetadataOrSubtemplateInDb(element, serviceContext, MetadataType.SUB_TEMPLATE, IndexingMode.none);
+    }
+
+    private AbstractMetadata injectMetadataOrSubtemplateInDb(Element sampleMetadataXml, ServiceContext context, MetadataType type, IndexingMode indexingMode) throws Exception {
+        String uuid = UUID.randomUUID().toString();
+        String schema = schemaManager.autodetectSchema(sampleMetadataXml);
+        if (type.equals(MetadataType.METADATA)) {
+            Xml.selectElement(sampleMetadataXml,
+                    "iso19139".equals(schema) ? "gmd:fileIdentifier/gco:CharacterString" : "mdb:metadataIdentifier/*/mcc:code/*",
+                    "iso19139".equals(schema) ? ISO19139SchemaPlugin.allNamespaces.asList() : ISO19115_3_2018SchemaPlugin.allNamespaces.asList())
+                .setText(uuid);
+        }
+
+        Metadata metadata = new Metadata();
+        metadata
+            .setDataAndFixCR(sampleMetadataXml)
+            .setUuid(uuid);
+        metadata.getDataInfo()
+            .setRoot(sampleMetadataXml.getQualifiedName())
+            .setSchemaId(schema)
+            .setType(type)
+            .setPopularity(1000);
+        metadata.getSourceInfo()
+            .setOwner(1)
+            .setSourceId(sourceRepository.findAll().get(0).getUuid());
+        metadata.getHarvestInfo()
+            .setHarvested(false);
+
+        return metadataManager.insertMetadata(context, metadata, sampleMetadataXml, indexingMode, false, UpdateDatestamp.NO,
+            false, true);
+    }
+
 }

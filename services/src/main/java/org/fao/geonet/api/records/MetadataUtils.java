@@ -52,6 +52,8 @@ import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.schema.AssociatedResource;
 import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
+import org.fao.geonet.kernel.search.EsFilterBuilder;
+import static org.fao.geonet.kernel.search.EsFilterBuilder.buildPermissionsFilter;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -432,6 +434,10 @@ public class MetadataUtils {
             }
         }
 
+        // Restrict all related searches to records the current user is allowed to view.
+        // Computed once here and reused for every query (as getAssociated does).
+        String permissionsFilter = buildPermissionsFilter(context);
+
 
         if(type == null || type.length == 0) {
             type = RelatedItemType.class.getEnumConstants();
@@ -451,7 +457,7 @@ public class MetadataUtils {
         // Search for children of this record
         if (listOfTypes.isEmpty() ||
             listOfTypes.contains(RelatedItemType.children)) {
-            relatedRecords.addContent(calculateResults("\"" + uuid + "\"", "children", from, to, null, portalFilter));
+            relatedRecords.addContent(calculateResults(permissionsFilter, "\"" + uuid + "\"", "children", from, to, null, portalFilter));
         }
 
         // Get parent record from this record
@@ -461,7 +467,7 @@ public class MetadataUtils {
             if (!listOfUUIDs.isEmpty()) {
                 // Collect local record info (taking into account privileges)
                 String joinedUUIDs = "\"" + Joiner.on("\" or \"").join(listOfUUIDs) + "\"";
-                relatedRecords.addContent(calculateResults(joinedUUIDs, "parent", from, to, null, portalFilter));
+                relatedRecords.addContent(calculateResults(permissionsFilter, joinedUUIDs, "parent", from, to, null, portalFilter));
             } else {
                 relatedRecords.addContent(new Element("parent"));
             }
@@ -474,7 +480,7 @@ public class MetadataUtils {
             Set<String> listOfUUIDs = schemaPlugin.getAssociatedParentUUIDs(md);
             if (!listOfUUIDs.isEmpty()) {
                 String joinedUUIDs = "\"" + Joiner.on("\" or \"").join(listOfUUIDs) + "\"";
-                relatedRecords.addContent(calculateResults(joinedUUIDs, RelatedItemType.brothersAndSisters.value(), from, to, uuid, portalFilter));
+                relatedRecords.addContent(calculateResults(permissionsFilter, joinedUUIDs, RelatedItemType.brothersAndSisters.value(), from, to, uuid, portalFilter));
             }
         }
 
@@ -490,7 +496,7 @@ public class MetadataUtils {
 
                     String origin;
                     // Search in the index to use the portal filter and verify the metadata is available for the portal
-                    Element searchResult = search("\"" + resource.getUuid() + "\"", RelatedItemType.siblings.value(), from, to, null, false);
+                    Element searchResult = search(permissionsFilter, "\"" + resource.getUuid() + "\"", RelatedItemType.siblings.value(), from, to, null, false);
                     // If can't be find, skip the result.
                     if (hasResult(searchResult)) {
                         origin = RelatedItemOrigin.portal.name();
@@ -522,13 +528,13 @@ public class MetadataUtils {
         // Search for records where an aggregate point to this record
         if (listOfTypes.isEmpty() ||
             listOfTypes.contains(RelatedItemType.associated)) {
-            relatedRecords.addContent(calculateResults("\"" + uuid + "\"", "associated", from, to, null, portalFilter));
+            relatedRecords.addContent(calculateResults(permissionsFilter, "\"" + uuid + "\"", "associated", from, to, null, portalFilter));
         }
 
         // Search for services
         if (listOfTypes.isEmpty() ||
             listOfTypes.contains(RelatedItemType.services)) {
-            relatedRecords.addContent(calculateResults("\"" + uuid + "\"", "services", from, to, null, portalFilter));
+            relatedRecords.addContent(calculateResults(permissionsFilter, "\"" + uuid + "\"", "services", from, to, null, portalFilter));
         }
 
         // Related record from uuiref attributes in metadata record
@@ -544,7 +550,7 @@ public class MetadataUtils {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedDatasetUUIDs(md);
                 if (listOfUUIDs != null && !listOfUUIDs.isEmpty()) {
                     String joinedUUIDs = "\"" + Joiner.on("\" or \"").join(listOfUUIDs) + "\"";
-                    relatedRecords.addContent(calculateResults(joinedUUIDs, "datasets", from, to, null, portalFilter));
+                    relatedRecords.addContent(calculateResults(permissionsFilter, joinedUUIDs, "datasets", from, to, null, portalFilter));
                 } else {
                     relatedRecords.addContent(new Element("datasets"));
                 }
@@ -557,7 +563,7 @@ public class MetadataUtils {
                 Set<String> listOfUUIDs = schemaPlugin.getAssociatedSourceUUIDs(md);
                 if (listOfUUIDs != null && !listOfUUIDs.isEmpty()) {
                     String joinedUUIDs = "\"" + Joiner.on("\" or \"").join(listOfUUIDs) + "\"";
-                    relatedRecords.addContent(calculateResults(joinedUUIDs, "sources", from, to, null, portalFilter));
+                    relatedRecords.addContent(calculateResults(permissionsFilter, joinedUUIDs, "sources", from, to, null, portalFilter));
                 } else {
                     relatedRecords.addContent(new Element("sources"));
                 }
@@ -573,7 +579,7 @@ public class MetadataUtils {
                     for (String fcat_uuid : listOfUUIDs) {
                         String origin;
                         // Search in the index to use the portal filter and verify the metadata is available for the portal
-                        Element searchResult = search("\"" + fcat_uuid + "\"", RelatedItemType.fcats.value(), from, to, null, false);
+                        Element searchResult = search(permissionsFilter, "\"" + fcat_uuid + "\"", RelatedItemType.fcats.value(), from, to, null, false);
                         // If can't be find, skip the result.
                         if (hasResult(searchResult)) {
                             origin = RelatedItemOrigin.portal.name();
@@ -603,7 +609,7 @@ public class MetadataUtils {
         if (listOfTypes.isEmpty() ||
             listOfTypes.contains(RelatedItemType.hassources)) {
             // Return records where this record is a source dataset
-            relatedRecords.addContent(calculateResults("\"" + uuid + "\"", "hassources", from, to, null, portalFilter));
+            relatedRecords.addContent(calculateResults(permissionsFilter, "\"" + uuid + "\"", "hassources", from, to, null, portalFilter));
         }
 
         // Relation table is preserved for backward compatibility but should not be used anymore.
@@ -612,7 +618,7 @@ public class MetadataUtils {
             // Related records could be feature catalogue defined in relation table
             relatedRecords.addContent(new Element("related").addContent(Get.getRelation(iId, "full", context)));
             // Or feature catalogue define in feature catalogue citation
-            relatedRecords.addContent(calculateResults("\"" + uuid + "\"", "hasfeaturecats", from, to, null, portalFilter));
+            relatedRecords.addContent(calculateResults(permissionsFilter, "\"" + uuid + "\"", "hasfeaturecats", from, to, null, portalFilter));
         }
 
         // XSL transformation is used on the metadata record to extract
@@ -626,7 +632,7 @@ public class MetadataUtils {
         return relatedRecords;
     }
 
-    private static Element search(String uuidQueryValue, String type, String from, String to,
+    private static Element search(String permissionsFilter, String uuidQueryValue, String type, String from, String to,
                                   String exclude, boolean ignorePortalFilter) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         EsSearchManager searchMan = applicationContext.getBean(EsSearchManager.class);
@@ -643,22 +649,23 @@ public class MetadataUtils {
             excludeQuery = String.format(" -uuid:%s", exclude);
         }
 
+        // Resolve the portal filter through EsFilterBuilder so quotes are escaped consistently
+        // with the main search (a raw filter would break the query_string it is embedded in).
         String portalFilter = null;
         if (!ignorePortalFilter) {
-            SourceRepository sourceRepository = ApplicationContextHolder.get().getBean(SourceRepository.class);
             NodeInfo node = ApplicationContextHolder.get().getBean(NodeInfo.class);
-            if (node != null && !NodeInfo.DEFAULT_NODE.equals(node.getId())) {
-                final Optional<Source> portal = sourceRepository.findById(node.getId());
-
-                if (portal.isPresent() && StringUtils.isNotEmpty(portal.get().getFilter())) {
-                    portalFilter = portal.get().getFilter();
-                }
-            }
+            portalFilter = EsFilterBuilder.buildPortalFilter(node);
         }
+
+        // Always restrict results to records the current user is allowed to view,
+        // combining the view-privilege filter with the portal filter when it applies.
+        String effectiveFilter = (ignorePortalFilter || StringUtils.isEmpty(portalFilter))
+            ? permissionsFilter
+            : String.format("(%s) AND (%s)", permissionsFilter, portalFilter);
 
         final SearchResponse result = searchMan.query(
             String.format("+%s:(%s)%s", RELATED_INDEX_FIELDS.get(type), uuidQueryValue, excludeQuery),
-            ignorePortalFilter ? null : portalFilter,
+            effectiveFilter,
             FIELDLIST_CORE,
             fromValue, (toValue - fromValue));
 
@@ -857,17 +864,17 @@ public class MetadataUtils {
      * @return
      * @throws Exception
      */
-    private static Element calculateResults(String uuidQueryValue, String type, String from, String to,
+    private static Element calculateResults(String permissionsFilter, String uuidQueryValue, String type, String from, String to,
                                             String exclude,
                                             String portalFilter) throws Exception {
 
         // Search related resources ignoring portal filter
-        Element results = search(uuidQueryValue, type, from, to, exclude, true);
+        Element results = search(permissionsFilter, uuidQueryValue, type, from, to, exclude, true);
 
         // Check if the portal has a filter
         if (StringUtils.isNotEmpty(portalFilter)) {
             // Search related resources with the portal filter
-            Element resultsForPortal = search(uuidQueryValue, type, from, to, exclude, false);
+            Element resultsForPortal = search(permissionsFilter, uuidQueryValue, type, from, to, exclude, false);
 
             // Build the set of uuids from portal results
             HashSet<String> portalResultsUuids = new HashSet<>();
