@@ -219,7 +219,7 @@
         data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
-        data-insert-modes=""
+        data-insert-modes="xlink"
         data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:pointOfContact" addDirective="data-gn-directory-entry-selector">
@@ -228,7 +228,7 @@
         data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
-        data-insert-modes=""
+        data-insert-modes="xlink"
         data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:distributorContact" addDirective="data-gn-directory-entry-selector">
@@ -237,7 +237,7 @@
         data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
-        data-insert-modes=""
+        data-insert-modes="xlink"
         data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:processor" addDirective="data-gn-directory-entry-selector">
@@ -246,7 +246,7 @@
         data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
-        data-insert-modes=""
+        data-insert-modes="xlink"
         data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:citedResponsibleParty" addDirective="data-gn-directory-entry-selector">
@@ -255,7 +255,7 @@
         data-search-action="true"
         data-popup-action="true"
         data-template-type="contact"
-        data-insert-modes=""
+        data-insert-modes="xlink"
         data-variables="gmd:role/gmd:CI_RoleCode/@codeListValue~{role}"/>
     </for>
     <for name="gmd:report" addDirective="data-gn-directory-entry-selector">
