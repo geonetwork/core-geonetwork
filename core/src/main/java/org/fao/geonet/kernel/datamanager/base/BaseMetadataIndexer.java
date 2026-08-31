@@ -87,8 +87,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static org.fao.geonet.resources.Resources.DEFAULT_LOGO_EXTENSION;
-
 
 public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPublisherAware {
     @Autowired
@@ -450,7 +448,9 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                     }
                 }
 
-                String logoUUID = null;
+                // Group logo are in the harvester folder and contains extension in file name
+                boolean groupLogoAdded = false;
+
                 if (groupOwner != null) {
                     final Optional<Group> groupOpt = groupRepository.findById(groupOwner);
                     if (groupOpt.isPresent()) {
@@ -460,37 +460,29 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                         if (group.getWebsite() != null && !group.getWebsite().isEmpty() && preferGroup) {
                             fields.put(Geonet.IndexFieldNames.GROUP_WEBSITE, group.getWebsite());
                         }
-                        if (group.getLogo() != null && preferGroup) {
-                            logoUUID = group.getLogo();
+                        if (preferGroup && StringUtils.isNotEmpty(group.getLogo())) {
+                            final Path harvesterLogosDir = resources.locateHarvesterLogosDir(getServiceContext());
+                            try (Resources.ResourceHolder logo = resources.getImage(getServiceContext(), group.getLogo(), harvesterLogosDir)) {
+                                if (logo != null) {
+                                    groupLogoAdded = true;
+                                    fields.put(Geonet.IndexFieldNames.LOGO,
+                                        "/srv/api/groups/" + group.getId() + "/logo");
+                                }
+                            }
                         }
                     }
                 }
 
-                // Group logo are in the harvester folder and contains extension in file name
-                boolean added = false;
-                if (StringUtils.isNotEmpty(logoUUID)) {
-                    final Path harvesterLogosDir = resources.locateHarvesterLogosDir(getServiceContext());
-                    try (Resources.ResourceHolder logo = resources.getImage(getServiceContext(), logoUUID, harvesterLogosDir)) {
-                        if (logo != null) {
-                            added = true;
-                            fields.put(Geonet.IndexFieldNames.LOGO,
-                                "/images/harvesting/" + logo.getPath().getFileName());
-                        }
-                    }
-                }
-
-                // If not available, use the local catalog logo
-                if (!added) {
+                // If not available, use the local catalog or the harvester logo
+                if (!groupLogoAdded) {
                     Source sourceCatalogue = sourceRepository.findOneByUuid(source);
-                    logoUUID =
-                        sourceCatalogue != null
-                            && StringUtils.isNotEmpty(sourceCatalogue.getLogo())
-                        ? sourceCatalogue.getLogo() : source + DEFAULT_LOGO_EXTENSION;
                     final Path logosDir = resources.locateLogosDir(getServiceContext());
-                    try (Resources.ResourceHolder image = resources.getImage(getServiceContext(), logoUUID, logosDir)) {
-                        if (image != null) {
-                            fields.put(Geonet.IndexFieldNames.LOGO,
-                                "/images/logos/" + logoUUID);
+                    if (sourceCatalogue != null && StringUtils.isNotEmpty(sourceCatalogue.getLogo())) {
+                        try (Resources.ResourceHolder image = resources.getImage(getServiceContext(), sourceCatalogue.getLogo(), logosDir)) {
+                            if (image != null) {
+                                fields.put(Geonet.IndexFieldNames.LOGO,
+                                    "/srv/api/sources/" + sourceCatalogue.getUuid() + "/logo");
+                            }
                         }
                     }
                 }
