@@ -1,0 +1,490 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix : <http://data.europa.eu/r5r#> .
+@prefix adms: <http://www.w3.org/ns/adms#> .
+@prefix cc: <http://creativecommons.org/ns#> .
+@prefix dc: <http://purl.org/dc/elements/1.1/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix lcon: <http://www.w3.org/ns/locn#> .
+@prefix org: <http://www.w3.org/ns/org#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix odrl: <http://www.w3.org/ns/odrl/2/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <http://schema.org/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix spdx: <http://spdx.org/rdf/terms#> .
+@prefix time: <http://www.w3.org/2006/time#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcatap: <http://data.europa.eu/r5r/> .
+
+
+<http://data.europa.eu/r5r/mdr_shapes>
+  dcat:accessURL <https://joinup.ec.europa.eu/solution/dcat-application-profile-data-portals-europe/distribution/dcat-ap-200-shacl-shapes>;
+  dcat:downloadURL <https://github.com/SEMICeu/DCAT-AP/raw/cea5a96bb4a6f120c20b7a2b3fb4d86bcd725952/releases/2.0.0/Draft/dcat-ap_2.0.0_shacl_shapes.ttl> ;
+  dcatap:availability <http://data.europa.eu/r5r/stable> ;
+  dct:format <http://publications.europa.eu/resource/authority/file-type/RDF_TURTLE> ;
+  dct:conformsTo <https://www.w3.org/TR/shacl> ;
+  dct:creator [
+                   rdfs:seeAlso <https://www.linkedin.com/in/bert-van-nuffelen-a349634/> ;
+                   org:memberOf <https://tenforce.com> ;
+                   foaf:homepage <https://www.linkedin.com/in/bert-van-nuffelen-a349634/> ;
+                   foaf:name "Bert Van Nuffelen"
+                 ], [
+                   rdfs:seeAlso <https://www.ails.ece.ntua.gr/people/natasa> ;
+                   org:memberOf <https://www.ails.ece.ntua.gr/> ;
+                   foaf:homepage <https://www.ails.ece.ntua.gr/people/natasa> ;
+                   foaf:name "Natasa Sofou"
+                 ], [
+                   rdfs:seeAlso <http://eugeniu.costezki.ro#me> ;
+                   org:memberOf <http://publications.europa.eu/resource/authority/corporate-body/PUBL> ;
+                   foaf:homepage <http://costezki.ro> ;
+                   foaf:name "Eugeniu Costetchi"
+                 ], [
+                   rdfs:seeAlso <http://makxdekkers.com/#me> ;
+                   org:memberOf <http://ami-consult.com/#id> ;
+                   foaf:homepage <http://makxdekkers.com/> ;
+                   foaf:name "Makx Dekkers"
+                 ], [
+                   rdfs:seeAlso <http://nikosloutas.com/> ;
+                   org:memberOf <http://www.pwc.com/gx/en/eu-institutions-services> ;
+                   foaf:homepage <http://nikosloutas.com/> ;
+                   foaf:name "Nikolaos Loutas"
+                 ], [
+                   rdfs:seeAlso <http://www.deri.ie/users/vassilios-peristeras/> ;
+                   org:memberOf <http://publications.europa.eu/resource/authority/corporate-body/COM> ;
+                   foaf:homepage <http://www.deri.ie/users/vassilios-peristeras/> ;
+                   foaf:name "Vassilios Peristeras"
+                 ] ;
+  dct:license <https://creativecommons.org/licenses/by/4.0> ;
+  cc:attributionURL <http://ec.europa.eu/> ;
+  dct:modified "2021-12-01"^^xsd:date ;
+  dct:publisher <http://publications.europa.eu/resource/authority/corporate-body/DIGIT> ;
+  dct:relation <https://joinup.ec.europa.eu/collection/semantic-interoperability-community-semic/solution/dcat-application-profile-data-portals-europe/release/210> ;
+  dct:description "This document specifies the controlled vocabulary constraints on properties expressed by DCAT-AP in SHACL."@en ;
+  dct:title "Controlled Vocabulary Constraints of DCAT Application Profile for Data Portals in Europe"@en ;
+  owl:versionInfo "2.1.1" ;
+  foaf:homepage <https://joinup.ec.europa.eu/collection/semantic-interoperability-community-semic/solution/dcat-application-profile-data-portals-europe/release/210> ;
+  foaf:maker [
+                   foaf:mbox <mailto:contact@semic.eu> ;
+                   foaf:name "DCAT-AP Working Group" ;
+                   foaf:page <https://github.com/SEMICeu/DCAT-AP>, <https://joinup.ec.europa.eu/node/64331>
+                 ] .
+
+:AvailabilityRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Availability restriction" ;
+  rdfs:label "Availability restriction" ;
+  sh:property [
+      sh:hasValue <http://publications.europa.eu/resource/authority/planned-availability> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:ContinentRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Continent restriction" ;
+  rdfs:label "Continent restriction" ;
+  sh:property [
+      sh:hasValue <http://publications.europa.eu/resource/authority/continent> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:CorporateBodyRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Corporate Body Restriction" ;
+  rdfs:label "Corporate Body Restriction" ;
+  sh:property [
+      sh:hasValue <http://publications.europa.eu/resource/authority/corporate-body> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:CountryRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Country restriction" ;
+  rdfs:label "Country restriction" ;
+  sh:property [
+      sh:hasValue <http://publications.europa.eu/resource/authority/country> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:DataThemeRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Data Theme Restriction" ;
+  rdfs:label "Data Theme Restriction" ;
+  sh:property [
+      sh:hasValue <http://publications.europa.eu/resource/authority/data-theme> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:AccessRightRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Access Rights Restriction" ;
+  rdfs:label "Data Theme Restriction" ;
+  sh:property [
+      sh:hasValue <http://publications.europa.eu/resource/authority/access-right> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:DatasetTypeRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Dataset Type Restriction" ;
+  rdfs:label "Dataset Type Restriction" ;
+  sh:property [
+      sh:hasValue <http://publications.europa.eu/resource/authority/dataset-type> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+
+:FileTypeRestriction
+  a sh:NodeShape ;
+  rdfs:comment "File Type Restriction" ;
+  rdfs:label "File Type Restriction" ;
+  sh:property [
+      sh:hasValue <http://publications.europa.eu/resource/authority/file-type> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:FrequencyRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Frequency Restriction" ;
+  rdfs:label "Frequency Restriction" ;
+  sh:property [
+      sh:hasValue <http://publications.europa.eu/resource/authority/frequency> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:GeoNamesRestrictionRegexURI
+  rdfs:comment "Geonames restriction - base itself on URI structure" ;
+  rdfs:label "Geonames restriction" ;
+  a sh:NodeShape ;
+  sh:pattern "^https://sws.geonames.org" .
+
+
+:LanguageRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Language Restriction" ;
+  rdfs:label "Language Restriction" ;
+  sh:property [
+      sh:hasValue <http://publications.europa.eu/resource/authority/language> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:LicenceTypeRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Licence type restriction" ;
+  rdfs:label "Licence type restriction" ;
+  sh:property [
+      sh:hasValue <http://purl.org/adms/licencetype/1.0> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:PlaceRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Place restriction" ;
+  rdfs:label "Place restriction" ;
+  sh:property [
+      sh:class skos:ConceptScheme ;
+      sh:hasValue <http://publications.europa.eu/resource/authority/place> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:PublisherTypeRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Publisher type restriction" ;
+  rdfs:label "Publisher type restriction" ;
+  sh:property [
+      sh:class skos:ConceptScheme ;
+      sh:hasValue <http://purl.org/adms/publishertype/1.0> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:IANARestrictionRegexURI
+  rdfs:comment "IANA restriction - base itself on URL structure" ;
+  rdfs:label "IANA restriction" ;
+  a sh:NodeShape ;
+  sh:pattern "^http.*://www.iana.org/assignments/media-types/" .
+
+:StatusRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Status restriction" ;
+  rdfs:label "Status restriction" ;
+  sh:property [
+      sh:class skos:ConceptScheme ;
+      sh:hasValue <http://publications.europa.eu/resource/authority/distribution-status> ;
+      sh:minCount 1 ;
+      sh:nodeKind sh:IRI ;
+      sh:path skos:inScheme
+    ] .
+
+:ChecksumAlgorithmRestriction
+  a sh:NodeShape ;
+  rdfs:comment "Checksum algorithm restriction" ;
+  rdfs:label "Checksum algorithm restriction" ;
+  sh:pattern "^https://spdx.org/rdf/terms" ;
+  sh:class <http://spdx.org/rdf/terms#ChecksumAlgorithm>.
+
+:Checksum_ShapeCV
+  a sh:NodeShape ;
+  sh:property [
+      sh:node :ChecksumAlgorithmRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path spdx:algorithm
+    ] ;
+  sh:targetClass spdx:Checksum.
+
+:LicenseDocument_ShapeCV
+  a sh:NodeShape ;
+  sh:property [
+      sh:node :LicenceTypeRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:type
+    ] ;
+  sh:targetClass dct:LicenseDocument.
+
+
+
+:Catalog_ShapeCV
+  a sh:NodeShape ;
+  sh:property [
+      sh:node :LanguageRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:language ;
+      sh:description "A non EU managed concept is used to indicate a language. If no corresponding can be found inform the maintainer of the EU language NAL" ;
+      sh:severity sh:Violation
+    ], [
+      sh:node :CorporateBodyRestriction ;
+      sh:node :Publisher_ShapeCV ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:publisher ;
+      sh:description "A non EU managed concept is used to indicate the publisher, check if a corresponding exists in the EU corporates bodies NAL" ;
+      sh:severity sh:Warning
+    ], [
+      sh:node [
+                a sh:NodeShape ;
+                sh:or (:CountryRestriction
+                       :PlaceRestriction
+                       :ContinentRestriction
+                       :GeoNamesRestrictionRegexURI
+                  )
+              ] ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:spatial ;
+      sh:description "A non managed concept is used to indicate a spatial description, check if a corresponding exists" ;
+      sh:severity sh:Warning
+    ], [
+      sh:hasValue <http://publications.europa.eu/resource/authority/data-theme> ;
+      sh:nodeKind sh:IRI ;
+      sh:path dcat:themeTaxonomy ;
+      sh:description "Multiple themes can be used but at least <http://publications.europa.eu/resource/authority/data-theme> should be present" ;
+      sh:severity sh:Warning
+    ] ;
+  sh:targetClass dcat:Catalog.
+
+:Dataset_ShapeCV
+  a sh:NodeShape ;
+  sh:property [
+      sh:node :FrequencyRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:accrualPeriodicity ;
+      sh:description "A non EU managed concept is used to indicate the accrualPeriodicity frequency. If no corresponding can be found inform the maintainer of the EU frequency NAL" ;
+      sh:severity sh:Violation
+    ], [
+      sh:node :LanguageRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:language ;
+      sh:description "A non EU managed concept is used to indicate a language. If no corresponding can be found inform the maintainer of the EU language NAL" ;
+      sh:severity sh:Violation
+    ], [
+      sh:node :CorporateBodyRestriction ;
+      sh:node :Publisher_ShapeCV ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:publisher ;
+      sh:description "A non EU managed concept is used to indicate the publisher, check if a corresponding exists in the EU corporates bodies NAL" ;
+      sh:severity sh:Warning
+    ], [
+      sh:node [
+                a sh:NodeShape ;
+                sh:or (:CountryRestriction
+                       :PlaceRestriction
+                       :ContinentRestriction
+                       :GeoNamesRestrictionRegexURI
+                  )
+              ] ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:spatial ;
+      sh:description "A non managed concept is used to indicate a spatial description, check if a corresponding exists" ;
+      sh:severity sh:Warning
+    ], [
+      sh:node :DataThemeRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dcat:theme ;
+      sh:description "Multiple themes can be used but at least one concept of <http://publications.europa.eu/resource/authority/data-theme> should be present" ;
+      sh:severity sh:Warning
+    ], [
+      sh:node :DatasetTypeRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:type ;
+      sh:description "Multiple types can be used but it is recommended to also provide at least one concept of <http://publications.europa.eu/resource/authority/dataset-type> should be present" ;
+      sh:severity sh:Warning
+    ], [
+      sh:node :AccessRightRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:accessRights ;
+      sh:description "A non EU managed concept is used to indicate the access right. If no corresponding can be found inform the maintainer of the EU language NAL" ;
+      sh:severity sh:Warning
+    ] ;
+  sh:targetClass dcat:Dataset.
+
+:DatasetSeries_ShapeCV
+  a sh:NodeShape ;
+  sh:property [
+      sh:node :FrequencyRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:accrualPeriodicity ;
+      sh:description "A non EU managed concept is used to indicate the accrualPeriodicity frequency. If no corresponding can be found inform the maintainer of the EU frequency NAL" ;
+      sh:severity sh:Violation
+    ], [
+      sh:node :CorporateBodyRestriction ;
+      sh:node :Publisher_ShapeCV ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:publisher ;
+      sh:description "A non EU managed concept is used to indicate the publisher, check if a corresponding exists in the EU corporates bodies NAL" ;
+      sh:severity sh:Warning
+    ], [
+      sh:node [
+                a sh:NodeShape ;
+                sh:or (:CountryRestriction
+                       :PlaceRestriction
+                       :ContinentRestriction
+                       :GeoNamesRestrictionRegexURI
+                  )
+              ] ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:spatial ;
+      sh:description "A non managed concept is used to indicate a spatial description, check if a corresponding exists" ;
+      sh:severity sh:Warning
+    ] ;
+  sh:targetClass dcat:DatasetSeries.
+
+# ------------------------------------------------------------------------------------------------------------------
+# The constraints for dcat:mediaType, dcat:compressFormat, dcat:packageFormat which are limited to the IANA codelist
+# cannot be expressed in SHACL unless a copy in RDF for the IANA codelist is being created.
+# A less formal check is provided based upon the assumption that the IANIA codelist is hosted on a known URL domain.
+# This check is sensitive to the publication strategy of IANA.
+# ------------------------------------------------------------------------------------------------------------------
+:Distribution_ShapeCV
+  a sh:NodeShape ;
+  sh:property [
+      sh:node :FileTypeRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:format ;
+      sh:description "A non EU managed concept is used to indicate the format of the distribution. If no corresponding can be found inform the maintainer of the fileformat NAL." ;
+      sh:severity sh:Violation
+    ], [
+      sh:node :LanguageRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:language ;
+      sh:description "A non EU managed concept is used to indicate a language. If no corresponding can be found inform the maintainer of the EU language NAL" ;
+      sh:severity sh:Violation
+    ], [
+      sh:node :StatusRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path adms:status ;
+      sh:description "A non EU managed concept is used to indicate the status of the distribution. If no corresponding can be found inform the maintainer of the adms:status codelist." ;
+      sh:severity sh:Violation
+    ], [
+      sh:node :AvailabilityRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dcatap:availability ;
+      sh:description "A non EU managed concept is used to indicate the availability of the distribution. If no corresponding can be found inform the maintainer of the DCAT-AP availability codelist." ;
+      sh:severity sh:Violation
+    ], [
+      sh:node :IANARestrictionRegexURI;
+      sh:nodeKind sh:IRI ;
+      sh:path dcat:mediaType ;
+      sh:description "A mediaType expects a value from IANA. This check uses the URLs from IANA to perform the check as there is no IANA codelist downloadable." ;
+      sh:severity sh:Violation
+    ], [
+      sh:node :IANARestrictionRegexURI;
+      sh:nodeKind sh:IRI ;
+      sh:path dcat:compressFormat ;
+      sh:description "A compressFormat expects a value from IANA. This check uses the URLs from IANA to perform the check as there is no IANA codelist downloadable." ;
+      sh:severity sh:Violation
+    ], [
+      sh:node :IANARestrictionRegexURI;
+      sh:nodeKind sh:IRI ;
+      sh:path dcat:packageFormat ;
+      sh:description "A packageFormat expects a value from IANA. This check uses the URLs from IANA to perform the check as there is no IANA codelist downloadable." ;
+      sh:severity sh:Violation
+    ] ;
+  sh:targetClass dcat:Distribution.
+
+:DataService_ShapeCV
+  a sh:NodeShape ;
+  sh:property [
+      sh:node :FileTypeRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:format ;
+      sh:description "A non EU managed concept is used to indicate the format the data service supports. If no corresponding can be found inform the maintainer of the fileformat NAL." ;
+      sh:severity sh:Violation
+    ], [
+      sh:node :DataThemeRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dcat:theme ;
+      sh:description "Multiple themes can be used but at least one concept of <http://publications.europa.eu/resource/authority/data-theme> should be present" ;
+      sh:severity sh:Warning
+    ], [
+      sh:node :CorporateBodyRestriction ;
+      sh:node :Publisher_ShapeCV ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:publisher ;
+      sh:description "A non EU managed concept is used to indicate the publisher, check if a corresponding exists in the EU corporates bodies NAL" ;
+      sh:severity sh:Warning
+    ], [
+      sh:node :AccessRightRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:accessRights ;
+      sh:description "A non EU managed concept is used to indicate the access right. If no corresponding can be found inform the maintainer of the EU language NAL" ;
+      sh:severity sh:Warning
+    ] ;
+  sh:targetClass dcat:DataService.
+
+
+:Publisher_ShapeCV
+  a sh:NodeShape ;
+  sh:property [
+      sh:node :PublisherTypeRestriction ;
+      sh:nodeKind sh:IRI ;
+      sh:path dct:type ;
+      sh:description "A non EU managed concept is used to indicate the type of the publisher. If no corresponding can be found inform the maintainer of the adms:publishertype codelist." ;
+      sh:severity sh:Violation
+    ] .
