@@ -179,14 +179,16 @@ public class Aligner extends BaseAligner<SimpleUrlParams> {
             return result;
         }
 
-        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
-
-            for (String uuid : localUuids.getUUIDs()) {
-                if (!records.contains(uuid)) {
-                    String id = localUuids.getID(uuid);
-                    log.debug("  - Removing old metadata with local id:" + id);
-                    metadataManager.deleteMetadata(context, id, submitter);
-                    result.locallyRemoved++;
+        // localUuids could be unset in case of previous errors
+        if (localUuids != null) {
+            try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
+                for (String uuid : localUuids.getUUIDs()) {
+                    if (!records.contains(uuid)) {
+                        String id = localUuids.getID(uuid);
+                        log.debug("  - Removing old metadata with local id:" + id);
+                        metadataManager.deleteMetadata(context, id, submitter);
+                        result.locallyRemoved++;
+                    }
                 }
             }
         }

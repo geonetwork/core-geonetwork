@@ -934,13 +934,6 @@
         </exclusions>
       </dependency>
 
-      <dependency>
-        <groupId>com.jayway.jsonpath</groupId>
-        <artifactId>json-path</artifactId>
-        <version>2.4.0</version>
-      </dependency>
-
-
       <!-- Tests -->
       <dependency>
         <groupId>junit</groupId>
@@ -1237,6 +1230,17 @@
         <version>${jackson.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.jayway.jsonpath</groupId>
+        <artifactId>json-path</artifactId>
+        <version>${jsonpath.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.jayway.jsonpath</groupId>
+        <artifactId>json-path-assert</artifactId>
+        <version>${jsonpath.version}</version>
+        <scope>test</scope>
       </dependency>
       <dependency>
         <groupId>javax.xml.bind</groupId>
@@ -1714,6 +1718,7 @@
     <pdfbox.version>3.0.3</pdfbox.version>
     <xmlunit.version>2.10.0</xmlunit.version>
     <jackson.version>2.22.0</jackson.version>
+    <jsonpath.version>2.10.0</jsonpath.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
     <log4j2.version>2.25.5</log4j2.version>

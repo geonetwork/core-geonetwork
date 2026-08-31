@@ -677,6 +677,7 @@
             pageSizeParam: "",
             pageFromParam: "",
             recordIdPath: "",
+            recordIdPathMode: "",
             toISOConversion: "schema:iso19115-3.2018:convert/fromSPARQL-DCAT"
           }
         },
@@ -687,6 +688,7 @@
             pageSizeParam: "limit",
             pageFromParam: "offset",
             recordIdPath: "/dataset/dataset_id",
+            recordIdPathMode: "jsonpointer",
             toISOConversion: "schema:iso19115-3.2018:convert/fromJsonOpenDataSoft"
           }
         },
@@ -697,6 +699,7 @@
             pageSizeParam: "limit",
             pageFromParam: "page",
             recordIdPath: "/id",
+            recordIdPathMode: "jsonpointer",
             toISOConversion: "schema:iso19115-3.2018:convert/stac-to-iso19115-3"
           }
         },
@@ -707,6 +710,7 @@
             pageSizeParam: "",
             pageFromParam: "",
             recordIdPath: "mdb:metadataIdentifier/*/mcc:code/*/text()",
+            recordIdPathMode: "xpath",
             toISOConversion: ""
           }
         },
@@ -717,6 +721,7 @@
             pageSizeParam: "",
             pageFromParam: "",
             recordIdPath: "gmd:fileIdentifier/*/text()",
+            recordIdPathMode: "xpath",
             toISOConversion: ""
           }
         }
