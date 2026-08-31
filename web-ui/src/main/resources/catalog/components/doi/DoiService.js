@@ -31,8 +31,9 @@
    */
   module.service("gnDoiService", [
     "$http",
+    "$q",
     "gnConfig",
-    function ($http, gnConfig) {
+    function ($http, $q, gnConfig) {
       /**
        * Returns a promise to validate a metadata to be published on a DOI server.
        *
@@ -65,7 +66,29 @@
        * @returns {*}
        */
       function getDoiServersForMetadata(metadataId) {
-        return $http.get("../api/doiservers/metadata/" + metadataId);
+        return $http.get("../api/doiservers/metadata/" + metadataId, { cache: true });
+      }
+
+      /**
+       * Return the DOI server with a prefix matching the DOI url.
+       */
+      function getDoiServerForMetadataAndDoi(metadataId, doiUrl) {
+        var deferred = $q.defer();
+        getDoiServersForMetadata(metadataId).then(
+          function (response) {
+            for (var i = 0; i < response.data.length; i++) {
+              if (doiUrl.match("doi.org/" + response.data[i].prefix)) {
+                deferred.resolve(response.data[i]);
+                return;
+              }
+            }
+            deferred.reject(null);
+          },
+          function () {
+            deferred.reject(null);
+          }
+        );
+        return deferred.promise;
       }
 
       function isDoiApplicableForMetadata(md) {
@@ -85,16 +108,45 @@
        *     the metadata is published.
        *
        */
-      function canPublishDoiForResource(md, resource) {
+      function canPublishDoiForResource(md, doiUrl) {
+        if (doiUrl == null || doiUrl.indexOf("doi.org/") === -1) {
+          return false;
+        }
+
         var doiKey = gnConfig["system.publication.doi.doikey"];
         var isMdWorkflowEnableForMetadata =
           gnConfig["metadata.workflow.enable"] && md.draft === "y";
         return (
           isDoiApplicableForMetadata(md) &&
-          resource.lUrl !== null &&
-          resource.lUrl.match("doi.org/" + doiKey) !== null &&
+          doiUrl.match("doi.org/" + doiKey) !== null &&
           !isMdWorkflowEnableForMetadata
         );
+      }
+
+      function checkDoiManagementForResource(md, resource) {
+        if (resource.locUrl == null || resource.locUrl.indexOf("doi.org/") === -1) {
+          return;
+        }
+        var doiKey = null;
+        getDoiServersForMetadata(md.id).then(function (response) {
+          var isMdWorkflowEnableForMetadata =
+            gnConfig["metadata.workflow.enable"] && md.draft === "y";
+          for (var i = 0; i < response.data.length; i++) {
+            if (resource.locUrl.match("doi.org/" + response.data[i].prefix)) {
+              doiKey = response.data[i].prefix;
+              break;
+            }
+          }
+          if (doiKey !== null) {
+            if (
+              isDoiApplicableForMetadata(md) &&
+              resource.locUrl.match("doi.org/" + doiKey) !== null &&
+              !isMdWorkflowEnableForMetadata
+            ) {
+              resource.canManageDoi = true;
+            }
+          }
+        });
       }
 
       return {
@@ -102,7 +154,9 @@
         create: create,
         isDoiApplicableForMetadata: isDoiApplicableForMetadata,
         canPublishDoiForResource: canPublishDoiForResource,
-        getDoiServersForMetadata: getDoiServersForMetadata
+        getDoiServersForMetadata: getDoiServersForMetadata,
+        checkDoiManagementForResource: checkDoiManagementForResource,
+        getDoiServerForMetadataAndDoi: getDoiServerForMetadataAndDoi
       };
     }
   ]);
