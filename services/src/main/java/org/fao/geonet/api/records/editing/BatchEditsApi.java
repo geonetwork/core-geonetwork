@@ -33,6 +33,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.services.ReadWriteController;
+import jeeves.transaction.BatchTransactionalProcessor;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiParams;
@@ -213,11 +214,13 @@ public class BatchEditsApi implements ApplicationContextAware {
         report.setTotalRecords(setOfUuidsToEdit.size());
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
 
-        String changeDate = null;
         Element preview = new Element("preview");
 
         final IMetadataUtils metadataRepository = context.getBean(IMetadataUtils.class);
-        for (String recordUuid : setOfUuidsToEdit) {
+
+        BatchTransactionalProcessor<String> processor =
+            new BatchTransactionalProcessor<>("BatchEditing", appContext);
+        processor.process(setOfUuidsToEdit, recordUuid -> {
             AbstractMetadata record = metadataRepository.findOneByUuid(recordUuid);
             if (record == null) {
                 report.incrementNullRecords();
@@ -264,7 +267,7 @@ public class BatchEditsApi implements ApplicationContextAware {
                     }
                     if (previewOnly) {
                         if (diffType == null) {
-                            preview.addContent(metadata);
+                            preview.addContent(metadata.detach());
                         } else {
                             preview.addContent(
                                 Diff.diff(original, Xml.getString(metadata), diffType)
@@ -280,7 +283,7 @@ public class BatchEditsApi implements ApplicationContextAware {
                             serviceContext, record.getId() + "", metadata,
                             validate, ufo,
                             "eng", // Not used when validate is false
-                            changeDate, uds, IndexingMode.full);
+                            null, uds, IndexingMode.full);
                         report.addMetadataInfos(record, "Metadata updated.");
 
                         Element afterMetadata = dataMan.getMetadata(serviceContext, String.valueOf(record.getId()), false, false, false);
@@ -296,7 +299,7 @@ public class BatchEditsApi implements ApplicationContextAware {
                 }
                 report.incrementProcessedRecords();
             }
-        }
+        });
         report.close();
         return Pair.write(report, preview);
     }
