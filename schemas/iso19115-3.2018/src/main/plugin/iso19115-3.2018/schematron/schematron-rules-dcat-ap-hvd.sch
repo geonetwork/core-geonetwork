@@ -47,6 +47,9 @@
   <sch:ns prefix="mdq" uri="http://standards.iso.org/iso/19157/-2/mdq/1.0"/>
   <sch:ns prefix="mrl" uri="http://standards.iso.org/iso/19115/-3/mrl/2.0"/>
   <sch:ns prefix="gco" uri="http://standards.iso.org/iso/19115/-3/gco/1.0"/>
+  <sch:ns prefix="rdf" uri="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
+  <sch:ns prefix="skos" uri="http://www.w3.org/2004/02/skos/core#"/>
+  <sch:ns prefix="util" uri="java:org.fao.geonet.util.XslUtil"/>
 
 
   <sch:diagnostic id="rule.hvd.legislation.mandatory-failure-en" xml:lang="en">
@@ -198,21 +201,54 @@
 
 
 
+  <sch:diagnostic id="rule.hvd.additional.legislation.recommended-failure-en" xml:lang="en">
+    Additional legislation is recommended. Add at least one keyword with an Anchor pointing to another legislation.
+  </sch:diagnostic>
+  <sch:diagnostic id="rule.hvd.additional.legislation.recommended-failure-fr" xml:lang="fr">
+    Il est recommandé d'ajouter une législation supplémentaire. Ajoutez au moins un mot-clé avec une ancre pointant vers une autre législation.
+  </sch:diagnostic>
+  <sch:diagnostic id="rule.hvd.additional.legislation.recommended-success-en"
+                  xml:lang="en">
+    Additional legislation found:<sch:value-of select="concat(' ', string-join($keywordEncodingAdditionalApplicableLegislationAsAnchor, ', '))"/>.
+  </sch:diagnostic>
+  <sch:diagnostic id="rule.hvd.additional.legislation.recommended-success-fr"
+                  xml:lang="fr">
+    Autres législations également encodées :<sch:value-of select="concat(' ', string-join($keywordEncodingAdditionalApplicableLegislationAsAnchor, ', '))"/>.
+  </sch:diagnostic>
+
+
+
+
+
+
   <sch:pattern>
     <sch:title>HVD</sch:title>
     <sch:rule
       context="//*:MD_Metadata">
 
-      <sch:let name="hasOneKeywordEncodingApplicableLegislationAsAnchor"
+      <sch:let name="hasOneKeywordEncodingHVDApplicableLegislationAsAnchor"
                value="count(*:identificationInfo/*/*:descriptiveKeywords/*/
                               *:keyword[*:Anchor/@xlink:href
                                   = 'http://data.europa.eu/eli/reg_impl/2023/138/oj']) = 1"/>
       <!-- TODO: Relax with CharacterString? -->
 
-      <sch:assert test="$hasOneKeywordEncodingApplicableLegislationAsAnchor"
+      <sch:assert test="$hasOneKeywordEncodingHVDApplicableLegislationAsAnchor"
                   diagnostics="rule.hvd.legislation.mandatory-failure-en rule.hvd.legislation.mandatory-failure-fr"/>
-      <sch:report test="$hasOneKeywordEncodingApplicableLegislationAsAnchor"
+      <sch:report test="$hasOneKeywordEncodingHVDApplicableLegislationAsAnchor"
                   diagnostics="rule.hvd.legislation.mandatory-success-en rule.hvd.legislation.mandatory-success-fr"/>
+
+
+      <sch:let name="keywordEncodingAdditionalApplicableLegislationAsAnchor"
+               value="*:identificationInfo/*/*:descriptiveKeywords/*/
+                              *:keyword[*:Anchor/@xlink:href != 'http://data.europa.eu/eli/reg_impl/2023/138/oj'
+                                                and starts-with(*:Anchor/@xlink:href, 'http://data.europa.eu/eli/')]"/>
+      <sch:let name="hasKeywordEncodingAdditionalApplicableLegislationAsAnchor"
+               value="count($keywordEncodingAdditionalApplicableLegislationAsAnchor) > 0"/>
+
+      <sch:report test="not($hasKeywordEncodingAdditionalApplicableLegislationAsAnchor)"
+                  diagnostics="rule.hvd.additional.legislation.recommended-failure-en rule.hvd.additional.legislation.recommended-failure-fr"/>
+      <sch:report test="$hasKeywordEncodingAdditionalApplicableLegislationAsAnchor"
+                  diagnostics="rule.hvd.additional.legislation.recommended-success-en rule.hvd.additional.legislation.recommended-success-fr"/>
 
 
       <!--
@@ -303,13 +339,21 @@
                             INSPIRE Data Specification on Addresses – Technical Guidelines, version 3.1</gcx:Anchor>
 
           Rule:
-          * More strict, at least one?
-          * TODO: non INSPIRE datasets?
+          If an external vocabulary `inspire-technical-guidelines.rdf` is available, then this vocabulary
+          list of concept URI are used to check if any valid dataset specifications are set.
+          If not, then all specifications starting with `https://inspire.ec.europa.eu/id/document` are used.
       -->
+      <sch:let name="listOfSpecificationsVocabulary"
+               value="document(concat('file:///', replace(util:getConfigValue('codeListDir'), '\\', '/'), '/external/thesauri/theme/inspire-technical-guidelines.rdf'))"/>
+      <sch:let name="listOfSpecificationUri"
+               value="$listOfSpecificationsVocabulary//skos:Concept/@rdf:about"/>
       <sch:let name="implementingRules"
-               value="*:dataQualityInfo/*/*:report/*/*:result/*/*:specification/*/
+               value="if ($listOfSpecificationUri)
+                           then *:dataQualityInfo/*/*:report/*/*:result/*/*:specification/*/
+                                    *:title[*:Anchor/@xlink:href = $listOfSpecificationUri]
+                            else *:dataQualityInfo/*/*:report/*/*:result/*/*:specification/*/
                                     *:title[starts-with(*:Anchor/@xlink:href, 'https://inspire.ec.europa.eu/id/document')]"/>
-      <!-- TODO: Relax with has a specification ? or CharacterString starting with INSPIRE Data Specification... ? -->
+
       <sch:let name="hasOneOrMoreDataSpecConformityForINSPIRE"
                value="count($implementingRules) > 0"/>
 
