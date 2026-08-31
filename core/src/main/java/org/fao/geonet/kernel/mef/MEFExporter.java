@@ -40,8 +40,13 @@ import org.fao.geonet.utils.Log;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_METADATA;
 
@@ -127,33 +132,41 @@ class MEFExporter {
         final Store store = context.getBean("resourceStore", Store.class);
 
         try (FileSystem zipFs = ZipUtil.createZipFs(file)) {
-            // --- save metadata
-            byte[] binData = xmlDocumentAsString.getBytes(Constants.ENCODING);
-            Files.write(zipFs.getPath(FILE_METADATA), binData);
-
-            // Get the paths to the public and private resources directories
-            Path publicResourcesPath = zipFs.getPath("public");
-            Path privateResourcesPath = zipFs.getPath("private");
-
-            // Create the resources directories
+            // MEF version 1 uses the original, pre-3.0 layout: public and private resources are
+            // written into separate top-level directories, matching MEFLib.Version#V1's own
+            // documented format (a single record with no per-visibility "access" tracking in the
+            // filename/path itself - which directory a file is in *is* its visibility).
+            Path publicResourcesPath = zipFs.getPath(DIR_PUBLIC);
             Files.createDirectories(publicResourcesPath);
+            Path privateResourcesPath = zipFs.getPath(DIR_PRIVATE);
             Files.createDirectories(privateResourcesPath);
 
-            // Add the resources if the specified format allows it
+            // Add the resources if the specified format allows it. This has to happen before
+            // metadata.xml is written below: a nested resource's stored name is flattened (see
+            // MEFLib#flattenResourceNames), and any reference to its original URL inside the
+            // record's own metadata.xml needs rewriting to match before that XML is serialized.
             List<MetadataResource> publicResources = List.of();
             List<MetadataResource> privateResources = List.of();
+            Map<String, String> publicFlattenedNames = Collections.emptyMap();
+            Map<String, String> privateFlattenedNames = Collections.emptyMap();
             if (includeAttachments) {
                 if (format == Format.PARTIAL || format == Format.FULL) {
+                    // Resources in a subfolder break old GeoNetwork versions reading a v1
+                    // archive (see MEFLib#flattenResourceNames).
                     publicResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PUBLIC, null, approved);
-                    StoreUtils.extract(context, record.getUuid(), publicResources, publicResourcesPath, approved);
+                    publicFlattenedNames = MEFLib.flattenResourceNames(publicResources);
+                    xmlDocumentAsString = MEFLib.rewriteFlattenedResourceUrls(xmlDocumentAsString, publicResources, publicFlattenedNames);
+                    StoreUtils.extract(context, record.getUuid(), publicResources, publicResourcesPath, approved, publicFlattenedNames);
                 }
 
                 if (format == Format.FULL) {
                     privateResources = store.getResources(context, record.getUuid(), MetadataResourceVisibility.PRIVATE, null, approved);
+                    privateFlattenedNames = MEFLib.flattenResourceNames(privateResources);
+                    xmlDocumentAsString = MEFLib.rewriteFlattenedResourceUrls(xmlDocumentAsString, privateResources, privateFlattenedNames);
 
                     try {
                         Lib.resource.checkPrivilege(context, "" + record.getId(), ReservedOperation.download);
-                        StoreUtils.extract(context, record.getUuid(), privateResources, privateResourcesPath, approved);
+                        StoreUtils.extract(context, record.getUuid(), privateResources, privateResourcesPath, approved, privateFlattenedNames);
                     } catch (Exception e) {
                         // Current user could not download private data
                         Log.warning(Geonet.MEF,
@@ -162,9 +175,18 @@ class MEFExporter {
                 }
             }
 
+            // --- save metadata (using the URL-rewritten string, if any resource was flattened)
+            byte[] binData = xmlDocumentAsString.getBytes(Constants.ENCODING);
+            Files.write(zipFs.getPath(FILE_METADATA), binData);
+
             // --- save info file
+            // Resources are split into the legacy public/private directories above, so info.xml
+            // must describe them the same way (unifiedStore = false) - separate <public>/
+            // <private> sections, not the unified MEF 3.0 <store> element.
+            Map<String, String> flattenedNames = new HashMap<>(publicFlattenedNames);
+            flattenedNames.putAll(privateFlattenedNames);
             binData = MEFLib.buildInfoFile(context, record, format, publicResources, privateResources,
-                skipUUID).getBytes(Constants.ENCODING);
+                skipUUID, false, flattenedNames).getBytes(Constants.ENCODING);
             Files.write(zipFs.getPath(FILE_INFO), binData);
         } catch (Exception e) {
             FileUtils.deleteQuietly(file.toFile());

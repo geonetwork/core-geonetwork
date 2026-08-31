@@ -25,7 +25,78 @@
   goog.provide("gn_filestore_directive");
 
   /**
+   * Given the flat list of a record's attachments (each resource's `filename` may contain
+   * "/"-separated folders) and the folder currently being browsed, compute a single level of the
+   * folder tree: the immediate subfolders of currentFolder, and the files directly inside it.
+   * No HTTP call is needed for this - the full flat list is already loaded.
+   *
+   * Mutates each matched file resource in place to add a `_displayName` (its filename relative
+   * to currentFolder, with no further "/"), mirroring how the directive already stashes
+   * transient UI state (eg. `filename_edit`) directly on resource objects.
+   *
+   * @param {Array} resources The flat list of resources, each with a `.filename`.
+   * @param {string} currentFolder The folder being browsed ('' for the root).
+   * @return {{folders: Array<string>, files: Array}} Sorted immediate subfolder names, and the
+   *     resource objects that are files directly inside currentFolder.
    */
+  function gnFileStoreGroupByFolder(resources, currentFolder) {
+    var prefix = currentFolder ? currentFolder + "/" : "";
+    var folderNames = [];
+    var seenFolders = {};
+    var files = [];
+
+    angular.forEach(resources || [], function (r) {
+      var relativePath = r.filename || "";
+      if (prefix && relativePath.indexOf(prefix) !== 0) {
+        return;
+      }
+      var remainder = relativePath.substring(prefix.length);
+      var slashIndex = remainder.indexOf("/");
+      if (slashIndex === -1) {
+        r._displayName = remainder;
+        files.push(r);
+      } else {
+        var folderName = remainder.substring(0, slashIndex);
+        if (!seenFolders[folderName]) {
+          seenFolders[folderName] = true;
+          folderNames.push(folderName);
+        }
+      }
+    });
+
+    folderNames.sort();
+
+    return {
+      folders: folderNames,
+      files: files
+    };
+  }
+
+  /**
+   * Build the "/"-separated URL path segment for a destination folder, matching the
+   * POST/PUT .../attachments/{folder:.+} mapping on AttachmentsApi. Each path segment is
+   * encoded individually so the "/" separators of a multi-level folder (eg. "a/b") aren't
+   * escaped to %2F - mirrors how FilesystemStoreResource already builds nested-path URLs with
+   * Guava's urlFragmentEscaper, which also leaves "/" unescaped.
+   *
+   * @param {string} folder The destination folder ('' or falsy for the root).
+   * @return {string} '' at the root, otherwise "/" followed by the encoded folder path.
+   */
+  function gnFileStoreFolderUrlSegment(folder) {
+    if (!folder) {
+      return "";
+    }
+    return (
+      "/" +
+      folder
+        .split("/")
+        .map(function (segment) {
+          return encodeURIComponent(segment);
+        })
+        .join("/")
+    );
+  }
+
   angular
     .module("gn_filestore_directive", ["blueimp.fileupload"])
     /**
@@ -46,6 +117,7 @@
             uploadOptions: "=?",
             fileTypes: "=?",
             visibility: "@?",
+            folder: "@?",
             afterUploadCb: "&?",
             afterUploadErrorCb: "&?"
           },
@@ -92,7 +164,9 @@
                   url:
                     "../api/records/" +
                     gnCurrentEdit.uuid +
-                    "/attachments?visibility=" +
+                    "/attachments" +
+                    gnFileStoreFolderUrlSegment(scope.folder) +
+                    "?visibility=" +
                     (scope.visibility || "public"),
                   dropZone: $("#gn-upload-" + scope.id),
                   pasteZone: null,
@@ -110,6 +184,17 @@
                 scope.uuid = n;
                 uploadFile();
                 unregisterWatch();
+              }
+            });
+
+            // Rebuild the upload URL whenever the destination folder changes (eg. the user
+            // navigates to a different folder in gnFileStore while this widget stays mounted).
+            // Reassigning scope.filestoreUploadOptions to a new object (inside uploadFile) is
+            // what the fileUpload directive's own $watch (jquery.fileupload-angular.js) picks up
+            // to re-apply the option live to the underlying jQuery File Upload widget.
+            scope.$watch("folder", function (newValue, oldValue) {
+              if (newValue !== oldValue && angular.isDefined(scope.uuid)) {
+                uploadFile();
               }
             });
 
@@ -229,6 +314,7 @@
             btnLabel: "=?gnDataUploaderButton",
             isOverview: "=?isOverview",
             visibility: "@?",
+            folder: "@?",
             afterUploadCb: "&?",
             afterUploadErrorCb: "&?"
           },
@@ -246,7 +332,14 @@
                 visibility: scope.visibility
               });
               $http
-                .put("../api/records/" + gnCurrentEdit.uuid + "/attachments?" + params)
+                .put(
+                  "../api/records/" +
+                    gnCurrentEdit.uuid +
+                    "/attachments" +
+                    gnFileStoreFolderUrlSegment(scope.folder) +
+                    "?" +
+                    params
+                )
                 .then(
                   function (response) {
                     $rootScope.$broadcast("gnFileStoreUploadDone");
@@ -347,6 +440,88 @@
             scope.selectOptions = { current: undefined };
             scope.metadataResources = [];
             scope.editingResource = false;
+            scope.currentFolder = "";
+            scope.currentFolders = [];
+            scope.currentFiles = [];
+            scope.isFiltered = false;
+
+            // While a filter is active, gnfilestoreService.get() already searches the whole
+            // tree server-side (matched against each file's leaf name), so folder-grouping the
+            // result would hide matches outside the currently browsed folder. Show a flat list
+            // of every match instead, with its full relative path as the display name so folder
+            // context isn't lost now that a single currentFolder no longer applies; clearing the
+            // filter goes back to browsing currentFolder exactly where it was left, since it's
+            // never touched while filtered.
+            function updateFolderView() {
+              scope.isFiltered = !!scope.filter;
+
+              if (scope.isFiltered) {
+                var matches = [];
+                angular.forEach(scope.metadataResources || [], function (r) {
+                  r._displayName = r.filename;
+                  matches.push(r);
+                });
+                scope.currentFolders = [];
+                scope.currentFiles = matches;
+                return;
+              }
+
+              var grouped = gnFileStoreGroupByFolder(
+                scope.metadataResources,
+                scope.currentFolder
+              );
+              scope.currentFolders = grouped.folders;
+              scope.currentFiles = grouped.files;
+            }
+
+            scope.openFolder = function (folderName) {
+              scope.currentFolder = scope.currentFolder
+                ? scope.currentFolder + "/" + folderName
+                : folderName;
+              updateFolderView();
+            };
+
+            scope.openParentFolder = function () {
+              var lastSlash = scope.currentFolder.lastIndexOf("/");
+              scope.currentFolder =
+                lastSlash === -1 ? "" : scope.currentFolder.substring(0, lastSlash);
+              updateFolderView();
+            };
+
+            // Folders aren't persisted objects (see the analysis report, design decision #1) -
+            // "creating" one just means browsing into it, so the next upload targets that
+            // destination; it only starts showing up for real once something's uploaded there.
+            //
+            // Kept as properties of one object (not bare scope properties) because the
+            // ng-model'd input lives inside an ng-if (layout !== 'select'), which creates a
+            // child scope: ng-model="newFolder.name" writes to the shared object found via the
+            // prototype chain, whereas ng-model="newFolderName" would instead create a new own
+            // property shadowing this scope's, invisible to createFolder() below.
+            scope.newFolder = { name: "", invalid: false };
+
+            // Mirrors the validation AbstractStore.checkResourceId applies server-side once the
+            // folder is combined with a filename, so the user gets immediate feedback instead of
+            // a failed upload.
+            function isValidFolderSegment(name) {
+              return (
+                !!name &&
+                name.indexOf("..") === -1 &&
+                name.indexOf("//") === -1 &&
+                name.charAt(0) !== "/" &&
+                name.charAt(name.length - 1) !== "/"
+              );
+            }
+
+            scope.createFolder = function () {
+              var name = (scope.newFolder.name || "").trim();
+              if (!isValidFolderSegment(name)) {
+                scope.newFolder.invalid = true;
+                return;
+              }
+              scope.newFolder.invalid = false;
+              scope.newFolder.name = "";
+              scope.openFolder(name);
+            };
 
             function updateVisibilityEditingPanel(index, editing) {
               if (editing) {
@@ -357,17 +532,40 @@
                 $("#resource_edit_" + index).addClass("hidden");
               }
             }
+            // A file's own folder is derived from its filename (everything before the last "/"),
+            // not from scope.currentFolder - rename works the same whether the file is reached
+            // by browsing into its folder or by a whole-tree filter match (see updateFolderView).
+            function folderPrefixOf(filename) {
+              var lastSlash = (filename || "").lastIndexOf("/");
+              return lastSlash === -1 ? "" : filename.substring(0, lastSlash);
+            }
+
+            function isValidLeafFilename(name) {
+              return !!name && name.indexOf("/") === -1;
+            }
+
             scope.editResource = function (r, index) {
-              r.filename_edit = r.filename;
+              // The rename box only ever edits the leaf filename - the folder prefix (if any) is
+              // kept alongside it and silently re-attached on save, so nested files aren't
+              // renamed by having the user retype their whole path.
+              r._renameFolderPrefix = folderPrefixOf(r.filename);
+              r.filename_edit = r._renameFolderPrefix
+                ? r.filename.substring(r._renameFolderPrefix.length + 1)
+                : r.filename;
+              r._renameOriginalLeaf = r.filename_edit;
               scope.editingResource = true;
               scope.duplicatedFilename = false;
+              scope.invalidFilename = false;
 
               updateVisibilityEditingPanel(index, true);
             };
 
             scope.cancelEditResource = function (r, index) {
               delete r.filename_edit;
+              delete r._renameFolderPrefix;
+              delete r._renameOriginalLeaf;
               scope.duplicatedFilename = false;
+              scope.invalidFilename = false;
               scope.editingResource = false;
               updateVisibilityEditingPanel(index, false);
             };
@@ -375,11 +573,28 @@
             scope.saveEditResource = function (r, index) {
               // TODO: check if the resource is already in the list and update it in the backend
 
+              var newLeafName = (r.filename_edit || "").trim();
+              if (!isValidLeafFilename(newLeafName)) {
+                scope.invalidFilename = true;
+                return;
+              }
+              scope.invalidFilename = false;
+
+              var newFullName = r._renameFolderPrefix
+                ? r._renameFolderPrefix + "/" + newLeafName
+                : newLeafName;
+
               gnfilestoreService.get(scope.gnCurrentEdit.uuid, "").then(function (data) {
                 var files = data.data;
                 var fileNameExists = false;
                 for (var i = 0; i < files.length; i++) {
-                  if (files[i].filename == r.filename_edit) {
+                  // Comparing full paths (folder prefix included) is what scopes this check to
+                  // files in the same folder as the one being renamed - a file with the same leaf
+                  // name in a different folder has a different full path and isn't a duplicate.
+                  if (
+                    files[i].filename == newFullName &&
+                    files[i].filename != r.filename
+                  ) {
                     fileNameExists = true;
                     break;
                   }
@@ -389,7 +604,7 @@
                   scope.duplicatedFilename = false;
 
                   gnfilestoreService
-                    .updateResourceName(scope.gnCurrentEdit.uuid, r, r.filename_edit)
+                    .updateResourceName(scope.gnCurrentEdit.uuid, r, newFullName)
                     .then(function (response) {
                       scope.editingResource = false;
                       updateVisibilityEditingPanel(index, false);
@@ -413,6 +628,7 @@
                 .get(scope.uuid, scope.filter)
                 .then(function (response) {
                   scope.metadataResources = response.data;
+                  updateFolderView();
                 });
             };
             scope.setResourceStatus = function (r) {
@@ -469,6 +685,7 @@
             });
             scope.$watch("uuid", function (newValue, oldValue) {
               if (angular.isDefined(scope.uuid) && newValue != oldValue) {
+                scope.currentFolder = "";
                 scope.loadMetadataResources();
 
                 scope.queue = [];

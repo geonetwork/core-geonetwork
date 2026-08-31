@@ -115,8 +115,10 @@ public class Importer {
         // Try to define MEF version from mef file not from parameter
         if (fileType.equals("mef")) {
             MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
-            if (version != null && version.equals(MEFLib.Version.V2)) {
+            if (version == MEFLib.Version.V2) {
                 fileType = "mef2";
+            } else if (version == MEFLib.Version.V3) {
+                fileType = "mef3";
             }
         }
 
@@ -128,6 +130,8 @@ public class Importer {
             visitor = new MEFVisitor();
         else if (fileType.equals("mef2"))
             visitor = new MEF2Visitor();
+        else if (fileType.equals("mef3"))
+            visitor = new MEF3Visitor();
         else
             throw new BadArgumentException("Bad file type parameter.");
 

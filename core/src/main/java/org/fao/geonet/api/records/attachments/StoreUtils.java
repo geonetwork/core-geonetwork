@@ -149,15 +149,43 @@ public abstract class StoreUtils {
      */
     public static void extract(final ServiceContext context, final String metadataUuid, final List<MetadataResource> resources,
             final Path destinationDir, boolean approved) throws Exception {
+        extract(context, metadataUuid, resources, destinationDir, approved, null);
+    }
+
+    /**
+     * Copy all the given attachments to the target directory, optionally under a different name
+     * than each resource's own {@link MetadataResource#getFilename()} (eg. a MEF v1/v2 export
+     * writing a flattened name for a nested resource - see
+     * {@link org.fao.geonet.kernel.mef.MEFLib#flattenResourceNames}). The resource is always
+     * looked up in the store under its real, original name; only where it's *written* changes.
+     *
+     * @param context
+     * @param metadataUuid The source metadata UUID
+     * @param resources The attachments to copy
+     * @param destinationDir The destination
+     * @param targetFilenames Optional map from a resource's original {@code getFilename()} to the
+     *                        name it should be written under instead. May be null, equivalent to
+     *                        an empty map (every resource keeps its own name).
+     * @throws Exception
+     */
+    public static void extract(final ServiceContext context, final String metadataUuid, final List<MetadataResource> resources,
+            final Path destinationDir, boolean approved, final Map<String, String> targetFilenames) throws Exception {
         final Store store = context.getBean("resourceStore", Store.class);
         Files.createDirectories(destinationDir);
         for (MetadataResource resource: resources) {
+            String targetFilename = (targetFilenames != null && targetFilenames.containsKey(resource.getFilename()))
+                ? targetFilenames.get(resource.getFilename())
+                : resource.getFilename();
+            // A target filename may include subfolder segments (nested paths); make sure its
+            // parent directory exists too, not just destinationDir itself.
+            Path targetPath = destinationDir.resolve(targetFilename);
+            Files.createDirectories(targetPath.getParent());
             try (
               Store.ResourceHolder holder = store.getResource(context, metadataUuid, resource.getVisibility(),
                     resource.getFilename(), approved);
               InputStream inputStream = holder.getResource().getInputStream();
             ) {
-                Files.copy(inputStream, destinationDir.resolve(resource.getFilename()));
+                Files.copy(inputStream, targetPath);
             }
         }
     }

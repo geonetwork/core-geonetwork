@@ -25,6 +25,8 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.MetadataFileUpload;
 
+import java.util.List;
+
 /**
  * Data Access object for accessing {@link org.fao.geonet.domain.MetadataFileUpload} entities.
  *
@@ -33,5 +35,12 @@ import org.fao.geonet.domain.MetadataFileUpload;
 public interface MetadataFileUploadRepositoryCustom {
 
     MetadataFileUpload findByMetadataIdAndFileNameNotDeleted(int metadataId, String fileName);
+
+    /**
+     * Returns every non-deleted {@link MetadataFileUpload} row for a metadata record, for
+     * building a filename-to-access lookup table (eg. {@code Store#getResources}) without a
+     * per-file database round trip.
+     */
+    List<MetadataFileUpload> findAllByMetadataIdNotDeleted(int metadataId);
 
 }

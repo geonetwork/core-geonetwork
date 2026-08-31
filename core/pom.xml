@@ -48,6 +48,10 @@
       <version>0.4.7</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-core</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.tuckey</groupId>
       <artifactId>urlrewritefilter</artifactId>
     </dependency>
@@ -705,6 +709,7 @@
                   </includes>
                   <excludes>
                     <exludes>**/ElasticsearchIndexingTest.java</exludes>
+                    <exclude>**/MetadataFileUploadBackfillTaskIntegrationTest.java</exclude>
                   </excludes>
                 </configuration>
               </execution>
@@ -718,6 +723,10 @@
                     <forkCount>1</forkCount>
                     <includes>
                       <include>**/ElasticsearchIndexingTest.java</include>
+                      <!-- Walks every metadata record's attachments catalog-wide; run alone to
+                           avoid racing other tests that mutate the same shared MEF fixture uuids
+                           under parallel forks. -->
+                      <include>**/MetadataFileUploadBackfillTaskIntegrationTest.java</include>
                     </includes>
                   </configuration>
               </execution>

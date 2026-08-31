@@ -28,6 +28,14 @@
       fileStoreNoFileMatching
     </div>
 
+    <div
+      class="alert alert-info"
+      data-ng-show="!filter && currentFolders.length === 0 && currentFiles.length === 0"
+      data-translate=""
+    >
+      fileStoreEmptyFolder
+    </div>
+
     <a
       class="btn btn-default btn-xs pull-right"
       data-ng-show="metadataResources.length > 0"
@@ -36,9 +44,37 @@
       <i class="fa fa-fw fa-refresh"></i>
     </a>
 
+    <div class="gn-filestore-current-folder" data-ng-if="currentFolder && !isFiltered">
+      <i class="fa fa-fw fa-folder-open-o"></i>
+      <span data-translate="">fileStoreCurrentFolder</span>:
+      <strong>{{currentFolder}}</strong>
+    </div>
+
     <table class="table gn-data-store">
       <tbody>
-        <tr data-ng-repeat="r in metadataResources track by $index">
+        <tr data-ng-if="currentFolder && !isFiltered">
+          <td colspan="10">
+            <a
+              href=""
+              title="{{'fileStoreFolderUp' | translate}}"
+              data-ng-click="openParentFolder()"
+            >
+              <i class="fa fa-fw fa-level-up"></i> ..
+            </a>
+          </td>
+        </tr>
+        <tr data-ng-repeat="folderName in currentFolders track by $index">
+          <td colspan="10">
+            <a
+              href=""
+              title="{{'fileStoreOpenFolder' | translate}}"
+              data-ng-click="openFolder(folderName)"
+            >
+              <i class="fa fa-fw fa-folder-o"></i> {{folderName}}
+            </a>
+          </td>
+        </tr>
+        <tr data-ng-repeat="r in currentFiles track by $index">
           <td>
             <a
               href=""
@@ -46,7 +82,7 @@
               title="{{'clickToAddResource' | translate}}"
               data-ng-click="setResource(r)"
             >
-              {{r.id.split('/').splice(2).join('/') | decodeURIComponent}}
+              {{r._displayName}}
             </a>
 
             <div id="resource_edit_{{$index}}" class="hidden">
@@ -62,7 +98,7 @@
                 class="btn btn-link"
                 title="{{'save' | translate}}"
                 data-ng-click="saveEditResource(r, $index)"
-                data-ng-disabled="r.filename_edit == r.filename"
+                data-ng-disabled="r.filename_edit == r._renameOriginalLeaf"
               >
                 <span class="fa fa-save"></span>
               </a>
@@ -81,6 +117,13 @@
                 class="alert alert-danger"
               >
                 fileStoreDuplicatedFilename
+              </div>
+              <div
+                data-ng-show="invalidFilename"
+                data-translate=""
+                class="alert alert-danger"
+              >
+                fileStoreInvalidFilename
               </div>
             </div>
           </td>
@@ -145,15 +188,38 @@
       </tbody>
     </table>
 
+    <div class="gn-filestore-new-folder form-inline">
+      <input
+        type="text"
+        class="form-control"
+        data-ng-model="newFolder.name"
+        placeholder="{{'fileStoreNewFolderPlaceholder' | translate}}"
+        maxlength="255"
+      />
+      <a
+        class="btn btn-default"
+        data-ng-disabled="!newFolder.name"
+        data-ng-click="createFolder()"
+      >
+        <i class="fa fa-fw fa-folder-o"></i>
+        <span data-translate="">fileStoreCreateFolder</span>
+      </a>
+      <div data-ng-show="newFolder.invalid" data-translate="" class="alert alert-danger">
+        fileStoreInvalidFolderName
+      </div>
+    </div>
+
     <div
       data-gn-data-uploader-button="'chooseOnlinesrc'"
       data-after-upload-cb="linkUploadedFileToRecord"
       data-upload-options="filestoreUploadOptions"
+      data-folder="{{currentFolder}}"
     ></div>
 
     <div
       data-gn-data-uploader-from-url=""
       data-after-upload-cb="linkUploadedFileToRecord"
+      data-folder="{{currentFolder}}"
     ></div>
   </div>
 </div>

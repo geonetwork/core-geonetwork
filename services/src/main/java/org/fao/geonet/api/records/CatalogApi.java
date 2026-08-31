@@ -86,6 +86,7 @@ import java.util.stream.Collectors;
 import static org.fao.geonet.api.ApiParams.*;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V3_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.search.EsSearchManager.FIELDLIST_CORE;
 import static org.fao.geonet.kernel.search.IndexFields.SOURCE_CATALOGUE;
 
@@ -157,7 +158,8 @@ public class CatalogApi {
         produces = {
             "application/zip",
             MEF_V1_ACCEPT_TYPE,
-            MEF_V2_ACCEPT_TYPE
+            MEF_V2_ACCEPT_TYPE,
+            MEF_V3_ACCEPT_TYPE
         })
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Return requested records as ZIP."),
@@ -243,8 +245,16 @@ public class CatalogApi {
         Log.info(Geonet.MEF, "Current record(s) in selection: " + uuidList.size());
 
         ServiceContext context = ApiUtils.createServiceContext(request);
-        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? "application/x-gn-mef-2-zip" : request.getHeader(HttpHeaders.ACCEPT);
+        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
         MEFLib.Version version = MEFLib.Version.find(acceptHeader);
+        // MEFLib.Version.find() falls back to V2 for anything it doesn't recognize, including a
+        // blank/missing Accept header - but V3 (flat "store" folder, no public/private split) is
+        // this endpoint's actual default export format, so only trust that fallback as "V2" when
+        // the caller genuinely asked for it explicitly; treat every other unrecognized value as V3.
+        if (version == MEFLib.Version.V2
+            && !MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE.equalsIgnoreCase(acceptHeader)) {
+            version = MEFLib.Version.V3;
+        }
         if (version == MEFLib.Version.V1) {
             throw new IllegalArgumentException("MEF version 1 only support one record. Use the /records/{uuid}/formatters/zip to retrieve that format");
         } else {
@@ -291,13 +301,22 @@ public class CatalogApi {
                 allowedUuid = selectionManger.getSelection(SelectionManager.SELECTION_METADATA);
             }
 
-            Log.info(Geonet.MEF, "Building MEF2 file with " + uuidList.size()
-                + " records.");
             try {
-                file = MEFLib.doMEF2Export(context, allowedUuid, format.toString(),
-                    false, stylePath,
-                    withXLinksResolved, withXLinkAttribute,
-                    false, addSchemaLocation, approved, includeAttachments);
+                if (version == MEFLib.Version.V2) {
+                    Log.info(Geonet.MEF, "Building MEF2 file with " + uuidList.size()
+                        + " records.");
+                    file = MEFLib.doMEF2Export(context, allowedUuid, format.toString(),
+                        false, stylePath,
+                        withXLinksResolved, withXLinkAttribute,
+                        false, addSchemaLocation, approved, includeAttachments);
+                } else {
+                    Log.info(Geonet.MEF, "Building MEF3 file with " + uuidList.size()
+                        + " records.");
+                    file = MEFLib.doMEF3Export(context, allowedUuid, format.toString(),
+                        false, stylePath,
+                        withXLinksResolved, withXLinkAttribute,
+                        false, addSchemaLocation, approved, includeAttachments);
+                }
 
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HHmmss");
                 String suffix = includeAttachments ? "" : "-" + messages.getMessage("api.metadata.export.filename.withoutAttachmentsSuffix", null, locale);
@@ -311,7 +330,9 @@ public class CatalogApi {
                     fileName
                 ));
                 response.setHeader(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(file)));
-                response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
+                response.setContentType(version == MEFLib.Version.V2
+                    ? MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE
+                    : MEFLib.Version.Constants.MEF_V3_ACCEPT_TYPE);
                 FileUtils.copyFile(file.toFile(), response.getOutputStream());
             } finally {
                 // -- Reset selection manager

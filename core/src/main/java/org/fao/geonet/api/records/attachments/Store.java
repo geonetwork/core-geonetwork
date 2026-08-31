@@ -252,6 +252,24 @@ public interface Store {
                                  MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
 
     /**
+     * Add a new resource from a file, under a destination folder.
+     *
+     *
+     * @param context
+     * @param metadataUuid               The metadata UUID
+     * @param file                       The resource file
+     * @param folder                     Optional destination folder (may contain "/"-separated
+     *                                   nested subfolders); the resource is stored as
+     *                                   {@code folder + "/" + file.getOriginalFilename()} when
+     *                                   provided, or under its own filename at the root otherwise
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     * @param approved   Put the approved version or not
+     * @return The resource description
+     */
+    MetadataResource putResource(ServiceContext context, String metadataUuid, MultipartFile file, @Nullable String folder,
+                                 MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
+
+    /**
      * Add a new resource from a file.
      *
      *
@@ -320,6 +338,25 @@ public interface Store {
      * @return The resource description
      */
     MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
+
+    /**
+     * Add a new resource from a URL, under a destination folder.
+     *
+     *
+     * @param context
+     * @param metadataUuid               The metadata UUID
+     * @param fileUrl                    The resource file URL
+     * @param folder                     Optional destination folder (may contain "/"-separated
+     *                                   nested subfolders); the resource is stored as
+     *                                   {@code folder + "/" + <filename derived from the URL>}
+     *                                   when provided, or under its derived filename at the root
+     *                                   otherwise
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     * @param approved   Return the approved version or not
+     * @return The resource description
+     */
+    MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl, @Nullable String folder,
+                                 MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
 
     /**
      * Change the resource sharing policy
@@ -470,6 +507,33 @@ public interface Store {
     MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception;
 
     MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception;
+
+    /**
+     * Physically migrate a resource still sitting in a legacy per-visibility folder into the flat
+     * layout, if this store implementation has such a legacy layout at all - only
+     * {@code FilesystemStore} does; other backends have no concept of it and use this default
+     * no-op.
+     *
+     * @param context  the service context
+     * @param resource the resource to migrate, as previously returned by {@link #getResources}
+     */
+    default void migrateResourceToFlatLayout(ServiceContext context, MetadataResource resource) throws Exception {
+    }
+
+    /**
+     * Delete a metadata record's legacy per-visibility folder, if this store implementation has
+     * such a legacy layout at all (see {@link #migrateResourceToFlatLayout}) and the folder is now
+     * empty - a no-op otherwise, so it's always safe to call once every resource of that
+     * visibility has been migrated. Default no-op for store implementations without such a legacy
+     * layout.
+     *
+     * @param context    the service context
+     * @param metadataId the metadata id
+     * @param visibility the legacy visibility folder to remove if empty
+     */
+    default void deleteLegacyVisibilityFolderIfEmpty(ServiceContext context, int metadataId, MetadataResourceVisibility visibility)
+            throws Exception {
+    }
 
     interface ResourceHolder extends Closeable {
         Resource getResource();
