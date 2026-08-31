@@ -1790,7 +1790,7 @@
 <p>By default the character set of GeoNetwork is <code>UTF-8</code>. This works well for many locales in the world and is compatible with ASCII that is typically used in US and Canada. However, if <code>UTF-8</code> is not a compatible characterset in your environment you can change the default.</p>
 <p>To change it within GeoNetwork simply start the application with the system property geonetwork.file.encoding set to the desired character set name.</p>
 <p>For example if you are running Tomcat you can set</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>JAVA_OPTS=&quot;-Dgeonetwork.file.encoding=UTF-16&quot;
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>JAVA_OPTS="-Dgeonetwork.file.encoding=UTF-16"
 </span></code></pre></div>
 <p>to the startup script and the default codec in GeoNetwork will be <code>UTF-16</code>.</p>
 <p>It is also recommended to set the file.encoding parameter to the same codec as this dictates to the default encoding used in Java and the Web Server may reference at times use the default codec.</p>

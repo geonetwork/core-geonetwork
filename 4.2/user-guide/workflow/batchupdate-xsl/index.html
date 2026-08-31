@@ -2379,7 +2379,7 @@
 <p>The XSLT process will be applied to each metadata record in the selection. Each document will have as root element the metadata XML document with the <code>geonet:info</code> element. The <code>geonet:info</code> element contains metadata about the metadata. This element MUST be removed by the process to not alter the record when saved in the database.</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;gmd:MD_Metadata&gt;</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span>...
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&lt;geonet:info</span><span class="w"> </span><span class="na">xmlns:geonet=</span><span class="s">&quot;http://www.fao.org/geonetwork&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&lt;geonet:info</span><span class="w"> </span><span class="na">xmlns:geonet=</span><span class="s">"http://www.fao.org/geonetwork"</span><span class="nt">&gt;</span>
 </span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">        </span><span class="nt">&lt;id&gt;</span>73481<span class="nt">&lt;/id&gt;</span>
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">        </span><span class="nt">&lt;uuid&gt;</span>bb151890-2da5-4cfb-8659-7839e7138be7<span class="nt">&lt;/uuid&gt;</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">        </span><span class="nt">&lt;schema&gt;</span>iso19139<span class="nt">&lt;/schema&gt;</span>
@@ -2401,15 +2401,15 @@
 </span></code></pre></div>
 <h3 id="adding-parameters">Adding parameters</h3>
 <p>The XSLT process can retrieve parameters which may be provided in the URL using <code>xsl:param</code>. For example, if using <code>md.processing.batch?process=my-custom-process&amp;myParameter=test</code>.</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">&lt;xsl:stylesheet</span><span class="w"> </span><span class="na">xmlns:xsl=</span><span class="s">&quot;http://www.w3.org/1999/XSL/Transform&quot;</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;2.0&quot;</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">                </span><span class="na">exclude-result-prefixes=</span><span class="s">&quot;#all&quot;</span><span class="nt">&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="nt">&lt;xsl:stylesheet</span><span class="w"> </span><span class="na">xmlns:xsl=</span><span class="s">"http://www.w3.org/1999/XSL/Transform"</span><span class="w"> </span><span class="na">version=</span><span class="s">"2.0"</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">                </span><span class="na">exclude-result-prefixes=</span><span class="s">"#all"</span><span class="nt">&gt;</span>
 </span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&lt;xsl:param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;myParameter&quot;</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;&#39;&#39;&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&lt;xsl:param</span><span class="w"> </span><span class="na">name=</span><span class="s">"myParameter"</span><span class="w"> </span><span class="na">select=</span><span class="s">"''"</span><span class="nt">/&gt;</span>
 </span></code></pre></div>
 <p>In this example, <code>xsl:param</code> will be accessible as a variable using <code>$myParameter</code> and it will have an empty value if not set by the URL parameter. To check that a parameter is properly set, use <code>xsl:message</code> to output information to the log file.</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&lt;xsl:param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;myParameter&quot;</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;&#39;&#39;&quot;</span><span class="nt">/&gt;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">&lt;xsl:message&gt;</span>myParameter:<span class="w"> </span><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;$myParameter&quot;</span><span class="nt">/&gt;&lt;/xsl:message&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&lt;xsl:param</span><span class="w"> </span><span class="na">name=</span><span class="s">"myParameter"</span><span class="w"> </span><span class="na">select=</span><span class="s">"''"</span><span class="nt">/&gt;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">&lt;xsl:message&gt;</span>myParameter:<span class="w"> </span><span class="nt">&lt;xsl:value-of</span><span class="w"> </span><span class="na">select=</span><span class="s">"$myParameter"</span><span class="nt">/&gt;&lt;/xsl:message&gt;</span>
 </span></code></pre></div>
 <p>The XSLT process also have access to catalog parameters:</p>
 <ul>
@@ -2419,7 +2419,7 @@
 <li>nodeId: The node identifier (default <code>srv</code>)</li>
 </ul>
 <p>To use one of those parameters in the process, use <code>xsl:param</code>:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&lt;xsl:param</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;guiLang&quot;</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;&#39;&#39;&quot;</span><span class="nt">/&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&lt;xsl:param</span><span class="w"> </span><span class="na">name=</span><span class="s">"guiLang"</span><span class="w"> </span><span class="na">select=</span><span class="s">"''"</span><span class="nt">/&gt;</span>
 </span></code></pre></div>
 <h3 id="making-a-copy-is-a-minimum">Making a copy is a minimum</h3>
 <p>A process MUST at least do:</p>
@@ -2427,20 +2427,20 @@
 <li>a copy of everything</li>
 <li>remove geonet:info metadata</li>
 </ul>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cp">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span>
-</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">&lt;xsl:stylesheet</span><span class="w"> </span><span class="na">xmlns:xsl=</span><span class="s">&quot;http://www.w3.org/1999/XSL/Transform&quot;</span><span class="w"> </span>
-</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">                </span><span class="na">xmlns:geonet=</span><span class="s">&quot;http://www.fao.org/geonetwork&quot;</span><span class="w"> </span><span class="na">version=</span><span class="s">&quot;2.0&quot;</span>
-</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">                </span><span class="na">exclude-result-prefixes=</span><span class="s">&quot;#all&quot;</span><span class="nt">&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cp">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="nt">&lt;xsl:stylesheet</span><span class="w"> </span><span class="na">xmlns:xsl=</span><span class="s">"http://www.w3.org/1999/XSL/Transform"</span><span class="w"> </span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">                </span><span class="na">xmlns:geonet=</span><span class="s">"http://www.fao.org/geonetwork"</span><span class="w"> </span><span class="na">version=</span><span class="s">"2.0"</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">                </span><span class="na">exclude-result-prefixes=</span><span class="s">"#all"</span><span class="nt">&gt;</span>
 </span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>
 </span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="w">    </span><span class="cm">&lt;!-- Do a copy of every nodes and attributes recursively --&gt;</span>
-</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nt">&lt;xsl:template</span><span class="w"> </span><span class="na">match=</span><span class="s">&quot;@*|node()&quot;</span><span class="nt">&gt;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nt">&lt;xsl:template</span><span class="w"> </span><span class="na">match=</span><span class="s">"@*|node()"</span><span class="nt">&gt;</span>
 </span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">        </span><span class="nt">&lt;xsl:copy&gt;</span>
-</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">            </span><span class="nt">&lt;xsl:apply-templates</span><span class="w"> </span><span class="na">select=</span><span class="s">&quot;@*|node()&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">            </span><span class="nt">&lt;xsl:apply-templates</span><span class="w"> </span><span class="na">select=</span><span class="s">"@*|node()"</span><span class="nt">/&gt;</span>
 </span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="w">        </span><span class="nt">&lt;/xsl:copy&gt;</span>
 </span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="w">    </span><span class="nt">&lt;/xsl:template&gt;</span>
 </span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
 </span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="cm">&lt;!-- Remove geonet:* elements. --&gt;</span>
-</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="nt">&lt;xsl:template</span><span class="w"> </span><span class="na">match=</span><span class="s">&quot;geonet:*&quot;</span><span class="w"> </span><span class="na">priority=</span><span class="s">&quot;2&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="nt">&lt;xsl:template</span><span class="w"> </span><span class="na">match=</span><span class="s">"geonet:*"</span><span class="w"> </span><span class="na">priority=</span><span class="s">"2"</span><span class="nt">/&gt;</span>
 </span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nt">&lt;/xsl:stylesheet&gt;</span>
 </span></code></pre></div>
 <p>Then customize the process to update the metadata record.</p>
@@ -2450,23 +2450,23 @@
 <ul>
 <li>Removing an element. Eg. removing all report about DQ_TopologicalConsistency:</li>
 </ul>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">&lt;xsl:template</span><span class="w"> </span><span class="na">match=</span><span class="s">&quot;gmd:report[gmd:DQ_TopologicalConsistency]&quot;</span>
-</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">              </span><span class="na">priority=</span><span class="s">&quot;2&quot;</span><span class="nt">/&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">&lt;xsl:template</span><span class="w"> </span><span class="na">match=</span><span class="s">"gmd:report[gmd:DQ_TopologicalConsistency]"</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">              </span><span class="na">priority=</span><span class="s">"2"</span><span class="nt">/&gt;</span>
 </span></code></pre></div>
 <p>Set priority to 2 in order for your template to take priority over the main template making the copy of everything.</p>
 <h2 id="customizing-xslt-suggestion">Registering a process as a suggestion</h2>
 <p>See <a href="../suggestion/">Suggestion for improving metadata content</a>.</p>
 <h2 id="xslt-in-editor">Registering a process as an editor action</h2>
 <p>An XSLT process can be used in the editor to trigger specific actions. For example, the INSPIRE view display a button to add a resource identifier if none defined ending by the metadata identifier.</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">&lt;action</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;batch&quot;</span>
-</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">        </span><span class="na">process=</span><span class="s">&quot;add-resource-id&quot;</span>
-</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">        </span><span class="na">if=</span><span class="s">&quot;count(gmd:MD_Metadata/gmd:identificationInfo/*/</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a><span class="nt">&lt;action</span><span class="w"> </span><span class="na">type=</span><span class="s">"batch"</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">        </span><span class="na">process=</span><span class="s">"add-resource-id"</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">        </span><span class="na">if=</span><span class="s">"count(gmd:MD_Metadata/gmd:identificationInfo/*/</span>
 </span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="s">                      gmd:citation/gmd:CI_Citation/</span>
 </span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="s">                          gmd:identifier[</span>
 </span><span id="__span-6-6"><a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a><span class="s">                          ends-with(</span>
 </span><span id="__span-6-7"><a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a><span class="s">                              gmd:MD_Identifier/gmd:code/gco:CharacterString,</span>
 </span><span id="__span-6-8"><a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a><span class="s">                              //gmd:MD_Metadata/gmd:fileIdentifier/gco:CharacterString</span>
-</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s">                          )]) = 0&quot;</span><span class="nt">/&gt;</span>
+</span><span id="__span-6-9"><a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a><span class="s">                          )]) = 0"</span><span class="nt">/&gt;</span>
 </span></code></pre></div>
 <p>See ref:<code>creating-custom-editor</code>.</p>
 <h2 id="customizing-xslt-conversion">Adding XSLT conversion for import</h2>

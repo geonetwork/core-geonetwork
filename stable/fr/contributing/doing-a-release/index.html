@@ -1513,7 +1513,7 @@ with the following utilities: <strong><em>sed</em></strong>, <strong><em>xmlstar
 </span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="s">===</span>
 </span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="s">================================================================================</span>
 </span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="s">EOF</span>
-</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>git<span class="w"> </span>log<span class="w"> </span>--pretty<span class="o">=</span><span class="s1">&#39;format:- %s&#39;</span><span class="w"> </span><span class="nv">$previousversion</span>...<span class="w"> </span>&gt;&gt;<span class="w"> </span>docs/changes/changes<span class="nv">$newversion</span>.txt
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>git<span class="w"> </span>log<span class="w"> </span>--pretty<span class="o">=</span><span class="s1">'format:- %s'</span><span class="w"> </span><span class="nv">$previousversion</span>...<span class="w"> </span>&gt;&gt;<span class="w"> </span>docs/changes/changes<span class="nv">$newversion</span>.txt
 </span></code></pre></div>
 </li>
 <li>
@@ -1522,16 +1522,16 @@ with the following utilities: <strong><em>sed</em></strong>, <strong><em>xmlstar
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git pull origin refs/notes/commits 
 </span></code></pre></div></p>
 <p>Review changes along with any notes:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git log --pretty=&#39;format:%h: %s %n      note: %N&#39; $previousversion...
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git log --pretty='format:%h: %s %n      note: %N' $previousversion...
 </span></code></pre></div></p>
 <p>Use <code>git note append</code> to document commits adding major features.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git notes append &lt;sha&gt; -m &quot;&lt;description of major feature&gt;&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git notes append &lt;sha&gt; -m "&lt;description of major feature&gt;"
 </span></code></pre></div>
 <p>Use <code>git note remove</code> if you need to clear a note and start again:
 <div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git notes remove &lt;sha&gt;
 </span></code></pre></div></p>
 <p>Preview changes using:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a> git log --pretty=&#39;format:* %N&#39; $previousversion... | grep -v &quot;^* $&quot;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a> git log --pretty='format:* %N' $previousversion... | grep -v "^* $"
 </span></code></pre></div>
 <p>Save your notes:
 <div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>git push origin refs/notes/commits
@@ -1558,7 +1558,7 @@ with the following utilities: <strong><em>sed</em></strong>, <strong><em>xmlstar
 </span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
 </span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="s">EOF</span>
 </span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>git<span class="w"> </span>log<span class="w"> </span>--pretty<span class="o">=</span><span class="s1">&#39;format:* %N&#39;</span><span class="w"> </span><span class="nv">$previousversion</span>...<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">&quot;^* </span>$<span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>docs/manual/docs/overview/change-log/version-<span class="nv">$version</span>.md
+</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>git<span class="w"> </span>log<span class="w"> </span>--pretty<span class="o">=</span><span class="s1">'format:* %N'</span><span class="w"> </span><span class="nv">$previousversion</span>...<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"^* </span>$<span class="s2">"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>docs/manual/docs/overview/change-log/version-<span class="nv">$version</span>.md
 </span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
 </span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; docs/manual/docs/overview/change-log/version-$version.md</span>
 </span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
@@ -1588,10 +1588,10 @@ Once running check the new page:
 <p>Commit &amp; tag the new version</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Then commit the new version</span>
 </span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>add<span class="w"> </span>.
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update version to </span><span class="nv">$newversion</span><span class="s2">&quot;</span>
+</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Update version to </span><span class="nv">$newversion</span><span class="s2">"</span>
 </span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
 </span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Create the release tag</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span><span class="nv">$version</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Tag for </span><span class="nv">$version</span><span class="s2"> release&quot;</span>
+</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span><span class="nv">$version</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">"Tag for </span><span class="nv">$version</span><span class="s2"> release"</span>
 </span></code></pre></div>
 </li>
 <li>
@@ -1633,20 +1633,20 @@ Once running check the new page:
 </span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Add SQL migration step for the next version</span>
 </span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>mkdir<span class="w"> </span>web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v<span class="si">${</span><span class="nv">nextversionnosnapshot</span><span class="p">//[.]/</span><span class="si">}</span>
 </span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${nextversionnosnapshot//[.]/}/migrate-default.sql</span>
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="s">UPDATE Settings SET value=&#39;${nextversionnosnapshot}&#39; WHERE name=&#39;system/platform/version&#39;;</span>
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="s">UPDATE Settings SET value=&#39;SNAPSHOT&#39; WHERE name=&#39;system/platform/subVersion&#39;;</span>
+</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="s">UPDATE Settings SET value='${nextversionnosnapshot}' WHERE name='system/platform/version';</span>
+</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="s">UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';</span>
 </span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="s">EOF</span>
 </span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>vi<span class="w"> </span>web/src/main/webResources/WEB-INF/config-db/database_migration.xml
 </span></code></pre></div>
 <p>In <code>WEB-INF/config-db/database_migration.xml</code> add an entry for the new version in the 2 steps:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">&lt;entry</span><span class="w"> </span><span class="na">key=</span><span class="s">&quot;4.2.2&quot;</span><span class="nt">&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">&lt;entry</span><span class="w"> </span><span class="na">key=</span><span class="s">"4.2.2"</span><span class="nt">&gt;</span>
 </span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">&lt;list&gt;</span>
 </span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nt">&lt;value&gt;</span>WEB-INF/classes/setup/sql/migrate/v422/migrate-<span class="nt">&lt;/value&gt;</span>
 </span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="nt">&lt;/list&gt;</span>
 </span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nt">&lt;/entry&gt;</span>
 </span></code></pre></div>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update version to </span><span class="nv">$nextversion</span><span class="s2">&quot;</span>
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Update version to </span><span class="nv">$nextversion</span><span class="s2">"</span>
 </span></code></pre></div>
 </li>
 <li>
@@ -1716,7 +1716,7 @@ Once running check the new page:
 </ul>
 <p>Commit the new version</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Update version to </span><span class="nv">$nextMajorVersion</span><span class="s2">&quot;</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Update version to </span><span class="nv">$nextMajorVersion</span><span class="s2">"</span>
 </span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>master
 </span></code></pre></div>
 </li>
