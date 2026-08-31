@@ -1200,6 +1200,7 @@
                     scope.params.name = "";
                     scope.params.desc = "";
                     initMultilingualFields();
+                    applyConfiguredFieldValues(typeConfig);
                   }
                   scope.$broadcast("onlineSrcDialogInited", { popupid: scope.popupid });
                 };
@@ -1312,6 +1313,33 @@
                   }
                   scope.params.selectedLayers = [];
                   scope.params.layers = [];
+                }
+              };
+
+              /**
+               * Apply the default values declared in the link type
+               * configuration (`fields.*.value` and `copyLabel`) to the form.
+               *
+               * Called when the dialog opens and when the selected link type
+               * changes, so that the defaults are restored on every new
+               * resource and not only the first time a type is selected.
+               *
+               * @param {Object} typeConfig the selected link type configuration
+               */
+              var applyConfiguredFieldValues = function (typeConfig) {
+                if (angular.isDefined(typeConfig.fields)) {
+                  angular.forEach(typeConfig.fields, function (val, key) {
+                    if (angular.isDefined(val.value)) {
+                      scope.params[key] = val.value;
+                    }
+                  });
+                }
+                // Set a default label
+                if (angular.isDefined(typeConfig.copyLabel)) {
+                  setParameterValue(
+                    typeConfig.copyLabel,
+                    $translate.instant(typeConfig.label)
+                  );
                 }
               };
 
@@ -1823,19 +1851,8 @@
                     );
                   }
 
-                  if (!scope.isEditing && angular.isDefined(newValue.fields)) {
-                    angular.forEach(newValue.fields, function (val, key) {
-                      if (angular.isDefined(val.value)) {
-                        scope.params[key] = val.value;
-                      }
-                    });
-                  }
-                  // Set a default label
-                  if (!scope.isEditing && angular.isDefined(newValue.copyLabel)) {
-                    setParameterValue(
-                      newValue.copyLabel,
-                      $translate.instant(newValue.label)
-                    );
+                  if (!scope.isEditing) {
+                    applyConfiguredFieldValues(newValue);
                   }
 
                   if (newValue.sources && newValue.sources.thumbnailMaker) {
