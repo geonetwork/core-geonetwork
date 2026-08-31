@@ -557,7 +557,7 @@
       <artifactId>netcdf</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.neovisionaries</groupId>
+      <groupId>uk.co.foundationsedge</groupId>
       <artifactId>nv-i18n</artifactId>
     </dependency>
     <dependency>
