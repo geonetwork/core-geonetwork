@@ -1637,6 +1637,12 @@
       }
     ],
     "properties": {
+      "text_vector": {
+        "type": "dense_vector",
+        "dims": ${es.index.semantic.server.model.dims},
+        "index": true,
+        "similarity": "cosine"
+      },
       "any": {
         "type": "object",
         "properties": {

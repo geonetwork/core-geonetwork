@@ -1672,4 +1672,20 @@ public final class XslUtil {
 
         return webAnalyticsConfiguration.getJavascriptCode();
     }
+
+
+    public static String buildEmbedding(String text) {
+        try {
+            ApplicationContext applicationContext = ApplicationContextHolder.get();
+            if (applicationContext == null) {
+                Log.error(Geonet.GEONETWORK, "Application context is not available. Failed to build embedding.");
+                return "";
+            }
+            SemanticUtils semanticUtils = applicationContext.getBean(SemanticUtils.class);
+            return semanticUtils.buildEmbedding(text);
+        } catch (BeanCreationException | IllegalStateException e) {
+            Log.error(Geonet.GEONETWORK, "Failed to access SemanticUtils bean to build embedding: " + e.getMessage(), e);
+            return "";
+        }
+    }
 }
