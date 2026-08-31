@@ -274,6 +274,8 @@
     "overview": "Overview",
     "overviews": "Overviews",
     "overwrite": "Overwrite metadata with same UUID",
+    "overwriteReplaceRecord": "Delete and replace the existing record",
+    "overwriteReplaceRecordHint": "If checked, existing privileges and attachments on the existing record will be completely deleted.",
     "parentMd": "Parent Metadata",
     "print_layout": "Layout",
     "print_scale": "Scale",
