@@ -4,13 +4,15 @@ The GeoNetwork community is not large enough to maintain many active branches of
 
 Volunteers wishing to backport security fixes to older versions of GeoNetwork are welcome to do so. Commercial support providers are welcome to do so on behalf of their customers.
 
-## Stable Release
+## Maintenance Release
 
-The stable release of GeoNetwork is recommended for production use and for new installations of GeoNetwork.
+The maintenance release of GeoNetwork provides production systems with essential updates and fixes to allow time to upgrade to the recommended stable release. 
 
-This series is under **active use** by our community, with regular improvements, documentation updates, bug reports, fixes, and releases.
+When available the maintenace series provides **time to upgrade** for our community - limited to providing essential fixes only.
 
 ### 4.2
+
+Be advised that GeoNetwork 4.2 series is nearing end-of-life. Production systems are advised to update to 4.4 above if they have not already done so.
 
 - [Version 4.2.17](../version-4.2.17.md)
 - [Version 4.2.16](../version-4.2.16.md)
@@ -30,18 +32,6 @@ This series is under **active use** by our community, with regular improvements,
 - [Version 4.2.2](../version-4.2.2.md)
 - [Version 4.2.1](../version-4.2.1.md)
 - [Version 4.2.0](../version-4.2.0.md)
-
-## Maintenance Release
-
-The maintenance release of GeoNetwork provides production systems with essential updates and fixes to allow time to upgrade to the recommended stable release. 
-
-When available the maintenace series provides **time to upgrade** for our community - limited to providing essential fixes only.
-
-### No maintenance release
-
-With the final release of 3.12.12 there is no active maintenance release being provided.
-
-Production systems are advised to update to 4.2 above if they have not already done so.
 
 ## Archived Releases
 
