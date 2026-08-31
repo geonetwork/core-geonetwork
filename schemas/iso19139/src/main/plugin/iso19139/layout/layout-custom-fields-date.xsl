@@ -79,6 +79,7 @@
   <xsl:template mode="mode-iso19139"
                 priority="2000"
                 match="gmd:CI_Date/gmd:date">
+
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="listOfValues" select="$iso19139codelists" required="no"/>
@@ -175,6 +176,8 @@
   <xsl:template mode="mode-iso19139"
                 priority="2000"
                 match="*[(gco:Date|gco:DateTime) and not(../gmd:dateType)]">
+
+
     <xsl:param name="schema" select="$schema" required="no"/>
     <xsl:param name="labels" select="$labels" required="no"/>
     <xsl:param name="overrideLabel" select="''" required="no"/>
