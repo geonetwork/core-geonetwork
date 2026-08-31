@@ -868,6 +868,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#security-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#migration-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1241,6 +1252,17 @@
       Table des matières
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#security-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Considerations
+      
+    </span>
+  </a>
+  
+</li>
       
         <li class="md-nav__item">
   <a href="#migration-notes" class="md-nav__link">
@@ -4081,6 +4103,17 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#security-considerations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Considerations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#migration-notes" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4154,7 +4187,15 @@
 
 <h1 id="version-4412">Version 4.4.12</h1>
 <p>GeoNetwork 4.4.12 is a minor release.</p>
-<p><strong>This release includes a security fix for a vulnerability affecting previous 4.4.x versions. All users are strongly encouraged to upgrade to 4.4.12 as soon as possible.</strong></p>
+<h2 id="security-considerations">Security Considerations</h2>
+<p>This release includes a security fix for a vulnerability affecting previous 4.4.x versions. <strong>All users are strongly encouraged to update to 4.4.12 as soon as possible.</strong></p>
+<ul>
+<li><a href="https://github.com/geonetwork/core-geonetwork/security/advisories/GHSA-mh22-prqr-vf42">CVE-2026-63219</a> Unauthenticated file upload via missing authorization on formatter upload endpoint </li>
+<li><a href="https://github.com/geonetwork/core-geonetwork/security/advisories/GHSA-5hx7-j24v-rffj">CVE-2026-55864</a> Unauthenticated Server-Side Request Forgery in SLD Tool </li>
+<li><a href="https://github.com/geonetwork/core-geonetwork/security/advisories/GHSA-5pq9-ppfw-p83j">CVE-2026-57582</a> Reflected XSS via unsanitized Javascript Sink </li>
+<li><a href="https://github.com/geonetwork/core-geonetwork/security/advisories/GHSA-x898-729x-cc3r">CVE-2026-58400</a> Remote Code Execution via unsafe Saxon XSLT processor configuration in formatter</li>
+<li><a href="https://github.com/geonetwork/core-geonetwork/security/advisories/GHSA-jcv2-3cfh-v9h2">CVE-2026-69130</a> Map feature popup renders KML/vector description and attributes as raw HTML via innerHTML</li>
+</ul>
 <h2 id="migration-notes">Migration notes</h2>
 <h3 id="api-changes">API changes</h3>
 <ul>
