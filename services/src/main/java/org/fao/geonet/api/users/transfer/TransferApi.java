@@ -186,6 +186,20 @@ public class TransferApi {
                 );
             }
             return list;
+        } else if (myProfile == Profile.Reviewer || myProfile == Profile.Editor) {
+            List<Integer> myGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(session.getUserIdAsInt()))
+                .stream().map(ug -> ug.getGroup().getId()).collect(Collectors.toList());
+            List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasGroupIds(myGroups));
+
+            if (groupTypes != null) {
+                userGroups = userGroups.stream()
+                    .filter(ug -> groupTypes.contains(ug.getGroup().getType()))
+                    .collect(Collectors.toList());
+            }
+            for (UserGroup ug : userGroups) {
+                list.add(new UserGroupsResponse(ug.getUser(), ug.getGroup(), ug.getProfile().name()));
+            }
+            return list;
         } else {
             throw new SecurityException("You don't have rights to do get the groups for this user");
         }
