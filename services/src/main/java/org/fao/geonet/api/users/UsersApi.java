@@ -86,6 +86,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -98,7 +99,6 @@ import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_USERS_IDENTICON;
-import static org.fao.geonet.repository.specification.UserGroupSpecs.hasProfile;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserId;
 import static org.fao.geonet.repository.specification.UserGroupSpecs.hasUserIdAndProfile;
 import static org.springframework.data.jpa.domain.Specification.where;
@@ -344,9 +344,15 @@ public class UsersApi {
 
 
         if (myProfile == Profile.UserAdmin) {
+            // A useradmin never administers an administrator, whatever groups they share
+            Optional<User> userToCheck = userRepository.findById(userIdentifier);
+            if (userToCheck.isPresent() && Profile.Administrator.equals(userToCheck.get().getProfile())) {
+                throw new IllegalArgumentException(
+                    "You don't have rights to delete this user because the user is not part of your group");
+            }
+
             final int iMyUserId = Integer.parseInt(myUserId);
-            final List<Integer> groupIdsSessionUser = userGroupRepository
-                .findGroupIds(where(hasUserId(iMyUserId)));
+            final List<Integer> groupIdsSessionUser = getGroupIdsWhereUserIsUserAdmin(iMyUserId);
 
             final List<Integer> groupIdsUserToDelete = userGroupRepository
                 .findGroupIds(where(hasUserId(userIdentifier)));
@@ -485,10 +491,6 @@ public class UsersApi {
 
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
 
-        if (Profile.Administrator.equals(profile)) {
-            checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
-        }
-
         // TODO: CheckAccessRights
 
         if (!myProfile.getProfileAndAllChildren().contains(profile)) {
@@ -525,12 +527,12 @@ public class UsersApi {
                 + userDto.getUsername() + " ignore case already exists");
         }
 
-        List<GroupElem> groups = new LinkedList<>();
+        List<GroupElem> groups = collectRequestedGroups(userDto);
 
-        groups.addAll(processGroups(userDto.getGroupsRegisteredUser(), Profile.RegisteredUser));
-        groups.addAll(processGroups(userDto.getGroupsEditor(), Profile.Editor));
-        groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
-        groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
+        if (!Profile.Administrator.equals(myProfile)) {
+            checkGroupsAreAdministeredBy(groups,
+                getGroupIdsWhereUserIsUserAdmin(Integer.parseInt(session.getUserId())));
+        }
 
         User user = new User();
         if (userDto.getPassword() != null) {
@@ -586,21 +588,54 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-        if (!Profile.Administrator.equals(myProfile) && !Profile.UserAdmin.equals(myProfile) && !myUserId.equals(Integer.toString(userIdentifier))) {
+        boolean isSelfUpdate = myUserId.equals(Integer.toString(userIdentifier));
+
+        if (!Profile.Administrator.equals(myProfile) && !Profile.UserAdmin.equals(myProfile) && !isSelfUpdate) {
             throw new IllegalArgumentException("You don't have rights to do this");
         }
 
-        if (Profile.Administrator.equals(profile)) {
-            checkIfAtLeastOneAdminIsEnabled(userDto, userRepository);
+        // The record to update is identified by the path variable. Reject a body carrying a
+        // different identifier rather than letting the two disagree.
+        if (StringUtils.isNotEmpty(userDto.getId())
+            && !userDto.getId().equals(Integer.toString(userIdentifier))) {
+            throw new IllegalArgumentException(String.format(
+                "The user identifier in the request body (%s) does not match the one in the path (%d)",
+                userDto.getId(), userIdentifier));
         }
 
         // TODO: CheckAccessRights
 
         Optional<User> userOptional = userRepository.findById(userIdentifier);
         if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException(String.format("No user found with id: %s", userDto.getId()));
+            throw new IllegalArgumentException(String.format("No user found with id: %d", userIdentifier));
         }
         User user = userOptional.get();
+
+        // Check the caller is entitled to act on this record before validating the request
+        // itself, so that the validation errors say nothing about users they cannot see.
+        List<Integer> myUserAdminGroups = Collections.emptyList();
+        List<UserGroup> userToUpdateGroups = Collections.emptyList();
+
+        if (!Profile.Administrator.equals(myProfile) && !isSelfUpdate) {
+            // A useradmin never administers an administrator, whatever groups they share
+            if (Profile.Administrator.equals(user.getProfile())) {
+                throw new IllegalArgumentException("You don't have rights to do this");
+            }
+
+            myUserAdminGroups = getGroupIdsWhereUserIsUserAdmin(Integer.parseInt(myUserId));
+            userToUpdateGroups = userGroupRepository.findAll(hasUserId(userIdentifier));
+
+            List<Integer> userToUpdateGroupIds = userToUpdateGroups.stream()
+                .map(ug -> ug.getId().getGroupId())
+                .collect(Collectors.toList());
+
+            // UserAdmin can't update users that are not in the groups administered
+            if (myUserAdminGroups.stream().noneMatch(userToUpdateGroupIds::contains)) {
+                throw new IllegalArgumentException("You don't have rights to do this");
+            }
+        }
+
+        checkIfAtLeastOneAdminIsEnabled(user, profile, userDto.isEnabled());
 
         // Check no duplicated username and if we are adding a duplicate existing name with other case combination
         List<User> usersWithUsernameIgnoreCase = userRepository.findByUsernameIgnoreCase(userDto.getUsername());
@@ -632,37 +667,24 @@ public class UsersApi {
 
         List<GroupElem> groups = new LinkedList<>();
 
-        groups.addAll(processGroups(userDto.getGroupsRegisteredUser(), Profile.RegisteredUser));
-        groups.addAll(processGroups(userDto.getGroupsEditor(), Profile.Editor));
-        groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
-        groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
-
-        //If it is an useradmin updating,
-        //maybe we don't know all the groups the user is part of
-        if (!Profile.Administrator.equals(myProfile)) {
-            List<Integer> myUserAdminGroups = userGroupRepository.findGroupIds(Specification.where(
-                hasProfile(myProfile)).and(hasUserId(Integer.parseInt(myUserId))));
-
-            List<UserGroup> usergroups =
-                userGroupRepository.findAll(Specification.where(
-                    hasUserId(Integer.parseInt(userDto.getId()))));
-
-            List<Integer> userToUpdateGroupIds = usergroups.stream()
-                .map(ug -> ug.getId().getGroupId())
-                .collect(Collectors.toList());
-
-            Set<Integer> groupsInCommon = myUserAdminGroups.stream()
-                .distinct()
-                .filter(userToUpdateGroupIds::contains)
-                .collect(Collectors.toSet());
-
-            // UserAdmin can't update users that are not in the groups administered
-            if (groupsInCommon.isEmpty()) {
-                throw new IllegalArgumentException("You don't have rights to do this");
+        if (Profile.Administrator.equals(myProfile)) {
+            groups.addAll(collectRequestedGroups(userDto));
+        } else if (isSelfUpdate) {
+            // Only an administrator may change group assignments on their own account. For
+            // everybody else the existing assignments are kept, so that editing one's own
+            // details through the UI does not alter them.
+            for (UserGroup ug : userGroupRepository.findAll(hasUserId(userIdentifier))) {
+                groups.add(new GroupElem(ug.getProfile().name(), ug.getGroup().getId()));
             }
+        } else {
+            // A useradmin only sees part of the catalog, so the update is restricted to the
+            // groups they administer and the groups they cannot see are left untouched.
+            List<GroupElem> requestedGroups = collectRequestedGroups(userDto);
+            checkGroupsAreAdministeredBy(requestedGroups, myUserAdminGroups);
+            groups.addAll(requestedGroups);
 
             //keep unknown groups as is
-            for (UserGroup ug : usergroups) {
+            for (UserGroup ug : userToUpdateGroups) {
                 if (!myUserAdminGroups.contains(ug.getGroup().getId())) {
                     groups.add(new GroupElem(ug.getProfile().name(),
                         ug.getGroup().getId()));
@@ -947,6 +969,34 @@ public class UsersApi {
     }
 
 
+    /**
+     * Collect the group assignments carried by the request, all profiles together.
+     */
+    private List<GroupElem> collectRequestedGroups(UserDto userDto) {
+        List<GroupElem> groups = new LinkedList<>();
+        groups.addAll(processGroups(userDto.getGroupsRegisteredUser(), Profile.RegisteredUser));
+        groups.addAll(processGroups(userDto.getGroupsEditor(), Profile.Editor));
+        groups.addAll(processGroups(userDto.getGroupsReviewer(), Profile.Reviewer));
+        groups.addAll(processGroups(userDto.getGroupsUserAdmin(), Profile.UserAdmin));
+        return groups;
+    }
+
+    /**
+     * Check that the requested assignments only concern groups the caller administers.
+     *
+     * @param requestedGroups      the assignments carried by the request.
+     * @param administeredGroupIds the groups the caller is user administrator of.
+     * @throws IllegalArgumentException thrown on the first group outside that list.
+     */
+    private void checkGroupsAreAdministeredBy(List<GroupElem> requestedGroups, List<Integer> administeredGroupIds) {
+        for (GroupElem requestedGroup : requestedGroups) {
+            if (!administeredGroupIds.contains(requestedGroup.getId())) {
+                throw new IllegalArgumentException(
+                    "You don't have rights to assign a user to the group " + requestedGroup.getId());
+            }
+        }
+    }
+
     private List<GroupElem> processGroups(List<String> groupsToProcessList, Profile profile) {
         List<GroupElem> groups = new LinkedList<>();
         for (String g : groupsToProcessList) {
@@ -1010,24 +1060,26 @@ public class UsersApi {
     }
 
     /**
-     * Check if removing userDto from the admins there are still at least one user administrator in the system. .
+     * Check that the update keeps at least one enabled administrator in the system, whether the
+     * account is being disabled or moved to a lower profile.
      *
-     * @param userDto        the user to check.
-     * @param userRepository user repository to retrieve users from.
-     * @throws IllegalArgumentException thrown if userDto is the last administrator user in the system.
+     * @param user       the user being updated, as currently stored.
+     * @param newProfile the profile the update would set.
+     * @param enabled    the enabled state the update would set.
+     * @throws IllegalArgumentException thrown if the user is the last enabled administrator in the system.
      */
-    private void checkIfAtLeastOneAdminIsEnabled(UserDto userDto, UserRepository userRepository) {
-        // Check at least 1 administrator is enabled
-        if (StringUtils.isNotEmpty(userDto.getId()) && (!userDto.isEnabled())) {
-            List<User> adminEnabledList = userRepository.findAll(
-                Specification.where(UserSpecs.hasProfile(Profile.Administrator)).and(UserSpecs.hasEnabled(true)));
-            if (adminEnabledList.size() == 1) {
-                User adminUser = adminEnabledList.get(0);
-                if (adminUser.getId() == Integer.parseInt(userDto.getId())) {
-                    throw new IllegalArgumentException(
-                        "Trying to disable all administrator users is not allowed");
-                }
-            }
+    private void checkIfAtLeastOneAdminIsEnabled(User user, Profile newProfile, boolean enabled) {
+        if (!Profile.Administrator.equals(user.getProfile())) {
+            return;
+        }
+        if (enabled && Profile.Administrator.equals(newProfile)) {
+            return;
+        }
+        List<User> adminEnabledList = userRepository.findAll(
+            Specification.where(UserSpecs.hasProfile(Profile.Administrator)).and(UserSpecs.hasEnabled(true)));
+        if (adminEnabledList.size() == 1 && adminEnabledList.get(0).getId() == user.getId()) {
+            throw new IllegalArgumentException(
+                "Trying to disable all administrator users is not allowed");
         }
     }
 }
