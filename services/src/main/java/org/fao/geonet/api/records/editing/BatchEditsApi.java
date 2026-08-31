@@ -293,6 +293,9 @@ public class BatchEditsApi implements ApplicationContextAware {
                     }
                 } catch (Exception e) {
                     report.addMetadataError(record, e);
+                    if (previewOnly) {
+                        throw e;
+                    }
                 }
                 report.incrementProcessedRecords();
             }
