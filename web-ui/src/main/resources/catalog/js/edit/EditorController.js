@@ -729,7 +729,7 @@
         // published: close w/o confirmation
         if (
           !$scope.gnCurrentEdit.metadata.isPublished() ||
-          !gnConfig["metadata.workflow.automaticUnpublishInvalidMd"]
+          !gnConfig["metadata.publication.automaticUnpublishInvalidMd"]
         ) {
           $scope.confirmClose(submit, approve);
           return;

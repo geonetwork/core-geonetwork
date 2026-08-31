@@ -672,7 +672,7 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     public void publishIso191153UpdatesPublicationDateWhenManageEnabled() throws Exception {
         settingManager.setValue(Settings.SYSTEM_METADATAPRIVS_PUBLICATION_MANAGEPUBLICATIONDATE, true);
         // Do not let validation block publication of the sample record; this test targets the publication date only.
-        settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD, true);
+        settingManager.setValue(Settings.METADATA_PUBLICATION_ALLOW_PUBLISH_INVALID_MD, true);
 
         int isoId = injectIso191153Record();
         String isoUuid = metadataRepository.findById(isoId).get().getUuid();
@@ -712,7 +712,7 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void publishIso191153DoesNotUpdatePublicationDateWhenManageDisabled() throws Exception {
         settingManager.setValue(Settings.SYSTEM_METADATAPRIVS_PUBLICATION_MANAGEPUBLICATIONDATE, false);
-        settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD, true);
+        settingManager.setValue(Settings.METADATA_PUBLICATION_ALLOW_PUBLISH_INVALID_MD, true);
 
         int isoId = injectIso191153Record();
         String isoUuid = metadataRepository.findById(isoId).get().getUuid();
@@ -777,7 +777,7 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void publishInvalidTemplateSucceedsWhenPublishInvalidMdDisabled() throws Exception {
         // Disable publishing of invalid metadata.
-        settingManager.setValue(Settings.METADATA_WORKFLOW_ALLOW_PUBLISH_INVALID_MD, false);
+        settingManager.setValue(Settings.METADATA_PUBLICATION_ALLOW_PUBLISH_INVALID_MD, false);
 
         // Change the metadata type to TEMPLATE.
         Metadata template = metadataRepository.findById(metadataId).get();
