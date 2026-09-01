@@ -264,7 +264,8 @@ public class GeonetEntity {
      * Subclasses can override this if there are properties that should not be called when constructing the XML representation. of this
      * entity.
      *
-     * The property should not have the get prefix.
+     * Entries must be the full getter method name, including the {@code get}/{@code is} prefix (e.g. {@code "getPassword"}),
+     * since matching is done against {@link Method#getName()}.
      */
     protected Set<String> propertiesToExcludeFromXml() {
         return Collections.emptySet();
