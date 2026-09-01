@@ -66,6 +66,9 @@ public class UserXmlSanitizationTest {
         assertNull("accountnonexpired must not be serialized to XML", xml.getChild("accountnonexpired"));
         assertNull("accountnonlocked must not be serialized to XML", xml.getChild("accountnonlocked"));
         assertNull("credentialsnonexpired must not be serialized to XML", xml.getChild("credentialsnonexpired"));
+        // getRandomPassword() is a static utility returning a fresh random value, not a user
+        // property, so it must not be serialized either.
+        assertNull("randompassword must not be serialized to XML", xml.getChild("randompassword"));
     }
 
     @Test

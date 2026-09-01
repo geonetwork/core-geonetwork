@@ -534,6 +534,9 @@ public class User extends GeonetEntity implements UserDetails {
     protected Set<String> propertiesToExcludeFromXml() {
         Set<String> properties = new HashSet<>(super.propertiesToExcludeFromXml());
         properties.add("getPassword");
+        // getRandomPassword() is a static utility that returns a fresh random value on every
+        // call, not a user property. It is getter-shaped so it would otherwise be serialized.
+        properties.add("getRandomPassword");
         properties.add("getAuthorities");
         properties.add("isAccountNonExpired");
         properties.add("isAccountNonLocked");
