@@ -1176,16 +1176,55 @@ public final class XslUtil {
      * Retrieve a metadata record. Use this function only
      * to retrieve records visible for current user. This
      * does not make any security checks.
+     *
+     * This is used by internal processes (eg. indexing) which
+     * may run asynchronously with no user session bound to the
+     * current thread. Do NOT expose this function to untrusted
+     * XSLT (eg. formatters) - use {@link #getRecordIfViewable(String)}
+     * instead which enforces the view privilege for the current user.
      */
     public static Node getRecord(String uuid) {
         return getRecord(uuid, null);
     }
     public static Node getRecord(String uuid, String schema) {
+        return getRecord(uuid, schema, false);
+    }
+
+    /**
+     * Retrieve a metadata record, only if it is visible to the current user
+     * (ie. the user is granted the view operation on the record), similar to
+     * {@code ApiUtils#canViewRecord}. Returns {@code null} if the record does
+     * not exist or is not visible to the current user (or if there is no
+     * user session bound to the current thread to check against).
+     *
+     * This is the function that should be exposed to untrusted XSLT (eg.
+     * formatters) that may be used to retrieve records other than the one
+     * currently being processed.
+     */
+    public static Node getRecordIfViewable(String uuid) {
+        return getRecordIfViewable(uuid, null);
+    }
+    public static Node getRecordIfViewable(String uuid, String schema) {
+        return getRecord(uuid, schema, true);
+    }
+
+    private static Node getRecord(String uuid, String schema, boolean checkPrivilege) {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         DataManager dataManager = applicationContext.getBean(DataManager.class);
         try {
             String id = dataManager.getMetadataId(uuid);
             if (id != null) {
+                if (checkPrivilege) {
+                    ServiceContext context = ServiceContext.get();
+                    if (context == null) {
+                        Log.warning(Geonet.GEONETWORK, String.format(
+                            "XslUtil getRecordIfViewable warning: Can't retrieve record %s. No service context available to check user privileges.",
+                            uuid));
+                        return null;
+                    }
+                    Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
+                }
+
                 Element metadata = dataManager.getMetadata(id);
                 String metadataSchema = dataManager.getMetadataSchema(id);
 
