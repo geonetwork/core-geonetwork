@@ -55,6 +55,7 @@ import org.fao.geonet.api.records.attachments.FilesystemStoreResourceContainer;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
 import org.fao.geonet.kernel.search.CodeListTranslator;
@@ -99,6 +100,7 @@ import org.springframework.beans.factory.annotation.BeanFactoryAnnotationUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -1222,7 +1224,20 @@ public final class XslUtil {
                             uuid));
                         return null;
                     }
-                    Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
+                    try {
+                        Lib.resource.checkPrivilege(context, id, ReservedOperation.view);
+                    } catch (OperationNotAllowedEx | AccessDeniedException e) {
+                        // The current user is not allowed to view this record. This is an
+                        // expected outcome (eg. a formatter referencing a record the viewer
+                        // can't see), not a failure, so log at debug and return null instead
+                        // of falling through to the error path below.
+                        if (Log.isDebugEnabled(Geonet.GEONETWORK)) {
+                            Log.debug(Geonet.GEONETWORK, String.format(
+                                "XslUtil getRecordIfViewable: record %s is not viewable by the current user.",
+                                uuid));
+                        }
+                        return null;
+                    }
                 }
 
                 Element metadata = dataManager.getMetadata(id);

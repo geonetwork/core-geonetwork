@@ -144,6 +144,25 @@ public class XslUtilTest {
     }
 
     @Test
+    public void testGetRecordIfViewableReturnsNullWhenAuthenticatedUserNotAllowed() throws Exception {
+        DataManager dataManager = mockDataManagerWithRecord();
+        // Authenticated user without the view operation: checkPrivilege throws
+        // AccessDeniedException (rather than OperationNotAllowedEx). Both are
+        // treated as an expected "not viewable" outcome, returning null.
+        ServiceContext context = mockServiceContextGrantingOperations(Collections.emptySet());
+        when(context.getUserSession().isAuthenticated()).thenReturn(true);
+
+        try (MockedStatic<ServiceContext> serviceContextMock = mockStatic(ServiceContext.class)) {
+            serviceContextMock.when(ServiceContext::get).thenReturn(context);
+
+            org.w3c.dom.Node node = XslUtil.getRecordIfViewable(UUID);
+
+            assertNull(node);
+            verify(dataManager, never()).getMetadata(anyString());
+        }
+    }
+
+    @Test
     public void testGetRecordIfViewableReturnsNullWhenNoServiceContext() throws Exception {
         DataManager dataManager = mockDataManagerWithRecord();
 
