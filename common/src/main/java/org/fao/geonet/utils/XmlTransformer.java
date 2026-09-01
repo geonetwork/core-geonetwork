@@ -301,7 +301,7 @@ public class XmlTransformer {
             "{java:org.fao.geonet.util.XslUtil}getUserDetails",
             "{java:org.fao.geonet.util.XslUtil}reprojectCoords",
             "{java:org.fao.geonet.util.XslUtil}geomToBbox",
-            "{java:org.fao.geonet.util.XslUtil}getRecord",
+            "{java:org.fao.geonet.util.XslUtil}getRecordIfViewable",
             "{java:org.fao.geonet.util.XslUtil}evaluate",
             "{java:org.fao.geonet.util.XslUtil}getSiteUrl",
             "{java:org.fao.geonet.util.XslUtil}getPermalink",
