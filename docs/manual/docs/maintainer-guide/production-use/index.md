@@ -59,7 +59,7 @@ A best practice is to whitelist a series of servers which are known to contain d
 
 If configured incorrectly, remote users may gain access to restricted resources, or impersonate the GeoNetwork server while browsing the web.
 
-GeoNetwork has 2 modes to limit the access via the proxy. The configuration of this mode is defined in ``WEB-INF/web.xml``.
+GeoNetwork has two modes to limit the access via the proxy. The configuration of this mode is defined in ``WEB-INF/web.xml``.
 
 ``` xml
 <init-param>
@@ -73,12 +73,82 @@ GeoNetwork has 2 modes to limit the access via the proxy. The configuration of t
 
 It is recommended to use the DB_LINK_CHECK mode. The following rules apply:
 
--   Authenticated users can use the proxy to all domains.
+-   Authenticated users can use the proxy to all domains, apart from the hosts kept out of reach by the exclusion list described below.
 -   For anonymous users, if the host of the URL requested is not used in any metadata record links, then a NotAllowedException is returned. If a WMS URL is registered, all GetCapabilities, GetFeatureInfo will be accepted. That's why only a host check is done.
 -   Also if a request is made directly to the proxy, a SecurityException is returned because no session exist. This limit its usage to user with a catalog session.
 -   Catalog reviewers have to use the metadata link analysis tool to register links allowed for the proxy. The tool is available at 'Record and link analysis' in the ``Admin --> Statistics & status`` menu. In the future we may trigger link analysis as a background task to have an up to date list of links. For now, if the table is empty, the exception highlights the fact that the link analysis tool should be used to populate the list.
 
 One issue that anonymous users can encounter is if using the map viewer and the user adds a WMS/WFS service URL which is not registered in any metadata records and which has no CORS enabled. The user will not be able to add any layers from those services.
+
+### Hosts and ports the proxy can reach {#proxy-hosts-and-ports}
+
+Independently of the security mode, the proxy refuses a request whose host matches ``excludeHosts``. It also refuses a request naming a port other than 80, 443, or one of the ports listed in ``allowPorts``; a URL that names no port at all uses the default of its protocol and is accepted. Both settings are defined in ``WEB-INF/web.xml`` and both apply to every caller, authenticated or not.
+
+``` xml
+<init-param>
+  <param-name>excludeHosts</param-name>
+  <param-value>^(localhost|127\..*|...)$</param-value>
+</init-param>
+<init-param>
+  <param-name>allowPorts</param-name>
+  <param-value>8443|8080</param-value>
+</init-param>
+```
+
+``excludeHosts`` is a regular expression matched against the whole host. Matching ignores case, since a host name is not case sensitive. Its default value keeps the proxy away from the server itself and from the ranges reserved for private networks:
+
+-   the loopback addresses, ``localhost``, ``127.0.0.0/8`` and ``::1``, and the ``.local`` and ``.localhost`` domains
+-   the unspecified addresses, ``0.0.0.0/8`` and ``::``, and the broadcast address ``255.255.255.255``
+-   the private ranges of RFC 1918, ``10.0.0.0/8``, ``172.16.0.0/12`` and ``192.168.0.0/16``
+-   the link-local range ``169.254.0.0/16``, the shared address space ``100.64.0.0/10``, and the benchmarking range ``198.18.0.0/15``
+-   the multicast range ``224.0.0.0/4``
+-   the IPv6 unique local, link-local and site-local ranges, ``fc00::/7``, ``fe80::/10`` and ``fec0::/10``
+-   the IPv6 ranges that carry an IPv4 address, ``::/96`` and the NAT64 prefix ``64:ff9b::/96``
+
+An address can be written in more than one way, so the host is compared in several forms: as it appears in the URL, without the brackets that surround an IPv6 literal, and in the canonical form of the address it denotes. An entry therefore applies whichever way a caller spells an address, and a single entry covers every spelling of it.
+
+#### Adding an IPv6 address
+
+The same address can be written in several ways, so an entry is best written in the canonical form: lower case, all eight groups spelled out, no ``::`` and no leading zeros. That form is the one the proxy derives from whatever the caller sent, so a single entry covers every spelling. To exclude the host ``2001:db8:1::10``, write its canonical form ``2001:db8:1:0:0:0:0:10``. To exclude a whole prefix, keep the groups the prefix fixes and finish with ``.*``: ``2001:db8:2::/48`` becomes ``2001:db8:2:.*``.
+
+``` xml
+<init-param>
+  <param-name>excludeHosts</param-name>
+  <param-value>^(localhost|127\..*|2001:db8:1:0:0:0:0:10|2001:db8:2:.*)$</param-value>
+</init-param>
+```
+
+Those two entries exclude ``[2001:db8:1::10]``, ``[2001:db8:1:0:0:0:0:10]`` and ``[2001:0db8:0001::0010]``, which are the same address, along with every address under ``2001:db8:2::/48``.
+
+Three details are worth keeping in mind:
+
+-   Write the entry without the square brackets of a URL. They are part of the URL syntax, not of the address. An entry that keeps them is still matched, but only against that one way of writing the address, so it misses the other spellings of the same host.
+-   Keep the colon that closes a prefix. ``2001:db8:2:.*`` stops at the addresses under ``2001:db8:2``, whereas ``2001:db8:2.*`` would also take in ``2001:db8:20`` and ``2001:db8:2a``, which are different networks.
+-   A prefix is straightforward to write when its length is a multiple of 16, since it ends on a group boundary. For a length such as /56, which cuts a group in two, exclude the enclosing /48 rather than trying to express the exact boundary in a regular expression.
+
+#### Setting them without editing web.xml {#proxy-settings-outside-web-xml}
+
+Both settings can be given outside ``WEB-INF/web.xml``, which is what you want when the file sits inside a container image. Each is looked up in turn as an environment variable, a Java system property, and an entry of ``WEB-INF/config.properties``, and the value in ``web.xml`` is used only when none of the three is set.
+
+The name of the property is the name of the servlet, ``HttpProxy``, between the ``geonetwork`` prefix and the name of the setting:
+
+-   ``geonetwork.HttpProxy.excludeHosts``
+-   ``geonetwork.HttpProxy.allowPorts``
+
+As an environment variable the same name is written in upper case with underscores in place of the dots:
+
+``` shell
+docker run --name geonetwork \
+  -e 'GEONETWORK_HTTPPROXY_EXCLUDEHOSTS=^(localhost|...|internal\.example\.org)$' \
+  -e 'GEONETWORK_HTTPPROXY_ALLOWPORTS=8080|8443' \
+  geonetwork
+```
+
+A value given this way replaces the default list rather than adding to it. Copy the value shipped in ``web.xml``, shown abbreviated above as ``...``, and put your own entries inside the same parentheses; an entry left out is an entry the proxy is once again free to fetch.
+
+If the catalogue is deployed under a context path other than ``/geonetwork``, that path is also accepted in place of the ``geonetwork`` prefix, so a catalogue served from ``/catalogue`` reads ``catalogue.HttpProxy.excludeHosts`` first and falls back to the ``geonetwork`` name.
+
+Keep those defaults and add your own entries for any other host the catalogue should not be asked to fetch. Entries are matched against the host as it appears in the request. Where the catalogue is published in front of a private network, restricting the outbound traffic of the server at the network level is worthwhile too, and use ``allowPorts`` sparingly, since every port added there is opened towards every host the proxy accepts.
 
 ## WEB
 
