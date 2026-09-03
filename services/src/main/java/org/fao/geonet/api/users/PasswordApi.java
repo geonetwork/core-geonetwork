@@ -1,5 +1,5 @@
 //=============================================================================
-//===   Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===   Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===   United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===   and United Nations Environment Programme (UNEP)
 //===
@@ -48,6 +48,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -116,17 +117,18 @@ public class PasswordApi {
 
         ServiceContext context = ApiUtils.createServiceContext(request);
 
+        // All the failure cases below return the exact same response.
+        // Details about the actual reason are available in the server log.
+        ResponseEntity<String> passwordNotChanged = new ResponseEntity<>(
+            messages.getString("user_password_notchanged"), HttpStatus.PRECONDITION_FAILED);
+
         List<User> existingUsers = userRepository.findByUsernameIgnoreCase(username);
 
         if (existingUsers.isEmpty()) {
             Log.warning(LOGGER, String.format("User update password. Can't find user '%s'",
                 username));
 
-            // Return response not providing details about the issue, that should be logged.
-            return new ResponseEntity<>(String.format(
-                messages.getString("user_password_notchanged"),
-                XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.PRECONDITION_FAILED);
+            return passwordNotChanged;
         }
 
         User user = existingUsers.get(0);
@@ -135,11 +137,7 @@ public class PasswordApi {
             Log.warning(LOGGER, String.format("User '%s' is authenticated using LDAP. Password can't be sent by email.",
                 username));
 
-            // Return response not providing details about the issue, that should be logged.
-            return new ResponseEntity<>(String.format(
-                messages.getString("user_password_notchanged"),
-                XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.PRECONDITION_FAILED);
+            return passwordNotChanged;
         }
 
         // construct expected change key - only valid today
@@ -147,14 +145,29 @@ public class PasswordApi {
         Calendar cal = Calendar.getInstance();
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         String todaysDate = sdf.format(cal.getTime());
-        boolean passwordMatches = PasswordUtil.encoder(ApplicationContextHolder.get()).matches(scrambledPassword + todaysDate, passwordAndChangeKey.getChangeKey());
+        PasswordEncoder encoder = PasswordUtil.encoder(ApplicationContextHolder.get());
+
+        boolean passwordMatches;
+        try {
+            passwordMatches = encoder.matches(scrambledPassword + todaysDate,
+                passwordAndChangeKey.getChangeKey());
+        } catch (RuntimeException e) {
+            // A change key which is not a hash the encoder can read makes it fail instead of
+            // returning false (eg. StandardPasswordEncoder rejects a key which is not hex
+            // encoded). Handle it like any other invalid change key.
+            Log.warning(LOGGER, String.format(
+                "User update password. The change key can't be read by the password encoder: %s",
+                e.getMessage()));
+
+            passwordMatches = false;
+        }
 
         //check change key
         if (!passwordMatches) {
-            return new ResponseEntity<>(String.format(
-                messages.getString("user_password_invalid_changekey"),
-                passwordAndChangeKey.getChangeKey(), XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.PRECONDITION_FAILED);
+            Log.warning(LOGGER, String.format("User update password. Invalid change key for user '%s'",
+                username));
+
+            return passwordNotChanged;
         }
 
         user.getSecurity().setPassword(PasswordUtil.encode(context, passwordAndChangeKey.getPassword()));
@@ -235,10 +248,8 @@ public class PasswordApi {
                 username));
 
             // Return response not providing details about the issue, that should be logged.
-            return new ResponseEntity<>(String.format(
-                messages.getString(USER_PASSWORD_SENT),
-                XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.CREATED);
+            return new ResponseEntity<>(
+                messages.getString(USER_PASSWORD_SENT), HttpStatus.CREATED);
         }
         User user = existingUsers.get(0);
 
@@ -247,10 +258,8 @@ public class PasswordApi {
                 username));
 
             // Return response not providing details about the issue, that should be logged.
-            return new ResponseEntity<>(String.format(
-                messages.getString(USER_PASSWORD_SENT),
-                XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.CREATED);
+            return new ResponseEntity<>(
+                messages.getString(USER_PASSWORD_SENT), HttpStatus.CREATED);
         }
 
         String email = user.getEmail();
@@ -259,10 +268,8 @@ public class PasswordApi {
                 username));
 
             // Return response not providing details about the issue, that should be logged.
-            return new ResponseEntity<>(String.format(
-                messages.getString(USER_PASSWORD_SENT),
-                XslUtil.encodeForJavaScript(username)
-            ), HttpStatus.CREATED);
+            return new ResponseEntity<>(
+                messages.getString(USER_PASSWORD_SENT), HttpStatus.CREATED);
         }
 
         // get mail settings
@@ -313,9 +320,7 @@ public class PasswordApi {
                 messages.getString("mail_error")), HttpStatus.PRECONDITION_FAILED);
         }
 
-        return new ResponseEntity<>(String.format(
-            messages.getString(USER_PASSWORD_SENT),
-            XslUtil.encodeForJavaScript(username)
-        ), HttpStatus.CREATED);
+        return new ResponseEntity<>(
+            messages.getString(USER_PASSWORD_SENT), HttpStatus.CREATED);
     }
 }
