@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -74,9 +74,10 @@ public class DashboardAppHealthCheck implements HealthCheckFactory {
                         }
                     }
                 } else {
-                    return Result.unhealthy(
-                        "Dashboard application is not configured. " +
-                            "Update config.properties to setup Kibana to use this feature.");
+                    // kb.url is intentionally blank: Kibana/Dashboards is not being used, so this
+                    // is not a failure condition. Report a healthy-but-disabled result instead of
+                    // failing the whole /warninghealthcheck endpoint (see #9482).
+                    return HealthCheckFactory.disabled("Kibana is currently not enabled.");
                 }
             }
         };

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -40,6 +40,8 @@ import org.jdom.Element;
 import com.yammer.metrics.HealthChecks;
 import com.yammer.metrics.core.HealthCheck;
 import com.yammer.metrics.core.HealthCheckRegistry;
+
+import jeeves.monitor.HealthCheckFactory;
 
 /**
  * An HTTP servlet which runs the health checks registered with a given {@link HealthCheckRegistry}
@@ -99,9 +101,15 @@ public class GeonetworkHealthCheckServlet extends HttpServlet {
                 final HealthCheck.Result result = entry.getValue();
                 healthcheck.addContent(new Element("name").setText(entry.getKey()));
                 if (result.isHealthy()) {
-                    healthcheck.addContent(new Element("status").setText("OK"));
-                    if (result.getMessage() != null) {
-                        healthcheck.addContent(new Element("msg").setText(result.getMessage()));
+                    if (HealthCheckFactory.isDisabled(result)) {
+                        healthcheck.addContent(new Element("status").setText("DISABLED"));
+                        healthcheck.addContent(new Element("msg").setText(
+                            HealthCheckFactory.getDisabledMessage(result)));
+                    } else {
+                        healthcheck.addContent(new Element("status").setText("OK"));
+                        if (result.getMessage() != null) {
+                            healthcheck.addContent(new Element("msg").setText(result.getMessage()));
+                        }
                     }
                 } else {
                     healthcheck.addContent(new Element("status").setText("ERROR"));
