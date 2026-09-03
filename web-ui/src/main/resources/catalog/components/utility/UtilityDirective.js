@@ -578,14 +578,8 @@
                     limit: 100,
                     templates: {
                       suggestion: function (datum) {
-                        return (
-                          "<p>" +
-                          datum.name +
-                          " " +
-                          datum.surname +
-                          " (" +
-                          datum.profile +
-                          ")</p>"
+                        return $("<p></p>").text(
+                          datum.name + " " + datum.surname + " (" + datum.profile + ")"
                         );
                       }
                     },
@@ -816,13 +810,12 @@
                               props.push(loc[p]);
                             }
                           });
-                          return (
-                            "<div>" +
-                            loc.name +
-                            (props.length == 0
-                              ? ""
-                              : " — <em>" + props.join(", ") + "</em></div>")
-                          );
+                          var suggestion = $("<div></div>").text(loc.name);
+                          if (props.length != 0) {
+                            suggestion.append(document.createTextNode(" — "));
+                            suggestion.append($("<em></em>").text(props.join(", ")));
+                          }
+                          return suggestion;
                         }
                       }
                     }
@@ -958,7 +951,7 @@
                     source: allOrSearchFn,
                     templates: {
                       suggestion: function (datum) {
-                        return "<p>" + datum.name + " (" + datum.code + ")</p>";
+                        return $("<p></p>").text(datum.name + " (" + datum.code + ")");
                       }
                     }
                   }
@@ -1069,7 +1062,7 @@
                       limit: Infinity,
                       templates: {
                         suggestion: function (datum) {
-                          return "<p>" + datum.name + " (" + datum.code + ")</p>";
+                          return $("<p></p>").text(datum.name + " (" + datum.code + ")");
                         }
                       }
                     }
@@ -1329,7 +1322,7 @@
               source: source.ttAdapter(),
               templates: {
                 suggestion: function (datum) {
-                  return "<p>" + datum[displayField] + "</p>";
+                  return $("<p></p>").text(datum[displayField]);
                 }
               }
             }
@@ -1604,7 +1597,7 @@
               source: source.ttAdapter(),
               templates: {
                 suggestion: function (datum) {
-                  return "<p>" + datum.label + "</p>";
+                  return $("<p></p>").text(datum.label);
                 }
               }
             }
