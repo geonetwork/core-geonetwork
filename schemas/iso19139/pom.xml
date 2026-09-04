@@ -85,10 +85,6 @@
                    basedir="src/main/plugin/iso19139/sample-data/physiographic"
                    whenempty="create"
                    excludes="**/.keepme"/>
-                 <zip destfile="target/sample-data/z3950_server.mef"
-                   basedir="src/main/plugin/iso19139/sample-data/z3950_server"
-                   whenempty="create"
-                   excludes="**/.keepme"/>
               </target>
             </configuration>
             <goals><goal>run</goal></goals>

@@ -94,7 +94,6 @@
             ISO profil.
         -->
     <param name="preferredSchema" value="iso19139"/>
-    <param name="jzkitConfig" value="JZkitApplicationContext.xml"/>
 
     <!-- The maximum number of writes in a transaction on the spatial index
 
@@ -144,7 +143,6 @@
   </services>
 
   <include>config/config-service-search.xml</include>
-  <include>config/config-service-sru.xml</include>
   <include>config/config-service-rss.xml</include>
   <include>config/config-service-thesaurus.xml</include>
   <include>config/config-service-admin.xml</include>
