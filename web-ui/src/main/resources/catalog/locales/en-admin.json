@@ -1239,6 +1239,8 @@
     "ui-isUserRecordsOnly-help": "If enabled, the checkbox \"Only my records\" will be checked by default in the editor dashboard",
     "ui-isFilterTagsDisplayed": "Display filter tags in dashboard",
     "ui-isFilterTagsDisplayed-help": "If enabled, display the list of filters applied in the dashboard and the batch editor dashboard",
+    "ui-showFileStoreSize": "Display file size in the file store",
+    "ui-showFileStoreSize-help": "If enabled, display the size of each uploaded file in the metadata editor's online resources file store panel",
     "ui-isFilterTagsDisplayedInSearch": "Display filter tags in the search results",
     "ui-isFilterTagsDisplayedInSearch-help": "If enabled, display the list of filters applied in the search results page",
     "ui-searchMapPlacement": "Search result map placement",

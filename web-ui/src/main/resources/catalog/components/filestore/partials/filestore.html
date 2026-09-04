@@ -48,6 +48,9 @@
             >
               {{r.id.split('/').splice(2).join('/') | decodeURIComponent}}
             </a>
+            <span data-ng-if="showFileStoreSize" class="text-muted"
+              >({{humanizeFileSize(r.size)}})</span
+            >
 
             <div id="resource_edit_{{$index}}" class="hidden">
               <input

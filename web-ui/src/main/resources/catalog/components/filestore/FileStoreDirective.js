@@ -25,6 +25,16 @@
   goog.provide("gn_filestore_directive");
 
   /**
+   * Convert a size in bytes into a human readable string (eg. '1.2 MB').
+   */
+  var humanizeDataSize = function (bytes) {
+    if (bytes === 0) return "0 Bytes";
+    var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+    var i = Math.floor(Math.log(bytes) / Math.log(1024)); // Determine the index for sizes
+    return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + " " + sizes[i]; // Format size
+  };
+
+  /**
    */
   angular
     .module("gn_filestore_directive", ["blueimp.fileupload"])
@@ -112,13 +122,6 @@
                 unregisterWatch();
               }
             });
-
-            var humanizeDataSize = function (bytes) {
-              if (bytes === 0) return "0 Bytes";
-              var sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-              var i = Math.floor(Math.log(bytes) / Math.log(1024)); // Determine the index for sizes
-              return parseFloat((bytes / Math.pow(1024, i)).toFixed(2)) + " " + sizes[i]; // Format size
-            };
 
             // Function to remove files from scope.queue that match data.files by $$hashKey
             var removeUploadedFilesFromQueue = function (data) {
@@ -308,13 +311,15 @@
       "$translate",
       "$rootScope",
       "$parse",
+      "gnGlobalSettings",
       function (
         gnfilestoreService,
         gnOnlinesrc,
         gnCurrentEdit,
         $translate,
         $rootScope,
-        $parse
+        $parse,
+        gnGlobalSettings
       ) {
         return {
           restrict: "A",
@@ -347,6 +352,9 @@
             scope.selectOptions = { current: undefined };
             scope.metadataResources = [];
             scope.editingResource = false;
+            scope.showFileStoreSize =
+              gnGlobalSettings.gnCfg.mods.editor.showFileStoreSize;
+            scope.humanizeFileSize = humanizeDataSize;
 
             function updateVisibilityEditingPanel(index, editing) {
               if (editing) {

@@ -272,6 +272,7 @@ This section defines the configuration for the map shown when editing a record. 
 -   **Application URL**: This is the URL to the editor application and can generally be left as the default.
 -   **Only my records**: If this checkbox is enabled then the "Only my records" checkbox in the editor dashboard will be checked by default.
 -   **Display filters in dashboard**: If enabled, the currently selected facets will be shown above the search results in both the editor dashboard the batch editor page.
+-   **Display file size in the file store**: If enabled, display the size of each uploaded file in the metadata editor's online resources file store panel.
 -   **Fluid container for the Editor**: If enabled, the editor application will have a full width container. If disabled it will have a fixed width and centered container.
 -   **New metadata page layout**: Choose from the options for the layout of the `add new metadata` page. The default is `Horizontal` but a vertical layout can be chosen, or a custom layout based on a supplied template.
 -   **Editor page indent type**: Choose from the options for the indent style when editing a record. The default is for minimal indents, select `Colored indents` to use the style shown below:

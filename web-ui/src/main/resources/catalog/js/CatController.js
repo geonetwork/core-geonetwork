@@ -1010,6 +1010,7 @@
             isUserRecordsOnly: false,
             minUserProfileToCreateTemplate: "",
             isFilterTagsDisplayed: false,
+            showFileStoreSize: true,
             fluidEditorLayout: true,
             createPageTpl: "../../catalog/templates/editor/new-metadata-horizontal.html",
             editorIndentType: "",
