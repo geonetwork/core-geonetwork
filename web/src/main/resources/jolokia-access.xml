@@ -1,6 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Jolokia access policy for GeoNetwork.
+
+  The agent exists here for one purpose: letting the admin dashboard and the
+  editor board poll the progress of GeoNetwork's own long running tasks. It is
+  reachable by any authenticated user, down to the RegisteredUser profile, so
+  this file is what keeps the rest of the JVM out of reach.
+
+  Three rules when editing it:
+
+  1. Keep <commands> present and empty. Both halves matter, and deleting the
+     element is a mistake: every command then becomes allowed "in
+     general", the <mbeans> allow list stops being consulted, and the agent
+     grants read, write and exec on every MBean in the JVM. Naming a command
+     inside <commands> widens that one command past the allow list while the
+     file still reads as though it were restricted; in particular, do not add
+     <command>read</command>. An empty self-closing tag looks like cruft. It
+     is the whole restriction.
+
+  2. Keep the allow list scoped to the "geonetwork-*" domain, and keep its
+     attributes read-only (mode="read"). The hyphen is load bearing:
+     "geonetwork-*" does not match the plain "geonetwork" domain.
+
+  3. Do not add a <deny> section, and do not rely on one being there: under
+     rule 1 it is inert. Jolokia consults <deny> only for commands allowed in
+     general, and none are, so a <deny> here changes nothing while reading as
+     extra hardening. Deny by leaving things out of the allow list.
+
+  What the allow list has to cover: the tasks register MBeans named
+  "geonetwork-<catalogue-uuid>:name=<task>,idx=<n>", where <task> is currently
+  one of "url-check" (MAnalyseProcess), "indexing-task"
+  (BatchOpsMetadataReindexer) or "batch-etf-inspire"
+  (MInspireEtfValidateProcess). The placeholder slots add two more shapes:
+  EmptySlot registers "name=url-check,idx=empty-slot-<n>", and EmptySlotBatch
+  drops the "name" key altogether, registering
+  "geonetwork-<catalogue-uuid>:idx=empty-slot-<n>".
+
+  Why the domain rather than the task: the task names above are fixed
+  literals, so they could be listed one by one, but the catalogue uuid is only
+  known at runtime, future tasks are not known at all, and one <mbean> entry
+  per task would have to be kept in step with the code. So everything
+  GeoNetwork registers under "geonetwork-<catalogue-uuid>" is readable,
+  present and future: treat the whole domain as readable by any authenticated
+  user, and keep anything worth protecting out of it.
+
+  What the allow list bounds: attribute values, and only those. No attribute
+  value outside it can be read, in any request form. It does not hide the
+  existence of MBeans, and there is deliberately no <http> section confining
+  the agent to GET, which is a trade-off rather than a no-op. Both points are
+  spelled out, with the mechanism and the tighter alternative, in
+  JolokiaAccessPolicyTest.patternReadEnumeratesMBeanNamesWithoutValues and
+  httpMethodIsNotRestricted.
+
+  JolokiaAccessPolicyTest covers all of the above. Run it after changing this
+  file, and fix the policy rather than the test if it fails.
+-->
 <restrict>
-    <commands>
-        <command>read</command>
-    </commands>
+    <!-- Deny every command. Must stay present and empty: deleting this
+         element grants read, write and exec on every MBean in the JVM.
+         See rule 1 above before editing. -->
+    <commands/>
+
+    <!-- Read-only access to GeoNetwork's own MBean domain, and nothing else. -->
+    <mbeans>
+        <mbean>
+            <name>geonetwork-*:*</name>
+            <attribute mode="read">*</attribute>
+        </mbean>
+    </mbeans>
 </restrict>
