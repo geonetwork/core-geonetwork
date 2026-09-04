@@ -671,12 +671,6 @@
         <version>3.7.0</version>
       </dependency>
 
-      <dependency>
-        <groupId>jdbm</groupId>
-        <artifactId>jdbm</artifactId>
-        <version>1.0</version>
-      </dependency>
-
       <!-- GeoTools and spatial search stuff -->
       <dependency>
         <groupId>org.geotools</groupId>
