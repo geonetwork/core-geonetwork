@@ -254,6 +254,17 @@
                                 $fieldName, ., $allLanguages)"/>
       </xsl:for-each-group>
 
+      <xsl:for-each select="gmd:dateStamp">
+            <xsl:variable name="date"
+                          select="string(gco:DateTime)"/>
+            <xsl:variable name="zuluDate"
+                          select="date-util:convertToISOZuluDateTime($date)"/>
+            <xsl:if test="$zuluDate != ''">
+              <recordDate type="object">
+                {"type": "creation", "date": "<xsl:value-of select="$zuluDate"/>"}
+              </recordDate>
+            </xsl:if>
+      </xsl:for-each>
 
       <!-- Indexing resource information
       TODO: Should we support multiple identification in the same record
@@ -326,6 +337,7 @@
               </resourceDate>
             </xsl:if>
           </xsl:for-each>
+
 
           <xsl:if test="$useDateAsTemporalExtent">
             <xsl:for-each-group select="gmd:date/gmd:CI_Date[gn-fn-index:is-isoDate(gmd:date/*/text())]/gmd:date/*/text()"
