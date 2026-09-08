@@ -16,6 +16,13 @@
 
   <xsl:param name="output" as="xs:string" select="'not-pdf'"/>
 
+  <!-- Declared here rather than in search-nojs.xsl itself: skin.xsl is included by every page,
+  and an undeclared variable reference breaks stylesheet compilation everywhere, not just where
+  unused - search-nojs.xsl gets this one for free by including skin.xsl. No filter needed here:
+  SearchApi.searchCriteria's allowlist already guarantees <params> can't contain fast/resultType
+  /from. -->
+  <xsl:variable name="parameters" select="/root/search/params/*"/>
+
   <xsl:function name="geonet:updateUrlPlaceholder" as="xs:string">
     <xsl:param name="url" as="xs:string"/>
     <xsl:param name="node" as="xs:string"/>
@@ -172,7 +179,7 @@
                        id="gn-any-field"
                        aria-label="{$t/anyPlaceHolder}"
                        placeholder="{$t/anyPlaceHolder}"
-                       value="{/root/request/any}"
+                       value="{/root/search/params/any}"
                        class="form-control"
                        autofocus=""/>
                 <div class="input-group-btn">
@@ -188,7 +195,10 @@
                   </a>
                 </div>
               </div>
-              <input type="hidden" name="fast" value="index"/>
+              <!-- Keeps every other active filter when submitting a new free-text search. -->
+              <xsl:for-each select="$parameters[name(.) != 'any']">
+                <input type="hidden" name="{name(.)}" value="{.}"/>
+              </xsl:for-each>
             </div>
           </div>
         </form>

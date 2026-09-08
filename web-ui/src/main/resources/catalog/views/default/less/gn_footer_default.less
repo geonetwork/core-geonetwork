@@ -23,3 +23,15 @@
     }
   }
 }
+
+// nojs styles
+.gn-nojs {
+  // The JS app never page-scrolls the document itself - it scrolls internal
+  // panels inside a fixed-height layout, so a fixed footer never overlaps
+  // anything. This page is a plain scrolling HTML document, so a fixed
+  // footer would sit on top of whatever content is at the bottom of the
+  // viewport instead of staying below it.
+  .gn-bottom-bar {
+    position: static;
+  }
+}
