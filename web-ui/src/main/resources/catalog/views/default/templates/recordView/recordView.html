@@ -3,6 +3,8 @@
   {{mdView.current.record}}
   </pre>-->
 
+  <div data-gn-cancel-metadata-publication="mdView.current.record"></div>
+
   <div
     data-ng-if="mdView.current.record.draft == 'e' || mdView.current.record.draft == 'y'"
     data-ng-show="user.canEditRecord(mdView.current.record)"
@@ -100,7 +102,7 @@
                 language="{{lang}}"
                 section="record_view_menu"
                 render-as-button="true"
-                context="{uuid: mdView.current.record.uuid, id: mdView.current.record.id}"
+                context="{uuid: mdView.current.record.uuid, id: mdView.current.record.id, mdStatus: mdView.current.record.mdStatus, isWorkflowEnabled: mdView.current.record.isWorkflowEnabled()}"
               ></div>
 
               <!-- edit -->

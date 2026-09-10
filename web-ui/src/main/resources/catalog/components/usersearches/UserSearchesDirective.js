@@ -586,7 +586,7 @@
                           ' fa-fw" title="' +
                           $filter("translate")("featuredsearch") +
                           '"></span>' +
-                          row.label
+                          gnUtilityService.escapeHtml(row.label)
                         );
                       }
                     },

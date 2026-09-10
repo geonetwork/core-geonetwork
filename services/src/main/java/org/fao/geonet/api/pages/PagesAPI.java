@@ -41,6 +41,7 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.PageIdentity;
+import org.fao.geonet.languages.LocaleMessages;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.page.PageRepository;
@@ -83,6 +84,7 @@ public class PagesAPI {
     private static final String PAGE_DELETED = "Page removed";
     private static final String ERROR_FILE = "File not valid";
     private static final String ERROR_CREATE = "Wrong parameters are provided";
+    private static final String RESERVED_STATIC_PAGE_PREFIX = "gn-";
 
     private final PageRepository pageRepository;
     private final GroupRepository groupRepository;
@@ -178,6 +180,15 @@ public class PagesAPI {
             checkValidLanguage(language);
         }
 
+        if (pageId != null && pageId.startsWith(RESERVED_STATIC_PAGE_PREFIX)) {
+            throw new IllegalArgumentException(
+                LocaleMessages.getMessageForLocale(
+                    "api.exception.invalidStaticPageIdReservedPrefix",
+                    new String[]{pageId, RESERVED_STATIC_PAGE_PREFIX},
+                    null,
+                    "apiMessages"));
+        }
+
         if (!StringUtils.isBlank(link)) {
             if (EmailUtil.isValidEmailAddress(link)) {
                 format = Page.PageFormat.EMAILLINK;
@@ -212,6 +223,10 @@ public class PagesAPI {
                     newPage.setGroups(pageGroups);
                 }
             }
+
+            newPage.setShowOnNonApproved(pageProperties.isShowOnNonApproved());
+            newPage.setShowOnApproved(pageProperties.isShowOnApproved());
+            newPage.setShowWhenWorkflowDisabled(pageProperties.isShowWhenWorkflowDisabled());
 
             pageRepository.save(newPage);
             return ResponseEntity.status(HttpStatus.CREATED).body("{}");
@@ -296,6 +311,9 @@ public class PagesAPI {
                 newIcon != null ? newIcon : pageToUpdate.getIcon(),
                 CollectionUtils.isNotEmpty(_groups)? _groups: null);
 
+            pageCopy.setShowOnNonApproved(pageProperties.isShowOnNonApproved());
+            pageCopy.setShowOnApproved(pageProperties.isShowOnApproved());
+            pageCopy.setShowWhenWorkflowDisabled(pageProperties.isShowWhenWorkflowDisabled());
             pageRepository.save(pageCopy);
             pageRepository.delete(pageToUpdate);
         } else {
@@ -305,6 +323,9 @@ public class PagesAPI {
             pageToUpdate.setStatus(pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
             pageToUpdate.setLabel(newLabel);
             pageToUpdate.setIcon(newIcon);
+            pageToUpdate.setShowOnNonApproved(pageProperties.isShowOnNonApproved());
+            pageToUpdate.setShowOnApproved(pageProperties.isShowOnApproved());
+            pageToUpdate.setShowWhenWorkflowDisabled(pageProperties.isShowWhenWorkflowDisabled());
 
             pageToUpdate.getGroups().clear();
             if (pageToUpdate.getStatus() == Page.PageStatus.GROUPS || pageToUpdate.getStatus() == Page.PageStatus.GROUPS_AND_ADMIN) {

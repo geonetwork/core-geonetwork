@@ -261,6 +261,7 @@
              data-max-tags="{$maxTags}"
              data-browsable="{not($thesaurusConfig/@browsable)
                               or $thesaurusConfig/@browsable != 'false'}"
+             data-required="{if ($thesaurusConfig/@mandatory = 'true') then 'true' else 'false'}"
              data-order-by-id="{$orderById}"
              data-lang="{$metadataOtherLanguagesAsJson}"
              data-textgroup-only="false">

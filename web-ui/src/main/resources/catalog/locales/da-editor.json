@@ -33,7 +33,7 @@
     "applySuggestion": "Anvend forslag",
     "assignToCatalog": "Tildel til nuværende katalog",
     "assignToCategory": "Tildel til kategori",
-    "assignToCategory-help": "This value is not used when importing metadata in MEF (ZIP) format, as the value defined in the ZIP file is used instead.",
+    "assignToCategory-help": "Denne værdi anvendes ikke ved import af metadata i MEF (ZIP)-format, da den værdi, der er defineret i ZIP-filen, i stedet anvendes.",
     "assignToGroup": "Tildel til gruppe",
     "associationType": "Foreningstype",
     "chooseContactRole": "Vælg kontaktrolle",

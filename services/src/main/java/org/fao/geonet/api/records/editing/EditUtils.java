@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -91,7 +91,7 @@ class EditUtils {
         for (Object descendant : list) {
             if (descendant instanceof Element) {
                 Element e = (Element) descendant;
-                if (e.getName() != Edit.RootChild.ELEMENT
+                if (!Edit.RootChild.ELEMENT.equals(e.getName())
                     && e.getNamespace() != Edit.NAMESPACE) {
                     Element geonetRef = e.getChild(Edit.RootChild.ELEMENT, Edit.NAMESPACE);
                     if (geonetRef == null) {

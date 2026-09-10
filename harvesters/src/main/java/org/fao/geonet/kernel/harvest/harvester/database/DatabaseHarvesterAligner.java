@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -39,6 +39,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.BaseAligner;
 import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -164,15 +165,17 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
     private void deleteLocalMetadataNotInDatabase(List<Integer> idsForHarvestingResult) throws Exception {
         Set<Integer> idsResultHs = Sets.newHashSet(idsForHarvestingResult);
         List<Integer> existingMetadata = metadataRepository.findIdsBy(MetadataSpecs.hasHarvesterUuid(params.getUuid()));
-        for (Integer existingId : existingMetadata) {
-            if (cancelMonitor.get()) {
-                return;
-            }
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
+            for (Integer existingId : existingMetadata) {
+                if (cancelMonitor.get()) {
+                    return;
+                }
 
-            if (!idsResultHs.contains(existingId)) {
-                log.debug("  Removing: " + existingId);
-                metadataManager.deleteMetadata(context, existingId.toString());
-                result.locallyRemoved++;
+                if (!idsResultHs.contains(existingId)) {
+                    log.debug("  Removing: " + existingId);
+                    metadataManager.deleteMetadata(context, existingId.toString(), submitter);
+                    result.locallyRemoved++;
+                }
             }
         }
     }
@@ -185,7 +188,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
      * @return
      * @throws Exception
      */
-    private String processMetadata(Element metadataElement) throws Exception {
+    String processMetadata(Element metadataElement) throws Exception {
 
         String id = "";
 
@@ -207,30 +210,38 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
 
         log.info(String.format("Processing metadata with UUID: %s", uuid));
 
-        try {
-            Integer groupIdVal = null;
-            if (StringUtils.hasLength(params.getOwnerIdGroup())) {
-                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
-            }
-
-            params.getValidate().validate(dataMan, context, metadataElement, groupIdVal);
-        } catch (Exception e) {
-            log.error("Ignoring invalid metadata with uuid " + uuid);
-            result.doesNotValidate++;
-            return id;
-        }
-
-        setParams(params);
-
         //
         // add / update the metadata from this harvesting result
         //
         id = metadataUtils.getMetadataId(uuid);
+        boolean collisionFromOtherSource = (id != null) && (localUuids.getID(uuid) == null);
+
+        // Resolve the UUID collision state before validating (see issue #9432): a record that
+        // already exists from another source and whose collision policy is SKIP must be counted as
+        // skipped without being validated. Validate only when the record will actually be inserted
+        // or updated; the SKIP case is handled in the collision switch below.
+        if (!params.isSkippedByUuidCollision(collisionFromOtherSource)) {
+            try {
+                Integer groupIdVal = null;
+                if (StringUtils.hasLength(params.getOwnerIdGroup())) {
+                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                }
+
+                params.getValidate().validate(dataMan, context, metadataElement, groupIdVal);
+            } catch (Exception e) {
+                log.error("Ignoring invalid metadata with uuid " + uuid);
+                result.doesNotValidate++;
+                return id;
+            }
+        }
+
+        setParams(params);
+
         if (id == null) {
             //Record is new
             id = addMetadata(metadataElement, uuid, schema);
             result.addedMetadata++;
-        } else if (localUuids.getID(uuid) == null) {
+        } else if (collisionFromOtherSource) {
             //Record does not belong to this harvester
             result.datasetUuidExist++;
 
@@ -329,7 +340,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
         addCategories(metadata, params.getCategories(), localCateg, context, null, true);
 
         metadataManager.flush();
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
     }
 
     /**
@@ -391,13 +402,13 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
 
         addCategories(metadata, params.getCategories(), localCateg, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
         addPrivileges(id, params.getPrivileges(), localGroups, context);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
 
         return id;
     }

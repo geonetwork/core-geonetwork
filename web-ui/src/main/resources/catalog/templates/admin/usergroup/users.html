@@ -543,7 +543,7 @@
                 <input
                   type="checkbox"
                   data-ng-checked="userSelected.profile == 'Administrator'"
-                  data-ng-click="setUserProfile(true)"
+                  data-ng-click="setUserProfile(true); gnUserEdit.profile.$setDirty()"
                   data-ng-show="user.isAdministratorOrMore()"
                   data-ng-disabled="!isUserGroupUpdateEnabled"
                 />

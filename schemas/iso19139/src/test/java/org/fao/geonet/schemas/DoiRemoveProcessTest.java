@@ -27,6 +27,7 @@ import org.fao.geonet.schema.iso19139.ISO19139Namespaces;
 import org.fao.geonet.schema.iso19139.ISO19139SchemaPlugin;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.xpath.XPath;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -53,12 +54,14 @@ public class DoiRemoveProcessTest extends XslProcessTest {
     }
 
     @Test
-    public void testRemoveDoi() throws Exception {
+    public void testRemoveDoiAndContainerElement() throws Exception {
         Element inputElement = Xml.loadFile(xmlFile);
         String inputString = Xml.getString(inputElement);
 
         String doi = "https://doi.org/11.1111/da165110-88fd-11da-a88f-000d939bc5d8";
 
+        // 1. Verify preconditions
+        assertThat(inputString, hasXPath("count(//gmd:transferOptions)", equalTo("2")).withNamespaceContext(ns));
         assertThat(inputString, hasXPath("count(//gmd:onLine[*/gmd:linkage/gmd:URL = '" + doi + "'])", equalTo("1")).withNamespaceContext(ns));
         assertThat(inputString, hasXPath("count(//gmd:identifier[*/gmd:code/gmx:Anchor/@xlink:href = '" + doi + "'])", equalTo("1")).withNamespaceContext(ns));
 
@@ -71,8 +74,42 @@ public class DoiRemoveProcessTest extends XslProcessTest {
         String resultString = Xml.getString(resultElement);
 
         // 3. Verify it is removed
-
+        assertThat(resultString, hasXPath("count(//gmd:transferOptions)", equalTo("1")).withNamespaceContext(ns));
         assertThat(resultString, hasXPath("count(//gmd:onLine[*/gmd:linkage/gmd:URL = '" + doi + "'])", equalTo("0")).withNamespaceContext(ns));
         assertThat(resultString, hasXPath("count(//gmd:identifier[*/gmd:code/gmx:Anchor/@xlink:href = '" + doi + "'])", equalTo("0")).withNamespaceContext(ns));
     }
+
+    @Test
+    public void testRemoveDoi() throws Exception {
+        Element inputElement = Xml.loadFile(xmlFile);
+
+        String doi = "https://doi.org/11.1111/da165110-88fd-11da-a88f-000d939bc5d8";
+
+        // 1. Add a new gmd:onLine in the gmd:transferOptions of the DOI resource
+        XPath xpath = XPath.newInstance(".//gmd:transferOptions/gmd:MD_DigitalTransferOptions[gmd:onLine/*/gmd:linkage/gmd:URL = '" + doi + "']");
+        Element el = (Element) xpath.selectSingleNode(inputElement);
+        Element newOnline = new  Element("onLine", "gmd", this.getNs().get("gmd") );
+        el.addContent(newOnline);
+
+        String inputString = Xml.getString(inputElement);
+
+        // 1. Verify preconditions
+        assertThat(inputString, hasXPath("count(//gmd:transferOptions)", equalTo("2")).withNamespaceContext(ns));
+        assertThat(inputString, hasXPath("count(//gmd:onLine[*/gmd:linkage/gmd:URL = '" + doi + "'])", equalTo("1")).withNamespaceContext(ns));
+        assertThat(inputString, hasXPath("count(//gmd:identifier[*/gmd:code/gmx:Anchor/@xlink:href = '" + doi + "'])", equalTo("1")).withNamespaceContext(ns));
+
+
+        // 2. Run the process
+        Map<String, Object> params = new HashMap<>();
+        params.put("doi", doi);
+
+        Element resultElement = Xml.transform(inputElement, xslFile, params);
+        String resultString = Xml.getString(resultElement);
+
+        // 3. Verify it is removed the DOI resource, but the gmd:transferOptions is not removed as has an additional gmd:onLine
+        assertThat(resultString, hasXPath("count(//gmd:transferOptions)", equalTo("2")).withNamespaceContext(ns));
+        assertThat(resultString, hasXPath("count(//gmd:onLine[*/gmd:linkage/gmd:URL = '" + doi + "'])", equalTo("0")).withNamespaceContext(ns));
+        assertThat(resultString, hasXPath("count(//gmd:identifier[*/gmd:code/gmx:Anchor/@xlink:href = '" + doi + "'])", equalTo("0")).withNamespaceContext(ns));
+    }
+
 }

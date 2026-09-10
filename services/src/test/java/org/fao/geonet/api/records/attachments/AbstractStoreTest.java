@@ -53,6 +53,13 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by francois on 19/01/16.
  */
+import org.fao.geonet.domain.MetadataFileUpload;
+import org.fao.geonet.repository.MetadataFileUploadRepository;
+import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
+import org.fao.geonet.kernel.datamanager.IMetadataManager;
+import org.springframework.mock.web.MockHttpServletRequest;
+import static org.junit.Assert.assertNotNull;
+
 public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
 
     protected static String resources =
@@ -61,6 +68,12 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
     protected IMetadataUtils metadataUtils;
     @Autowired
     private MetadataRepository _metadataRepo;
+    @Autowired
+    protected IMetadataManager metadataManager;
+    @Autowired
+    protected IMetadataIndexer metadataIndexer;
+    @Autowired
+    protected MetadataFileUploadRepository uploadRepository;
 
     protected abstract Store getStore();
 
@@ -157,6 +170,142 @@ public abstract class AbstractStoreTest extends AbstractServiceIntegrationTest {
         assertEquals("0 resource for record",
             0,
             resourcesList.size());
+    }
+
+    @Test
+    public void testRenameResource() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        getStore().delResources(context, metadataUuid, true);
+
+        String filename = "record-with-old-links.xml";
+        String newFilename = "renamed-record.xml";
+        MultipartFile file = new MockMultipartFile(filename,
+            filename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, filename)
+            ));
+        getStore().putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+
+        MetadataResource renamedResource = getStore().renameResource(context, metadataUuid, filename, newFilename, true);
+        assertEquals("Renamed resource id is correct",
+            metadataUuid + "/attachments/" + newFilename,
+            renamedResource.getId());
+        assertEquals("Renamed resource URL is correct",
+            "http://localhost:8080/srv/api/records/" + metadataUuid + "/attachments/" + newFilename,
+            renamedResource.getUrl());
+
+        List<MetadataResource> resourcesList =
+            getStore().getResources(context, metadataUuid, Sort.name, null, true);
+        assertEquals("1 resource for record after rename", 1, resourcesList.size());
+        assertEquals("Resource in list has new filename", newFilename, resourcesList.get(0).getFilename());
+
+        getStore().delResources(context, metadataUuid, true);
+    }
+
+    @Test
+    public void testAttachmentsApiPatchResourceRename() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        getStore().delResources(context, metadataUuid, true);
+
+        String filename = "record-with-old-links.xml";
+        String newFilename = "api-renamed-record.xml";
+        MultipartFile file = new MockMultipartFile(filename,
+            filename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, filename)
+            ));
+        getStore().putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+
+        AttachmentsApi api = new AttachmentsApi(getStore(), metadataManager, metadataIndexer);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setMethod("PATCH");
+        request.setRequestURI("/srv/api/records/" + metadataUuid + "/attachments/" + filename);
+
+        MetadataResource result = api.patchResource(metadataUuid, filename, null, newFilename, true, request);
+        assertNotNull("Renamed metadata resource should not be null", result);
+        assertEquals("Renamed resource filename is updated", newFilename, result.getFilename());
+
+        getStore().delResources(context, metadataUuid, true);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testAttachmentsApiPatchResourceValidation() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        AttachmentsApi api = new AttachmentsApi(getStore(), metadataManager, metadataIndexer);
+        MockHttpServletRequest request = new MockHttpServletRequest();
+
+        api.patchResource(metadataUuid, "somefile.xml", null, null, true, request);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testRenameResourceExceedsMaxLength() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataId = importMetadata(context);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataId);
+
+        StringBuilder longName = new StringBuilder();
+        for (int i = 0; i < 260; i++) {
+            longName.append("a");
+        }
+        longName.append(".xml");
+
+        getStore().renameResource(context, metadataUuid, "somefile.xml", longName.toString(), true);
+    }
+
+    @Test
+    public void testResourceLoggerStoreRenameUploadRecord() throws Exception {
+        final ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+        String metadataIdStr = importMetadata(context);
+        int metadataId = Integer.parseInt(metadataIdStr);
+        String metadataUuid = metadataUtils.getMetadataUuid(metadataIdStr);
+
+        Store loggerStore = new ResourceLoggerStore(getStore());
+
+        String filename = "record-with-old-links.xml";
+        String newFilename = "logger-renamed-record.xml";
+        MultipartFile file = new MockMultipartFile(filename,
+            filename,
+            "application/xml",
+            Files.newInputStream(
+                Paths.get(resources, filename)
+            ));
+        loggerStore.putResource(context, metadataUuid, file, MetadataResourceVisibility.PUBLIC, true);
+
+        MetadataFileUpload initialUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, metadataUuid + "/attachments/" + filename);
+        if (initialUpload == null) {
+            initialUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, filename);
+        }
+        assertNotNull("Initial upload record in MetadataFileUploads should exist", initialUpload);
+        assertTrue("Initial upload record has old filename", initialUpload.getFileName().endsWith(filename));
+
+        MetadataResource renamedResource = loggerStore.renameResource(context, metadataUuid, filename, newFilename, true);
+        assertNotNull("Renamed resource should not be null", renamedResource);
+
+        MetadataFileUpload updatedUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, renamedResource.getId());
+        if (updatedUpload == null) {
+            updatedUpload = uploadRepository.findByMetadataIdAndFileNameNotDeleted(metadataId, newFilename);
+        }
+        assertNotNull("Updated upload record in MetadataFileUploads should exist with new filename", updatedUpload);
+        assertEquals("Updated upload record ID matches initial record ID", initialUpload.getId(), updatedUpload.getId());
+        assertTrue("Updated upload record has new filename", updatedUpload.getFileName().endsWith(newFilename));
+
+        loggerStore.delResources(context, metadataUuid, true);
     }
 
     @Test

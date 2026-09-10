@@ -1,14 +1,17 @@
 package org.fao.geonet.kernel.security;
 
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.GroupType;
 import org.fao.geonet.domain.Language;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.LanguageRepository;
+import org.fao.geonet.utils.Log;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Collections;
@@ -63,6 +66,25 @@ public class BaseUserUtilsTest {
     }
 
     @Test
+    public void getOrCreateGroup_noWarningWhenRequestedTypeIsNull() {
+        String groupName = "ExistingTypedGroup";
+        Group existingGroup = new Group();
+        existingGroup.setName(groupName);
+        existingGroup.setType(GroupType.Workspace);
+
+        when(groupRepository.findByName(groupName)).thenReturn(existingGroup);
+
+        try (MockedStatic<Log> logMock = mockStatic(Log.class)) {
+            Group result = baseUserUtils.getOrCreateGroup(groupName); // no type requested
+            assertEquals(existingGroup, result);
+
+            logMock.verifyNoInteractions();
+        }
+
+        verify(groupRepository, never()).save(any(Group.class));
+    }
+
+    @Test
     public void getOrCreateGroup_logsWarningWhenGroupTypeDiffers() {
         String groupName = "MismatchedGroup";
         GroupType existingType = GroupType.SystemPrivilege;
@@ -73,9 +95,17 @@ public class BaseUserUtilsTest {
 
         when(groupRepository.findByName(groupName)).thenReturn(existingGroup);
 
-        Group result = baseUserUtils.getOrCreateGroup(groupName, requestedType);
+        try (MockedStatic<Log> logMock = mockStatic(Log.class)) {
+            Group result = baseUserUtils.getOrCreateGroup(groupName, requestedType);
+            assertEquals(existingGroup, result);
 
-        assertEquals(existingGroup, result);
+            logMock.verify(() -> Log.warning(
+                Geonet.SECURITY,
+                "Group '{}' exists with type '{}', but requested type is '{}'. Using existing group type.",
+                groupName, existingType, requestedType
+            ));
+        }
+
         verify(groupRepository, never()).save(any(Group.class));
     }
 

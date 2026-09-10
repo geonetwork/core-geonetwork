@@ -4,6 +4,7 @@
                   xmlns:gmd="http://www.isotc211.org/2005/gmd"
                   xmlns:gmx="http://www.isotc211.org/2005/gmx"
                   xmlns:xlink="http://www.w3.org/1999/xlink"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
                   xmlns:geonet="http://www.fao.org/geonetwork"
                   exclude-result-prefixes="#all">
 
@@ -39,7 +40,7 @@
                 select="count(//gmd:distributionInfo//gmd:onLine/*[matches(gmd:protocol/gco:CharacterString, $doiProtocolRegex)]/gmd:linkage/gmd:URL[. != '']) > 0"/>-->
 
 
-  <xsl:template match="gmd:identificationInfo[1]/*/gmd:citation/*[not($isDoiAlreadySet)]"
+  <xsl:template match="gmd:identificationInfo[1]/*/gmd:citation/*[not($isDoiAlreadySet) and string($doi)]"
                 priority="2">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
@@ -73,14 +74,11 @@
     </xsl:copy>
   </xsl:template>
 
-  <!-- Insert the DOI in the first distributionInfo section
-  (a distribution format is mandatory in ISO
-  and a publisher (distributor) is required for a DOI
-  so it should always exist).
-
-  Adding a new transfer option block.
+  <!-- Insert the DOI in the first distributionInfo section.
+  If a transferOptions already exists, add the DOI onLine to the first one.
+  Otherwise, create a new transferOptions.
   -->
-  <xsl:template match="gmd:distributionInfo[not($isDoiAlreadySet) and position() = 1]"
+  <xsl:template match="gmd:distributionInfo[not($isDoiAlreadySet) and string($doi) and position() = 1]"
                 priority="2">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
@@ -88,26 +86,63 @@
         <xsl:apply-templates select="*/@*"/>
         <xsl:apply-templates select="*/gmd:distributionFormat"/>
         <xsl:apply-templates select="*/gmd:distributor"/>
-        <xsl:apply-templates select="*/gmd:transferOptions"/>
-        <gmd:transferOptions>
-          <gmd:MD_DigitalTransferOptions>
-            <gmd:onLine>
-              <gmd:CI_OnlineResource>
-                <gmd:linkage>
-                  <gmd:URL><xsl:value-of select="concat($doiProxy, $doi)"/></gmd:URL>
-                </gmd:linkage>
-                <gmd:protocol>
-                  <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>
-                </gmd:protocol>
-                <gmd:name>
-                  <gco:CharacterString><xsl:value-of select="$doiName"/></gco:CharacterString>
-                </gmd:name>
-              </gmd:CI_OnlineResource>
-            </gmd:onLine>
-          </gmd:MD_DigitalTransferOptions>
-        </gmd:transferOptions>
+        <xsl:choose>
+          <xsl:when test="*/gmd:transferOptions">
+            <xsl:apply-templates select="*/gmd:transferOptions[1]" mode="doi-add"/>
+            <xsl:apply-templates select="*/gmd:transferOptions[position() > 1]"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <gmd:transferOptions>
+              <gmd:MD_DigitalTransferOptions>
+                <xsl:call-template name="add-doi-resource">
+                  <xsl:with-param name="linkage" select="concat($doiProxy, $doi)" />
+                  <xsl:with-param name="protocol" select="$doiProtocol" />
+                  <xsl:with-param name="name" select="$doiName" />
+                </xsl:call-template>
+              </gmd:MD_DigitalTransferOptions>
+            </gmd:transferOptions>
+          </xsl:otherwise>
+        </xsl:choose>
       </gmd:MD_Distribution>
     </xsl:copy>
+  </xsl:template>
+
+  <xsl:template match="gmd:transferOptions" mode="doi-add">
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <gmd:MD_DigitalTransferOptions>
+        <xsl:apply-templates select="gmd:MD_DigitalTransferOptions/@*|gmd:MD_DigitalTransferOptions/(gmd:unitsOfDistribution|gmd:transferSize|gmd:onLine)"/>
+
+        <xsl:call-template name="add-doi-resource">
+          <xsl:with-param name="linkage" select="concat($doiProxy, $doi)" />
+          <xsl:with-param name="protocol" select="$doiProtocol" />
+          <xsl:with-param name="name" select="$doiName" />
+        </xsl:call-template>
+
+        <xsl:apply-templates select="gmd:MD_DigitalTransferOptions/gmd:offLine"/>
+
+      </gmd:MD_DigitalTransferOptions>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template name="add-doi-resource">
+    <xsl:param name="linkage" as="xs:string" />
+    <xsl:param name="protocol" as="xs:string" />
+    <xsl:param name="name" as="xs:string" />
+
+    <gmd:onLine>
+      <gmd:CI_OnlineResource>
+        <gmd:linkage>
+          <gmd:URL><xsl:value-of select="$linkage"/></gmd:URL>
+        </gmd:linkage>
+        <gmd:protocol>
+          <gco:CharacterString><xsl:value-of select="$protocol"/></gco:CharacterString>
+        </gmd:protocol>
+        <gmd:name>
+          <gco:CharacterString><xsl:value-of select="$name"/></gco:CharacterString>
+        </gmd:name>
+      </gmd:CI_OnlineResource>
+    </gmd:onLine>
   </xsl:template>
 
 

@@ -16,170 +16,228 @@
             <p xmlns:xs="http://www.w3.org/2001/XMLSchema">Site web du projet "Châteaux rhénans" : www.chateaux-rhenans.eu/fr</p>
           </div>
           <script type="application/ld+json">{
-    "@context": "http://schema.org/",
-    
-      "@type": "schema:Dataset",
-    
-    
-    "@id": "trueapi/records/f74f5451-b198-4edf-abdd-a6b6b7caed81",
-    "includedInDataCatalog":[{"@type":"DataCatalog","url":"truesearch#","name":""}],
-    
-    "inLanguage":"fre",
-    
-    "name": "Ch\u00E2teaux rh\u00E9nans convertis vers iso19115-3.2018",
+      "@context": {
+        "@language":  "fr" ,
+        "@vocab": "https://schema.org/",
+        "schema": "https://schema.org/",
+        "sc": "https://schema.org/",
+        "cr": "http://mlcommons.org/croissant/",
+        "rai": "http://mlcommons.org/croissant/RAI/",
+        "dct": "http://purl.org/dc/terms/",
+        "citeAs": "cr:citeAs",
+        "column": "cr:column",
+        "conformsTo": "dct:conformsTo",
+        "data": {
+          "@id": "cr:data",
+          "@type": "@json"
+        },
+        "dataType": {
+          "@id": "cr:dataType",
+          "@type": "@vocab"
+        },
+        "examples": {
+          "@id": "cr:examples",
+          "@type": "@json"
+        },
+        "extract": "cr:extract",
+        "field": "cr:field",
+        "fileProperty": "cr:fileProperty",
+        "fileObject": "cr:fileObject",
+        "fileSet": "cr:fileSet",
+        "format": "cr:format",
+        "includes": "cr:includes",
+        "isLiveDataset": "cr:isLiveDataset",
+        "jsonPath": "cr:jsonPath",
+        "key": "cr:key",
+        "md5": "cr:md5",
+        "parentField": "cr:parentField",
+        "path": "cr:path",
+        "recordSet": "cr:recordSet",
+        "references": "cr:references",
+        "regex": "cr:regex",
+        "repeated": "cr:repeated",
+        "replace": "cr:replace",
+        "separator": "cr:separator",
+        "source": "cr:source",
+        "subField": "cr:subField"
+      },
+       
+        "@type":  "schema:Dataset" ,
+       
 
-    
-    "alternateName": [
-    ],
-    "dateCreated": [
-    
-       "2024-02-15"],
-    "dateModified": [
-    
-    "2024-07-15"],
-    "datePublished": [
-    
-      "2024-03-14"],
-    "thumbnailUrl": [
-    
-    "https://geoportal.georhena.eu/geonetwork/srv/api/records/f74f5451-b198-4edf-abdd-a6b6b7caed81/attachments/chateaux_rhenans.jpeg"],
-    "description": "Pr\u00E9sentation des ch\u00E2teaux forts du Rhin Sup\u00E9rieur selon des donn\u00E9es d\u2019accessibilit\u00E9 d\u2019itin\u00E9rance, d\u2019int\u00E9r\u00EAt touristique, de billetterie ou encore d\u2019offre de restauration.\n                        Cette action b\u00E9n\u00E9ficie d\u2019un cofinancement de l\u2019UE dans le cadre du projet Interreg VI \u00AB Ch\u00E2teaux rh\u00E9nans \u2013 Burgen am Oberrhein \u00BB.\n\n                        Site web du projet \"Ch\u00E2teaux rh\u00E9nans\" : www.chateaux-rhenans.eu\/fr",
+      "@id":  "http:\/\/localhost:8080\/geonetwork\/srv\/api\/records\/f74f5451-b198-4edf-abdd-a6b6b7caed81#resource" ,
 
-    
-    
-
-    
-
-
-    
-    "keywords":[
-      "Rhin Sup\u00E9rieur","gestion patrimoniale","tourisme","Ch\u00E2teaux forts","Patrimoine castral"
-    ],
-
-
-    
-    "publisher": [
       
-        {
-        
-        
-        "@id":"contact@georhena.eu",
-        "@type":"Organization"
-        
-          ,"name": "GeoRhena"
-            ,"email":  ["contact@georhena.eu"]
-        
+      "url":  "http:\/\/localhost:8080\/geonetwork\/srv\/api\/records\/f74f5451-b198-4edf-abdd-a6b6b7caed81#resource" ,
 
-        
-        ,"contactPoint": {
-          "@type" : "PostalAddress"
-          
-          }
-        }
-        ,
-        {
-        
-        
-        "@id":"info@chateaux-rhenans.eu",
-        "@type":"Organization"
-        
-          ,"name": "Collectivit\u00E9 Europ\u00E9enne d'Alsace"
-            ,"email":  ["info@chateaux-rhenans.eu"]
-        
+      "includedInDataCatalog": [{
+      "@type": "DataCatalog",
+      "url":  "http:\/\/localhost:8080\/geonetwork\/srv\/fre\/" ,
+      "name":  "true" 
+      }],
 
-        
-        ,"contactPoint": {
-          "@type" : "PostalAddress"
-          
-          }
-        }
-        
-    ]
-
-    
-
-    
-    
-    ,"distribution": [
       
-        {
-        "@type":"DataDownload",
-        "contentUrl": "https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows"
-        ,
-          "encodingFormat": "OGC:WMS"
-        ,
-          "name": "chateaux_rhenans",
-          "description": "Ch\u00E2teaux rh\u00E9nans du Rhin Sup\u00E9rieur"
-        }
-        ,
-        {
-        "@type":"DataDownload",
-        "contentUrl": "https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows"
-        ,
-          "encodingFormat": "OGC:WFS"
-        ,
-          "name": "society:chateaux_rhenans",
-          "description": "Ch\u00E2teaux rh\u00E9nans du Rhin Sup\u00E9rieur"
-        }
-        ,
-        {
-        "@type":"DataDownload",
-        "contentUrl": "https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows?request=GetFeature&amp;service=WFS&amp;typeName=chateaux_rhenans&amp;version=1.0.0&amp;outputFormat=SHAPE-ZIP"
-        ,
-          "encodingFormat": "WWW:DOWNLOAD-1.0-ftp--download"
-        ,
-          "name": "T\u00E9l\u00E9chargement du Shapefile"
-        }
-        ,
-        {
-        "@type":"DataDownload",
-        "contentUrl": "www.chateaux-rhenans.eu"
-        ,
-          "encodingFormat": "WWW:LINK-1.0-http--link"
-        ,
-          "name": "Site internet du projet \"Ch\u00E2teaux rh\u00E9nans\"",
-          "description": ""
-        }
-        
-    ]
-    
-      ,"encodingFormat": [
-      "G\u00E9odonn\u00E9e au format SHP"
-      ]
-    
+       
+        "inLanguage": [
+         "fr" ],
+       
 
+      
+      "name":  "Ch\u00E2teaux rh\u00E9nans convertis vers iso19115-3.2018" ,
 
-    ,"spatialCoverage": [
-    
-      {"@type":"Place",
-        "description": [
-        
-          ],
-        "geo": [
-          
-              {"@type":"GeoShape",
-              "box": "47.34626718 7.00927734 49.31079888 8.74511719"
-              }
-        ]
-      }]
+      
+       
 
-    ,"temporalCoverage": [
-    
-       "2023-12-15/2024-02-15"
-      ]
+      "description":  "Pr\u00E9sentation des ch\u00E2teaux forts du Rhin Sup\u00E9rieur selon des donn\u00E9es d\u2019accessibilit\u00E9 d\u2019itin\u00E9rance, d\u2019int\u00E9r\u00EAt touristique, de billetterie ou encore d\u2019offre de restauration.\n                        Cette action b\u00E9n\u00E9ficie d\u2019un cofinancement de l\u2019UE dans le cadre du projet Interreg VI \u00AB Ch\u00E2teaux rh\u00E9nans \u2013 Burgen am Oberrhein \u00BB.\n\n                        Site web du projet \"Ch\u00E2teaux rh\u00E9nans\" : www.chateaux-rhenans.eu\/fr" ,
 
+      
+      "conformsTo": "http://mlcommons.org/croissant/1.0",
 
-    
-      ,"license": [
+      
+
+       
+        "license": [
+         
               {
-                "@type": "CreativeWork",
-                "name": "Pas d'autre limitation"
+              "@type": "CreativeWork",
+              "name":  "Pas d'autre limitation" 
               }
-            ]
-    
-    
-    
-  }</script>
+             
+        ],
+       
+      "citeAs": " @misc{f74f5451-b198-4edf-abdd-a6b6b7caed81,\n      author = {Collectivit\u00E9 Europ\u00E9enne d'Alsace},\n      publisher = {},\n      title = {Ch\u00E2teaux rh\u00E9nans convertis vers iso19115-3.2018},\n      year = {2024},\n      url = {http:\/\/localhost:8080\/geonetwork\/srv\/api\/records\/f74f5451-b198-4edf-abdd-a6b6b7caed81}\n      } ",
+
+
+       
+
+
+      
+      "keywords":[
+       "Rhin Sup\u00E9rieur" , "gestion patrimoniale" , "tourisme" , "Ch\u00E2teaux forts" , "Patrimoine castral" 
+      ]
+
+
+       
+          , "provider" : [
+           
+            {
+            "@id":  "contact@georhena.eu" ,
+            "@type":"Organization"
+             
+              ,"name":   "GeoRhena" 
+              ,"email": [
+               "contact@georhena.eu" 
+              ]
+             
+
+            
+            ,"contactPoint": {
+              "@type" : "PostalAddress"
+               
+              }
+            }
+             
+          ]
+         
+          , "producer" : [
+           
+            {
+            "@id":  "info@chateaux-rhenans.eu" ,
+            "@type":"Organization"
+             
+              ,"name":   "Collectivit\u00E9 Europ\u00E9enne d'Alsace" 
+              ,"email": [
+               "info@chateaux-rhenans.eu" 
+              ]
+             
+
+            
+            ,"contactPoint": {
+              "@type" : "PostalAddress"
+               
+              }
+            }
+             
+          ]
+         
+        ,"distribution": [
+         
+          {
+          "@type":"DataDownload",
+          "@id":  "https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows" ,
+          "contentUrl":  "https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows" ,
+             
+            "encodingFormat":  "OGC:WMS" ,
+            "name":
+             "chateaux_rhenans" ,
+            "description":
+             "" 
+          }
+           , 
+          {
+          "@type":"DataDownload",
+          "@id":  "www.chateaux-rhenans.eu" ,
+          "contentUrl":  "www.chateaux-rhenans.eu" ,
+             
+            "encodingFormat":  "WWW:LINK-1.0-http--link" ,
+            "name":
+             "Site internet du projet \"Ch\u00E2teaux rh\u00E9nans\"" ,
+            "description":
+             "" 
+          }
+           , 
+          {
+          "@type": "cr:FileObject",
+          "@id":  "https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows" ,
+          "contentUrl":  "https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows" ,
+            "encodingFormat":  "OGC:WFS" ,
+            "name":
+             "society:chateaux_rhenans" ,
+            "description":
+             "Ch\u00E2teaux rh\u00E9nans du Rhin Sup\u00E9rieur" 
+          
+          }
+           , 
+          {
+          "@type": "cr:FileObject",
+          "@id":  "https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows?request=GetFeature&amp;service=WFS&amp;typeName=chateaux_rhenans&amp;version=1.0.0&amp;outputFormat=SHAPE-ZIP" ,
+          "contentUrl":  "https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows?request=GetFeature&amp;service=WFS&amp;typeName=chateaux_rhenans&amp;version=1.0.0&amp;outputFormat=SHAPE-ZIP" ,
+            "encodingFormat":  "WWW:DOWNLOAD-1.0-ftp--download" ,
+            "name":
+             "T\u00E9l\u00E9chargement du Shapefile" 
+          
+          }
+           
+        ]
+       
+        ,"encodingFormat": [
+         "G\u00E9odonn\u00E9e au format SHP" 
+        ]
+       
+
+      ,"spatialCoverage": [
+       
+        {"@type":"Place",
+        "description": [
+         
+        ],
+        "geo": [
+         
+          {"@type":"GeoShape",
+          "box":  "47.34626718 7.00927734 49.31079888 8.74511719" 
+          }
+           
+        ]
+        }
+         
+      ]
+
+       
+        ,"temporalCoverage": [
+         "2023-12-15\/2024-02-15" 
+        ]
+       
+      }</script>
           <div gn-related="md" data-user="user" data-layout="card" data-types="onlines" />
         </header>
         <div>
@@ -227,7 +285,7 @@
           <div class="tab-content">
             <div id="gn-tab-identificationInfo" class="tab-pane">
               <h1 class="hidden">Identification</h1>
-              <div id="gn-view-d53e346" class="gn-tab-content">
+              <div id="gn-view-d90e346" class="gn-tab-content">
                 <div class="entry name">
                   <h2>mri:MD_DataIdentification</h2>
                   <div class="target">
@@ -541,7 +599,7 @@
             </div>
             <div id="gn-tab-distributionInfo" class="tab-pane">
               <h1 class="hidden">Distribution</h1>
-              <div id="gn-view-d53e350" class="gn-tab-content">
+              <div id="gn-view-d90e350" class="gn-tab-content">
                 <div class="entry name">
                   <h2>mrd:MD_Distribution</h2>
                   <div class="target">
@@ -621,7 +679,7 @@
             </div>
             <div id="gn-tab-resourceLineage" class="tab-pane">
               <h1 class="hidden">Généalogie</h1>
-              <div id="gn-view-d53e354" class="gn-tab-content">
+              <div id="gn-view-d90e354" class="gn-tab-content">
                 <div class="entry name">
                   <h2>mrl:LI_Lineage</h2>
                   <div class="target">
@@ -644,7 +702,7 @@
             </div>
             <div id="gn-tab-metadata" class="tab-pane">
               <h1 class="hidden">Métadonnées</h1>
-              <div id="gn-section-d53e362" class="gn-tab-content">
+              <div id="gn-section-d90e362" class="gn-tab-content">
                 <h2>Métadonnées</h2>
                 <dl class="gn-code">
                   <dt>mdb:metadataIdentifier</dt>

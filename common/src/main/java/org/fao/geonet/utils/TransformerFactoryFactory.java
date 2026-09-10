@@ -44,12 +44,15 @@ public class TransformerFactoryFactory {
     public static final String TRANSFORMER_PATH = "/WEB-INF/classes/META-INF/services/" + SYSTEM_PROPERTY_NAME;
 
     private static TransformerFactory factory;
+    private static String currentImplementationName;
 
-    public static void init(String implementationName) {
+    public static synchronized void init(String implementationName) {
         debug("Implementation name: " + implementationName);
         if (implementationName != null && implementationName.length() > 0) {
+            currentImplementationName = implementationName;
             factory = TransformerFactory.newInstance(implementationName, null);
         } else {
+            currentImplementationName = null;
             factory = TransformerFactory.newInstance();
         }
     }
@@ -64,6 +67,14 @@ public class TransformerFactoryFactory {
             + " produces transformer implementation "
             + factory.newTransformer().getClass().getName());
         return factory;
+    }
+
+    public static synchronized TransformerFactory newTransformerFactory() {
+        if (currentImplementationName != null) {
+            return TransformerFactory.newInstance(currentImplementationName, null);
+        } else {
+            return TransformerFactory.newInstance();
+        }
     }
 
     // used for JUnit testing into Eclipse (which selects an incompatible TransformerFactory)

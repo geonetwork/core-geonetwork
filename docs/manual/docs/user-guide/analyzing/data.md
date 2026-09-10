@@ -18,7 +18,7 @@ Once indexed, all users can access the filtering menu providing:
 -   a control to display or not the heatmap
 -   facets on all fields (computing automatically range facet for numbers)
 -   table action display all values
--   filter action apply the filters to the WMS layers using SLD
+-   filter action apply the filters to the WMS layers via the WMS `FILTER` parameter
 
 ![](img/filtering.png)
 

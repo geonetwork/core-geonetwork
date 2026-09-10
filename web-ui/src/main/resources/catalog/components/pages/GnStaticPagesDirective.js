@@ -113,6 +113,12 @@
     }
   ]);
 
+  /**
+   * Render static page menu entries for a configured section.
+   *
+   * Accepts a page id, an array of page ids, or nested submenu config through
+   * `gn-static-page-menu`.
+   */
   module.directive("gnStaticPageMenu", [
     "gnStaticPagesService",
     "gnGlobalSettings",
@@ -140,6 +146,120 @@
           // Set button style based on explicit parameter (defaults to false)
           $scope.renderAsButton = $scope.renderAsButton === "true";
 
+          /**
+           * Apply runtime visibility rules for a page.
+           *
+           * In `record_view_menu`, visibility depends on workflow state and
+           * metadata approval status from the current record context.
+           */
+          function shouldShowPage(page) {
+            if (!page) return false;
+            if ($scope.section === "record_view_menu" && $scope.context) {
+              if (!$scope.context.isWorkflowEnabled)
+                return page.showWhenWorkflowDisabled === true;
+              if ($scope.context.mdStatus == 2) return page.showOnApproved === true;
+              return page.showOnNonApproved === true;
+            }
+            return true;
+          }
+
+          /**
+           * Recursively build a display-ready menu from `pagesConfig`.
+           *
+           * `pagesConfig` may contain page ids (strings) and submenu descriptors.
+           * Unknown page ids are ignored and logged to help diagnose UI config issues.
+           */
+          function buildMenu(pagesMenu, staticPages, pagesConfig) {
+            pagesConfig.forEach(function (menu) {
+              if (typeof menu === "string") {
+                if (staticPages[menu]) {
+                  if (shouldShowPage(staticPages[menu])) {
+                    pagesMenu.push(staticPages[menu]);
+                  }
+                } else {
+                  console.warn(
+                    menu +
+                      " not found in pages configuration." +
+                      " Check your UI configuration."
+                  );
+                }
+              } else if (angular.isObject(menu)) {
+                var key = Object.keys(menu)[0];
+                var value = menu[key];
+
+                var submenu = {
+                  label: key,
+                  icon: undefined,
+                  type: "submenu",
+                  pages: []
+                };
+
+                var menuItems;
+
+                // If the submenu is using the legacy array format
+                if (angular.isArray(value)) {
+                  menuItems = value;
+                  // If the submenu is using the new object format with an items array and optional icon
+                } else if (angular.isObject(value)) {
+                  if (angular.isArray(value.items)) {
+                    menuItems = value.items;
+                  }
+                  if (angular.isDefined(value.icon)) {
+                    submenu.icon = value.icon;
+                  }
+                } else {
+                  console.warn(
+                    "Invalid menu configuration for " +
+                      key +
+                      ". Expected an array of page identifiers or an object with an items array."
+                  );
+                  return;
+                }
+
+                buildMenu(submenu.pages, staticPages, menuItems);
+
+                if (submenu.pages.length > 0) {
+                  pagesMenu.push(submenu);
+                }
+              }
+            });
+            return pagesMenu;
+          }
+
+          /**
+           * Recompute rendered menu items from loaded pages and current config.
+           *
+           * When a single item is produced, expose it as `$scope.page` for
+           * simplified template handling; otherwise keep list rendering mode.
+           */
+          function rebuildMenu() {
+            if (!$scope.pages) {
+              return;
+            }
+
+            $scope.pagesMenu = [];
+            buildMenu($scope.pagesMenu, $scope.pages, $scope.pagesConfig);
+
+            if ($scope.pagesMenu.length === 1) {
+              $scope.page = $scope.pagesMenu[0];
+              $scope.isSubmenu = $scope.page.type === "submenu";
+              $scope.isExternalLink =
+                $scope.page.format === "LINK" ||
+                $scope.page.format === "EMAILLINK" ||
+                $scope.page.format === "HTMLPAGE";
+
+              if (
+                $scope.page.format === "EMAILLINK" &&
+                $scope.page.link &&
+                !$scope.page.link.startsWith("mailto:")
+              ) {
+                $scope.page.link = "mailto:" + $scope.page.link;
+              }
+            } else {
+              $scope.page = null;
+            }
+          }
+
           if ($scope.pagesConfig.length > 0) {
             gnStaticPagesService.loadPages($scope.language, $scope.section).then(
               function (response) {
@@ -149,27 +269,20 @@
                   $scope.pages[page.pageId] = page;
                 });
 
-                gnStaticPagesService.buildMenu(
-                  $scope.pagesMenu,
-                  $scope.pages,
-                  $scope.pagesConfig
-                );
-                if ($scope.pagesMenu.length === 1) {
-                  $scope.page = $scope.pagesMenu[0];
-                  $scope.isSubmenu = $scope.page.type === "submenu";
-                  $scope.isExternalLink =
-                    $scope.page.format === "LINK" ||
-                    $scope.page.format === "EMAILLINK" ||
-                    $scope.page.format === "HTMLPAGE";
-
-                  if ($scope.page.format === "EMAILLINK") {
-                    $scope.page.link = "mailto:" + $scope.page.link;
-                  }
-                }
+                rebuildMenu();
               },
               function (response) {
                 $scope.pagesList = null;
               }
+            );
+
+            // Rebuild menu when any context field changes.
+            $scope.$watch(
+              "context",
+              function () {
+                rebuildMenu();
+              },
+              true
             );
           }
         }

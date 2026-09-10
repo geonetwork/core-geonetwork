@@ -27,7 +27,7 @@
   <parent>
     <artifactId>geonetwork</artifactId>
     <groupId>org.geonetwork-opensource</groupId>
-    <version>4.4.12-SNAPSHOT</version>
+    <version>4.4.13-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -246,19 +246,6 @@
       <artifactId>commons-pool</artifactId>
     </dependency>
 
-    <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
-    <dependency>
-      <groupId>org.dspace</groupId>
-      <artifactId>cql-java</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jzkit</groupId>
-      <artifactId>a2j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>marc4j</groupId>
-      <artifactId>marc4j</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-main</artifactId>
@@ -338,10 +325,6 @@
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-email</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-digester</groupId>
-      <artifactId>commons-digester</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-io</groupId>
@@ -480,6 +463,15 @@
       </exclusions>
     </dependency>
 
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-webmvc-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springdoc</groupId>
+      <artifactId>springdoc-openapi-common</artifactId>
+    </dependency>
+
     <!-- ====================== -->
     <!-- Generated dependencies -->
     <dependency>
@@ -522,26 +514,6 @@
     <dependency>
       <groupId>lizard</groupId>
       <artifactId>lizard-tiff</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>jzkit</groupId>
-      <artifactId>jzkit-core</artifactId>
-      <version>3.r260.geonetwork.patch.1</version>
-    </dependency>
-    <dependency>
-      <groupId>jzkit</groupId>
-      <artifactId>jzkit-service</artifactId>
-      <version>3.r260.geonetwork.patch.1</version>
-    </dependency>
-    <dependency>
-      <groupId>jzkit</groupId>
-      <artifactId>jzkit-z3950-server</artifactId>
-      <version>3.r260.geonetwork.patch.1</version>
-    </dependency>
-    <dependency>
-      <groupId>jzkit</groupId>
-      <artifactId>jzkit-z3950-plugin</artifactId>
-      <version>3.r260.geonetwork.patch.1</version>
     </dependency>
     <dependency>
       <groupId>edu.ucar</groupId>
@@ -726,6 +698,12 @@
               <transportPort>9300</transportPort>
               <httpPort>9200</httpPort>
               <environmentVariables><ES_JAVA_OPTS>-Xmx2g</ES_JAVA_OPTS></environmentVariables>
+              <instanceSettings>
+                <properties>
+                  <!-- Problem with elastic - if you don't have enough disk space (90+% full), it will NOT start. -->
+                  <cluster.routing.allocation.disk.threshold_enabled>false</cluster.routing.allocation.disk.threshold_enabled>
+                </properties>
+              </instanceSettings>
             </configuration>
             <executions>
               <execution>

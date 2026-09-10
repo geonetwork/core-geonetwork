@@ -524,19 +524,18 @@ public class AccessManager {
     /**
      * Checks if the user has the specified profile or any profile with greater permissions within the group.
      *
-     * @param context The service context containing the user's session.
+     * @param userSession The user's session.
      * @param profile The profile to be verified.
      * @param groupId The ID of the group in which the user's profile is to be verified.
      * @return true if the user has the specified profile (or greater) within the group; false otherwise.
      */
-    public boolean isProfileOrMoreOnGroup(final ServiceContext context, Profile profile, final int groupId) {
-        UserSession us = context.getUserSession();
-        if (!isUserAuthenticated(us)) {
+    public boolean isProfileOrMoreOnGroup(final UserSession userSession, Profile profile, final int groupId) {
+        if (!isUserAuthenticated(userSession)) {
             return false;
         }
 
         // Grant access if the user is a global administrator
-        if (Profile.Administrator == us.getProfile()) {
+        if (Profile.Administrator == userSession.getProfile()) {
             return true;
         }
 
@@ -544,12 +543,37 @@ public class AccessManager {
         Set<Profile> acceptedProfiles = profile.getProfileAndAllParents();
 
         // Build a specification to fetch any accepted profiles for the user in the specified group
-        Specification<UserGroup> spec = Specification.where(UserGroupSpecs.hasUserId(us.getUserIdAsInt()))
+        Specification<UserGroup> spec = Specification.where(UserGroupSpecs.hasUserId(userSession.getUserIdAsInt()))
             .and(UserGroupSpecs.hasGroupId(groupId))
             .and(UserGroupSpecs.hasProfileIn(acceptedProfiles));
         List<UserGroup> userGroups = userGroupRepository.findAll(spec);
 
         return !userGroups.isEmpty();
+    }
+
+    /**
+     * Checks if the user has exactly the specified profile within the group.
+     *
+     * @param userSession The user's session.
+     * @param profile The exact profile to verify.
+     * @param groupId The ID of the group in which the user's profile is verified.
+     * @return true if the user has exactly the specified profile in the group; false otherwise.
+     */
+    public boolean isProfileOnGroup(final UserSession userSession, Profile profile, final int groupId) {
+        if (!isUserAuthenticated(userSession)) {
+            return false;
+        }
+
+        // Global administrators remain allowed regardless of group assignments.
+        if (Profile.Administrator == userSession.getProfile()) {
+            return true;
+        }
+
+        Specification<UserGroup> spec = Specification.where(UserGroupSpecs.hasUserId(userSession.getUserIdAsInt()))
+            .and(UserGroupSpecs.hasGroupId(groupId))
+            .and(UserGroupSpecs.hasProfile(profile));
+
+        return userGroupRepository.count(spec)> 0;
     }
 
     public int getPrivilegeId(final String name) {
