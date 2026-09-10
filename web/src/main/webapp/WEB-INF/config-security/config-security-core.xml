@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2026 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -38,14 +38,10 @@
       <list>
         <!-- TODO: This needs to be secured to not access private info -->
         <sec:filter-chain pattern="/index/**" filters=""/>
-        <!-- The Jolokia agent is reachable by any authenticated user, including the
-             RegisteredUser profile, because the editor board and the admin dashboard
-             poll GeoNetwork task progress from it.
-
-             Which MBeans may be read is not decided here: path based rules cannot
-             express that for every request form the agent accepts. The allow list
-             lives in web/src/main/resources/jolokia-access.xml (see the notes in that
-             file, and JolokiaAccessPolicyTest). Scope MBean access there, not here. -->
+        <!-- The Jolokia agent is reachable by any authenticated user, including
+             RegisteredUser: the editor board and admin dashboard poll task
+             progress from it. Which MBeans may be read is decided in
+             web/src/main/resources/jolokia-access.xml, not here. -->
         <sec:filter-chain pattern="/jolokia" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/jolokia/read/geonetwork-**" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/dashboards/**" filters="securityContextPersistenceFilter, basicAuthenticationFilter, authenticatedUserFilter"/>
