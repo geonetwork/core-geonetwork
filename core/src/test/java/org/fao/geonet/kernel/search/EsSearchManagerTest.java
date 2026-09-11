@@ -246,16 +246,28 @@ public class EsSearchManagerTest {
 
 
     @Test
-    public void toFieldMapPreservesScalarBooleanAndKeepsOpArrays() {
+    public void toFieldMapConvertsValuesDependingOnFieldType() {
         Multimap<String, Object> fields = ArrayListMultimap.create();
+        // Single value of a scalar field stays a scalar.
         fields.put("isPublishedToAll", true);
+        fields.put("groupPublishedId", 2);
+        // "op*" fields are always arrays, even with a single value.
+        fields.put("op0", 1);
         fields.put("op1", 1);
         fields.put("op1", 2);
+        // A field declared in arrayFields stays an array with a single value.
+        fields.put("cat", "datasets");
+        // Any field with more than one value becomes an array.
+        fields.put("groupPublished", "sample");
+        fields.put("groupPublished", "intranet");
 
-        Object result = instance.toFieldMap(fields).get("isPublishedToAll");
-        Object[] opValues = (Object[]) instance.toFieldMap(fields).get("op1");
+        Map<String, Object> fieldMap = instance.toFieldMap(fields);
 
-        assertEquals(Boolean.TRUE, result);
-        assertArrayEquals(new Object[]{1, 2}, opValues);
+        assertEquals(Boolean.TRUE, fieldMap.get("isPublishedToAll"));
+        assertEquals(2, fieldMap.get("groupPublishedId"));
+        assertArrayEquals(new Object[]{1}, (Object[]) fieldMap.get("op0"));
+        assertArrayEquals(new Object[]{1, 2}, (Object[]) fieldMap.get("op1"));
+        assertArrayEquals(new Object[]{"datasets"}, (Object[]) fieldMap.get("cat"));
+        assertArrayEquals(new Object[]{"sample", "intranet"}, (Object[]) fieldMap.get("groupPublished"));
     }
 }
