@@ -366,7 +366,7 @@ public class EsSearchManager implements ISearchManager {
                 return;
             }
 
-            boolean isMultivaluedField = fieldName.startsWith("op") || arrayFields.contains(fieldName)
+            boolean isMultivaluedField = fieldName.startsWith(Geonet.IndexFieldNames.OP_PREFIX) || arrayFields.contains(fieldName)
                 || values.size() > 1;
             fieldMap.put(fieldName, isMultivaluedField ? values.toArray() : values.iterator().next());
         });
