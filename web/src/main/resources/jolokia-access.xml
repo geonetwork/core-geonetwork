@@ -1,6 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+  Jolokia access policy for GeoNetwork. The agent is reachable by any
+  authenticated user, down to RegisteredUser, so this file is what keeps the
+  rest of the JVM out of reach.
+
+  1. Keep <commands> present and empty. Deleting it, or naming a command
+     inside it, allows that command "in general": the <mbeans> allow list
+     stops being consulted for it. Do not add <command>read</command>.
+  2. Keep the allow list scoped to "geonetwork-*" and read-only. The hyphen is
+     load bearing: "geonetwork-*" does not match the plain "geonetwork" domain.
+     Everything GeoNetwork registers under that domain is readable, present and
+     future, so keep anything worth protecting out of it.
+  3. A <deny> section would be inert here: Jolokia consults it only for
+     commands allowed in general, and none are. Deny by leaving things out.
+
+  The allow list bounds attribute values only. It does not hide MBean names,
+  and there is deliberately no <http> section confining the agent to GET.
+
+  JolokiaAccessPolicyTest covers all of the above. Run it after changing this
+  file, and fix the policy rather than the test if it fails.
+-->
 <restrict>
-    <commands>
-        <command>read</command>
-    </commands>
+    <!-- Deny every command. Must stay present and empty: deleting this
+         element grants read, write and exec on every MBean in the JVM. -->
+    <commands/>
+
+    <!-- Read-only access to GeoNetwork's own MBean domain, and nothing else. -->
+    <mbeans>
+        <mbean>
+            <name>geonetwork-*:*</name>
+            <attribute mode="read">*</attribute>
+        </mbean>
+    </mbeans>
 </restrict>
