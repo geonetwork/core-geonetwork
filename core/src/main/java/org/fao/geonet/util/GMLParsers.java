@@ -1,6 +1,7 @@
 package org.fao.geonet.util;
 
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.NoOpEntityResolver;
 import org.geotools.gml3.GMLConfiguration;
 import org.geotools.xsd.Configuration;
 import org.geotools.xsd.Parser;
@@ -29,6 +30,7 @@ public final class GMLParsers {
 
 	static private Parser createParser(Configuration configuration) {
 		Parser parser = new Parser(configuration);
+		parser.setEntityResolver(new NoOpEntityResolver());
 		parser.setStrict(false);
 		parser.setValidating(false);
 		return parser;
