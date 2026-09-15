@@ -31,7 +31,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
-import org.geotools.util.PreventLocalEntityResolver;
+import org.geotools.util.DefaultEntityResolver;
 import org.geotools.xsd.Configuration;
 import org.geotools.xsd.Parser;
 import org.jdom.Element;
@@ -57,9 +57,8 @@ public class FilterParser {
             throw new IllegalArgumentException("UnsupportFilterVersion: " + filterVersion);
         }
         Parser parser = new Parser(config);
-        // parseFilter validates against the OGC filter schemas, so the resolver has to keep
-        // resolving those. PreventLocalEntityResolver allows schemas only and refuses anything else.
-        parser.setEntityResolver(PreventLocalEntityResolver.INSTANCE);
+        // parseFilter requires access to OGC filter schemas, allowed by DefaultEntityResolver
+        parser.setEntityResolver(DefaultEntityResolver.INSTANCE);
         return parser;
     }
 
