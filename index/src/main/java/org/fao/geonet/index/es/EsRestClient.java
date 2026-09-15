@@ -94,6 +94,13 @@ public class EsRestClient implements InitializingBean {
 
     private boolean healthDecodeFailureReported = false;
 
+    /**
+     * Whether the version of the index server has already been checked against the version of this
+     * Elasticsearch client. Lives here, on the singleton client, rather than on the status checker:
+     * Quartz creates a new {@link EsServerStatusChecker} instance for every run, so a flag on the
+     * checker itself would never stay set across runs.
+     */
+    boolean versionChecked = false;
 
     private String serverUrl;
 

@@ -117,6 +117,27 @@ public class EsServerStatusCheckerTest {
     }
 
     /**
+     * Quartz creates a new {@link EsServerStatusChecker} instance for every run; the "already
+     * checked" state must survive that, so it has to live on the client, not on the checker.
+     */
+    @Test
+    public void versionOfTheServerIsOnlyReadOnceAcrossJobInstances() {
+        EsRestClientStub client = new EsRestClientStub("green", null);
+
+        EsServerStatusChecker first = new EsServerStatusChecker();
+        first.setStatus(new Status("index"));
+        first.client = client;
+        first.checkState();
+
+        EsServerStatusChecker second = new EsServerStatusChecker();
+        second.setStatus(new Status("index"));
+        second.client = client;
+        second.checkState();
+
+        assertEquals(1, client.serverVersionReads);
+    }
+
+    /**
      * A server which can not be reached is checked again on the next run.
      */
     @Test

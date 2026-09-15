@@ -44,8 +44,6 @@ public class EsServerStatusChecker
 
     private boolean indexChecked = false;
 
-    private boolean versionChecked = false;
-
     public EsServerStatusChecker() {
     }
 
@@ -95,7 +93,7 @@ public class EsServerStatusChecker
      * is retried on the next run when the version can not be read.
      */
     private void checkServerVersion() {
-        if (versionChecked) {
+        if (client.versionChecked) {
             return;
         }
         String serverVersion;
@@ -107,7 +105,7 @@ public class EsServerStatusChecker
                 client.getServerUrl(), e.getMessage()));
             return;
         }
-        versionChecked = true;
+        client.versionChecked = true;
 
         String message = versionMismatchMessage(client.getServerUrl(), serverVersion);
         if (message != null) {
