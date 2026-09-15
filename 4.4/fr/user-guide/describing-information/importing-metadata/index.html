@@ -2104,6 +2104,12 @@
 <ul>
 <li><code>None</code>: the UUID of the record loaded is left unchanged. If a metadata record with the same UUID is already present in the catalog, an error message is returned.</li>
 <li><code>Overwrite metadata with same UUID</code>: any existing metadata record in the catalog having the same UUID as the loaded record will be updated.</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>By default, only the XML content of the existing record will be overwritten. To completely remove the existing record including attachments and privileges, use the <code>Delete and replace the existing record</code> option.</p>
+</div>
+<ul>
 <li><code>Generate UUID for inserted metadata</code>: a new UUID is affected to the loaded record.</li>
 </ul>
 </li>
