@@ -898,12 +898,18 @@ public class SiteApi implements ApplicationEventPublisherAware {
                 holder.close();
             }
         } else {
-            String actualLogo = siteSource.getLogo();
-            if (StringUtils.isNotEmpty(actualLogo)) {
-                resources.deleteImageIfExists(actualLogo, dataDirectory.getResourcesDir().resolve("images").resolve("logos"));
-            }
+            // Copy first: on failure the catalogue keeps the logo it currently has.
             String logoFile = resources.copyLogo(serviceContext,
                 "images" + File.separator + "harvesting" + File.separator + file, nodeUuid);
+            if (StringUtils.isBlank(logoFile)) {
+                throw new FileNotFoundException("Logo file '" + file + "' not found in resources.");
+            }
+
+            // The new logo may have another extension than the previous one.
+            String actualLogo = siteSource.getLogo();
+            if (StringUtils.isNotEmpty(actualLogo) && !actualLogo.equals(logoFile)) {
+                resources.deleteImageIfExists(actualLogo, dataDirectory.getResourcesDir().resolve("images").resolve("logos"));
+            }
 
             siteSource.setLogo(logoFile);
             sourceRepository.save(siteSource);
