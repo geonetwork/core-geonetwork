@@ -43,14 +43,24 @@
           scope.gnDoiService = gnDoiService;
           scope.response = {};
           scope.isUpdate = angular.isDefined(scope.doiUrl);
-
           scope.doiServers = [];
           scope.selectedDoiServer = null;
 
           gnDoiService.getDoiServersForMetadata(scope.uuid).then(function (response) {
             scope.doiServers = response.data;
-            if (scope.doiServers.length > 0) {
-              scope.selectedDoiServer = scope.doiServers[0].id;
+
+            if (scope.isUpdate) {
+              gnDoiService
+                .getDoiServerForMetadataAndDoi(scope.uuid, scope.doiUrl)
+                .then(function (server) {
+                  if (server) {
+                    scope.selectedDoiServer = server.id;
+                  }
+                });
+            } else {
+              if (scope.doiServers.length > 0) {
+                scope.selectedDoiServer = scope.doiServers[0].id;
+              }
             }
           });
 
