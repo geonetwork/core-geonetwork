@@ -292,6 +292,8 @@ public abstract class Resources {
                 if (src != null) {
                     java.nio.file.Files.copy(src.getPath(), des.getPath(), REPLACE_EXISTING, NOFOLLOW_LINKS);
                 } else {
+                    // Nothing was copied, do not report a file name for a file which does not exist.
+                    filename = null;
                     des.abort();
                 }
             }
