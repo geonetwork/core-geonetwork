@@ -470,8 +470,6 @@
     </foaf:page>
     <dcat:distribution>
       <dcat:Distribution>
-        <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2023-02-21</dct:issued>
-
 
 
         <dct:issued rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">2023-12-08T00:00:00</dct:issued>
