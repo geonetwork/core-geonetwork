@@ -539,6 +539,13 @@ public class EsRestClient implements InitializingBean {
             HealthResponse response = client.cluster().health();
             return response.status().toString();
         } catch (TransportException e) {
+            if (!isDecodeFailure(e)) {
+                // Not a decoding problem: the server answered with an error, is not an Elasticsearch
+                // server or is not the one we are talking to (a proxy stripping the product header,
+                // an HTML error page, ...). Report it as it is instead of reading the status from a
+                // response the client already refused.
+                throw e;
+            }
             // The typed client only decodes the health response of the server version it is built for.
             // Any other version may return a response with missing or unknown properties, so read the
             // status with the low level client which does not check the response against a model.
@@ -550,6 +557,16 @@ public class EsRestClient implements InitializingBean {
                 throw e;
             }
         }
+    }
+
+    /**
+     * The transport reports every response it refuses as a {@link TransportException}: a missing or
+     * invalid <code>X-Elastic-Product</code> header, a response which is not JSON, a missing body,
+     * an error status code and a response it can not decode. Only the last one is a successful
+     * response, and it is the only one which carries the decoding error as its cause.
+     */
+    static boolean isDecodeFailure(TransportException e) {
+        return e.getCause() != null && e.statusCode() < 400;
     }
 
     /**

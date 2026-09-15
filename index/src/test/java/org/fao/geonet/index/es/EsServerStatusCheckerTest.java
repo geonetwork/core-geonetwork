@@ -36,6 +36,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -132,6 +133,27 @@ public class EsServerStatusCheckerTest {
         assertEquals(2, client.serverVersionReads);
     }
 
+    /**
+     * The low level fallback is only for a successful response the client can not decode. Every other
+     * response the transport refuses, in particular one from a server which is not Elasticsearch, has
+     * to be reported as it is.
+     */
+    @Test
+    public void onlyAnUndecodableSuccessfulResponseFallsBackToTheLowLevelClient() {
+        assertTrue(EsRestClient.isDecodeFailure(new TransportException(
+            new ResponseStub(200), "Failed to decode response", "es/cluster.health",
+            new IOException("Missing required property 'HealthResponse.unassignedPrimaryShards'"))));
+
+        assertFalse(EsRestClient.isDecodeFailure(new TransportException(
+            new ResponseStub(200), "Missing [X-Elastic-Product] header.", "es/cluster.health")));
+        assertFalse(EsRestClient.isDecodeFailure(new TransportException(
+            new ResponseStub(200), "Expecting JSON data but response content-type is: text/html",
+            "es/cluster.health")));
+        assertFalse(EsRestClient.isDecodeFailure(new TransportException(
+            new ResponseStub(401), "Failed to decode error response, check exception cause for "
+            + "additional details", "es/cluster.health", new IOException("Unauthorized"))));
+    }
+
     private Status check(EsRestClient client) {
         EsServerStatusChecker checker = new EsServerStatusChecker();
         checker.setStatus(new Status("index"));
@@ -140,7 +162,7 @@ public class EsServerStatusCheckerTest {
     }
 
     private TransportException transportException() {
-        return new TransportException(new ResponseStub(), "Failed to decode response", "es/cluster.health");
+        return new TransportException(new ResponseStub(200), "Failed to decode response", "es/cluster.health");
     }
 
     /**
@@ -181,6 +203,12 @@ public class EsServerStatusCheckerTest {
      * Minimal response required to build a {@link TransportException}.
      */
     private static class ResponseStub implements TransportHttpClient.Response {
+        private final int statusCode;
+
+        ResponseStub(int statusCode) {
+            this.statusCode = statusCode;
+        }
+
         @Override
         public TransportHttpClient.Node node() {
             return new TransportHttpClient.Node(SERVER_URL);
@@ -188,7 +216,7 @@ public class EsServerStatusCheckerTest {
 
         @Override
         public int statusCode() {
-            return 200;
+            return statusCode;
         }
 
         @Override
