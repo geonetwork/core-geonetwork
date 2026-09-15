@@ -99,6 +99,34 @@ public class EsServerStatusCheckerTest {
         assertNull(EsServerStatusChecker.versionMismatchMessage(SERVER_URL, "unknown"));
     }
 
+    @Test
+    public void earlierMinorVersionOfTheServerIsReportedAsAWarning() {
+        String earlierMinor = Version.VERSION.major() + "." + Math.max(0, Version.VERSION.minor() - 1) + ".0";
+
+        String message = EsServerStatusChecker.minorVersionWarningMessage(SERVER_URL, earlierMinor);
+
+        assertNotNull(message);
+        assertTrue(message, message.contains(earlierMinor));
+        assertTrue(message, message.contains(Version.VERSION.major() + "." + Version.VERSION.minor()));
+    }
+
+    @Test
+    public void earlierMinorVersionOfTheServerIsNotReportedWhenMajorVersionAlreadyDiffers() {
+        assertNull(EsServerStatusChecker.minorVersionWarningMessage(SERVER_URL, "0.0.0"));
+    }
+
+    @Test
+    public void minorVersionOfTheServerIsNotReportedWhenItIsAtLeastTheClientMinorVersion() {
+        assertNull(EsServerStatusChecker.minorVersionWarningMessage(SERVER_URL, Version.VERSION.toString()));
+        assertNull(EsServerStatusChecker.minorVersionWarningMessage(SERVER_URL,
+            Version.VERSION.major() + "." + (Version.VERSION.minor() + 1) + ".0"));
+    }
+
+    @Test
+    public void minorVersionOfTheServerIsNotReportedWhenItCanNotBeRead() {
+        assertNull(EsServerStatusChecker.minorVersionWarningMessage(SERVER_URL, "unknown"));
+    }
+
     /**
      * The check runs every few seconds, the version of the server is only read once.
      */

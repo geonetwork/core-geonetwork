@@ -110,6 +110,11 @@ public class EsServerStatusChecker
         String message = versionMismatchMessage(client.getServerUrl(), serverVersion);
         if (message != null) {
             Log.error(LOGGER, message);
+            return;
+        }
+        message = minorVersionWarningMessage(client.getServerUrl(), serverVersion);
+        if (message != null) {
+            Log.warning(LOGGER, message);
         }
     }
 
@@ -128,6 +133,26 @@ public class EsServerStatusChecker
                 + "client %s. Only Elasticsearch %d.x is supported, check the installation guide. "
                 + "Running another version leads to errors which are not always reported as a version issue.",
             serverUrl, serverVersion, Version.VERSION, Version.VERSION.major());
+    }
+
+    /**
+     * @return the message to report when the index server is the same major version as the
+     * Elasticsearch client this GeoNetwork is built with, but an earlier minor version; null
+     * when the minor version is at least the one the client is built with, when the major
+     * version already differs (reported separately by {@link #versionMismatchMessage}), or
+     * when the version can not be parsed.
+     */
+    static String minorVersionWarningMessage(String serverUrl, String serverVersion) {
+        Version server = Version.parse(serverVersion);
+        if (server == null || server.major() != Version.VERSION.major()
+            || server.minor() >= Version.VERSION.minor()) {
+            return null;
+        }
+        return String.format(
+            "Index server at %s is Elasticsearch %s, earlier than the %d.%d this GeoNetwork version is built "
+                + "and tested with. Earlier minor versions may be missing fields this client expects, check "
+                + "the installation guide.",
+            serverUrl, serverVersion, Version.VERSION.major(), Version.VERSION.minor());
     }
 
     @Override
