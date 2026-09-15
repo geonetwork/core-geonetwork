@@ -26,6 +26,7 @@ package org.fao.geonet.api.users;
 import com.google.common.collect.Lists;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -1162,6 +1163,57 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
         Assert.assertTrue(_userGroupRepo.findAll(hasUserId(userToUpdate.getId())).stream()
             .anyMatch(ug -> ug.getGroup().getId() == sampleGroup.getId()
                 && Profile.Reviewer.equals(ug.getProfile())));
+    }
+
+    @Test
+    public void updateUserEchoingBackGroupsNotAdministeredByTheCaller() throws Exception {
+        User userAdmin = _userRepo.findOneByUsername("testuser-useradmin");
+        Assert.assertNotNull(userAdmin);
+
+        Group sampleGroup = _groupRepo.findByName("sample");
+        Assert.assertNotNull(sampleGroup);
+        Group testGroup = _groupRepo.findByName("test");
+        Assert.assertNotNull(testGroup);
+
+        // Member of the sample group, which the caller administers, and of the test group,
+        // which it does not
+        User userToUpdate = _userRepo.findOneByUsername("testuser-editor");
+        Assert.assertNotNull(userToUpdate);
+        _userGroupRepo.save(new UserGroup().setGroup(testGroup)
+            .setProfile(Profile.Editor).setUser(userToUpdate));
+
+        UserDto user = new UserDto();
+        user.setId(Integer.toString(userToUpdate.getId()));
+        user.setUsername(userToUpdate.getUsername());
+        user.setName("a new name");
+        user.setProfile(Profile.Editor.name());
+        // The user form is loaded from /users/{id}/groups, which returns every group of the
+        // user, and sends them all back
+        user.setGroupsEditor(Arrays.asList(
+            Integer.toString(sampleGroup.getId()), Integer.toString(testGroup.getId())));
+        user.setEmail(new ArrayList(userToUpdate.getEmailAddresses()));
+        user.setEnabled(true);
+
+        Gson gson = new Gson();
+        String json = gson.toJson(user);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockHttpSession = loginAs(userAdmin);
+
+        this.mockMvc.perform(put("/srv/api/users/" + userToUpdate.getId())
+                .content(json)
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(204));
+
+        Assert.assertEquals("a new name", _userRepo.findOneByUsername("testuser-editor").getName());
+
+        // Both assignments are still there, the one the caller cannot see included
+        Set<Integer> groupIdsAfter = new HashSet<>(_userGroupRepo.findGroupIds(hasUserId(userToUpdate.getId())));
+        Assert.assertTrue(groupIdsAfter.contains(sampleGroup.getId()));
+        Assert.assertTrue(groupIdsAfter.contains(testGroup.getId()));
     }
 
     @Test

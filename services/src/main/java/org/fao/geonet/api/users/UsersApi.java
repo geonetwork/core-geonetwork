@@ -615,6 +615,7 @@ public class UsersApi {
         // itself, so that the validation errors say nothing about users they cannot see.
         List<Integer> myUserAdminGroups = Collections.emptyList();
         List<UserGroup> userToUpdateGroups = Collections.emptyList();
+        List<Integer> userToUpdateGroupIds = Collections.emptyList();
 
         if (!Profile.Administrator.equals(myProfile) && !isSelfUpdate) {
             // A useradmin never administers an administrator, whatever groups they share
@@ -625,7 +626,7 @@ public class UsersApi {
             myUserAdminGroups = getGroupIdsWhereUserIsUserAdmin(Integer.parseInt(myUserId));
             userToUpdateGroups = userGroupRepository.findAll(hasUserId(userIdentifier));
 
-            List<Integer> userToUpdateGroupIds = userToUpdateGroups.stream()
+            userToUpdateGroupIds = userToUpdateGroups.stream()
                 .map(ug -> ug.getId().getGroupId())
                 .collect(Collectors.toList());
 
@@ -677,11 +678,19 @@ public class UsersApi {
                 groups.add(new GroupElem(ug.getProfile().name(), ug.getGroup().getId()));
             }
         } else {
-            // A useradmin only sees part of the catalog, so the update is restricted to the
-            // groups they administer and the groups they cannot see are left untouched.
-            List<GroupElem> requestedGroups = collectRequestedGroups(userDto);
-            checkGroupsAreAdministeredBy(requestedGroups, myUserAdminGroups);
-            groups.addAll(requestedGroups);
+            //
+            // The user form is loaded with every group of the user, the ones the caller does
+            // not administer included, and sends them all back. Such an assignment is refused
+            // only when the user is not already a member of the group; otherwise it is dropped
+            // here and restored from the stored record right below, unchanged.
+            for (GroupElem requestedGroup : collectRequestedGroups(userDto)) {
+                if (myUserAdminGroups.contains(requestedGroup.getId())) {
+                    groups.add(requestedGroup);
+                } else if (!userToUpdateGroupIds.contains(requestedGroup.getId())) {
+                    throw new IllegalArgumentException(
+                        "You don't have rights to assign a user to the group " + requestedGroup.getId());
+                }
+            }
 
             //keep unknown groups as is
             for (UserGroup ug : userToUpdateGroups) {
