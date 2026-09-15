@@ -52,6 +52,14 @@
         },
         delete: function (resource) {
           return $http.delete(resource.url);
+        },
+        updateResourceName: function (metadataUuid, resource, newResourceName) {
+          return $http.patch("../api/records/" + resource.id, null, {
+            params: {
+              approved: resource.approved,
+              newResourceName: newResourceName
+            }
+          });
         }
       };
     }

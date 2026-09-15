@@ -37,7 +37,7 @@ GeoNetwork is a memory-intensive application. Consider providing at least 2 GB, 
 
 ## Scaling
 
-GeoNetwork currently has limitations when deployed in a load-balanced/failover configuration. The search index is stored in memory and will not reflect changes made to records on other nodes. One option to work around this is a master-minion model: modifications are made on the master, and minions harvest from the master at regular intervals. Each minion will have its own local database. Typical aspects stored in the database, like groups, settings, user feedback, and search statistics, will not be synchronised between nodes. The data folder can be shared between nodes using a network share.
+GeoNetwork currently has limitations when deployed in a load-balanced/failover configuration. The search index is stored in memory and will not reflect changes made to records on other nodes. One option to work around this is a master-minion model: modifications are made on the master, and minions harvest from the master at regular intervals. Each minion will have its own local database. Typical aspects stored in the database, like groups, settings, and user feedback, will not be synchronised between nodes. The data folder can be shared between nodes using a network share.
 
 ## GeoNetwork and Docker
 

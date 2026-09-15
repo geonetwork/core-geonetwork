@@ -10,6 +10,19 @@
 </div>
 
 <div
+  class="gn-margin-bottom flex-row"
+  data-ng-show="mdView.current.record.publicationDate"
+>
+  <span class="badge badge-rounded" title="{{'publicationDate' | translate}}">
+    <i class="fa fa-fw fa-calendar"></i>
+  </span>
+  <div>
+    <h3 data-translate="">publicationDate</h3>
+    <p>{{mdView.current.record.publicationDate}}</p>
+  </div>
+</div>
+
+<div
   data-ng-init="mdLanguages = mdView.current.record.getMetadataLanguages()"
   data-ng-show="mdLanguages.length > 0"
   class="gn-margin-bottom flex-row"

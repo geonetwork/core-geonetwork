@@ -833,19 +833,22 @@ public class MetadataPublicationService {
     }
 
     /**
-     * For privileges to {@link ReservedGroup#all} group, check if it's allowed or not to publish invalid metadata.
+     * For privileges to {@link ReservedGroup#all} group, check if it's allowed or not to publish invalid or
+     * non-approved metadata. Templates are excluded from the validation check as they are incomplete by design.
      *
-     * @param context
-     * @param messages
-     * @param metadata
-     * @param allowPublishInvalidMd
-     * @param allowPublishNonApprovedMd
-     * @throws Exception
+     * @param context                   the current service context
+     * @param messages                  the resource bundle for error messages
+     * @param metadata                  the metadata record being published
+     * @param allowPublishInvalidMd     whether publishing invalid metadata is allowed (excluding templates)
+     * @param allowPublishNonApprovedMd whether publishing non-approved metadata is allowed
+     * @throws Exception if the metadata is invalid or not approved and publishing is not allowed
      */
     private void checkCanPublishToAllGroup(ServiceContext context, ResourceBundle messages, AbstractMetadata metadata,
                                            boolean allowPublishInvalidMd, boolean allowPublishNonApprovedMd) throws Exception {
 
-        if (!allowPublishInvalidMd) {
+        boolean metadataTypeRequiresValidation = metadata.getDataInfo().getType().requiresValidation;
+
+        if (!allowPublishInvalidMd && metadataTypeRequiresValidation) {
             boolean hasValidation =
                 (metadataValidationRepository.count(MetadataValidationSpecs.hasMetadataId(metadata.getId())) > 0);
 

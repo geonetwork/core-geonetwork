@@ -25,17 +25,21 @@ package org.fao.geonet.kernel.metadata;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.api.exception.NotAllowedException;
-import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.MetadataSourceInfo;
-import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.MetadataValidationRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+
+import org.springframework.data.jpa.domain.Specification;
+
+import java.lang.reflect.Method;
+import java.util.ResourceBundle;
 
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -62,6 +66,10 @@ public class MetadataPublicationServiceTest {
     private static final int GROUP_OWNER = 12;
 
     @Mock
+    private MetadataValidationRepository metadataValidationRepository;
+
+
+    @Mock
     private AccessManager accessManager;
 
     @Mock
@@ -69,6 +77,8 @@ public class MetadataPublicationServiceTest {
 
     @InjectMocks
     private MetadataPublicationService service;
+
+
 
     private AbstractMetadata mockMetadata() {
         AbstractMetadata metadata = mock(AbstractMetadata.class);
@@ -148,5 +158,34 @@ public class MetadataPublicationServiceTest {
 
         // Administrators bypass the configured publication-profile check.
         verify(accessManager, never()).isProfileOnGroup(any(), any(), anyInt());
+    }
+
+
+
+    /**
+     * Templates have {@code MetadataType.requiresValidation == false}, so the
+     * {@code checkCanPublishToAllGroup} gate must skip the validation repository entirely
+     * even when {@code allowPublishInvalidMd} is {@code false}.
+     */
+    @Test
+    public void templateIsExemptFromValidationCheckWhenPublishInvalidMdDisabled() throws Exception {
+        AbstractMetadata template = mock(AbstractMetadata.class);
+        MetadataDataInfo dataInfo = mock(MetadataDataInfo.class);
+        when(dataInfo.getType()).thenReturn(MetadataType.TEMPLATE);
+        when(template.getDataInfo()).thenReturn(dataInfo);
+
+        ServiceContext context = mock(ServiceContext.class);
+        ResourceBundle messages = mock(ResourceBundle.class);
+
+        Method method = MetadataPublicationService.class.getDeclaredMethod(
+            "checkCanPublishToAllGroup",
+            ServiceContext.class, ResourceBundle.class, AbstractMetadata.class, boolean.class, boolean.class);
+        method.setAccessible(true);
+
+        // Must not throw – templates are exempt from validation checks.
+        method.invoke(service, context, messages, template, false, true);
+
+        // The validation repository must never be consulted for templates.
+        verify(metadataValidationRepository, never()).count(any(Specification.class));
     }
 }

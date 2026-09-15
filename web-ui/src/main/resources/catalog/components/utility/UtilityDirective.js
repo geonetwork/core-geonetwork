@@ -2527,14 +2527,8 @@
     function () {
       return function (url, context) {
         return url
-          .replace(
-            /{uuid}/g,
-            (context && context.currentRecord && context.currentRecord.uuid) || ""
-          )
-          .replace(
-            /{id}/g,
-            (context && context.currentRecord && context.currentRecord.id) || ""
-          );
+          .replace(/{uuid}/g, (context && context.uuid) || "")
+          .replace(/{id}/g, (context && context.id) || "");
       };
     }
   ]);

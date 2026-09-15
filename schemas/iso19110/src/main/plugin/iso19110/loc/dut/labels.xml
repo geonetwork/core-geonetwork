@@ -29,232 +29,236 @@
         xmlns:gmd="http://www.isotc211.org/2005/gmd">
 
   <element name="gfc:FC_FeatureCatalogue">
-    <label>Feature Catalogue description</label>
-    <description></description>
+    <label>Featurecatalogus</label>
+    <description>Bevat de definities van de featuretypes, attributen, associaties en operaties die in een dataset worden gebruikt</description>
   </element>
   <element name="gfc:FC_FeatureAttribute">
-    <label>Attribute</label>
+    <label>Attribuut</label>
+    <description>Kenmerk dat een eigenschap van een featuretype beschrijft, zoals naam, type en toegestane waarden</description>
   </element>
   <element name="gfc:name">
-    <label>Name</label>
-    <description>Feature catalogue name</description>
+    <label>Naam</label>
+    <description>Naam van de featurecatalogus</description>
   </element>
   <element name="gfc:scope">
-    <label>Scope</label>
-    <description>Scope definition</description>
+    <label>Toepassingsgebied</label>
+    <description>Geeft aan voor welk gebied, thema of toepassing de catalogus is bedoeld</description>
   </element>
   <element name="gfc:versionNumber">
-    <label>Version</label>
-    <description>Catalogue version</description>
+    <label>Versie</label>
+    <description>Versienummer van de featurecatalogus</description>
   </element>
   <element name="gfc:versionDate">
-    <label>Date</label>
-    <description>Catalogue date</description>
+    <label>Datum</label>
+    <description>Datum waarop deze versie van de catalogus is vastgesteld</description>
   </element>
   <element name="gfc:producer">
-    <label>Catalogue producer</label>
-    <description>Catalogue responsible</description>
+    <label>Catalogusbeheerder</label>
+    <description>Organisatie of persoon die verantwoordelijk is voor het opstellen en onderhouden van de catalogus</description>
   </element>
   <element name="gfc:featureType">
-    <label>Property description</label>
-    <description>Property description</description>
+    <label>Featuretypes</label>
+    <description>De featuretypes die deel uitmaken van deze catalogus</description>
   </element>
   <element name="gfc:isAbstract">
-    <label>Abstract</label>
-    <description>Is this element an abstract element ?</description>
+    <label>Abstracte feature</label>
+    <description>Geeft aan of het featuretype abstract is (d.w.z. op zichzelf nooit als tastbaar object voor mag komen, maar overgeërfd wordt door andere featuretypen)</description>
   </element>
   <element name="gfc:FC_FeatureType">
-    <label>Attribute table description</label>
-    <description>Attribute table description</description>
+    <label>Featuretype</label>
+    <description>Definitie van een featuretype, met inbegrip van naam, omschrijving en attributen</description>
   </element>
   <element name="gfc:typeName">
-    <label>Property name</label>
-    <description></description>
+    <label>Featuretype naam</label>
+    <description/>
   </element>
   <element name="gfc:carrierOfCharacteristics">
-    <label>Elements</label>
-    <description>Association, attribute, operation, ...</description>
+    <label>Elementen</label>
+    <description>Attributen, operaties, of associaties waaruit het featuretype opgebouwd is</description>
   </element>
   <element name="gfc:definition">
-    <label>Definition</label>
-    <description>Property definition</description>
+    <label>Omschrijving</label>
+    <description>Beschrijft wat de feature vertegenwoordigt</description>
   </element>
   <element name="gfc:fieldOfApplication">
-    <label>Field of application</label>
-    <description>Field of application</description>
+    <label>Toepassingsdomein</label>
+    <description>Geeft aan binnen welk vakgebied of domein het featuretype wordt toegepast</description>
   </element>
   <element name="gmd:responsibleParty">
-    <label>Responsible party</label>
-    <description>Responsible party</description>
+    <label>Verantwoordelijke partij</label>
+    <description/>
   </element>
   <element name="gmd:CI_ResponsibleParty">
-    <label>Responsible party</label>
-    <description>Responsible party</description>
+    <label>Verantwoordelijke partij</label>
+    <description/>
   </element>
   <element name="gco:lower">
-    <label>Lower cardinality</label>
-    <description>Lower cardinality</description>
+    <label>Laagste kardinaliteit</label>
+    <description>Het minimaal vereiste aantal voorkomende gevallen (ondergrens van de kardinaliteit) voor objecten, attributen of associaties</description>
   </element>
   <element name="gco:upper">
-    <label>Upper cardinality</label>
-    <description>Upper cardinality</description>
+    <label>Hoogste kardinaliteit</label>
+    <description>Het maximaal aantal voorkomende gevallen (bovengrens van de kardinaliteit) voor objecten, attributen of associaties</description>
   </element>
   <element name="gfc:cardinality">
-    <label>Cardinalities</label>
-    <description>Cardinalities</description>
+    <label>Kardinaliteit</label>
+    <description>Definieert hoe vaak objecten, attributen of associaties voor mogen komen</description>
   </element>
   <element name="gfc:label">
     <label>Label</label>
-    <description/>
+    <description>Leesbare naam waaronder het element of de waarde wordt weergegeven</description>
   </element>
   <element name="gfc:listedValue">
-    <label>Codelist</label>
-    <description>List of values for this element.</description>
+    <label>Codelijst</label>
+    <description>Lijst met toegestane waarden voor dit element</description>
   </element>
   <element name="gfc:constrainedBy">
-    <label>Constrained by</label>
-    <description></description>
+    <label>Beperkingen</label>
+    <description>Verwijzing naar de beperkingen die op dit attribuut van toepassing zijn</description>
   </element>
   <element name="gfc:definitionReference">
-    <label>Definition reference</label>
-    <description></description>
+    <label>Definitieverwijzing</label>
+    <description>Verwijzing naar een officiële, externe bron of definitielijst waarin een geo-object (of attribuut) wettelijk of technisch is vastgelegd</description>
   </element>
   <element name="gfc:code">
     <label>Code</label>
-    <description></description>
+    <description>Technische of machine-leesbare waarde van een gecodeerde keuzelijst</description>
   </element>
   <element name="gfc:isOrdered">
-    <label>Is ordered</label>
-    <description></description>
+    <label>Geordend</label>
+    <description>Geeft aan of de volgorde van de gerelateerde objecten van belang is</description>
   </element>
   <element name="gfc:isNavigable">
-    <label>Is navigable</label>
-    <description></description>
+    <label>Navigeerbaar</label>
+    <description>Geeft aan of de associatie doorlopen kan worden</description>
   </element>
   <element name="gfc:roleType">
-    <label>Role type</label>
-    <description></description>
+    <label>Roltype</label>
+    <description>Classificatie van de rol binnen een associatie, bijvoorbeeld aggregatie of compositie</description>
   </element>
   <element name="gfc:inheritsFrom">
-    <label>Inherits from</label>
-    <description></description>
+    <label>Erft van</label>
+    <description>Verwijzing naar het bovenliggende (super)featuretype waarvan wordt overgeërfd</description>
   </element>
   <element name="gfc:inheritsTo">
-    <label>Inherits to</label>
-    <description></description>
+    <label>Erft naar</label>
+    <description>Verwijzing naar het onderliggende (sub)featuretype dat overerft</description>
   </element>
   <element name="gfc:FC_InheritanceRelation">
-    <label>Heritance relation</label>
-    <description></description>
+    <label>Overervingsrelatie</label>
+    <description>Beschrijft een overervingsrelatie tussen twee featuretypes</description>
   </element>
   <element name="gfc:functionalLanguage">
-    <label>Functional language</label>
-    <description></description>
+    <label>Formele taal</label>
+    <description>Taal waarin de formele definitie is opgesteld, bijvoorbeeld OCL, UML, of SQL</description>
   </element>
   <element name="gfc:definitionSource">
-    <label>Definition source</label>
-    <description></description>
+    <label>Bron van definitie</label>
+    <description>Verwijzing naar de externe bron waaruit de definitie is overgenomen</description>
   </element>
   <element name="gfc:FC_FeatureOperation">
-    <label>Feature operation</label>
-    <description></description>
+    <label>Feature-operatie</label>
+    <description>Beschrijft een handeling of methode die door het featuretype kan worden uitgevoerd</description>
   </element>
   <element name="gfc:FC_FeatureAssociation">
-    <label>Feature association</label>
-    <description></description>
+    <label>Feature-associatie</label>
+    <description>Beschrijft een relatie tussen twee featuretypes</description>
   </element>
   <element name="gfc:FC_AssociationRole">
-    <label>Association role</label>
-    <description></description>
+    <label>Associatierol</label>
+    <description>Beschrijft de rol van een featuretype binnen een associatie</description>
   </element>
   <element name="gfc:FC_RoleType">
-    <label>Role type</label>
-    <description></description>
+    <label>Roltype (codelijst)</label>
+    <description>Codelijst met de mogelijke roltypen binnen een associatie</description>
   </element>
   <element name="gfc:description">
-    <label>Description</label>
-    <description></description>
+    <label>Beschrijving</label>
+    <description/>
   </element>
   <element name="gfc:aliases">
-    <label>Aliases</label>
-    <description></description>
+    <label>Aliassen</label>
+    <description>Alternatieve namen waaronder het featuretype of attribuut bekend is</description>
   </element>
   <element name="gfc:FC_ListedValue">
-    <label>Codelist</label>
-    <description></description>
+    <label>Toegestane waarde</label>
+    <description>Eén toegestane waarde binnen de codelijst, met code, label en omschrijving</description>
   </element>
   <element name="gfc:valueType">
-    <label>Value type</label>
-    <description></description>
+    <label>Waardetype</label>
+    <description>Gegevenstype van de toegestane waarde, bijvoorbeeld geheel getal of tekenreeks</description>
   </element>
   <element name="gfc:memberName">
-    <label>Member name</label>
-    <description></description>
+    <label>Naam</label>
+    <description/>
   </element>
   <element name="gfc:FC_Constraint">
-    <label>Constraint</label>
-    <description></description>
+    <label>Beperking</label>
+    <description>Regel of voorwaarde waaraan het attribuut moet voldoen</description>
   </element>
   <element name="gfc:uniqueInstance">
-    <label>Unique instance</label>
-    <description></description>
+    <label>Unieke instantie</label>
+    <description>Geeft aan of van dit featuretype slechts één exemplaar mag bestaan</description>
   </element>
   <element name="gfc:type">
     <label>Type</label>
-    <description></description>
+    <description>Geeft het soort associatie aan, bijvoorbeeld aggregatie of compositie</description>
   </element>
   <element name="gfc:relation">
-    <label>Relation</label>
-    <description></description>
+    <label>Relatie</label>
+    <description>Verwijzing naar de gerelateerde rol binnen de associatie</description>
   </element>
   <element name="gfc:featureCatalogue">
-    <label>Feature catalogue</label>
-    <description></description>
+    <label>Featurecatalogus</label>
+    <description>Verwijzing naar de featurecatalogus waartoe dit featuretype behoort</description>
   </element>
   <element name="gfc:roleName">
-    <label>Role name</label>
-    <description></description>
+    <label>Rolnaam</label>
+    <description>Naam van de rol die het featuretype vervult binnen de associatie</description>
   </element>
   <element name="gfc:signature">
-    <label>Signature</label>
-    <description></description>
+    <label>Signatuur</label>
+    <description>Technische specificatie van de operatie, met inbegrip van inputparameters, datatypen en outputwaarde(n)</description>
   </element>
   <element name="gfc:formalDefinition">
-    <label>Formal definition</label>
-    <description></description>
+    <label>Formele definitie</label>
+    <description>Formele, wiskundige of programmatische beschrijving van het gedrag of de logica van een object (bijv. een OCL-expressie)</description>
   </element>
   <element name="gfc:triggeredByValueOf">
-    <label>Triggered by value of</label>
-    <description></description>
+    <label>Getriggerd door waarde van</label>
+    <description>Verwijzing naar het attribuut waarvan een waardewijziging deze operatie activeert</description>
   </element>
   <element name="gfc:affectsValueOf">
-    <label>Affects value of</label>
+    <label>Beïnvloedt waarde van</label>
+    <description>Verwijzing naar het attribuut waarvan de waarde door deze operatie wordt gewijzigd</description>
   </element>
   <element name="gfc:observesValueOf">
-    <label>Observes value of</label>
+    <label>Controleert waarde van</label>
+    <description>Verwijzing naar het attribuut waarvan de waarde door deze operatie wordt gecontroleerd</description>
   </element>
   <element name="gfc:valueMeasurementUnit">
-    <label>Value measurement unit</label>
+    <label>Meeteenheid</label>
+    <description>Eenheid waarin de waarde van het attribuut wordt uitgedrukt</description>
   </element>
   <!-- ==================================================== -->
   <element name="gmx:name">
-    <label>Name</label>
-    <description>Feature catalogue name</description>
+    <label>Naam</label>
+    <description>Naam van de featurecatalogus</description>
   </element>
   <element name="gmx:scope">
-    <label>Scope</label>
-    <description>Scope definition</description>
+    <label>Toepassingsgebied</label>
+    <description>Geeft aan voor welk gebied, thema of toepassing de catalogus is bedoeld</description>
   </element>
   <element name="gmx:versionNumber">
-    <label>Version</label>
-    <description>Catalogue version</description>
+    <label>Versie</label>
+    <description>Versienummer van de catalogus</description>
   </element>
   <element name="gmx:versionDate">
-    <label>Date</label>
-    <description>Catalogue date</description>
+    <label>Datum</label>
+    <description>Datum waarop deze versie van de catalogus is vastgesteld</description>
   </element>
   <element name="gmx:fieldOfApplication">
-    <label>Field of application</label>
-    <description>Field of application</description>
+    <label>Toepassingsdomein</label>
+    <description>Geeft aan binnen welk vakgebied de catalogus wordt toegepast</description>
   </element>
 </labels>

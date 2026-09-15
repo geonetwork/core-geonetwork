@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -188,7 +188,7 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
      * @return
      * @throws Exception
      */
-    private String processMetadata(Element metadataElement) throws Exception {
+    String processMetadata(Element metadataElement) throws Exception {
 
         String id = "";
 
@@ -210,30 +210,38 @@ class DatabaseHarvesterAligner extends BaseAligner<DatabaseHarvesterParams> impl
 
         log.info(String.format("Processing metadata with UUID: %s", uuid));
 
-        try {
-            Integer groupIdVal = null;
-            if (StringUtils.hasLength(params.getOwnerIdGroup())) {
-                groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
-            }
-
-            params.getValidate().validate(dataMan, context, metadataElement, groupIdVal);
-        } catch (Exception e) {
-            log.error("Ignoring invalid metadata with uuid " + uuid);
-            result.doesNotValidate++;
-            return id;
-        }
-
-        setParams(params);
-
         //
         // add / update the metadata from this harvesting result
         //
         id = metadataUtils.getMetadataId(uuid);
+        boolean collisionFromOtherSource = (id != null) && (localUuids.getID(uuid) == null);
+
+        // Resolve the UUID collision state before validating (see issue #9432): a record that
+        // already exists from another source and whose collision policy is SKIP must be counted as
+        // skipped without being validated. Validate only when the record will actually be inserted
+        // or updated; the SKIP case is handled in the collision switch below.
+        if (!params.isSkippedByUuidCollision(collisionFromOtherSource)) {
+            try {
+                Integer groupIdVal = null;
+                if (StringUtils.hasLength(params.getOwnerIdGroup())) {
+                    groupIdVal = Integer.parseInt(params.getOwnerIdGroup());
+                }
+
+                params.getValidate().validate(dataMan, context, metadataElement, groupIdVal);
+            } catch (Exception e) {
+                log.error("Ignoring invalid metadata with uuid " + uuid);
+                result.doesNotValidate++;
+                return id;
+            }
+        }
+
+        setParams(params);
+
         if (id == null) {
             //Record is new
             id = addMetadata(metadataElement, uuid, schema);
             result.addedMetadata++;
-        } else if (localUuids.getID(uuid) == null) {
+        } else if (collisionFromOtherSource) {
             //Record does not belong to this harvester
             result.datasetUuidExist++;
 

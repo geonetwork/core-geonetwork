@@ -427,7 +427,7 @@
       <dependency>
         <groupId>org.jsoup</groupId>
         <artifactId>jsoup</artifactId>
-        <version>1.15.3</version>
+        <version>1.23.1</version>
       </dependency>
 
       <!-- universal character set detector -->
@@ -520,9 +520,9 @@
         <version>3.9.0</version>
       </dependency>
       <dependency>
-        <groupId>commons-digester</groupId>
-        <artifactId>commons-digester</artifactId>
-        <version>1.6</version>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.11.0</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -669,28 +669,6 @@
         <groupId>org.eclipse.core</groupId>
         <artifactId>org.eclipse.core.runtime</artifactId>
         <version>3.7.0</version>
-      </dependency>
-
-      <!-- Z39.50, SRU  stuff (ie: Spring, CQL, ...)  -->
-      <dependency>
-        <groupId>org.dspace</groupId>
-        <artifactId>cql-java</artifactId>
-        <version>1.0</version>
-      </dependency>
-      <dependency>
-        <groupId>org.jzkit</groupId>
-        <artifactId>a2j</artifactId>
-        <version>2.0.4</version>
-      </dependency>
-      <dependency>
-        <groupId>marc4j</groupId>
-        <artifactId>marc4j</artifactId>
-        <version>2.3.1</version>
-      </dependency>
-      <dependency>
-        <groupId>jdbm</groupId>
-        <artifactId>jdbm</artifactId>
-        <version>1.0</version>
       </dependency>
 
       <!-- GeoTools and spatial search stuff -->
@@ -928,13 +906,6 @@
           </exclusion>
         </exclusions>
       </dependency>
-
-      <dependency>
-        <groupId>com.jayway.jsonpath</groupId>
-        <artifactId>json-path</artifactId>
-        <version>2.4.0</version>
-      </dependency>
-
 
       <!-- Tests -->
       <dependency>
@@ -1234,6 +1205,17 @@
         <scope>import</scope>
       </dependency>
       <dependency>
+        <groupId>com.jayway.jsonpath</groupId>
+        <artifactId>json-path</artifactId>
+        <version>${jsonpath.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.jayway.jsonpath</groupId>
+        <artifactId>json-path-assert</artifactId>
+        <version>${jsonpath.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
         <groupId>javax.xml.bind</groupId>
         <artifactId>jaxb-api</artifactId>
         <version>2.3.1</version>
@@ -1262,7 +1244,7 @@
       <dependency>
         <groupId>org.apache.pdfbox</groupId>
         <artifactId>pdfbox</artifactId>
-        <version>2.0.24</version>
+        <version>${pdfbox.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jasypt</groupId>
@@ -1703,11 +1685,16 @@
     <wro.version>1.10.1</wro.version>
     <wro.debug>true</wro.debug>
     <fop.version>2.11</fop.version>
+    <!-- Must track the pdfbox version that fop-pdf-images:${fop.version} itself depends on
+         (see its POM), otherwise fox:external-document/PDF embedding fails at runtime with
+         NoClassDefFoundError masked as "java.io.IOException: closed". -->
+    <pdfbox.version>3.0.3</pdfbox.version>
     <xmlunit.version>2.10.0</xmlunit.version>
     <jackson.version>2.22.0</jackson.version>
+    <jsonpath.version>2.10.0</jsonpath.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
-    <log4j2.version>2.25.4</log4j2.version>
+    <log4j2.version>2.25.5</log4j2.version>
     <slf4j.version>1.8.0-beta2</slf4j.version>
     <xbean.version>4.22</xbean.version>
     <jolokia.version>1.7.2</jolokia.version>

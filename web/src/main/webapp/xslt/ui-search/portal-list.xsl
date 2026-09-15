@@ -48,7 +48,7 @@
           <div class="gn-md-thumbnail">
             <a href="{$nodeUrl}">
               <img class="gn-portal-main-logo"
-                   src="../../images/logos/{$env//system/site/siteId}.png"/>
+                   src="../../srv/api/site/logo"/>
             </a>
           </div>
 

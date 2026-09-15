@@ -140,7 +140,6 @@ The main GeoNetwork logger `geonetwork` controls the base level for all GeoNetwo
 | `org.hibernate.SQL` | Hibernate SQL statements |
 | `org.hibernate.type` | Hibernate type resolution |
 | `org.hibernate.tool.hbm2ddl` | Hibernate schema generation |
-| `org.jzkit` | JZKIT search toolkit |
 | `org.apache.camel` | Apache Camel routing |
 
 ### Log levels per preset
