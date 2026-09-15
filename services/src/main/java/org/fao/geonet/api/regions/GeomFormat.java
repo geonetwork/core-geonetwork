@@ -199,7 +199,7 @@ public enum GeomFormat {
 
     private static Parser createParser(Configuration configuration) {
         Parser parser = new Parser(configuration);
-        parser.setEntityResolver(new NoOpEntityResolver());
+        parser.setEntityResolver(NoOpEntityResolver.INSTANCE);
         return parser;
     }
 
