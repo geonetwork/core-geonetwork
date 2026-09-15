@@ -131,6 +131,19 @@ public class GroupsApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
     }
 
+    @Test
+    public void getGroupLogoSetsRevalidationCachePolicy() throws Exception {
+        Group group = _groupRepo.findByName("sample");
+        Assert.assertNotNull(group);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(get("/srv/api/groups/" + group.getId() + "/logo"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            .andExpect(org.springframework.test.web.servlet.result.MockMvcResultMatchers.header()
+                .string("Cache-Control", "no-cache, public, must-revalidate"));
+    }
+
 
     @Test
     public void getGroupUsers() throws Exception {

@@ -62,7 +62,6 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
  */
 public abstract class Resources {
     public static final String BLANK_LOGO = "blank.png";
-    public static final String DEFAULT_LOGO_EXTENSION = ".png";
 
     protected final static Set<String> IMAGE_READ_SUFFIXES;
     protected final static Set<String> IMAGE_WRITE_SUFFIXES;
@@ -272,6 +271,7 @@ public abstract class Resources {
      * @param icon     a relative path from images directory ( {@linkplain #locateResourcesDir(ServiceContext)})
      *                 for example harvesting/defaultHarvester.png
      * @param destName the name of the final image (in logos directory) so just the name.
+     * @return the name of the copied logo, or {@code null} if nothing was copied.
      */
     public String copyLogo(ServiceContext context, String icon,
                          String destName) {
@@ -292,11 +292,14 @@ public abstract class Resources {
                 if (src != null) {
                     java.nio.file.Files.copy(src.getPath(), des.getPath(), REPLACE_EXISTING, NOFOLLOW_LINKS);
                 } else {
+                    // Nothing was copied, do not report a file name for a file which does not exist.
+                    filename = null;
                     des.abort();
                 }
             }
         } catch (IOException e) {
             // --- we ignore exceptions here, just log them
+            filename = null;
 
             context.warning("Cannot copy icon -> " + e.getMessage());
             context.warning(" (C) Source : " + icon);
