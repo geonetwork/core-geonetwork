@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -28,7 +28,9 @@ import com.google.common.collect.Sets;
 import com.google.common.io.Files;
 import jeeves.server.context.ServiceContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.IO;
 import org.fao.geonet.utils.XmlRequest;
@@ -42,6 +44,7 @@ import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -191,11 +194,7 @@ public abstract class Resources {
             }
         }
 
-        if (property == null) {
-            return IO.toPath("resources");
-        } else {
-            return property;
-        }
+        return Objects.requireNonNullElseGet(property, () -> IO.toPath("resources"));
     }
 
     /**
@@ -275,6 +274,8 @@ public abstract class Resources {
      */
     public String copyLogo(ServiceContext context, String icon,
                          String destName) {
+        validatePath(context, locateLogosDir(context), destName);
+
         ServletContext servletContext = null;
         if (context.getServlet() != null) {
             servletContext = context.getServlet().getServletContext();
@@ -314,6 +315,7 @@ public abstract class Resources {
      * @param destName the filename prefix to copy the unknown filename to.
      */
     public void copyUnknownLogo(ServiceContext context, String destName) {
+        validatePath(context, locateLogosDir(context), destName);
         copyLogo(context, BLANK_LOGO, destName);
     }
 
@@ -351,16 +353,36 @@ public abstract class Resources {
 
     public abstract void deleteImageIfExists(final String image, final Path dir) throws IOException;
 
+    /**
+     * Verify that the final file is inside of the resourcesDir path.
+     *
+     * @param context the service context
+     * @param dir     the directory where the file should be located
+     * @param filename the name of the file
+     */
+    protected void validatePath(ServiceContext context, Path dir, String filename) {
+        if (StringUtils.isEmpty(filename)) {
+            return;
+        }
+        Path resourcesDir = locateResourcesDir(context);
+        Path finalPath = dir.resolve(filename).normalize();
+        if (!finalPath.startsWith(resourcesDir.normalize())) {
+            throw new BadParameterEx("The final file (" + finalPath
+                                               + ") is outside of the resourcesDir (" + resourcesDir + ") path.");
+        }
+    }
+
     public void createImageFromReq(ServiceContext context, final Path logoDir, final String filename,
                                    final XmlRequest req) throws IOException {
+        validatePath(context, logoDir, filename);
+
         try(ResourceHolder file = getWritableImage(context, filename, logoDir)) {
             try {
                 req.executeLarge(file.getPath());
-            } catch (IOException e) {
+            } catch (IOException | IllegalArgumentException e) {
                 file.abort();
                 throw e;
             }
-
         }
     }
 

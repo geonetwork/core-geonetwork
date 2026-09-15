@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -143,8 +143,14 @@ public class XmlRequest extends AbstractHttpRequest {
     protected final Path doExecuteLarge(HttpRequestBase httpMethod, Path outFile) throws IOException {
 
         try (ClientHttpResponse httpResponse = doExecute(httpMethod)) {
-            Files.copy(httpResponse.getBody(), outFile, StandardCopyOption.REPLACE_EXISTING);
-            return outFile;
+            if (!httpResponse.getStatusCode().isError()) {
+                Files.copy(httpResponse.getBody(), outFile, StandardCopyOption.REPLACE_EXISTING);
+                return outFile;
+            } else {
+                throw new IOException(
+                    String.format("Error retrieving the remote file: Response status: %s, URI: %s, Response Code: %s",
+                        httpResponse.getStatusText(), httpMethod.getURI(), httpResponse.getRawStatusCode()));
+            }
         } finally {
             httpMethod.releaseConnection();
 
