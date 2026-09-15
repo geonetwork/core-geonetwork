@@ -271,6 +271,7 @@ public abstract class Resources {
      * @param icon     a relative path from images directory ( {@linkplain #locateResourcesDir(ServiceContext)})
      *                 for example harvesting/defaultHarvester.png
      * @param destName the name of the final image (in logos directory) so just the name.
+     * @return the name of the copied logo, or {@code null} if nothing was copied.
      */
     public String copyLogo(ServiceContext context, String icon,
                          String destName) {
