@@ -106,6 +106,28 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void getSourceLogoWithTraversalReferenceReturnsNoLogo() throws Exception {
+        Source source = sourceRepo.findOneByName("source-test");
+        assertNotNull(source);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        String url = "/srv/api/sources/" + source.getUuid() + "/logo";
+        byte[] noLogo = this.mockMvc.perform(get(url))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+
+        // The logo reference is stored in database and can be set through the API,
+        // it must never be resolved outside of the logo folders.
+        source.setLogo("../../../../../../../../../../../../../../../../etc/hosts");
+        sourceRepo.save(source);
+
+        this.mockMvc.perform(get(url))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            // The transparent 1x1 px PNG is returned, not the traversed file.
+            .andExpect(content().bytes(noLogo));
+    }
+    @Test
     public void getNonExistingSource() throws Exception {
         Source sourceToUpdate = sourceRepo.findOneByName("source-test-2");
         assertNull(sourceToUpdate);
