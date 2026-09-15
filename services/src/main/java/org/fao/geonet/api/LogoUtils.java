@@ -27,7 +27,11 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.api.records.attachments.AttachmentsApi;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.FilePathChecker;
+import org.fao.geonet.utils.Log;
 import org.springframework.web.context.request.WebRequest;
 
 import javax.servlet.http.HttpServletResponse;
@@ -108,10 +112,25 @@ public final class LogoUtils {
             "default-src 'none'; style-src 'unsafe-inline'; sandbox");
     }
 
+   /**
+     * A logo reference is a plain file name stored in the source or group table.
+     * It is not a trusted value: it comes from the database where it can be set
+     * through the API, so it is checked for path traversal before being resolved
+     * against the logo folders. An invalid reference is handled as "no logo".
+     */
     private static boolean isLocalLogoRef(String logoRef) {
-        return StringUtils.isNotBlank(logoRef)
-            && !logoRef.startsWith("http://")
-            && !logoRef.startsWith("https://")
-            && !logoRef.startsWith("https//");
+        if (StringUtils.isBlank(logoRef)
+            || logoRef.startsWith("http://")
+            || logoRef.startsWith("https://")
+            || logoRef.startsWith("https//")) {
+            return false;
+        }
+        try {
+            FilePathChecker.verify(logoRef);
+            return true;
+        } catch (BadParameterEx e) {
+            Log.warning(Geonet.RESOURCES, "Ignoring invalid logo reference '" + logoRef + "'.");
+            return false;
+        }
     }
 }
