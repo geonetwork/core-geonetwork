@@ -27,14 +27,25 @@ import org.xml.sax.ext.EntityResolver2;
 
 import java.io.StringReader;
 
+/**
+ * EntityResolver2 returning empty content for any external entity.
+ */
 public class NoOpEntityResolver implements EntityResolver2 {
+
+    /**
+     * Singleton instance of NoOpEntityResolver.
+     */
+    public static final NoOpEntityResolver INSTANCE = new NoOpEntityResolver();
+
+    /**
+     * Use the INSTANCE field to access.
+     */
+    protected NoOpEntityResolver(){
+    }
+    
     @Override
     public InputSource getExternalSubset(String name, String baseURI) {
-        // Return null (not an empty source) so a document without a DOCTYPE is
-        // parsed exactly as before this class became an EntityResolver2: an empty
-        // external subset would otherwise attach a synthetic DOCTYPE to every such
-        // document. No external fetch happens either way.
-        return null;
+        return null; // no external subset
     }
 
     @Override
@@ -47,7 +58,17 @@ public class NoOpEntityResolver implements EntityResolver2 {
         return emptyInputSource();
     }
 
+    /**
+     * Empty InputSource, used to prevent download of external entities.
+     *
+     * @return an empty InputSource
+     */
     private InputSource emptyInputSource() {
         return new InputSource(new StringReader(""));
+    }
+
+    @Override
+    public String toString() {
+        return "NoOpEntityResolver";
     }
 }

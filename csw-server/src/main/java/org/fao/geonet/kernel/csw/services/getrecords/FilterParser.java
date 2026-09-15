@@ -57,8 +57,7 @@ public class FilterParser {
             throw new IllegalArgumentException("UnsupportFilterVersion: " + filterVersion);
         }
         Parser parser = new Parser(config);
-        // parseFilter validates against the OGC filter schemas, so the resolver has to keep
-        // resolving those. PreventLocalEntityResolver allows schemas only and refuses anything else.
+        // parseFilter requires access to OGC filter schemas, allowed by PreventLocalEntityResolver
         parser.setEntityResolver(PreventLocalEntityResolver.INSTANCE);
         return parser;
     }
