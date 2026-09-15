@@ -34,10 +34,13 @@ import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedOperation;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.SchemaManager;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.utils.IO;
+import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -193,6 +196,19 @@ public class MEFLibIntegrationTest extends AbstractCoreIntegrationTest {
                 ReservedOperation.dynamic.getId(),
                 ReservedOperation.featured.getId()),
             getAllowedOperationsForGroup(featureCatalogueRecord.getId(), intranetGroup.getId()));
+
+        // The feature catalogue keeps the UUID it has in the MEF and the imported dataset
+        // cites it, so the association survives the import.
+        assertEquals("411cd05b-9a79-45f2-b39f-0b344a9f35af", featureCatalogueRecord.getUuid());
+
+        final AbstractMetadata datasetRecord = importedMetadata.stream()
+            .filter(md -> "iso19139".equals(md.getDataInfo().getSchemaId()))
+            .findFirst()
+            .orElseThrow(() -> new AssertionError("Imported MEF should include an iso19139 dataset record"));
+
+        assertEquals(Set.of(featureCatalogueRecord.getUuid()),
+            ((AssociatedResourcesSchemaPlugin) SchemaManager.getSchemaPlugin("iso19139"))
+                .getAssociatedFeatureCatalogueUUIDs(Xml.loadString(datasetRecord.getData(), false)));
     }
 
     @Test

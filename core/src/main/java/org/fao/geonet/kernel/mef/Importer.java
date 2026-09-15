@@ -41,7 +41,10 @@ import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.*;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.submission.DirectDeletionSubmitter;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
@@ -367,6 +370,27 @@ public class Importer {
                     metadataValidator.validateExternalMetadata(schema, metadata, context, " ", groupIdVal);
                 }
 
+                // The metadata to feature catalogue association is only carried by the
+                // feature catalogue citation, so the feature catalogue UUID has to be
+                // known before the record is stored: the citation must point to the UUID
+                // the feature catalogue is actually imported with.
+                String fcUuid = null;
+                if (!fc.isEmpty() && fc.get(index) != null) {
+                    // UUID is set as @uuid in root element
+                    fcUuid = fc.get(index).getAttributeValue("uuid");
+                    if (StringUtils.isBlank(fcUuid)
+                        || uuidAction == MEFLib.UuidAction.GENERATEUUID
+                        || metadataUtils.existsMetadataUuid(fcUuid)) {
+                        fcUuid = UUID.randomUUID().toString();
+                    }
+                    fc.add(index, metadataUtils.setUUID("iso19110", fcUuid, fc.get(index)));
+
+                    // MEF files created before the Relations table removal record the
+                    // association in the archive layout only, add the citation when the
+                    // record does not reference the feature catalogue yet.
+                    md.add(index, addFeatureCatalogueCitation(context, schema, md.get(index), fcUuid));
+                }
+
                 try {
                     importRecord(uuid, uuidAction, md, schema, index, source, sourceName, sourceTranslations, context, metadataIdMap,
                         createDate, changeDate, groupId, isTemplate[0]);
@@ -374,12 +398,7 @@ public class Importer {
                     throw new Exception("Failed to import metadata with uuid '" + uuid + "'. " + e.getLocalizedMessage(), e);
                 }
 
-                if (!fc.isEmpty() && fc.get(index) != null) {
-                    // UUID is set as @uuid in root element
-                    uuid = UUID.randomUUID().toString();
-
-                    fc.add(index, metadataUtils.setUUID("iso19110", uuid, fc.get(index)));
-
+                if (fcUuid != null) {
                     //
                     // insert metadata
                     //
@@ -388,15 +407,14 @@ public class Importer {
                     String docType = null;
                     String category = null;
                     boolean ufo = false;
+                    // Indexed once the categories and privileges below are applied.
                     String fcId = metadataManager
-                        .insertMetadata(context, "iso19110", fc.get(index), uuid, userid, group, source, isTemplate[0].codeString, docType,
-                            category, createDate, changeDate, ufo, IndexingMode.full);
+                        .insertMetadata(context, "iso19110", fc.get(index), fcUuid, userid, group, source, isTemplate[0].codeString, docType,
+                            category, createDate, changeDate, ufo, IndexingMode.none);
 
                     if (Log.isDebugEnabled(Geonet.MEF))
-                        Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
+                        Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + fcUuid);
 
-                    // The metadata to feature catalogue association is kept in the
-                    // metadata feature catalogue citation.
                     metadataIdMap.add(fcId);
 
                     final int featureCatalogMetadataId = Integer.parseInt(fcId);
@@ -414,9 +432,11 @@ public class Importer {
                             final Set<OperationAllowed> allowedSet = addOperations(context, accessManager, metadataOperations, privileges,
                                 featureCatalogMetadataId, Integer.parseInt(groupId));
                             allowedRepository.saveAll(allowedSet);
-                            metadata1.getSourceInfo().setGroupOwner(Integer.valueOf(groupId));
+                            metadata1.getSourceInfo().setGroupOwner(Integer.parseInt(groupId));
                         }
                     });
+
+                    metadataIndexer.indexMetadata(fcId, DirectIndexSubmitter.INSTANCE, IndexingMode.full);
                 }
 
                 final int iMetadataId = Integer.parseInt(metadataIdMap.get(index));
@@ -488,6 +508,53 @@ public class Importer {
         });
 
         return metadataIdMap;
+    }
+
+    /**
+     * Reference a feature catalogue from a record through its feature catalogue citation,
+     * unless the record already cites it. The citation is the only carrier of the metadata
+     * to feature catalogue association, so a MEF that ships a feature catalogue in its
+     * {@code applschema} folder without citing it would otherwise lose the association on
+     * import.
+     *
+     * @param schema  the schema of the record.
+     * @param md      the record to reference the feature catalogue from.
+     * @param fcUuid  the UUID of the feature catalogue.
+     * @return the record with the citation added, or the record unchanged when the schema
+     * does not support feature catalogue citations or the citation could not be added.
+     */
+    private static Element addFeatureCatalogueCitation(ServiceContext context, String schema, Element md, String fcUuid) {
+        try {
+            SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(schema);
+            if (schemaPlugin instanceof AssociatedResourcesSchemaPlugin) {
+                Set<String> citedUuids =
+                    ((AssociatedResourcesSchemaPlugin) schemaPlugin).getAssociatedFeatureCatalogueUUIDs(md);
+                if (citedUuids != null && citedUuids.contains(fcUuid)) {
+                    return md;
+                }
+            }
+
+            Path process = context.getBean(SchemaManager.class).getSchemaDir(schema)
+                .resolve("process").resolve("fcats-add.xsl");
+            if (!Files.exists(process)) {
+                Log.warning(Geonet.MEF, String.format(
+                    "Schema '%s' has no fcats-add process, the association with feature catalogue '%s' is not recorded in the imported record.",
+                    schema, fcUuid));
+                return md;
+            }
+
+            SettingManager settingManager = context.getBean(SettingManager.class);
+            Map<String, Object> params = new HashMap<>();
+            params.put("uuidref", fcUuid);
+            // iso19139 names the parameter siteUrl, iso19115-3.2018 names it nodeUrl.
+            params.put("siteUrl", settingManager.getSiteURL(context));
+            params.put("nodeUrl", settingManager.getNodeURL());
+            return Xml.transform(md, process, params);
+        } catch (Exception e) {
+            Log.warning(Geonet.MEF, String.format(
+                "Failed to reference feature catalogue '%s' in the imported record. %s", fcUuid, e.getMessage()), e);
+            return md;
+        }
     }
 
     /**
