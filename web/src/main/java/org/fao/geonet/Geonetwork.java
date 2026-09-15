@@ -538,7 +538,7 @@ public class Geonetwork implements ApplicationHandler {
                 logoFile = resources.copyLogo(context, "images" + File.separator + "harvesting" + File.separator + DEFAULT_LOGO, nodeUuid);
             }
             Source source = sourceRepository.findOneByUuid(nodeUuid);
-            if (source != null) {
+            if (source != null && StringUtils.isNotBlank(logoFile)) {
                 source.setLogo(logoFile);
                 sourceRepository.save(source);
             }
