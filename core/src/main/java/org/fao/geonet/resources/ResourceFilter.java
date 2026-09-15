@@ -104,7 +104,7 @@ public class ResourceFilter implements Filter {
             SourceRepository sourceRepository =  applicationContext.getBean(SourceRepository.class);
             this.nodeId = applicationContext.getBean(NodeInfo.class).getId();
             if (defaultImage == null) {
-                Optional<Source> catalogues = sourceRepository.findById(this.nodeId);
+                Optional<Source> catalogues = sourceRepository.findById(NodeInfo.DEFAULT_NODE.equals(nodeId) ? this.siteId : nodeId);
                 String defaultImageName = IMAGES_LOGOS_FOLDER + (
                     catalogues.isPresent() ? catalogues.get().getLogo() :  DEFAULT_LOGO);
                 defaultImage = resources.loadResource(resourcesDir, servletContext, appPath, defaultImageName, new byte[0], -1);
