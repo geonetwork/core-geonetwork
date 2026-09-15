@@ -29,12 +29,15 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.jdom.Element;
 
+import java.util.Locale;
+
 public class SimpleUrlParams extends AbstractParams {
     public String url;
     public String icon;
     public String loopElement;
     public String numberOfRecordPath;
     public String recordIdPath;
+    public SimpleUrlPathMode recordIdPathMode;
     public String pageSizeParam;
     public String pageFromParam;
     public String toISOConversion;
@@ -56,6 +59,8 @@ public class SimpleUrlParams extends AbstractParams {
         loopElement = Util.getParam(site, "loopElement", "");
         numberOfRecordPath = Util.getParam(site, "numberOfRecordPath", "");
         recordIdPath = Util.getParam(site, "recordIdPath", "");
+        var recordIdPathModeString = Util.getParam(site, "recordIdPathMode", SimpleUrlPathMode.AUTO.name());
+        recordIdPathMode = SimpleUrlPathMode.valueOf(recordIdPathModeString.toUpperCase(Locale.ROOT));
         pageSizeParam = Util.getParam(site, "pageSizeParam", "");
         pageFromParam = Util.getParam(site, "pageFromParam", "");
         toISOConversion = Util.getParam(site, "toISOConversion", "");
@@ -74,6 +79,8 @@ public class SimpleUrlParams extends AbstractParams {
         loopElement = Util.getParam(site, "loopElement", "");
         numberOfRecordPath = Util.getParam(site, "numberOfRecordPath", "");
         recordIdPath = Util.getParam(site, "recordIdPath", "");
+        var recordIdPathModeString = Util.getParam(site, "recordIdPathMode", SimpleUrlPathMode.AUTO.name());
+        recordIdPathMode = SimpleUrlPathMode.valueOf(recordIdPathModeString.toUpperCase(Locale.ROOT));
         pageSizeParam = Util.getParam(site, "pageSizeParam", "");
         pageFromParam = Util.getParam(site, "pageFromParam", "");
         toISOConversion = Util.getParam(site, "toISOConversion", "");
@@ -96,6 +103,7 @@ public class SimpleUrlParams extends AbstractParams {
         copy.pageSizeParam = pageSizeParam;
         copy.pageFromParam = pageFromParam;
         copy.recordIdPath = recordIdPath;
+        copy.recordIdPathMode = recordIdPathMode;
         copy.toISOConversion = toISOConversion;
 
         return copy;
