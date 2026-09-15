@@ -34,6 +34,7 @@ import org.globus.ftp.DataSink;
 import org.globus.ftp.FTPClient;
 import org.globus.ftp.Session;
 import org.jdom.Element;
+import org.springframework.core.io.Resource;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -47,6 +48,7 @@ import java.nio.channels.WritableByteChannel;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 //=============================================================================
 
@@ -93,6 +95,32 @@ public final class BinaryFile {
         final BinaryFile binaryFile = new BinaryFile();
         binaryFile.doEncode(responseCode, path, remove);
         return binaryFile;
+    }
+
+    /*
+     * TODO: Implement resources/streams instead of temporary files or remove this method along with the unused services that call it:
+     *     - org.fao.geonet.services.feedback.AddLimitations
+     *     - org.fao.geonet.services.resources.DownloadArchive
+     *   See the following issues:
+     *     - https://github.com/geonetwork/core-geonetwork/issues/3308
+     *     - https://github.com/geonetwork/core-geonetwork/issues/4459
+     */
+    public static BinaryFile encode(int responseCode, Resource resource, int metadataId, String filename, boolean remove) throws IOException {
+        Path path;
+        if (resource.isFile()) {
+            path = resource.getFile().toPath();
+        } else {
+            // Create a temporary file
+            // Preserve filename by putting the files into a temporary folder and using the same filename.
+            Path tempFolderPath = Files.createTempDirectory("gn-meta-res-" + metadataId + "-");
+            tempFolderPath.toFile().deleteOnExit();
+            path = tempFolderPath.resolve(filename);
+            try (InputStream in = resource.getInputStream()) {
+                Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
+            }
+        }
+
+        return encode(responseCode, path, remove);
     }
 
     //---------------------------------------------------------------------------

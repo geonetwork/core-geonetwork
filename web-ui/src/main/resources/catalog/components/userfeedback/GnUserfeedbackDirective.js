@@ -386,6 +386,11 @@
               return;
             }
 
+            // Re-check login status
+            if ($rootScope.user && $rootScope.user.username) {
+              scope.userName = $rootScope.user.username;
+            }
+
             scope.uf = {
               rating: {},
               ratingAVG: null

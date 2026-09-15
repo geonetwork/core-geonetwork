@@ -86,7 +86,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$.content[0].url").value(equalTo("http://services.sandre.eaufrance.fr/geo/ouvrage")))
             .andExpect(jsonPath("$.content[0].records", hasSize(1)))
             .andExpect(jsonPath("$.content[0].records[0].metadataId").value(equalTo(md.getId())))
-            .andExpect(jsonPath("$.content[0].records[0].metadataUuid").value(equalTo(md.getUuid())));;
+            .andExpect(jsonPath("$.content[0].records[0].metadataUuid").value(equalTo(md.getUuid())));
 
         this.mockMvc.perform(delete("/srv/api/records/links")
             .session(httpSession)
@@ -98,7 +98,7 @@ public class LinksApiTest extends AbstractServiceIntegrationTest {
 
     private void createTestData() throws Exception {
         loginAsAdmin(context);
-        this.md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+        this.md = injectMetadataInDb(getSampleMetadataXml(), context);
         Element xmlData = this.md.getXmlData(false);
 
         urlAnalyzer.processMetadata(xmlData, this.md);

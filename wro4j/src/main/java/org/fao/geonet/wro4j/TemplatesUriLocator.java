@@ -32,7 +32,7 @@ public class TemplatesUriLocator implements UriLocator {
         } else {
             javascript = new StringBuilder();
             final String realPath;
-            final String path = uri.substring(URI_PREFIX.length());
+            final String path = uri.substring(URI_PREFIX.length()).replace('\\', '/');
             final ServletContext servletContext = Context.get().getServletContext();
             if (servletContext != null) {
                 realPath = servletContext.getRealPath(path);

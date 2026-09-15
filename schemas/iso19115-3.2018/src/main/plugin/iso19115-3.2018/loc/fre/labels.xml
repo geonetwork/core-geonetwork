@@ -8788,7 +8788,7 @@ http://www.sandre.eaufrance.fr/?urn=urn:sandre:ensembledonnees:BDCarthage:FXX:::
     <description>Cardinalités</description>
     <helper>
       <option value="0..1">0..1</option>
-      <option value="1..n">0..n</option>
+      <option value="0..n">0..n</option>
       <option value="1..1">1..1</option>
       <option value="1..n">1..n</option>
     </helper>

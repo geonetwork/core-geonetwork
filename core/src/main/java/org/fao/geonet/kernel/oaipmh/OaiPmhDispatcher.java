@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -65,7 +65,7 @@ public class OaiPmhDispatcher {
     //--- Constructor
     //---
     //---------------------------------------------------------------------------
-    private HashMap<String, OaiPmhService> hmServices = new HashMap<String, OaiPmhService>();
+    private HashMap<String, OaiPmhService> hmServices = new HashMap<>();
 
     //---------------------------------------------------------------------------
 
@@ -96,8 +96,8 @@ public class OaiPmhDispatcher {
     //---
     //---------------------------------------------------------------------------
 
-    public Element dispatch(Element request, ServiceContext context) {
-        Element response = dispatchI(request, context);
+    public Element dispatch(OaiPmhParams oaiPmhParams, ServiceContext context) {
+        Element response = dispatchI(oaiPmhParams, context);
         validateResponse(context, response);
 
         return response;
@@ -105,7 +105,7 @@ public class OaiPmhDispatcher {
 
     //---------------------------------------------------------------------------
 
-    private Element dispatchI(Element request, ServiceContext context) {
+    private Element dispatchI(OaiPmhParams oaiPmhParams, ServiceContext context) {
         String url = null;
 
         Map<String, String> params = null;
@@ -113,8 +113,8 @@ public class OaiPmhDispatcher {
         SettingInfo si = context.getBean(SettingInfo.class);
 
         try {
-            url = si.getSiteUrl() + context.getBaseUrl() + "/" + Jeeves.Prefix.SERVICE + "/en/" + context.getService();
-            params = OaiPmhFactory.extractParams(request);
+            url = si.getSiteUrl() + context.getBaseUrl() + "/" + Jeeves.Prefix.SERVICE + "/" + context.getService();
+            params = oaiPmhParams.asMap();
 
             AbstractRequest req = OaiPmhFactory.parse(context.getApplicationContext(), params);
             OaiPmhService srv = hmServices.get(req.getVerb());

@@ -51,9 +51,12 @@ import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.search.EsFilterBuilder;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Attribute;
+import org.jdom.Comment;
 import org.jdom.Content;
 import org.jdom.Element;
 import org.jdom.Namespace;
@@ -111,37 +114,9 @@ public class SearchController {
                                     boolean checkMetadataAvailableInPortal) throws CatalogException {
 
         if (checkMetadataAvailableInPortal) {
-            // Check if the metadata is available in the portal
-            String elasticSearchQuery = "{ \"bool\": {\n" +
-                "            \"must\": [\n" +
-                "        {" +
-                "          \"term\": {" +
-                "            \"id\": {" +
-                "              \"value\": \"%s\"" +
-                "            }" +
-                "          }" +
-                "        } " +
-                "            ]\n" +
-                "          ,\"filter\":{\"query_string\":{\"query\":\"%s\"}}}}";
-
-            JsonNode esJsonQuery;
-
-            try {
-                String filterQueryString = esFilterBuilder.build(context, "metadata", false, node);
-                String jsonQuery = String.format(elasticSearchQuery, id, filterQueryString);
-
-                ObjectMapper objectMapper = new ObjectMapper();
-                esJsonQuery = objectMapper.readTree(jsonQuery);
-
-                TotalHits total = searchManager.query(esJsonQuery, new HashSet<>(), 0, 0).hits().total();
-
-                if (Optional.ofNullable(total).map(TotalHits::value).orElse(0L) == 0) {
-                    return null;
-                }
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+            if (!metadataUtils.isMetadataAvailableInPortal(Integer.parseInt(id))) {
+                return null;
             }
-
         }
 
         try {
@@ -486,6 +461,9 @@ public class SearchController {
         // TODO: Check to get summary or remove custom summary output
 
         try {
+            SettingManager sm = context.getBean(SettingManager.class);
+            boolean ignoreMetadataNotSupported = sm.getValueAsBool(Settings.SYSTEM_CSW_GETRECORDS_IGNORE_METADATA_NOT_SUPPORTED, true);
+
             SearchResponse result = searchManager.query(esJsonQuery, new HashSet<>(), startPos - 1, maxRecords, sort);
 
             List<Hit> hits = result.hits().hits();
@@ -510,18 +488,25 @@ public class SearchController {
                 AbstractMetadata metadata = metadataUtils.findOne(mdId);
 
                 String displayLanguage = context.getLanguage();
-                // The query to retrieve GetRecords, filters by portal. No need to re-check again when retrieving each metadata.
-                Element resultMD = retrieveMetadata(context, metadata.getId() + "",
-                    setName, outSchema, elemNames, typeName, resultType, strategy, displayLanguage, false);
+                try {
+                    // The query to retrieve GetRecords, filters by portal. No need to re-check again when retrieving each metadata.
+                    Element resultMD = retrieveMetadata(context, metadata.getId() + "",
+                        setName, outSchema, elemNames, typeName, resultType, strategy, displayLanguage, false);
 
-                if (resultMD != null) {
-                    if (resultType == ResultType.RESULTS) {
-                        results.addContent(resultMD);
+                    if (resultMD != null) {
+                        if (resultType == ResultType.RESULTS) {
+                            results.addContent(resultMD);
+                        }
+
+                        counter++;
                     }
-
-                    counter++;
+                } catch (InvalidParameterValueEx e) {
+                    if (ignoreMetadataNotSupported) {
+                        results.addContent(new Comment(e.getMessage()));
+                    } else {
+                        throw e;
+                    }
                 }
-
             }
 
             results.setAttribute("numberOfRecordsMatched", Long.toString(numMatches));

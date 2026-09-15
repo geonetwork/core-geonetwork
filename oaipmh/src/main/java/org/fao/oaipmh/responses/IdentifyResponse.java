@@ -151,7 +151,7 @@ public class IdentifyResponse extends AbstractResponse {
         for (String email : adminEmails)
             add(root, "adminEmail", email);
 
-        add(root, "earliestDatestamp", earlDateStamp + "Z");
+        add(root, "earliestDatestamp", earlDateStamp.getDateAndTime());
         add(root, "deletedRecord", deletedRecord.toString());
         add(root, "granularity", granularity.toString());
 

@@ -30,6 +30,7 @@ import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.security.ViewMdGrantedAuthority;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -40,9 +41,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Stream;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_INTRANET_IP_SEPARATOR;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY;
@@ -79,6 +82,13 @@ public class AccessManager {
     @Autowired
     UserRepository userRepository;
 
+    public static Stream<AnonymousAccessLink> anonymousAccessLinkStreamFromSecurityContext() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .filter(ViewMdGrantedAuthority.class::isInstance)
+                .map(ViewMdGrantedAuthority.class::cast)
+                .map(ViewMdGrantedAuthority::getAnonymousAccessLink);
+    }
+
     /**
      * Given a user(session) a list of groups and a metadata returns all operations that user can
      * perform on that metadata (an set of OPER_XXX as keys). If the user is authenticated the
@@ -109,6 +119,8 @@ public class AccessManager {
                 results.add(operationRepository.findReservedOperation(ReservedOperation.view));
             }
         }
+
+        processViewMdGrantedAuthorityIfAny(mdId, results);
 
         return results;
     }
@@ -512,19 +524,18 @@ public class AccessManager {
     /**
      * Checks if the user has the specified profile or any profile with greater permissions within the group.
      *
-     * @param context The service context containing the user's session.
+     * @param userSession The user's session.
      * @param profile The profile to be verified.
      * @param groupId The ID of the group in which the user's profile is to be verified.
      * @return true if the user has the specified profile (or greater) within the group; false otherwise.
      */
-    public boolean isProfileOrMoreOnGroup(final ServiceContext context, Profile profile, final int groupId) {
-        UserSession us = context.getUserSession();
-        if (!isUserAuthenticated(us)) {
+    public boolean isProfileOrMoreOnGroup(final UserSession userSession, Profile profile, final int groupId) {
+        if (!isUserAuthenticated(userSession)) {
             return false;
         }
 
         // Grant access if the user is a global administrator
-        if (Profile.Administrator == us.getProfile()) {
+        if (Profile.Administrator == userSession.getProfile()) {
             return true;
         }
 
@@ -532,12 +543,37 @@ public class AccessManager {
         Set<Profile> acceptedProfiles = profile.getProfileAndAllParents();
 
         // Build a specification to fetch any accepted profiles for the user in the specified group
-        Specification<UserGroup> spec = Specification.where(UserGroupSpecs.hasUserId(us.getUserIdAsInt()))
+        Specification<UserGroup> spec = Specification.where(UserGroupSpecs.hasUserId(userSession.getUserIdAsInt()))
             .and(UserGroupSpecs.hasGroupId(groupId))
             .and(UserGroupSpecs.hasProfileIn(acceptedProfiles));
         List<UserGroup> userGroups = userGroupRepository.findAll(spec);
 
         return !userGroups.isEmpty();
+    }
+
+    /**
+     * Checks if the user has exactly the specified profile within the group.
+     *
+     * @param userSession The user's session.
+     * @param profile The exact profile to verify.
+     * @param groupId The ID of the group in which the user's profile is verified.
+     * @return true if the user has exactly the specified profile in the group; false otherwise.
+     */
+    public boolean isProfileOnGroup(final UserSession userSession, Profile profile, final int groupId) {
+        if (!isUserAuthenticated(userSession)) {
+            return false;
+        }
+
+        // Global administrators remain allowed regardless of group assignments.
+        if (Profile.Administrator == userSession.getProfile()) {
+            return true;
+        }
+
+        Specification<UserGroup> spec = Specification.where(UserGroupSpecs.hasUserId(userSession.getUserIdAsInt()))
+            .and(UserGroupSpecs.hasGroupId(groupId))
+            .and(UserGroupSpecs.hasProfile(profile));
+
+        return userGroupRepository.count(spec)> 0;
     }
 
     public int getPrivilegeId(final String name) {
@@ -657,4 +693,13 @@ public class AccessManager {
     private boolean isUserAuthenticated(UserSession us) {
         return us != null && us.isAuthenticated();
     }
+
+    private void processViewMdGrantedAuthorityIfAny(String mdId, Set<Operation> results) {
+        anonymousAccessLinkStreamFromSecurityContext()
+                .map(AnonymousAccessLink::getMetadataId)
+                .map(id -> Integer.toString(id))
+                .filter(mdId::equals)
+                .forEach(grantedAuthority -> results.add(operationRepository.findReservedOperation(ReservedOperation.view)));
+    }
+
 }

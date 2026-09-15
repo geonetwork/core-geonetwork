@@ -209,20 +209,14 @@ public class UserFeedbackAPI {
         try {
             Log.debug("org.fao.geonet.api.userfeedback.UserFeedback", "getMetadataUserComments");
 
-            // Check permission for metadata
-            final AbstractMetadata metadata = ApiUtils.canViewRecord(metadataUuid, request);
-            if (metadata == null) {
-                printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-                return null;
-            }
-
+            ApiUtils.canViewRecord(metadataUuid, request);
             final UserSession session = ApiUtils.getUserSession(httpSession);
 
             boolean published = true; // Takes only published comments
 
             // showing not published comments only to logged users (maybe better
             // restrict to Reviewers)
-            if (session != null && session.isAuthenticated()) {
+            if (session.isAuthenticated()) {
                 published = false;
             }
 
@@ -280,7 +274,7 @@ public class UserFeedbackAPI {
 
         // showing not published comments only to logged users (maybe better
         // restrict to Reviewers)
-        if (session != null && session.isAuthenticated()) {
+        if (session.isAuthenticated()) {
             published = false;
         }
 
@@ -293,11 +287,7 @@ public class UserFeedbackAPI {
         }
 
         // Check permission for metadata
-        final AbstractMetadata metadata = ApiUtils.canViewRecord(userfeedback.getMetadata().getUuid(), request);
-        if (metadata == null) {
-            printOutputMessage(response, HttpStatus.FORBIDDEN, ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
-            return null;
-        }
+        ApiUtils.canViewRecord(userfeedback.getMetadata().getUuid(), request);
 
         return dto;
     }
@@ -408,13 +398,13 @@ public class UserFeedbackAPI {
 
             // showing not published comments only to logged users (maybe better
             // restrict to Reviewers)
-            if (session != null && session.isAuthenticated()) {
+            if (session.isAuthenticated()) {
                 published = false;
             }
 
             List<UserFeedback> listUserfeedback = null;
 
-            if (metadataUuid == null || metadataUuid.equals("")) {
+            if (metadataUuid == null || metadataUuid.isEmpty()) {
                 listUserfeedback = userFeedbackService.retrieveUserFeedback(size, published);
             } else {
                 listUserfeedback = userFeedbackService.retrieveUserFeedbackForMetadata(metadataUuid, size, published);
@@ -522,16 +512,35 @@ public class UserFeedbackAPI {
                     String catalogueName = settingManager.getValue(SYSTEM_SITE_NAME_PATH);
                     String title = XslUtil.getIndexField(null, userFeedbackDto.getMetadataUUID(), "resourceTitleObject", "");
 
-                    if (toAddress.size() > 0) {
+                    if (!toAddress.isEmpty()) {
                         try {
-                            MailUtil.sendMail(toAddress,
-                                String.format(
-                                    messages.getString("new_user_rating"),
-                                    catalogueName, title),
-                                String.format(
-                                    messages.getString("new_user_rating_text"),
-                                    metadataUtils.getDefaultUrl(userFeedbackDto.getMetadataUUID(), locale.getISO3Language())),
-                                settingManager);
+                            Locale[] feedbackLocales = feedbackLanguages.getLocales(locale);
+
+                            LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "new_user_rating", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+                            LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "new_user_rating_text", KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+
+                            for (Locale feedbackLocale : feedbackLocales) {
+                                emailSubjectComponent.addParameters(
+                                    feedbackLocale,
+                                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, catalogueName),
+                                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 2, title)
+                                );
+
+                                emailMessageComponent.addParameters(
+                                    feedbackLocale,
+                                    new LocalizedEmailParameter(ParameterType.RAW_VALUE, 1, metadataUtils.getDefaultUrl(userFeedbackDto.getMetadataUUID(), feedbackLocale.getISO3Language()))
+                                );
+                            }
+
+                            LocalizedEmail localizedEmail = new LocalizedEmail(false);
+                            localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
+                            MailUtil.sendMail(
+                                toAddress,
+                                localizedEmail.getParsedSubject(feedbackLocales),
+                                localizedEmail.getParsedMessage(feedbackLocales),
+                                settingManager
+                            );
                         } catch (IllegalArgumentException ex) {
                             Log.warning(API.LOG_MODULE_NAME, ex.getMessage(), ex);
                         }
@@ -689,22 +698,6 @@ public class UserFeedbackAPI {
             settingManager
         );
         return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    /**
-     * Prints the output message.
-     *
-     * @param response the response
-     * @param code     the code
-     * @param message  the message
-     * @throws IOException Signals that an I/O exception has occurred.
-     */
-    private void printOutputMessage(final HttpServletResponse response, final HttpStatus code, final String message) throws IOException {
-        response.setStatus(code.value());
-        final PrintWriter out = response.getWriter();
-        response.setContentType("text/html");
-        out.println(message);
-        response.flushBuffer();
     }
 
     /**

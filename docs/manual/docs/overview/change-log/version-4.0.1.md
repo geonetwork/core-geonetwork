@@ -17,4 +17,4 @@ GeoNetwork 4.0.1 release is a minor release aligned with GeoNetwork 3.10.5 (see 
 -   [ISO19115-3 / ISO19139 conversion / Fix for multiple individuals in organization](https://github.com/geonetwork/core-geonetwork/pull/5150)
 -   [CSW / Restore possibility to query any index fields](https://github.com/geonetwork/core-geonetwork/pull/5127)
 
-and more \... see [4.0.1 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.1+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.1+is%3Aclosed) for full details.
+and more ... see [4.0.1 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.1+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.1+is%3Aclosed) for full details.

@@ -193,6 +193,43 @@ public class XmlTest {
     }
 
     @Test
+    public void testProcessBOMMarker_withBom_skipsBom() throws Exception {
+        byte[] bom = new byte[] {(byte)0xEF, (byte)0xBB, (byte)0xBF};
+        byte[] payload = "<a>data</a>".getBytes(Constants.CHARSET);
+        byte[] input = new byte[bom.length + payload.length];
+        System.arraycopy(bom, 0, input, 0, bom.length);
+        System.arraycopy(payload, 0, input, bom.length, payload.length);
+        try (InputStream in = new java.io.ByteArrayInputStream(input);
+             java.io.PushbackInputStream processed = Xml.processBOMMarker(in, "test.xml")) {
+            byte[] readAll = processed.readAllBytes();
+            String s = new String(readAll, Constants.CHARSET);
+            assertEquals("<a>data</a>", s);
+        }
+    }
+
+    @Test
+    public void testProcessBOMMarker_withoutBom_preservesContent() throws Exception {
+        byte[] payload = "ABCDEF".getBytes(Constants.CHARSET);
+        try (InputStream in = new java.io.ByteArrayInputStream(payload);
+             java.io.PushbackInputStream processed = Xml.processBOMMarker(in, "")) {
+            byte[] readAll = processed.readAllBytes();
+            String s = new String(readAll, Constants.CHARSET);
+            assertEquals("ABCDEF", s);
+        }
+    }
+
+    @Test
+    public void testProcessBOMMarker_shortInput_preserved() throws Exception {
+        byte[] payload = new byte[] { 'X' }; // less than 3 bytes
+        try (InputStream in = new java.io.ByteArrayInputStream(payload);
+             java.io.PushbackInputStream processed = Xml.processBOMMarker(in, null)) {
+            byte[] readAll = processed.readAllBytes();
+            assertEquals(1, readAll.length);
+            assertEquals('X', readAll[0]);
+        }
+    }
+
+    @Test
     public void testIsXmlLike() {
         assertEquals(true,
             Xml.isXMLLike("<selfclosingtag attribute=\"\"/>"));
@@ -207,4 +244,6 @@ public class XmlTest {
             Xml.isRDFLike("<?xml version='1.0' encoding='utf-8'?>\n<rdf:RDF\n" +
                 "    xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"/>"));
     }
+
+
 }

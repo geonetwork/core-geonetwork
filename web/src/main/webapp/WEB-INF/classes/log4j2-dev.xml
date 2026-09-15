@@ -46,7 +46,7 @@
     <Logger name="geonetwork.database" level="error"/>
     <Logger name="geonetwork.databasemigration" level="debug"/>
     <Logger name="geonetwork.datamanager" level="error"/>
-    <Logger name="geonetwork.domain" level="warning"/>
+    <Logger name="geonetwork.domain" level="warn"/>
     <Logger name="geonetwork.editor" level="debug"/>
     <Logger name="geonetwork.editorexpandelement" level="debug"/>
     <Logger name="geonetwork.editorfillelement" level="debug"/>
@@ -68,8 +68,6 @@
     <Logger name="geonetwork.search" level="debug"/>
     <Logger name="geonetwork.security" level="error"/>
     <Logger name="geonetwork.spatineo" level="error"/>
-    <Logger name="geonetwork.sru" level="error"/>
-    <Logger name="geonetwork.sru.search" level="debug"/>
     <Logger name="geonetwork.thesaurus" level="debug"/>
     <Logger name="geonetwork.thesaurus-man" level="debug"/>
     <Logger name="geonetwork.userwatchlist" level="error"/>
@@ -100,14 +98,6 @@
       <AppenderRef ref="File"/>
     </Logger>
 
-    <!--  JZKIT logging configuration -->
-    <Logger name="org.jzkit" level="warn" additivity="false">
-      <AppenderRef ref="Console"/>
-      <AppenderRef ref="File"/>
-    </Logger>
-    <Logger name="org.jzkit.a2j" level="warn"/>
-    <Logger name="org.jzkit.search.impl.LRUCache" level="warn"/>
-
     <Logger name="ro.isdc.wro.http" level="debug" additivity="false">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>
@@ -132,6 +122,11 @@
     </Logger>
 
     <Logger name="org.apache.camel" level="warn" additivity="false">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="File"/>
+    </Logger>
+
+    <Logger name="com.zaxxer.hikari" level="warn" additivity="false">
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>
     </Logger>

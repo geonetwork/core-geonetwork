@@ -533,6 +533,10 @@ public class MetadataSchema {
         return hmOperationFilters.get(operation);
     }
 
+    public MetadataSchemaOperationFilter getOperationFilter(MetadataOperationFilterType operation) {
+        return hmOperationFilters.get(operation.name());
+    }
+
     @JsonIgnore
     public SchemaPlugin getSchemaPlugin() {
         return schemaPlugin;

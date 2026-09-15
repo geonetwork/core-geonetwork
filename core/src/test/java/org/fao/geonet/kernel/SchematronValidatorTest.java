@@ -107,7 +107,7 @@ public class SchematronValidatorTest extends AbstractCoreIntegrationTest {
     public void testGetApplicableSchematron() throws Exception {
         ApplicableSchematron applicableSchematron = schematronValidator.getApplicableSchematron(id, metadata, schema, schematron);
 
-        assertEquals(SchematronRequirement.REQUIRED, applicableSchematron.requirement);
+        assertEquals(SchematronRequirement.REQUIRED, applicableSchematron.getRequirement());
     }
 
     @Test
@@ -116,7 +116,7 @@ public class SchematronValidatorTest extends AbstractCoreIntegrationTest {
 
         boolean found = false;
         for (ApplicableSchematron applicable : applicableSchematron) {
-            found |= applicable.schematron.getId() == schematron.getId();
+            found |= applicable.getSchematron().getId() == schematron.getId();
         }
     }
 }

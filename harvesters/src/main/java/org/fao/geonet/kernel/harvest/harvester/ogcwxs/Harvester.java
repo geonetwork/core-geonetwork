@@ -47,6 +47,7 @@ import org.fao.geonet.kernel.harvest.harvester.*;
 import org.fao.geonet.kernel.schema.ISOPlugin;
 import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.MetadataCategoryRepository;
@@ -61,6 +62,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.Namespace;
 import org.jdom.xpath.XPath;
+import org.springframework.core.io.PathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
@@ -248,25 +250,27 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         //-----------------------------------------------------------------------
         //--- remove old metadata
-        for (String uuid : localUuids.getUUIDs()) {
-            if (cancelMonitor.get()) {
-                return this.result;
-            }
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
+            for (String uuid : localUuids.getUUIDs()) {
+                if (cancelMonitor.get()) {
+                    return this.result;
+                }
 
-            //If it was not on the uuids added:
-            if (!uuids.contains(uuid)) {
-                String id = localUuids.getID(uuid);
+                //If it was not on the uuids added:
+                if (!uuids.contains(uuid)) {
+                    String id = localUuids.getID(uuid);
 
-                if (log.isDebugEnabled())
-                    log.debug("  - Removing old metadata before update with id: " + id);
+                    if (log.isDebugEnabled())
+                        log.debug("  - Removing old metadata before update with id: " + id);
 
-                //--- remove the metadata directory including the public and private directories.
-                store.delResources(context, uuid);
+                    //--- remove the metadata directory including the public and private directories.
+                    store.delResources(context, uuid);
 
-                // Remove metadata
-                metadataManager.deleteMetadata(context, id);
+                    // Remove metadata
+                    metadataManager.deleteMetadata(context, id, submitter);
 
-                result.locallyRemoved++;
+                    result.locallyRemoved++;
+                }
             }
         }
 
@@ -415,7 +419,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
 
         if (!dataMan.existsMetadataUuid(uuid)) {
             result.addedMetadata++;
-            metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+            metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
         } else {
             result.updatedMetadata++;
             String id = dataMan.getMetadataId(uuid);
@@ -834,7 +838,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
             }
             if (!dataMan.existsMetadataUuid(reg.uuid)) {
                 result.addedMetadata++;
-                metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, false);
+                metadata = metadataManager.insertMetadata(context, metadata, xml, IndexingMode.none, false, UpdateDatestamp.NO, false, batchingIndexSubmitter);
             } else {
                 result.updatedMetadata++;
                 String id = dataMan.getMetadataId(reg.uuid);
@@ -916,7 +920,7 @@ class Harvester extends BaseAligner<OgcWxSParams> implements IHarvester<HarvestR
                 store.delResource(context, layer.uuid, filename.getFileName().toString());
             } catch (Exception e) {}
             MetadataResource resource = store.putResource(context, layer.uuid,
-                filename,
+                new PathResource(filename),
                 MetadataResourceVisibility.PUBLIC);
             Path xslProcessing = schemaMan
                 .getSchemaDir(schema).resolve("process")

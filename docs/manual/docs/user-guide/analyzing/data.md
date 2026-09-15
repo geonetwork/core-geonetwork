@@ -2,7 +2,7 @@
 
 ## Data accessible using download services (WFS)
 
-All datasets described in metadata records and accessible through a download services (ie WFS) can be analyzed to improve search and data visualization. The catalog collect WFS features and index them.
+All datasets described in metadata records and accessible through a download service (i.e. WFS) can be analyzed to improve search and data visualization. The catalog collect WFS features and index them.
 
 ![](img/mechanism.png)
 
@@ -18,7 +18,7 @@ Once indexed, all users can access the filtering menu providing:
 -   a control to display or not the heatmap
 -   facets on all fields (computing automatically range facet for numbers)
 -   table action display all values
--   filter action apply the filters to the WMS layers using SLD
+-   filter action apply the filters to the WMS layers via the WMS `FILTER` parameter
 
 ![](img/filtering.png)
 
@@ -32,7 +32,7 @@ Spatial filters can also be applied.
 
 ## Feature type customization
 
-By default, the filter panel is generated from Elasticsearch index. But you customise it for a specific WFS Feature Type.
+By default, the filter panel is generated from the Elasticsearch index. But you can customise it for a specific WFS Feature Type.
 
 The customisation is done by a JSON config inserted in the gmd:applicationProfile section of the online resource in the metadata.
 

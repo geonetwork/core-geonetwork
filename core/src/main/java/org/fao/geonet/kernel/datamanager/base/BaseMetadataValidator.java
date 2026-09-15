@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -28,6 +28,7 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_METADATA_VALIDATION_
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +49,7 @@ import org.fao.geonet.kernel.SchematronValidator;
 import org.fao.geonet.kernel.SchematronValidatorExternalMd;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.utils.Log;
@@ -65,11 +67,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 
@@ -93,6 +90,9 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
     @Lazy
     private SettingManager settingManager;
 
+    @Autowired
+    private IMetadataUtils metadataUtils;
+
     private IMetadataManager metadataManager;
 
     @Override
@@ -114,7 +114,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         XmlErrorHandler eh = new XmlErrorHandler();
         Element xsdErrors = validateInfo(schema, xml, eh);
         if (xsdErrors != null) {
-            if (!fileName.equals(" ")) {
+            if (!StringUtils.isBlank(fileName)) {
                 throw new XSDValidationErrorEx("XSD Validation error(s):\n" + Xml.getString(xsdErrors) + "(in " + fileName + "): ", xsdErrors);
             } else {
                 throw new XSDValidationErrorEx("XSD Validation error(s):\n" + Xml.getString(xsdErrors), xsdErrors);
@@ -127,9 +127,9 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
         Element schemaTronReport = doSchemaTronForEditor(schema, xml, context.getLanguage(), groupOwner);
         xml.detach();
-        if (schemaTronReport != null && schemaTronReport.getContent().size() > 0) {
+        if (schemaTronReport != null && !schemaTronReport.getContent().isEmpty()) {
 
-            List<Namespace> theNSs = new ArrayList<Namespace>();
+            List<Namespace> theNSs = new ArrayList<>();
             theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
             theNSs.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
 
@@ -148,15 +148,16 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
             if ((!failedAssert.isEmpty()) || (!failedSchematronVerification.isEmpty())) {
                 StringBuilder errorReport = new StringBuilder();
+                String errorReportSeparator = "";
 
                 Iterator reports = schemaTronReport.getDescendants(ReportFinder);
                 while (reports.hasNext()) {
                     Element report = (Element) reports.next();
                     Element schematronVerificationError = report.getChild("schematronVerificationError", Edit.NAMESPACE);
 
-
                     if (schematronVerificationError != null) {
-                        errorReport.append("schematronVerificationError: " + schematronVerificationError.getTextTrim());
+                        errorReport.append(errorReportSeparator).append("schematronVerificationError: " + schematronVerificationError.getTextTrim());
+                        errorReportSeparator = ", ";
                     } else {
                         Iterator errors = report.getDescendants(ErrorFinder);
                         while (errors.hasNext()) {
@@ -182,14 +183,14 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
                             }
 
                             if (msg.length() > 0) {
-                                errorReport.append(reportType).append(':').append(msg);
+                                errorReport.append(errorReportSeparator).append(reportType).append(':').append(msg);
+                                errorReportSeparator = ", ";
                             }
                         }
                     }
                 }
 
-                throw new SchematronValidationErrorEx(
-                    "Schematron errors detected for file " + fileName + " - " + errorReport + " for more details", schemaTronReport);
+                throw new SchematronValidationErrorEx(buildSchematronValidationErrorMessage(context, fileName, schema, xml, errorReport.toString()), schemaTronReport);
             }
         }
 
@@ -201,7 +202,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         // --- we must skip this phase
 
         Namespace ns = md.getNamespace();
-        if (ns != Namespace.NO_NAMESPACE && (md.getNamespacePrefix().equals(""))) {
+        if (ns != Namespace.NO_NAMESPACE && (md.getNamespacePrefix().isEmpty())) {
             // --- set prefix for iso19139 metadata
 
             ns = Namespace.getNamespace("gmd", md.getNamespace().getURI());
@@ -254,7 +255,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         String schemaLoc = md.getAttributeValue("schemaLocation", Namespaces.XSI);
         LOGGER.debug("Extracted schemaLocation of {}", schemaLoc);
         boolean noChoiceButToUseSchemaLocation = schema == null;
-        boolean isSchemaLocationDefinedInMd = schemaLoc != null && schemaLoc != "";
+        boolean isSchemaLocationDefinedInMd = schemaLoc != null && !schemaLoc.isEmpty();
 
         if (noChoiceButToUseSchemaLocation || isSchemaLocationDefinedInMd) {
             return Xml.validateInfo(md, eh, schema);
@@ -364,7 +365,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
      * @param lang     Language from context
      */
     @Override
-    public Pair<Element, Boolean> doValidate(AbstractMetadata metadata, String lang) {
+    public Pair<Element, Boolean> doValidate(AbstractMetadata metadata, String lang) throws Exception {
         String schema = metadata.getDataInfo().getSchemaId();
         int metadataId = metadata.getId();
         Element errorReport = new Element("report", Edit.NAMESPACE);
@@ -377,6 +378,9 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             return Pair.read(errorReport, false);
         }
 
+        // Inflate the metadata so that it contains all the necessary information for validation.
+        md = metadataManager.inflateMetadata(md, schema, lang);
+
         List<MetadataValidation> validations = new ArrayList<>();
         boolean valid = true;
 
@@ -385,7 +389,7 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         Element xsdErrors = getXSDXmlReport(schema, md, false);
 
         int xsdErrorCount = 0;
-        if (xsdErrors != null && xsdErrors.getContent().size() > 0) {
+        if (xsdErrors != null && !xsdErrors.getContent().isEmpty()) {
             xsdErrorCount = xsdErrors.getContent().size();
         }
         if (xsdErrorCount > 0) {
@@ -408,25 +412,36 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
 
             // Apply custom schematron rules
             Element schemaTronReport = applyCustomSchematronRules(schema, metadataId, md, lang, validations);
-            if (valid && schemaTronReport != null) {
-                List<Namespace> theNSs = new ArrayList<Namespace>();
+            if (schemaTronReport != null) {
+                List<Namespace> theNSs = new ArrayList<>();
                 theNSs.add(Namespace.getNamespace("geonet", "http://www.fao.org/geonetwork"));
                 theNSs.add(Namespace.getNamespace("svrl", "http://purl.oclc.org/dsdl/svrl"));
 
-                List<?> failedAssert = Xml.selectNodes(schemaTronReport,
-                    "geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/svrl:schematron-output/svrl:failed-assert",
+                // Get all the errors
+                List<?> errors = Xml.selectNodes(schemaTronReport,
+                    "geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/svrl:schematron-output/svrl:failed-assert" +
+                    " | geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/geonet:schematronVerificationError",
                     theNSs);
 
-                List<?> failedSchematronVerification = Xml.selectNodes(schemaTronReport,
-                    "geonet:report[@geonet:required = '" + SchematronRequirement.REQUIRED + "']/geonet:schematronVerificationError",
+                // Get all the warnings
+                List<?> warnings = Xml.selectNodes(schemaTronReport,
+                    "geonet:report[@geonet:required = '" + SchematronRequirement.REPORT_ONLY + "']/svrl:schematron-output/svrl:failed-assert" +
+                        " | geonet:report[@geonet:required = '" + SchematronRequirement.REPORT_ONLY + "']/geonet:schematronVerificationError",
                     theNSs);
 
-                if (failedAssert.size() >  0 || failedSchematronVerification.size() > 0) {
+                // If there are errors the report is not valid
+                if (!errors.isEmpty()) {
                     valid = false;
-                    errorReport.addContent(schemaTronReport);
                     if (LOGGER.isDebugEnabled()) {
                         LOGGER.debug("  - Schematron error: {}", Xml.getString(schemaTronReport));
                     }
+                } else if (!warnings.isEmpty()) {
+                    LOGGER.debug("  - Schematron warning: {}", Xml.getString(schemaTronReport));
+                }
+
+                // Add the schematron report content if there are errors or warnings
+                if (!errors.isEmpty() || !warnings.isEmpty()) {
+                    errorReport.addContent(schemaTronReport);
                 }
             }
         } catch (Exception e) {
@@ -453,13 +468,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         int intMetadataId = Integer.parseInt(metadataId);
         String version = null;
         LOGGER.debug("Creating validation report for record #{} [schema: {}].", metadataId, schema);
-
-        Element sessionReport = (Element) session.getProperty(Geonet.Session.VALIDATION_REPORT + metadataId);
-        if (sessionReport != null && !forEditing) {
-            LOGGER.debug("  Validation report available in session.");
-            sessionReport.detach();
-            return Pair.read(sessionReport, version);
-        }
 
         List<MetadataValidation> validations = new ArrayList<>();
         Element errorReport = new Element("report", Edit.NAMESPACE);
@@ -514,8 +522,6 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
         }
 
         saveValidationStatus(intMetadataId, validations);
-
-        session.setProperty(Geonet.Session.VALIDATION_REPORT + metadataId, errorReport);
 
         return Pair.read(errorReport, version);
     }
@@ -606,4 +612,37 @@ public class BaseMetadataValidator implements org.fao.geonet.kernel.datamanager.
             return false;
         }
     };
+
+    private String buildSchematronValidationErrorMessage(ServiceContext context, String fileName, String schema, Element xml, String errorReport) {
+        if (!StringUtils.isBlank(fileName)) {
+            return String.format("Schematron errors detected for metadata in file '%s' - %s", fileName, errorReport);
+        } else {
+            String metadataUuid;
+            String metadataTitle;
+
+            try {
+                metadataUuid = metadataUtils.extractUUID(schema, xml);
+                metadataTitle = extractMetadataTitle(metadataUtils.extractTitles(schema, xml), context.getLanguage());
+            } catch(Exception ex) {
+                return String.format("Schematron errors detected - %s", errorReport);
+            }
+
+            return String.format("Schematron errors detected for metadata with UUID '%s' / %s - %s", metadataUuid, metadataTitle, errorReport);
+        }
+    }
+
+    private String extractMetadataTitle(LinkedHashMap<String, String> metadataTitles, String language) {
+        String metadataTitle = metadataTitles.get(language);
+
+        if (metadataTitle == null) {
+            Map.Entry<String, String> first = metadataTitles.entrySet().stream().findFirst().orElse(null);
+            if (first != null) {
+                metadataTitle = first.getValue();
+            } else {
+                metadataTitle = "";
+            }
+        }
+
+        return metadataTitle;
+    }
 }

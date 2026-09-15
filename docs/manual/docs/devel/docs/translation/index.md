@@ -1,6 +1,6 @@
 # Translation
 
-The ``mkdocs-static-i18n`` plugin is setup based on suffix, with **`index.md`** is the default English, and **``index.fr.md``** used for French:
+The ``mkdocs-static-i18n`` plugin is set up based on suffix, with **`index.md`** as the default English and **``index.fr.md``** used for French:
 
 ``` text
 | index.md
@@ -29,7 +29,7 @@ Specific ***pandoc*** extensions are used to match the capabilities of ***mkdocs
 | pymdownx.superfences | backtick_code_blocks   |
 | admonition           | fenced_divs            |
 
-The differences differences in markdown requires pre/post processing of markdown and html files. These steps are automated in the ***translate*** python script (check comments for details). Supporting additional ***mkdocs*** features requires updating this script.
+The differences in markdown require pre/post processing of markdown and HTML files. These steps are automated in the ***translate*** python script (check comments for details). Supporting additional ***mkdocs*** features requires updating this script.
 
 1. Install [mkdocs_translate](https://github.com/jodygarnett/translate) python script:
    

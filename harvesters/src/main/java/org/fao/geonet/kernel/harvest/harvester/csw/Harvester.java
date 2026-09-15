@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -111,9 +111,8 @@ class Harvester implements IHarvester<HarvestResult> {
 
         boolean error = false;
         HarvestResult result = new HarvestResult();
-    	Set<String> uuids = new HashSet<String>();
-        try {
-            Aligner aligner = new Aligner(cancelMonitor, context, server, params, log);
+    	Set<String> uuids = new HashSet<>();
+        try (Aligner aligner = new Aligner(cancelMonitor, context, server, params, log)) {
             searchAndAlign(server, uuids, aligner, errors);
             result = aligner.cleanupRemovedRecords(uuids);
         } catch (Exception t) {
@@ -233,6 +232,11 @@ class Harvester implements IHarvester<HarvestResult> {
         if (params.isUseAccount()) {
             log.debug("Logging into server (" + params.getUsername() + ")");
             request.setCredentials(params.getUsername(), params.getPassword());
+        }
+
+        if (params.getApiKey() != null && !params.getApiKey().isBlank()) {
+            log.debug("Using apiKey to authenticate");
+            request.setApiKey(params.getApiKeyHeader(), params.getApiKey());
         }
         // Simple fallback mechanism. Try search with PREFERRED_HTTP_METHOD method, if fails change it
         try {
@@ -725,7 +729,7 @@ class Harvester implements IHarvester<HarvestResult> {
             if (modified.length() == 0) modified = null;
             if (log.isDebugEnabled())
                 log.debug("getRecordInfo: adding " + identif + " with modification date " + modified);
-            return new RecordInfo(identif, modified);
+            return new RecordInfo(identif, modified, schema, null);
         } catch (Exception e) {
             log.warning("Skipped record not in supported format : " + name);
         }

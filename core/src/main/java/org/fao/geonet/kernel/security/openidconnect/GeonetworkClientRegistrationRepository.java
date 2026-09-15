@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -26,6 +26,8 @@ package org.fao.geonet.kernel.security.openidconnect;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 
+import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider.CLIENT_REGISTRATION_NAME;
+import static org.fao.geonet.kernel.security.openidconnect.bearer.GeonetworkClientServiceAccountRegistrationProvider.CLIENT_SERVICE_ACCOUNT_REGISTRATION_NAME;
 
 /**
  * trivial implementation of ClientRegistrationRepository.
@@ -35,16 +37,33 @@ public class GeonetworkClientRegistrationRepository implements ClientRegistratio
 
     ClientRegistration clientRegistration;
 
+    ClientRegistration clientServiceAccountRegistration;
 
     public GeonetworkClientRegistrationRepository(GeonetworkClientRegistrationProvider clientRegistrationProvider) throws Exception {
         if (clientRegistrationProvider == null)
             throw new Exception("clientRegistration must not be null!");
         clientRegistration = clientRegistrationProvider.getClientRegistration();
+        clientServiceAccountRegistration = null;
+    }
+
+
+    public GeonetworkClientRegistrationRepository(GeonetworkClientRegistrationProvider clientRegistrationProvider,
+                                                  GeonetworkClientRegistrationProvider clientServiceAccountRegistrationProvider) throws Exception {
+        if (clientRegistrationProvider == null)
+            throw new Exception("clientRegistration must not be null!");
+        clientRegistration = clientRegistrationProvider.getClientRegistration();
+        clientServiceAccountRegistration = clientServiceAccountRegistrationProvider.getClientRegistration();
     }
 
 
     @Override
     public ClientRegistration findByRegistrationId(String registrationId) {
-        return clientRegistration;
+        if (CLIENT_REGISTRATION_NAME.equals(registrationId)) {
+            return clientRegistration;
+        } else if (CLIENT_SERVICE_ACCOUNT_REGISTRATION_NAME.equals(registrationId)) {
+            return clientServiceAccountRegistration;
+        } else {
+            return null;
+        }
     }
 }

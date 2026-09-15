@@ -62,6 +62,7 @@
    */
 
   var module = angular.module("gn_viewer", [
+    "ngSanitize",
     "gn_viewer_directive",
     "gn_viewer_service",
     "gn_wmsimport",
@@ -95,9 +96,10 @@
   module.controller("gnViewerController", [
     "$scope",
     "$timeout",
+    "$sanitize",
     "gnViewerSettings",
     "gnMap",
-    function ($scope, $timeout, gnViewerSettings, gnMap) {
+    function ($scope, $timeout, $sanitize, gnViewerSettings, gnMap) {
       var map = $scope.searchObj.viewerMap;
 
       // Display pop up on feature over
@@ -141,7 +143,7 @@
                 });
                 html = '<dl class="dl-horizontal">' + html + "</dl>";
               }
-              overlay.getElement().innerHTML = html;
+              overlay.getElement().innerHTML = $sanitize(html);
             }
             overlay.setPosition(coordinate);
             $(overlay.getElement()).show();

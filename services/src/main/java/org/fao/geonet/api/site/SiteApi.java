@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -64,6 +64,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -78,6 +79,8 @@ import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.ProxyInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -97,6 +100,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.fileupload.util.Streams.checkFileName;
 import static org.fao.geonet.api.ApiParams.API_CLASS_CATALOG_TAG;
@@ -113,7 +117,7 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_FEEDBACK_EMAIL;
 @Tag(name = API_CLASS_CATALOG_TAG,
     description = ApiParams.API_CLASS_CATALOG_OPS)
 @Controller("site")
-public class SiteApi {
+public class SiteApi implements ApplicationEventPublisherAware {
     @Autowired
     GeonetworkDataDirectory dataDirectory;
     @Autowired
@@ -142,6 +146,14 @@ public class SiteApi {
 
     @Autowired
     private SystemInfo info;
+
+    private ApplicationEventPublisher eventPublisher;
+
+    @Override
+    public void setApplicationEventPublisher(
+        ApplicationEventPublisher applicationEventPublisher) {
+        this.eventPublisher = applicationEventPublisher;
+    }
 
     public static void reloadServices(ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
@@ -179,11 +191,29 @@ public class SiteApi {
         summary = "Get site (or portal) description",
         description = "")
     @RequestMapping(
+        consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.ALL_VALUE},
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Site description.")
+        @ApiResponse(responseCode = "200", description = "Site description.",
+        content = {
+            @Content(schema = @Schema(
+                type = "object",
+                additionalPropertiesSchema = String.class
+            ),
+                examples = @ExampleObject(value = "{\n" +
+                "  \"system/site/name\": \"My GeoNetwork catalogue\",\n" +
+                "  \"system/site/organization\": \"My organization\",\n" +
+                "  \"system/site/siteId\": \"33bc8c82-7ac2-49b6-a22b-af7376dbcf10\",\n" +
+                "  \"system/platform/version\": \"4.4.7\",\n" +
+                "  \"system/platform/subVersion\": \"SNAPSHOT\",\n" +
+                "  \"node/default\": \"true\",\n" +
+                "  \"node/id\": \"33bc8c82-7ac2-49b6-a22b-af7376dbcf10\",\n" +
+                "  \"node/name\": \"My GeoNetwork catalogue\",\n" +
+                "  \"microservices/enabled\": false\n" +
+                "}"))
+        })
     })
     @ResponseBody
     public SettingsListResponse getSiteOrPortalDescription(
@@ -445,13 +475,17 @@ public class SiteApi {
         if (MediaType.APPLICATION_JSON_VALUE.equals(request.getContentType()) && allRequestParams.isEmpty()) {
             BufferedReader reader = request.getReader();
             ObjectMapper mapper = new ObjectMapper();
-            allRequestParams = mapper.readValue(reader, new TypeReference<Map<String, String>>() {});
+            allRequestParams = mapper.readValue(reader, new TypeReference<>() {
+            });
         }
 
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         String currentUuid = settingManager.getSiteId();
         String oldSiteName = settingManager.getSiteName();
         String oldBaseUrl = settingManager.getBaseURL();
+
+        List<Setting> oldSettings = settingManager.getAll();
+        List<Setting> oldSettingsClone = oldSettings.stream().map(Setting::createDeepCopy).collect(Collectors.toList());
 
         if (!settingManager.setValues(allRequestParams)) {
             throw new OperationAbortedEx("Cannot set all values");
@@ -510,6 +544,11 @@ public class SiteApi {
 
         // Reload services affected by updated settings
         reloadServices(context);
+
+        eventPublisher.publishEvent(
+            new org.fao.geonet.events.setting.SettingsChanged(settingManager.getAll(),
+                oldSettingsClone));
+
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -596,7 +635,7 @@ public class SiteApi {
         HttpServletRequest request
     ) throws Exception {
         ApiUtils.createServiceContext(request);
-        return ApplicationContextHolder.get().getBean(DataManager.class).isIndexing();
+        return BatchOpsMetadataReindexer.isIndexing();
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -613,10 +652,6 @@ public class SiteApi {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
         boolean reset,
-        @Parameter(description = "Asynchronous mode (only on all records. ie. no selection bucket)",
-            required = false)
-        @RequestParam(required = false, defaultValue = "false")
-        boolean asynchronous,
         @Parameter(description = "Index. By default only remove record index.",
             required = false)
         @RequestParam(required = false, defaultValue = "records")
@@ -632,8 +667,7 @@ public class SiteApi {
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-        DataManager dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
-        boolean isIndexing = dataManager.isIndexing();
+        boolean isIndexing = BatchOpsMetadataReindexer.isIndexing();
 
         if (isIndexing) {
             throw new NotAllowedException(
@@ -649,28 +683,12 @@ public class SiteApi {
 
         if (StringUtils.isEmpty(bucket)) {
             BaseMetadataManager metadataManager = ApplicationContextHolder.get().getBean(BaseMetadataManager.class);
-            metadataManager.synchronizeDbWithIndex(context, false, asynchronous);
+            metadataManager.synchronizeDbWithIndex(context);
         } else {
             searchMan.rebuildIndex(context, false, bucket);
         }
 
         return new HttpEntity<>(HttpStatus.CREATED);
-    }
-
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Index commit",
-        description = "")
-    @RequestMapping(
-        path = "/index/commit",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('Administrator')")
-    public void indexCommit(
-        HttpServletRequest request
-    ) throws Exception {
-        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-        searchMan.forceIndexChanges();
     }
 
 
@@ -716,24 +734,6 @@ public class SiteApi {
         );
         infoIndexDbSynch.put("index.count", countResponse.count());
         return infoIndexDbSynch;
-    }
-
-
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Force to commit pending documents in index.",
-        description = "May be used when indexing task is hanging.")
-    @PutMapping(
-        path = "/index/commit")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Changes committed.")
-    })
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('Administrator')")
-    public void commitIndexChanges(
-    ) throws Exception {
-        ApplicationContextHolder.get()
-            .getBean(EsSearchManager.class)
-            .forceIndexChanges();
     }
 
 

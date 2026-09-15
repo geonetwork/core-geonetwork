@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -551,6 +551,15 @@ public interface IMetadataUtils {
     void replaceFiles(AbstractMetadata original, AbstractMetadata dest);
 
     /**
+     * Checks if the metadata is available in the current portal.
+     *
+     * @param id
+     * @return
+     */
+    boolean isMetadataAvailableInPortal(int id);
+
+
+    /**
      * Get the metadata after preforming a search and replace on it.
      * @param uuid    The UUID of the metadata to search for.
      * @param search  The string to search for.
@@ -576,4 +585,5 @@ public interface IMetadataUtils {
      * @return The metadata with the search and replace applied.
      */
     String selectOneWithRegexSearchAndReplace(String uuid, String search, String replace);
+
 }

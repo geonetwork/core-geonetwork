@@ -24,21 +24,37 @@ package org.fao.geonet.kernel.security.openidconnect.bearer;
 
 import com.google.common.collect.Lists;
 import junit.framework.TestCase;
-import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.jwt.Jwt;
 
 import java.time.Instant;
-import java.util.Collections;
 
 public class UserInfoCacheTest extends TestCase {
 
-    private OAuth2User user1 = new DefaultOAuth2User(Lists.newArrayList(), Collections.singletonMap("name", "frank"), "name");
-    private OAuth2User user2 = new DefaultOAuth2User(Lists.newArrayList(), Collections.singletonMap("name", "jeff"), "name");
+    private final Jwt jwt1 = Jwt.withTokenValue("token1")
+        .header("alg", "none")
+        .claim("sub", "frank")
+        .expiresAt(Instant.now().plusSeconds(1000))
+        .issuedAt(Instant.now())
+        .build();
+
+    private final Jwt jwt2 = Jwt.withTokenValue("token2")
+        .header("alg", "none")
+        .claim("sub", "jeff")
+        .expiresAt(Instant.now().plusSeconds(1000))
+        .issuedAt(Instant.now())
+        .build();
+
+    private final Jwt jwt3 = Jwt.withTokenValue("token3")
+        .header("alg", "none")
+        .claim("sub", "jeff")
+        .expiresAt(Instant.now().minusSeconds(1000))
+        .issuedAt(Instant.now().minusSeconds(2000))
+        .build();
 
     public void testCache() {
-        UserInfoCacheItem item1 = new UserInfoCacheItem("a", Instant.now().plusSeconds(1000), user1, Lists.newArrayList());
-        UserInfoCacheItem item2 = new UserInfoCacheItem("b", Instant.now().plusSeconds(1000), user2, Lists.newArrayList());
-        UserInfoCacheItem item3 = new UserInfoCacheItem("c", Instant.now().minusSeconds(1000), user2, Lists.newArrayList());
+        UserInfoCacheItem item1 = new UserInfoCacheItem("a", jwt1, Lists.newArrayList(), "frank");
+        UserInfoCacheItem item2 = new UserInfoCacheItem("b", jwt2, Lists.newArrayList(), "jeff");
+        UserInfoCacheItem item3 = new UserInfoCacheItem("c", jwt3, Lists.newArrayList(), "jeff");
 
         UserInfoCache cache = new UserInfoCache();
         cache.putItem(item1);

@@ -18,11 +18,14 @@ var gnHarvestersimpleurl = {
           "password" : []
         },
         "url" : "http://",
+        "apiKeyHeader" : "",
+        "apiKey" : "",
         "loopElement" : "",
         "numberOfRecordPath": "",
         "pageSizeParam": "",
         "pageFromParam": "",
         "recordIdPath": "",
+        "recordIdPathMode": "auto",
         "toISOConversion": ""
       },
       "content" : {
@@ -87,9 +90,12 @@ var gnHarvestersimpleurl = {
       + '      <username>' + h.site.account.username + '</username>'
       + '      <password>' + h.site.account.password + '</password>'
       + '    </account>'
+      + '    <apiKeyHeader>' + h.site.apiKeyHeader + '</apiKeyHeader>'
+      + '    <apiKey>' + h.site.apiKey + '</apiKey>'
       + '    <loopElement>' + h.site.loopElement + '</loopElement>'
       + '    <numberOfRecordPath>' + h.site.numberOfRecordPath + '</numberOfRecordPath>'
       + '    <recordIdPath>' + h.site.recordIdPath + '</recordIdPath>'
+      + '    <recordIdPathMode>' + h.site.recordIdPathMode + '</recordIdPathMode>'
       + '    <pageFromParam>' + h.site.pageFromParam + '</pageFromParam>'
       + '    <pageSizeParam>' + h.site.pageSizeParam + '</pageSizeParam>'
       + '    <toISOConversion>' + h.site.toISOConversion + '</toISOConversion>'

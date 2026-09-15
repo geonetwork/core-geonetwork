@@ -33,6 +33,8 @@ import org.fao.geonet.domain.MetadataSourceInfo;
 import org.fao.geonet.kernel.EditLib;
 import org.fao.geonet.kernel.UpdateDatestamp;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.IDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.fao.geonet.repository.BatchUpdateQuery;
 import org.fao.geonet.repository.PathSpec;
 import org.fao.geonet.repository.Updater;
@@ -68,9 +70,10 @@ public interface IMetadataManager {
      *
      * @param context
      * @param metadataId
+     * @param deletionSubmittor
      * @throws Exception
      */
-    void deleteMetadata(ServiceContext context, String metadataId) throws Exception;
+    void deleteMetadata(ServiceContext context, String metadataId, IDeletionSubmitter deletionSubmittor) throws Exception;
 
     /**
      * Delete the record with the id metadataId
@@ -147,12 +150,12 @@ public interface IMetadataManager {
      * @param updateFixedInfo
      * @param updateDatestamp
      * @param fullRightsForGroup
-     * @param forceRefreshReaders
+     * @param indexSubmittor
      * @return
      * @throws Exception
      */
     AbstractMetadata insertMetadata(ServiceContext context, AbstractMetadata newMetadata, Element metadataXml, IndexingMode indexingMode,
-                                    boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, boolean forceRefreshReaders)
+                                    boolean updateFixedInfo, UpdateDatestamp updateDatestamp, boolean fullRightsForGroup, IIndexSubmitter indexSubmittor)
             throws Exception;
 
     /**
@@ -285,4 +288,16 @@ public interface IMetadataManager {
 
 
 	public Map<Integer, MetadataSourceInfo> findAllSourceInfo(Specification<? extends AbstractMetadata> specs);
+
+    /**
+     * Inflates a metadata XML document by applying a transformation using a specified XSLT stylesheet.
+     * If the stylesheet does not exist, the original metadata is returned unchanged.
+     *
+     * @param metadataXml The metadata XML document to be inflated.
+     * @param schema The schema associated with the metadata, used to locate the XSLT stylesheet.
+     * @param lang The language to be used in the transformation environment.
+     * @return The transformed metadata XML document, or the original metadata if no stylesheet is found.
+     * @throws Exception If an error occurs during the transformation process.
+     */
+    public Element inflateMetadata(Element metadataXml, String schema, String lang) throws Exception;
 }

@@ -79,6 +79,23 @@
                 {{'system/csw/transactionUpdateCreateXPath-help' | translate}}
               </p>
             </div>
+            <div data-ng-show="cswSettings['system/csw/enable']">
+              <label>
+                <input
+                  type="checkbox"
+                  name="system/csw/getRecordsIgnoreMetadataNotSupported"
+                  value="{{cswSettings['system/csw/getRecordsIgnoreMetadataNotSupported']}}"
+                  data-ng-model="cswSettings['system/csw/getRecordsIgnoreMetadataNotSupported']"
+                />
+                <span
+                  >{{'system/csw/getRecordsIgnoreMetadataNotSupported' | translate}}</span
+                >
+              </label>
+
+              <p class="help-block">
+                {{'system/csw/getRecordsIgnoreMetadataNotSupported-help' | translate}}
+              </p>
+            </div>
           </form>
 
           <div data-gn-need-help="csw-configuration"></div>

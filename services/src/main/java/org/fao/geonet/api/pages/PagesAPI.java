@@ -41,10 +41,12 @@ import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.PageIdentity;
+import org.fao.geonet.languages.LocaleMessages;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.page.PageRepository;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
+import org.fao.geonet.utils.EmailUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -82,6 +84,7 @@ public class PagesAPI {
     private static final String PAGE_DELETED = "Page removed";
     private static final String ERROR_FILE = "File not valid";
     private static final String ERROR_CREATE = "Wrong parameters are provided";
+    private static final String RESERVED_STATIC_PAGE_PREFIX = "gn-";
 
     private final PageRepository pageRepository;
     private final GroupRepository groupRepository;
@@ -177,8 +180,21 @@ public class PagesAPI {
             checkValidLanguage(language);
         }
 
+        if (pageId != null && pageId.startsWith(RESERVED_STATIC_PAGE_PREFIX)) {
+            throw new IllegalArgumentException(
+                LocaleMessages.getMessageForLocale(
+                    "api.exception.invalidStaticPageIdReservedPrefix",
+                    new String[]{pageId, RESERVED_STATIC_PAGE_PREFIX},
+                    null,
+                    "apiMessages"));
+        }
+
         if (!StringUtils.isBlank(link)) {
-            format = Page.PageFormat.LINK;
+            if (EmailUtil.isValidEmailAddress(link)) {
+                format = Page.PageFormat.EMAILLINK;
+            } else {
+                format = Page.PageFormat.LINK;
+            }
         }
 
         checkMandatoryContent(data, link, content);
@@ -198,7 +214,7 @@ public class PagesAPI {
             if (status != null) {
                 newPage.setStatus(status);
 
-                if (status == Page.PageStatus.GROUPS && CollectionUtils.isNotEmpty(groups)) {
+                if ((status == Page.PageStatus.GROUPS || status == Page.PageStatus.GROUPS_AND_ADMIN) && CollectionUtils.isNotEmpty(groups)) {
                     Set<Group> pageGroups = new LinkedHashSet<>();
                     for (String groupName : groups) {
                         Group group = groupRepository.findByName(groupName);
@@ -207,6 +223,10 @@ public class PagesAPI {
                     newPage.setGroups(pageGroups);
                 }
             }
+
+            newPage.setShowOnNonApproved(pageProperties.isShowOnNonApproved());
+            newPage.setShowOnApproved(pageProperties.isShowOnApproved());
+            newPage.setShowWhenWorkflowDisabled(pageProperties.isShowWhenWorkflowDisabled());
 
             pageRepository.save(newPage);
             return ResponseEntity.status(HttpStatus.CREATED).body("{}");
@@ -291,6 +311,9 @@ public class PagesAPI {
                 newIcon != null ? newIcon : pageToUpdate.getIcon(),
                 CollectionUtils.isNotEmpty(_groups)? _groups: null);
 
+            pageCopy.setShowOnNonApproved(pageProperties.isShowOnNonApproved());
+            pageCopy.setShowOnApproved(pageProperties.isShowOnApproved());
+            pageCopy.setShowWhenWorkflowDisabled(pageProperties.isShowWhenWorkflowDisabled());
             pageRepository.save(pageCopy);
             pageRepository.delete(pageToUpdate);
         } else {
@@ -300,9 +323,12 @@ public class PagesAPI {
             pageToUpdate.setStatus(pageProperties.getStatus() != null ? pageProperties.getStatus() : pageToUpdate.getStatus());
             pageToUpdate.setLabel(newLabel);
             pageToUpdate.setIcon(newIcon);
+            pageToUpdate.setShowOnNonApproved(pageProperties.isShowOnNonApproved());
+            pageToUpdate.setShowOnApproved(pageProperties.isShowOnApproved());
+            pageToUpdate.setShowWhenWorkflowDisabled(pageProperties.isShowWhenWorkflowDisabled());
 
             pageToUpdate.getGroups().clear();
-            if (pageToUpdate.getStatus() == Page.PageStatus.GROUPS) {
+            if (pageToUpdate.getStatus() == Page.PageStatus.GROUPS || pageToUpdate.getStatus() == Page.PageStatus.GROUPS_AND_ADMIN) {
                 pageToUpdate.getGroups().addAll(_groups);
             }
 
@@ -403,9 +429,7 @@ public class PagesAPI {
         }
 
         final UserSession us = ApiUtils.getUserSession(session);
-        if (page.get().getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() != Profile.Administrator) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        } else if ((page.get().getStatus().equals(Page.PageStatus.PRIVATE) || page.get().getStatus().equals(Page.PageStatus.GROUPS)) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
+        if (!canAccessPage(us, page.get())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         } else {
             String content;
@@ -436,9 +460,15 @@ public class PagesAPI {
         @RequestParam(value = "language", required = false) final String language,
         @RequestParam(value = "section", required = false) final Page.PageSection section,
         @RequestParam(value = "format", required = false) final Page.PageFormat format,
+        @Parameter(description = "Whether to include all pages regardless of the permissions (only for administrators)")
+        @RequestParam(value = "includeAll", required = false, defaultValue = "false") final boolean includeAll,
         @Parameter(hidden = true) final HttpSession session) {
 
         final UserSession us = ApiUtils.getUserSession(session);
+
+        if (includeAll && us.getProfile() != Profile.Administrator) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
 
         List<Page> unfilteredResult;
 
@@ -451,11 +481,7 @@ public class PagesAPI {
         final List<org.fao.geonet.api.pages.PageProperties> filteredResult = new ArrayList<>();
 
         for (final Page page : unfilteredResult) {
-            if (page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() == Profile.Administrator
-                || page.getStatus().equals(Page.PageStatus.PRIVATE) && us.getProfile() != null && us.getProfile() != Profile.Guest
-                || page.getStatus().equals(Page.PageStatus.GROUPS) && us.getProfile() != null && us.getProfile() != Profile.Guest && checkGroupPermission(us, page)
-                || page.getStatus().equals(Page.PageStatus.PUBLIC)
-                || page.getStatus().equals(Page.PageStatus.PUBLIC_ONLY) && !us.isAuthenticated()) {
+            if (includeAll || canAccessPage(us, page)) {
                 if (section == null) {
                     filteredResult.add(new PageProperties(page));
                 } else {
@@ -499,8 +525,8 @@ public class PagesAPI {
     }
 
     private void checkCorrectFormat(final MultipartFile data, final Page.PageFormat format) {
-        if (Page.PageFormat.LINK.equals(format) && data != null && !data.isEmpty()) {
-            throw new IllegalArgumentException("Wrong format. Cannot set format to LINK and upload a file.");
+        if ((Page.PageFormat.LINK.equals(format) || Page.PageFormat.EMAILLINK.equals(format)) && data != null && !data.isEmpty()) {
+            throw new IllegalArgumentException("Wrong format. Cannot set format to LINK or EMAILLINK and upload a file.");
         }
     }
 
@@ -560,13 +586,43 @@ public class PagesAPI {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             final UserSession us = ApiUtils.getUserSession(session);
-            if (page.getStatus().equals(Page.PageStatus.HIDDEN) && us.getProfile() != Profile.Administrator) {
-                return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-            } else if ((page.getStatus().equals(Page.PageStatus.PRIVATE) || page.getStatus().equals(Page.PageStatus.GROUPS)) && (us.getProfile() == null || us.getProfile() == Profile.Guest)) {
+            if (!canAccessPage(us, page)) {
                 return new ResponseEntity<>(HttpStatus.FORBIDDEN);
             } else {
                 return new ResponseEntity<>(new PageProperties(page), HttpStatus.OK);
             }
+        }
+    }
+
+    /**
+     * Check if the user has permissions to access the page based on the page status and user profile.
+     *
+     * @param us   Current User Session
+     * @param page static page object
+     * @return permission granted
+     */
+    private boolean canAccessPage(UserSession us, Page page) {
+        Profile profile = us.getProfile();
+
+        boolean isAdmin = profile == Profile.Administrator;
+        boolean isLoggedIn = profile != null && profile != Profile.Guest;
+        boolean hasGroupAccess = isLoggedIn && checkGroupPermission(us, page);
+
+        switch (page.getStatus()) {
+            case HIDDEN:
+                return isAdmin;
+            case PRIVATE:
+                return isLoggedIn;
+            case GROUPS:
+                return hasGroupAccess;
+            case GROUPS_AND_ADMIN:
+                return isAdmin || hasGroupAccess;
+            case PUBLIC:
+                return true;
+            case PUBLIC_ONLY:
+                return !us.isAuthenticated();
+            default:
+                return false;
         }
     }
 
@@ -619,28 +675,36 @@ public class PagesAPI {
             page.setData(content.getBytes());
         } else if (page.getData() == null) {
             // Check the link, unless it refers to a file uploaded to the page, that contains the original file name.
-            if (StringUtils.isNotBlank(link) && !UrlUtils.isValidRedirectUrl(link)) {
-                throw new IllegalArgumentException("The link provided is not valid");
-            } else {
-                page.setLink(link);
+            // The link should be a valid URL or mailto address
+            if (page.getFormat() == Page.PageFormat.LINK) {
+                if (StringUtils.isNotBlank(link) && !UrlUtils.isValidRedirectUrl(link)) {
+                    throw new IllegalArgumentException("The link provided is not valid");
+                } else {
+                    page.setLink(link);
+                }
+            } else if (page.getFormat() == Page.PageFormat.EMAILLINK) {
+                if (StringUtils.isNotBlank(link) && !EmailUtil.isValidEmailAddress(link)) {
+                    throw new IllegalArgumentException("The link provided is not valid");
+                } else {
+                    page.setLink(link);
+                }
             }
         }
-
     }
 
+
     /**
-     * Check is the user is in designated group to access the static page when page permission level is set to GROUP
+     * Check if the user belongs to one of the groups assigned to the static page.
+     *
      * @param us Current User Session
      * @param page static page object
-     * @return permission granted
+     * @return permission granted by group membership
      */
     private boolean checkGroupPermission (UserSession us, Page page) {
         boolean isGranted = false;
         String currentUserId = us.getUserId();
 
-        if (us.getProfile() == Profile.Administrator) {
-            isGranted = true;
-        } else if (page.getStatus().equals(Page.PageStatus.GROUPS) && StringUtils.isNotEmpty(currentUserId)) {
+        if (StringUtils.isNotEmpty(currentUserId)) {
             List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(Integer.parseInt(currentUserId)));
 
             Set<Group> accessingGroups = page.getGroups();

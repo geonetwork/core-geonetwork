@@ -13,7 +13,7 @@ This format has been designed with the following needs in mind:
 
 In the paragraphs below, some terms should be intended as follows:
 
-1.  the term actor is used to indicate any system (application, service etc\...) that operates on metadata.
+1.  the term actor is used to indicate any system (application, service etc.) that operates on metadata.
 2.  the term reader will be used to indicate any actor that can import metadata from a MEF file.
 3.  the term writer will be used to indicate any actor that can generate a MEF file.
 
@@ -35,7 +35,7 @@ Root
 1.  *metadata.xml*: this file contains the metadata itself, in XML format. The text encoding of the metadata (eg. UTF-8) is specified in the XML declaration.
 2.  *info.xml*: this is a special XML file which contains information related to the metadata (metadata about the metadata). Examples of the information in the info.xml file are: creation date, modification date, privileges This information is needed by GeoNetwork.
 3.  *public*: this is a directory used to store the metadata thumbnails and other public files. There are no restrictions on the image format but it is strongly recommended to use the portable network graphics (PNG), JPEG or GIF format.
-4.  *private*: this is a directory used to store all data (maps, shape files etc\...) uploaded with the metadata in the GeoNetwork editor. Files in this directory are *private* in the sense that authorisation is required to access them. There are no restrictions on the file types that can be stored into this directory.
+4.  *private*: this is a directory used to store all data (maps, shape files etc.) uploaded with the metadata in the GeoNetwork editor. Files in this directory are *private* in the sense that authorisation is required to access them. There are no restrictions on the file types that can be stored into this directory.
 
 Any other file or directory present in the MEF file should be ignored by readers that don't recognise them. This allows actors to add custom extensions to the MEF file.
 
@@ -49,12 +49,12 @@ It is recommended to use the .mef extension when naming MEF files.
 
 ## MEF v2 file format
 
-MEF version 2 support the following:
+MEF version 2 supports the following:
 
 -   multi-metadata support: more than one metadata record and data can be stored in a single MEF file.
 -   multi-schema support: be able to store in a single MEF n formats (eg. for an ISO profile, also store a version of that record in the base ISO19115/ISO19139 schema).
 
-Current export services that create MEF files from a metadata record with related records (eg. paent, feature catalog etc), can include these related metadata records in the MEF.
+Current export services that create MEF files from a metadata record with related records (e.g. parent, feature catalog, etc.) can include these related metadata records in the MEF.
 
 MEF v2 format structure is the following:
 
@@ -110,7 +110,7 @@ Any other element or attribute should be ignored by readers that don't understan
 
 ### Date format {#info_xml}
 
-Unless differently specified, all dates in this file must be in the ISO/8601 format. The pattern must be ``YYYY-MM-DDTHH:mm:SS`` and the timezone should be the local one.
+Unless otherwise specified, all dates in this file must be in the ISO 8601 format. The pattern must be ``YYYY-MM-DDTHH:mm:SS`` and the timezone should be the local one.
 
 Example of info file:
 

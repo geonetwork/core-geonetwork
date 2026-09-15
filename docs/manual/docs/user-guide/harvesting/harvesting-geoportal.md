@@ -18,11 +18,11 @@ Providing the following information:
 -   **Schedule**: Scheduling options to execute the harvester. If disabled, the harvester must be run manually from the harvester page. If enabled, a scheduling expression using cron syntax should be configured ([See examples](https://www.quartz-scheduler.org/documentation/quartz-2.1.7/tutorials/crontrigger)).
 
 -   **Configure connection to GeoPortal REST**
-    -   *URL*: The base URL of the GeoPortal server to be harvested. eg. <http://yourhost.com/geoportal>. The harvester will add the additional path required to access the REST services on the GeoPortal server.
+    -   *URL*: The base URL of the GeoPortal server to be harvested. eg. `http://yourhost.com/geoportal`. The harvester will add the additional path required to access the REST services on the GeoPortal server.
     -   *Remote authentication*: If checked, should be provided the credentials for basic HTTP authentication on the server.
-    -   *Search filter*: (Optional) You can query any field on the GeoPortal server using the Lucene query syntax described at <http://webhelp.esri.com/geoportal_extension/9.3.1/index.htm#srch_lucene.htm>.
+    -   *Search filter*: (Optional) You can query any field on the GeoPortal server using the [Lucene query syntax](http://webhelp.esri.com/geoportal_extension/9.3.1/index.htm#srch_lucene.htm).
   
--   **Configure response processing for geoPREST**
+-   **Configure response processing for GeoPortal REST**
     -   *Validate records before import*: Defines the criteria to reject metadata that is invalid according to XML structure (XSD) and validation rules (schematron).
         -   Accept all metadata without validation.
         -   Accept metadata that are XSD valid.
@@ -32,7 +32,7 @@ Providing the following information:
 -   **Privileges** - Assign privileges to harvested metadata.
 
 
-!!! Notes
+!!! note
 
     -   This harvester uses two REST services from the GeoPortal API:
         -   `rest/find/document` with searchText parameter to return an RSS listing of metadata records that meet the search criteria (maximum 100000)

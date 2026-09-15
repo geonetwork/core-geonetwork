@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -31,7 +31,7 @@ class DatabaseMetadataRetrieverFactory {
         // Prevent creating instances
     }
 
-    public static final DatabaseMetadataRetriever getDatabaseMetadataRetriever(String dbType, String server, int port,
+    public static DatabaseMetadataRetriever getDatabaseMetadataRetriever(String dbType, String server, int port,
                                                                 String database, String username, String password,
                                                                 Logger log) throws DatabaseMetadataRetrieverException {
 

@@ -69,9 +69,7 @@ import org.fao.geonet.wro4j.GeonetWro4jFilter;
 import org.jdom.Element;
 import org.quartz.SchedulerException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mock.web.MockFilterChain;
@@ -195,24 +193,6 @@ public class Geonetwork implements ApplicationHandler {
             if (conn != null) {
                 conn.close();
             }
-        }
-
-        //------------------------------------------------------------------------
-        //--- initialize SRU
-
-        logger.info("  - SRU...");
-
-        try {
-				  String[] configs = { Geonet.File.JZKITAPPLICATIONCONTEXT };
-          ApplicationContext app_context = new  ClassPathXmlApplicationContext( configs, _applicationContext );
-
-          // to have access to the GN context in spring-managed objects
-          ContextContainer cc = (ContextContainer)_applicationContext.getBean("ContextGateway");
-          cc.setSrvctx(context);
-
-
-        } catch (Exception e) {
-          logger.error("     SRU initialization failed - cannot pass context to SRU subsystem, SRU searches will not work! Error is:" + Util.getStackTrace(e));
         }
 
         //------------------------------------------------------------------------

@@ -20,6 +20,6 @@
 > -   [BP] [Fix issue with CMIS connection during startup](https://github.com/geonetwork/core-geonetwork/pull/6106)
 > -   [BP] [Fix issue with getting keycloak token from upgraded security context](https://github.com/geonetwork/core-geonetwork/pull/6207)
 
-and more \... see [3.12.4 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.4+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.4+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.12.4 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.4+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.4+is%3Aclosed+is%3Apr) for full details.
 
 **Full Changelog**: [here](https://github.com/geonetwork/core-geonetwork/compare/3.12.3...3.12.4)

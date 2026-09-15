@@ -53,6 +53,7 @@ public class Settings {
     public static final String METADATA_URL_SITEMAPDOIFIRST = "metadata/url/sitemapDoiFirst";
     public static final String METADATA_URL_DYNAMICAPPLINKURL = "metadata/url/dynamicAppLinkUrl";
 
+    public static final String METADATA_EDIT_SUPPORTEDFILEMIMETYPES = "system/metadata/edit/supportedFileMimetypes";
     public static final String SYSTEM_INSPIRE_ENABLE = "system/inspire/enable";
     public static final String SYSTEM_INSPIRE_ATOM = "system/inspire/atom";
     public static final String SYSTEM_INSPIRE_ATOM_SCHEDULE = "system/inspire/atomSchedule";
@@ -77,11 +78,10 @@ public class Settings {
     public static final String SYSTEM_INTRANET_NETWORK = "system/intranet/network";
     public static final String SYSTEM_INTRANET_NETMASK = "system/intranet/netmask";
     public static final String SYSTEM_INTRANET_IP_SEPARATOR = ",";
-    public static final String SYSTEM_Z3950_ENABLE = "system/z3950/enable";
-    public static final String SYSTEM_Z3950_PORT = "system/z3950/port";
     public static final String SYSTEM_SELECTIONMANAGER_MAXRECORDS = "system/selectionmanager/maxrecords";
     public static final String SYSTEM_CSW_ENABLE = "system/csw/enable";
     public static final String SYSTEM_CSW_ENABLEWHENINDEXING = "system/csw/enabledWhenIndexing";
+    public static final String SYSTEM_CSW_GETRECORDS_IGNORE_METADATA_NOT_SUPPORTED = "system/csw/getRecordsIgnoreMetadataNotSupported";
     public static final String SYSTEM_CSW_CAPABILITY_RECORD_UUID = "system/csw/capabilityRecordUuid";
     public static final String SYSTEM_CSW_METADATA_PUBLIC = "system/csw/metadataPublic";
     public static final String SYSTEM_USERSELFREGISTRATION_ENABLE = "system/userSelfRegistration/enable";
@@ -101,11 +101,13 @@ public class Settings {
     public static final String SYSTEM_OAI_MAXRECORDS = "system/oai/maxrecords";
     public static final String SYSTEM_OAI_TOKENTIMEOUT = "system/oai/tokentimeout";
     public static final String SYSTEM_OAI_CACHESIZE = "system/oai/cachesize";
+    public static final String SYSTEM_OAI_ENABLE = "system/oai/enable";
     public static final String SYSTEM_HARVESTER_ENABLE_EDITING = "system/harvester/enableEditing";
     public static final String SYSTEM_HARVESTER_ENABLE_PRIVILEGES_MANAGEMENT = "system/harvester/enablePrivilegesManagement";
     public static final String SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES = "system/harvester/disabledHarvesterTypes";
     public static final String SYSTEM_METADATAPRIVS_USERGROUPONLY = "system/metadataprivs/usergrouponly";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY = "system/metadataprivs/publicationbyrevieweringroupowneronly";
+    public static final String SYSTEM_METADATAPRIVS_PUBLICATION_MANAGEPUBLICATIONDATE = "system/metadataprivs/publication/managepublicationdate";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATIONNOTIFICATION_EMAILS = "system/metadataprivs/publication/notificationEmails";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL = "system/metadataprivs/publication/notificationLevel";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS = "system/metadataprivs/publication/notificationGroups";
@@ -120,6 +122,9 @@ public class Settings {
     public static final String SYSTEM_HARVESTING_MAIL_TEMPLATE_ERROR = "system/harvesting/mail/templateError";
     public static final String SYSTEM_HARVESTING_MAIL_TEMPLATE = "system/harvesting/mail/template";
     public static final String SYSTEM_METADATACREATE_GENERATE_UUID = "system/metadatacreate/generateUuid";
+    public static final String SYSTEM_METADATACREATE_PUBLISH_FOR_GROUP_EDITORS = "system/metadatacreate/publishForGroupEditors";
+    public static final String SYSTEM_METADATACREATE_COPY_ATTACHMENTS = "system/metadatacreate/copyAttachments";
+    public static final String SYSTEM_METADATACREATE_SKIP_METADATA_CREATION_PAGE = "system/metadatacreate/skipMetadataCreationPage";
     public static final String SYSTEM_THREADEDINDEXING_MAXTHREADS = "system/threadedindexing/maxthreads";
     public static final String SYSTEM_RESOURCE_PREFIX = "metadata/resourceIdentifierPrefix";
     public static final String SYSTEM_INSPIRE_REMOTE_VALIDATION_URL = "system/inspire/remotevalidation/url";
@@ -147,8 +152,10 @@ public class Settings {
     public static final String METADATA_DELETE_BACKUPOPTIONS = "metadata/delete/backupOptions";
     public static final String METADATA_PUBLISH_USERPROFILE = "metadata/publication/profilePublishMetadata";
     public static final String METADATA_UNPUBLISH_USERPROFILE = "metadata/publication/profileUnpublishMetadata";
+    public static final String METADATA_PUBLICATION_ENABLE_SCHEDULED_PUBLICATION = "metadata/publication/enableScheduledPublication";
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
     public static final String METADATA_VCS = "metadata/vcs/enable";
+    public static final String METADATA_ZIPEXPORT_ATTACHMENTSSIZELIMIT = "metadata/zipExport/attachmentsSizeLimit";
 
     public static final String SYSTEM_AUDITABLE_ENABLE = "system/auditable/enable";
     public static final String VIRTUAL_SETTINGS_SUFFIX_ISDEFINED = "IsDefined";

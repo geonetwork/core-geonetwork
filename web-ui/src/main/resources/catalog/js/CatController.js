@@ -444,6 +444,14 @@
                     }
                   }
                 },
+                aggs: {
+                  keep_nonzero: {
+                    bucket_selector: {
+                      buckets_path: { count: "_count" },
+                      script: "params.count > 0"
+                    }
+                  }
+                },
                 meta: {
                   decorator: {
                     type: "icon",
@@ -682,6 +690,10 @@
                 sortOrder: ""
               },
               {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
+              },
+              {
                 sortBy: "rating",
                 sortOrder: "desc"
               },
@@ -757,6 +769,11 @@
               {
                 label: "exportMEF",
                 url: "/formatters/zip?withRelated=false",
+                class: "fa-file-zip-o"
+              },
+              {
+                label: "exportMEF-excludeAttachments",
+                url: "/formatters/zip?withRelated=false&includeAttachments=false",
                 class: "fa-file-zip-o"
               },
               {
@@ -993,6 +1010,7 @@
             isUserRecordsOnly: false,
             minUserProfileToCreateTemplate: "",
             isFilterTagsDisplayed: false,
+            showFileStoreSize: true,
             fluidEditorLayout: true,
             createPageTpl: "../../catalog/templates/editor/new-metadata-horizontal.html",
             editorIndentType: "",
@@ -1038,6 +1056,23 @@
                 },
                 meta: {
                   collapsed: true
+                }
+              },
+              "indexingErrorMsg.type": {
+                terms: {
+                  field: "indexingErrorMsg.type",
+                  size: 2
+                },
+                meta: {
+                  collapsed: true,
+                  decorator: {
+                    type: "icon",
+                    prefix: "fa fa-fw ",
+                    map: {
+                      error: "fa-exclamation-circle",
+                      warning: "fa-exclamation-triangle"
+                    }
+                  }
                 }
               },
               sourceCatalogue: {
@@ -1169,6 +1204,10 @@
                 sortOrder: ""
               },
               {
+                sortBy: "resourceTitleObject.default.sort",
+                sortOrder: "desc"
+              },
+              {
                 sortBy: "recordOwner",
                 sortOrder: ""
               },
@@ -1235,6 +1274,14 @@
                       }
                     }
                   }
+                },
+                aggs: {
+                  keep_nonzero: {
+                    bucket_selector: {
+                      buckets_path: { count: "_count" },
+                      script: "params.count > 0"
+                    }
+                  }
                 }
               },
               resourceType: {
@@ -1265,7 +1312,11 @@
           authentication: {
             enabled: true,
             signinUrl: "../../{{node}}/{{lang}}/catalog.signin",
+            signinAPI: "../../signin",
             signoutUrl: "../../signout"
+            // GN5 configuration
+            // signinAPI: "../../api/user/signin",
+            // signoutUrl: "../../api/user/signout"
           },
           page: {
             enabled: true,
@@ -1838,8 +1889,16 @@
         }
       });
 
-      // login url for inline signin form in top toolbar
-      $scope.signInFormAction = "../../signin#" + $location.url();
+      // login url and form action with hash reference to the current page
+      $scope.signInFormLinkWithHash =
+        ($scope.gnCfg.mods.authentication.signinUrl ||
+          "../../{{node}}/{{lang}}/catalog.signin") +
+        "#" +
+        $location.url();
+      $scope.signInFormActionWithHash =
+        ($scope.gnCfg.mods.authentication.signinAPI || "../../signin") +
+        "#" +
+        $location.url();
 
       // when the login input have focus, do not close the dropdown/popup
       $scope.focusLoginPopup = function () {
@@ -1952,23 +2011,37 @@
                   : "";
             return angular.isFunction(this[fnName]) ? this[fnName]() : false;
           },
-          canPublishMetadata: function () {
+          canPublishMetadata: function (groupId) {
+            if (this.isAdministrator()) {
+              return true;
+            }
+
             var profile =
                 gnConfig["metadata.publication.profilePublishMetadata"] || "Reviewer",
               fnName =
                 profile !== ""
-                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "ForGroup"
                   : "";
-            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+            if (groupId === undefined || groupId === null) {
+              return false;
+            }
+            return angular.isFunction(this[fnName]) ? this[fnName](groupId) : false;
           },
-          canUnpublishMetadata: function () {
+          canUnpublishMetadata: function (groupId) {
+            if (this.isAdministrator()) {
+              return true;
+            }
+
             var profile =
                 gnConfig["metadata.publication.profileUnpublishMetadata"] || "Reviewer",
               fnName =
                 profile !== ""
-                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "OrMore"
+                  ? "is" + profile[0].toUpperCase() + profile.substring(1) + "ForGroup"
                   : "";
-            return angular.isFunction(this[fnName]) ? this[fnName]() : false;
+            if (groupId === undefined || groupId === null) {
+              return false;
+            }
+            return angular.isFunction(this[fnName]) ? this[fnName](groupId) : false;
           },
           // The md provide the information about
           // if the current user can edit records or not
@@ -2049,7 +2122,7 @@
                     var allowedProfiles = $scope.profiles.slice(
                       $scope.profiles.indexOf(profile)
                     );
-                    return allowedProfiles.some(function(p) {
+                    return allowedProfiles.some(function (p) {
                       return me["is" + p + "ForGroup"](groupId);
                     });
                   };
@@ -2148,6 +2221,16 @@
         return gnConfig["metadata.workflow.allowPublishNonApprovedMd"];
       };
 
+      // Whether the metadata type requires validation before it can be
+      // published. This mirrors the backend MetadataType.requiresValidation
+      // logic: templates and sub-templates are incomplete by design and are
+      // therefore never validated, so they must not be blocked from being
+      // published because they are "invalid". Only normal
+      // records (isTemplate === "n") require validation.
+      $scope.metadataTypeRequiresValidation = function (md) {
+        return !md.isTemplate || md.isTemplate === "n";
+      };
+
       $scope.getPublicationOptionClass = function (
         md,
         user,
@@ -2179,7 +2262,7 @@
       ) {
         var publicationOptionTitle = "";
         if (!md.isPublished(pubOption)) {
-          if (md.isValid()) {
+          if (!$scope.metadataTypeRequiresValidation(md) || md.isValid()) {
             publicationOptionTitle = "mdvalid";
           } else {
             if (

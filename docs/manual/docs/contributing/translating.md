@@ -1,6 +1,6 @@
 # Translating the application {#translating}
 
-To translate the client interface, go on [GeoNetwork on Transifex](https://www.transifex.com/geonetwork/core-geonetwork/). Only the reference language (ie. en) MUST be updated on github. All other translations MUST be on Transifex.
+To translate the client interface, go to [GeoNetwork on Transifex](https://www.transifex.com/geonetwork/core-geonetwork/). Only the reference language (i.e. English) MUST be updated on GitHub. All other translations MUST be done on Transifex.
 
 Main files to translate are the `Angular UI` ones:
 
@@ -64,4 +64,4 @@ Add a new SQL file for the database initialization in `src/main/webapp/WEB-INF/c
 
 # Translating a standard
 
-To translate a standard, see the schema folder (`schemas/iso19139/src/main/plugin/iso19139/loc`). Those files are used in the editor and formatters to translate standard elements, to provide help text, recommended values list, \...
+To translate a standard, see the schema folder (`schemas/iso19139/src/main/plugin/iso19139/loc`). Those files are used in the editor and formatters to translate standard elements, provide help text, recommended value lists, etc.

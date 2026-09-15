@@ -1,3 +1,3 @@
-# Formatter {#tuto-customui-viw}
+# Formatter {#tuto-customui-view}
 
 -   [Create a new formatter](formatter.md)

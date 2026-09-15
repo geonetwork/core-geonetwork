@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2025 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -30,28 +30,21 @@ import org.jdom.Element;
 
 //=============================================================================
 
-class Group {
-    //---------------------------------------------------------------------------
-    //---
-    //--- Constructor
-    //---
-    //---------------------------------------------------------------------------
+/**
+ * Represents a group with a specific name and copy policy configuration.
+ * This class is responsible for parsing group information from an XML
+ * element and managing group-related operations.
+ */
+public class Group {
+
 
     public String name;
-
-    //---------------------------------------------------------------------------
     public CopyPolicy policy;
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- API methods
-    //---
-    //---------------------------------------------------------------------------
 
     Group() {
     }
 
-    //---------------------------------------------------------------------------
 
     public Group(Element group) throws BadInputEx {
         name = group.getAttributeValue("name");
@@ -78,12 +71,12 @@ class Group {
             throw new BadParameterEx("attribute:policy", policy);
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- Variables
-    //---
-    //---------------------------------------------------------------------------
 
+    /**
+     * Creates a deep copy of the current Group object, replicating its name and policy attributes.
+     *
+     * @return a new Group instance with the same name and policy as the original object
+     */
     public Group copy() {
         Group m = new Group();
 
@@ -93,33 +86,44 @@ class Group {
         return m;
     }
 
+    /**
+     * Determines if the group is identified as the "all" group.
+     *
+     * @return true if the group's name equals "all", otherwise false
+     */
     public boolean isAllGroup() {
         return name.equals("all");
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- CopyType
-    //---
-    //---------------------------------------------------------------------------
 
+    /**
+     * Represents the copy policies that can be applied to a group.
+     * <p>
+     * The copy policies define different modes of copying, including simple copying,
+     * creating and copying, or copying to intranet-specific destinations. Each policy
+     * is associated with a specific string value, which can be used for parsing or
+     * representation purposes.
+     */
     public enum CopyPolicy {
         COPY("copy"),
         CREATE_AND_COPY("createAndCopy"),
         COPY_TO_INTRANET("copyToIntranet");
 
-        //------------------------------------------------------------------------
-
         private String policy;
 
-        //------------------------------------------------------------------------
-
-        private CopyPolicy(String policy) {
+        CopyPolicy(String policy) {
             this.policy = policy;
         }
 
-        //------------------------------------------------------------------------
-
+        /**
+         * Parses a string value to determine the corresponding {@link CopyPolicy} enumeration constant.
+         * If no matching policy is found, this method returns null.
+         *
+         * @param policy The string representation of the copy policy to parse. It should match
+         *               the string representation of one of the {@link CopyPolicy} constants.
+         * @return The {@link CopyPolicy} constant that matches the given string representation,
+         * or null if no match is found.
+         */
         public static CopyPolicy parse(String policy) {
             if (policy.equals(COPY.toString())) return COPY;
             if (policy.equals(CREATE_AND_COPY.toString())) return CREATE_AND_COPY;
@@ -128,13 +132,10 @@ class Group {
             return null;
         }
 
-        //------------------------------------------------------------------------
 
+        @Override
         public String toString() {
             return policy;
         }
     }
 }
-
-//=============================================================================
-

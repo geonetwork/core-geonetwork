@@ -25,14 +25,9 @@
 package org.fao.geonet.api.records.attachments;
 
 import com.amazonaws.AmazonServiceException;
-import com.amazonaws.services.s3.model.CopyObjectResult;
-import com.amazonaws.services.s3.model.ListObjectsV2Result;
-import com.amazonaws.services.s3.model.ObjectMetadata;
-import com.amazonaws.services.s3.model.PutObjectResult;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
+import com.amazonaws.services.s3.model.*;
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataResource;
@@ -42,6 +37,8 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.resources.S3Credentials;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 
 import java.io.File;
 import java.io.IOException;
@@ -62,7 +59,7 @@ public class S3Store extends AbstractStore {
 
     @Override
     public List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid,
-            final MetadataResourceVisibility visibility, String filter, Boolean approved) throws Exception {
+            final MetadataResourceVisibility visibility, String filter, Boolean approved, boolean includeAdditionalIndexedProperties) throws Exception {
         final int metadataId = canEdit(context, metadataUuid, approved);
 
         final String resourceTypeDir = getMetadataDir(metadataId) + "/" + visibility.toString();
@@ -110,9 +107,46 @@ public class S3Store extends AbstractStore {
         try {
             final S3Object object = s3.getClient().getObject(
                 s3.getBucket(), getKey(metadataUuid, metadataId, visibility, resourceId));
-            return new ResourceHolderImpl(object, createResourceDescription(metadataUuid, visibility, resourceId,
+            return new S3ResourceHolder(object, createResourceDescription(metadataUuid, visibility, resourceId,
                                                                             object.getObjectMetadata().getContentLength(),
                                                                             object.getObjectMetadata().getLastModified(), metadataId, approved));
+        } catch (AmazonServiceException ignored) {
+            throw new ResourceNotFoundException(
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+        }
+    }
+
+    @Override
+    public MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
+        // Those characters should not be allowed by URL structure
+        int metadataId = canDownload(context, metadataUuid, visibility, approved);
+        try {
+            final ObjectMetadata objectMetadata = s3.getClient().getObjectMetadata(
+                s3.getBucket(), getKey(metadataUuid, metadataId, visibility, resourceId));
+            return createResourceDescription(metadataUuid, visibility, resourceId,
+                objectMetadata.getContentLength(),
+                objectMetadata.getLastModified(), metadataId, approved);
+        } catch (AmazonServiceException ignored) {
+            throw new ResourceNotFoundException(
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+        }
+    }
+
+    @Override
+    public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String resourceId, Boolean approved, long start, long end) throws Exception {
+        // Those characters should not be allowed by URL structure
+        int metadataId = canDownload(context, metadataUuid, metadataResourceVisibility, approved);
+        try {
+            GetObjectRequest rangeGetObjectRequest = new GetObjectRequest(s3.getBucket(), getKey(metadataUuid, metadataId, metadataResourceVisibility, resourceId)).withRange(start, end);
+            final S3Object object = s3.getClient().getObject(rangeGetObjectRequest);
+            // We use getInstanceLength here to get the full length of the object not the length of the range
+            return new S3ResourceHolder(object, createResourceDescription(metadataUuid, metadataResourceVisibility, resourceId,
+                object.getObjectMetadata().getInstanceLength(),
+                object.getObjectMetadata().getLastModified(), metadataId, approved));
         } catch (AmazonServiceException ignored) {
             throw new ResourceNotFoundException(
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -180,6 +214,53 @@ public class S3Store extends AbstractStore {
         } else {
             throw new ResourceNotFoundException(
                     String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
+        }
+    }
+
+    @Override
+    public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception {
+        int metadataId = canEdit(context, metadataUuid, approved);
+        checkResourceId(newName);
+
+        String sourceKey = null;
+        ObjectMetadata objectMetadata = null;
+        MetadataResourceVisibility sourceVisibility = null;
+        for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
+            final String key = getKey(metadataUuid, metadataId, visibility, resourceId);
+            try {
+                objectMetadata = s3.getClient().getObjectMetadata(s3.getBucket(), key);
+                sourceKey = key;
+                sourceVisibility = visibility;
+                break;
+            } catch (AmazonServiceException ignored) {
+                // ignored
+            }
+        }
+
+        if (sourceKey != null) {
+            final String destKey = getKey(metadataUuid, metadataId, sourceVisibility, newName);
+            if (sourceKey.equals(destKey)) {
+                return createResourceDescription(metadataUuid, sourceVisibility, newName, objectMetadata.getContentLength(),
+                                                 objectMetadata.getLastModified(), metadataId, approved);
+            }
+            try {
+                s3.getClient().getObjectMetadata(s3.getBucket(), destKey);
+                throw new ResourceAlreadyExistException(
+                    String.format("A resource with name '%s' and status '%s' already exists for metadata '%s'.",
+                        newName, sourceVisibility, metadataUuid));
+            } catch (AmazonServiceException ignored) {
+                // destination does not exist, safe to proceed
+            }
+            final CopyObjectResult copyResult = s3.getClient().copyObject(
+                s3.getBucket(), sourceKey, s3.getBucket(), destKey);
+            s3.getClient().deleteObject(s3.getBucket(), sourceKey);
+            return createResourceDescription(metadataUuid, sourceVisibility, newName, objectMetadata.getContentLength(),
+                                             copyResult.getLastModifiedDate(), metadataId, approved);
+        } else {
+            throw new ResourceNotFoundException(
+                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                    .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                    .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
         }
     }
 
@@ -266,21 +347,20 @@ public class S3Store extends AbstractStore {
         return s3.getKeyPrefix() + metadataId;
     }
 
-    private static class ResourceHolderImpl implements ResourceHolder {
-        private Path path;
+    private static class S3ResourceHolder implements ResourceHolder {
+        private final InputStreamResource resource;
         private final MetadataResource metadata;
+        private final InputStream inputStream;
 
-        public ResourceHolderImpl(final S3Object object, MetadataResource metadata) throws IOException {
-            path = Files.createTempFile("", getFilename(object.getKey()));
+        public S3ResourceHolder(final S3Object object, MetadataResource metadata) {
             this.metadata = metadata;
-            try (S3ObjectInputStream in = object.getObjectContent()) {
-                Files.copy(in, path, StandardCopyOption.REPLACE_EXISTING);
-            }
+            this.inputStream = object.getObjectContent();
+            this.resource = new InputStreamResource(inputStream);
         }
 
         @Override
-        public Path getPath() {
-            return path;
+        public Resource getResource() {
+            return resource;
         }
 
         @Override
@@ -290,10 +370,7 @@ public class S3Store extends AbstractStore {
 
         @Override
         public void close() throws IOException {
-            if (path != null) {
-                Files.delete(path);
-                path = null;
-            }
+            inputStream.close();
         }
     }
 }

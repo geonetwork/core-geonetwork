@@ -110,13 +110,13 @@
     </entry>
     <entry>
       <code>deprecated</code>
-      <label>Deprecated</label>
+      <label>Déprécié</label>
       <description>Date à laquelle la ressource a été mise dépréciée
       </description>
     </entry>
     <entry>
       <code>superseded</code>
-      <label>Superseded</label>
+      <label>Remplacé</label>
       <description>Date à laquelle la ressource a été remplacé ou remplacé par
         une autre ressource
       </description>
@@ -1382,7 +1382,7 @@
     </entry>
     <entry>
       <code>retired</code>
-      <label>Retired</label>
+      <label>Retiré</label>
       <description>L’utilisation de l’élément n’est plus recommandée. Il n’a pas
         été remplacé par un autre élément
       </description>
@@ -1427,7 +1427,7 @@
     </entry>
     <entry>
       <code>deprecated</code>
-      <label>Déprecié</label>
+      <label>Déprécié</label>
       <description>ressource remplacée et deviendra obsolète, utilisation
         uniquement pour des besoins d’historiques
       </description>
@@ -1601,7 +1601,7 @@
     </entry>
     <entry>
       <code>nonGeographicDataset</code>
-      <label>Jeux de données non géographiques</label>
+      <label>Jeu de données non géographique</label>
       <description>Les informations appliquées aux caractéristiques de jeux de
         données non géographiques
       </description>
@@ -1671,12 +1671,12 @@
     <entry>
       <code>initiative</code>
       <label>Initiative</label>
-      <description>Les informations s’appliquent à une initiativee</description>
+      <description>Les informations s’appliquent à une initiative</description>
     </entry>
     <entry>
       <code>sample</code>
-      <label>Echantillon</label>
-      <description>Les informations s’appliquent à un échantillone</description>
+      <label>Échantillon</label>
+      <description>Les informations s’appliquent à un échantillon</description>
     </entry>
     <entry>
       <code>document</code>
@@ -2221,39 +2221,39 @@
   <codelist name="reg:RE_Disposition">
     <entry>
       <code>withdrawn</code>
-      <label>Withdrawn</label>
+      <label>Annulé</label>
       <description></description>
     </entry>
     <entry>
       <code>accepted</code>
-      <label>Accepted</label>
+      <label>Accepté</label>
       <description></description>
     </entry>
     <entry>
       <code>notAccepted</code>
-      <label>Not Accepted</label>
+      <label>Non accepté</label>
       <description></description>
     </entry>
   </codelist>
   <codelist name="reg:RE_ItemStatus">
     <entry>
       <code>notValid</code>
-      <label>Not Valid</label>
+      <label>Non valide</label>
       <description></description>
     </entry>
     <entry>
       <code>valid</code>
-      <label>Valid</label>
+      <label>Valide</label>
       <description></description>
     </entry>
     <entry>
       <code>superseded</code>
-      <label>Superseded</label>
+      <label>Remplacé</label>
       <description></description>
     </entry>
     <entry>
       <code>retired</code>
-      <label>Retired</label>
+      <label>Retiré</label>
       <description></description>
     </entry>
   </codelist>

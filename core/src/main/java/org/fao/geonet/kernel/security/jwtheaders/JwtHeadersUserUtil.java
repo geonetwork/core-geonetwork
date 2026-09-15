@@ -25,13 +25,11 @@ package org.fao.geonet.kernel.security.jwtheaders;
 
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Group;
-import org.fao.geonet.domain.Language;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.kernel.security.BaseUserUtils;
 import org.fao.geonet.kernel.security.GeonetworkAuthenticationProvider;
-import org.fao.geonet.repository.GroupRepository;
-import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.UserGroupRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.utils.Log;
@@ -46,22 +44,16 @@ import java.util.Set;
 /**
  * This class handles GeoNetwork related User (and Group/UserGroup) activities.
  */
-public class JwtHeadersUserUtil {
+public class JwtHeadersUserUtil extends BaseUserUtils {
 
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    GroupRepository groupRepository;
 
     @Autowired
     UserGroupRepository userGroupRepository;
 
     @Autowired
     GeonetworkAuthenticationProvider authProvider;
-
-    @Autowired
-    LanguageRepository languageRepository;
 
     /**
      * Gets a user.
@@ -198,19 +190,7 @@ public class JwtHeadersUserUtil {
             List<String> groups = profileGroups.get(p);
             for (String rgGroup : groups) {
 
-                Group group = groupRepository.findByName(rgGroup);
-
-                if (group == null) {
-                    group = new Group();
-                    group.setName(rgGroup);
-
-                    // Populate languages for the group
-                    for (Language l : languageRepository.findAll()) {
-                        group.getLabelTranslations().put(l.getId(), group.getName());
-                    }
-
-                    groupRepository.save(group);
-                }
+                Group group = getOrCreateGroup(rgGroup);
 
                 UserGroup usergroup = new UserGroup();
                 usergroup.setGroup(group);

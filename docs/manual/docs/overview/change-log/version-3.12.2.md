@@ -32,6 +32,6 @@
 > -   [BP] [Update log4j2 from from 2.7 to 2.15.0 (CVE-2021-44228)](https://github.com/geonetwork/core-geonetwork/pull/6070)
 > -   [BP] [Use the Map projection Region API setting in Regions/geometry related services](https://github.com/geonetwork/core-geonetwork/pull/6050)
 
-and more \... see [3.12.2 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.2+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.2+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.12.2 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.2+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.2+is%3Aclosed+is%3Apr) for full details.
 
 **Full Changelog**: [here](https://github.com/geonetwork/core-geonetwork/compare/3.12.1...3.12.2)

@@ -1,0 +1,19 @@
+================================================================================
+===
+=== GeoNetwork 4.2.16-SNAPSHOT: List of changes
+===
+================================================================================
+- Elasticsearch / Proxy / More robust aggregations processing (#9312)
+- Elasticsearch / Proxy / More robust filter processing (#9310)
+- [Backport 4.2.x] Harden login redirect URL validation (#9309)
+- Library updates (#9299) (#9308)
+- GN4 harvester / ignore unknown fields when deserializing sources and groups (#9304)
+- Release / Generate sha256 instead of md5 (#9301) (#9303)
+- Use version 2.4.3 of markdown-page-generator-plugin plugin, compatible with Java 8 (#9305)
+- [Backport 4.2.x] Metadata editor / close the service link dialogue box when linking it to the service metadata (#9295)
+- [Backport 4.2.x] Metadata import / help text for the category field (#9265)
+- Batch editing - In XPATH replace mode don't try to add a node if doesn't exist (#9266)
+- Setting / fix setting editable method (#9259)
+- Sort geographic extent autocomplete suggestions alphabetically (#9260)
+- docs: add documentation for application banner feature (#9262)
+- Fix missing link in docs nav structure

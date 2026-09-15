@@ -127,7 +127,7 @@ public class Header {
         Element header = new Element("header", OaiPmh.Namespaces.OAI_PMH);
 
         Lib.add(header, "identifier", identifier);
-        Lib.add(header, "datestamp", dateStamp + "Z");
+        Lib.add(header, "datestamp", dateStamp.getDateAndTime());
 
         for (String set : sets)
             Lib.add(header, "setSpec", set);

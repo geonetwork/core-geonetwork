@@ -12,7 +12,7 @@ The data directory also contains a number of support files used by the catalog f
 -   uploaded document attached to metadata records
 -   thumbnails
 
-It is a good idea to define an external data directory when going to production in order to make future updates easier. The data directory allows to run the WAR in readonly mode if needed.
+It is a good idea to define an external data directory when going to production in order to make future updates easier. The data directory allows the WAR to run in read-only mode if needed.
 
 ## Creating a new data directory
 
@@ -30,7 +30,7 @@ If the data directory is not set, the following message is displayed in the log 
 If the data directory is not accessible for the user, the log displays:
 
 ``` shell
-2015-12-16 08:09:17,723 WARN  [geonetwork.data.directory] -     - Data directory '/tmp/gndatadir' is not writable. Set read/write privileges to user starting the catalogue (ie. francois).
+2015-12-16 08:09:17,723 WARN  [geonetwork.data.directory] -     - Data directory '/tmp/gndatadir' is not writable. Set read/write privileges to user starting the catalogue (i.e. francois).
 2015-12-16 08:09:17,723 WARN  [geonetwork.data.directory] -     - Data directory provided could not be used. Using default location: /data/dev/gn/3.0.x/web/src/main/webapp/WEB-INF/data
 ```
 
@@ -54,15 +54,15 @@ For system environment variable use:
 Resolution order is:
 
 1.  <webappname>.dir
-    1.  Java environment variable (ie. -D<webappname>.dir=/a/data/dir)
-    2.  Servlet context parameter (ie. web.xml)
-    3.  Config.xml appHandler parameter (ie. config.xml)
-    4.  System environment variable (ie. <webappname>_dir=/a/data/dir). "." is not supported in env variables
+    1.  Java environment variable (i.e. -D<webappname>.dir=/a/data/dir)
+    2.  Servlet context parameter (i.e. web.xml)
+    3.  Config.xml appHandler parameter (i.e. config.xml)
+    4.  System environment variable (i.e. <webappname>_dir=/a/data/dir). "." is not supported in env variables
 2.  geonetwork.dir
-    1.  Java environment variable (ie. -Dgeonetwork.dir=/a/data/dir)
-    2.  Servlet context parameter (ie. web.xml)
-    3.  Config.xml appHandler parameter (ie. config.xml)
-    4.  System environment variable (ie. geonetwork_dir=/a/data/dir). "." is not supported in env variables
+    1.  Java environment variable (i.e. -Dgeonetwork.dir=/a/data/dir)
+    2.  Servlet context parameter (i.e. web.xml)
+    3.  Config.xml appHandler parameter (i.e. config.xml)
+    4.  System environment variable (i.e. geonetwork_dir=/a/data/dir). "." is not supported in env variables
 
 ## Java System Property
 
@@ -131,6 +131,61 @@ The `s3credentials` bean can be left empty and the following system environment 
 -   AWS_S3_ENDPOINT
 -   AWS_ACCESS_KEY_ID
 -   AWS_SECRET_ACCESS_KEY
+
+## Using a generic cloud object storage (JCLoud)
+
+If your infrastructure doesn't have a persistent storage available, you can configure
+GeoNetwork to use a cloud object storage to store the images and data.
+The JCloud implementation supports the following [providers](https://jclouds.apache.org/reference/providers/)
+
+In order to do that, you must use a custom bean configuration. Replace the
+`filesystemStore`, `resourceStore` and `resources` beans in
+**`core/src/main/resources/config-spring-geonetwork.xml`** with something like this:
+
+Azure Blob sample
+
+``` xml
+<bean id="jcloudcredentials" class="org.fao.geonet.resources.JCloudCredentials">
+  <property name="provider" value="eu-west-1"/>
+  <property name="containerName" value="geonetwork-test"/>
+  <property name="baseFolder" value="geonetwork"/>
+  <property name="storageAccountName" value="MyAccessKey"/>
+  <property name="storageAccountKey" value="MySecretKey"/>
+</bean>
+<bean id="filesystemStore" class="org.fao.geonet.api.records.attachments.JCloudStore" />
+<bean id="resourceStore"
+      class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
+  <constructor-arg index="0" ref="filesystemStore"/>
+</bean>
+<bean id="resources" class="org.fao.geonet.resources.JCloudResources"/>
+```
+
+AWS S3 sample
+```
+<bean id="jcloudcredentials" class="org.fao.geonet.resources.JCloudCredentials">
+  <property name="provider" value="aws-s3"/>
+  <property name="containerName" value="geonetwork-test"/>
+  <property name="baseFolder" value="geonetwork"/>
+  <property name="storageAccountName" value="MyAccessKey"/>
+  <property name="storageAccountKey" value="MySecretKey"/>
+</bean>
+<bean id="filesystemStore" class="org.fao.geonet.api.records.attachments.JCloudStore" />
+<bean id="resourceStore"
+      class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
+  <constructor-arg index="0" ref="filesystemStore"/>
+</bean>
+<bean id="resources" class="org.fao.geonet.resources.JCloudResources"/>
+```
+
+The `jcloudcredentials` bean can be left empty and the following system environment variables
+can be used to configure it (convenient in a container environment):
+
+ - JCLOUD_PROVIDER
+ - JCLOUD_CONTAINERNAME
+ - JCLOUD_BASEFOLDER
+ - JCLOUD_STORAGEACCOUNTNAME
+ - JCLOUD_STORAGEACCOUNTKEY
+
 
 ## Structure of the data directory
 

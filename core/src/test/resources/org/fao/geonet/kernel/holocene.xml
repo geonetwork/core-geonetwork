@@ -1,19 +1,24 @@
-<gmd:MD_Metadata xmlns:gmd="http://www.isotc211.org/2005/gmd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.geocat.ch/2008/che https://www.geocat.ch/geonetwork/xml/schemas/iso19139.che/schema/che/che.xsd">
-  <gmd:fileIdentifier xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+<gmd:MD_Metadata xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                 xmlns:gco="http://www.isotc211.org/2005/gco"
+                 xmlns:gml="http://www.opengis.net/gml"
+                 xsi:schemaLocation="http://www.isotc211.org/2005/gmd https://www.isotc211.org/2005/gmd/gmd.xsd
+  http://www.opengis.net/gml https://www.opengis.net/gml/gml.xsd">
+  <gmd:fileIdentifier>
     <gco:CharacterString>4d2794d4-447e-4bbe-89ba-ab11cfdfc7b8</gco:CharacterString>
   </gmd:fileIdentifier>
-  <gmd:language xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:language>
     <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
   </gmd:language>
-  <gmd:characterSet xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:characterSet>
     <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
   </gmd:characterSet>
-  <gmd:hierarchyLevel xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:hierarchyLevel>
     <gmd:MD_ScopeCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ScopeCode" codeListValue="dataset" />
   </gmd:hierarchyLevel>
-  <gmd:contact xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:gml="http://www.opengis.net/gml" xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx">
+  <gmd:contact>
     <gmd:CI_ResponsibleParty>
-      <gmd:organisationName xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv" xsi:type="gmd:PT_FreeText_PropertyType">
+      <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
         <gco:CharacterString>Atlas of Switzerland</gco:CharacterString>
         <gmd:PT_FreeText>
           <gmd:textGroup>
@@ -30,7 +35,7 @@
           </gmd:textGroup>
         </gmd:PT_FreeText>
       </gmd:organisationName>
-      <gmd:contactInfo xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:contactInfo>
         <gmd:CI_Contact>
           <gmd:phone>
             <gmd:CI_Telephone>
@@ -84,21 +89,18 @@
           </gmd:hoursOfService>
         </gmd:CI_Contact>
       </gmd:contactInfo>
-      <gmd:role xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:role>
         <gmd:CI_RoleCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#CI_RoleCode" codeListValue="pointOfContact" />
       </gmd:role>
     </gmd:CI_ResponsibleParty>
   </gmd:contact>
-  <gmd:dateStamp xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
-    <gco:Date xmlns:gml="http://www.opengis.net/gml" xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">2023-02-28</gco:Date>
+  <gmd:dateStamp>
+    <gco:Date>2023-02-28</gco:Date>
   </gmd:dateStamp>
   <gmd:metadataStandardName>
-    <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco">ISO 19115/19119</gco:CharacterString>
+    <gco:CharacterString>ISO 19115/19119</gco:CharacterString>
   </gmd:metadataStandardName>
-  <gmd:metadataStandardVersion>
-    <gco:CharacterString xmlns:gco="http://www.isotc211.org/2005/gco" />
-  </gmd:metadataStandardVersion>
-  <gmd:locale xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:locale>
     <gmd:PT_Locale id="DE">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger" />
@@ -108,7 +110,7 @@
       </gmd:characterEncoding>
     </gmd:PT_Locale>
   </gmd:locale>
-  <gmd:locale xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:locale>
     <gmd:PT_Locale id="FR">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre" />
@@ -118,7 +120,7 @@
       </gmd:characterEncoding>
     </gmd:PT_Locale>
   </gmd:locale>
-  <gmd:locale xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:locale>
     <gmd:PT_Locale id="IT">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita" />
@@ -128,7 +130,7 @@
       </gmd:characterEncoding>
     </gmd:PT_Locale>
   </gmd:locale>
-  <gmd:locale xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:locale>
     <gmd:PT_Locale id="EN">
       <gmd:languageCode>
         <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
@@ -138,7 +140,7 @@
       </gmd:characterEncoding>
     </gmd:PT_Locale>
   </gmd:locale>
-  <gmd:referenceSystemInfo xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:referenceSystemInfo>
     <gmd:MD_ReferenceSystem>
       <gmd:referenceSystemIdentifier>
         <gmd:RS_Identifier>
@@ -152,9 +154,9 @@
       </gmd:referenceSystemIdentifier>
     </gmd:MD_ReferenceSystem>
   </gmd:referenceSystemInfo>
-  <gmd:identificationInfo xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:identificationInfo>
     <gmd:MD_DataIdentification>
-      <gmd:citation xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:citation>
         <gmd:CI_Citation>
           <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Volcanic eruptions in the holocene</gco:CharacterString>
@@ -235,7 +237,7 @@
           </gmd:presentationForm>
         </gmd:CI_Citation>
       </gmd:citation>
-      <gmd:abstract xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv" xsi:type="gmd:PT_FreeText_PropertyType">
+      <gmd:abstract xsi:type="gmd:PT_FreeText_PropertyType">
         <gco:CharacterString>Volcanic eruptions in the holocene. Map type: Symbols. Spatial extent: World. Times: 10,000–0 BC, 0–1699, 1700–1799, 1800–1899, 1900–1999, 2000–2021, Total</gco:CharacterString>
         <gmd:PT_FreeText>
           <gmd:textGroup>
@@ -252,10 +254,10 @@
           </gmd:textGroup>
         </gmd:PT_FreeText>
       </gmd:abstract>
-      <gmd:status xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:status>
         <gmd:MD_ProgressCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_ProgressCode" codeListValue="onGoing" />
       </gmd:status>
-      <gmd:pointOfContact xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Atlas of Switzerland</gco:CharacterString>
@@ -333,7 +335,7 @@
           </gmd:role>
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>
-      <gmd:pointOfContact xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Smithsonian Institution's Global Volcanism Program</gco:CharacterString>
@@ -398,7 +400,7 @@
           </gmd:role>
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>
-      <gmd:pointOfContact xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:pointOfContact>
         <gmd:CI_ResponsibleParty>
           <gmd:organisationName xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>National Oceanic and Atmospheric Administration</gco:CharacterString>
@@ -463,14 +465,14 @@
           </gmd:role>
         </gmd:CI_ResponsibleParty>
       </gmd:pointOfContact>
-      <gmd:resourceMaintenance xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:resourceMaintenance>
         <gmd:MD_MaintenanceInformation>
           <gmd:maintenanceAndUpdateFrequency>
             <gmd:MD_MaintenanceFrequencyCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_MaintenanceFrequencyCode" codeListValue="irregular" />
           </gmd:maintenanceAndUpdateFrequency>
         </gmd:MD_MaintenanceInformation>
       </gmd:resourceMaintenance>
-      <gmd:descriptiveKeywords xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>
           <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Global Switzerland</gco:CharacterString>
@@ -559,7 +561,7 @@
           </gmd:thesaurusName>
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
-      <gmd:descriptiveKeywords xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:descriptiveKeywords>
         <gmd:MD_Keywords>
           <gmd:keyword xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>Geology</gco:CharacterString>
@@ -614,7 +616,7 @@
           </gmd:thesaurusName>
         </gmd:MD_Keywords>
       </gmd:descriptiveKeywords>
-      <gmd:resourceConstraints xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:resourceConstraints>
         <gmd:MD_Constraints>
           <gmd:useLimitation xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>See end-user license agreement</gco:CharacterString>
@@ -635,27 +637,27 @@
           </gmd:useLimitation>
         </gmd:MD_Constraints>
       </gmd:resourceConstraints>
-      <gmd:resourceConstraints xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:resourceConstraints>
         <gmd:MD_LegalConstraints>
           <gmd:accessConstraints>
             <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions" />
           </gmd:accessConstraints>
-          <gmd:otherConstraints xmlns:xlink="http://www.w3.org/1999/xlink">
-            <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/LimitationsOnPublicAccess/noLimitations">There are no limitations on public access to spatial data sets and services.</gmx:Anchor>
+          <gmd:otherConstraints>
+            <gco:CharacterString>There are no limitations on public access to spatial data sets and services.</gco:CharacterString>
           </gmd:otherConstraints>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
-      <gmd:resourceConstraints xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:resourceConstraints>
         <gmd:MD_LegalConstraints>
           <gmd:useConstraints>
             <gmd:MD_RestrictionCode codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" codeListValue="otherRestrictions" />
           </gmd:useConstraints>
-          <gmd:otherConstraints xmlns:xlink="http://www.w3.org/1999/xlink">
-            <gmx:Anchor xlink:href="http://inspire.ec.europa.eu/metadata-codelist/ConditionsApplyingToAccessAndUse/conditionsUnknown">The conditions applying to access and use are unknown.</gmx:Anchor>
+          <gmd:otherConstraints>
+            <gco:CharacterString>The conditions applying to access and use are unknown.</gco:CharacterString>
           </gmd:otherConstraints>
         </gmd:MD_LegalConstraints>
       </gmd:resourceConstraints>
-      <gmd:aggregationInfo xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:aggregationInfo>
         <gmd:MD_AggregateInformation>
           <gmd:aggregateDataSetIdentifier>
             <gmd:MD_Identifier>
@@ -669,10 +671,10 @@
           </gmd:associationType>
         </gmd:MD_AggregateInformation>
       </gmd:aggregationInfo>
-      <gmd:spatialRepresentationType xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:spatialRepresentationType>
         <gmd:MD_SpatialRepresentationTypeCode codeListValue="vector" codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_SpatialRepresentationTypeCode" />
       </gmd:spatialRepresentationType>
-      <gmd:spatialResolution xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:spatialResolution>
         <gmd:MD_Resolution>
           <gmd:equivalentScale>
             <gmd:MD_RepresentativeFraction>
@@ -683,28 +685,25 @@
           </gmd:equivalentScale>
         </gmd:MD_Resolution>
       </gmd:spatialResolution>
-      <gmd:language xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:language>
         <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="eng" />
       </gmd:language>
-      <gmd:language xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:language>
         <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ger" />
       </gmd:language>
-      <gmd:language xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:language>
         <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="fre" />
       </gmd:language>
-      <gmd:language xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:language>
         <gmd:LanguageCode codeList="http://www.loc.gov/standards/iso639-2/" codeListValue="ita" />
       </gmd:language>
-      <gmd:characterSet xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:characterSet>
         <gmd:MD_CharacterSetCode codeList="http://www.isotc211.org/2005/resources/Codelist/gmxCodelists.xml#MD_CharacterSetCode" codeListValue="utf8" />
       </gmd:characterSet>
-      <gmd:topicCategory xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:topicCategory>
         <gmd:MD_TopicCategoryCode>geoscientificInformation</gmd:MD_TopicCategoryCode>
       </gmd:topicCategory>
-      <gmd:topicCategory xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
-        <gmd:MD_TopicCategoryCode>geoscientificInformation_Geology</gmd:MD_TopicCategoryCode>
-      </gmd:topicCategory>
-      <gmd:extent xmlns:gts="http://www.isotc211.org/2005/gts" xmlns:srv="http://www.isotc211.org/2005/srv">
+      <gmd:extent>
         <gmd:EX_Extent>
           <gmd:description xsi:type="gmd:PT_FreeText_PropertyType">
             <gco:CharacterString>World</gco:CharacterString>
@@ -742,7 +741,7 @@
           <gmd:temporalElement>
             <gmd:EX_TemporalExtent>
               <gmd:extent>
-                <gml:TimePeriod gml:id="timePeriod1">
+                <gml:TimePeriod id="timePeriod1">
                   <gml:beginPosition>-10000-01-01T00:00:00</gml:beginPosition>
                   <gml:endPosition>2021-12-31T23:59:59</gml:endPosition>
                 </gml:TimePeriod>
@@ -753,7 +752,7 @@
       </gmd:extent>
     </gmd:MD_DataIdentification>
   </gmd:identificationInfo>
-  <gmd:distributionInfo xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:distributionInfo>
     <gmd:MD_Distribution>
       <gmd:distributionFormat>
         <gmd:MD_Format>
@@ -795,7 +794,7 @@
       </gmd:transferOptions>
     </gmd:MD_Distribution>
   </gmd:distributionInfo>
-  <gmd:dataQualityInfo xmlns:che="http://www.geocat.ch/2008/che" xmlns:gco="http://www.isotc211.org/2005/gco" xmlns:gmx="http://www.isotc211.org/2005/gmx" xmlns:gml="http://www.opengis.net/gml/3.2">
+  <gmd:dataQualityInfo>
     <gmd:DQ_DataQuality>
       <gmd:scope>
         <gmd:DQ_Scope>
@@ -822,34 +821,34 @@
                 <gmd:CI_Citation>
                   <gmd:title xsi:type="gmd:PT_FreeText_PropertyType">
                     <gco:CharacterString>COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010
-                                            implementing Directive 2007/2/EC of the European Parliament and of the
-                                            Council as regards interoperability of spatial data sets and services</gco:CharacterString>
+                      implementing Directive 2007/2/EC of the European Parliament and of the
+                      Council as regards interoperability of spatial data sets and services</gco:CharacterString>
                     <gmd:PT_FreeText>
                       <gmd:textGroup>
                         <gmd:LocalisedCharacterString locale="#DE">VERORDNUNG (EG) Nr. 1089/2010
-                                                    DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie
-                                                    2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der
-                                                    Interoperabilität von Geodatensätzen und -diensten</gmd:LocalisedCharacterString>
+                          DER KOMMISSION vom 23. November 2010 zur Durchführung der Richtlinie
+                          2007/2/EG des Europäischen Parlaments und des Rates hinsichtlich der
+                          Interoperabilität von Geodatensätzen und -diensten</gmd:LocalisedCharacterString>
                       </gmd:textGroup>
                       <gmd:textGroup>
                         <gmd:LocalisedCharacterString locale="#FR">RÈGLEMENT (UE) No 1089/2010
-                                                    DE LA COMMISSION du 23 novembre 2010 portant modalités d'application
-                                                    de la directive 2007/2/CE du Parlement européen et du Conseil en ce
-                                                    qui concerne l'interopérabilité des séries et des services de
-                                                    données géographiques</gmd:LocalisedCharacterString>
+                          DE LA COMMISSION du 23 novembre 2010 portant modalités d'application
+                          de la directive 2007/2/CE du Parlement européen et du Conseil en ce
+                          qui concerne l'interopérabilité des séries et des services de
+                          données géographiques</gmd:LocalisedCharacterString>
                       </gmd:textGroup>
                       <gmd:textGroup>
                         <gmd:LocalisedCharacterString locale="#IT">REGOLAMENTO (UE) N. 1089/2010
-                                                    DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della
-                                                    direttiva 2007/2/CE del Parlamento europeo e del Consiglio per
-                                                    quanto riguarda l'interoperabilità dei set di dati territoriali e
-                                                    dei servizi di dati territoriali</gmd:LocalisedCharacterString>
+                          DELLA COMMISSIONE del 23 novembre 2010 recante attuazione della
+                          direttiva 2007/2/CE del Parlamento europeo e del Consiglio per
+                          quanto riguarda l'interoperabilità dei set di dati territoriali e
+                          dei servizi di dati territoriali</gmd:LocalisedCharacterString>
                       </gmd:textGroup>
                       <gmd:textGroup>
                         <gmd:LocalisedCharacterString locale="#EN">COMMISSION REGULATION (EU) No
-                                                    1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of
-                                                    the European Parliament and of the Council as regards
-                                                    interoperability of spatial data sets and services</gmd:LocalisedCharacterString>
+                          1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of
+                          the European Parliament and of the Council as regards
+                          interoperability of spatial data sets and services</gmd:LocalisedCharacterString>
                       </gmd:textGroup>
                     </gmd:PT_FreeText>
                   </gmd:title>
@@ -896,19 +895,19 @@
             <gmd:PT_FreeText>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#DE">Ursprungsdaten: Smithsonian Institution's Global Volcanism Program, National Oceanic and Atmospheric Administration.
-                                    Datenverarbeitung: Atlas der Schweiz</gmd:LocalisedCharacterString>
+                  Datenverarbeitung: Atlas der Schweiz</gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#FR">Données originales: Smithsonian Institution's Global Volcanism Program, National Oceanic and Atmospheric Administration.
-                                    Traitement de données: Atlas de la Suisse</gmd:LocalisedCharacterString>
+                  Traitement de données: Atlas de la Suisse</gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#IT">Dati di origine: Smithsonian Institution's Global Volcanism Program, National Oceanic and Atmospheric Administration.
-                                    Trattamento dei dati: Atlante della Svizzera</gmd:LocalisedCharacterString>
+                  Trattamento dei dati: Atlante della Svizzera</gmd:LocalisedCharacterString>
               </gmd:textGroup>
               <gmd:textGroup>
                 <gmd:LocalisedCharacterString locale="#EN">Source data: Smithsonian Institution's Global Volcanism Program, National Oceanic and Atmospheric Administration. Data
-                                    processing: Atlas of Switzerland</gmd:LocalisedCharacterString>
+                  processing: Atlas of Switzerland</gmd:LocalisedCharacterString>
               </gmd:textGroup>
             </gmd:PT_FreeText>
           </gmd:statement>

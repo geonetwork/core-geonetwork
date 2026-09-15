@@ -25,4 +25,4 @@
 
 > -   [Data directory can be stored on S3](https://github.com/geonetwork/core-geonetwork/pull/4248)
 
-and more \... see [3.10.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.10.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.10.0+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.10.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.10.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.10.0+is%3Aclosed+is%3Apr) for full details.

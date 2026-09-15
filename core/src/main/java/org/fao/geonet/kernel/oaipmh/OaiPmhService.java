@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -31,12 +31,12 @@ import org.fao.oaipmh.responses.AbstractResponse;
 //=============================================================================
 
 public interface OaiPmhService {
-    public String getVerb();
+    String getVerb();
 
     /**
      * Executes the service on given input request
      */
-    public AbstractResponse execute(AbstractRequest request, ServiceContext context)
+    AbstractResponse execute(AbstractRequest request, ServiceContext context)
         throws Exception;
 }
 

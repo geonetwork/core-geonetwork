@@ -67,6 +67,9 @@ public class Page extends GeonetEntity implements Serializable {
 
     private String label;
     private String icon;
+    private boolean showOnNonApproved = true;
+    private boolean showOnApproved = true;
+    private boolean showWhenWorkflowDisabled = true;
 
     public Page() {
 
@@ -86,11 +89,11 @@ public class Page extends GeonetEntity implements Serializable {
     }
 
     public enum PageStatus {
-        PUBLIC, PUBLIC_ONLY, GROUPS, PRIVATE, HIDDEN;
+        PUBLIC, PUBLIC_ONLY, GROUPS, GROUPS_AND_ADMIN, PRIVATE, HIDDEN;
     }
 
     public enum PageFormat {
-        LINK, HTML, HTMLPAGE, TEXT;
+        LINK, HTML, HTMLPAGE, TEXT, EMAILLINK;
     }
 
     // These are the sections where is shown the link to the Page object
@@ -153,6 +156,33 @@ public class Page extends GeonetEntity implements Serializable {
     @Column
     public String getIcon() {
         return icon;
+    }
+
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    public boolean isShowOnNonApproved() {
+        return showOnNonApproved;
+    }
+
+    public void setShowOnNonApproved(boolean showOnNonApproved) {
+        this.showOnNonApproved = showOnNonApproved;
+    }
+
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    public boolean isShowOnApproved() {
+        return showOnApproved;
+    }
+
+    public void setShowOnApproved(boolean showOnApproved) {
+        this.showOnApproved = showOnApproved;
+    }
+
+    @Column(nullable = false, columnDefinition = "boolean default true")
+    public boolean isShowWhenWorkflowDisabled() {
+        return showWhenWorkflowDisabled;
+    }
+
+    public void setShowWhenWorkflowDisabled(boolean showWhenWorkflowDisabled) {
+        this.showWhenWorkflowDisabled = showWhenWorkflowDisabled;
     }
 
     /**

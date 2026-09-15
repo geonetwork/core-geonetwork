@@ -10,8 +10,8 @@ SELECT ?catalogId ?resourceId
 WHERE {
   {
     ?resourceId a dcat:Dataset .
-    ?catalogId dcat:dataset ?resourceId .
     OPTIONAL {
+      ?catalogId dcat:dataset ?resourceId .
       ?catalogId a dcat:Catalog .
       ?resourceId dct:identifier ?identifier
     }

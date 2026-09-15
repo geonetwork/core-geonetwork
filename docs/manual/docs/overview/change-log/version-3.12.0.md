@@ -31,4 +31,4 @@
 > -   Memory / [ServiceContext resource leak](https://github.com/geonetwork/core-geonetwork/pull/5260)
 > -   [Upgrade to GeoTools 24.0 and JTS 1.17.1](https://github.com/geonetwork/core-geonetwork/pull/5007)
 
-and more \... see [3.12.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.0+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.12.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.0+is%3Aclosed+is%3Apr) for full details.

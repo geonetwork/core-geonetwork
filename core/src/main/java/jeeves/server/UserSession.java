@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2005 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -45,7 +45,7 @@ import java.util.Hashtable;
  * Abstraction layer from the user session.
  */
 public class UserSession {
-    private Hashtable<String, Object> htProperties = new Hashtable<String, Object>(10, .75f);
+    private Hashtable<String, Object> htProperties = new Hashtable<>(10, .75f);
 
     private HttpSession sHttpSession;
 
@@ -119,7 +119,7 @@ public class UserSession {
     public void loginAs(User user) {
         SecurityContextImpl secContext = new SecurityContextImpl();
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-            user, null);
+            user, null, user.getAuthorities());
         secContext.setAuthentication(authentication);
         SecurityContextHolder.setContext(secContext);
     }
@@ -207,8 +207,7 @@ public class UserSession {
         if (secContext == null) {
             return null;
         } else {
-            Authentication authentication = secContext.getAuthentication();
-            return authentication;
+            return secContext.getAuthentication();
         }
     }
 

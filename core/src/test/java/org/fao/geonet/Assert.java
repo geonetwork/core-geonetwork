@@ -68,7 +68,7 @@ public final class Assert extends junit.framework.TestCase {
         } else {
             element = Xml.selectNodes(xml, xpath, Arrays.asList(namespaces));
         }
-        assertEquals("Expected 1 element but found " + element.size() + "No element found at: " + xpath + " in \n" + Xml.getString(xml),
+        assertEquals("Expected 1 element but found " + element.size() + ". No element found at: " + xpath + " in \n" + Xml.getString(xml),
             1, element.size());
         String text;
         if (element.get(0) instanceof Element) {
@@ -77,6 +77,8 @@ public final class Assert extends junit.framework.TestCase {
             text = ((Attribute) element.get(0)).getValue();
         } else if (element.get(0) instanceof Text) {
             text = ((Text) element.get(0)).getTextTrim();
+        }  else if (element.get(0) instanceof String) {
+            text = ((String) element.get(0)).trim();
         } else {
             fail("Handling of " + element.get(0).getClass() + " is not yet implemented");
             text = "";

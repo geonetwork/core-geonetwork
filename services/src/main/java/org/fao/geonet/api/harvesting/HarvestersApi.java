@@ -47,7 +47,6 @@ import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.repository.SourceRepository;
 import org.jdom.Element;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -105,7 +104,7 @@ public class HarvestersApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
     @ResponseBody
-    public HttpEntity<HttpStatus> assignHarvestedRecordToSource(
+    public ResponseEntity<Void> assignHarvestedRecordToSource(
         @Parameter(
             description = "The harvester UUID"
         )
@@ -169,9 +168,44 @@ public class HarvestersApi {
         history.setParams(harvester.getParams().getNodeElement());
         historyRepository.save(history);
 
-        return new HttpEntity<>(HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+
+    @io.swagger.v3.oas.annotations.Operation(
+            summary = "Reindexes all records of an harvester",
+            description = ""
+    )
+    @RequestMapping(
+            value = "/{harvesterUuid}/reindex",
+            method = RequestMethod.POST
+    )
+    @PreAuthorize("hasAuthority('UserAdmin')")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Reindexing was successful"),
+            @ApiResponse(responseCode = "409", description = "Reindexing already running"),
+            @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND),
+            @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
+    })
+    public ResponseEntity<Void> reindexHarvester(
+            @Parameter(
+                    description = "The harvester UUID"
+            )
+            @PathVariable
+            String harvesterUuid) throws Exception {
+        final AbstractHarvester<?, ?> harvester = harvestManager.getHarvester(harvesterUuid);
+        if (harvester == null) {
+            throw new ResourceNotFoundException(String.format(
+                    "Harvester with UUID '%s' not found. Cannot reindex harvester.",
+                    harvesterUuid));
+        }
+        var successful = harvester.reindex();
+        if (successful) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } else {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Check if a harvester name or host already exist",
@@ -184,14 +218,13 @@ public class HarvestersApi {
         value = "/properties/{property}",
         method = RequestMethod.GET
     )
-    @ResponseStatus(value = HttpStatus.OK)
     @PreAuthorize("hasAuthority('UserAdmin')")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Property does not exist."),
         @ApiResponse(responseCode = "404", description = "A property with that value already exist."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    public ResponseEntity<HttpStatus> checkHarvesterPropertyExist(
+    public ResponseEntity<Void> checkHarvesterPropertyExist(
         @Parameter(
             description = "The harvester property to check"
         )

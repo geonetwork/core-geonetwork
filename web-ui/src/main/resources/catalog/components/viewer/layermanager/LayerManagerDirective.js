@@ -309,7 +309,7 @@
                   defaultValueIdx = i;
                 }
               }
-              if (currentLayerValue && !idx) {
+              if (currentLayerValue && idx === undefined) {
                 console.warn(
                   "Dimension value " +
                     currentLayerValue +
@@ -317,7 +317,7 @@
                     dimensionConfig.values[defaultValueIdx]
                 );
               }
-              idx = idx || defaultValueIdx;
+              idx = idx === undefined ? defaultValueIdx : idx;
 
               scope.dimensions[dimension] = {
                 current: dimensionConfig.values[idx],
@@ -354,11 +354,21 @@
               });
             }
           }
+
+          function isWMSLayer(layerSource) {
+            return (
+              layerSource instanceof ol.source.ImageWMS ||
+              layerSource instanceof ol.source.TileWMS
+            );
+          }
+
           function init() {
-            scope.params = scope.layer.getSource().getParams() || {};
-            angular.forEach(scope.parameters, function (icon, p) {
-              initDimension(p);
-            });
+            if (isWMSLayer(scope.layer.getSource())) {
+              scope.params = scope.layer.getSource().getParams() || {};
+              angular.forEach(scope.parameters, function (icon, p) {
+                initDimension(p);
+              });
+            }
           }
 
           init();

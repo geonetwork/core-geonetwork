@@ -7,6 +7,12 @@
     <capabilitiesUrl>
       <xsl:value-of select="capabUrl/value"/>
     </capabilitiesUrl>
+    <apiKeyHeader>
+      <xsl:value-of select="apiKeyHeader/value"/>
+    </apiKeyHeader>
+    <apiKey>
+      <xsl:value-of select="apiKey/value"/>
+    </apiKey>
     <icon>
       <xsl:value-of select="icon/value"/>
     </icon>

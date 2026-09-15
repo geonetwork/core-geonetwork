@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="warn" dest="out">
+    <Properties>
+      <Property name="logs_dir">logs</Property>
+    </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%date{HH:mm:ss.SSS} %-6level [%logger{2}] - %msg%n"/>
         </Console>
+        <Routing name="Harvester">
+          <Routes pattern="$${ctx:logfile}">
+            <!-- value dynamically determines the name of the log file. -->
+            <Route>
+              <File name="harvester-${ctx:harvester}" fileName="${sys:log_dir:-${logs_dir}}/${ctx:logfile:-harvester_default.log}">
+                <PatternLayout>
+                  <pattern>%date{ISO8601}{${ctx:timeZone}} %-5level [%logger] - %message%n</pattern>
+                </PatternLayout>
+              </File>
+            </Route>
+          </Routes>
+        </Routing>
     </Appenders>
     <Loggers>
         <Logger name="org.springframework.aop.framework.CglibAopProxy" level="error"/>

@@ -33,6 +33,7 @@ import org.fao.geonet.domain.*;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.ApplicableSchematron;
 import org.fao.geonet.kernel.SchematronValidator;
+import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
@@ -40,7 +41,14 @@ import org.fao.geonet.kernel.schema.MetadataSchema;
 import org.fao.geonet.kernel.schema.SavedQuery;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.languages.FeedbackLanguages;
 import org.fao.geonet.repository.SchematronRepository;
+import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.util.LocalizedEmail;
+import org.fao.geonet.util.LocalizedEmailComponent;
+import org.fao.geonet.util.LocalizedEmailParameter;
+import org.fao.geonet.util.MailUtil;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -50,11 +58,18 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.fao.geonet.doi.client.DoiMedraClient.MEDRA_SEARCH_KEY;
+import static org.fao.geonet.doi.client.DoiSettings.LOGGER_NAME;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.MESSAGE;
+import static org.fao.geonet.util.LocalizedEmailComponent.ComponentType.SUBJECT;
+import static org.fao.geonet.util.LocalizedEmailComponent.ReplacementType.POSITIONAL_FORMAT;
 
 /**
  * Class to register/unregister DOIs using the Datacite Metadata Store (MDS) API.
@@ -346,6 +361,8 @@ public class DoiManager {
      */
     private void createDoi(ServiceContext context, IDoiClient doiClient, DoiServer doiServer,
                            AbstractMetadata metadata, Map<String, String> doiInfo, Element dataciteMetadata) throws Exception {
+
+
         // * Now, let's create the DOI
         // picking a DOI name,
 
@@ -374,8 +391,10 @@ public class DoiManager {
 
         metadataManager.updateMetadata(context, metadata.getId() + "", recordWithDoi, false, true,
             context.getLanguage(), new ISODate().toString(), true, IndexingMode.full);
-    }
 
+        // Send mail notifications to task owner
+        notifyByMail(context, metadata, doiClient.createPublicUrl(doiInfo.get("doi")));
+    }
 
     /**
      * TODO: Check that the DOI is properly created.
@@ -544,4 +563,83 @@ public class DoiManager {
     private boolean isMedraServer(DoiServer doiServer) {
         return doiServer.getUrl().contains(MEDRA_SEARCH_KEY);
     }
+
+    /**
+     * Notify by mail to the DOI task owner about the DOI publication.
+     *
+     * @param context   Service context.
+     * @param metadata  Metadata published to the DOI.
+     */
+    private void notifyByMail(ServiceContext context, AbstractMetadata metadata, String doiUrl) {
+        SettingManager sm = context.getBean(SettingManager.class);
+        boolean notifyToTaskOwner = sm.getValueAsBool(DoiSettings.SETTING_PUBLICATION_DOI_MAIL_NOTIFICATION, false);
+        if (notifyToTaskOwner) {
+            IMetadataStatus metadataStatus = context.getBean(IMetadataStatus.class);
+
+            try {
+                List<MetadataStatus> metadataStatuses = metadataStatus.getAllStatus(metadata.getId());
+
+                Optional<MetadataStatus> msOpt = metadataStatuses.stream().filter(ms ->
+                    ms.getStatusValue().getName().equals("doiCreationTask") && (ms.getCloseDate() == null)).findFirst();
+
+                if (msOpt.isPresent()) {
+                    Integer taskOwner = msOpt.get().getUserId();
+                    if (taskOwner != null) {
+                        UserRepository userRepository = context.getBean(UserRepository.class);
+                        Optional<User> ownerUser = userRepository.findById(taskOwner);
+
+                        if (ownerUser.isPresent()) {
+                            User user = ownerUser.get();
+
+                            if (StringUtils.isNotBlank(user.getEmail())) {
+                                FeedbackLanguages feedbackLanguages = context.getBean(FeedbackLanguages.class);
+                                Locale[] feedbackLocales = feedbackLanguages.getLocales(new Locale(context.getLanguage()));
+
+                                LocalizedEmailComponent emailSubjectComponent = new LocalizedEmailComponent(SUBJECT, "doi_publication_subject", LocalizedEmailComponent.KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+                                emailSubjectComponent.enableCompileWithIndexFields(metadata.getUuid());
+
+                                LocalizedEmailComponent emailMessageComponent = new LocalizedEmailComponent(MESSAGE, "doi_publication_message", LocalizedEmailComponent.KeyType.MESSAGE_KEY, POSITIONAL_FORMAT);
+                                emailMessageComponent.enableCompileWithIndexFields(metadata.getUuid());
+                                emailMessageComponent.enableReplaceLinks(true);
+
+                                for (Locale feedbackLocale : feedbackLocales) {
+                                    emailSubjectComponent.addParameters(
+                                        feedbackLocale,
+                                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, sm.getSiteName())
+                                    );
+                                    emailMessageComponent.addParameters(
+                                        feedbackLocale,
+                                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 1, doiUrl)
+                                    );
+                                    emailMessageComponent.addParameters(
+                                        feedbackLocale,
+                                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 2, doiUrl)
+                                    );
+                                    emailMessageComponent.addParameters(
+                                        feedbackLocale,
+                                        new LocalizedEmailParameter(LocalizedEmailParameter.ParameterType.RAW_VALUE, 3, sm.getSiteName())
+                                    );
+                                }
+
+                                LocalizedEmail localizedEmail = new LocalizedEmail(true);
+                                localizedEmail.addComponents(emailSubjectComponent, emailMessageComponent);
+
+                                String mailSubject = localizedEmail.getParsedSubject(feedbackLocales);
+                                String htmlMessage = localizedEmail.getParsedMessage(feedbackLocales);
+
+                                MailUtil.sendHtmlMail(Arrays.asList(user.getEmail()), mailSubject, htmlMessage, sm);
+                            } else {
+                                Log.warning(LOGGER_NAME, "   -- Can not send DOI publication mail notification. Error: user does not have an email address.");
+                            }
+
+                        }
+                    }
+                }
+
+            } catch (Exception ex) {
+                Log.warning(LOGGER_NAME, "   -- Can not send DOI publication mail notification. User does not have a mail. Error: " + ex.getMessage());
+            }
+        }
+    }
+
 }

@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2007 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2023 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -28,6 +28,13 @@ import org.jdom.Namespace;
 //=============================================================================
 
 public class OaiPmh {
+    /**
+     * Private constructor to avoid instantiate the class.
+     */
+    private OaiPmh() {
+
+    }
+
     //---------------------------------------------------------------------------
     //---
     //--- Constants
@@ -40,9 +47,34 @@ public class OaiPmh {
     //---------------------------------------------------------------------------
 
     public static class Namespaces {
+        /**
+         * Private constructor to avoid instantiate the class.
+         */
+        private Namespaces() {
+
+        }
         public static final Namespace OAI_PMH = Namespace.getNamespace("http://www.openarchives.org/OAI/2.0/");
         public static final Namespace OAI_DC = Namespace.getNamespace("oai_dc", "http://www.openarchives.org/OAI/2.0/oai_dc/");
         public static final Namespace XSI = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
+    }
+
+    public static class ParamNames {
+        /**
+         * Private constructor to avoid instantiate the class.
+         */
+        private ParamNames() {
+
+        }
+
+        public static final String VERB = "verb";
+        public static final String METADATA_PREFIX = "metadataPrefix";
+        public static final String IDENTIFIER = "identifier";
+        public static final String SET = "set";
+
+        public static final String FROM = "from";
+        public static final String UNTIL = "until";
+
+        public static final String RESUMPTION_TOKEN = "resumptionToken";
     }
 }
 

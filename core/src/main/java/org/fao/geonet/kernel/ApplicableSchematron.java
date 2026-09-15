@@ -33,8 +33,8 @@ import org.fao.geonet.domain.SchematronRequirement;
  *
  */
 public class ApplicableSchematron {
-    final SchematronRequirement requirement;
-    final Schematron schematron;
+    final private SchematronRequirement requirement;
+    final private Schematron schematron;
 
     public SchematronRequirement getRequirement() {
         return requirement;

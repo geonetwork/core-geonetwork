@@ -67,10 +67,6 @@
 
 
   <xsl:template match="mrd:MD_Format">
-    <xsl:copy>
-      <xsl:apply-templates select="mrd:name"/>
-      <xsl:apply-templates select="mrd:version"/>
-    </xsl:copy>
   </xsl:template>
 
 

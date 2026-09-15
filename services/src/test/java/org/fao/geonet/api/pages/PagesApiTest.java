@@ -25,6 +25,10 @@ package org.fao.geonet.api.pages;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
+import org.fao.geonet.domain.Group;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
+import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.page.Page;
 import org.fao.geonet.domain.page.PageIdentity;
 import org.fao.geonet.repository.page.PageRepository;
@@ -40,11 +44,19 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Optional;
+import java.util.UUID;
 
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PagesApiTest extends AbstractServiceIntegrationTest {
@@ -139,5 +151,167 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
             .andExpect(status().is(HttpStatus.OK.value()));
         this.mockMvc.perform(deletePageBuilder)
             .andExpect(status().is(HttpStatus.NOT_FOUND.value()));
+    }
+
+    @Test
+    public void groupsAndAdminPagesAreListedForAdminsAndAssignedGroupMembers() throws Exception {
+        final String language = "eng";
+        final String pageId = "groups-and-admin-list-" + UUID.randomUUID().toString().substring(0, 8);
+        final Group sampleGroup = _groupRepo.findByName("sample");
+        Assert.assertNotNull(sampleGroup);
+
+        final User nonGroupMember = createAuthenticatedUser("page-non-group-member-" + UUID.randomUUID());
+        final User groupMember = createUserInGroup("page-group-member-" + UUID.randomUUID(), sampleGroup);
+        pageRepository.saveAndFlush(createPage(language, pageId, Page.PageStatus.GROUPS_AND_ADMIN, sampleGroup));
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockMvc.perform(get("/srv/api/pages")
+                .session(loginAsAnonymous())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(not(containsString("\"pageId\":\"" + pageId + "\""))));
+
+        this.mockMvc.perform(get("/srv/api/pages")
+                .session(loginAs(nonGroupMember))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(not(containsString("\"pageId\":\"" + pageId + "\""))));
+
+        this.mockMvc.perform(get("/srv/api/pages")
+                .session(loginAs(groupMember))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("\"pageId\":\"" + pageId + "\"")));
+
+        this.mockMvc.perform(get("/srv/api/pages")
+                .session(loginAsAdmin())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("\"pageId\":\"" + pageId + "\"")));
+    }
+
+    @Test
+    public void groupsAndAdminPageDetailsAreVisibleToAdminsAndAssignedGroupMembers() throws Exception {
+        final String language = "eng";
+        final String pageId = "groups-and-admin-access-" + UUID.randomUUID().toString().substring(0, 8);
+        final Group sampleGroup = _groupRepo.findByName("sample");
+        Assert.assertNotNull(sampleGroup);
+
+        final User nonGroupMember = createAuthenticatedUser("page-non-group-member-" + UUID.randomUUID());
+        final User groupMember = createUserInGroup("page-group-member-" + UUID.randomUUID(), sampleGroup);
+        pageRepository.saveAndFlush(createPage(language, pageId, Page.PageStatus.GROUPS_AND_ADMIN, sampleGroup));
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockMvc.perform(get("/srv/api/pages/" + language + "/" + pageId)
+                .session(loginAsAnonymous())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+
+        this.mockMvc.perform(get("/srv/api/pages/" + language + "/" + pageId)
+                .session(loginAs(nonGroupMember))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+
+        this.mockMvc.perform(get("/srv/api/pages/" + language + "/" + pageId)
+                .session(loginAsAdmin())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("\"pageId\":\"" + pageId + "\"")));
+
+        this.mockMvc.perform(get("/srv/api/pages/" + language + "/" + pageId)
+                .session(loginAs(groupMember))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("\"pageId\":\"" + pageId + "\"")));
+    }
+
+    @Test
+    public void groupsAndAdminPageContentIsVisibleToAdminsAndAssignedGroupMembers() throws Exception {
+        final String language = "eng";
+        final String pageId = "groups-and-admin-content-" + UUID.randomUUID().toString().substring(0, 8);
+        final Group sampleGroup = _groupRepo.findByName("sample");
+        Assert.assertNotNull(sampleGroup);
+
+        final User nonGroupMember = createAuthenticatedUser("page-non-group-member-" + UUID.randomUUID());
+        final User groupMember = createUserInGroup("page-group-member-" + UUID.randomUUID(), sampleGroup);
+        pageRepository.saveAndFlush(createPage(language, pageId, Page.PageStatus.GROUPS_AND_ADMIN, sampleGroup));
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockMvc.perform(get("/srv/api/pages/" + language + "/" + pageId + "/content")
+                .session(loginAsAnonymous())
+                .accept(MediaType.TEXT_HTML))
+            .andExpect(status().isForbidden());
+
+        this.mockMvc.perform(get("/srv/api/pages/" + language + "/" + pageId + "/content")
+                .session(loginAs(nonGroupMember))
+                .accept(MediaType.TEXT_HTML))
+            .andExpect(status().isForbidden());
+
+        this.mockMvc.perform(get("/srv/api/pages/" + language + "/" + pageId + "/content")
+                .session(loginAs(groupMember))
+                .accept(MediaType.TEXT_HTML))
+            .andExpect(status().isOk())
+            .andExpect(content().string("<p>Restricted content</p>"));
+
+        this.mockMvc.perform(get("/srv/api/pages/" + language + "/" + pageId + "/content")
+                .session(loginAsAdmin())
+                .accept(MediaType.TEXT_HTML))
+            .andExpect(status().isOk())
+            .andExpect(content().string("<p>Restricted content</p>"));
+    }
+
+    @Test
+    public void includeAllPagesRequiresAdministratorPrivileges() throws Exception {
+        final String pageId = "groups-and-admin-listing-" + UUID.randomUUID().toString().substring(0, 8);
+        final Group sampleGroup = _groupRepo.findByName("sample");
+        Assert.assertNotNull(sampleGroup);
+
+        final User groupMember = createUserInGroup("page-include-all-member-" + UUID.randomUUID(), sampleGroup);
+        pageRepository.saveAndFlush(createPage("eng", pageId, Page.PageStatus.GROUPS_AND_ADMIN, sampleGroup));
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockMvc.perform(get("/srv/api/pages?includeAll=true")
+                .session(loginAs(groupMember))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isForbidden());
+
+        this.mockMvc.perform(get("/srv/api/pages?includeAll=true")
+                .session(loginAsAdmin())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("\"pageId\":\"" + pageId + "\"")));
+    }
+
+    private Page createPage(String language, String pageId, Page.PageStatus status, Group group) {
+        return new Page(
+            new PageIdentity(language, pageId),
+            "<p>Restricted content</p>".getBytes(StandardCharsets.UTF_8),
+            "../api/pages/" + language + "/" + pageId + "/content",
+            Page.PageFormat.HTML,
+            new ArrayList<>(),
+            status,
+            pageId,
+            null,
+            new LinkedHashSet<>(Collections.singleton(group)));
+    }
+
+    private User createAuthenticatedUser(String username) {
+        User user = new User();
+        user.setUsername(username);
+        user.setProfile(Profile.Editor);
+        user.setEnabled(true);
+        user.getEmailAddresses().add(username + "@example.com");
+        _userRepo.save(user);
+        return user;
+    }
+
+    private User createUserInGroup(String username, Group group) {
+        User user = createAuthenticatedUser(username);
+        _userGroupRepo.save(new UserGroup().setGroup(group).setProfile(Profile.Editor).setUser(user));
+        return user;
     }
 }

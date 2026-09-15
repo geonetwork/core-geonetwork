@@ -25,4 +25,4 @@
 
 > -   [Fix an error when GN is deployed as ROOT context ("/").](https://github.com/geonetwork/core-geonetwork/pull/4366)
 
-and more \... see [3.8.3 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.8.3+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.8.3+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.8.3 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.8.3+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.8.3+is%3Aclosed+is%3Apr) for full details.

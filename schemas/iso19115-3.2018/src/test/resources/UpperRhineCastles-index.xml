@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <docType>metadata</docType>
+  <document />
+  <metadataIdentifier>f74f5451-b198-4edf-abdd-a6b6b7caed81</metadataIdentifier>
+  <standardNameObject type="object">{"default":"ISO 19115-3:2018", "langfre":"ISO 19115-3:2018"}</standardNameObject>
+  <standardVersionObject type="object">{"default":"1.0", "lang":"1.0"}</standardVersionObject>
+  <indexingDate>2025-04-11T17:46:21+02:00</indexingDate>
+  <dateStamp>2025-06-18T14:55:30.520183Z</dateStamp>
+  <mainLanguage>fre</mainLanguage>
+  <otherLanguage>ger</otherLanguage>
+  <otherLanguageId>DE</otherLanguageId>
+  <otherLanguage>eng</otherLanguage>
+  <otherLanguageId>EN</otherLanguageId>
+  <otherLanguage>fre</otherLanguage>
+  <otherLanguageId>FR</otherLanguageId>
+  <cl_characterSet type="object">{"key":"utf8","default":"lan:MD_CharacterSetCode--utf8--fre","langfre":"lan:MD_CharacterSetCode--utf8--fre","langger":"lan:MD_CharacterSetCode--utf8--ger","langeng":"lan:MD_CharacterSetCode--utf8--eng","langfre":"lan:MD_CharacterSetCode--utf8--fre","link":"https:\/\/standards.iso.org\/iso\/19115\/resources\/Codelists\/cat\/codelists.xml#MD_CharacterSetCode","text":"utf8"}</cl_characterSet>
+  <resourceType>dataset</resourceType>
+  <OrgObject type="object">{"default":"GeoRhena: Syst\u00E8me d'Information G\u00E9ographique du Rhin Sup\u00E9rieur", "langfre":"GeoRhena: Syst\u00E8me d'Information G\u00E9ographique du Rhin Sup\u00E9rieur", "langger":"GeoRhena: Geographische Informationssystem des Oberrheins", "langeng":"GeoRhena: Geographical Information System of the Upper Rhine"}</OrgObject>
+  <distributorOrgObject type="object">{"default":"GeoRhena: Syst\u00E8me d'Information G\u00E9ographique du Rhin Sup\u00E9rieur", "langfre":"GeoRhena: Syst\u00E8me d'Information G\u00E9ographique du Rhin Sup\u00E9rieur", "langger":"GeoRhena: Geographische Informationssystem des Oberrheins", "langeng":"GeoRhena: Geographical Information System of the Upper Rhine"}</distributorOrgObject>
+  <contact type="object">{
+      
+        "organisationObject": 
+            {"default":"GeoRhena: Syst\u00E8me d'Information G\u00E9ographique du Rhin Sup\u00E9rieur", "langfre":"GeoRhena: Syst\u00E8me d'Information G\u00E9ographique du Rhin Sup\u00E9rieur", "langger":"GeoRhena: Geographische Informationssystem des Oberrheins", "langeng":"GeoRhena: Geographical Information System of the Upper Rhine"}
+            ,
+      
+      "role":"distributor",
+      "email":"",
+      "website":"http:\/\/www.georhena.eu",
+      "logo":"",
+      "individual":"",
+      "position":"",
+      "phone":"00 33 3 89 30 63 91",
+      "address":"100, avenue d'Alsace, COLMAR, 68000, FR"
+      
+      }</contact>
+  <cl_resourceScope type="object">{"key":"dataset","default":"mcc:MD_ScopeCode--dataset--fre","langfre":"mcc:MD_ScopeCode--dataset--fre","langger":"mcc:MD_ScopeCode--dataset--ger","langeng":"mcc:MD_ScopeCode--dataset--eng","langfre":"mcc:MD_ScopeCode--dataset--fre","link":"https:\/\/standards.iso.org\/iso\/19115\/resources\/Codelists\/cat\/codelists.xml#MD_ScopeCode","text":"dataset"}</cl_resourceScope>
+  <cl_numberType type="object">{"key":"facsimile","default":"cit:CI_TelephoneTypeCode--facsimile--fre","langfre":"cit:CI_TelephoneTypeCode--facsimile--fre","langger":"cit:CI_TelephoneTypeCode--facsimile--ger","langeng":"cit:CI_TelephoneTypeCode--facsimile--eng","langfre":"cit:CI_TelephoneTypeCode--facsimile--fre","link":"https:\/\/standards.iso.org\/iso\/19115\/resources\/Codelists\/cat\/codelists.xml#CI_TelephoneTypeCode","text":"facsimile"}</cl_numberType>
+  <cl_status type="object">{"key":"completed","default":"mcc:MD_ProgressCode--completed--fre","langfre":"mcc:MD_ProgressCode--completed--fre","langger":"mcc:MD_ProgressCode--completed--ger","langeng":"mcc:MD_ProgressCode--completed--eng","langfre":"mcc:MD_ProgressCode--completed--fre","link":"https:\/\/standards.iso.org\/iso\/19115\/resources\/Codelists\/cat\/codelists.xml#MD_ProgressCode","text":"completed"}</cl_status>
+  <cl_numberType type="object">{"key":"voice","default":"cit:CI_TelephoneTypeCode--voice--fre","langfre":"cit:CI_TelephoneTypeCode--voice--fre","langger":"cit:CI_TelephoneTypeCode--voice--ger","langeng":"cit:CI_TelephoneTypeCode--voice--eng","langfre":"cit:CI_TelephoneTypeCode--voice--fre","link":"https:\/\/standards.iso.org\/iso\/19115\/resources\/Codelists\/cat\/codelists.xml#CI_TelephoneTypeCode","text":"voice"}</cl_numberType>
+  <cl_spatialRepresentationType type="object">{"key":"vector","default":"mcc:MD_SpatialRepresentationTypeCode--vector--fre","langfre":"mcc:MD_SpatialRepresentationTypeCode--vector--fre","langger":"mcc:MD_SpatialRepresentationTypeCode--vector--ger","langeng":"mcc:MD_SpatialRepresentationTypeCode--vector--eng","langfre":"mcc:MD_SpatialRepresentationTypeCode--vector--fre","link":"https:\/\/standards.iso.org\/iso\/19115\/resources\/Codelists\/cat\/codelists.xml#MD_SpatialRepresentationTypeCode","text":"vector"}</cl_spatialRepresentationType>
+  <cl_maintenanceAndUpdateFrequency type="object">{"key":"asNeeded","default":"mmi:MD_MaintenanceFrequencyCode--asNeeded--fre","langfre":"mmi:MD_MaintenanceFrequencyCode--asNeeded--fre","langger":"mmi:MD_MaintenanceFrequencyCode--asNeeded--ger","langeng":"mmi:MD_MaintenanceFrequencyCode--asNeeded--eng","langfre":"mmi:MD_MaintenanceFrequencyCode--asNeeded--fre","link":"http:\/\/standards.iso.org\/iso\/19139\/resources\/gmxCodelists.xml#MD_MaintenanceFrequencyCode"}</cl_maintenanceAndUpdateFrequency>
+  <cl_type type="object">{"key":"place","default":"mri:MD_KeywordTypeCode--place--fre","langfre":"mri:MD_KeywordTypeCode--place--fre","langger":"mri:MD_KeywordTypeCode--place--ger","langeng":"mri:MD_KeywordTypeCode--place--eng","langfre":"mri:MD_KeywordTypeCode--place--fre","link":"http:\/\/standards.iso.org\/iso\/19139\/resources\/gmxCodelists.xml#MD_KeywordTypeCode"}</cl_type>
+  <cl_type type="object">{"key":"theme","default":"mri:MD_KeywordTypeCode--theme--fre","langfre":"mri:MD_KeywordTypeCode--theme--fre","langger":"mri:MD_KeywordTypeCode--theme--ger","langeng":"mri:MD_KeywordTypeCode--theme--eng","langfre":"mri:MD_KeywordTypeCode--theme--fre","link":"http:\/\/standards.iso.org\/iso\/19139\/resources\/gmxCodelists.xml#MD_KeywordTypeCode"}</cl_type>
+  <cl_accessConstraints type="object">{"key":"otherRestrictions","default":"mco:MD_RestrictionCode--otherRestrictions--fre","langfre":"mco:MD_RestrictionCode--otherRestrictions--fre","langger":"mco:MD_RestrictionCode--otherRestrictions--ger","langeng":"mco:MD_RestrictionCode--otherRestrictions--eng","langfre":"mco:MD_RestrictionCode--otherRestrictions--fre","link":"http:\/\/standards.iso.org\/iso\/19139\/resources\/gmxCodelists.xml#MD_RestrictionCode"}</cl_accessConstraints>
+  <resourceTitleObject type="object">{"default":"Ch\u00E2teaux rh\u00E9nans", "langfre":"Ch\u00E2teaux rh\u00E9nans", "langger":"Burgen am Oberrhein", "langeng":"Castles on the Upper Rhine"}</resourceTitleObject>
+  <creationDateForResource>2024-02-15</creationDateForResource>
+  <creationYearForResource>2024</creationYearForResource>
+  <creationMonthForResource>2024-02</creationMonthForResource>
+  <publicationDateForResource>2024-03-14</publicationDateForResource>
+  <publicationYearForResource>2024</publicationYearForResource>
+  <publicationMonthForResource>2024-03</publicationMonthForResource>
+  <revisionDateForResource>2024-07-15</revisionDateForResource>
+  <revisionYearForResource>2024</revisionYearForResource>
+  <revisionMonthForResource>2024-07</revisionMonthForResource>
+  <resourceDate type="object">{"type": "creation", "date": "2024-02-15T00:00:00.000Z"}</resourceDate>
+  <resourceDate type="object">{"type": "publication", "date": "2024-03-14T00:00:00.000Z"}</resourceDate>
+  <resourceDate type="object">{"type": "revision", "date": "2024-07-15T00:00:00.000Z"}</resourceDate>
+  <resourceTemporalDateRange type="object">{
+                  "gte": "2024-02-15T00:00:00.000Z",
+                  "lte": "2024-02-15T00:00:00.000Z"
+                  }</resourceTemporalDateRange>
+  <resourceTemporalDateRange type="object">{
+                  "gte": "2024-03-14T00:00:00.000Z",
+                  "lte": "2024-03-14T00:00:00.000Z"
+                  }</resourceTemporalDateRange>
+  <resourceTemporalDateRange type="object">{
+                  "gte": "2024-07-15T00:00:00.000Z",
+                  "lte": "2024-07-15T00:00:00.000Z"
+                  }</resourceTemporalDateRange>
+  <resourceAbstractObject type="object">{"default":"Pr\u00E9sentation des ch\u00E2teaux forts du Rhin Sup\u00E9rieur selon des donn\u00E9es d\u2019accessibilit\u00E9 d\u2019itin\u00E9rance, d\u2019int\u00E9r\u00EAt touristique, de billetterie ou encore d\u2019offre de restauration. \nCette action b\u00E9n\u00E9ficie d\u2019un cofinancement de l\u2019UE dans le cadre du projet Interreg VI \u00AB Ch\u00E2teaux rh\u00E9nans \u2013 Burgen am Oberrhein \u00BB.\n\nSite web du projet \"Ch\u00E2teaux rh\u00E9nans\" : www.chateaux-rhenans.eu\/fr", "langfre":"Pr\u00E9sentation des ch\u00E2teaux forts du Rhin Sup\u00E9rieur selon des donn\u00E9es d\u2019accessibilit\u00E9 d\u2019itin\u00E9rance, d\u2019int\u00E9r\u00EAt touristique, de billetterie ou encore d\u2019offre de restauration. \nCette action b\u00E9n\u00E9ficie d\u2019un cofinancement de l\u2019UE dans le cadre du projet Interreg VI \u00AB Ch\u00E2teaux rh\u00E9nans \u2013 Burgen am Oberrhein \u00BB.\n\nSite web du projet \"Ch\u00E2teaux rh\u00E9nans\" : www.chateaux-rhenans.eu\/fr", "langger":"Vorstellung der Burgen am Oberrhein anhand von Daten zur Zug\u00E4nglichkeit der Wanderwege, zum touristischen Interesse, zum Ticketverkauf oder auch zum Gastronomieangebot. \nDiese Aktion wird von der EU im Rahmen des Interreg VI-Projekts \"Rheinische Burgen - Burgen am Oberrhein\" kofinanziert.\n\nWebsite des Projekts \"Burgen am Oberrhein\" : www.chateaux-rhenans.eu\/de", "langeng":"Presentation of the fortified castles of the Upper Rhine according to data on accessibility, itinerancy, tourist interest, ticketing and catering facilities. \nThis project is co-financed by the EU as part of the Interreg VI project \"Ch\u00E2teaux rh\u00E9nans - Burgen am Oberrhein\".\n\n\"Ch\u00E2teaux rh\u00E9nans \u2013 Burgen am Oberrhein\" project website: www.chateaux-rhenans.eu"}</resourceAbstractObject>
+  <cl_resourceCharacterSet type="object">{"key":"utf8","default":"lan:MD_CharacterSetCode--utf8--fre","langfre":"lan:MD_CharacterSetCode--utf8--fre","langger":"lan:MD_CharacterSetCode--utf8--ger","langeng":"lan:MD_CharacterSetCode--utf8--eng","langfre":"lan:MD_CharacterSetCode--utf8--fre","link":"https:\/\/standards.iso.org\/iso\/19115\/resources\/Codelists\/cat\/codelists.xml#MD_CharacterSetCode","text":"utf8"}</cl_resourceCharacterSet>
+  <OrgForResourceObject type="object">{"default":"GeoRhena", "langfre":"GeoRhena", "langger":"GeoRhena", "langeng":"GeoRhena"}</OrgForResourceObject>
+  <pointOfContactOrgForResourceObject type="object">{"default":"GeoRhena", "langfre":"GeoRhena", "langger":"GeoRhena", "langeng":"GeoRhena"}</pointOfContactOrgForResourceObject>
+  <contactForResource type="object">{
+      
+        "organisationObject": 
+            {"default":"GeoRhena", "langfre":"GeoRhena", "langger":"GeoRhena", "langeng":"GeoRhena"}
+            ,
+      
+      "role":"pointOfContact",
+      "email":"contact@georhena.eu",
+      "website":"https:\/\/www.georhena.eu\/",
+      "logo":"",
+      "individual":"GeoRhena",
+      "position":"",
+      "phone":"00 33 3 89 30 63 91",
+      "address":"100, avenue d'Alsace, COLMAR, 68000, FRANCE"
+      
+      }</contactForResource>
+  <OrgForResourceObject type="object">{"default":"Collectivit\u00E9 Europ\u00E9enne d'Alsace", "langfre":"Collectivit\u00E9 Europ\u00E9enne d'Alsace", "langger":"Collectivit\u00E9 Europ\u00E9enne d'Alsace", "langeng":"Collectivit\u00E9 Europ\u00E9enne d'Alsace"}</OrgForResourceObject>
+  <custodianOrgForResourceObject type="object">{"default":"Collectivit\u00E9 Europ\u00E9enne d'Alsace", "langfre":"Collectivit\u00E9 Europ\u00E9enne d'Alsace", "langger":"Collectivit\u00E9 Europ\u00E9enne d'Alsace", "langeng":"Collectivit\u00E9 Europ\u00E9enne d'Alsace"}</custodianOrgForResourceObject>
+  <contactForResource type="object">{
+      
+        "organisationObject": 
+            {"default":"Collectivit\u00E9 Europ\u00E9enne d'Alsace", "langfre":"Collectivit\u00E9 Europ\u00E9enne d'Alsace", "langger":"Collectivit\u00E9 Europ\u00E9enne d'Alsace", "langeng":"Collectivit\u00E9 Europ\u00E9enne d'Alsace"}
+            ,
+      
+      "role":"custodian",
+      "email":"info@chateaux-rhenans.eu",
+      "website":"https:\/\/www.alsace.eu",
+      "logo":"",
+      "individual":"",
+      "position":"",
+      "phone":"",
+      "address":""
+      
+      }</contactForResource>
+  <hasOverview>true</hasOverview>
+  <overview type="object">{
+            "url": "https:\/\/geoportal.georhena.eu\/geonetwork\/srv\/api\/records\/f74f5451-b198-4edf-abdd-a6b6b7caed81\/attachments\/chateaux_rhenans.jpeg"
+            ,
+              "nameObject":
+              
+            {"default":"chateaux_rhenans.jpeg", "langfre":"chateaux_rhenans.jpeg", "langger":"chateaux_rhenans.jpeg", "langeng":"chateaux_rhenans.jpeg"}
+            
+            }</overview>
+  <resourceLanguage>fre</resourceLanguage>
+  <resourceLanguage>ger</resourceLanguage>
+  <tag type="object">[
+      {
+      "default":"Rhin Sup\u00E9rieur", "langfre":"Rhin Sup\u00E9rieur", "langger":"Oberrhein", "langeng":"Upper Rhine"
+      }
+      ,
+      {
+      "default":"Ch\u00E2teaux forts", "langfre":"Ch\u00E2teaux forts", "langger":"Burgen und Schl\u00F6sser", "langeng":"Fortified castles"
+      }
+      ,
+      {
+      "default":"Patrimoine castral", "langfre":"Patrimoine castral", "langger":"Kastralisches Kulturerbe", "langeng":"Castral heritage"
+      }
+      ,
+      {
+      "default":"gestion patrimoniale", "langfre":"gestion patrimoniale", "langger":"Erbherrliches Management", "langeng":"patrimonial management"
+      }
+      ,
+      {
+      "default":"tourisme", "langfre":"tourisme", "langger":"Fremdenverkehr", "langeng":"tourism"
+      }
+      ]</tag>
+  <tagNumber>5</tagNumber>
+  <isOpenData>false</isOpenData>
+  <keywordType-place type="object">[
+          {
+          "default":"Rhin Sup\u00E9rieur", "langfre":"Rhin Sup\u00E9rieur", "langger":"Oberrhein", "langeng":"Upper Rhine"
+          }
+          ]</keywordType-place>
+  <keywordType-theme type="object">[
+          {
+          "default":"Ch\u00E2teaux forts", "langfre":"Ch\u00E2teaux forts", "langger":"Burgen und Schl\u00F6sser", "langeng":"Fortified castles"
+          }
+          ,
+          {
+          "default":"Patrimoine castral", "langfre":"Patrimoine castral", "langger":"Kastralisches Kulturerbe", "langeng":"Castral heritage"
+          }
+          ,
+          {
+          "default":"gestion patrimoniale", "langfre":"gestion patrimoniale", "langger":"Erbherrliches Management", "langeng":"patrimonial management"
+          }
+          ,
+          {
+          "default":"tourisme", "langfre":"tourisme", "langger":"Fremdenverkehr", "langeng":"tourism"
+          }
+          ]</keywordType-theme>
+  <th_otherKeywords-placeNumber>1</th_otherKeywords-placeNumber>
+  <th_otherKeywords-place type="object">[
+        {
+        "default":"Rhin Sup\u00E9rieur", "langfre":"Rhin Sup\u00E9rieur", "langger":"Oberrhein", "langeng":"Upper Rhine"
+        }
+        ]</th_otherKeywords-place>
+  <th_otherKeywords-themeNumber>2</th_otherKeywords-themeNumber>
+  <th_otherKeywords-theme type="object">[
+        {
+        "default":"Ch\u00E2teaux forts", "langfre":"Ch\u00E2teaux forts", "langger":"Burgen und Schl\u00F6sser", "langeng":"Fortified castles"
+        }
+        ,
+        {
+        "default":"Patrimoine castral", "langfre":"Patrimoine castral", "langger":"Kastralisches Kulturerbe", "langeng":"Castral heritage"
+        }
+        ]</th_otherKeywords-theme>
+  <th_gemetNumber>2</th_gemetNumber>
+  <th_gemet type="object">[
+        {
+        "default":"gestion patrimoniale", "langfre":"gestion patrimoniale", "langger":"Erbherrliches Management", "langeng":"patrimonial management"
+        }
+        ,
+        {
+        "default":"tourisme", "langfre":"tourisme", "langger":"Fremdenverkehr", "langeng":"tourism"
+        }
+        ]</th_gemet>
+  <allKeywords type="object">{
+      
+        "th_otherKeywords-place": {
+        
+            "title": "otherKeywords-place",
+          
+        "theme": "place",
+        
+        "keywords": [
+        
+          {
+          "default":"Rhin Sup\u00E9rieur", "langfre":"Rhin Sup\u00E9rieur", "langger":"Oberrhein", "langeng":"Upper Rhine"
+          }
+          
+        ]}
+        ,
+        "th_otherKeywords-theme": {
+        
+            "title": "otherKeywords-theme",
+          
+        "theme": "theme",
+        
+        "keywords": [
+        
+          {
+          "default":"Ch\u00E2teaux forts", "langfre":"Ch\u00E2teaux forts", "langger":"Burgen und Schl\u00F6sser", "langeng":"Fortified castles"
+          }
+          ,
+          {
+          "default":"Patrimoine castral", "langfre":"Patrimoine castral", "langger":"Kastralisches Kulturerbe", "langeng":"Castral heritage"
+          }
+          
+        ]}
+        ,
+        "th_gemet": {
+        
+          "id": "geonetwork.thesaurus.external.theme.gemet",
+        
+            "multilingualTitle": {
+              "default":"GEMET - Concepts, version 2.4", "langfre":"GEMET - Concepts, version 2.4"
+            },
+          
+        "theme": "theme",
+        
+          "link": "https:\/\/geoportal.georhena.eu\/geonetwork\/srv\/api\/registries\/vocabularies\/external.theme.gemet",
+        
+        "keywords": [
+        
+          {
+          "default":"gestion patrimoniale", "langfre":"gestion patrimoniale", "langger":"Erbherrliches Management", "langeng":"patrimonial management"
+          }
+          ,
+          {
+          "default":"tourisme", "langfre":"tourisme", "langger":"Fremdenverkehr", "langeng":"tourism"
+          }
+          
+        ]}
+        
+      }</allKeywords>
+  <indexingErrorMsg type="object">{
+                            "string": "indexingErrorMsg-keywordNotFoundInThesaurus",
+                            "type": "warning",
+                            "values": {
+                              "keyword": "gestion patrimoniale",
+                              "thesaurus": "geonetwork.thesaurus.external.theme.gemet"
+                            }
+                          }</indexingErrorMsg>
+  <indexingErrorMsg type="object">{
+                            "string": "indexingErrorMsg-keywordNotFoundInThesaurus",
+                            "type": "warning",
+                            "values": {
+                              "keyword": "tourisme",
+                              "thesaurus": "geonetwork.thesaurus.external.theme.gemet"
+                            }
+                          }</indexingErrorMsg>
+  <cl_topic type="object">{"key":"society","default":"mri:MD_TopicCategoryCode--society--fre","langfre":"mri:MD_TopicCategoryCode--society--fre","langger":"mri:MD_TopicCategoryCode--society--ger","langeng":"mri:MD_TopicCategoryCode--society--eng","langfre":"mri:MD_TopicCategoryCode--society--fre"}</cl_topic>
+  <resolutionScaleDenominator>100000</resolutionScaleDenominator>
+  <spatialRepresentationType>vector</spatialRepresentationType>
+  <maintenance type="object">{
+            "frequency": "asNeeded"
+            
+            }</maintenance>
+  <MD_ConstraintsUseLimitationObject type="object">{"default":"Licence CC-BY - \u00A9CeA ; \u00A9GeoRhena", "langfre":"Licence CC-BY - \u00A9CeA ; \u00A9GeoRhena", "langger":"Lizenz CC-BY - \u00A9CeA ; \u00A9GeoRhena", "langeng":"Licence CC-BY - \u00A9CeA ; \u00A9GeoRhena"}</MD_ConstraintsUseLimitationObject>
+  <MD_LegalConstraintsOtherConstraintsObject type="object">{"default":"Pas d'autre limitation", "langfre":"Pas d'autre limitation", "langger":"Keine andere Einschr\u00E4nkung", "langeng":"No other limitation"}</MD_LegalConstraintsOtherConstraintsObject>
+  <licenseObject type="object">{"default":"Pas d'autre limitation", "langfre":"Pas d'autre limitation", "langger":"Keine andere Einschr\u00E4nkung", "langeng":"No other limitation"}</licenseObject>
+  <resourceTemporalDateRange type="object">{
+                  "gte": "2023-12-15T00:00:00.000Z"
+                  
+                    ,"lte": "2024-02-15T00:00:00.000Z"
+                  
+                  }</resourceTemporalDateRange>
+  <resourceTemporalExtentDateRange type="object">{
+                  "gte": "2023-12-15T00:00:00.000Z"
+                  
+                    ,"lte": "2024-02-15T00:00:00.000Z"
+                  
+                }</resourceTemporalExtentDateRange>
+  <resourceTemporalExtentDetails type="object">{
+        "start": {
+        "date": "2023-12-15"
+        },
+        "end": {
+        "date": "2024-02-15"
+        }
+        }</resourceTemporalExtentDetails>
+  <geom type="object">{"type": "Polygon","coordinates": [[[7.009277,47.346267],[8.745117,47.346267],[8.745117,49.310799],[7.009277,49.310799],[7.009277,47.346267]]]}</geom>
+  <location>48.328533,7.877197000000001</location>
+  <featureTypes type="object">[
+        
+        ]</featureTypes>
+  <lineageObject type="object">{"default":"Recensement des ch\u00E2teaux forts \u00E0 partir de donn\u00E9es collect\u00E9es aupr\u00E8s d\u2019institutions culturelles ou touristiques partenaires dans le cadre du projet Ch\u00E2teaux rh\u00E9nans.", "langfre":"Recensement des ch\u00E2teaux forts \u00E0 partir de donn\u00E9es collect\u00E9es aupr\u00E8s d\u2019institutions culturelles ou touristiques partenaires dans le cadre du projet Ch\u00E2teaux rh\u00E9nans.", "langger":"Erfassung von Burgen und Schl\u00F6ssern anhand von Daten, die bei kulturellen oder touristischen Partnerinstitutionen im Rahmen des Projekts Rheinburgen gesammelt wurden.", "langeng":"Inventory of castles based on data collected from partner cultural and tourist institutions as part of the Ch\u00E2teaux rh\u00E9nans project."}</lineageObject>
+  <format>Géodonnée au format SHP</format>
+  <format />
+  <format />
+  <format />
+  <format />
+  <OrgForDistributionObject type="object">{"default":"GeoRhena", "langfre":"GeoRhena"}</OrgForDistributionObject>
+  <publisherOrgForDistributionObject type="object">{"default":"GeoRhena", "langfre":"GeoRhena"}</publisherOrgForDistributionObject>
+  <contactForDistribution type="object">{
+      
+        "organisationObject": 
+            {"default":"GeoRhena", "langfre":"GeoRhena"}
+            ,
+      
+      "role":"publisher",
+      "email":"",
+      "website":"",
+      "logo":"",
+      "individual":"",
+      "position":"",
+      "phone":"",
+      "address":""
+      
+      }</contactForDistribution>
+  <linkUrl>https://geoportal.georhena.eu/geoserver/society/ows</linkUrl>
+  <linkProtocol>OGC:WMS</linkProtocol>
+  <linkUrlProtocolOGCWMS>https://geoportal.georhena.eu/geoserver/society/ows</linkUrlProtocolOGCWMS>
+  <link type="object">{
+            "protocol":"OGC:WMS",
+            "mimeType":"",
+            
+              "urlObject": 
+            {"default":"https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows", "langfre":"https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows"}
+            ,
+            
+              "nameObject": 
+            {"default":"chateaux_rhenans", "langfre":"chateaux_rhenans"}
+            ,
+            
+              "descriptionObject": 
+            {"default":"Ch\u00E2teaux rh\u00E9nans du Rhin Sup\u00E9rieur - copie", "langfre":"Ch\u00E2teaux rh\u00E9nans du Rhin Sup\u00E9rieur - copie", "langger":"Burgen am Oberrhein - kopie"}
+            ,
+            
+            "function":"",
+            "applicationProfile":"",
+            "group": 0
+            }</link>
+  <linkUrl>https://geoportal.georhena.eu/geoserver/society/ows</linkUrl>
+  <linkProtocol>OGC:WFS</linkProtocol>
+  <linkUrlProtocolOGCWFS>https://geoportal.georhena.eu/geoserver/society/ows</linkUrlProtocolOGCWFS>
+  <link type="object">{
+            "protocol":"OGC:WFS",
+            "mimeType":"",
+            
+              "urlObject": 
+            {"default":"https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows", "langfre":"https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows"}
+            ,
+            
+              "nameObject": 
+            {"default":"society:chateaux_rhenans", "langfre":"society:chateaux_rhenans", "langger":"society:chateaux_rhenans"}
+            ,
+            
+              "descriptionObject": 
+            {"default":"Ch\u00E2teaux rh\u00E9nans du Rhin Sup\u00E9rieur", "langfre":"Ch\u00E2teaux rh\u00E9nans du Rhin Sup\u00E9rieur", "langger":"Burgen am Oberrhein"}
+            ,
+            
+            "function":"",
+            "applicationProfile":"",
+            "group": 0
+            }</link>
+  <linkUrl>https://geoportal.georhena.eu/geoserver/society/ows?request=GetFeature&amp;service=WFS&amp;typeName=chateaux_rhenans&amp;version=1.0.0&amp;outputFormat=SHAPE-ZIP</linkUrl>
+  <linkProtocol>WWW:DOWNLOAD-1.0-ftp--download</linkProtocol>
+  <linkUrlProtocolWWWDOWNLOAD10ftpdownload>https://geoportal.georhena.eu/geoserver/society/ows?request=GetFeature&amp;service=WFS&amp;typeName=chateaux_rhenans&amp;version=1.0.0&amp;outputFormat=SHAPE-ZIP</linkUrlProtocolWWWDOWNLOAD10ftpdownload>
+  <link type="object">{
+            "protocol":"WWW:DOWNLOAD-1.0-ftp--download",
+            "mimeType":"",
+            
+              "urlObject": 
+            {"default":"https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows?request=GetFeature&amp;service=WFS&amp;typeName=chateaux_rhenans&amp;version=1.0.0&amp;outputFormat=SHAPE-ZIP", "langfre":"https:\/\/geoportal.georhena.eu\/geoserver\/society\/ows?request=GetFeature&amp;service=WFS&amp;typeName=chateaux_rhenans&amp;version=1.0.0&amp;outputFormat=SHAPE-ZIP"}
+            ,
+            
+              "nameObject": 
+            {"default":"T\u00E9l\u00E9chargement du Shapefile", "langfre":"T\u00E9l\u00E9chargement du Shapefile", "langeng":"T\u00E9l\u00E9chargement du Shapefile", "langeng":"T\u00E9l\u00E9chargement du Shapefile"}
+            ,
+            
+            "function":"",
+            "applicationProfile":"",
+            "group": 0
+            }</link>
+  <linkUrl>www.chateaux-rhenans.eu</linkUrl>
+  <linkProtocol>WWW:LINK-1.0-http--link</linkProtocol>
+  <linkUrlProtocolWWWLINK10httplink>www.chateaux-rhenans.eu</linkUrlProtocolWWWLINK10httplink>
+  <link type="object">{
+            "protocol":"WWW:LINK-1.0-http--link",
+            "mimeType":"",
+            
+              "urlObject": 
+            {"default":"www.chateaux-rhenans.eu", "langfre":"www.chateaux-rhenans.eu"}
+            ,
+            
+              "nameObject": 
+            {"default":"Site internet du projet \"Ch\u00E2teaux rh\u00E9nans\"", "langfre":"Site internet du projet \"Ch\u00E2teaux rh\u00E9nans\"", "langger":"Webseite des Projekts \"Rheinburgen\".", "langeng":"\"Rhine castles\" project website"}
+            ,
+            
+            "function":"",
+            "applicationProfile":"",
+            "group": 0
+            }</link>
+  <recordGroup>f74f5451-b198-4edf-abdd-a6b6b7caed81</recordGroup>
+</doc>
+

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -210,12 +210,18 @@
           md: "=gnMetadataStatusUpdater",
           statusType: "@",
           task: "=",
-          statusToSelect: "@"
+          statusToSelect: "@",
+          dueDate: "@"
         },
         link: function (scope) {
           var user = scope.$parent.user;
           var metadataId = scope.md.id;
           var defaultType = "workflow";
+
+          scope.minDate = new Date();
+          var requestedDueDate = new Date(moment(scope.dueDate).format("YYYY-MM-DD"));
+          var dueDate =
+            requestedDueDate > scope.minDate ? requestedDueDate : scope.minDate;
 
           scope.statusType = scope.statusType || defaultType;
           scope.lang = scope.$parent.lang;
@@ -223,7 +229,7 @@
           scope.newStatus = {
             status: scope.task ? scope.task.id : -1,
             owner: null,
-            dueDate: null,
+            dueDate: dueDate,
             changeMessage: ""
           };
 
@@ -240,20 +246,6 @@
                   scope.status = data !== "null" ? data.status : null;
                   scope.newStatus.status = scope.statusToSelect;
                   scope.lastStatus = data.currentStatus.id.statusId;
-                });
-            } else {
-              return $http
-                .get("../api/status/" + scope.statusType)
-                .then(function (response) {
-                  var data = response.data;
-
-                  scope.status = data;
-                  scope.newStatus = {
-                    status: scope.task ? scope.task.id : 0,
-                    owner: null,
-                    dueDate: null,
-                    changeMessage: ""
-                  };
                 });
             }
           }
@@ -764,7 +756,7 @@
             scope.selectedGroup = group;
           };
           $http
-            .get("../api/users/groups")
+            .get("../api/users/groups?groupTypes=Workspace")
             .then(function (response) {
               var uniqueUserGroups = {};
               angular.forEach(response.data, function (g) {
@@ -825,32 +817,122 @@
                   "&groupIdentifier=" +
                   scope.selectedUserGroup.groupId
               )
-              .then(function (r) {
-                var msg = $translate.instant("transfertPrivilegesFinished", {
-                  metadata: r.data.numberOfRecordsProcessed
-                });
+              .then(
+                function (r) {
+                  var msg = $translate.instant("transfertPrivilegesFinished", {
+                    metadata: r.data.numberOfRecordsProcessed
+                  });
 
-                scope.processReport = r.data;
+                  scope.processReport = r.data;
 
-                // A report is returned
-                gnUtilityService.openModal(
-                  {
-                    title: msg,
-                    content: '<div gn-batch-report="processReport"></div>',
-                    className: "gn-privileges-popup",
-                    onCloseCallback: function () {
-                      if (bucket != "null") {
-                        scope.$emit("search", true);
-                        scope.$broadcast("operationOnSelectionStop");
+                  // A report is returned
+                  gnUtilityService.openModal(
+                    {
+                      title: msg,
+                      content: '<div gn-batch-report="processReport"></div>',
+                      className: "gn-privileges-popup",
+                      onCloseCallback: function () {
+                        if (bucket != "null") {
+                          scope.$emit("search", true);
+                          scope.$broadcast("operationOnSelectionStop");
+                        }
+                        scope.$emit("TransferOwnershipDone", true);
+                        scope.processReport = null;
                       }
-                      scope.$emit("TransferOwnershipDone", true);
-                      scope.processReport = null;
-                    }
-                  },
-                  scope,
-                  "TransferOwnershipDone"
-                );
-              });
+                    },
+                    scope,
+                    "TransferOwnershipDone"
+                  );
+                },
+                function (r) {
+                  $rootScope.$broadcast("StatusUpdated", {
+                    title: $translate.instant("transferOwnershipError"),
+                    error: r.data,
+                    timeout: 0,
+                    type: "danger"
+                  });
+                }
+              );
+          };
+        }
+      };
+    }
+  ]);
+
+  /**
+   * @ngdoc directive
+   * @name gn_mdactions_directive.directive:gnMetadataBatchDelete
+   * @restrict A
+   *
+   * @description
+   * The `gnMetadataBatchDelete` directive provides a
+   * dialog to confirm the deletion of a metadata selection.
+   *
+   */
+  module.directive("gnMetadataBatchDelete", [
+    "$translate",
+    "gnMetadataActions",
+    function ($translate, gnMetadataActions) {
+      return {
+        restrict: "A",
+        replace: false,
+        templateUrl:
+          "../../catalog/components/metadataactions/partials/" + "batchdelete.html",
+        scope: {
+          selectionBucket: "@"
+        },
+        link: function (scope, element, attrs) {
+          scope.confirmActionWord = "DELETE";
+
+          // User input for confirm action word
+          scope.userInput = "";
+
+          /**
+           * Checks to disable the confirm button if a confirm action word
+           * is defined and the user input does not match it.
+           *
+           * @returns {boolean}
+           */
+          scope.disableConfirmButton = function () {
+            return scope.userInput !== scope.confirmActionWord;
+          };
+
+          scope.deleteMd = function () {
+            return gnMetadataActions.deleteMd(null, scope.selectionBucket).then(
+              function () {
+                scope.$emit("MetadataDeleted");
+                scope.$emit("StatusUpdated", {
+                  msg: $translate.instant("metadataDeletedWithNoErrors"),
+                  timeout: 2,
+                  type: "success"
+                });
+              },
+              function () {
+                scope.$emit("MetadataDeleted");
+              }
+            );
+          };
+
+          scope.getMetadataDeleteConfirmMessage = function () {
+            var metadataTypes = gnMetadataActions.getSelectedMetadataTypes();
+            var translationsMetadataTypes = "";
+
+            // check for additional texts to display depending on the metadata type(s) selected.
+            for (var i = 0; i < metadataTypes.length; i++) {
+              var messageKey = "metadataDelete-" + metadataTypes[i].type;
+
+              var textMetadataType = $translate.instant(messageKey);
+
+              if (textMetadataType !== messageKey) {
+                translationsMetadataTypes += "<br/>" + textMetadataType;
+              }
+            }
+
+            var translation =
+              $translate.instant("metadataBatchDeleteConfirm") +
+              translationsMetadataTypes;
+
+            return translation;
           };
         }
       };

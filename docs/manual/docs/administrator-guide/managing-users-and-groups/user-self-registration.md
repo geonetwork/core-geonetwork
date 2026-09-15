@@ -4,7 +4,7 @@
     This function requires an email server configured. See [System configuration](../configuring-the-catalog/system-configuration.md#system-config-feedback).
 
 
-To enable the self-registration functions, see [System configuration](../configuring-the-catalog/system-configuration.md). When self-registration is enabled, for users that are not logged in, an additional link is shown on the login page:
+To enable the self-registration functions, see [System configuration](../configuring-the-catalog/system-configuration.md). When self-registration is enabled, for users who are not logged in, an additional link is shown on the login page:
 
 ![](img/selfregistration-start.png)
 
@@ -24,7 +24,7 @@ The fields in this form are self-explanatory except for the following:
 
 ## What happens when a user self-registers?
 
-When a user self-registration occurs, the user receives an email with the new account details that looks something like the following:
+When a user self-registers, they receive an email with the new account details that looks something like the following:
 
     Dear User,
 
@@ -46,9 +46,9 @@ When a user self-registration occurs, the user receives an email with the new ac
     Yours sincerely,
     The team at The Greenhouse GeoNetwork Site
 
-Notice that the user has requested an 'Editor' profile. As a result an email will be sent to the Email address nominated in the Feedback (see [Feedback](../configuring-the-catalog/system-configuration.md#system-config-feedback)) section of the `System Administration` menu which looks something like the following:
+Notice that the user has requested an 'Editor' profile. As a result, an email will be sent to the email address nominated in the Feedback (see [Feedback](../configuring-the-catalog/system-configuration.md#system-config-feedback)) section of the `System Administration` menu which looks something like the following:
 
-Notice also that the user has been added to the built-in user group 'GUEST'. This is a security restriction. An administrator/user-administrator can add the user to other groups if that is required later.
+Notice also that the user has been added to the built-in user group 'GUEST'. This is a security restriction. An administrator/user-administrator can add the user to other groups if needed.
 
 If you want to change the content of this email, you should modify `xslt/service/account/registration-pwd-email.xsl`.
 

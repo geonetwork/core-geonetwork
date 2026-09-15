@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,7 +29,7 @@ import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider.CLIENTREGISTRATION_NAME;
+import static org.fao.geonet.kernel.security.openidconnect.GeonetworkClientRegistrationProvider.CLIENT_REGISTRATION_NAME;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -123,9 +123,9 @@ public class GeonetworkClientRegistrationProviderTest {
     @Test
     public void testScopes_all() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
-        configuration.setClientId("clientid");
-        configuration.setClientSecret("clientsecret");
-        configuration.setScopes("");//use all scopes from server
+        configuration.getClientConfig().setClientId("clientid");
+        configuration.getClientConfig().setClientSecret("clientsecret");
+        configuration.getClientConfig().setScopes("");//use all scopes from server
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
             configuration
@@ -139,9 +139,9 @@ public class GeonetworkClientRegistrationProviderTest {
     @Test
     public void testScopes_limited() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
-        configuration.setClientId("clientid");
-        configuration.setClientSecret("clientsecret");
-        configuration.setScopes("openid email");//use 2 scopes
+        configuration.getClientConfig().setClientId("clientid");
+        configuration.getClientConfig().setClientSecret("clientsecret");
+        configuration.getClientConfig().setScopes("openid email");//use 2 scopes
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
             configuration
@@ -157,9 +157,9 @@ public class GeonetworkClientRegistrationProviderTest {
     @Test
     public void testParsingKeycloakConfigurationMetadataJson() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
-        configuration.setClientId("clientid");
-        configuration.setClientSecret("clientsecret");
-        configuration.setScopes("");//use all scopes
+        configuration.getClientConfig().setClientId("clientid");
+        configuration.getClientConfig().setClientSecret("clientsecret");
+        configuration.getClientConfig().setScopes("");//use all scopes
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(keycloakConfig),
             configuration
@@ -169,7 +169,7 @@ public class GeonetworkClientRegistrationProviderTest {
 
         assertEquals("clientid", out.getClientRegistration().getClientId());
         assertEquals("clientsecret", out.getClientRegistration().getClientSecret());
-        assertEquals(CLIENTREGISTRATION_NAME, out.getClientRegistration().getRegistrationId());
+        assertEquals(CLIENT_REGISTRATION_NAME, out.getClientRegistration().getRegistrationId());
         assertEquals(9, out.getClientRegistration().getScopes().size());
         assertTrue(out.getClientRegistration().getScopes().contains("openid"));
 
@@ -186,9 +186,9 @@ public class GeonetworkClientRegistrationProviderTest {
     @Test
     public void testParsingAzureADConfigurationMetadataJson() throws Exception {
         OIDCConfiguration configuration = new OIDCConfiguration();
-        configuration.setClientId("clientid");
-        configuration.setClientSecret("clientsecret");
-        configuration.setScopes("");//use all scopes
+        configuration.getClientConfig().setClientId("clientid");
+        configuration.getClientConfig().setClientSecret("clientsecret");
+        configuration.getClientConfig().setScopes("");//use all scopes
         GeonetworkClientRegistrationProvider out = new GeonetworkClientRegistrationProvider(
             string2InputStream(azureADConfig),
             configuration
@@ -198,7 +198,7 @@ public class GeonetworkClientRegistrationProviderTest {
 
         assertEquals("clientid", out.getClientRegistration().getClientId());
         assertEquals("clientsecret", out.getClientRegistration().getClientSecret());
-        assertEquals(CLIENTREGISTRATION_NAME, out.getClientRegistration().getRegistrationId());
+        assertEquals(CLIENT_REGISTRATION_NAME, out.getClientRegistration().getRegistrationId());
         assertEquals(4, out.getClientRegistration().getScopes().size());
         assertTrue(out.getClientRegistration().getScopes().contains("openid"));
 

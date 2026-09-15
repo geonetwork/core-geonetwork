@@ -85,6 +85,8 @@ public abstract class AbstractParams implements Cloneable {
     private boolean useAccount;
     private String username;
     private String password;
+    private String apiKeyHeader;
+    private String apiKey;
     private String every;
     private boolean oneRunOnly;
     private HarvestValidationEnum validate;
@@ -190,6 +192,9 @@ public abstract class AbstractParams implements Cloneable {
         setUseAccount(Util.getParam(account, "use", false));
         setUsername(Util.getParam(account, "username", ""));
         setPassword(Util.getParam(account, "password", ""));
+        
+        setApiKeyHeader(Util.getParam(site, "apiKeyHeader", ""));
+        setApiKey(Util.getParam(site, "apiKey", ""));
 
         setEvery(Util.getParam(opt, "every", "0 0 0 * * ?"));
 
@@ -275,6 +280,9 @@ public abstract class AbstractParams implements Cloneable {
         setUsername(Util.getParam(account, "username", getUsername()));
         setPassword(Util.getParam(account, "password", getPassword()));
 
+        setApiKeyHeader(Util.getParam(site, "apiKeyHeader", getApiKeyHeader()));
+        setApiKey(Util.getParam(site, "apiKey", getApiKey()));
+
         setEvery(Util.getParam(opt, "every", getEvery()));
         setOneRunOnly(Util.getParam(opt, "oneRunOnly", isOneRunOnly()));
 
@@ -332,6 +340,8 @@ public abstract class AbstractParams implements Cloneable {
         copy.setUseAccount(isUseAccount());
         copy.setUsername(getUsername());
         copy.setPassword(getPassword());
+        copy.setApiKeyHeader(getApiKeyHeader());
+        copy.setApiKey(getApiKey());
 
         copy.setEvery(getEvery());
         copy.setOneRunOnly(isOneRunOnly());
@@ -558,6 +568,22 @@ public abstract class AbstractParams implements Cloneable {
         this.password = password;
     }
 
+    public String getApiKeyHeader() {
+        return apiKeyHeader;
+    }
+
+    public void setApiKeyHeader(String apiKeyHeader) {
+        this.apiKeyHeader = apiKeyHeader;
+    }
+
+    public String getApiKey() {
+        return apiKey;
+    }
+
+    public void setApiKey(String apiKey) {
+        this.apiKey = apiKey;
+    }
+
     public String getEvery() {
         return every;
     }
@@ -638,6 +664,20 @@ public abstract class AbstractParams implements Cloneable {
 
     public void setOverrideUuid(OverrideUuid overrideUuid) {
         this.overrideUuid = overrideUuid;
+    }
+
+    /**
+     * Returns {@code true} when a record whose UUID collides with an existing record from another
+     * source must be skipped because the configured collision policy is {@link OverrideUuid#SKIP}.
+     * <p>
+     * Harvesters use this to resolve the collision state <em>before</em> validating a record, so a
+     * colliding record is counted as skipped without being validated (see issue #9432).
+     *
+     * @param collisionFromOtherSource whether the record already exists in the catalogue and
+     *                                 belongs to another source (local node or another harvester).
+     */
+    public boolean isSkippedByUuidCollision(boolean collisionFromOtherSource) {
+        return collisionFromOtherSource && overrideUuid == OverrideUuid.SKIP;
     }
 
     public boolean isIfRecordExistAppendPrivileges() {

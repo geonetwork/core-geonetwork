@@ -1,6 +1,15 @@
 <div class="panel panel-default metadata">
   <div class="panel-heading">
-    <div gc-md-actions-menu="md" class="pull-right"></div>
+    <div
+      data-ng-if="md && user.isEditorOrMore()"
+      class="gn-md-actions-btn pull-right"
+      gn-manage-record-menu="md"
+    ></div>
+    <div
+      data-ng-if="md"
+      class="gn-md-actions-btn pull-right"
+      gn-download-record-menu="md"
+    ></div>
     <button class="btn btn-default" ng-click="dismiss()" translate>backToList</button>
     {{md.resourceTitle}}
   </div>

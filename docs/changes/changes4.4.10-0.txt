@@ -1,0 +1,126 @@
+================================================================================
+===
+=== GeoNetwork 4.4.10-SNAPSHOT: List of changes
+===
+================================================================================
+- 4.4.10 changelog
+- Revert "Disable resolving XML external entity in user-controlled data. (#9066)" (#9244)
+- Transifex updates for GeoNetwork 4.4.10 (#9236)
+- Modify URI construction logic in ThesaurusService (#9157)
+- Subtemplates fields readonly in editor (#9179)
+- Ger schematron diagnostics (#9231)
+- Update Elasticsearch to v8.19.13 (#9176)
+- Update OpenLayers library to version 10.8.0 (#9225)
+- Disable resolving XML external entity in user-controlled data. (#9066)
+- Map viewer / ignore layer dimensions for non WMS layers (#9228)
+- use STANDARD_TREE as model for saxon tree (#8994)
+- Refactor resource download handling to use HttpServletResponse directly (#9230)
+- Thesaurus search cache immutable (#9204)
+- New postgres-postgis config file with an hikari cp connection pool. (#9107)
+- Add missing directive
+- Formatter / DCAT / Add support for turtle and json-ld formats (#8908)
+- Add the option to sort search results by title in descending order (#9226)
+- Allow to customise the cookie warning template (#9222)
+- Add Log4j2 JsonTemplateLayout support for JSON log output (#9209)
+- Harvester / CSW / Avoid using uneeded nested operator when only one logical operator is used. (#9166)
+- Index / Contact / Add search by identifiers (#8573)
+- Standard / ISO19115-3 / Indexing / Fix date parsing error on stepDateTime. (#9168)
+- Standard / 19115-3 / Fix maintenance date type in 19139 conversion (#9072)
+- ISO19115-3 / Formatter / Datacite (#9218)
+- Add support for reindexing all metadata of a harvester (#9133)
+- Fix the build of gn-es-dashboards
+- Collect up abandonded JCloud docs PR
+- Improve static page notes
+- Clarify recordIdPath change in GN > 4.2.2
+- Documentation / remove admin batch update section and update batch update process usage
+- New metadata form / Don't exclude templates with resource type map-static.
+- Improve CKAN Harvester by converting HTML to Plain Text (#9101)
+- Mef samples import with md type set to subtemplate in info xml (#9202)
+- schematron's success and warning ger translations (#9201)
+- editor, side panels, online resources, edit when no title (#9208)
+- Fix missing section in full view (#9163)
+- Enable group owner access to new field (#9177)
+- ISO19115-3 / Formatter / Datacite (#9191)
+- Stac harvester example (#9114)
+- Add UUID display to directory entries (#9182)
+- Fix NPE when accept header is missing (#9192)
+- Fix access to retrieve DOI servers for a metadata (#9195)
+- Editor user can not change privileges when the metadata is published. (#9197)
+- ISO19139 / ISO19115-3.2018 / Full record view improvements (#9070)
+- Fix record view custom menus (#9171)
+- Library / Security / Update Mapfish print (#9075)
+- Improve logging for UUID collision handling in harvester (#9188)
+- Standard / ISO19115-3 / Metadata linkage improvement (#9167)
+- Fix batch validation UI when there are only warnings (#9181)
+- Admin / Harvester report / Minor styling improvements. (#9165)
+- Add better support for JWT bearer token authentication in openidconnectbearer mode to enable external API calls (#9174)
+- Editor / Associated panel / Enable more configurability for the Online resource linking modal from the schema plugin (#9117)
+- Fix element creation via <gn_create/> with XPATH ending on predicate (#9116)
+- Standard / ISO19115-3 / Datacite / Only consider identification edition
+- Standard / ISO19115-3 / Feature catalogue / Fix cardinality suggestion.
+- ISO19115-3.2018 / Configure the xpath for the feature catalogue metadata titles
+- Metadata delete dialog / Allow to display a custom message, based on the metadata resource type(s) to delete. (#9172)
+- Add scrollable dropdown for WFS format selection menu (#9184)
+- Metadata Editor / Improve WMS resource configuration
+- Identification info locale and iso19139 to iso19115-3 conversion (#9127)
+- Update put resource from file to use a limited input stream
+- Stac harvester doi (#9089)
+- fix full view, side panel, related disappearence (#9123)
+- Public permalink to private md (#9059)
+- Separate date and datetime options in date picker control (#9153)
+- Metadata delete dialog (#9144)
+- Fix path for encryptor.properties file (#9158)
+- Fix horizontal scroll bar in WFS features table (#9160)
+- Formatter / Use portal filter (rebased #8263)  (#9139)
+- Standard / 19115-3 / Fix indexing of maintenance date (#9080)
+- Fix group update of metadata when workflow is enabled (#9155)
+- FIX: GeoNetwork 4 harvester missing one record due to pagination bug (#9154)
+- CSW / Fix invalid character in constraints parameters (#9145)
+- FIX: Map Layer Ellipsis not always clickable based on title of map (#9140)
+- group change will also change permissions (#9138)
+- Limit zip export resources size and add option to exclude attachments (#9130)
+- Update leadership team active maintainers list (#9128)
+- Update authors.md
+- Make userIdentifier optional in  user selection api (#8864)
+- Harvesters / Check if the metadata schema of a metadata to update has changed (#9052)
+- Iso19115-3.2018, full view, linkage multilingual support (#9120)
+- Fix index field escaping in email templates (#9124)
+- GN5 / Add sign in/out support / Add loginType for JWT security provider.
+- GN5 / Add sign in/out support
+- Fix issues related to group types. (#9108)
+- Stac harvester links to self and items (#9082)
+- Update migration script to remove the duplicate insert (#9105)
+- Additional filter options in GN 4.x harvesters (#9100)
+- Implement Group Types (#8741)
+- Support harvester log in subdirectory (#9087)
+- fetch formatters only when md has loaded
+- Add support to get metadata resource json object into the index. (#9036)
+- Add docs for allowed mime types including wildcards
+- Update setting description
+- Improve FileMimetypeChecker
+- Update API Key authentication section in user guide
+- Update formatting for API Key authentication section
+- Documentation for API Key in SimpleURL and CSW harvesters (#9097)
+- Add support for API Key in harvesters (#9094)
+- feat: update sourceFilter-help i18n to point to ES and not Lucene (#9077)
+- Update uuid property on resource duplication (#9090)
+- Fix errors with GN4 type harvester
+- Add docs for create a record options and settings (#9088)
+- Move system/metadata/edit/supportedFileMimetypes setting to from v444 to v4410 migration script. (#9079)
+- API / Allow editors to index their records (#9058)
+- Restrict username / group name characters (#6001)
+- avoid bad url forging when contact logo from existing org (#9073)
+- Fix wrong query parameter key used for record link generation (#9074)
+- Add option to skip attachments on record duplication (#9021)
+- Improve validation response (#8985)
+- Fix use of deprecated class (#9078)
+- Stream metadata resources (#9013)
+- Embbed webcomponent file inside datahub files. (#9056)
+- File uploads / check mimetypes (#7710)
+- Added support to login via service account connection when using security type openidconnectbearer (#9038)
+- add missing headers (#9069)
+- Fix db upgrade script to avoid errors when settings already exists (#9064)
+- Skip BOM chars from XML documents (#9046)
+- Release notes for 4.2.14 - update change log page (#9061)
+- Release notes for 4.2.14 (#9060)
+- Update version to 4.4.10-SNAPSHOT

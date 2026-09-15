@@ -1,6 +1,6 @@
 # Describing attributes table in a feature Catalog {#linking-feature-catalog}
 
-A feature catalog describes the data model of the dataset with the list of tables, attributes, definitions, list of values, \... Feature catalogs could be described:
+A feature catalog describes the data model of the dataset with the list of tables, attributes, definitions, list of values, ... Feature catalogs could be described:
 
 -   as a document (eg. PDF) and linked to the metadata record (see [Linking a document](linking-online-resources.md#linking-online-resources-doc))
 -   as a record and described using the ISO19110 standards.

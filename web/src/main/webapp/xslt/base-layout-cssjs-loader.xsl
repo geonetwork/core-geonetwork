@@ -111,7 +111,7 @@
 
         <script src="{$uiResourcesPath}lib/base64.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/jquery-3.7.1.js?v={$buildNumber}"></script>
-        <script src="{$uiResourcesPath}lib/jquery-migrate-3.4.1.js?v={$buildNumber}"></script>
+        <script src="{$uiResourcesPath}lib/jquery-migrate-3.6.0.js?v={$buildNumber}"></script>
 
         <script src="{$uiResourcesPath}lib/moment-with-locales.min.js?v={$buildNumber}"></script>
         <script src="{$uiResourcesPath}lib/moment-timezone-with-data-1970-2030.min.js?v={$buildNumber}"></script>
@@ -281,9 +281,9 @@
     <link rel="stylesheet" href="{$uiResourcesPath}lib/d3_timeseries/nv.d3.min.css"/>
 
     <xsl:variable name="appConfig"
-                  select="util:getUiConfiguration(/root/request/ui)"/>
+                  select="util:toUiConfigArg(util:getUiConfiguration(/root/request/ui))"/>
     <xsl:variable name="urlAppConfig"
-                  select="/root/request/uiconfig"/>
+                  select="util:toUiConfigArg(/root/request/uiconfig)"/>
 
     <script type="text/javascript">
       var module = angular.module('<xsl:value-of select="$angularApp"/>');

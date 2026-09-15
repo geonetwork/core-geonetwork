@@ -280,9 +280,14 @@ public abstract class AbstractOperation {
 
         Filter filter;
         try {
+            if (StringUtils.isNotEmpty(cql)) {
+                // GeoNetwork <4.4.10 may generate CQL with &nbsp; instead of space
+                // characters. Replace them to avoid CQL parsing errors.
+                cql = cql.replace("&nbsp;", " ").replace('\u00A0', ' ');
+            }
             filter = CQL.toFilter(cql);
         } catch (CQLException e) {
-            Log.error(Geonet.CSW, "Error parsing CQL or during conversion into Filter");
+            Log.error(Geonet.CSW, "Error parsing CQL or during conversion into Filter. Error: " + e.getMessage());
             throw new NoApplicableCodeEx("Error during CQL to Filter conversion : " + e);
         }
 

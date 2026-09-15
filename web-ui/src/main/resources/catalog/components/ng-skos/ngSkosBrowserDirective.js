@@ -110,8 +110,16 @@
           });
 
           // Select concept for navigation, push previous concept onto stack
-          scope.selectConcept = function (concept, previousConcept) {
-            if (!previousConcept) scope.previous.unshift(concept);
+          scope.selectConcept = function (concept, previousConcept, previousIndex) {
+            if (!previousConcept) {
+              scope.previous.unshift(concept);
+            } else {
+              // Remove from previous list all concepts after the previousIndex
+              scope.previous =
+                previousIndex === 0
+                  ? scope.previous.slice(0, 0)
+                  : scope.previous.slice(-(previousIndex + 1));
+            }
             if (scope.selectURI && concept.uri) {
               scope.selectURI(concept.thesaurus, concept.uri);
             } else if (

@@ -159,6 +159,7 @@
     "exportCSV": "Արտահանում (CSV)",
     "exportPDF": "Արտահանում (PDF)",
     "exportMEF": "Արտահանում (ZIP)",
+    "exportMEF-excludeAttachments": "Export (ZIP) without attachments",
     "welcomeText": "Այստեղ դուք կգտնեք տվյալներ, ծառայություններ և քարտեզներ և ավելին:",
     "searchOver": "Որոնեք <strong>{{գրառումներ}}</strong> տվյալների հավաքածուներ, ծառայություններ և քարտեզներ, ...",
     "browseBy": "Թերթիր ըստ",
@@ -357,7 +358,7 @@
     "KMLfileURL": "KML ֆայլի URL",
     "refineSearch": "Բարելավել որոնումը",
     "backToList": "Վերադառնալ ցուցակին",
-    "privilegesBatchAlert": "<span class='text-danger'>Արտոնությունները կթարմացվեն ընտրության բոլոր խմբագրվող գրառումների համար: Արտոնության ձևը դատարկ է և չի արտացոլում ընտրված գրառումների ընթացիկ արտոնությունները: Արտոնությունները վերակայվում են և փոխարինվում նորով։</span><br/><br/> Սեղմելով <strong>«Միաձուլել ընտրվածը»</strong> կավելացվեն (նշված է <strong>+</strong> ) կամ կհեռացվեն (վանդակը <strong>-</strong> ով) ընտրված արտոնությունները:<br/><br/> Սեղմելով <strong>Փոխարինել ընտրվածի վրա</strong> ՝ կհեռացվեն գրառումների կատեգորիաները, այնուհետև կավելացվեն (նշված է <strong>+</strong> ) կամ կհեռացվեն (վանդակը <strong>-</strong> ով) ընտրված արտոնությունները:",
+    "privilegesBatchAlert": "<span class='text-danger'>The privileges will be updated for all editable records in the selection. The privilege form is empty and does not reflect the selected records current privileges! Privileges are reset and replaced by the new one.</span><br/><br/>Clicking on <strong>Merge selected</strong> will add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.<br/><br/>Clicking on <strong>Update</strong> will remove record privileges and then add (checked with <strong>+</strong>) or remove (checkbox with <strong>-</strong>) selected privileges.",
     "permalink": "Մշտական հղում",
     "permalinkTo": "Մշտական հղում դեպի {{title}}",
     "shareOnTwitter": "Կիսվեք Twitter-ում",
@@ -559,5 +560,8 @@
     "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Զգուշացում / Դաշտային ռեսուրսTemporalDateRange / Ստորին միջակայքի սահմանը {{lowerBound}} չի կարող մեծ լինել վերին սահմանից {{upperBound}}: Ամսաթվերի միջակայքը ինդեքսավորված չէ:",
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Զգուշացում / Դաշտային ռեսուրսTemporalDateRange / Ստորին միջակայքի սահմանը {{lowerBound}} չի կարող մեծ լինել վերին սահմանից {{upperBound}}:",
     "indexingErrorMsg-schemaNotRegistered": "Գրառում {{գրառում}} / «{{schema}}» սխեման գրանցված չէ այս կատալոգում: Տեղադրեք այն կամ հեռացրեք այդ գրառումները: Գրառումը ինդեքսավորվում է ինդեքսավորման սխալի դրոշակ:",
-    "indexingErrorMsg-indexingStyleSheetError": "Ինդեքսավորման ոճաթերթը պարունակում է սխալներ՝ {{հաղորդագրություն }}\n Մետատվյալների նշումը որպես _indexingError=1 ինդեքսում:"
+    "indexingErrorMsg-indexingStyleSheetError": "Ինդեքսավորման ոճաթերթը պարունակում է սխալներ՝ {{հաղորդագրություն }}\n Մետատվյալների նշումը որպես _indexingError=1 ինդեքսում:",
+    "createAnonymousAccess": "Share unpublished record preview",
+    "deleteAnonymousAccess": "Revoke unpublished record preview",
+    "anonymousAccessTo": "Anonymous access to {{title}}"
 }

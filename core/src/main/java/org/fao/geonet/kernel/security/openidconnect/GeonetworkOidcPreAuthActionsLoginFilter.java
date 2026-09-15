@@ -32,6 +32,7 @@ import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequest
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.net.URLEncoder;
 import org.apache.commons.lang3.StringUtils;
@@ -105,9 +106,11 @@ public class GeonetworkOidcPreAuthActionsLoginFilter  implements Filter, Servlet
         HttpServletRequest servletRequest = (HttpServletRequest) request;
         HttpServletResponse servletResponse = (HttpServletResponse) response;
 
+        final HttpSession httpSession = servletRequest.getSession(false);
+
         String requestUri = servletRequest.getRequestURI();
         String contextPath = servletRequest.getContextPath();
-        String clientRegistrationId = GeonetworkClientRegistrationProvider.CLIENTREGISTRATION_NAME;
+        String clientRegistrationId = GeonetworkClientRegistrationProvider.CLIENT_REGISTRATION_NAME;
         // Grab the first (or default) registrationId from repository
         String registrationId = clientRegistrationRepository.findByRegistrationId(clientRegistrationId).getRegistrationId();
         String loginPath = contextPath + OAuth2AuthorizationRequestRedirectFilter.DEFAULT_AUTHORIZATION_REQUEST_BASE_URI + "/" + registrationId;
@@ -118,7 +121,7 @@ public class GeonetworkOidcPreAuthActionsLoginFilter  implements Filter, Servlet
             servletRequest.getHeader("Authorization").startsWith("Bearer ");
         boolean isAuthenticated = SecurityContextHolder.getContext().getAuthentication() != null &&
             SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
-            !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken);
+            !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken) && httpSession != null;
 
         boolean isPublicEndpoint = excludedPathsMatchers.stream()
             .anyMatch(matcher -> matcher.matches(servletRequest));

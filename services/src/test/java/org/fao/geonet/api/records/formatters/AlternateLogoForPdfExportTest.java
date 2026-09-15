@@ -25,7 +25,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
+import static org.mockito.ArgumentMatchers.any;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -53,7 +53,7 @@ public class AlternateLogoForPdfExportTest extends AbstractServiceIntegrationTes
     public void createTestData() throws Exception {
         context = createServiceContext();
         loginAsAdmin(context);
-        metadata = injectMetadataInDbDoNotRefreshHeader(getSampleISO19139MetadataXml(), context);
+        metadata = injectMetadataInDb(getSampleISO19139MetadataXml(), context);
     }
 
     @Before

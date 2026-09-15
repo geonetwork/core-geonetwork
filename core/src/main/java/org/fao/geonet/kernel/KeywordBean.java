@@ -69,6 +69,25 @@ public class KeywordBean {
         this.isoLanguageMapper = isoLangMapper;
     }
 
+    public KeywordBean(KeywordBean other) {
+        this.values.putAll(other.values);
+        this.definitions.putAll(other.definitions);
+        this.id = other.id;
+        this.code = other.code;
+        this.coordEast = other.coordEast;
+        this.coordWest = other.coordWest;
+        this.coordSouth = other.coordSouth;
+        this.coordNorth = other.coordNorth;
+        this.thesaurusKey = other.thesaurusKey;
+        this.selected = other.selected;
+        this.thesaurusTitle = other.thesaurusTitle;
+        this.thesaurusDate = other.thesaurusDate;
+        this.downloadUrl = other.downloadUrl;
+        this.keywordUrl = other.keywordUrl;
+        this.isoLanguageMapper = other.isoLanguageMapper;
+        this.defaultLang = other.defaultLang;
+    }
+
     /**
      * Transforms a list of KeywordBean object into its iso19139 representation.
      *

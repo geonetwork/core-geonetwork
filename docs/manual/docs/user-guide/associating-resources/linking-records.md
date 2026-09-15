@@ -6,3 +6,4 @@
 -   [Describing attributes table in a feature Catalog](linking-feature-catalog.md)
 -   [Other types of resources (eg. sensor, publication)](linking-others.md)
 -   [Linking to a remote record](linking-remote-records.md)
+-  [Advanced configuration](linking-panel-configuration.md)

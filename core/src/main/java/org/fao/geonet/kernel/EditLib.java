@@ -1,29 +1,25 @@
-//==============================================================================
-//===
-//=== EditLib
-//===
-//=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
-//===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
-//===	and United Nations Environment Programme (UNEP)
-//===
-//===	This program is free software; you can redistribute it and/or modify
-//===	it under the terms of the GNU General Public License as published by
-//===	the Free Software Foundation; either version 2 of the License, or (at
-//===	your option) any later version.
-//===
-//===	This program is distributed in the hope that it will be useful, but
-//===	WITHOUT ANY WARRANTY; without even the implied warranty of
-//===	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-//===	General Public License for more details.
-//===
-//===	You should have received a copy of the GNU General Public License
-//===	along with this program; if not, write to the Free Software
-//===	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
-//===
-//===	Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
-//===	Rome - Italy. email: geonetwork@osgeo.org
-//==============================================================================
+/*
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
+ *
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
+ */
 
 package org.fao.geonet.kernel;
 
@@ -590,11 +586,19 @@ public class EditLib {
                                 value);
                         } else if (elem instanceof Element) {
                             Element element = (Element) elem;
+                            final String predicateAndSuffix = xpathProperty.substring(indexOfRequiredPortion);
 
-                            isUpdated = createAndAddFromXPath(element,
-                                metadataSchema,
-                                xpathProperty.substring(indexOfRequiredPortion),
-                                value);
+                            if (containsOnlyPredicates(predicateAndSuffix)) {
+                                isUpdated = createAndAddFromXPath(metadataRecord,
+                                    metadataSchema,
+                                    requiredXPath,
+                                    value);
+                            } else {
+                                isUpdated = createAndAddFromXPath(element,
+                                    metadataSchema,
+                                    predicateAndSuffix,
+                                    value);
+                            }
                         } else {
                             isUpdated = false;
                         }
@@ -1037,16 +1041,22 @@ public class EditLib {
 
     private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, Element parent, Element element) throws Exception {
         String parentName = parent.getQualifiedName();
-        fillElement(schema, sugg, parentName, element);
+        fillElement(schema, sugg, parentName, element, Collections.emptySet());
     }
 
     /**
-     * @param schema     The metadata schema
-     * @param sugg       The suggestion configuration for the schema
-     * @param parentName The name of the parent
-     * @param element    The element to fill
+     * @param schema           The metadata schema
+     * @param sugg             The suggestion configuration for the schema
+     * @param parentName       The name of the parent
+     * @param element          The element to fill
+     * @param ancestorTypes    Names of the types of the ancestors of this element that are
+     *                         currently being auto-expanded, used to detect and stop
+     *                         self-referencing / mutually recursive type definitions
+     *                         (eg. gfc feature catalogue types) which would otherwise cause
+     *                         infinite recursion / StackOverflowError.
      */
-    private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, String parentName, Element element) throws Exception {
+    private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, String parentName, Element element,
+                              Set<String> ancestorTypes) throws Exception {
         String elemName = element.getQualifiedName();
         SchemaPlugin plugin = schema.getSchemaPlugin();
         boolean isISOPlugin = plugin instanceof ISOPlugin;
@@ -1065,6 +1075,19 @@ public class EditLib {
         }
 
         MetadataType type = schema.getTypeInfo(schema.getElementType(elemName, parentName));
+
+        // Track the chain of types being auto-expanded on this branch so that
+        // self-referencing / mutually recursive type definitions (eg. gfc feature
+        // catalogue FC_AssociationRole <-> FC_FeatureAssociation) stop expanding
+        // instead of recursing until the stack overflows.
+        if (ancestorTypes.contains(type.getName())) {
+            LOGGER_FILL_ELEMENT.warn("#### Recursive type definition detected for type '{}' while filling element '{}'. " +
+                "Stopping automatic expansion to avoid infinite recursion.", type.getName(), elemName);
+            return;
+        }
+        Set<String> typesInPath = new HashSet<>(ancestorTypes);
+        typesInPath.add(type.getName());
+
         boolean hasSuggestion = sugg.hasSuggestion(elemName, type.getElementList());
 //        List<String> elementSuggestion = sugg.getSuggestedElements(elemName);
 //        boolean hasSuggestion = elementSuggestion.size() != 0;
@@ -1081,7 +1104,7 @@ public class EditLib {
         //--- handle attributes if mandatory or suggested
         //
         for (MetadataAttribute attr: type.getAlAttribs()) {
-            LOGGER_FILL_ELEMENT.debug("####   - {} attribute = {}", attr.name);
+            LOGGER_FILL_ELEMENT.debug("####   - attribute = {}", attr.name);
             LOGGER_FILL_ELEMENT.debug("####     - required = {}", attr.required);
             LOGGER_FILL_ELEMENT.debug("####     - suggested = {}", sugg.isSuggested(elemName, attr.name));
 
@@ -1160,7 +1183,7 @@ public class EditLib {
                         }
 
                         // Continue ....
-                        fillElement(schema, sugg, element, child);
+                        fillElement(schema, sugg, element.getQualifiedName(), child, typesInPath);
                     } else {
                         // Logging some cases to avoid
                         if (LOGGER_FILL_ELEMENT.isDebugEnabled()) {
@@ -1819,6 +1842,33 @@ public class EditLib {
         }
     }
 
+    private boolean containsOnlyPredicates(String xpath) {
+        if (xpath == null) {
+            return false;
+        }
+        String trimmed = xpath.trim();
+        if (trimmed.isEmpty() || trimmed.charAt(0) != '[') {
+            return false;
+        }
+        boolean seenPredicate = false;
+        int depth = 0;
+        for (int i = 0; i < trimmed.length(); i++) {
+            char c = trimmed.charAt(i);
+            if (c == '[') {
+                depth++;
+                seenPredicate = true;
+            } else if (c == ']') {
+                if (depth == 0) {
+                    return false;
+                }
+                depth--;
+            } else if (depth == 0 && !Character.isWhitespace(c)) {
+                return false;
+            }
+        }
+        return seenPredicate && depth == 0;
+    }
+
     /**
      * If the xpath starts with the metadata root element, it's removed. Used to apply the Xpath
      * filters as the root element should not be included.
@@ -1874,7 +1924,17 @@ public class EditLib {
         String DELETE = "gn_delete";
 
         /**
-         * Multiple target updates
+         * Multiple target updates.
+         *
+         * <p>
+         * When using this mode, a gn_delete operation is applied first,
+         * then gn_create is applied for each element.
+         * </p>
+         *
+         * <p>
+         * If a predicate is used, the predicate is applied to the gn_delete operation.
+         * Therefor the gn_create will only create the element targeting the xpath without the predicate.
+         * </p>
          */
         String REPLACE_ALL = "gn_replace_all";
     }

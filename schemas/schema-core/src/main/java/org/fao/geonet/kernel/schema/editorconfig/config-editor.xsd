@@ -416,9 +416,9 @@ displayIfRecord and displayIfServiceInfo could be combined. An AND operator is u
       <xs:attribute name="hideTimeInCalendar" type="xs:boolean" fixed="true">
         <xs:annotation>
           <xs:documentation><![CDATA[
-Define if calendar control should allows users to set date only or
-datetime. If attribute is not set, then date and time can be set. This is controlled at the view level,
-switching to another view may allow more control over the dates.
+Define if calendar control should allow users to set date only or
+datetime as well. If omitted, both can be set (default). If true, only date can be set and time will remain hidden.
+This is controlled at the view level, so switching to another view may still allow setting the time.
 
 ]]></xs:documentation>
         </xs:annotation>

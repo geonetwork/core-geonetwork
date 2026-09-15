@@ -29,6 +29,7 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 
@@ -70,6 +71,7 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
     @Before
     public void setUp() {
         utils = new ShibbolethUserUtils();
+        utils = spy(utils);
         config = new ShibbolethUserConfiguration();
 
         config.setArraySeparator(";");
@@ -119,6 +121,12 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
         request.addHeader(this.config.getProfileKey(), profile);
         request.addHeader(this.config.getSurnameKey(), surname);
         request.addHeader(this.config.getUsernameKey(), username);
+
+        doAnswer(invocation -> {
+            String name = invocation.getArgument(0, String.class);
+            return groupRepo.findByName(name);
+        }).when(utils).getOrCreateGroup(anyString(), any());
+
         utils.setupUser(request, this.config);
 
         // Checks
@@ -175,6 +183,12 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
         request.addHeader(this.config.getProfileKey(), profile);
         request.addHeader(this.config.getSurnameKey(), surname);
         request.addHeader(this.config.getUsernameKey(), username);
+
+        doAnswer(invocation -> {
+            String name = invocation.getArgument(0, String.class);
+            return groupRepo.findByName(name);
+        }).when(utils).getOrCreateGroup(anyString(), any());
+
         utils.setupUser(request, this.config);
 
         // Checks
@@ -231,6 +245,11 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
         request.addHeader(this.config.getUsernameKey(), username);
         request.addHeader(this.config.getOrganisationKey(), organisation);
 
+        doAnswer(invocation -> {
+            String name = invocation.getArgument(0, String.class);
+            return groupRepo.findByName(name);
+        }).when(utils).getOrCreateGroup(anyString(), any());
+
         utils.setupUser(request, this.config);
 
         // Checks
@@ -275,6 +294,11 @@ public class ShibbolethUserUtilsTest extends AbstractCoreIntegrationTest {
         request.addHeader(this.config.getProfileKey(), profile);
         request.addHeader(this.config.getSurnameKey(), surname);
         request.addHeader(this.config.getUsernameKey(), username);
+
+        doAnswer(invocation -> {
+            String name = invocation.getArgument(0, String.class);
+            return groupRepo.findByName(name);
+        }).when(utils).getOrCreateGroup(anyString(), any());
 
         utils.setupUser(request, this.config);
 

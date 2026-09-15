@@ -45,7 +45,6 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 
 /**
@@ -113,10 +112,14 @@ public class LocaleRedirects {
                              ) throws ResourceNotFoundException {
         String lang = lang(langParam, langCookie, langHeader);
 
-        if (checkPortalExist(portal, !accept.startsWith(ACCEPT_VALUE))) {
+        // Throw exception for non-HTML requests instead of redirecting if portal is not found
+        boolean throwExceptionOnMissingPortal = accept != null && !accept.startsWith(ACCEPT_VALUE);
+
+        if (checkPortalExist(portal, throwExceptionOnMissingPortal)) {
             return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, portal));
         } else {
-            if (sourceRepository.findByType(SourceType.portal, null).size() == 0) {
+            List<Source> portals = sourceRepository.findByType(SourceType.portal, null);
+            if (portals == null || portals.isEmpty()) {
                 return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, NodeInfo.DEFAULT_NODE));
             }
             // Redirect to list of portal page if more than one or the default if only one
@@ -147,10 +150,14 @@ public class LocaleRedirects {
                                            final String langHeader) throws ResourceNotFoundException {
         String lang = lang(langParam, langCookie, langHeader);
 
-        if (checkPortalExist(portal, !accept.startsWith(ACCEPT_VALUE))) {
+        // Throw exception for non-HTML requests instead of redirecting if portal is not found
+        boolean throwExceptionOnMissingPortal = accept != null && !accept.startsWith(ACCEPT_VALUE);
+
+        if (checkPortalExist(portal, throwExceptionOnMissingPortal)) {
             return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, portal));
         } else {
-            if (sourceRepository.findByType(SourceType.subportal, null).size() == 0) {
+            List<Source> subPortals = sourceRepository.findByType(SourceType.subportal, null);
+            if (subPortals == null || subPortals.isEmpty()) {
                 return redirectURL(createServiceUrl(request, _homeRedirectUrl, lang, NodeInfo.DEFAULT_NODE));
             }
             // Redirect to list of portal page if more than one or the default if only one

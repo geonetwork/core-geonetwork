@@ -1,6 +1,6 @@
 # DCAT {#rdf-dcat}
 
-The catalogue has the capability to convert ISO to DCAT format in various API endpoint. 
+The catalogue has the capability to convert ISO to DCAT format in various API endpoints.
 
 ## Supported DCAT profiles
 
@@ -29,7 +29,7 @@ A base conversion is provided with complementary extensions for various profiles
 
 ## Usage in the formatters API
 
-Each DCAT formats are available using a formatter eg. http://localhost:8080/geonetwork/srv/api/records/be44fe5a-65ca-4b70-9d29-ac5bf1f0ebc5/formatters/eu-dcat-ap
+Each DCAT format is available using a formatter, e.g. `http://localhost:8080/geonetwork/srv/api/records/be44fe5a-65ca-4b70-9d29-ac5bf1f0ebc5/formatters/eu-dcat-ap`
 
 To add the formatter in the record view download list, the user interface configuration can be updated:
 
@@ -79,6 +79,9 @@ User interface configuration:
           "url": "/formatters/eu-dcat-ap-hvd"
         }
       ]
+    }
+  }
+}
 ```
 
 
@@ -86,9 +89,9 @@ User interface configuration:
 
 All DCAT profiles are also accessible using CSW protocol.
 
-A `GetRecordById` operation can be used: http://localhost:8080/geonetwork/srv/eng/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetRecordById&ID=da165110-88fd-11da-a88f-000d939bc5d8&outputSchema=https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/ and is equivalent to the API http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/eu-dcat-ap-hvd?output=xml.
+A `GetRecordById` operation can be used: `http://localhost:8080/geonetwork/srv/eng/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetRecordById&ID=da165110-88fd-11da-a88f-000d939bc5d8&outputSchema=https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/` and is equivalent to the API `http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/eu-dcat-ap-hvd?output=xml`.
 
-A `GetRecords` operation can be used to retrieve a set of records: http://localhost:8080/geonetwork/srv/fre/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetRecords&outputSchema=http://data.europa.eu/930/&elementSetName=full&resultType=results&maxRecords=300
+A `GetRecords` operation can be used to retrieve a set of records: `http://localhost:8080/geonetwork/srv/fre/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetRecords&outputSchema=http://data.europa.eu/930/&elementSetName=full&resultType=results&maxRecords=300`
 
 Use the `outputSchema` parameter to select the DCAT profile to use. The following values are supported:
 
@@ -109,7 +112,7 @@ Use the `outputSchema` parameter to select the DCAT profile to use. The followin
 
 When using GET request, it is recommended to encode URL characters in parameters (eg. `#` as `%23`) to avoid issues with the URL.
 
-Those values are listed in the `GetCapabilities` operation http://localhost:8080/geonetwork/srv/eng/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetCapabilities.
+These values are listed in the `GetCapabilities` operation: `http://localhost:8080/geonetwork/srv/eng/csw?SERVICE=CSW&VERSION=2.0.2&REQUEST=GetCapabilities`.
 
 ```xml
 <ows:Parameter name="outputSchema">
@@ -134,9 +137,9 @@ For the time being, OGC API Records provides a simplified DCAT output (based on 
 
 The DCAT validation can be done using online validation tool:
 
-* https://www.itb.ec.europa.eu/shacl/dcat-ap/upload
+* [DCAT-AP validation tool](https://www.itb.ec.europa.eu/shacl/dcat-ap/upload)
 
-Depending on the target DCAT profile to use, it may be required to build proper ISO template and metadata record containing all required fields. Usually profiles are adding constraints for usage of specific vocabularies and fields (eg. [for High Value datasets, specific vocabularies are defined for categories, license, applicable legislations, ...](https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/#controlled-vocabularies-to-be-used)).
+Depending on the target DCAT profile to use, it may be required to build proper ISO template and metadata record containing all required fields. Usually profiles are adding constraints for usage of specific vocabularies and fields (eg. [for High Value datasets, specific vocabularies are defined for categories, license, applicable legislation, ...](https://semiceu.github.io/DCAT-AP/releases/2.2.0-hvd/#controlled-vocabularies-to-be-used)).
 
 
 ## Mapping considerations

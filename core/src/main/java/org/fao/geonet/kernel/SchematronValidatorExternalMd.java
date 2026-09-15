@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -57,11 +57,14 @@ public class SchematronValidatorExternalMd extends AbstractSchematronValidator {
             List<ApplicableSchematron> applicableSchematron = getApplicableSchematronList(md, metadataSchema, groupOwnerId);
 
             for (ApplicableSchematron applicable : applicableSchematron) {
+                // Pass -1 as metadataId for external validation since the metadata is not in the database.
+                // Schematron rules can reference the metadataId parameter, but attempting to look up metadata
+                // using -1 will return empty results.
                 runSchematron(lang, schemaDir, validations, schemaTronXmlOut, -1, md, applicable);
             }
         } catch (Throwable e) {
             Element errorReport = new Element("schematronVerificationError", Edit.NAMESPACE);
-            errorReport.addContent("Schematron error ocurred, rules could not be verified: " + e.getMessage());
+            errorReport.addContent("Schematron error occurred, rules could not be verified: " + e.getMessage());
             schemaTronXmlOut.addContent(errorReport);
         }
 
@@ -84,7 +87,7 @@ public class SchematronValidatorExternalMd extends AbstractSchematronValidator {
         for (Schematron schematron : schematronList) {
             final ApplicableSchematron applicable = getApplicableSchematron(md, metadataSchema, schematron, groupOwnerId);
 
-            if (applicable.requirement != SchematronRequirement.DISABLED) {
+            if (applicable.getRequirement() != SchematronRequirement.DISABLED) {
                 if (Log.isDebugEnabled(Geonet.DATA_MANAGER)) {
                     Log.debug(Geonet.DATA_MANAGER, " - rule:" + schematron.getRuleName());
                 }

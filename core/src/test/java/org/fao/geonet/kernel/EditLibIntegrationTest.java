@@ -31,6 +31,7 @@ import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
 import org.fao.geonet.kernel.schema.MetadataSchema;
+import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018Namespaces;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
 import org.jdom.Element;
@@ -773,6 +774,31 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
         assertEquals(att, Xml.selectString(metadataElement, attXPath, Arrays.asList(GMD, GCO)));
     }
 
+    /**
+     * gfc:FC_AssociationRole and gfc:FC_FeatureAssociation mutually reference each other's
+     * property types (FC_AssociationRole -> relation -> FC_FeatureAssociation -> roleName ->
+     * FC_AssociationRole -> ...), causing EditLib.fillElement() to recurse infinitely
+     * (StackOverflowError / Saxon "Too many nested function calls") when a user picks
+     * "Association role" (or "Binding", "Bound association role", "Bound feature attribute")
+     * from the "Property description" dropdown when editing a feature catalogue record.
+     */
+    @Test
+    public void testAddElement_FeatureCatalogueAssociationRoleDoesNotRecurseInfinitely() throws Exception {
+        MetadataSchema schema = _schemaManager.getSchema("iso19115-3.2018");
+        Namespace gfc = Namespace.getNamespace("gfc", "http://standards.iso.org/iso/19110/gfc/1.1");
+
+        EditLib editLib = new EditLib(_schemaManager);
+
+        final Element featureType = new Element("FC_FeatureType", gfc);
+        Element carrierOfCharacteristics = editLib.addElement(schema, featureType, "gfc:carrierOfCharacteristics");
+
+        Element associationRole = new Element("FC_AssociationRole", gfc);
+        carrierOfCharacteristics.addContent(associationRole);
+        editLib.fillElement(schema.getName(), carrierOfCharacteristics, associationRole);
+
+        assertEquals("FC_AssociationRole", associationRole.getName());
+    }
+
 
     @Test
     public void testAddElementFromXpath_Extent() throws Exception {
@@ -806,6 +832,52 @@ public class EditLibIntegrationTest extends AbstractCoreIntegrationTest {
 
         assertTrue(updated);
         assertEqualsText(newValue, metadataElement, xpath, GMD, GCO);
+    }
+
+    /**
+     * This does not affect ISO editor but DCAT is using edits targeting a node with a predicate and expect the node to be replaced.
+     * This test ensures that this works: replace_all mode remove the target node and restore it with the fragment without NPE.
+     * eg.
+     * <pre>
+     *     ./dcat:Catalog/dcat:dataset/dcat:Dataset/dcat:theme[skos:Concept/skos:inScheme/@rdf:resource='http://vocab.belgif.be/auth/datatheme']
+     * </pre>
+     *
+     * <pre>
+     *         <gn_replace_all>
+     *                <dcat:theme xmlns:dcat="http://www.w3.org/ns/dcat#">
+     *                     <skos:Concept xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:skos="http://www.w3.org/2004/02/skos/core#" rdf:about="http://vocab.belgif.be/auth/datatheme/CULT">
+     *                     <skos:prefLabel xml:lang="nl">Cultuur en sport</skos:prefLabel>
+     *                     <skos:inScheme rdf:resource="http://vocab.belgif.be/auth/datatheme"/>
+     *                     </skos:Concept>
+     *                </dcat:theme>
+     * </pre>
+     *
+     *  ISO editor is using replace_all for topic category and directory (without predicate).
+     */
+    @Test
+    public void testCreateWithPredicate() throws Exception {
+        MetadataSchema schema = _schemaManager.getSchema("iso19115-3.2018");
+
+        final Element metadataElement = Xml.loadFile(EditLibIntegrationTest.class.getResource("metadata.iso19115-3.xml"));
+
+        String newValue = "<mri:descriptiveKeywords xmlns:gco=\"http://standards.iso.org/iso/19115/-3/gco/1.0\" xmlns:mri=\"http://standards.iso.org/iso/19115/-3/mri/1.0\">" +
+            "             <mri:MD_Keywords>" +
+            "               <mri:keyword>" +
+            "                  <gco:CharacterString>KEYWORD1</gco:CharacterString>" +
+            "               </mri:keyword>" +
+            "             </mri:MD_Keywords>" +
+            "</mri:descriptiveKeywords>";
+
+        final String xpath = "mdb:identificationInfo/mri:MD_DataIdentification/mri:descriptiveKeywords[*/mri:thesaurusName/*/cit:title/gcx:Anchor = 'Mots-clés InfraSIG']";
+        final String xpathProperty = "/mdb:MD_Metadata/" + xpath;
+        boolean updated = new EditLib(_schemaManager).addElementOrFragmentFromXpath(metadataElement, schema, xpathProperty,
+            new AddElemValue("<gn_create>" + newValue + "</gn_create>"),
+            true);
+
+        assertTrue(updated);
+        assertEqualsText("1", metadataElement,
+            "concat(count(mdb:identificationInfo/mri:MD_DataIdentification/mri:descriptiveKeywords/*/mri:keyword[gco:CharacterString = 'KEYWORD1']), '')",
+            ISO19115_3_2018Namespaces.MDB, ISO19115_3_2018Namespaces.MRI, ISO19115_3_2018Namespaces.GCO);
     }
 
     @Test

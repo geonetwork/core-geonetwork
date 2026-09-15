@@ -11,6 +11,6 @@ GeoNetwork 4.0.3 release is a minor release with some changes:
 
 -   Translation pack builder for faster initialization of the client application.
 
-and more \... see [4.0.3 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.3+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.3+is%3Aclosed) for full details.
+and more ... see [4.0.3 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.3+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.3+is%3Aclosed) for full details.
 
 Version 4.0.3 is also the version to use if [testing the draft OGC API Records service](https://github.com/geonetwork/geonetwork-microservices/tree/main/modules/services/ogc-api-records).

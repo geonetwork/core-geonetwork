@@ -759,8 +759,8 @@ Display help documentation onfocus (default), onhover or by clicking on an icon.
         <xs:annotation>
           <xs:documentation><![CDATA[
 Define if calendar control should allow users to set date only or
-datetime. If the attribute is not set, then date and datetime can be set. This is controlled at the view level,
-switching to another view may allow more control over the dates.
+datetime as well. If omitted, both can be set (default). If true, only date can be set and time will remain hidden.
+This is controlled at the view level, so switching to another view may still allow setting the time.
 
 ]]></xs:documentation>
         </xs:annotation>
@@ -1022,6 +1022,7 @@ Conversion are defined in `convert/thesaurus-transformation.xsl`.
             <xs:attribute name="fieldset" type="xs:string" use="optional" fixed="false"/>
             <xs:attribute name="browsable" type="xs:string" use="optional" fixed="false"/>
             <xs:attribute name="transformations" type="xs:string" use="optional"/>
+            <xs:attribute name="mandatory" type="xs:string" use="optional" default="false"/>
           </xs:complexType>
         </xs:element>
       </xs:sequence>

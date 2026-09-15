@@ -34,7 +34,6 @@ import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
-import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataFileDownloadRepository;
 import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.util.ThreadPool;
@@ -76,10 +75,41 @@ public class ResourceLoggerStore extends AbstractStore {
     }
 
     @Override
+    public List<MetadataResource> getResources(ServiceContext context, String metadataUuid,
+                                               MetadataResourceVisibility metadataResourceVisibility, String filter, Boolean approved, boolean includeAdditionalIndexedProperties)
+        throws Exception {
+        if (decoratedStore != null) {
+            return decoratedStore.getResources(context, metadataUuid, metadataResourceVisibility, filter, approved, includeAdditionalIndexedProperties);
+        }
+        return null;
+    }
+
+    @Override
     public ResourceHolder getResource(final ServiceContext context, final String metadataUuid, final MetadataResourceVisibility visibility,
                                       final String resourceId, Boolean approved) throws Exception {
         if (decoratedStore != null) {
             ResourceHolder holder = decoratedStore.getResource(context, metadataUuid, visibility, resourceId, approved);
+            if (holder != null) {
+                // TODO: Add Requester details which may have been provided by a form ?
+                storeGetRequest(context, metadataUuid, holder.getMetadata().getId(), "", "", "", "", new ISODate().toString(), approved);
+            }
+            return holder;
+        }
+        return null;
+    }
+
+    @Override
+    public MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
+        if (decoratedStore != null) {
+            return decoratedStore.getResourceMetadata(context, metadataUuid, visibility, resourceId, approved);
+        }
+        return null;
+    }
+
+    @Override
+    public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved, long start, long end) throws Exception {
+        if (decoratedStore != null) {
+            ResourceHolder holder = decoratedStore.getResourceWithRange(context, metadataUuid, visibility, resourceId, approved, start, end);
             if (holder != null) {
                 // TODO: Add Requester details which may have been provided by a form ?
                 storeGetRequest(context, metadataUuid, holder.getMetadata().getId(), "", "", "", "", new ISODate().toString(), approved);
@@ -273,5 +303,53 @@ public class ResourceLoggerStore extends AbstractStore {
             decoratedStore.copyResources(context, sourceUuid, targetUuid, metadataResourceVisibility, sourceApproved, targetApproved);
         }
 
+    }
+
+    /**
+     * Stores a file upload rename request in the MetadataFileUploads table.
+     */
+    private void storeRenameRequest(final String metadataUuid, final String resourceId, final MetadataResource renamedResource, Boolean approved) throws Exception {
+        final ConfigurableApplicationContext context = ApplicationContextHolder.get();
+        final int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+
+        MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
+        String oldFileName = getFilename(metadataUuid, resourceId);
+        String fullResourceId = metadataUuid + "/attachments/" + oldFileName;
+
+        MetadataFileUpload metadataFileUpload = null;
+        try {
+            metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, fullResourceId);
+        } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+            try {
+                metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, resourceId);
+            } catch (org.springframework.dao.EmptyResultDataAccessException ex2) {
+                try {
+                    metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, oldFileName);
+                } catch (org.springframework.dao.EmptyResultDataAccessException ex3) {
+                    Log.debug(Geonet.RESOURCES, String.format(
+                        "No references in MetadataFileUploads repository for metadata '%s', resource '%s' when renaming to '%s'.",
+                        metadataUuid, resourceId, renamedResource.getId()));
+                }
+            }
+        }
+
+        if (metadataFileUpload != null) {
+            String targetName = metadataFileUpload.getFileName().contains("/") ? renamedResource.getId() : renamedResource.getFilename();
+            metadataFileUpload.setFileName(targetName);
+            repo.save(metadataFileUpload);
+        }
+    }
+
+    @Override
+    public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception {
+        if (decoratedStore != null) {
+            MetadataResource renamedResource = decoratedStore.renameResource(context, metadataUuid, resourceId, newName, approved);
+            if (renamedResource != null) {
+                storeRenameRequest(metadataUuid, resourceId, renamedResource, approved);
+            }
+            return renamedResource;
+        }
+
+        return null;
     }
 }

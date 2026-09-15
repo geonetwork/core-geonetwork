@@ -8,10 +8,23 @@
         <span data-translate="">{{options.title}}</span>
       </h4>
     </div>
-    <div class="modal-body" data-ng-transclude=""></div>
+    <div class="modal-body">
+      <p data-ng-transclude=""></p>
+
+      <div data-ng-show="hasConfirmActionWord">
+        <p data-translate="">{{options.confirmActionWordLabel}}</p>
+        <input
+          class="form-control"
+          type="text"
+          data-ng-model="userInput"
+          placeholder="{{'typeToConfirm' | translate}}"
+        />
+      </div>
+    </div>
     <div class="modal-footer" ng-if="options.confirmCallback">
       <button
         data-dismiss="modal"
+        data-ng-disabled="disableConfirmButton()"
         class="btn btn-primary"
         data-ng-click="options.confirmCallback()"
       >

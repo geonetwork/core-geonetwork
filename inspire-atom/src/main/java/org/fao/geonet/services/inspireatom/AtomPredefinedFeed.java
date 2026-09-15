@@ -248,7 +248,7 @@ public class AtomPredefinedFeed {
             params.put("searchTerms", searchTerms.toLowerCase());
         }
         Element feed = InspireAtomUtil.getMetadataFeedByResourceIdentifier(context, spIdentifier, spNamespace, params, language);
-        Map<Integer, Element> crsCounts = new HashMap<Integer, Element>();;
+        Map<Integer, Element> crsCounts = new HashMap<Integer, Element>();
         Namespace ns = Namespace.getNamespace("http://www.w3.org/2005/Atom");
         if (crs!=null) {
             crsCounts = countDatasetsForCrs(feed, crs, ns);

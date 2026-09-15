@@ -36,9 +36,9 @@
         restrict: "E",
         replace: "true",
         template:
-          '<p class="help-block"' +
+          '<div class="help-block"' +
           "           data-ng-show=\"(('ui-' + key + '-help') | translate) != ('ui-' + key + '-help')\"" +
-          "           data-ng-bind-html=\"('ui-' + key + '-help') | translate\"></p>"
+          "           data-ng-bind-html=\"('ui-' + key + '-help') | translate\"></div>"
       };
     }
   ]);

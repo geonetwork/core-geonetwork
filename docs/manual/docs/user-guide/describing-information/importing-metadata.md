@@ -32,12 +32,18 @@ The user should have an `editor` profile to access metadata.
 
         -   `None`: the UUID of the record loaded is left unchanged. If a metadata record with the same UUID is already present in the catalog, an error message is returned.
         -   `Overwrite metadata with same UUID`: any existing metadata record in the catalog having the same UUID as the loaded record will be updated.
+
+        !!! note
+
+            By default, only the XML content of the existing record will be overwritten. To completely remove the existing record including attachments and privileges, use the `Delete and replace the existing record` option.
+
+
         -   `Generate UUID for inserted metadata`: a new UUID is affected to the loaded record.
 
     -   `Apply XSLT conversion` allows to transform the record loaded using an XSLT stylesheet. A list of predefined transformations is provided. The selected transformation should be compatible with the standard of the loaded record (see [Adding XSLT conversion for import](../workflow/batchupdate-xsl.md#customizing-xslt-conversion)).
     -   `Validate` trigger the validation of the record before loading it. In case of error the record is rejected and an error reported.
     -   `Assign to current catalog` assign the current catalog as origin for the record, in case the MEF file indicate another source.
-    -   `Assign to Group` define the group of the loaded record.
+    -   `Assign to Group` define the group of the loaded record. Only [Workspace Groups](../../administrator-guide/managing-users-and-groups/creating-group.md#1-workspace-group) can be selected.
     -   `Assign to Category` define a local category to assign to the loaded record.
 
 3. Click `import` to trigger the import. After processing, a summary is provided with the following details:

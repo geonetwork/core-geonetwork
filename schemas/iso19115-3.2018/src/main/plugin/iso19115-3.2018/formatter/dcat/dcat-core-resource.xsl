@@ -14,8 +14,10 @@
                 xmlns:mdUtil="java:org.fao.geonet.api.records.MetadataUtils"
                 xmlns:util="java:org.fao.geonet.util.XslUtil"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
+                xmlns:pav="http://purl.org/pav/"
                 xmlns:dct="http://purl.org/dc/terms/"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:foaf="http://xmlns.com/foaf/0.1/"
                 exclude-result-prefixes="#all">
 
@@ -101,8 +103,28 @@
         <xsl:when test="local-name() = 'sources'">
           <dct:source rdf:resource="{$recordUri}"/>
         </xsl:when>
-        <xsl:when test="local-name() = 'siblings'">
-          <dct:references rdf:resource="{$recordUri}"/>
+        <xsl:when test="local-name() = 'siblings' and not(@uuid = (../children/@uuid))">
+          <xsl:variable name="associationType"
+                        select="@associationType"/>
+          <xsl:variable name="initiativeType"
+                        select="@initiativeType"/>
+          <xsl:variable name="dcTypeForAssociationAndInitiative"
+                        as="xs:string?"
+                        select="$isoAssociatedTypesToDcatCommonNames[@associationType = $associationType and @initiativeType = $initiativeType]/text()"/>
+          <xsl:variable name="dcTypeForAssociation"
+                        as="xs:string?"
+                        select="$isoAssociatedTypesToDcatCommonNames[@associationType = $associationType and not(@initiativeType)]/text()"/>
+          <xsl:variable name="elementType"
+                        as="xs:string"
+                        select="if ($dcTypeForAssociationAndInitiative)
+                          then $dcTypeForAssociationAndInitiative
+                          else if ($dcTypeForAssociation)
+                          then $dcTypeForAssociation
+                          else 'dct:relation'"/>
+
+          <xsl:element name="{$elementType}">
+            <xsl:attribute name="rdf:resource" select="$recordUri"/>
+          </xsl:element>
         </xsl:when>
         <xsl:when test="local-name() = 'datasets'">
           <dcat:servesDataset>
@@ -111,81 +133,90 @@
         </xsl:when>
         <xsl:when test="local-name() = 'services'">
 
+          <!-- Prefer a link that is not purely informational (e.g. skip a
+          "more information" page or data quality report) so the distribution
+          points to the actual service endpoint. Fall back to the first link
+          if no other kind is available, so a distribution is still produced. -->
+          <xsl:variable name="nonInformationalLinks"
+                        select="root/link[not(function = ('information', 'dataQualityReport'))]"/>
+
           <xsl:variable name="mainLink"
-                        select="(root/link[not(function = ('information', 'dataQualityReport'))])[1]"/>
+                        select="if ($nonInformationalLinks) then $nonInformationalLinks[1] else root/link[1]"/>
 
           <xsl:variable name="serviceUri"
-                        select="if (root/resourceIdentifier) then concat(root/resourceIdentifier[1]/codeSpace, root/resourceIdentifier[1]/code) else ." />
+                        select="if (root/resourceIdentifier) then concat(root/resourceIdentifier[1]/codeSpace, root/resourceIdentifier[1]/code) else $mainLink/urlObject/default" />
 
-          <xsl:choose>
-            <!-- Only record with resourceType is service are mapped to a distribution.
-            Other related services which can be software, applications are mapped to foaf:page -->
-            <xsl:when test="root/resourceType = 'service'">
-              <dcat:distribution>
-                <dcat:Distribution>
-                  <xsl:for-each select="$mainLink/urlObject/default">
-                    <dcat:accessURL rdf:resource="{.}"/>
-                    <dcat:accessService rdf:resource="{$serviceUri}"/>
-                  </xsl:for-each>
+          <xsl:if test="$mainLink">
+            <xsl:choose>
+              <!-- Only record with resourceType is service are mapped to a distribution.
+              Other related services which can be software, applications are mapped to foaf:page -->
+              <xsl:when test="root/resourceType = 'service'">
+                <dcat:distribution>
+                  <dcat:Distribution>
+                    <xsl:for-each select="$mainLink/urlObject/default">
+                      <dcat:accessURL rdf:resource="{.}"/>
+                      <dcat:accessService rdf:resource="{$serviceUri}"/>
+                    </xsl:for-each>
 
-                  <xsl:call-template name="rdf-index-field-localised">
-                    <xsl:with-param name="nodeName" select="'dct:title'"/>
-                    <xsl:with-param name="field" select="root/resourceTitleObject"/>
-                  </xsl:call-template>
+                    <xsl:call-template name="rdf-index-field-localised">
+                      <xsl:with-param name="nodeName" select="'dct:title'"/>
+                      <xsl:with-param name="field" select="root/resourceTitleObject"/>
+                    </xsl:call-template>
 
-                  <xsl:call-template name="rdf-index-field-localised">
-                    <xsl:with-param name="nodeName" select="'dct:description'"/>
-                    <xsl:with-param name="field" select="root/resourceAbstractObject"/>
-                  </xsl:call-template>
-                  <!--
-                   RDF Property:	dcterms:issued
-                   Definition:	Date of formal issuance (e.g., publication) of the distribution.
-                  -->
-                  <xsl:call-template name="iso19115-3-to-dcat-date-info">
-                    <xsl:with-param name="values"
-                                    select="$metadata//mrd:MD_Distributor/mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime|
-                                           $metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication']/cit:date"/>
-                    <xsl:with-param name="dateType" select="'publication'"/>
-                  </xsl:call-template>
+                    <xsl:call-template name="rdf-index-field-localised">
+                      <xsl:with-param name="nodeName" select="'dct:description'"/>
+                      <xsl:with-param name="field" select="root/resourceAbstractObject"/>
+                    </xsl:call-template>
+                    <!--
+                     RDF Property:	dcterms:issued
+                     Definition:	Date of formal issuance (e.g., publication) of the distribution.
+                    -->
+                    <xsl:call-template name="iso19115-3-to-dcat-date-info">
+                      <xsl:with-param name="values"
+                                      select="$metadata//mrd:MD_Distributor/mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime|
+                                             $metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication']/cit:date"/>
+                      <xsl:with-param name="dateType" select="'publication'"/>
+                    </xsl:call-template>
 
-                  <!--
-                  RDF Property:	dcterms:modified
-                  Definition:	Most recent date on which the distribution was changed, updated or modified.
-                  Range:	rdfs:Literal encoded using the relevant ISO 8601 Date and Time compliant string [DATETIME] and typed using the appropriate XML Schema datatype [XMLSCHEMA11-2] (xsd:gYear, xsd:gYearMonth, xsd:date, or xsd:dateTime).
-                  -->
-                  <xsl:call-template name="iso19115-3-to-dcat-date-info">
-                    <xsl:with-param name="values"
-                                    select="$metadata//mrd:MD_Distributor/mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime|
-                                           $metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'revision']/cit:date"/>
-                    <xsl:with-param name="dateType" select="'revision'"/>
-                  </xsl:call-template>
+                    <!--
+                    RDF Property:	dcterms:modified
+                    Definition:	Most recent date on which the distribution was changed, updated or modified.
+                    Range:	rdfs:Literal encoded using the relevant ISO 8601 Date and Time compliant string [DATETIME] and typed using the appropriate XML Schema datatype [XMLSCHEMA11-2] (xsd:gYear, xsd:gYearMonth, xsd:date, or xsd:dateTime).
+                    -->
+                    <xsl:call-template name="iso19115-3-to-dcat-date-info">
+                      <xsl:with-param name="values"
+                                      select="$metadata//mrd:MD_Distributor/mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime|
+                                             $metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'revision']/cit:date"/>
+                        <xsl:with-param name="dateType" select="'revision'"/>
+                    </xsl:call-template>
 
-                  <xsl:apply-templates mode="iso19115-3-to-dcat"
-                                       select="$metadata/mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]"/>
-                  <xsl:apply-templates mode="iso19115-3-to-dcat"
-                                       select="$metadata/mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]"/>
+                    <xsl:apply-templates mode="iso19115-3-to-dcat"
+                                         select="$metadata/mdb:identificationInfo/*/mri:resourceConstraints/*[mco:useConstraints]"/>
+                    <xsl:apply-templates mode="iso19115-3-to-dcat"
+                                         select="$metadata/mdb:identificationInfo/*/mri:resourceConstraints/*[mco:accessConstraints]"/>
 
-                  <xsl:apply-templates mode="iso19115-3-to-dcat"
-                                       select="$metadata/mdb:identificationInfo/*/mri:defaultLocale"/>
+                    <xsl:apply-templates mode="iso19115-3-to-dcat"
+                                         select="$metadata/mdb:identificationInfo/*/mri:defaultLocale"/>
 
-                  <xsl:apply-templates mode="iso19115-3-to-dcat"
-                                       select="$legislations"/>
+                    <xsl:apply-templates mode="iso19115-3-to-dcat"
+                                         select="$legislations"/>
 
-                  <xsl:call-template name="rdf-format-as-mediatype">
-                    <xsl:with-param name="format" select="$mainLink/protocol"/>
-                  </xsl:call-template>
-                </dcat:Distribution>
-              </dcat:distribution>
-            </xsl:when>
-            <xsl:otherwise>
-              <foaf:page>
-                <foaf:Document rdf:about="{$mainLink/urlObject/default}">
-                  <dct:title><xsl:value-of select="root/resourceTitleObject/default"/></dct:title>
-                  <dct:description xml:lang="fre"><xsl:value-of select="root/resourceAbstractObject/default"/></dct:description>
-                </foaf:Document>
-              </foaf:page>
-            </xsl:otherwise>
-          </xsl:choose>
+                    <xsl:call-template name="rdf-format-as-mediatype">
+                      <xsl:with-param name="format" select="$mainLink/protocol"/>
+                    </xsl:call-template>
+                  </dcat:Distribution>
+                </dcat:distribution>
+              </xsl:when>
+              <xsl:otherwise>
+                <foaf:page>
+                  <foaf:Document rdf:about="{$mainLink/urlObject/default}">
+                    <dct:title><xsl:value-of select="root/resourceTitleObject/default"/></dct:title>
+                    <dct:description xml:lang="fre"><xsl:value-of select="root/resourceAbstractObject/default"/></dct:description>
+                  </foaf:Document>
+                </foaf:page>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:if>
         </xsl:when>
         <xsl:otherwise>
           <!-- TODO: other type of relations -->

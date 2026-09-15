@@ -1,5 +1,7 @@
 # GeoNetwork opensource
 
+[![LFX Health Score](https://insights.linuxfoundation.org/api/badge/health-score?project=geonetwork-core-geonetwork)](https://insights.linuxfoundation.org/project/geonetwork-core-geonetwork) [![LFX Active Contributors](https://insights.linuxfoundation.org/api/badge/active-contributors?project=geonetwork-core-geonetwork)](https://insights.linuxfoundation.org/project/geonetwork-core-geonetwork)
+
 [![Build Status](https://github.com/geonetwork/core-geonetwork/actions/workflows/linux.yml/badge.svg?branch=main)](https://github.com/geonetwork/core-geonetwork/actions/workflows/linux.yml?query=branch%3Amain) [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/8626/badge)](https://www.bestpractices.dev/projects/8626)  [![CLA assistant](https://cla-assistant.io/readme/badge/geonetwork/geonetwork)](https://cla-assistant.io/geonetwork/geonetwork)
 
 ## Features
@@ -9,7 +11,7 @@
 * An interactive Web Map Viewer to combine Web Map Services from distributed servers around the world
 * Online editing of metadata with a powerful template system
 * Scheduled harvesting and synchronization of metadata between distributed catalogs
-* Support for OGC-CSW 2.0.2, ISO 1911x and DCAT-AP metadata profiles, OAI-PMH, SRU protocols
+* Support for OGC-CSW 2.0.2, ISO 1911x and DCAT-AP metadata profiles, OAI-PMH protocols
 * Fine-grained access control with group and user management
 * Multi-lingual user interface
 

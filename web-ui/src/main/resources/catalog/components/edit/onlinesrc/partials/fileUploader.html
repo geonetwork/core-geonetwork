@@ -32,6 +32,17 @@
         >
           <i class="fa fa-times text-danger"></i>
         </a>
+
+        <a
+          href=""
+          class="btn btn-link onlinesrc-edit"
+          data-ng-if="readonly !== true"
+          data-ng-click="onlinesrcService.onOpenPopup('onlinesrc', f)"
+          data-ng-show="editableThumbnail==='true'"
+          title="{{'edit' | translate}}"
+        >
+          <i class="fa fa-pencil"></i>
+        </a>
       </li>
     </ul>
 

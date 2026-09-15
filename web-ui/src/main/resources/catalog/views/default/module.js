@@ -338,101 +338,17 @@
         }
       });
 
-      function buildAddToMapConfig(link, md) {
-        var type = "wms";
-        if (link.protocol.indexOf("WMTS") > -1) {
-          type = "wmts";
-        } else if (
-          link.protocol === "ESRI:REST" ||
-          link.protocol.startsWith("ESRI REST")
-        ) {
-          type = "esrirest";
-        } else if (link.protocol === "OGC:3DTILES") {
-          type = "3dtiles";
-        } else if (link.protocol === "OGC:COG") {
-          type = "cog";
-        }
-
-        var config = {
-          uuid: md ? md.uuid : null,
-          type,
-          url: $filter("gnLocalized")(link.url) || link.url
-        };
-
-        var title = link.title;
-
-        var name;
-
-        if ($scope.addToMapLayerNameUrlParam !== "") {
-          var params = gnUrlUtils.parseKeyValue(config.url.split("?")[1]);
-          name = params[$scope.addToMapLayerNameUrlParam];
-
-          if (angular.isUndefined(name)) {
-            name = link.name;
-          }
-        } else {
-          name = link.name;
-        }
-
-        if (angular.isObject(link.title)) {
-          title = $filter("gnLocalized")(link.title);
-        }
-        if (angular.isObject(name)) {
-          name = $filter("gnLocalized")(name);
-        }
-
-        if (name && name !== "") {
-          config.name = name;
-          config.group = link.group;
-          // Related service return a property title for the name
-        } else if (title) {
-          config.name = title;
-        }
-
-        // if an external viewer is defined, use it here
-        if (gnExternalViewer.isEnabled()) {
-          gnExternalViewer.viewService(
-            {
-              id: md ? md.id : null,
-              uuid: config.uuid
-            },
-            {
-              type: config.type,
-              url: config.url,
-              name: config.name,
-              title: title
-            }
-          );
-          return;
-        }
-
-        // no support for COG or 3DTiles for now
-        if (config.type === "cog" || config.type === "3dtiles") {
-          gnAlertService.addAlert({
-            msg: $translate.instant("layerProtocolNotSupported", {
-              type: link.protocol
-            }),
-            delay: 20,
-            type: "warning"
-          });
-          return;
-        }
-
-        return config;
-      }
-
       $scope.resultviewFns = {
         addMdLayerToMap: function (link, md) {
-          var config = buildAddToMapConfig(link, md);
-
-          gnWebAnalyticsService.trackLink(config.url, link.protocol);
-
           // This is probably only a service
           // Open the add service layer tab
-          var config = buildAddToMapConfig(link, md);
+          var config = gnMap.buildAddToMapConfig(link, md);
           if (!config) {
             return;
           }
+
+          gnWebAnalyticsService.trackLink(config.url, link.protocol);
+
           $location.path("map").search({
             add: encodeURIComponent(angular.toJson([config]))
           });
@@ -490,7 +406,7 @@
         addAllMdLayersToMap: function (layers, md) {
           var config = layers
             .map(function (layer) {
-              return buildAddToMapConfig(layer, md);
+              return gnMap.buildAddToMapConfig(layer, md);
             })
             .filter(function (config) {
               return !!config;

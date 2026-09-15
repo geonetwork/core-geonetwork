@@ -16,59 +16,19 @@ The [project issue tracker](https://github.com/geonetwork/core-geonetwork/issues
 
 Documentation is [MkDocs-material](https://squidfunk.github.io/mkdocs-material/) which is a Markdown documentation framework written on top of [MkDocs](https://www.mkdocs.org/).
 
-If you are using Python3:
-
-1. Install using ``pip3`` and build:
-
-   ```bash
-   pip3 install -r requirements.txt
-   ```
-   
-   In the future you can update using:
-   
-   ```bash
-   pip3 install -r requirements.txt -U 
-   ```
-
-2. Use ***mkdocs** to preview locally:
-
-   ```bash
-   mkdocs serve
-   ```
-      
-3. Preview: http://localhost:8000
-
-   Preview uses a single version, so expect some warnings from version chooser:
-   ```
-   "GET /versions.json HTTP/1.1" code 404
-   ```
-
-4. Optional: Preview online help:
-   
-   ```bash
-   mkdocs serve --config-file help.yml  
-   ```
-
-### VirtualEnv
-
-If you use a Python virtual environment:
-
-1. Activate virtual environment:
+1. Install virtual environment:
 
    ```bash
    virtualenv venv
+   ```
+
+2. Activate virtual environment and install (or update) requirements:
+   ```bash
    source venv/bin/activate
    pip install -r requirements.txt
    ```
    
-   In the future you can update with:
-   
-   ```bash
-   source venv/bin/activate
-   pip3 install -r requirements.txt
-   ```
-   
-2. Use ***mkdocs*** to preview from virtual environment:
+3. Use ***mkdocs*** to preview from virtual environment:
 
    ```bash
    mkdocs serve

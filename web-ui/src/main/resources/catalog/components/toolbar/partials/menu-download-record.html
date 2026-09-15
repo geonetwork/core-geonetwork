@@ -1,0 +1,44 @@
+<div class="btn-group md-actions">
+  <button
+    type="button"
+    title="{{'downloadRecord' | translate}}"
+    class="btn btn-default dropdown-toggle"
+    data-toggle="dropdown"
+    aria-label="{{'download' | translate}}"
+    aria-expanded="false"
+  >
+    <span class="fa fa-fw fa-download"></span>
+    <span data-translate="" class="hidden-xs">download</span>
+    <span class="caret"></span>
+  </button>
+  <ul class="dropdown-menu" role="menu">
+    <li data-ng-class="{'disabled': md.draft === 'y'}">
+      <a href="" data-ng-click="mdService.getPermalink(md)">
+        <span class="fa fa-fw fa-link"></span>&nbsp;
+        <span data-translate="">permalink</span>
+      </a>
+    </li>
+    <li
+      role="menuitem"
+      data-ng-repeat="f in formatterList"
+      data-ng-class="{'disabled': f.label === 'exportMEF' && attachmentsExceedExportLimit}"
+      data-ng-attr-title="{{f.label === 'exportMEF' && attachmentsExceedExportLimit ? ('attachmentsExportLimitExceededSingle' | translate) : ''}}"
+    >
+      <a
+        data-ng-if="!!f.url"
+        data-ng-href="{{::buildFormatter(f.url, md.uuid, md.draft)}}"
+        target="_blank"
+      >
+        <span class="fa fa-fw {{f.class}}"></span>&nbsp;
+        <span>{{f.label | translate}}</span>
+      </a>
+      <a
+        data-ng-if="!!f.url === false && f.label.indexOf('PDF') !== -1"
+        href="javascript:print();"
+      >
+        <span class="fa fa-fw {{f.class}}"></span>&nbsp;
+        <span>{{f.label | translate}}</span>
+      </a>
+    </li>
+  </ul>
+</div>

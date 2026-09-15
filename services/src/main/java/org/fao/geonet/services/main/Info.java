@@ -34,9 +34,9 @@ import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadParameterEx;
-import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.region.RegionsDAO;
+import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
@@ -253,7 +253,7 @@ public class Info implements Service {
      */
     private Element getIndex(GeonetContext gc) {
         Element isIndexing = new Element(INDEX);
-        isIndexing.setText(Boolean.toString(gc.getBean(DataManager.class).isIndexing()));
+        isIndexing.setText(Boolean.toString(BatchOpsMetadataReindexer.isIndexing()));
         return isIndexing;
     }
 

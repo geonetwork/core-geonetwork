@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright (C) 2001-2016 Food and Agriculture Organization of the
+  ~ Copyright (C) 2001-2026 Food and Agriculture Organization of the
   ~ United Nations (FAO-UN), United Nations World Food Programme (WFP)
   ~ and United Nations Environment Programme (UNEP)
   ~
@@ -38,6 +38,10 @@
       <list>
         <!-- TODO: This needs to be secured to not access private info -->
         <sec:filter-chain pattern="/index/**" filters=""/>
+        <!-- The Jolokia agent is reachable by any authenticated user, including
+             RegisteredUser: the editor board and admin dashboard poll task
+             progress from it. Which MBeans may be read is decided in
+             web/src/main/resources/jolokia-access.xml, not here. -->
         <sec:filter-chain pattern="/jolokia" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/jolokia/read/geonetwork-**" filters="securityContextPersistenceFilter, authenticatedUserFilter"/>
         <sec:filter-chain pattern="/dashboards/**" filters="securityContextPersistenceFilter, basicAuthenticationFilter, authenticatedUserFilter"/>
@@ -101,6 +105,7 @@
         <ref bean="formLoginFilter"/>
         <ref bean="requestCacheFilter"/>
         <ref bean="anonymousFilter"/>
+        <ref bean="grantViewMdAuthorityFilter"/>
         <ref bean="sessionMgmtFilter"/>
         <ref bean="exceptionTranslationFilter"/>
         <ref bean="filterSecurityInterceptor"/>
@@ -113,6 +118,10 @@
   <bean id="securityContextPersistenceFilter"
         class="org.springframework.security.web.context.SecurityContextPersistenceFilter">
     <!-- repo -->
+    <constructor-arg ref="securityContextRepository"/>
+  </bean>
+
+  <bean id="grantViewMdAuthorityFilter" class="org.fao.geonet.security.GrantViewMdAuthorityFilter">
     <constructor-arg ref="securityContextRepository"/>
   </bean>
 
@@ -166,7 +175,7 @@
     </property>
     <property name="authenticationSuccessHandler">
       <bean
-        class="org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler">
+        class="org.fao.geonet.kernel.security.GeonetworkSavedRequestAwareAuthenticationSuccessHandler">
         <property name="defaultTargetUrl" value="/"/>
         <property name="targetUrlParameter" value="redirectUrl"/>
         <property name="requestCache" ref="requestCache"/>
@@ -381,9 +390,10 @@
         <value>/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw!?.*</value>
         <value>/[a-zA-Z0-9_\-]+/api/search/.*</value>
         <value>/[a-zA-Z0-9_\-]+/api/site</value>
+        <value>/signout</value>
       </set>
     </constructor-arg>
   </bean>
 
-  <bean id="authenticatedUserFilter" class="org.fao.geonet.security.AuthenticathedUserFilter"/>
+  <bean id="authenticatedUserFilter" class="org.fao.geonet.security.AuthenticatedUserFilter"/>
 </beans>

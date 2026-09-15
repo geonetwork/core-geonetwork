@@ -30,10 +30,7 @@ import org.fao.geonet.GeonetContext;
 import org.fao.geonet.api.tools.i18n.TranslationPackBuilder;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.constants.Geonet;
-import org.fao.geonet.domain.HarvestHistory;
-import org.fao.geonet.domain.ISODate;
-import org.fao.geonet.domain.Metadata;
-import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadInputEx;
 import org.fao.geonet.exceptions.JeevesException;
 import org.fao.geonet.exceptions.MissingParameterEx;
@@ -41,10 +38,12 @@ import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.HarvestInfoProvider;
+import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.harvest.Common.OperResult;
 import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.AbstractParams;
 import org.fao.geonet.kernel.harvest.harvester.HarversterJobListener;
+import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.HarvesterSettingsManager;
 import org.fao.geonet.repository.HarvestHistoryRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
@@ -76,9 +75,10 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         Arrays.asList("harvesting", "node", "site", "name", "uuid",
             "url", "capabUrl", "baseUrl", "host", "useAccount",
             "ogctype", "options", "status", "info", "lastRun",
-            "ownerGroup", "ownerUser");
+            "ownerGroup", "ownerUser", "apiKey", "apiKeyHeader");
     private HarvesterSettingsManager settingMan;
     private DataManager dataMan;
+    private IMetadataUtils metadataUtils;
     private Path xslPath;
     private ServiceContext context;
     private boolean readOnly;
@@ -108,6 +108,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
     public void init(ServiceContext context, boolean isReadOnly) throws Exception {
         this.context = context;
         this.dataMan = context.getBean(DataManager.class);
+        this.metadataUtils = context.getBean(IMetadataUtils.class);
         this.settingMan = context.getBean(HarvesterSettingsManager.class);
         this.translationPackBuilder = context.getBean(TranslationPackBuilder.class);
 
@@ -297,6 +298,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
             return null;
         }
 
+
         // TODO use a parameter in mask to avoid call again in base
         // and use it for call harvesterSettingsManager.get
         // don't forget to clean parameter when update or delete
@@ -461,6 +463,7 @@ public class HarvestManagerImpl implements HarvestInfoProvider, HarvestManager {
         if (Log.isDebugEnabled(Geonet.HARVEST_MAN)) {
             Log.debug(Geonet.HARVEST_MAN, "Updating harvesting node : \n" + Xml.getString(node));
         }
+
         String id = node.getAttributeValue("id");
 
         if (id == null) {

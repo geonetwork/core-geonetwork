@@ -74,7 +74,7 @@ Many sites have existing metadata records with common information eg. contact in
 
 To use this function the following set of steps should be followed:
 
--   Make sure you understand what an XPath is - see <http://www.w3schools.com/xpath/default.asp> for example.
+-   Make sure you understand what an XPath is - see [w3schools.com/xpath](http://www.w3schools.com/xpath/default.asp) for example.
 -   Identify fragments of metadata that they would like to manage as reusable subtemplates in the metadata record. This can be done using an XPath. eg. the XPath `.//gmd:CI_ResponsibleParty` identifies all responsible party in a records. An example of such a fragment (taken from one of the sample records) is shown in the following example:
 
 ``` xml

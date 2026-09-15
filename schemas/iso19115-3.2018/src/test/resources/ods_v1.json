@@ -1,0 +1,78 @@
+{
+  "datasetid":"molecular-dynamics-data-for-udg-enzyme",
+  "metas":{
+    "domain":"pndb",
+    "staged":false,
+    "visibility":"domain",
+    "metadata_processed":"2025-11-21T17:50:08.969974+00:00",
+    "modified":"2025-03-14T12:18:58+00:00",
+    "license":"etalab 2.0",
+    "description":"<a href=\"https://doi.org/10.57745/C5UQ2X\", target=\",_blank\",>Lien vers les données</a><br>UDG enzyme-MD simulation. <br> Initially, the UDG enzyme was solvated using the TIP3P water model, and 0.15 M sodium and chloride ions were added to neutralize the system. <br> Before running the production MD, minimization and equilibration steps were performed on the UDG enzyme. The final MD production run was conducted on the system for 500 ns to obtain a stable configuration. <br> The 'input' folder contains the files necessary to run the simulation, while the 'output' folder contains the resulting trajectory.",
+    "publisher":"SARAVANAN, Vinnarasi",
+    "title":"Molecular dynamics data for UDG enzyme",
+    "keyword":[
+      "INRAE",
+      " Glycoside Hydrolases",
+      " Molecular Dynamics Simulation",
+      " uracil-DNA glycosylase"
+    ],
+    "license_url":"https://spdx.org/licenses/etalab-2.0.html",
+    "federated":false,
+    "references":"https://doi.org/10.57745/C5UQ2X",
+    "metadata_languages":[
+      "en"
+    ],
+    "language":"en",
+    "records_count":0,
+    "donnees":"<a href=\",https://doi.org/10.57745/TLBTXS\", target=\",_blank\",>README.txt</a><br><a href=\",https://doi.org/10.57745/DJJKUD\", target=\",_blank\",>UDG.tar.gz</a>"
+  },
+  "has_records":false,
+  "data_visible":true,
+  "features":[],
+  "attachments":[],
+  "alternative_exports":[],
+  "fields":[],
+  "basic_metas":{
+    "default":{
+      "metadata_processed":"2025-11-21T17:50:08.969974+00:00",
+      "modified":"2025-03-14T12:18:58+00:00",
+      "license":"etalab 2.0",
+      "description":"<a href=\"https://doi.org/10.57745/C5UQ2X\" target=\"_blank\">Lien vers les données</a><br>UDG enzyme-MD simulation. <br> Initially, the UDG enzyme was solvated using the TIP3P water model, and 0.15 M sodium and chloride ions were added to neutralize the system. <br> Before running the production MD, minimization and equilibration steps were performed on the UDG enzyme. The final MD production run was conducted on the system for 500 ns to obtain a stable configuration. <br> The 'input' folder contains the files necessary to run the simulation, while the 'output' folder contains the resulting trajectory.",
+      "publisher":"SARAVANAN, Vinnarasi",
+      "title":"Molecular dynamics data for UDG enzyme",
+      "keyword":[
+        "INRAE",
+        " Glycoside Hydrolases",
+        " Molecular Dynamics Simulation",
+        " uracil-DNA glycosylase"
+      ],
+      "license_url":"https://spdx.org/licenses/etalab-2.0.html",
+      "federated":false,
+      "references":"https://doi.org/10.57745/C5UQ2X",
+      "metadata_languages":[
+        "en"
+      ],
+      "language":"en",
+      "records_count":0
+    },
+    "custom":{
+      "donnees":"<a href=\"https://doi.org/10.57745/TLBTXS\" target=\"_blank\">README.txt</a><br><a href=\"https://doi.org/10.57745/DJJKUD\" target=\"_blank\">UDG.tar.gz</a>"
+    }
+  },
+  "interop_metas":{
+    "inspire":{
+      "file_identifier":"cnrs://10.57745/C5UQ2X",
+      "contact_individual_name":"BRYSBAERT, Guillaume",
+      "type":[
+        "Dataset",
+        " Model",
+        " Physical Object"
+      ]
+    },
+    "dcat":{
+      "created":"2025-03-14T00:00:00+00:00"
+    }
+  },
+  "extra_metas":{
+  }
+}

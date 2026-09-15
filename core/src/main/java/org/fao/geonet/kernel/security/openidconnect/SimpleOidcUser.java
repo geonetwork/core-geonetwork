@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Food and Agriculture Organization of the
+ * Copyright (C) 2025 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -103,11 +103,11 @@ public class SimpleOidcUser {
             }
 
 
-            if (idToken.getClaims() != null && idToken.getClaims().containsKey(oidcConfiguration.organizationProperty)) {
-                organisation = (String) idToken.getClaims().get(oidcConfiguration.organizationProperty);
+            if (idToken.getClaims() != null && idToken.getClaims().containsKey(oidcConfiguration.getOrganizationProperty())) {
+                organisation = (String) idToken.getClaims().get(oidcConfiguration.getOrganizationProperty());
             }
-            if ( (organisation == null) && attributes.containsKey(oidcConfiguration.organizationProperty) ) {
-                organisation = (String) attributes.get(oidcConfiguration.organizationProperty);
+            if ( (organisation == null) && attributes.containsKey(oidcConfiguration.getOrganizationProperty()) ) {
+                organisation = (String) attributes.get(oidcConfiguration.getOrganizationProperty());
             }
 
 
@@ -155,8 +155,8 @@ public class SimpleOidcUser {
 
             email = (String) attributes.get(StandardClaimNames.EMAIL);
 
-            if (attributes.containsKey(oidcConfiguration.organizationProperty)) {
-                organisation = (String) attributes.get(oidcConfiguration.organizationProperty);
+            if (attributes.containsKey(oidcConfiguration.getOrganizationProperty())) {
+                organisation = (String) attributes.get(oidcConfiguration.getOrganizationProperty());
             }
 
             Map<Profile, List<String>> profileGroups = oidcRoleProcessor.getProfileGroups(attributes);

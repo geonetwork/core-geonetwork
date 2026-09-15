@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -173,7 +173,7 @@ public class UserFeedbackUtils {
         Map<Integer, Integer> ratings = new HashMap<>();
         for (final Rating rating : ratingList) {
             Integer id = rating.getCategory().getId();
-            if (id == RatingCriteria.AVERAGE_ID) {
+            if (id.equals(AVERAGE_ID)) {
                 userfeedbackDto.setRatingAVG(rating.getRating());
             } else {
                 ratings.put(id, rating.getRating());
@@ -218,7 +218,7 @@ public class UserFeedbackUtils {
         ISODate maxDate = null; // LAST COMMENT DATE
         RatingAverage v = null;
 
-        if (list.size() > 0) {
+        if (!list.isEmpty()) {
             Map<Integer, Integer> ratingAverages = new HashMap<>();
             RatingCriteriaRepository criteriaRepository = ApplicationContextHolder.get().getBean(RatingCriteriaRepository.class);
             List<RatingCriteria> criteriaList = criteriaRepository.findAll();
@@ -231,7 +231,7 @@ public class UserFeedbackUtils {
                     maxDate = new ISODate(userFeedback.getCreationDate().getTime());
                 }
 
-                if (userFeedback.getDetailedRatingList() != null && userFeedback.getDetailedRatingList().size() > 0) {
+                if (userFeedback.getDetailedRatingList() != null && !userFeedback.getDetailedRatingList().isEmpty()) {
 
                     for (final Rating rating : userFeedback.getDetailedRatingList()) {
                         Integer criteriaId = rating.getCategory().getId();
@@ -242,9 +242,10 @@ public class UserFeedbackUtils {
                                 ratingAverages.get(criteriaId) == null
                                     ? value
                                     : (ratingAverages.get(criteriaId) + value) / 2);
-                        }
-                        if (criteriaId == AVERAGE_ID) {
-                            ratingCount++;
+
+                            if (criteriaId.equals(AVERAGE_ID)) {
+                                ratingCount++;
+                            }
                         }
                     }
 
@@ -288,6 +289,7 @@ public class UserFeedbackUtils {
          * @param ratingAverages    the average for all rating categories
          * @param userfeedbackCount the userfeedback count
          * @param lastComment       the last comment
+         * @param ratingCount       the rating count
          */
         public RatingAverage(Map<Integer, Integer> ratingAverages, int userfeedbackCount, String lastComment, int ratingCount) {
             this.ratingAverages = ratingAverages;

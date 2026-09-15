@@ -525,6 +525,23 @@
                     deleteHarvesterRecords</span
                   >
                 </button>
+
+                <button
+                  id="gn-harvest-records-buttons-reindex"
+                  type="button"
+                  class="btn btn-warning"
+                  data-gn-click-and-spin="reindexHarvesterRecord(harvesterSelected['@id'])"
+                  data-ng-disabled="harvesterSelected.info.running === true || harvesterSelected.info.reindexing === true || deleting.indexOf(harvesterSelected['@id']) > -1"
+                  title="{{'reindexHarvesterRecordsHelp' | translate}}"
+                >
+                  <span class="fa fa-refresh"></span>&nbsp;
+                  <span
+                    data-translate=""
+                    data-translate-values="{records: '{{searchResults.count}}'}"
+                  >
+                    reindexHarvesterRecords</span
+                  >
+                </button>
               </div>
 
               <div
