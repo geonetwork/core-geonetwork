@@ -145,7 +145,7 @@ public final class Xml {
             NioPathHolder.setBase(base);
             builder.setEntityResolver(Xml.PATH_RESOLVER);
         } else {
-            builder.setEntityResolver(new NoOpEntityResolver());
+            builder.setEntityResolver(NoOpEntityResolver.INSTANCE);
         }
 
         return builder;
