@@ -41,6 +41,8 @@ import co.elastic.clients.json.JsonData;
 import co.elastic.clients.json.JsonpMapper;
 import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
+import co.elastic.clients.transport.TransportException;
+import co.elastic.clients.transport.Version;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -60,6 +62,8 @@ import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.http.nio.conn.SchemeIOSessionStrategy;
 import org.apache.http.nio.conn.ssl.SSLIOSessionStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
+import org.elasticsearch.client.Request;
+import org.elasticsearch.client.Response;
 import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestClientBuilder;
 import org.fao.geonet.utils.Log;
@@ -86,6 +90,17 @@ public class EsRestClient implements InitializingBean {
 
     private ElasticsearchAsyncClient asyncClient;
 
+    private RestClient restClient;
+
+    private boolean healthDecodeFailureReported = false;
+
+    /**
+     * Whether the version of the index server has already been checked against the version of this
+     * Elasticsearch client. Lives here, on the singleton client, rather than on the status checker:
+     * Quartz creates a new {@link EsServerStatusChecker} instance for every run, so a flag on the
+     * checker itself would never stay set across runs.
+     */
+    boolean versionChecked = false;
 
     private String serverUrl;
 
@@ -114,7 +129,7 @@ public class EsRestClient implements InitializingBean {
         return client;
     }
 
-    public ElasticsearchAsyncClient getAsynchClient() {
+    public ElasticsearchAsyncClient getAsyncClient() {
         return asyncClient;
     }
 
@@ -176,7 +191,7 @@ public class EsRestClient implements InitializingBean {
                 }
             }
 
-            RestClient restClient = builder.build();
+            restClient = builder.build();
 
             ElasticsearchTransport transport = new RestClientTransport(restClient, new JacksonJsonpMapper());
 
@@ -222,12 +237,14 @@ public class EsRestClient implements InitializingBean {
         return this;
     }
 
-    public static final String ROUTING_KEY = "101";
-
-    public BulkResponse bulkRequest(String index, Map<String, String> docs) throws IOException {
+    private void checkActivated() {
         if (!activated) {
-            throw new IOException("Index not yet activated.");
+            throw new IllegalStateException("Index not yet activated.");
         }
+    }
+
+    public BulkRequest buildIndexBulkRequest(String index, Map<String, String> docs) {
+        checkActivated();
 
         BulkRequest.Builder requestBuilder = new BulkRequest.Builder()
             .index(index)
@@ -245,14 +262,31 @@ public class EsRestClient implements InitializingBean {
                     .document(jd)));
         }
 
-        BulkRequest request = requestBuilder.build();
+        return requestBuilder.build();
+    }
 
-        try {
-            return client.bulk(request);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
+    public BulkRequest buildDeleteBulkRequest(String index, List<String> deletionUUIDs) {
+        checkActivated();
+
+        BulkRequest.Builder requestBuilder = new BulkRequest.Builder()
+            .index(index)
+            .refresh(Refresh.True);
+
+        for (String uuid : deletionUUIDs) {
+            requestBuilder.operations(op -> op.delete(del -> del.index(index)
+                .id(uuid)));
         }
+
+        return requestBuilder.build();
+    }
+
+    public DeleteByQueryRequest buildDeleteByQuery(String index, String query) {
+        checkActivated();
+
+        return DeleteByQueryRequest.of(
+            b -> b.index(index)
+                .q(query)
+                .refresh(true));
     }
 
 
@@ -394,34 +428,6 @@ public class EsRestClient implements InitializingBean {
         }
     }
 
-
-    public String deleteByQuery(String index, String query) throws Exception {
-        if (!activated) {
-            return "";
-        }
-
-        DeleteByQueryRequest request = DeleteByQueryRequest.of(
-            b -> b.index(new ArrayList<>(Arrays.asList(index)))
-                .q(query)
-                .refresh(true));
-
-        final DeleteByQueryResponse deleteByQueryResponse =
-            client.deleteByQuery(request);
-
-
-        if (deleteByQueryResponse.deleted() >= 0) {
-            return String.format("Record removed. %s.", deleteByQueryResponse.deleted());
-        } else {
-            StringBuilder stringBuilder = new StringBuilder();
-
-            deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
-
-            throw new IOException(String.format(
-                "Error during removal. Errors are '%s'.", stringBuilder
-            ));
-        }
-    }
-
     /**
      * Get the complete document from the index.
      * @param id For record index, use UUID.
@@ -536,9 +542,70 @@ public class EsRestClient implements InitializingBean {
 
     // TODO: check index exist too
     public String getServerStatus() throws IOException {
+        try {
+            HealthResponse response = client.cluster().health();
+            return response.status().toString();
+        } catch (TransportException e) {
+            if (!isDecodeFailure(e)) {
+                // Not a decoding problem: the server answered with an error, is not an Elasticsearch
+                // server or is not the one we are talking to (a proxy stripping the product header,
+                // an HTML error page, ...). Report it as it is instead of reading the status from a
+                // response the client already refused.
+                throw e;
+            }
+            // The typed client only decodes the health response of the server version it is built for.
+            // Any other version may return a response with missing or unknown properties, so read the
+            // status with the low level client which does not check the response against a model.
+            logHealthDecodeFailure(e);
+            try {
+                return getServerStatusUsingLowLevelClient();
+            } catch (Exception fallbackException) {
+                e.addSuppressed(fallbackException);
+                throw e;
+            }
+        }
+    }
 
-        HealthResponse response = client.cluster().health();
-        return response.status().toString();
+    /**
+     * The transport reports every response it refuses as a {@link TransportException}: a missing or
+     * invalid <code>X-Elastic-Product</code> header, a response which is not JSON, a missing body,
+     * an error status code and a response it can not decode. Only the last one is a successful
+     * response, and it is the only one which carries the decoding error as its cause.
+     */
+    static boolean isDecodeFailure(TransportException e) {
+        return e.getCause() != null && e.statusCode() < 400;
+    }
+
+    /**
+     * Read the cluster status from the raw <code>_cluster/health</code> response.
+     */
+    private String getServerStatusUsingLowLevelClient() throws IOException {
+        Response response = restClient.performRequest(new Request("GET", "/_cluster/health"));
+        JsonNode status = new ObjectMapper().readTree(response.getEntity().getContent()).get("status");
+        if (status == null) {
+            throw new IOException(String.format(
+                "No status property found in the cluster health response from %s.", serverUrl));
+        }
+        return status.asText();
+    }
+
+    /**
+     * The status is checked on a regular basis, so only report the decoding error once.
+     * It is reported as an error because the default log configuration only reports
+     * errors for the index.
+     */
+    private void logHealthDecodeFailure(TransportException e) {
+        String message = String.format(
+            "Failed to decode the cluster health response returned by %s using the Elasticsearch client %s. "
+                + "Check that the index server version is compatible with this GeoNetwork version. "
+                + "Reading the cluster status using the low level client. Error is %s.",
+            serverUrl, Version.VERSION, e.getMessage());
+        if (healthDecodeFailureReported) {
+            Log.debug("geonetwork.index", message);
+        } else {
+            healthDecodeFailureReported = true;
+            Log.error("geonetwork.index", message);
+        }
     }
 
     public String getServerVersion() throws IOException, ElasticsearchException {

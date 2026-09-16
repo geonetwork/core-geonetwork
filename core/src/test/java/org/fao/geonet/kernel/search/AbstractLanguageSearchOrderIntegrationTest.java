@@ -32,7 +32,6 @@ import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.repository.SettingRepository;
 import org.jdom.JDOMException;
-import org.junit.After;
 import org.junit.BeforeClass;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -49,7 +48,6 @@ import java.util.List;
  */
 public abstract class AbstractLanguageSearchOrderIntegrationTest extends AbstractCoreIntegrationTest {
     public static List<String> METADATA_TO_IMPORT = new ArrayList<String>(10);
-    protected MetaSearcher _luceneSearcher;
     protected ServiceContext _serviceContext;
     protected String _abstractSearchTerm;
     @Autowired
@@ -147,16 +145,8 @@ public abstract class AbstractLanguageSearchOrderIntegrationTest extends Abstrac
             importMetadataXML(_serviceContext, "uuid:" + System.currentTimeMillis(), new ByteArrayInputStream(bytes),
                 MetadataType.METADATA, ReservedGroup.intranet.getId(), Params.GENERATE_UUID);
         }
-// TODOES
-//        this._luceneSearcher = _searchManager.newSearcher(SearcherType.LUCENE, Geonet.File.SEARCH_LUCENE);
     }
 
     protected abstract String[] doSearch(String lang) throws Exception;
 
-    @After
-    public void tearDownResources() throws Exception {
-        if (this._luceneSearcher != null) {
-            this._luceneSearcher.close();
-        }
-    }
 }

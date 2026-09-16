@@ -41,18 +41,24 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.xlink.Processor;
 import org.apache.commons.lang3.StringUtils;
-import org.fao.geonet.*;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.GeonetContext;
+import org.fao.geonet.NodeInfo;
+import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.LogoUtils;
 import org.fao.geonet.api.OpenApiConfig;
 import org.fao.geonet.api.exception.FeatureNotEnabledException;
 import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.site.model.SettingSet;
 import org.fao.geonet.api.site.model.SettingsListResponse;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.users.recaptcha.RecaptchaChecker;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.exceptions.OperationAbortedEx;
 import org.fao.geonet.index.Status;
 import org.fao.geonet.index.es.EsRestClient;
@@ -64,6 +70,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.kernel.harvest.HarvestManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
+import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
@@ -88,16 +95,15 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.WebRequest;
 
-import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -190,11 +196,29 @@ public class SiteApi implements ApplicationEventPublisherAware {
         summary = "Get site (or portal) description",
         description = "")
     @RequestMapping(
+        consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.ALL_VALUE},
         produces = MediaType.APPLICATION_JSON_VALUE,
         method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Site description.")
+        @ApiResponse(responseCode = "200", description = "Site description.",
+        content = {
+            @Content(schema = @Schema(
+                type = "object",
+                additionalPropertiesSchema = String.class
+            ),
+                examples = @ExampleObject(value = "{\n" +
+                "  \"system/site/name\": \"My GeoNetwork catalogue\",\n" +
+                "  \"system/site/organization\": \"My organization\",\n" +
+                "  \"system/site/siteId\": \"33bc8c82-7ac2-49b6-a22b-af7376dbcf10\",\n" +
+                "  \"system/platform/version\": \"4.4.7\",\n" +
+                "  \"system/platform/subVersion\": \"SNAPSHOT\",\n" +
+                "  \"node/default\": \"true\",\n" +
+                "  \"node/id\": \"33bc8c82-7ac2-49b6-a22b-af7376dbcf10\",\n" +
+                "  \"node/name\": \"My GeoNetwork catalogue\",\n" +
+                "  \"microservices/enabled\": false\n" +
+                "}"))
+        })
     })
     @ResponseBody
     public SettingsListResponse getSiteOrPortalDescription(
@@ -616,7 +640,7 @@ public class SiteApi implements ApplicationEventPublisherAware {
         HttpServletRequest request
     ) throws Exception {
         ApiUtils.createServiceContext(request);
-        return ApplicationContextHolder.get().getBean(DataManager.class).isIndexing();
+        return BatchOpsMetadataReindexer.isIndexing();
     }
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -633,10 +657,6 @@ public class SiteApi implements ApplicationEventPublisherAware {
             required = false)
         @RequestParam(required = false, defaultValue = "true")
         boolean reset,
-        @Parameter(description = "Asynchronous mode (only on all records. ie. no selection bucket)",
-            required = false)
-        @RequestParam(required = false, defaultValue = "false")
-        boolean asynchronous,
         @Parameter(description = "Index. By default only remove record index.",
             required = false)
         @RequestParam(required = false, defaultValue = "records")
@@ -652,8 +672,7 @@ public class SiteApi implements ApplicationEventPublisherAware {
     ) throws Exception {
         ServiceContext context = ApiUtils.createServiceContext(request);
         EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-        DataManager dataManager = ApplicationContextHolder.get().getBean(DataManager.class);
-        boolean isIndexing = dataManager.isIndexing();
+        boolean isIndexing = BatchOpsMetadataReindexer.isIndexing();
 
         if (isIndexing) {
             throw new NotAllowedException(
@@ -669,28 +688,12 @@ public class SiteApi implements ApplicationEventPublisherAware {
 
         if (StringUtils.isEmpty(bucket)) {
             BaseMetadataManager metadataManager = ApplicationContextHolder.get().getBean(BaseMetadataManager.class);
-            metadataManager.synchronizeDbWithIndex(context, false, asynchronous);
+            metadataManager.synchronizeDbWithIndex(context);
         } else {
             searchMan.rebuildIndex(context, false, bucket);
         }
 
         return new HttpEntity<>(HttpStatus.CREATED);
-    }
-
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Index commit",
-        description = "")
-    @RequestMapping(
-        path = "/index/commit",
-        produces = MediaType.APPLICATION_JSON_VALUE,
-        method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasAuthority('Administrator')")
-    public void indexCommit(
-        HttpServletRequest request
-    ) throws Exception {
-        EsSearchManager searchMan = ApplicationContextHolder.get().getBean(EsSearchManager.class);
-        searchMan.forceIndexChanges();
     }
 
 
@@ -736,24 +739,6 @@ public class SiteApi implements ApplicationEventPublisherAware {
         );
         infoIndexDbSynch.put("index.count", countResponse.count());
         return infoIndexDbSynch;
-    }
-
-
-    @io.swagger.v3.oas.annotations.Operation(
-        summary = "Force to commit pending documents in index.",
-        description = "May be used when indexing task is hanging.")
-    @PutMapping(
-        path = "/index/commit")
-    @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Changes committed.")
-    })
-    @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasAuthority('Administrator')")
-    public void commitIndexChanges(
-    ) throws Exception {
-        ApplicationContextHolder.get()
-            .getBean(EsSearchManager.class)
-            .forceIndexChanges();
     }
 
 
@@ -813,9 +798,9 @@ public class SiteApi implements ApplicationEventPublisherAware {
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Set catalog logo",
         description = "Logos are stored in the data directory " +
-            "resources/images/harvesting as PNG or GIF images. " +
+            "`resources/images/harvesting` images. " +
             "When a logo is assigned to the catalog, a new " +
-            "image is created in images/logos/<catalogUuid>.png.")
+            "image is created in `images/logos/<catalogUuid>.<fileExtension>`.")
     @RequestMapping(
         path = "/logo",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -852,51 +837,91 @@ public class SiteApi implements ApplicationEventPublisherAware {
 
         String nodeUuid = settingManager.getSiteId();
 
-        Resources.ResourceHolder holder = resources.getImage(serviceContext, file, logoDirectory);
-        final Path resourcesDir =
-            resources.locateResourcesDir(request.getServletContext(), serviceContext.getApplicationContext());
-        if (holder == null || holder.getPath() == null) {
-            holder = resources.getImage(serviceContext, "images/harvesting/" + file, resourcesDir);
+        Optional<Source> siteSourceOpt = sourceRepository.findById(nodeUuid);
+        if (siteSourceOpt.isEmpty()) {
+            throw new ResourceNotFoundException("Unable to find main catalog in source table with uuid '" + nodeUuid + "'.");
         }
-        try {
-            try (InputStream inputStream = Files.newInputStream(holder.getPath())) {
-                BufferedImage source = ImageIO.read(inputStream);
+        Source siteSource = siteSourceOpt.get();
+        if (siteSource.getType() != SourceType.portal) {
+            throw new BadParameterEx("Source with uuid '" + nodeUuid + "' is not of the type portal (main catalogue).");
+        }
+        boolean isSvg = file.endsWith(".svg");
 
-                if (asFavicon) {
+        if (asFavicon) {
+            if (isSvg) {
+                throw new IllegalArgumentException("SVG logo can not be used to generate favicon.");
+            }
+
+            Resources.ResourceHolder holder = resources.getImage(serviceContext, file, logoDirectory);
+            final Path resourcesDir =
+                resources.locateResourcesDir(request.getServletContext(), serviceContext.getApplicationContext());
+
+            if (holder == null || holder.getPath() == null) {
+                holder = resources.getImage(serviceContext, "images/harvesting/" + file, resourcesDir);
+            }
+
+            if (holder == null || holder.getPath() == null) {
+                throw new FileNotFoundException("Logo file '" + file + "' not found in resources.");
+            }
+
+            try {
+
+                try (InputStream inputStream = Files.newInputStream(holder.getPath())) {
+                    java.awt.image.BufferedImage source = javax.imageio.ImageIO.read(inputStream);
                     try (Resources.ResourceHolder favicon =
                              resources.getWritableImage(serviceContext, "images/logos/favicon.png",
                                  resourcesDir)) {
                         ApiUtils.createFavicon(source, favicon.getPath());
                     }
-                } else {
-                    try (Resources.ResourceHolder logo =
-                             resources.getWritableImage(serviceContext,
-                                 "images/logos/" + nodeUuid + ".png",
-                                 resourcesDir);
-                         Resources.ResourceHolder defaultLogo =
-                             resources.getWritableImage(serviceContext,
-                                 "images/logo.png", resourcesDir)) {
-                        if (!file.endsWith(".png")) {
-                            try (
-                                OutputStream logoOut = Files.newOutputStream(logo.getPath());
-                                OutputStream defLogoOut = Files.newOutputStream(defaultLogo.getPath())
-                            ) {
-                                ImageIO.write(source, "png", logoOut);
-                                ImageIO.write(source, "png", defLogoOut);
-                            }
-                        } else {
-                            Files.copy(holder.getPath(), logo.getPath(), StandardCopyOption.REPLACE_EXISTING);
-                            Files.copy(holder.getPath(), defaultLogo.getPath(),
-                                StandardCopyOption.REPLACE_EXISTING);
-                        }
-                    }
                 }
+            } finally {
+                holder.close();
             }
-        } catch (Exception e) {
-            throw new Exception(
-                "Unable to move uploaded thumbnail to destination directory. Error: " + e.getMessage());
-        } finally {
-            holder.close();
+        } else {
+            // Copy first: on failure the catalogue keeps the logo it currently has.
+            String logoFile = resources.copyLogo(serviceContext,
+                "images" + File.separator + "harvesting" + File.separator + file, nodeUuid);
+            if (StringUtils.isBlank(logoFile)) {
+                throw new FileNotFoundException("Logo file '" + file + "' not found in resources.");
+            }
+
+            // The new logo may have another extension than the previous one.
+            String actualLogo = siteSource.getLogo();
+            if (StringUtils.isNotEmpty(actualLogo) && !actualLogo.equals(logoFile)) {
+                resources.deleteImageIfExists(actualLogo, dataDirectory.getResourcesDir().resolve("images").resolve("logos"));
+            }
+
+            siteSource.setLogo(logoFile);
+            sourceRepository.save(siteSource);
+        }
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get catalog logo image.",
+        description = LogoUtils.API_GET_LOGO_NOTE)
+    @GetMapping(
+        path = "/logo")
+    @ResponseStatus(HttpStatus.OK)
+    @ResponseBody
+    public void getLogo(
+        @Parameter(hidden = true) WebRequest webRequest,
+        HttpServletRequest request,
+        HttpServletResponse response
+    ) {
+        ServiceContext serviceContext = ApiUtils.createServiceContext(request);
+        final Resources resources = serviceContext.getBean(Resources.class);
+        final String siteUuid = settingManager.getSiteId();
+        final String logoRef = sourceRepository.findById(siteUuid)
+            .map(Source::getLogo)
+            .filter(StringUtils::isNotBlank)
+            .orElse(siteUuid);
+
+        try (Resources.ResourceHolder image = LogoUtils.getImage(resources, serviceContext, logoRef)) {
+            LogoUtils.writeImageOrTransparentLogo(webRequest, response, image);
+        } catch (IOException e) {
+            Log.error(Geonet.GEONETWORK + ".api.site",
+                String.format("There was an error accessing the logo for site uuid '%s'", siteUuid));
+            throw new RuntimeException(e);
         }
     }
 

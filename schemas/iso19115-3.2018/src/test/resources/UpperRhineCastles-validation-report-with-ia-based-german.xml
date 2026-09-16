@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rules>
-  <report xmlns:gml320="http://www.opengis.net/gml" xmlns:util="java:org.fao.geonet.util.XslUtil">
+  <report xmlns:util="java:org.fao.geonet.util.XslUtil" xmlns:gml320="http://www.opengis.net/gml">
     <id>xsd</id>
     <displayPriority>0</displayPriority>
     <error>0</error>
@@ -9,7 +9,7 @@
     <requirement>REQUIRED</requirement>
     <patterns />
   </report>
-  <report xmlns:gml320="http://www.opengis.net/gml" xmlns:util="java:org.fao.geonet.util.XslUtil">
+  <report xmlns:util="java:org.fao.geonet.util.XslUtil" xmlns:gml320="http://www.opengis.net/gml">
     <id />
     <displayPriority />
     <label>Règles ISO</label>

@@ -56,7 +56,7 @@ import static org.junit.Assert.assertFalse;
 public abstract class XslProcessTest {
 
 
-    protected Map<String, String> ns = new HashMap<String, String>();
+    protected Map<String, String> ns = new HashMap<>();
     public Map<String, String> getNs() {
         return ns;
     }

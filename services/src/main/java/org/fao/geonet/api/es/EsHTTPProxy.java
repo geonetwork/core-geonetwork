@@ -649,6 +649,10 @@ public class EsHTTPProxy {
         final Set<String> selections = (addPermissions ?
             SelectionManager.getManager(ApiUtils.getUserSession(httpSession)).getSelection(bucket) : new HashSet<>());
 
+        // The editor groups of the user do not depend on the processed document:
+        // fetch them at most once per response
+        final UserEditorGroups editorGroups = new UserEditorGroups(context.getUserSession());
+
         if (endPoint.equals(SEARCH_ENDPOINT)) {
             JsonStreamUtils.addInfoToDocs(parser, generator, doc -> {
                 if (addPermissions) {
@@ -660,30 +664,7 @@ public class EsHTTPProxy {
                     addRelatedTypes(doc, relatedTypes, context);
                 }
 
-                if (doc.has("_source")) {
-                    ObjectNode sourceNode = (ObjectNode) doc.get("_source");
-
-                    if (sourceNode.has(Geonet.IndexFieldNames.SCHEMA)) {
-                        String metadataSchema = sourceNode.get(Geonet.IndexFieldNames.SCHEMA).asText();
-                        try {
-                            MetadataSchema mds = schemaManager.getSchema(metadataSchema);
-
-                            // Apply metadata schema filters to remove non-allowed fields
-                            processMetadataSchemaFilters(context, mds, doc);
-                        } catch (IllegalArgumentException e) {
-                            LOGGER.error("Failed to load metadata schema for {}. Error is: {}",
-                                getSourceString(doc, Geonet.IndexFieldNames.UUID),
-                                e.getMessage()
-                            );
-                        }
-                    }
-
-                    // Remove fields with privileges info
-                    for (ReservedOperation o : ReservedOperation.values()) {
-                        sourceNode.remove("op" + o.getId());
-                    }
-
-                }
+                processSourceNode(context, doc, editorGroups);
             });
         } else {
             JsonStreamUtils.addInfoToDocsMSearch(parser, generator, doc -> {
@@ -696,14 +677,7 @@ public class EsHTTPProxy {
                     addRelatedTypes(doc, relatedTypes, context);
                 }
 
-                // Remove fields with privileges info
-                if (doc.has("_source")) {
-                    ObjectNode sourceNode = (ObjectNode) doc.get("_source");
-
-                    for (ReservedOperation o : ReservedOperation.values()) {
-                        sourceNode.remove("op" + o.getId());
-                    }
-                }
+                processSourceNode(context, doc, editorGroups);
             });
         }
 
@@ -838,12 +812,8 @@ public class EsHTTPProxy {
      * @param doc
      * @throws JsonProcessingException
      */
-    private void processMetadataSchemaFilters(ServiceContext context, MetadataSchema mds, ObjectNode doc) throws JsonProcessingException, SQLException {
-        if (!doc.has("_source")) {
-            return;
-        }
-
-        ObjectMapper mapper = new ObjectMapper();
+    private void processMetadataSchemaFilters(ServiceContext context, MetadataSchema mds, ObjectNode doc,
+                                              UserEditorGroups editorGroups) throws JsonProcessingException, SQLException {
         ObjectNode sourceNode = (ObjectNode) doc.get("_source");
 
         MetadataSchemaOperationFilter authenticatedFilter = mds.getOperationFilter(MetadataOperationFilterType.authenticated.name());
@@ -858,7 +828,7 @@ public class EsHTTPProxy {
 
         if (groupOwnerFilter != null) {
             if (context.getUserSession().getProfile() != Profile.Administrator) {
-                List<Integer> userGroups = AccessManager.getGroups(context.getUserSession(), Profile.Editor);
+                List<Integer> userGroups = editorGroups.get();
                 Integer groupOwner = getSourceInteger(doc, Geonet.IndexFieldNames.GROUP_OWNER);
                 boolean isGroupOwner = groupOwner != null && userGroups.contains(groupOwner);
 
@@ -871,7 +841,7 @@ public class EsHTTPProxy {
         MetadataSchemaOperationFilter editFilter = mds.getOperationFilter(ReservedOperation.editing);
 
         if (editFilter != null) {
-            boolean canEdit = doc.get("edit").asBoolean();
+            boolean canEdit = doc.path("edit").asBoolean(false);
 
             if (!canEdit) {
                 jsonpathFilters.add(editFilter.getJsonpath());
@@ -880,7 +850,7 @@ public class EsHTTPProxy {
 
         MetadataSchemaOperationFilter downloadFilter = mds.getOperationFilter(ReservedOperation.download);
         if (downloadFilter != null) {
-            boolean canDownload = doc.get("download").asBoolean();
+            boolean canDownload = doc.path("download").asBoolean(false);
 
             if (!canDownload) {
                 jsonpathFilters.add(downloadFilter.getJsonpath());
@@ -889,13 +859,18 @@ public class EsHTTPProxy {
 
         MetadataSchemaOperationFilter dynamicFilter = mds.getOperationFilter(ReservedOperation.dynamic);
         if (dynamicFilter != null) {
-            boolean canDynamic = doc.get("dynamic").asBoolean();
+            boolean canDynamic = doc.path("dynamic").asBoolean(false);
 
             if (!canDynamic) {
                 jsonpathFilters.add(dynamicFilter.getJsonpath());
             }
         }
 
+        if (jsonpathFilters.isEmpty()) {
+            return;
+        }
+
+        ObjectMapper mapper = new ObjectMapper();
         JsonNode actualObj = filterResponseElements(mapper, sourceNode, jsonpathFilters);
         if (actualObj != null) {
             doc.set("_source", actualObj);
@@ -915,5 +890,55 @@ public class EsHTTPProxy {
         }
 
         return mapper.readTree(jsonContext.jsonString());
+    }
+
+    private void processSourceNode(ServiceContext context, ObjectNode doc,
+                                   UserEditorGroups editorGroups) throws SQLException, JsonProcessingException {
+        if (!doc.has("_source")) {
+            return;
+        }
+
+        ObjectNode sourceNode = (ObjectNode) doc.get("_source");
+
+        // Remove fields with privileges info
+        for (ReservedOperation o : ReservedOperation.values()) {
+            sourceNode.remove("op" + o.getId());
+        }
+
+        if (sourceNode.has(Geonet.IndexFieldNames.SCHEMA)) {
+            String metadataSchema = sourceNode.get(Geonet.IndexFieldNames.SCHEMA).asText();
+            try {
+                MetadataSchema mds = schemaManager.getSchema(metadataSchema);
+
+                // Apply metadata schema filters to remove non-allowed fields
+                processMetadataSchemaFilters(context, mds, doc, editorGroups);
+            } catch (IllegalArgumentException e) {
+                LOGGER.error("Failed to load metadata schema for {}. Error is: {}",
+                    getSourceString(doc, Geonet.IndexFieldNames.UUID),
+                    e.getMessage()
+                );
+            }
+        }
+    }
+
+    /**
+     * Lazy cache of the group identifiers where the user is Editor, used by the
+     * metadata schema filters. Fetching them at most once per search response
+     * avoids one database lookup per returned document.
+     */
+    static final class UserEditorGroups {
+        private final UserSession session;
+        private List<Integer> groups;
+
+        UserEditorGroups(UserSession session) {
+            this.session = session;
+        }
+
+        List<Integer> get() throws SQLException {
+            if (groups == null) {
+                groups = AccessManager.getGroups(session, Profile.Editor);
+            }
+            return groups;
+        }
     }
 }

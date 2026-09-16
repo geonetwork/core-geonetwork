@@ -666,6 +666,20 @@ public abstract class AbstractParams implements Cloneable {
         this.overrideUuid = overrideUuid;
     }
 
+    /**
+     * Returns {@code true} when a record whose UUID collides with an existing record from another
+     * source must be skipped because the configured collision policy is {@link OverrideUuid#SKIP}.
+     * <p>
+     * Harvesters use this to resolve the collision state <em>before</em> validating a record, so a
+     * colliding record is counted as skipped without being validated (see issue #9432).
+     *
+     * @param collisionFromOtherSource whether the record already exists in the catalogue and
+     *                                 belongs to another source (local node or another harvester).
+     */
+    public boolean isSkippedByUuidCollision(boolean collisionFromOtherSource) {
+        return collisionFromOtherSource && overrideUuid == OverrideUuid.SKIP;
+    }
+
     public boolean isIfRecordExistAppendPrivileges() {
         return ifRecordExistAppendPrivileges;
     }

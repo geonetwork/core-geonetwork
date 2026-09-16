@@ -422,7 +422,7 @@ public class UsersApi {
         @ApiResponse(responseCode = "404", description = "A property with that value already exist."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    public ResponseEntity<HttpStatus> checkUserPropertyExist(
+    public ResponseEntity<Void> checkUserPropertyExist(
         @Parameter(
             description = "The user property to check"
         )

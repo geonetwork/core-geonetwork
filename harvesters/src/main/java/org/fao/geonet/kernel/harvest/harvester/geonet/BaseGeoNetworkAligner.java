@@ -1,5 +1,5 @@
 //=============================================================================
-//===    Copyright (C) 2001-2025 Food and Agriculture Organization of the
+//===    Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===    United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===    and United Nations Environment Programme (UNEP)
 //===
@@ -81,6 +81,7 @@ import org.fao.geonet.kernel.mef.MEF2Visitor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.batch.BatchingDeletionSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
@@ -181,24 +182,27 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         processParams = filter.two();
 
         //--- remove old metadata
-        for (String uuid : localUuids.getUUIDs()) {
-            if (cancelMonitor.get()) {
-                return this.result;
-            }
 
-            try {
-                if (!exists(records, uuid)) {
-                    String id = localUuids.getID(uuid);
-
-                    if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id:" + id);
-                    metadataManager.deleteMetadata(context, id);
-
-                    result.locallyRemoved++;
+        try (BatchingDeletionSubmitter submitter = new BatchingDeletionSubmitter()) {
+            for (String uuid : localUuids.getUUIDs()) {
+                if (cancelMonitor.get()) {
+                    return this.result;
                 }
-            } catch (Throwable t) {
-                log.error("Couldn't remove metadata with uuid " + uuid);
-                log.error(t);
-                result.unchangedMetadata++;
+
+                try {
+                    if (!exists(records, uuid)) {
+                        String id = localUuids.getID(uuid);
+
+                        if (log.isDebugEnabled()) log.debug("  - Removing old metadata with id:" + id);
+                        metadataManager.deleteMetadata(context, id, submitter);
+
+                        result.locallyRemoved++;
+                    }
+                } catch (Throwable t) {
+                    log.error("Couldn't remove metadata with uuid " + uuid);
+                    log.error(t);
+                    result.unchangedMetadata++;
+                }
             }
         }
 
@@ -286,8 +290,6 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
             }
         }
 
-        metadataIndexer.forceIndexChanges();
-
         log.info("End of alignment for : " + params.getName());
 
         return result;
@@ -371,7 +373,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                         }
 
                         public void indexMetadata(int index) throws Exception {
-                            metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+                            metadataIndexer.indexMetadata(id, batchingIndexSubmitter, IndexingMode.full);
                         }
                     });
                 } catch (Exception e) {
@@ -445,7 +447,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                 updateSchema = !newSchema.equals(schema);
                 schema = newSchema;
             } else {
-                if (!ri.schema.equals(schema)) {
+                if (!schema.equals(ri.schema)) {
                     log.warning("  - Detected schema '" + schema + "' is different from the one of the metadata in the catalog '" + ri.schema + "'. Using the detected one.");
                     updateSchema = true;
                 }
@@ -513,7 +515,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
 
         metadataManager.save(metadata);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, this.batchingIndexSubmitter, IndexingMode.full);
     }
 
     /**
@@ -898,7 +900,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
                 }
 
                 public void indexMetadata(int index) throws Exception {
-                    metadataIndexer.indexMetadata(id[index], true, IndexingMode.full);
+                    metadataIndexer.indexMetadata(id[index], batchingIndexSubmitter, IndexingMode.full);
                 }
             });
         } catch (Exception e) {
@@ -997,7 +999,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
 
         addCategories(metadata, params.getCategories(), localCategory, context, null, false);
 
-        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, false);
+        metadata = metadataManager.insertMetadata(context, metadata, md, IndexingMode.none, ufo, UpdateDatestamp.NO, false, this.batchingIndexSubmitter);
 
         String id = String.valueOf(metadata.getId());
 
@@ -1026,7 +1028,7 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
         }
         context.getBean(IMetadataManager.class).save(metadata);
 
-        metadataIndexer.indexMetadata(id, true, IndexingMode.full);
+        metadataIndexer.indexMetadata(id, this.batchingIndexSubmitter, IndexingMode.full);
         result.addedMetadata++;
 
         return id;

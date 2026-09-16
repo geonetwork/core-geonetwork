@@ -437,6 +437,24 @@
       };
 
       /**
+       * Escape HTML special characters in a string, so it can be safely inserted as text
+       * (e.g. into an HTML attribute value or as element content) when building HTML
+       * fragments by string concatenation, such as in bootstrap-table `formatter` functions.
+       * @param {string} str
+       * @return {string} the escaped string, or an empty string if str is falsy.
+       */
+      var escapeHtml = function (str) {
+        if (!str) return "";
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#39;")
+          .replace(/=/g, "&#x3D;");
+      };
+
+      /**
        * Sort an array of elements with translations labels, using the provided language.
        *
        */
@@ -469,7 +487,8 @@
         displayPermalink: displayPermalink,
         openModal: openModal,
         goBack: goBack,
-        sortByTranslation: sortByTranslation
+        sortByTranslation: sortByTranslation,
+        escapeHtml: escapeHtml
       };
     }
   ]);

@@ -26,8 +26,10 @@ package org.fao.geonet.api.registries.vocabularies;
 import com.sun.net.httpserver.HttpServer;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.WebApplicationException;
+import java.nio.file.Files;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SpringLocalServiceInvoker;
 import org.fao.geonet.kernel.Thesaurus;
 import org.fao.geonet.kernel.ThesaurusManager;
@@ -52,7 +54,6 @@ import org.springframework.web.context.WebApplicationContext;
 import javax.servlet.http.HttpSession;
 import java.net.InetSocketAddress;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -236,6 +237,11 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
             "taxref.csv", scheme.getChildText("title", NAMESPACE_DC));
     }
 
+    // see finally block in #testImportOntologyToSkos
+    // this is required to locate the file to be deleted.
+    @Autowired
+    GeonetworkDataDirectory geonetworkDataDirectory;
+
 
     @Test
     public void testImportOntologyToSkos() throws Exception {
@@ -405,6 +411,16 @@ public class KeywordsApiTest extends AbstractServiceIntegrationTest {
         } finally {
             // Restore the default (empty allowlist = allow all) so other tests are unaffected.
             settingManager.setValue(Settings.SYSTEM_METADATA_THESAURUS_URL_ALLOWLIST, "");
+
+            //clean up
+            // this test case uploads a thesaurus.
+            // if you don't delete it, then, on the next run, it will be picked up and you'll get an error because
+            // the thesaurus already exists.  This will clean up and there will not be a problem on the next run.
+            // This is typically only an issue if you are running the test locally - on the build server it gets a
+            // new, clean, filesystem so there isn't a problem.
+            Path uploadedThesauras = geonetworkDataDirectory.resolveWebResource(
+                "WEB-INF/data/config/codelist/external/thesauri/theme/mobility-theme.rdf");
+            Files.deleteIfExists(uploadedThesauras);
         }
     }
 }

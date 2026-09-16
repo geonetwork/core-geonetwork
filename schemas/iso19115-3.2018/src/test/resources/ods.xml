@@ -135,7 +135,7 @@
       <mri:pointOfContact>
         <cit:CI_Responsibility>
           <cit:role>
-            <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="originator">publisher</cit:CI_RoleCode>
+            <cit:CI_RoleCode codeList="codeListLocation#CI_RoleCode" codeListValue="originator"/>
           </cit:role>
           <cit:party>
             <cit:CI_Organisation>
@@ -296,6 +296,9 @@
           <mri:keyword>
             <gco:CharacterString>Collecte</gco:CharacterString>
           </mri:keyword>
+          <mri:type>
+            <mri:MD_KeywordTypeCode codeListValue="theme" codeList="./resources/codeList.xml#MD_KeywordTypeCode" />
+          </mri:type>
         </mri:MD_Keywords>
       </mri:descriptiveKeywords>
       <mri:resourceConstraints>
@@ -725,6 +728,28 @@
   </mdb:contentInfo>
   <mdb:distributionInfo>
     <mrd:MD_Distribution>
+      <mrd:distributionFormat>
+        <mrd:MD_Format>
+          <mrd:formatSpecificationCitation>
+            <cit:CI_Citation>
+              <cit:title>
+                <gco:CharacterString>csv</gco:CharacterString>
+              </cit:title>
+            </cit:CI_Citation>
+          </mrd:formatSpecificationCitation>
+        </mrd:MD_Format>
+      </mrd:distributionFormat>
+      <mrd:distributionFormat>
+        <mrd:MD_Format>
+          <mrd:formatSpecificationCitation>
+            <cit:CI_Citation>
+              <cit:title>
+                <gco:CharacterString>json</gco:CharacterString>
+              </cit:title>
+            </cit:CI_Citation>
+          </mrd:formatSpecificationCitation>
+        </mrd:MD_Format>
+      </mrd:distributionFormat>
       <mrd:transferOptions>
         <mrd:MD_DigitalTransferOptions>
           <mrd:onLine>

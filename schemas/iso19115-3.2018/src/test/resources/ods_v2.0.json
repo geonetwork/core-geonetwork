@@ -1,0 +1,189 @@
+{
+  "links": [
+    {
+      "rel": "self",
+      "href": "https://www.pndb.fr/api/explore/v2.0/catalog/datasets/molecular-dynamics-data-for-udg-enzyme"
+    },
+    {
+      "rel": "datasets",
+      "href": "https://www.pndb.fr/api/explore/v2.0/catalog/datasets"
+    }
+  ],
+  "dataset": {
+    "visibility": "domain",
+    "dataset_id": "molecular-dynamics-data-for-udg-enzyme",
+    "dataset_uid": "da_89inb3",
+    "has_records": false,
+    "features": [],
+    "attachments": [],
+    "alternative_exports": [],
+    "data_visible": true,
+    "fields": [],
+    "metas": {
+      "dcat": {
+        "created": "2025-03-14",
+        "issued": null,
+        "creator": null,
+        "contributor": null,
+        "contact_name": null,
+        "contact_email": null,
+        "accrualperiodicity": null,
+        "spatial": null,
+        "temporal": null,
+        "granularity": null,
+        "dataquality": null,
+        "publisher_type": null,
+        "conforms_to": null,
+        "temporal_coverage_start": null,
+        "temporal_coverage_end": null,
+        "accessRights": null,
+        "relation": null
+      },
+      "inspire": {
+        "theme": null,
+        "type": [
+          "Dataset",
+          " Model",
+          " Physical Object"
+        ],
+        "file_identifier": "cnrs://10.57745/C5UQ2X",
+        "hierarchy_level": null,
+        "hierarchy_level_name": null,
+        "spatial_resolution": null,
+        "topologic_consistency": null,
+        "contact_individual_name": "BRYSBAERT, Guillaume",
+        "contact_position": null,
+        "contact_address": null,
+        "contact_email": null,
+        "identification_purpose": null,
+        "extend_description": null,
+        "extend_bounding_box_westbound_longitude": null,
+        "extend_bounding_box_eastbound_longitude": null,
+        "extend_bounding_box_southbound_latitude": null,
+        "extend_bounding_box_northbound_latitude": null
+      },
+      "default": {
+        "title": "Molecular dynamics data for UDG enzyme",
+        "description": "<a href=\"https://doi.org/10.57745/C5UQ2X\" target=\"_blank\">Lien vers les données</a><br>UDG enzyme-MD simulation. <br>  Initially, the UDG enzyme was solvated using the TIP3P water model, and 0.15 M sodium and chloride ions were added to neutralize the system. <br>  Before running the production MD, minimization and equilibration steps were performed on the UDG enzyme. The final MD production run was conducted on the system for 500 ns to obtain a stable configuration.  <br>  The 'input' folder contains the files necessary to run the simulation, while the 'output' folder contains the resulting trajectory.",
+        "theme": null,
+        "keyword": [
+          "INRAE",
+          " Glycoside Hydrolases",
+          " Molecular Dynamics Simulation",
+          " uracil-DNA glycosylase"
+        ],
+        "license": "etalab 2.0",
+        "license_url": "https://spdx.org/licenses/etalab-2.0.html",
+        "language": "en",
+        "metadata_languages": [
+          "en"
+        ],
+        "timezone": null,
+        "modified": "2025-03-14T12:18:58+00:00",
+        "modified_updates_on_metadata_change": null,
+        "modified_updates_on_data_change": null,
+        "data_processed": null,
+        "metadata_processed": "2025-11-21T17:50:08.969000+00:00",
+        "geographic_reference": null,
+        "geographic_reference_auto": null,
+        "territory": null,
+        "geometry_types": null,
+        "bbox": null,
+        "publisher": "SARAVANAN, Vinnarasi",
+        "references": "https://doi.org/10.57745/C5UQ2X",
+        "records_count": 1,
+        "attributions": null,
+        "source_domain": null,
+        "source_domain_title": null,
+        "source_domain_address": null,
+        "source_dataset": null,
+        "shared_catalog": null,
+        "federated": false,
+        "parent_domain": null,
+        "update_frequency": null
+      },
+      "dcat_ap": {
+        "title": null,
+        "description": null,
+        "theme": null,
+        "keyword": null,
+        "contact_name": null,
+        "contact_email": null,
+        "publisher_name": null,
+        "publisher_type": null,
+        "spatial_bbox": null,
+        "spatial_centroid": null,
+        "temporal_startDate": null,
+        "temporal_endDate": null,
+        "accrualPeriodicity": null
+      },
+      "events-pndb": {
+        "event-type": null,
+        "event-status": null,
+        "event-start-date": null,
+        "event-end-date": null,
+        "event-location-1": null,
+        "event-location-2": null,
+        "event-organizer-1": null,
+        "event-organizer-2": null,
+        "event-language": null,
+        "event-capacity": null,
+        "event-registration": null,
+        "event-creation-date": null
+      },
+      "services": {
+        "service-type": null,
+        "service-delivery-method": null,
+        "service-terms-conditions": null,
+        "service-url": null,
+        "ressource-liee": null,
+        "activite-liee": null,
+        "evenement-lie": null
+      },
+      "resources": {
+        "resource-category": null,
+        "resource-provider": null,
+        "resource-delivery-method": null,
+        "resource-terms-conditions": null,
+        "resource-contact-email": null,
+        "resource-url": null
+      },
+      "promotion": {
+        "promu-par-le-pndb": null
+      },
+      "timeline": {
+        "evenement": null,
+        "imagecsv": null,
+        "jour": null,
+        "mois": null,
+        "annee": null,
+        "coordonnees_geo": null,
+        "web": null,
+        "siecle": null,
+        "video": null,
+        "description": null
+      },
+      "date-de-publication": {
+        "type": null,
+        "auteurs": null,
+        "date-de-publication": null,
+        "identifiant": null
+      },
+      "activites": {
+        "type-d-activite": null,
+        "producteur": null,
+        "date-de-debut-de-l-activite": null,
+        "date-de-fin-de-l-activite": null
+      },
+      "classsement": {
+        "rang": null
+      },
+      "liens": {
+        "donnees": null
+      },
+      "custom": {
+        "donnees": "<a href=\"https://doi.org/10.57745/TLBTXS\" target=\"_blank\">README.txt</a><br><a href=\"https://doi.org/10.57745/DJJKUD\" target=\"_blank\">UDG.tar.gz</a>"
+      }
+    }
+  }
+}

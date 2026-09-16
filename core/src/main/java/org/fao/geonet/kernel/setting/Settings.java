@@ -79,8 +79,6 @@ public class Settings {
     public static final String SYSTEM_INTRANET_NETWORK = "system/intranet/network";
     public static final String SYSTEM_INTRANET_NETMASK = "system/intranet/netmask";
     public static final String SYSTEM_INTRANET_IP_SEPARATOR = ",";
-    public static final String SYSTEM_Z3950_ENABLE = "system/z3950/enable";
-    public static final String SYSTEM_Z3950_PORT = "system/z3950/port";
     public static final String SYSTEM_SELECTIONMANAGER_MAXRECORDS = "system/selectionmanager/maxrecords";
     public static final String SYSTEM_CSW_ENABLE = "system/csw/enable";
     public static final String SYSTEM_CSW_ENABLEWHENINDEXING = "system/csw/enabledWhenIndexing";
@@ -110,6 +108,7 @@ public class Settings {
     public static final String SYSTEM_HARVESTER_DISABLED_HARVESTER_TYPES = "system/harvester/disabledHarvesterTypes";
     public static final String SYSTEM_METADATAPRIVS_USERGROUPONLY = "system/metadataprivs/usergrouponly";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATIONBYGROUPOWNERONLY = "system/metadataprivs/publicationbyrevieweringroupowneronly";
+    public static final String SYSTEM_METADATAPRIVS_PUBLICATION_MANAGEPUBLICATIONDATE = "system/metadataprivs/publication/managepublicationdate";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATIONNOTIFICATION_EMAILS = "system/metadataprivs/publication/notificationEmails";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONLEVEL = "system/metadataprivs/publication/notificationLevel";
     public static final String SYSTEM_METADATAPRIVS_PUBLICATION_NOTIFICATIONGROUPS = "system/metadataprivs/publication/notificationGroups";
@@ -154,6 +153,7 @@ public class Settings {
     public static final String METADATA_DELETE_BACKUPOPTIONS = "metadata/delete/backupOptions";
     public static final String METADATA_PUBLISH_USERPROFILE = "metadata/publication/profilePublishMetadata";
     public static final String METADATA_UNPUBLISH_USERPROFILE = "metadata/publication/profileUnpublishMetadata";
+    public static final String METADATA_PUBLICATION_ENABLE_SCHEDULED_PUBLICATION = "metadata/publication/enableScheduledPublication";
     public static final String METADATA_BACKUPARCHIVE_ENABLE = "metadata/backuparchive/enable";
     public static final String METADATA_VCS = "metadata/vcs/enable";
     public static final String METADATA_ZIPEXPORT_ATTACHMENTSSIZELIMIT = "metadata/zipExport/attachmentsSizeLimit";

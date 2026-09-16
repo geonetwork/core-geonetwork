@@ -23,10 +23,17 @@
 
 package org.fao.geonet.kernel.harvest.harvester.simpleurl;
 
+import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ValueNode;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.CharStreams;
+import com.jayway.jsonpath.Configuration;
+import com.jayway.jsonpath.JsonPath;
+import com.jayway.jsonpath.spi.json.JacksonJsonNodeJsonProvider;
+import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -60,6 +67,7 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Function;
 
 import static org.fao.geonet.utils.Xml.isRDFLike;
 import static org.fao.geonet.utils.Xml.isXMLLike;
@@ -105,132 +113,229 @@ class Harvester implements IHarvester<HarvestResult> {
 
         String[] urlList = params.url.split("\n");
         boolean error = false;
-        Aligner aligner = new Aligner(cancelMonitor, context, params, log);
-        Set<String> listOfUuids = new HashSet<>();
+        try (Aligner aligner = new Aligner(cancelMonitor, context, params, log)) {
+            Set<String> listOfUuids = new HashSet<>();
 
-        for (String url : urlList) {
-            log.debug("Loading URL: " + url);
-            String content = retrieveUrl(url);
-            if (cancelMonitor.get()) {
-                return new HarvestResult();
-            }
-            log.debug("Response is: " + content);
-
-            int numberOfRecordsToHarvest = -1;
-
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonObj = null;
-            Element xmlObj = null;
-            SimpleUrlResourceType type;
-
-            if (isRDFLike(content)) type = SimpleUrlResourceType.RDFXML;
-            else if (isXMLLike(content)) type = SimpleUrlResourceType.XML;
-            else type = SimpleUrlResourceType.JSON;
-
-            if (type == SimpleUrlResourceType.XML
-                || type == SimpleUrlResourceType.RDFXML) {
-                xmlObj = Xml.loadString(content, false);
-            } else {
-                jsonObj = objectMapper.readTree(content);
-            }
-
-            // TODO: Add page support for Hydra in RDFXML feeds ?
-            if (StringUtils.isNotEmpty(params.numberOfRecordPath)) {
-                try {
-                    if (type == SimpleUrlResourceType.XML) {
-                        Object element = Xml.selectSingle(xmlObj, params.numberOfRecordPath, xmlObj.getAdditionalNamespaces());
-                        if (element != null) {
-                            String s = getXmlElementTextValue(element);
-                            numberOfRecordsToHarvest = Integer.parseInt(s);
-                        }
-                    } else if (type == SimpleUrlResourceType.JSON) {
-                        numberOfRecordsToHarvest = jsonObj.at(params.numberOfRecordPath).asInt();
-                    }
-                    log.debug("Number of records to harvest: " + numberOfRecordsToHarvest);
-                } catch (Exception e) {
-                    errors.add(new HarvestError(context, e));
-                    log.error(String.format("Failed to extract total in response at path %s. Error is: %s",
-                        params.numberOfRecordPath, e.getMessage()));
+            for (String url : urlList) {
+                log.debug("Loading URL: " + url);
+                String content = retrieveUrl(url);
+                if (cancelMonitor.get()) {
+                    return new HarvestResult();
                 }
-            }
-            try {
-                List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
-                for (int i = 0; i < listOfUrlForPages.size(); i++) {
-                    if (i != 0) {
-                        content = retrieveUrl(listOfUrlForPages.get(i));
+                log.debug("Response is: " + content);
+
+                int numberOfRecordsToHarvest = -1;
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode jsonObj = null;
+                Element xmlObj = null;
+                SimpleUrlResourceType type;
+
+                if (isRDFLike(content)) type = SimpleUrlResourceType.RDFXML;
+                else if (isXMLLike(content)) type = SimpleUrlResourceType.XML;
+                else type = SimpleUrlResourceType.JSON;
+
+                if (type == SimpleUrlResourceType.XML
+                    || type == SimpleUrlResourceType.RDFXML) {
+                    xmlObj = Xml.loadString(content, false);
+                } else {
+                    jsonObj = objectMapper.readTree(content);
+                }
+
+                // TODO: Add page support for Hydra in RDFXML feeds ?
+                if (StringUtils.isNotEmpty(params.numberOfRecordPath)) {
+                    try {
                         if (type == SimpleUrlResourceType.XML) {
-                            xmlObj = Xml.loadString(content, false);
-                        } else {
-                            jsonObj = objectMapper.readTree(content);
-                        }
-                    }
-                    if (StringUtils.isNotEmpty(params.loopElement)
-                        || type == SimpleUrlResourceType.RDFXML) {
-                        Map<String, Element> uuids = new HashMap<>();
-                        try {
-                            if (type == SimpleUrlResourceType.XML) {
-                                collectRecordsFromXml(xmlObj, uuids, aligner);
-                            } else if (type == SimpleUrlResourceType.RDFXML) {
-                                collectRecordsFromRdf(xmlObj, uuids, aligner);
-                            } else if (type == SimpleUrlResourceType.JSON) {
-                                collectRecordsFromJson(jsonObj, uuids, aligner);
+                            Object element = Xml.selectSingle(xmlObj, params.numberOfRecordPath, xmlObj.getAdditionalNamespaces());
+                            if (element != null) {
+                                String s = getXmlElementTextValue(element);
+                                numberOfRecordsToHarvest = Integer.parseInt(s);
                             }
-                            aligner.align(uuids, errors);
-                            listOfUuids.addAll(uuids.keySet());
-                        } catch (Exception e) {
-                            errors.add(new HarvestError(this.context, e));
-                            log.error(String.format("Failed to collect record in response at path %s. Error is: %s",
-                                params.loopElement, e.getMessage()));
+                        } else if (type == SimpleUrlResourceType.JSON) {
+                            numberOfRecordsToHarvest = jsonObj.at(params.numberOfRecordPath).asInt();
                         }
+                        log.debug("Number of records to harvest: " + numberOfRecordsToHarvest);
+                    } catch (Exception e) {
+                        errors.add(new HarvestError(context, e));
+                        log.error(String.format("Failed to extract total in response at path %s. Error is: %s",
+                            params.numberOfRecordPath, e.getMessage()));
                     }
                 }
-            } catch (Exception t) {
-                error = true;
-                log.error("Unknown error trying to harvest");
-                log.error(t.getMessage());
-                log.error(t);
-                errors.add(new HarvestError(context, t));
-            } catch (Throwable t) {
-                error = true;
-                log.fatal("Something unknown and terrible happened while harvesting");
-                log.fatal(t.getMessage());
-                errors.add(new HarvestError(context, t));
-            }
+                try {
+                    List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
+                    for (int i = 0; i < listOfUrlForPages.size(); i++) {
+                        if (i != 0) {
+                            content = retrieveUrl(listOfUrlForPages.get(i));
+                            if (type == SimpleUrlResourceType.XML) {
+                                xmlObj = Xml.loadString(content, false);
+                            } else {
+                                jsonObj = objectMapper.readTree(content);
+                            }
+                        }
+                        if (StringUtils.isNotEmpty(params.loopElement)
+                            || type == SimpleUrlResourceType.RDFXML) {
+                            Map<String, Element> uuids = new HashMap<>();
+                            try {
+                                if (type == SimpleUrlResourceType.XML) {
+                                    collectRecordsFromXml(xmlObj, uuids, aligner);
+                                } else if (type == SimpleUrlResourceType.RDFXML) {
+                                    collectRecordsFromRdf(xmlObj, uuids, aligner);
+                                } else if (type == SimpleUrlResourceType.JSON) {
+                                    collectRecordsFromJson(jsonObj, uuids, aligner);
+                                }
+                                aligner.align(uuids, errors);
+                                listOfUuids.addAll(uuids.keySet());
+                            } catch (Exception e) {
+                                errors.add(new HarvestError(this.context, e));
+                                log.error(String.format("Failed to collect record in response at path %s. Error is: %s",
+                                    params.loopElement, e.getMessage()));
+                            }
+                        }
+                    }
+                } catch (Exception t) {
+                    error = true;
+                    log.error("Unknown error trying to harvest");
+                    log.error(t.getMessage());
+                    log.error(t);
+                    errors.add(new HarvestError(context, t));
+                } catch (Throwable t) {
+                    error = true;
+                    log.fatal("Something unknown and terrible happened while harvesting");
+                    log.fatal(t.getMessage());
+                    errors.add(new HarvestError(context, t));
+                }
 
-            log.info("Total records processed in all searches :" + listOfUuids.size());
-            if (error) {
-                log.warning("Due to previous errors the align process has not been called");
+                log.info("Total records processed in all searches :" + listOfUuids.size());
+                if (error) {
+                    log.warning("Due to previous errors the align process has not been called");
+                }
             }
+            aligner.cleanupRemovedRecords(listOfUuids);
+            return aligner.getResult();
         }
-        aligner.cleanupRemovedRecords(listOfUuids);
-        return aligner.getResult();
     }
 
     private void collectRecordsFromJson(JsonNode jsonObj,
                                         Map<String, Element> uuids,
                                         Aligner aligner) {
-        JsonNode nodes = jsonObj.at(params.loopElement);
+
+        SimpleUrlPathMode mode = params.recordIdPathMode;
+        if (mode == null || mode == SimpleUrlPathMode.AUTO) {
+            mode = determineJsonPathMode(params.recordIdPath);
+        }
+
+        List<JsonNode> nodes = selectJsonRecords(jsonObj, mode, params.loopElement);
         log.debug(String.format("%d records found in JSON response.", nodes.size()));
 
-        nodes.forEach(jsonRecord -> {
+        Function<JsonNode, String> uuidExtractor;
+        if (mode == SimpleUrlPathMode.JSONPOINTER) {
+            uuidExtractor = buildJsonPointerExtractor();
+        } else if (mode == SimpleUrlPathMode.JSONPATH) {
+            uuidExtractor = buildJsonPathExtractor();
+        } else {
+            throw new IllegalStateException("Unsupported recordIdPathMode " + mode + " for JSON input!");
+        }
+
+        for (JsonNode jsonRecord : nodes) {
             String uuid = null;
             try {
-                uuid = this.extractUuidFromIdentifier(jsonRecord.at(params.recordIdPath).asText());
+                uuid = this.extractUuidFromIdentifier(uuidExtractor.apply(jsonRecord));
             } catch (Exception e) {
                 log.error(String.format("Failed to collect record UUID at path %s. Error is: %s",
-                    params.recordIdPath, e.getMessage()));
+                        params.recordIdPath, e.getMessage()));
             }
             String apiUrlPath = params.url.split("\\?")[0];
             try {
                 URL apiUrl = new URL(apiUrlPath);
-                String nodeUrl = new StringBuilder(apiUrl.getProtocol()).append("://").append(apiUrl.getAuthority()).toString();
+                String nodeUrl = apiUrl.getProtocol() + "://" + apiUrl.getAuthority();
                 Element xml = convertJsonRecordToXml(jsonRecord, uuid, apiUrlPath, nodeUrl);
                 uuids.put(uuid, xml);
             } catch (MalformedURLException e) {
                 errors.add(new HarvestError(this.context, e));
                 log.warning(String.format("Failed to parse JSON source URL. Error is: %s", e.getMessage()));
             }
-        });
+        }
+    }
+
+    @VisibleForTesting
+    SimpleUrlPathMode determineJsonPathMode(String pathExpression) {
+        if (StringUtils.isEmpty(pathExpression) || pathExpression.startsWith("/")) {
+            return SimpleUrlPathMode.JSONPOINTER;
+        }
+        if (pathExpression.startsWith("$")) {
+            return SimpleUrlPathMode.JSONPATH;
+        }
+
+        try {
+            JsonPointer.compile(pathExpression);
+            return SimpleUrlPathMode.JSONPOINTER;
+        } catch (IllegalArgumentException e) {
+            try {
+                JsonPath.compile(pathExpression);
+                return SimpleUrlPathMode.JSONPATH;
+            } catch (Exception e2) {
+                throw new IllegalStateException(String.format(
+                    "Path '%s' is neither a valid JSON Pointer nor JSON Path.", pathExpression), e2);
+            }
+        }
+    }
+
+    @VisibleForTesting
+    List<JsonNode> selectJsonRecords(JsonNode jsonObj, SimpleUrlPathMode mode, String loopPath) {
+        if (mode == SimpleUrlPathMode.JSONPOINTER) {
+            JsonPointer pointer = JsonPointer.compile(loopPath);
+            return toJsonNodeListFromIterableNode(jsonObj.at(pointer));
+        }
+
+        JsonPath path = JsonPath.compile(loopPath);
+        Configuration configuration = Configuration.defaultConfiguration()
+            .jsonProvider(new JacksonJsonNodeJsonProvider())
+            .mappingProvider(new JacksonMappingProvider());
+        JsonNode selected = path.read(jsonObj, configuration);
+
+        if (selected == null || selected.isNull() || selected.isMissingNode()) {
+            return Collections.emptyList();
+        }
+        if (selected instanceof ArrayNode) {
+            return toJsonNodeListFromIterableNode(selected);
+        }
+        return Collections.singletonList(selected);
+    }
+
+    private List<JsonNode> toJsonNodeListFromIterableNode(JsonNode node) {
+        if (node == null || node.isNull() || node.isMissingNode()) {
+            return Collections.emptyList();
+        }
+
+        List<JsonNode> result = new ArrayList<>();
+        node.forEach(result::add);
+        return result;
+    }
+
+    private Function<JsonNode, String> buildJsonPointerExtractor() {
+        JsonPointer pointer = JsonPointer.compile(params.recordIdPath);
+        return record -> record.at(pointer).asText();
+    }
+
+    private Function<JsonNode, String> buildJsonPathExtractor() {
+        JsonPath path = JsonPath.compile(params.recordIdPath);
+        Configuration configuration = Configuration.defaultConfiguration()
+                .jsonProvider(new JacksonJsonNodeJsonProvider())
+                .mappingProvider(new JacksonMappingProvider());
+        return record -> {
+            // as per RFC9535, the result of a JsonPath is always a nodelist,
+            // but that does not mean the result is always an array!
+            // The underlying library may return TextNodes directly depending on the path
+            JsonNode node = path.read(record, configuration);
+            if (node instanceof ArrayNode) {
+                // always return the first element
+                return node.get(0).asText();
+            } else if (node instanceof ValueNode) {
+                return node.asText();
+            } else {
+                throw new IllegalStateException("Json Path yielded unexpected node type: " + node.getClass());
+            }
+        };
     }
 
     private void collectRecordsFromRdf(Element xmlObj,
@@ -244,6 +349,18 @@ class Harvester implements IHarvester<HarvestResult> {
             log.error(String.format("Failed to find records in RDF graph. Error is: %s",
                 e.getMessage()));
         }
+
+        SimpleUrlPathMode mode = params.recordIdPathMode;
+        if (mode == null || mode == SimpleUrlPathMode.AUTO) {
+            // auto or unset means we choose XPATH
+            mode = SimpleUrlPathMode.XPATH;
+        }
+
+        if (mode != SimpleUrlPathMode.XPATH) {
+            // XML input -> only accept XML
+            throw new IllegalStateException("Unsupported recordIdPathMode " + mode + " for RDFXML input!");
+        }
+
         if (rdfNodes != null) {
             log.debug(String.format("%d records found in RDFXML response.", rdfNodes.size()));
 
@@ -270,6 +387,17 @@ class Harvester implements IHarvester<HarvestResult> {
         } catch (JDOMException e) {
             log.error(String.format("Failed to query records using %s. Error is: %s",
                 params.loopElement, e.getMessage()));
+        }
+
+        SimpleUrlPathMode mode = params.recordIdPathMode;
+        if (mode == null || mode == SimpleUrlPathMode.AUTO) {
+            // auto or unset means we choose XPATH
+            mode = SimpleUrlPathMode.XPATH;
+        }
+
+        if (mode != SimpleUrlPathMode.XPATH) {
+            // XML input -> only accept XML
+            throw new IllegalStateException("Unsupported recordIdPathMode " + mode + " for XML input!");
         }
 
         if (xmlNodes != null) {

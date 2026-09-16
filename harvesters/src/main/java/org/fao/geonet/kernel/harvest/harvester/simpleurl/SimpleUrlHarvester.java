@@ -28,6 +28,7 @@ import org.fao.geonet.kernel.harvest.harvester.AbstractHarvester;
 import org.fao.geonet.kernel.harvest.harvester.HarvestResult;
 
 import java.sql.SQLException;
+import java.util.Locale;
 
 /**
  * Harvest metadata from a JSON source.
@@ -55,6 +56,11 @@ public class SimpleUrlHarvester extends AbstractHarvester<HarvestResult, SimpleU
         harvesterSettingsManager.add("id:" + siteId, "loopElement", params.loopElement);
         harvesterSettingsManager.add("id:" + siteId, "numberOfRecordPath", params.numberOfRecordPath);
         harvesterSettingsManager.add("id:" + siteId, "recordIdPath", params.recordIdPath);
+        SimpleUrlPathMode mode = params.recordIdPathMode;
+        if (params.recordIdPathMode == null) {
+            mode = SimpleUrlPathMode.AUTO;
+        }
+        harvesterSettingsManager.add("id:" + siteId, "recordIdPathMode", mode.name().toLowerCase(Locale.ROOT));
         harvesterSettingsManager.add("id:" + siteId, "pageFromParam", params.pageFromParam);
         harvesterSettingsManager.add("id:" + siteId, "pageSizeParam", params.pageSizeParam);
         harvesterSettingsManager.add("id:" + siteId, "toISOConversion", params.toISOConversion);
