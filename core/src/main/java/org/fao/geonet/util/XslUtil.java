@@ -1184,6 +1184,9 @@ public final class XslUtil {
      * current thread. Do NOT expose this function to untrusted
      * XSLT (eg. formatters) - use {@link #getRecordIfViewable(String)}
      * instead which enforces the view privilege for the current user.
+     *
+     * @param uuid Metadata uuid identifier
+     * @return Metadata document, null if doesn´t exist
      */
     public static Node getRecord(String uuid) {
         return getRecord(uuid, null);
@@ -1202,6 +1205,9 @@ public final class XslUtil {
      * This is the function that should be exposed to untrusted XSLT (eg.
      * formatters) that may be used to retrieve records other than the one
      * currently being processed.
+     *
+     * @param uuid Metadata uuid identifier
+     * @return Metadata document, null if doesn´t exist or not visible to the current user
      */
     public static Node getRecordIfViewable(String uuid) {
         return getRecordIfViewable(uuid, null);
