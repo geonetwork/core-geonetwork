@@ -2214,7 +2214,7 @@
       });
 
       $scope.allowPublishInvalidMd = function () {
-        return gnConfig["metadata.workflow.allowPublishInvalidMd"];
+        return gnConfig["metadata.publication.allowPublishInvalidMd"];
       };
 
       $scope.allowPublishNonApprovedMd = function () {
