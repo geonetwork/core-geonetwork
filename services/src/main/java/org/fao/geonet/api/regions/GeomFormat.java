@@ -25,7 +25,9 @@ package org.fao.geonet.api.regions;
 
 import org.fao.geonet.Constants;
 import org.fao.geonet.csw.common.util.Xml;
+import org.fao.geonet.utils.NoOpEntityResolver;
 import org.geotools.gml2.GMLConfiguration;
+import org.geotools.xsd.Configuration;
 import org.geotools.xsd.Encoder;
 import org.geotools.xsd.Parser;
 import org.jdom.Element;
@@ -82,15 +84,15 @@ public enum GeomFormat {
             geomString = decode(geomString);
             Object value;
             try {
-                Parser parser3 = new Parser(gml3Config);
+                Parser parser3 = createParser(gml3Config);
                 value = parser3.parse(new StringReader(geomString));
             } catch (Exception e) {
                 try {
-                    Parser parser32 = new Parser(gml32Config);
+                    Parser parser32 = createParser(gml32Config);
                     value = parser32.parse(new StringReader(geomString));
                 } catch (Exception e2) {
                     try {
-                        Parser parser2 = new Parser(gml2Config);
+                        Parser parser2 = createParser(gml2Config);
                         value = parser2.parse(new StringReader(geomString));
                     } catch (Exception e3) {
                         throw e;
@@ -124,15 +126,15 @@ public enum GeomFormat {
             geomString = decode(geomString);
             Object value;
             try {
-                Parser parser2 = new Parser(gml2Config);
+                Parser parser2 = createParser(gml2Config);
                 value = parser2.parse(new StringReader(geomString));
             } catch (Exception e) {
                 try {
-                    Parser parser3 = new Parser(gml3Config);
+                    Parser parser3 = createParser(gml3Config);
                     value = parser3.parse(new StringReader(geomString));
                 } catch (Exception e2) {
                     try {
-                        Parser parser32 = new Parser(gml32Config);
+                        Parser parser32 = createParser(gml32Config);
                         value = parser32.parse(new StringReader(geomString));
                     } catch (Exception e3) {
                         throw e;
@@ -167,15 +169,15 @@ public enum GeomFormat {
             geomString = decode(geomString);
             Object value;
             try {
-                Parser parser32 = new Parser(gml32Config);
+                Parser parser32 = createParser(gml32Config);
                 value = parser32.parse(new StringReader(geomString));
             } catch (Exception e) {
                 try {
-                    Parser parser3 = new Parser(gml3Config);
+                    Parser parser3 = createParser(gml3Config);
                     value = parser3.parse(new StringReader(geomString));
                 } catch (Exception e2) {
                     try {
-                        Parser parser2 = new Parser(gml2Config);
+                        Parser parser2 = createParser(gml2Config);
                         value = parser2.parse(new StringReader(geomString));
                     } catch (Exception e3) {
                         throw e;
@@ -194,6 +196,12 @@ public enum GeomFormat {
     static GMLConfiguration gml2Config = new GMLConfiguration();
     static org.geotools.gml3.GMLConfiguration gml3Config = new org.geotools.gml3.GMLConfiguration();
     static org.geotools.gml3.v3_2.GMLConfiguration gml32Config = new org.geotools.gml3.v3_2.GMLConfiguration();
+
+    private static Parser createParser(Configuration configuration) {
+        Parser parser = new Parser(configuration);
+        parser.setEntityResolver(NoOpEntityResolver.INSTANCE);
+        return parser;
+    }
 
     private static String decode(String geomString) throws UnsupportedEncodingException {
         if (!geomString.contains(" ")) {

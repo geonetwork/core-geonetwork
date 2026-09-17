@@ -22,13 +22,53 @@
  */
 package org.fao.geonet.utils;
 
-import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
+import org.xml.sax.ext.EntityResolver2;
 
 import java.io.StringReader;
 
-public class NoOpEntityResolver implements EntityResolver {
+/**
+ * EntityResolver2 returning empty content for any external entity.
+ */
+public class NoOpEntityResolver implements EntityResolver2 {
+
+    /**
+     * Singleton instance of NoOpEntityResolver.
+     */
+    public static final NoOpEntityResolver INSTANCE = new NoOpEntityResolver();
+
+    /**
+     * Use the INSTANCE field to access.
+     */
+    protected NoOpEntityResolver(){
+    }
+    
+    @Override
+    public InputSource getExternalSubset(String name, String baseURI) {
+        return null; // no external subset
+    }
+
+    @Override
     public InputSource resolveEntity(String publicId, String systemId) {
+        return emptyInputSource();
+    }
+
+    @Override
+    public InputSource resolveEntity(String name, String publicId, String baseURI, String systemId) {
+        return emptyInputSource();
+    }
+
+    /**
+     * Empty InputSource, used to prevent download of external entities.
+     *
+     * @return an empty InputSource
+     */
+    private InputSource emptyInputSource() {
         return new InputSource(new StringReader(""));
+    }
+
+    @Override
+    public String toString() {
+        return "NoOpEntityResolver";
     }
 }
