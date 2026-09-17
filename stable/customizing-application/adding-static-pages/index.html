@@ -10,13 +10,13 @@
       
       
       
-        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.2/customizing-application/adding-static-pages/">
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.4/customizing-application/adding-static-pages/">
       
       
         <link rel="prev" href="../advanced-configuration/">
       
       
-        <link rel="next" href="../characterset/">
+        <link rel="next" href="../implementing-a-schema-plugin/">
       
       
         
@@ -31,7 +31,7 @@
     
     
       
-        <title>Adding static pages - GeoNetwork opensource (EN)</title>
+        <title>Adding static pages - GeoNetwork opensource</title>
       
     
     
@@ -98,7 +98,7 @@
           <aside class="md-banner md-banner--warning">
             <div class="md-banner__inner md-grid md-typeset">
               
-  GeoNetwork 4.2 is outdated.
+  GeoNetwork 4.4 is latest.
   <a href="../../.."><strong>Click here to go to stable.</strong></a>
 
             </div>
@@ -112,7 +112,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-header__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../assets/images/geonetwork-logo.svg" alt="logo">
 
@@ -125,7 +125,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            GeoNetwork opensource (EN)
+            GeoNetwork opensource
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -481,12 +481,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-nav__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
-    GeoNetwork opensource (EN)
+    GeoNetwork opensource
   </label>
   
     <div class="md-nav__source">
@@ -1060,6 +1060,8 @@
       
         
       
+        
+      
     
     
     
@@ -1484,6 +1486,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#change-the-menu-order-in-the-record-view-toolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change the menu order in the record view toolbar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#change-the-static-pages-order-in-the-footer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1510,14 +1523,14 @@
   
   
     <li class="md-nav__item">
-      <a href="../characterset/" class="md-nav__link">
+      <a href="../implementing-a-schema-plugin/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Characterset
+    Implementing schema plugins
   
 
     
@@ -1538,14 +1551,42 @@
   
   
     <li class="md-nav__item">
-      <a href="../implementing-a-schema-plugin/" class="md-nav__link">
+      <a href="../integrating-external-resource-properties/" class="md-nav__link">
         
   
   
   <span class="md-ellipsis">
     
   
-    Implementing schema plugins
+    Integrating External Resource Properties
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../characterset/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Characterset
   
 
     
@@ -1832,6 +1873,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#change-the-menu-order-in-the-record-view-toolbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Change the menu order in the record view toolbar
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#change-the-static-pages-order-in-the-footer" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1879,8 +1931,10 @@
 <p>This function allows storing the HTML content of static pages and displaying links to these pages in specific sections of the user interface. </p>
 <p>To add new static pages go to <strong>Admin Console</strong> &rarr;  <strong>Settings</strong> &rarr;  <strong>Static Pages</strong> and select the <strong>+ New Static Page</strong> option, providing the following information:</p>
 <ul>
-<li><strong>Language</strong>: User interface language in which the static page will be displayed.</li>
-<li><strong>Page identifier</strong>: A unique text identifier for the page.</li>
+<li><strong>Language</strong>: User interface language in which the static page will be displayed.<br />
+  (3 letters like 'eng', 'ita', 'fra' ...)</li>
+<li><strong>Page identifier</strong>: A unique text identifier for the page.<br />
+  This value should be encoded</li>
 <li><strong>Page label</strong>: Label to display on the link.</li>
 <li><strong>Page icon</strong>: (Optional) Icon to display next to the link label.</li>
 <li>
@@ -1896,7 +1950,7 @@
 <li>
 <p><strong>Link</strong>: Available for <strong>Web link</strong> / <strong>Email link</strong> formats.</p>
 <ul>
-<li>For <strong>Web link</strong> the link to a web page.</li>
+<li>For <strong>Web link</strong> the URL link to another web page.  The URL should be encoded.</li>
 <li>For <strong>Email link</strong>, the email address to which the email will be sent.</li>
 </ul>
 </li>
@@ -1907,18 +1961,32 @@
 <p><strong>Page content</strong>: For formats other than <strong>Web link</strong> or <strong>Email link</strong>, allows editing the HTML / text content to display.</p>
 </li>
 <li>
-<p><strong>Page section</strong>: Section of the page to display the link. Currently implemented sections are <code>TOP</code> (top menu of the main page) and <code>FOOTER</code> (footer of the main page).</p>
+<p><strong>Page section</strong>: Section of the page to display the link. Currently implemented sections are <code>TOP</code> (top menu of the main page), <code>FOOTER</code> (footer of the main page), and <code>RECORD_VIEW_MENU</code> (toolbar shown on the record view page).</p>
 </li>
+<li>
+<p><strong>Workflow visibility (<code>RECORD_VIEW_MENU</code> only)</strong>: Controls whether a page is shown for each workflow state.</p>
+</li>
+<li>
+<p><code>showWhenWorkflowDisabled</code></p>
+</li>
+<li><code>showOnApproved</code></li>
+<li><code>showOnNonApproved</code></li>
+</ul>
+<p>These options default to <code>true</code> (backward compatible).</p>
+<ul>
 <li>
 <p><strong>Status</strong>: Defines which users can see the link.</p>
 <ul>
 <li><strong>Visible only to the administrator</strong></li>
 <li><strong>Visible to logged users</strong></li>
 <li><strong>Visible to users belonging to groups</strong></li>
+<li><strong>Visible to users belonging to groups and to administrators</strong></li>
 <li><strong>Visible to every one</strong></li>
 </ul>
 </li>
 </ul>
+<p>When using one of the group-based visibility options, select one or more values in the <strong>Groups</strong> field.
+  Administrators can still see all configured static pages in the administration screen so they can manage pages even when a page is not publicly visible.</p>
 <p><img alt="" src="../img/add-static-page.png" /></p>
 <p><img alt="" src="../img/static-page-footer.png" /></p>
 <p>Some restrictions:</p>
@@ -1936,18 +2004,48 @@
 </span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w"> </span><span class="s2">"gn-contribute-menu"</span><span class="p">,</span>
 </span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w"> </span><span class="s2">"gn-admin-menu"</span><span class="p">]</span>
 </span></code></pre></div>
-<p>Insert a page as a simple menu using the page identifier or as a submenu using an object:</p>
+<p>Insert a page as a simple menu using the page identifier or as a submenu using an object. In the submenu case, the object key defines the top-level label. That label can be a translation key, or literal text if the text is not defined in the translations.</p>
 <div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">[</span><span class="s2">"gn-site-name-menu"</span><span class="p">,</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w"> </span><span class="s2">"gn-portal-switcher"</span><span class="p">,</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w"> </span><span class="s2">"gn-search-menu"</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w"> </span><span class="p">{</span><span class="nt">"Quick search"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">   </span><span class="s2">"searchForAfrica"</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">   </span><span class="s2">"forReview"</span>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w"> </span><span class="p">]},</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w"> </span><span class="s2">"gn-map-menu"</span><span class="p">,</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w"> </span><span class="s2">"gn-contribute-menu"</span><span class="p">,</span>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w"> </span><span class="s2">"gn-admin-menu"</span><span class="p">,</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w"> </span><span class="s2">"documentation"</span><span class="p">]</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w"> </span><span class="p">{</span><span class="nt">"quickSearch"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">   </span><span class="nt">"icon"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fa-search"</span><span class="p">,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">   </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">     </span><span class="s2">"searchForAfrica"</span><span class="p">,</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">     </span><span class="s2">"forReview"</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">   </span><span class="p">]</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w"> </span><span class="p">}},</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w"> </span><span class="s2">"gn-map-menu"</span><span class="p">,</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w"> </span><span class="s2">"gn-contribute-menu"</span><span class="p">,</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w"> </span><span class="s2">"gn-admin-menu"</span><span class="p">,</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w"> </span><span class="s2">"documentation"</span><span class="p">]</span>
+</span></code></pre></div>
+<p>For example, if a translation is defined for <code>quickSearch</code>, the submenu label is translated automatically for each language.</p>
+<h2 id="change-the-menu-order-in-the-record-view-toolbar">Change the menu order in the record view toolbar</h2>
+<p>On the record view page, static pages can also be inserted between the default record actions. This can be configured in <strong>Admin Console</strong> &rarr; <strong>Settings</strong> &rarr; <strong>User interface</strong>, in the <strong>Record View custom menu items</strong> section.</p>
+<p>To add a static page to this area, create it first with the <strong>Page section</strong> set to <code>RECORD_VIEW_MENU</code>.</p>
+<p>By default, the record view toolbar uses the following menu order:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">[</span><span class="s2">"gn-recordview-edit-menu"</span><span class="p">,</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w"> </span><span class="s2">"gn-recordview-delete-menu"</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w"> </span><span class="s2">"gn-recordview-manage-menu"</span><span class="p">,</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w"> </span><span class="s2">"gn-recordview-download-menu"</span><span class="p">,</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w"> </span><span class="s2">"gn-recordview-display-menu"</span><span class="p">]</span>
+</span></code></pre></div>
+<p>If the <strong>Record View custom menu items</strong> list is empty, only this default menu order is used and static pages are not automatically added.</p>
+<p>Use the static page identifier directly (for example <code>documentation</code>) when inserting custom pages. The <code>gn-</code> prefix is reserved for built-in menu entries and custom page identifiers using that prefix are ignored.</p>
+<p>As with the top toolbar, insert a page as a simple menu using the page identifier or as a submenu using an object:</p>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">[</span><span class="s2">"gn-recordview-edit-menu"</span><span class="p">,</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w"> </span><span class="p">{</span><span class="nt">"quickSearch"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">   </span><span class="nt">"icon"</span><span class="p">:</span><span class="w"> </span><span class="s2">"fa-search"</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">   </span><span class="nt">"items"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">     </span><span class="s2">"documentation"</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">     </span><span class="s2">"forReview"</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">   </span><span class="p">]</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w"> </span><span class="p">}},</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w"> </span><span class="s2">"gn-recordview-delete-menu"</span><span class="p">,</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w"> </span><span class="s2">"gn-recordview-manage-menu"</span><span class="p">,</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w"> </span><span class="s2">"gn-recordview-download-menu"</span><span class="p">,</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w"> </span><span class="s2">"gn-recordview-display-menu"</span><span class="p">]</span>
 </span></code></pre></div>
 <h2 id="change-the-static-pages-order-in-the-footer">Change the static pages order in the footer</h2>
 <p>The order of the footer pages can be configured in <strong>Admin Console</strong> &rarr;  <strong>Settings</strong> &rarr;  <strong>User interface</strong>, in the <strong>Footer custom menu items</strong> section.</p>
@@ -2005,13 +2103,13 @@
         
         
           
-          <a href="../characterset/" class="md-footer__link md-footer__link--next" aria-label="Next: Characterset">
+          <a href="../implementing-a-schema-plugin/" class="md-footer__link md-footer__link--next" aria-label="Next: Implementing schema plugins">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Characterset
+                Implementing schema plugins
               </div>
             </div>
             <div class="md-footer__button md-icon">
@@ -2048,7 +2146,7 @@
 <div class="md-copyright">
   
   <span class="md-copyright__highlight">
-    Copyright &copy; 2001 - 2025 FAO-UN and others
+    Copyright &copy; 2001 - 2026 FAO-UN and others
   </span>
   
   
@@ -2129,7 +2227,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>

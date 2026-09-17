@@ -10,10 +10,10 @@
       
       
       
-        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.2/install-guide/configuring-database/">
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.4/install-guide/configuring-database/">
       
       
-        <link rel="prev" href="../installing-from-source-code/">
+        <link rel="prev" href="../plugins/">
       
       
         <link rel="next" href="../customizing-data-directory/">
@@ -31,7 +31,7 @@
     
     
       
-        <title>Configuring the database - GeoNetwork opensource (EN)</title>
+        <title>Configuring the database - GeoNetwork opensource</title>
       
     
     
@@ -98,7 +98,7 @@
           <aside class="md-banner md-banner--warning">
             <div class="md-banner__inner md-grid md-typeset">
               
-  GeoNetwork 4.2 is outdated.
+  GeoNetwork 4.4 is latest.
   <a href="../../.."><strong>Click here to go to stable.</strong></a>
 
             </div>
@@ -112,7 +112,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-header__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../assets/images/geonetwork-logo.svg" alt="logo">
 
@@ -125,7 +125,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            GeoNetwork opensource (EN)
+            GeoNetwork opensource
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -481,12 +481,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-nav__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
-    GeoNetwork opensource (EN)
+    GeoNetwork opensource
   </label>
   
     <div class="md-nav__source">
@@ -888,6 +888,8 @@
       
         
           
+        
+      
         
       
         
@@ -1758,7 +1760,7 @@
 
 <h1 id="configuring-database">Configuring the database</h1>
 <h2 id="introduction">Introduction</h2>
-<p>GeoNetwork uses a database to persist aspects such as metadata records, privileges and configurations. The database default structure is created by the application on initial startup. Subsequent releases of GeoNetwork will update the database structure automatically. For this reason the database user initially needs create privileges on the database. A number of database dialects are supported; <strong><em>H2</em></strong>,<strong><em>PostgreSQL</em></strong>,<strong><em>PostGIS</em></strong>,<strong><em>Oracle</em></strong>,<strong><em>SQL Server</em></strong>. This section describes various options to configure the database connection.</p>
+<p>GeoNetwork uses a database to persist aspects such as metadata records, privileges and configurations. The database default structure is created by the application on initial startup. Subsequent releases of GeoNetwork will update the database structure automatically. For this reason the database user initially needs create privileges on the database. A number of database dialects are supported: <strong><em>H2</em></strong>, <strong><em>PostgreSQL</em></strong>, <strong><em>PostGIS</em></strong>, <strong><em>Oracle</em></strong>, <strong><em>SQL Server</em></strong>. This section describes various options to configure the database connection.</p>
 <h2 id="h2-database">H2 database</h2>
 <p>By default, a <a href="https://www.h2database.com/html/main.html">H2</a> database is configured and created when the application first starts. The H2 database named <code>gn.h2.db</code> is created:</p>
 <ul>
@@ -1770,12 +1772,12 @@
 <p>You don't <strong>need</strong> to configure the database if you are happy with the local H2 database. Only change the configuration if you wish to store the data on a remote database.</p>
 </div>
 <h2 id="configuring-a-database-via-config-files">Configuring a database via config files</h2>
-<p>The database dialect is configured in <strong><code>/WEB-INF/config-node/srv.xml</code></strong>. Uncomment the dialect to use.</p>
+<p>The database dialect is configured in <strong><code>/WEB-INF/config-node/srv.xml</code></strong>. Uncomment the dialect to use or use Java System property to configure it with <code>-Dgeonetwork.db.type=postgres</code> as described in https://github.com/geonetwork/core-geonetwork/blob/e8cee088ca714789788d9de0cb8f143d09a8e9ba/web/src/main/webResources/WEB-INF/config-node/srv.xml#L36.</p>
 <p>A jdbc driver is included for PostgreSQL, Oracle and H2. Other dialects require a jdbc driver to be installed. Download the jdbc library for the dialect and place it in <code>/WEB-INF/lib</code> or in the tomcat or GeoNetwork lib folder.</p>
 <p>To update the connection details, update the <strong><code>WEB-INF/config-db/jdbc.properties</code></strong> file with relevant connection information.</p>
 <p>GeoNetwork assumes data is stored in the default schema for a user. If this is not the case, you need to activate a setting <code>hibernate.default_schema</code> in <strong><code>/WEB-INF/config-spring-geonetwork.xml</code></strong>. There are some scripts that run directly on the database at initialisation and can't use the <code>hibernate.default-schema</code> parameter. For these scripts you need to set the default-schema manually. In PostgreSQL this is possible by appending <code>?currentSchema=example</code> to the database connection.</p>
 <h2 id="configuring-a-database-via-jndi">Configuring a database via JNDI</h2>
-<p>The Java Naming and Directory Interface (JNDI) is a technology which allows to configure the database in tomcat and reference the JNDI connection by name.</p>
+<p>The Java Naming and Directory Interface (JNDI) is a technology that allows you to configure the database in Tomcat and reference the JNDI connection by name.</p>
 <ol>
 <li>
 <p>To activate JNDI, you need to activate the JNDI database type in <strong><code>/WEB-INF/config-node/srv.xml</code></strong>.</p>
@@ -1793,7 +1795,7 @@
 </li>
 </ol>
 <h2 id="configuring-a-database-via-environment">Configuring a database via environment</h2>
-<p>Setting configuration properties via environment variables is common in container environments such as Docker. 2 options exist:</p>
+<p>Setting configuration properties via environment variables is common in container environments such as Docker. Two options exist:</p>
 <ol>
 <li>
 <p>Add the parameters directly to the Java environment by substituting JAVA_OPTS.</p>
@@ -1818,27 +1820,54 @@
 </span></code></pre></div>
 </li>
 </ol>
-<p>Within PostgreSQL it is possible to configure <code>postgres</code> or <code>postgis</code>. In the latter case GeoNetwork will use spatial capabilities of PostGIS to filter metadata. In the first case (and for other database dialects) a Shapefile is created for storage of metadata coverage.</p>
+<p>Within PostgreSQL it is possible to configure three geonetwork.db.type:</p>
+<ul>
+<li><code>postgres</code>: (and for other database dialects) a Shapefile is created for storage of metadata coverage.</li>
+<li><code>postgres-postgis</code>: GeoNetwork will use spatial capabilities of PostGIS to filter metadata.</li>
+<li><code>postgres-postgis-hikari</code>: All the features of postgis with hikari "on top" to provide connection management more adapted to postgres.</li>
+</ul>
+<p>When choosing between postgres-postgis and postgres-postgis-hikari, postgres-postgis-hikari is recommended: it is based on hikari connection pool which provides better connection management when using 'connectionTestQuery' instead of defaultJdbcDataSource's 'validationQuery'.</p>
+<p>Alternative environment variables are also supported for non-container (WAR-file) environments:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>  GEONETWORK_DB_USERNAME=example
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>  GEONETWORK_DB_PASSWORD=xx
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>  GEONETWORK_DB_NAME=example
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a>  GEONETWORK_DB_HOST=localhost
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>  GEONETWORK_DB_PORT=5432
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>  GEONETWORK_DB_TYPE=postgres
+</span></code></pre></div>
+<p>Based on compile-time default settings: https://github.com/geonetwork/core-geonetwork/blob/e8cee088ca714789788d9de0cb8f143d09a8e9ba/pom.xml#L1556-L1562 that are used to set these https://github.com/geonetwork/core-geonetwork/blob/e8cee088ca714789788d9de0cb8f143d09a8e9ba/web/src/main/webResources/WEB-INF/config-db/jdbc.properties#L24-L28</p>
 <h2 id="logging">Logging</h2>
 <p>To see more details about the database connection and queries, the log can be switched to DEBUG level in <code>web/src/main/webapp/WEB-INF/classes/log4j.xml</code> (or see <a href="../../administrator-guide/configuring-the-catalog/system-configuration/#system-config-server">Catalog Server</a> &rarr; Log level).</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&lt;logger</span><span class="w"> </span><span class="na">name=</span><span class="s">"org.hibernate.SQL"</span><span class="w"> </span><span class="na">additivity=</span><span class="s">"false"</span><span class="nt">&gt;</span>
-</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">    </span><span class="nt">&lt;level</span><span class="w"> </span><span class="na">value=</span><span class="s">"DEBUG"</span><span class="w"> </span><span class="nt">/&gt;</span>
-</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">    </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">"consoleAppender"</span><span class="w"> </span><span class="nt">/&gt;</span>
-</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">    </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">"fileAppender"</span><span class="w"> </span><span class="nt">/&gt;</span>
-</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="nt">&lt;/logger&gt;</span>
-</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="nt">&lt;logger</span><span class="w"> </span><span class="na">name=</span><span class="s">"org.hibernate.type"</span><span class="w"> </span><span class="na">additivity=</span><span class="s">"false"</span><span class="nt">&gt;</span>
-</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">    </span><span class="nt">&lt;level</span><span class="w"> </span><span class="na">value=</span><span class="s">"DEBUG"</span><span class="w"> </span><span class="nt">/&gt;</span>
-</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">    </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">"consoleAppender"</span><span class="w"> </span><span class="nt">/&gt;</span>
-</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">    </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">"fileAppender"</span><span class="w"> </span><span class="nt">/&gt;</span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nt">&lt;/logger&gt;</span>
-</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="nt">&lt;logger</span><span class="w"> </span><span class="na">name=</span><span class="s">"org.hibernate.tool.hbm2ddl"</span><span class="w"> </span><span class="na">additivity=</span><span class="s">"false"</span><span class="nt">&gt;</span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">    </span><span class="nt">&lt;level</span><span class="w"> </span><span class="na">value=</span><span class="s">"DEBUG"</span><span class="w"> </span><span class="nt">/&gt;</span>
-</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">    </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">"consoleAppender"</span><span class="w"> </span><span class="nt">/&gt;</span>
-</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">    </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">"fileAppender"</span><span class="w"> </span><span class="nt">/&gt;</span>
-</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="nt">&lt;/logger&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">&lt;logger</span><span class="w"> </span><span class="na">name=</span><span class="s">"org.hibernate.SQL"</span><span class="w"> </span><span class="na">additivity=</span><span class="s">"false"</span><span class="nt">&gt;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">    </span><span class="nt">&lt;level</span><span class="w"> </span><span class="na">value=</span><span class="s">"DEBUG"</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">    </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">"consoleAppender"</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="w">    </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">"fileAppender"</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="nt">&lt;/logger&gt;</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="nt">&lt;logger</span><span class="w"> </span><span class="na">name=</span><span class="s">"org.hibernate.type"</span><span class="w"> </span><span class="na">additivity=</span><span class="s">"false"</span><span class="nt">&gt;</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="w">    </span><span class="nt">&lt;level</span><span class="w"> </span><span class="na">value=</span><span class="s">"DEBUG"</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="w">    </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">"consoleAppender"</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="w">    </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">"fileAppender"</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="nt">&lt;/logger&gt;</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="nt">&lt;logger</span><span class="w"> </span><span class="na">name=</span><span class="s">"org.hibernate.tool.hbm2ddl"</span><span class="w"> </span><span class="na">additivity=</span><span class="s">"false"</span><span class="nt">&gt;</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a><span class="w">    </span><span class="nt">&lt;level</span><span class="w"> </span><span class="na">value=</span><span class="s">"DEBUG"</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="w">    </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">"consoleAppender"</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="w">    </span><span class="nt">&lt;appender-ref</span><span class="w"> </span><span class="na">ref=</span><span class="s">"fileAppender"</span><span class="w"> </span><span class="nt">/&gt;</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="nt">&lt;/logger&gt;</span>
 </span></code></pre></div>
 <h2 id="summary">Summary</h2>
 <p>There are various ways to configure a database in GeoNetwork. JNDI and environment are favourable, because when updating to a new version, or changing a database, you don't need to touch any application files.</p>
+<p>Supported types:</p>
+<ul>
+<li>db2</li>
+<li>h2 (default)</li>
+<li>jndi</li>
+<li>mysql</li>
+<li>oracle</li>
+<li>postgres</li>
+<li>postgres-postgis</li>
+<li>postgres-postgis-hikari</li>
+<li>sqlserver</li>
+</ul>
 
 
 
@@ -1876,7 +1905,7 @@
       <nav class="md-footer__inner md-grid" aria-label="Footer" >
         
           
-          <a href="../installing-from-source-code/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Building from Source Code">
+          <a href="../plugins/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Plugins">
             <div class="md-footer__button md-icon">
               
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
@@ -1886,7 +1915,7 @@
                 Previous
               </span>
               <div class="md-ellipsis">
-                Building from Source Code
+                Plugins
               </div>
             </div>
           </a>
@@ -1936,7 +1965,7 @@
 <div class="md-copyright">
   
   <span class="md-copyright__highlight">
-    Copyright &copy; 2001 - 2025 FAO-UN and others
+    Copyright &copy; 2001 - 2026 FAO-UN and others
   </span>
   
   
@@ -2017,7 +2046,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>

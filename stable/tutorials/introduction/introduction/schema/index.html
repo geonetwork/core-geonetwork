@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.2/tutorials/introduction/introduction/schema/">
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.4/tutorials/introduction/introduction/schema/">
       
       
         <link rel="prev" href="../map/">
@@ -31,7 +31,7 @@
     
     
       
-        <title>Multi schema support - GeoNetwork opensource (EN)</title>
+        <title>Multi schema support - GeoNetwork opensource</title>
       
     
     
@@ -98,7 +98,7 @@
           <aside class="md-banner md-banner--warning">
             <div class="md-banner__inner md-grid md-typeset">
               
-  GeoNetwork 4.2 is outdated.
+  GeoNetwork 4.4 is latest.
   <a href="../../../../.."><strong>Click here to go to stable.</strong></a>
 
             </div>
@@ -112,7 +112,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-header__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../../../assets/images/geonetwork-logo.svg" alt="logo">
 
@@ -125,7 +125,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            GeoNetwork opensource (EN)
+            GeoNetwork opensource
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -481,12 +481,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-nav__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
-    GeoNetwork opensource (EN)
+    GeoNetwork opensource
   </label>
   
     <div class="md-nav__source">
@@ -1947,13 +1947,13 @@
 
 
 <h1 id="internals.rst">Multi schema support</h1>
-<p>This paragraph explains how GeoNetwork leverages metadata records formatted in various schemas (metadata models). Over time various communities adopted a number of metadata standards and profiles for metadata records.</p>
-<p>Metadata models define which properties can be registered for an asset, such as title, author, creation date. In the spatial domain TC211 together with OGC are the standardisation bodies which define the standards. In 2005 TC211 released ISO19139, a standard for metadata to describe spatial assets which is still widely used. In 2014 TC211 released a big update to this standard, named ISO19115-1. GeoNetwork is able to manage records in either schema (and other schemas, such as Dublin Core, DCAT).</p>
+<p>This section explores how GeoNetwork leverages metadata records formatted in various schemas (metadata models). Over time different communities have eached adopted a metadata standards and profiles for metadata records appropriate to their needs.</p>
+<p>Metadata models define which properties can be registered for an asset, such as title, author, creation date. In the spatial domain TC211 together with OGC are the standardisation bodies which define the standards. In 2005 TC211 released ISO19139, a standard for metadata to describe spatial assets which is widely used. In 2014 TC211 released a big update to this standard, named ISO19115-1. GeoNetwork is able to manage records in either schema (and other schemas, such as Dublin Core, DCAT).</p>
 <h2 id="indexing-records">Indexing records</h2>
 <p>In GeoNetwork records in various schemas are stored as XML-documents in the database. To manage records that follow a certain schema a series of "schema-plugins" is available, which define rules how to manage records formatted according to that schema. One aspect of a schema-plugin is that it defines which parts of the xml document contain relevant information for the search mechanism. The process of extracting this information and storing it in a unified search index is called 'indexing'. This process is triggered when a record is updated or imported in the database.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The search index of GeoNetwork is based on an external component, called "Elastic Search".</p>
+<p>The search index of GeoNetwork is based on an external component, called "Elasticsearch".</p>
 </div>
 <h2 id="authoring-records">Authoring Records</h2>
 <p>GeoNetwork provides an option to create and modify records in an advanced web form. The web form is created and validated from rules that are defined in the relevant "schema-plugin". Saving the form results in an updated xml-document in the database. Read more on this topic on the next page.</p>
@@ -2064,7 +2064,7 @@
 <div class="md-copyright">
   
   <span class="md-copyright__highlight">
-    Copyright &copy; 2001 - 2025 FAO-UN and others
+    Copyright &copy; 2001 - 2026 FAO-UN and others
   </span>
   
   
@@ -2145,7 +2145,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>

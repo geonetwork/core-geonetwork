@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.2/contributing/doing-a-release/">
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.4/contributing/doing-a-release/">
       
       
         <link rel="prev" href="../making-a-pull-request/">
@@ -31,7 +31,7 @@
     
     
       
-        <title>Doing a GeoNetwork release - GeoNetwork opensource (EN)</title>
+        <title>Doing a GeoNetwork release - GeoNetwork opensource</title>
       
     
     
@@ -98,7 +98,7 @@
           <aside class="md-banner md-banner--warning">
             <div class="md-banner__inner md-grid md-typeset">
               
-  GeoNetwork 4.2 is outdated.
+  GeoNetwork 4.4 is latest.
   <a href="../../.."><strong>Click here to go to stable.</strong></a>
 
             </div>
@@ -112,7 +112,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-header__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../assets/images/geonetwork-logo.svg" alt="logo">
 
@@ -125,7 +125,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            GeoNetwork opensource (EN)
+            GeoNetwork opensource
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -481,12 +481,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-nav__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
-    GeoNetwork opensource (EN)
+    GeoNetwork opensource
   </label>
   
     <div class="md-nav__source">
@@ -1058,6 +1058,8 @@
       
         
       
+        
+      
     
     
     
@@ -1250,6 +1252,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Doing a GeoNetwork release
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1266,6 +1286,97 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#doing-a-release-with-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Doing a release with scripts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Doing a release with scripts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-translations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Translations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#release-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-the-release-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build the release locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publish-the-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publish the release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#doing-a-manual-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Doing a manual release
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1435,6 +1546,86 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#doing-a-release-with-scripts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Doing a release with scripts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Doing a release with scripts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-translations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Translations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#release-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Release Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#build-the-release-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Build the release locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#publish-the-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publish the release
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#doing-a-manual-release" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Doing a manual release
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1467,103 +1658,300 @@
 
 
 <h1 id="doing-a-release">Doing a GeoNetwork release</h1>
-<p>This section documents the steps followed by the development team to do a new release.</p>
+<h2 id="doing-a-release-with-scripts">Doing a release with scripts</h2>
+<h3 id="update-translations">Update Translations</h3>
+<ol>
+<li>Update translations:</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nb">cd</span><span class="w"> </span>web-ui
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>./download-from-transifex.sh
+</span></code></pre></div>
+<p>Commit the changed files:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Transifex update"</span>
+</span></code></pre></div>
+<h3 id="release-notes">Release Notes</h3>
+<ol>
+<li>
+<p>Prepare change-log notes.</p>
+<p>Git notes are managed in <code>ref/notes/commits</code> similar to push and pulling tags. Start by pulling the latest notes:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git fetch origin refs/notes/commits:refs/notes/commits
+</span></code></pre></div></p>
+<p>Review changes along with any notes:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git log --pretty='format:%h: %s %n      note: %N' $previousversion...
+</span></code></pre></div></p>
+<p>Use <code>git note append</code> to document commits adding major features.</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git notes append &lt;sha&gt; -m "&lt;description of major feature&gt;"
+</span></code></pre></div>
+<p>Use <code>git note remove</code> if you need to clear a note and start again:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>git notes remove &lt;sha&gt;
+</span></code></pre></div></p>
+<p>Preview changes using:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a> git log --pretty='format:* %N' $previousversion... | grep -v "^* $"
+</span></code></pre></div>
+<p>Save your notes:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>git push origin refs/notes/commits
+</span></code></pre></div></p>
+</li>
+<li>
+<p>Generate release notes:</p>
+</li>
+</ol>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>./release-notes
+</span></code></pre></div>
+<p>After the script runs, it will produce:</p>
+<ul>
+<li>
+<p><code>docs/changes/changes4.4.4-0.txt</code></p>
+<p>The last couple commits here can be removed (from the release steps above).</p>
+</li>
+<li>
+<p><code>docs/manual/docs/overview/change-log/version-4.4.4.md</code></p>
+<p>This file can be updated based on highlights from: <a href="https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.4.4+is%3Aclosed">milestone closed issues</a></p>
+<p>Filter using:</p>
+<ul>
+<li>label: <code>changelog</code> as Major Features</li>
+<li>label: api change</li>
+<li>label: <code>index structure change</code> as Index</li>
+<li>label: <code>bug</code> as Fixes</li>
+</ul>
+</li>
+<li>
+<p>Update the navigation:</p>
+</li>
+<li>
+<p><code>docs/manual/mkdocs.yml</code></p>
+</li>
+<li><code>docs/manual/docs/overview/change-log/latest/index.md</code></li>
+</ul>
+<h3 id="build-the-release-locally">Build the release locally</h3>
+<ol>
+<li>
+<p>Use release build script:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>./release-build.sh
+</span></code></pre></div>
+</li>
+<li>
+<p>Startup Elasticsearch</p>
+</li>
+<li>
+<p>Remove local database:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>rm<span class="w"> </span>~/gn.mv.db
+</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>rm<span class="w"> </span>~/gn.trace.db
+</span></code></pre></div>
+</li>
+<li>
+<p>Test the release:</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>./release-test.sh
+</span></code></pre></div>
+</li>
+<li>
+<p>Smoke Test:</p>
+<ul>
+<li>Load ISO19139 samples and templates</li>
+<li>Display a record and try each of the views, and the XML download</li>
+<li>Use Contributor board to create a new record (from the "preferred" template)</li>
+<li>Try validation (validation errors are expected we just wish to check it runs)</li>
+<li>Try each of the editor views</li>
+</ul>
+</li>
+</ol>
+<h3 id="publish-the-release">Publish the release</h3>
+<ol>
+<li>
+<p>Publish</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>./release-publish.sh
+</span></code></pre></div>
+</li>
+<li>
+<p>Cleanup</p>
+<div class="language-bash highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>./release-restore.sh
+</span></code></pre></div>
+</li>
+<li>
+<p>Close the milestone on github https://github.com/geonetwork/core-geonetwork/milestones?state=closed with link to sourceforge download.</p>
+</li>
+</ol>
+<p><strong>Title:</strong> <code>4.4.7</code>
+   <div class="language-text highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>Downloads available here: https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.7/
+</span></code></pre></div></p>
+<ol>
+<li>Publish the release on github https://github.com/geonetwork/core-geonetwork/releases .</li>
+</ol>
+<p><strong>Title:</strong> <code>GeoNetwork v4.4.7</code>
+   <div class="language-text highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.7/
+</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>
+</span><span id="__span-15-3"><a id="__codelineno-15-3" name="__codelineno-15-3" href="#__codelineno-15-3"></a>Check the [GeoNetwork 4.4.7 changelog](https://docs.geonetwork-opensource.org/4.4/overview/change-log/version-4.4.7/)
+</span></code></pre></div></p>
+<ol>
+<li>
+<p>Update the website https://github.com/geonetwork/website .</p>
+</li>
+<li>
+<p>Version: <a href="https://github.com/geonetwork/website/blob/master/docsrc/conf.py">docssrc/conf.py</a>:</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a># The short X.Y version.
+</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>version = '4.4.7'
+</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a># The full version, including alpha/beta/rc tags.
+</span><span id="__span-16-4"><a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>release = '4.4.7'
+</span></code></pre></div>
+<ul>
+<li>Update the download link: &lt;&gt;</li>
+<li>Add the section for the new release: <a href="https://github.com/geonetwork/website/blob/master/docsrc/news.rst">https://github.com/geonetwork/website/blob/master/docsrc/news.rst</a></li>
+</ul>
+</li>
+<li>
+<p>Download: <a href="https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst">docsrc/downloads.rst</a></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a>Releases
+</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a>--------
+</span><span id="__span-17-3"><a id="__codelineno-17-3" name="__codelineno-17-3" href="#__codelineno-17-3"></a>
+</span><span id="__span-17-4"><a id="__codelineno-17-4" name="__codelineno-17-4" href="#__codelineno-17-4"></a> * `v4.4.7 &lt;https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.7/&gt;`_
+</span></code></pre></div>
+</li>
+<li>
+<p>News: <a href="https://github.com/geonetwork/website/blob/master/docsrc/news.rst">docsrc/news.rst</a></p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>News
+</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>====
+</span><span id="__span-18-3"><a id="__codelineno-18-3" name="__codelineno-18-3" href="#__codelineno-18-3"></a>
+</span><span id="__span-18-4"><a id="__codelineno-18-4" name="__codelineno-18-4" href="#__codelineno-18-4"></a>GeoNetwork opensource v4.4.7 released
+</span><span id="__span-18-5"><a id="__codelineno-18-5" name="__codelineno-18-5" href="#__codelineno-18-5"></a>------------------------------------------------
+</span><span id="__span-18-6"><a id="__codelineno-18-6" name="__codelineno-18-6" href="#__codelineno-18-6"></a>
+</span><span id="__span-18-7"><a id="__codelineno-18-7" name="__codelineno-18-7" href="#__codelineno-18-7"></a>Date: 10 April 2025
+</span><span id="__span-18-8"><a id="__codelineno-18-8" name="__codelineno-18-8" href="#__codelineno-18-8"></a>
+</span><span id="__span-18-9"><a id="__codelineno-18-9" name="__codelineno-18-9" href="#__codelineno-18-9"></a>We're pleased to announce the release 4.4.7 of GeoNetwork opensource.
+</span><span id="__span-18-10"><a id="__codelineno-18-10" name="__codelineno-18-10" href="#__codelineno-18-10"></a>Check the `changelog &lt;https://docs.geonetwork-opensource.org/4.4/overview/change-log/version-4.4.7/&gt;`__ and proceed to :doc:`downloads` and enjoy!
+</span><span id="__span-18-11"><a id="__codelineno-18-11" name="__codelineno-18-11" href="#__codelineno-18-11"></a>
+</span><span id="__span-18-12"><a id="__codelineno-18-12" name="__codelineno-18-12" href="#__codelineno-18-12"></a>Thanks and congratulations to the all community members!
+</span></code></pre></div>
+</li>
+<li>
+<p>Share with <a href="https://discourse.osgeo.org/c/geonetwork/user/54">GeoNetwork User Forum</a> inviting discussion:</p>
+</li>
+</ol>
+<p>Latest: <strong>GeoNetwork 4.4.7 Released</strong> (Tags: <code>release</code>)</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>We're pleased to [announce the release GeoNetwork opensource v4.4.7](https://geonetwork-opensource.org/news.html).
+</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a>
+</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a>This is a minor update to the 4.4 latest series, recommended for those enjoying the newest features from the GeoNetwork community.
+</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a>
+</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a>You can find the software in [GeoNetwork/v4.4.7](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.4.7/) downloads.
+</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>
+</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a>The changelog [provides an overview of new functionality and features](https://docs.geonetwork-opensource.org/4.4/overview/change-log/version-4.4.7/).
+</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>
+</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>Thanks to everyone who contributed and congratulations to the GeoNetwork community.
+</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>
+</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>If you have any questions about this release please reply to this topic.
+</span></code></pre></div>
+<p>Stable: <strong>GeoNetwork 4.4.12 Released</strong> (Tags: <code>release</code>)</p>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a>We're pleased to [announce the release GeoNetwork opensource v4.2.12](https://geonetwork-opensource.org/news.html).
+</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>
+</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>This is a minor update to the 4.2 stable series, recommended for production use and for new installations of GeoNetwork.
+</span><span id="__span-20-4"><a id="__codelineno-20-4" name="__codelineno-20-4" href="#__codelineno-20-4"></a>
+</span><span id="__span-20-5"><a id="__codelineno-20-5" name="__codelineno-20-5" href="#__codelineno-20-5"></a>You can find the software in [GeoNetwork/v4.2.12](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.2.12/) downloads.
+</span><span id="__span-20-6"><a id="__codelineno-20-6" name="__codelineno-20-6" href="#__codelineno-20-6"></a>
+</span><span id="__span-20-7"><a id="__codelineno-20-7" name="__codelineno-20-7" href="#__codelineno-20-7"></a>The changelog [provides an overview of new functionality and features](https://sourceforge.net/projects/geonetwork/files/GeoNetwork_opensource/v4.2.12/).
+</span><span id="__span-20-8"><a id="__codelineno-20-8" name="__codelineno-20-8" href="#__codelineno-20-8"></a>
+</span><span id="__span-20-9"><a id="__codelineno-20-9" name="__codelineno-20-9" href="#__codelineno-20-9"></a>Thanks and congratulations to all community members.
+</span><span id="__span-20-10"><a id="__codelineno-20-10" name="__codelineno-20-10" href="#__codelineno-20-10"></a>
+</span><span id="__span-20-11"><a id="__codelineno-20-11" name="__codelineno-20-11" href="#__codelineno-20-11"></a>If you have any questions about this release please reply to this topic.
+</span></code></pre></div>
+<h2 id="doing-a-manual-release">Doing a manual release</h2>
+<p>This section documents the manual steps followed by the development team to do a new release.</p>
 <p>Once the release branch has been thoroughly tested and is stable a release can be made.</p>
 <p>The following script can be used on Linux and Mac. For this a running build environment is needed
 with the following utilities: <strong><em>sed</em></strong>, <strong><em>xmlstarlet</em></strong> and <strong><em>sftp</em></strong>.</p>
 <ol>
 <li>
-<p>Prepare the release (examples prepairs version 4.2.1 as latest release):</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="c1"># Setup properties</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nv">from</span><span class="o">=</span>origin
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nv">frombranch</span><span class="o">=</span>origin/4.2.x
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="nv">series</span><span class="o">=</span><span class="m">4</span>.2
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="nv">versionbranch</span><span class="o">=</span><span class="nv">$series</span>.x
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="nv">version</span><span class="o">=</span><span class="m">4</span>.2.1
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="nv">minorversion</span><span class="o">=</span><span class="m">0</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="nv">release</span><span class="o">=</span>latest
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="nv">newversion</span><span class="o">=</span><span class="nv">$version</span>-<span class="nv">$minorversion</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nv">currentversion</span><span class="o">=</span><span class="m">4</span>.2.1-SNAPSHOT
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="nv">previousversion</span><span class="o">=</span><span class="m">4</span>.2.0
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="nv">nextversion</span><span class="o">=</span><span class="m">4</span>.2.2-SNAPSHOT
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nv">nextMajorVersion</span><span class="o">=</span><span class="m">4</span>.4.0-SNAPSHOT
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="c1"># Get the branch</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/geonetwork/core-geonetwork.git<span class="w"> </span><span class="se">\</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="w">          </span>geonetwork-<span class="nv">$versionbranch</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="nb">cd</span><span class="w"> </span>geonetwork-<span class="nv">$versionbranch</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="c1"># Create or move to the branch for the version</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="c1"># Create it if it does not exist yet</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span><span class="nv">$versionbranch</span><span class="w"> </span><span class="nv">$frombranch</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="c1"># or move into it if it exist</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="c1"># git checkout $versionbranch</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="c1"># or stay in main branch if the release is on main</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="c1"># Update version number (in pom.xml, installer config and SQL)</span>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>./update-version.sh<span class="w"> </span><span class="nv">$currentversion</span><span class="w"> </span><span class="nv">$newversion</span>
-</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>
-</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a><span class="c1"># Generate list of changes</span>
-</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; docs/changes/changes$newversion.txt</span>
-</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a><span class="s">================================================================================</span>
-</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a><span class="s">===</span>
-</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="s">=== GeoNetwork $version: List of changes</span>
-</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a><span class="s">===</span>
-</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a><span class="s">================================================================================</span>
-</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a><span class="s">EOF</span>
-</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>git<span class="w"> </span>log<span class="w"> </span>--pretty<span class="o">=</span><span class="s1">'format:- %s'</span><span class="w"> </span><span class="nv">$previousversion</span>...<span class="w"> </span>&gt;&gt;<span class="w"> </span>docs/changes/changes<span class="nv">$newversion</span>.txt
+<p>Prepare the release (this example prepares version 4.4.1 as the latest release):</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a><span class="c1"># Setup properties</span>
+</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a><span class="nv">from</span><span class="o">=</span>origin
+</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a><span class="nv">frombranch</span><span class="o">=</span>origin/main
+</span><span id="__span-21-4"><a id="__codelineno-21-4" name="__codelineno-21-4" href="#__codelineno-21-4"></a><span class="nv">series</span><span class="o">=</span><span class="m">4</span>.4
+</span><span id="__span-21-5"><a id="__codelineno-21-5" name="__codelineno-21-5" href="#__codelineno-21-5"></a><span class="nv">versionbranch</span><span class="o">=</span><span class="nv">$series</span>.x
+</span><span id="__span-21-6"><a id="__codelineno-21-6" name="__codelineno-21-6" href="#__codelineno-21-6"></a><span class="nv">version</span><span class="o">=</span><span class="m">4</span>.4.1
+</span><span id="__span-21-7"><a id="__codelineno-21-7" name="__codelineno-21-7" href="#__codelineno-21-7"></a><span class="nv">minorversion</span><span class="o">=</span><span class="m">0</span>
+</span><span id="__span-21-8"><a id="__codelineno-21-8" name="__codelineno-21-8" href="#__codelineno-21-8"></a><span class="nv">release</span><span class="o">=</span>latest
+</span><span id="__span-21-9"><a id="__codelineno-21-9" name="__codelineno-21-9" href="#__codelineno-21-9"></a><span class="nv">newversion</span><span class="o">=</span><span class="nv">$version</span>-<span class="nv">$minorversion</span>
+</span><span id="__span-21-10"><a id="__codelineno-21-10" name="__codelineno-21-10" href="#__codelineno-21-10"></a><span class="nv">currentversion</span><span class="o">=</span><span class="m">4</span>.4.1-SNAPSHOT
+</span><span id="__span-21-11"><a id="__codelineno-21-11" name="__codelineno-21-11" href="#__codelineno-21-11"></a><span class="nv">previousversion</span><span class="o">=</span><span class="m">4</span>.4.0
+</span><span id="__span-21-12"><a id="__codelineno-21-12" name="__codelineno-21-12" href="#__codelineno-21-12"></a><span class="nv">nextversion</span><span class="o">=</span><span class="m">4</span>.4.2-SNAPSHOT
+</span><span id="__span-21-13"><a id="__codelineno-21-13" name="__codelineno-21-13" href="#__codelineno-21-13"></a><span class="nv">nextMajorVersion</span><span class="o">=</span><span class="m">4</span>.6.0-SNAPSHOT
+</span><span id="__span-21-14"><a id="__codelineno-21-14" name="__codelineno-21-14" href="#__codelineno-21-14"></a>
+</span><span id="__span-21-15"><a id="__codelineno-21-15" name="__codelineno-21-15" href="#__codelineno-21-15"></a>
+</span><span id="__span-21-16"><a id="__codelineno-21-16" name="__codelineno-21-16" href="#__codelineno-21-16"></a><span class="c1"># Get the branch</span>
+</span><span id="__span-21-17"><a id="__codelineno-21-17" name="__codelineno-21-17" href="#__codelineno-21-17"></a>git<span class="w"> </span>clone<span class="w"> </span>--recursive<span class="w"> </span>https://github.com/geonetwork/core-geonetwork.git<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-21-18"><a id="__codelineno-21-18" name="__codelineno-21-18" href="#__codelineno-21-18"></a><span class="w">          </span>geonetwork-<span class="nv">$versionbranch</span>
+</span><span id="__span-21-19"><a id="__codelineno-21-19" name="__codelineno-21-19" href="#__codelineno-21-19"></a><span class="nb">cd</span><span class="w"> </span>geonetwork-<span class="nv">$versionbranch</span>
+</span><span id="__span-21-20"><a id="__codelineno-21-20" name="__codelineno-21-20" href="#__codelineno-21-20"></a>
+</span><span id="__span-21-21"><a id="__codelineno-21-21" name="__codelineno-21-21" href="#__codelineno-21-21"></a>
+</span><span id="__span-21-22"><a id="__codelineno-21-22" name="__codelineno-21-22" href="#__codelineno-21-22"></a><span class="c1"># Create or move to the branch for the version</span>
+</span><span id="__span-21-23"><a id="__codelineno-21-23" name="__codelineno-21-23" href="#__codelineno-21-23"></a><span class="c1"># Create it if it does not exist yet</span>
+</span><span id="__span-21-24"><a id="__codelineno-21-24" name="__codelineno-21-24" href="#__codelineno-21-24"></a>git<span class="w"> </span>checkout<span class="w"> </span>-b<span class="w"> </span><span class="nv">$versionbranch</span><span class="w"> </span><span class="nv">$frombranch</span>
+</span><span id="__span-21-25"><a id="__codelineno-21-25" name="__codelineno-21-25" href="#__codelineno-21-25"></a><span class="c1"># or move into it if it exist</span>
+</span><span id="__span-21-26"><a id="__codelineno-21-26" name="__codelineno-21-26" href="#__codelineno-21-26"></a><span class="c1"># git checkout $versionbranch</span>
+</span><span id="__span-21-27"><a id="__codelineno-21-27" name="__codelineno-21-27" href="#__codelineno-21-27"></a><span class="c1"># or stay in main branch if the release is on main</span>
+</span><span id="__span-21-28"><a id="__codelineno-21-28" name="__codelineno-21-28" href="#__codelineno-21-28"></a>
+</span><span id="__span-21-29"><a id="__codelineno-21-29" name="__codelineno-21-29" href="#__codelineno-21-29"></a>
+</span><span id="__span-21-30"><a id="__codelineno-21-30" name="__codelineno-21-30" href="#__codelineno-21-30"></a><span class="c1"># Update version number (in pom.xml, installer config and SQL)</span>
+</span><span id="__span-21-31"><a id="__codelineno-21-31" name="__codelineno-21-31" href="#__codelineno-21-31"></a>./update-version.sh<span class="w"> </span><span class="nv">$currentversion</span><span class="w"> </span><span class="nv">$newversion</span>
+</span><span id="__span-21-32"><a id="__codelineno-21-32" name="__codelineno-21-32" href="#__codelineno-21-32"></a>
+</span><span id="__span-21-33"><a id="__codelineno-21-33" name="__codelineno-21-33" href="#__codelineno-21-33"></a><span class="c1"># Generate list of changes</span>
+</span><span id="__span-21-34"><a id="__codelineno-21-34" name="__codelineno-21-34" href="#__codelineno-21-34"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; docs/changes/changes$newversion.txt</span>
+</span><span id="__span-21-35"><a id="__codelineno-21-35" name="__codelineno-21-35" href="#__codelineno-21-35"></a><span class="s">================================================================================</span>
+</span><span id="__span-21-36"><a id="__codelineno-21-36" name="__codelineno-21-36" href="#__codelineno-21-36"></a><span class="s">===</span>
+</span><span id="__span-21-37"><a id="__codelineno-21-37" name="__codelineno-21-37" href="#__codelineno-21-37"></a><span class="s">=== GeoNetwork $version: List of changes</span>
+</span><span id="__span-21-38"><a id="__codelineno-21-38" name="__codelineno-21-38" href="#__codelineno-21-38"></a><span class="s">===</span>
+</span><span id="__span-21-39"><a id="__codelineno-21-39" name="__codelineno-21-39" href="#__codelineno-21-39"></a><span class="s">================================================================================</span>
+</span><span id="__span-21-40"><a id="__codelineno-21-40" name="__codelineno-21-40" href="#__codelineno-21-40"></a><span class="s">EOF</span>
+</span><span id="__span-21-41"><a id="__codelineno-21-41" name="__codelineno-21-41" href="#__codelineno-21-41"></a>git<span class="w"> </span>log<span class="w"> </span>--pretty<span class="o">=</span><span class="s1">'format:- %s'</span><span class="w"> </span><span class="nv">$previousversion</span>...<span class="w"> </span>&gt;&gt;<span class="w"> </span>docs/changes/changes<span class="nv">$newversion</span>.txt
 </span></code></pre></div>
 </li>
 <li>
 <p>Prepare change-log notes.</p>
-<p>Git notes are managed similar to push and pulling tags. Start by pulling the latest notes:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git pull origin refs/notes/commits 
+<p>Git notes are managed in <code>ref/notes/commits</code> similar to push and pulling tags. Start by pulling the latest notes:
+<div class="language-text highlight"><pre><span></span><code><span id="__span-22-1"><a id="__codelineno-22-1" name="__codelineno-22-1" href="#__codelineno-22-1"></a>git fetch origin refs/notes/commits:refs/notes/commits
 </span></code></pre></div></p>
 <p>Review changes along with any notes:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>git log --pretty='format:%h: %s %n      note: %N' $previousversion...
+<div class="language-text highlight"><pre><span></span><code><span id="__span-23-1"><a id="__codelineno-23-1" name="__codelineno-23-1" href="#__codelineno-23-1"></a>git log --pretty='format:%h: %s %n      note: %N' $previousversion...
 </span></code></pre></div></p>
 <p>Use <code>git note append</code> to document commits adding major features.</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>git notes append &lt;sha&gt; -m "&lt;description of major feature&gt;"
+<div class="language-text highlight"><pre><span></span><code><span id="__span-24-1"><a id="__codelineno-24-1" name="__codelineno-24-1" href="#__codelineno-24-1"></a>git notes append &lt;sha&gt; -m "&lt;description of major feature&gt;"
 </span></code></pre></div>
 <p>Use <code>git note remove</code> if you need to clear a note and start again:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>git notes remove &lt;sha&gt;
+<div class="language-text highlight"><pre><span></span><code><span id="__span-25-1"><a id="__codelineno-25-1" name="__codelineno-25-1" href="#__codelineno-25-1"></a>git notes remove &lt;sha&gt;
 </span></code></pre></div></p>
 <p>Preview changes using:</p>
-<div class="language-text highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a> git log --pretty='format:* %N' $previousversion... | grep -v "^* $"
+<div class="language-text highlight"><pre><span></span><code><span id="__span-26-1"><a id="__codelineno-26-1" name="__codelineno-26-1" href="#__codelineno-26-1"></a> git log --pretty='format:* %N' $previousversion... | grep -v "^* $"
 </span></code></pre></div>
 <p>Save your notes:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>git push origin refs/notes/commits
+<div class="language-text highlight"><pre><span></span><code><span id="__span-27-1"><a id="__codelineno-27-1" name="__codelineno-27-1" href="#__codelineno-27-1"></a>git push origin refs/notes/commits
 </span></code></pre></div></p>
 </li>
 <li>
 <p>Create change log page: <code>docs/manual/docs/overview/change-log/</code></p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-7-1"><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; docs/manual/docs/overview/change-log/version-$version.md</span>
-</span><span id="__span-7-2"><a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a><span class="s"># Version $version</span>
-</span><span id="__span-7-3"><a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a>
-</span><span id="__span-7-4"><a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="s">GeoNetwork $version is a minor release.</span>
-</span><span id="__span-7-5"><a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-</span><span id="__span-7-6"><a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="s">## Migration notes</span>
-</span><span id="__span-7-7"><a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a>
-</span><span id="__span-7-8"><a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="s">### API changes</span>
-</span><span id="__span-7-9"><a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a>
-</span><span id="__span-7-10"><a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a><span class="s">### Installation changes</span>
-</span><span id="__span-7-11"><a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a>
-</span><span id="__span-7-12"><a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="s">### Index changes</span>
-</span><span id="__span-7-13"><a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a>
-</span><span id="__span-7-14"><a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a><span class="s">## List of changes</span>
-</span><span id="__span-7-15"><a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a>
-</span><span id="__span-7-16"><a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="s">Major changes:</span>
-</span><span id="__span-7-17"><a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a>
-</span><span id="__span-7-18"><a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a><span class="s">EOF</span>
-</span><span id="__span-7-19"><a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a>
-</span><span id="__span-7-20"><a id="__codelineno-7-20" name="__codelineno-7-20" href="#__codelineno-7-20"></a>git<span class="w"> </span>log<span class="w"> </span>--pretty<span class="o">=</span><span class="s1">'format:* %N'</span><span class="w"> </span><span class="nv">$previousversion</span>...<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"^* </span>$<span class="s2">"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>docs/manual/docs/overview/change-log/version-<span class="nv">$version</span>.md
-</span><span id="__span-7-21"><a id="__codelineno-7-21" name="__codelineno-7-21" href="#__codelineno-7-21"></a>
-</span><span id="__span-7-22"><a id="__codelineno-7-22" name="__codelineno-7-22" href="#__codelineno-7-22"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; docs/manual/docs/overview/change-log/version-$version.md</span>
-</span><span id="__span-7-23"><a id="__codelineno-7-23" name="__codelineno-7-23" href="#__codelineno-7-23"></a>
-</span><span id="__span-7-24"><a id="__codelineno-7-24" name="__codelineno-7-24" href="#__codelineno-7-24"></a><span class="s">and more \... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&amp;q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.</span>
-</span><span id="__span-7-25"><a id="__codelineno-7-25" name="__codelineno-7-25" href="#__codelineno-7-25"></a><span class="s">EOF</span>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-28-1"><a id="__codelineno-28-1" name="__codelineno-28-1" href="#__codelineno-28-1"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; docs/manual/docs/overview/change-log/version-$version.md</span>
+</span><span id="__span-28-2"><a id="__codelineno-28-2" name="__codelineno-28-2" href="#__codelineno-28-2"></a><span class="s"># Version $version</span>
+</span><span id="__span-28-3"><a id="__codelineno-28-3" name="__codelineno-28-3" href="#__codelineno-28-3"></a>
+</span><span id="__span-28-4"><a id="__codelineno-28-4" name="__codelineno-28-4" href="#__codelineno-28-4"></a><span class="s">GeoNetwork $version is a minor release.</span>
+</span><span id="__span-28-5"><a id="__codelineno-28-5" name="__codelineno-28-5" href="#__codelineno-28-5"></a>
+</span><span id="__span-28-6"><a id="__codelineno-28-6" name="__codelineno-28-6" href="#__codelineno-28-6"></a><span class="s">## Migration notes</span>
+</span><span id="__span-28-7"><a id="__codelineno-28-7" name="__codelineno-28-7" href="#__codelineno-28-7"></a>
+</span><span id="__span-28-8"><a id="__codelineno-28-8" name="__codelineno-28-8" href="#__codelineno-28-8"></a><span class="s">### API changes</span>
+</span><span id="__span-28-9"><a id="__codelineno-28-9" name="__codelineno-28-9" href="#__codelineno-28-9"></a>
+</span><span id="__span-28-10"><a id="__codelineno-28-10" name="__codelineno-28-10" href="#__codelineno-28-10"></a><span class="s">### Installation changes</span>
+</span><span id="__span-28-11"><a id="__codelineno-28-11" name="__codelineno-28-11" href="#__codelineno-28-11"></a>
+</span><span id="__span-28-12"><a id="__codelineno-28-12" name="__codelineno-28-12" href="#__codelineno-28-12"></a><span class="s">### Index changes</span>
+</span><span id="__span-28-13"><a id="__codelineno-28-13" name="__codelineno-28-13" href="#__codelineno-28-13"></a>
+</span><span id="__span-28-14"><a id="__codelineno-28-14" name="__codelineno-28-14" href="#__codelineno-28-14"></a><span class="s">## List of changes</span>
+</span><span id="__span-28-15"><a id="__codelineno-28-15" name="__codelineno-28-15" href="#__codelineno-28-15"></a>
+</span><span id="__span-28-16"><a id="__codelineno-28-16" name="__codelineno-28-16" href="#__codelineno-28-16"></a><span class="s">Major changes:</span>
+</span><span id="__span-28-17"><a id="__codelineno-28-17" name="__codelineno-28-17" href="#__codelineno-28-17"></a>
+</span><span id="__span-28-18"><a id="__codelineno-28-18" name="__codelineno-28-18" href="#__codelineno-28-18"></a><span class="s">EOF</span>
+</span><span id="__span-28-19"><a id="__codelineno-28-19" name="__codelineno-28-19" href="#__codelineno-28-19"></a>
+</span><span id="__span-28-20"><a id="__codelineno-28-20" name="__codelineno-28-20" href="#__codelineno-28-20"></a>git<span class="w"> </span>log<span class="w"> </span>--pretty<span class="o">=</span><span class="s1">'format:* %N'</span><span class="w"> </span><span class="nv">$previousversion</span>..<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-v<span class="w"> </span><span class="s2">"^* </span>$<span class="s2">"</span><span class="w"> </span>&gt;&gt;<span class="w"> </span>docs/manual/docs/overview/change-log/version-<span class="nv">$version</span>.md
+</span><span id="__span-28-21"><a id="__codelineno-28-21" name="__codelineno-28-21" href="#__codelineno-28-21"></a>
+</span><span id="__span-28-22"><a id="__codelineno-28-22" name="__codelineno-28-22" href="#__codelineno-28-22"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; docs/manual/docs/overview/change-log/version-$version.md</span>
+</span><span id="__span-28-23"><a id="__codelineno-28-23" name="__codelineno-28-23" href="#__codelineno-28-23"></a>
+</span><span id="__span-28-24"><a id="__codelineno-28-24" name="__codelineno-28-24" href="#__codelineno-28-24"></a><span class="s">and more... see [$version issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A$version+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&amp;q=is%3Apr+milestone%3A$version+is%3Aclosed) for full details.</span>
+</span><span id="__span-28-25"><a id="__codelineno-28-25" name="__codelineno-28-25" href="#__codelineno-28-25"></a><span class="s">EOF</span>
 </span></code></pre></div>
 <p>Fill in the above markdown file, removing any unused headings.</p>
 </li>
@@ -1577,83 +1965,83 @@ with the following utilities: <strong><em>sed</em></strong>, <strong><em>xmlstar
 <li><code>docs/manual/docs/overview/change-log/archive.md</code></li>
 </ul>
 <p>Test documentation locally:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-8-1"><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>cd docs/manual
-</span><span id="__span-8-2"><a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>mkdocs serve
+<div class="language-text highlight"><pre><span></span><code><span id="__span-29-1"><a id="__codelineno-29-1" name="__codelineno-29-1" href="#__codelineno-29-1"></a>cd docs/manual
+</span><span id="__span-29-2"><a id="__codelineno-29-2" name="__codelineno-29-2" href="#__codelineno-29-2"></a>mkdocs serve
 </span></code></pre></div>
 Once running check the new page:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-9-1"><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>open http://localhost:8000/ocverview/change-log/$newversion
+<div class="language-text highlight"><pre><span></span><code><span id="__span-30-1"><a id="__codelineno-30-1" name="__codelineno-30-1" href="#__codelineno-30-1"></a>open http://localhost:8000/overview/change-log/$newversion
 </span></code></pre></div></p>
 </li>
 <li>
 <p>Commit &amp; tag the new version</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-10-1"><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a><span class="c1"># Then commit the new version</span>
-</span><span id="__span-10-2"><a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>git<span class="w"> </span>add<span class="w"> </span>.
-</span><span id="__span-10-3"><a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Update version to </span><span class="nv">$newversion</span><span class="s2">"</span>
-</span><span id="__span-10-4"><a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>
-</span><span id="__span-10-5"><a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a><span class="c1"># Create the release tag</span>
-</span><span id="__span-10-6"><a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span><span class="nv">$version</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">"Tag for </span><span class="nv">$version</span><span class="s2"> release"</span>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-31-1"><a id="__codelineno-31-1" name="__codelineno-31-1" href="#__codelineno-31-1"></a><span class="c1"># Then commit the new version</span>
+</span><span id="__span-31-2"><a id="__codelineno-31-2" name="__codelineno-31-2" href="#__codelineno-31-2"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span><span id="__span-31-3"><a id="__codelineno-31-3" name="__codelineno-31-3" href="#__codelineno-31-3"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Update version to </span><span class="nv">$newversion</span><span class="s2">"</span>
+</span><span id="__span-31-4"><a id="__codelineno-31-4" name="__codelineno-31-4" href="#__codelineno-31-4"></a>
+</span><span id="__span-31-5"><a id="__codelineno-31-5" name="__codelineno-31-5" href="#__codelineno-31-5"></a><span class="c1"># Create the release tag</span>
+</span><span id="__span-31-6"><a id="__codelineno-31-6" name="__codelineno-31-6" href="#__codelineno-31-6"></a>git<span class="w"> </span>tag<span class="w"> </span>-a<span class="w"> </span><span class="nv">$version</span><span class="w"> </span>-m<span class="w"> </span><span class="s2">"Tag for </span><span class="nv">$version</span><span class="s2"> release"</span>
 </span></code></pre></div>
 </li>
 <li>
 <p>Build</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-11-1"><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a><span class="c1"># deep clean</span>
-</span><span id="__span-11-2"><a id="__codelineno-11-2" name="__codelineno-11-2" href="#__codelineno-11-2"></a>mvn<span class="w"> </span>clean:clean@reset
-</span><span id="__span-11-3"><a id="__codelineno-11-3" name="__codelineno-11-3" href="#__codelineno-11-3"></a>
-</span><span id="__span-11-4"><a id="__codelineno-11-4" name="__codelineno-11-4" href="#__codelineno-11-4"></a><span class="c1"># Build the new release</span>
-</span><span id="__span-11-5"><a id="__codelineno-11-5" name="__codelineno-11-5" href="#__codelineno-11-5"></a>mvn<span class="w"> </span>install<span class="w"> </span>-Drelease
-</span><span id="__span-11-6"><a id="__codelineno-11-6" name="__codelineno-11-6" href="#__codelineno-11-6"></a>
-</span><span id="__span-11-7"><a id="__codelineno-11-7" name="__codelineno-11-7" href="#__codelineno-11-7"></a><span class="c1"># Create a minimal war</span>
-</span><span id="__span-11-8"><a id="__codelineno-11-8" name="__codelineno-11-8" href="#__codelineno-11-8"></a><span class="nb">cd</span><span class="w"> </span>web
-</span><span id="__span-11-9"><a id="__codelineno-11-9" name="__codelineno-11-9" href="#__codelineno-11-9"></a>mvn<span class="w"> </span>clean<span class="w"> </span>install<span class="w"> </span>-DskipTests<span class="w"> </span>-Pwar<span class="w"> </span>-Pwro4j-prebuild-cache
-</span><span id="__span-11-10"><a id="__codelineno-11-10" name="__codelineno-11-10" href="#__codelineno-11-10"></a>
-</span><span id="__span-11-11"><a id="__codelineno-11-11" name="__codelineno-11-11" href="#__codelineno-11-11"></a><span class="c1"># Download Jetty and create the installer</span>
-</span><span id="__span-11-12"><a id="__codelineno-11-12" name="__codelineno-11-12" href="#__codelineno-11-12"></a><span class="nb">cd</span><span class="w"> </span>../release
-</span><span id="__span-11-13"><a id="__codelineno-11-13" name="__codelineno-11-13" href="#__codelineno-11-13"></a>mvn<span class="w"> </span>clean<span class="w"> </span>install<span class="w"> </span>-Pjetty-download,bundle
-</span><span id="__span-11-14"><a id="__codelineno-11-14" name="__codelineno-11-14" href="#__codelineno-11-14"></a>
-</span><span id="__span-11-15"><a id="__codelineno-11-15" name="__codelineno-11-15" href="#__codelineno-11-15"></a><span class="c1"># Deploy to osgeo repository (requires credentials in ~/.m2/settings.xml)</span>
-</span><span id="__span-11-16"><a id="__codelineno-11-16" name="__codelineno-11-16" href="#__codelineno-11-16"></a><span class="nb">cd</span><span class="w"> </span>..
-</span><span id="__span-11-17"><a id="__codelineno-11-17" name="__codelineno-11-17" href="#__codelineno-11-17"></a>mvn<span class="w"> </span>deploy<span class="w"> </span>-Drelease
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-32-1"><a id="__codelineno-32-1" name="__codelineno-32-1" href="#__codelineno-32-1"></a><span class="c1"># deep clean</span>
+</span><span id="__span-32-2"><a id="__codelineno-32-2" name="__codelineno-32-2" href="#__codelineno-32-2"></a>mvn<span class="w"> </span>clean:clean@reset
+</span><span id="__span-32-3"><a id="__codelineno-32-3" name="__codelineno-32-3" href="#__codelineno-32-3"></a>
+</span><span id="__span-32-4"><a id="__codelineno-32-4" name="__codelineno-32-4" href="#__codelineno-32-4"></a><span class="c1"># Build the new release</span>
+</span><span id="__span-32-5"><a id="__codelineno-32-5" name="__codelineno-32-5" href="#__codelineno-32-5"></a>mvn<span class="w"> </span>install<span class="w"> </span>-Drelease
+</span><span id="__span-32-6"><a id="__codelineno-32-6" name="__codelineno-32-6" href="#__codelineno-32-6"></a>
+</span><span id="__span-32-7"><a id="__codelineno-32-7" name="__codelineno-32-7" href="#__codelineno-32-7"></a><span class="c1"># Create a minimal war (with only the default datasources)</span>
+</span><span id="__span-32-8"><a id="__codelineno-32-8" name="__codelineno-32-8" href="#__codelineno-32-8"></a><span class="nb">cd</span><span class="w"> </span>web
+</span><span id="__span-32-9"><a id="__codelineno-32-9" name="__codelineno-32-9" href="#__codelineno-32-9"></a>mvn<span class="w"> </span>clean<span class="w"> </span>install<span class="w"> </span>-DskipTests<span class="w"> </span>-Pwar<span class="w"> </span>-Pwro4j-prebuild-cache
+</span><span id="__span-32-10"><a id="__codelineno-32-10" name="__codelineno-32-10" href="#__codelineno-32-10"></a>
+</span><span id="__span-32-11"><a id="__codelineno-32-11" name="__codelineno-32-11" href="#__codelineno-32-11"></a><span class="c1"># Download Jetty and create the installer</span>
+</span><span id="__span-32-12"><a id="__codelineno-32-12" name="__codelineno-32-12" href="#__codelineno-32-12"></a><span class="nb">cd</span><span class="w"> </span>../release
+</span><span id="__span-32-13"><a id="__codelineno-32-13" name="__codelineno-32-13" href="#__codelineno-32-13"></a>mvn<span class="w"> </span>clean<span class="w"> </span>install<span class="w"> </span>-Pjetty-download,bundle
+</span><span id="__span-32-14"><a id="__codelineno-32-14" name="__codelineno-32-14" href="#__codelineno-32-14"></a>
+</span><span id="__span-32-15"><a id="__codelineno-32-15" name="__codelineno-32-15" href="#__codelineno-32-15"></a><span class="c1"># Deploy to osgeo repository (requires credentials in ~/.m2/settings.xml)</span>
+</span><span id="__span-32-16"><a id="__codelineno-32-16" name="__codelineno-32-16" href="#__codelineno-32-16"></a><span class="nb">cd</span><span class="w"> </span>..
+</span><span id="__span-32-17"><a id="__codelineno-32-17" name="__codelineno-32-17" href="#__codelineno-32-17"></a>mvn<span class="w"> </span>deploy<span class="w"> </span>-Drelease
 </span></code></pre></div>
 </li>
 <li>
 <p>Test</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-12-1"><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a><span class="nb">cd</span><span class="w"> </span>target/GeoNetwork-<span class="nv">$version</span>
-</span><span id="__span-12-2"><a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>unzip<span class="w"> </span>geonetwork-bundle-<span class="nv">$newversion</span>.zip<span class="w"> </span>-d<span class="w"> </span>geonetwork-bundle-<span class="nv">$newversion</span>
-</span><span id="__span-12-3"><a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a><span class="nb">cd</span><span class="w"> </span>geonetwork-bundle-<span class="nv">$newversion</span>/bin
-</span><span id="__span-12-4"><a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>./startup.sh<span class="w"> </span>-f
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-33-1"><a id="__codelineno-33-1" name="__codelineno-33-1" href="#__codelineno-33-1"></a><span class="nb">cd</span><span class="w"> </span>target/GeoNetwork-<span class="nv">$newversion</span>
+</span><span id="__span-33-2"><a id="__codelineno-33-2" name="__codelineno-33-2" href="#__codelineno-33-2"></a>unzip<span class="w"> </span>geonetwork-bundle-<span class="nv">$newversion</span>.zip<span class="w"> </span>-d<span class="w"> </span>geonetwork-bundle-<span class="nv">$newversion</span>
+</span><span id="__span-33-3"><a id="__codelineno-33-3" name="__codelineno-33-3" href="#__codelineno-33-3"></a><span class="nb">cd</span><span class="w"> </span>geonetwork-bundle-<span class="nv">$newversion</span>/bin
+</span><span id="__span-33-4"><a id="__codelineno-33-4" name="__codelineno-33-4" href="#__codelineno-33-4"></a>./startup.sh<span class="w"> </span>-f
 </span></code></pre></div>
 </li>
 <li>
 <p>Set the next version</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-13-1"><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a><span class="c1"># Set version number to SNAPSHOT</span>
-</span><span id="__span-13-2"><a id="__codelineno-13-2" name="__codelineno-13-2" href="#__codelineno-13-2"></a>./update-version.sh<span class="w"> </span><span class="nv">$newversion</span><span class="w"> </span><span class="nv">$nextversion</span>
-</span><span id="__span-13-3"><a id="__codelineno-13-3" name="__codelineno-13-3" href="#__codelineno-13-3"></a>
-</span><span id="__span-13-4"><a id="__codelineno-13-4" name="__codelineno-13-4" href="#__codelineno-13-4"></a><span class="nv">nextversionnosnapshot</span><span class="o">=</span><span class="si">${</span><span class="nv">nextversion</span><span class="p">//[-SNAPSHOT]/</span><span class="si">}</span>
-</span><span id="__span-13-5"><a id="__codelineno-13-5" name="__codelineno-13-5" href="#__codelineno-13-5"></a>
-</span><span id="__span-13-6"><a id="__codelineno-13-6" name="__codelineno-13-6" href="#__codelineno-13-6"></a><span class="c1"># Add SQL migration step for the next version</span>
-</span><span id="__span-13-7"><a id="__codelineno-13-7" name="__codelineno-13-7" href="#__codelineno-13-7"></a>mkdir<span class="w"> </span>web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v<span class="si">${</span><span class="nv">nextversionnosnapshot</span><span class="p">//[.]/</span><span class="si">}</span>
-</span><span id="__span-13-8"><a id="__codelineno-13-8" name="__codelineno-13-8" href="#__codelineno-13-8"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${nextversionnosnapshot//[.]/}/migrate-default.sql</span>
-</span><span id="__span-13-9"><a id="__codelineno-13-9" name="__codelineno-13-9" href="#__codelineno-13-9"></a><span class="s">UPDATE Settings SET value='${nextversionnosnapshot}' WHERE name='system/platform/version';</span>
-</span><span id="__span-13-10"><a id="__codelineno-13-10" name="__codelineno-13-10" href="#__codelineno-13-10"></a><span class="s">UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';</span>
-</span><span id="__span-13-11"><a id="__codelineno-13-11" name="__codelineno-13-11" href="#__codelineno-13-11"></a><span class="s">EOF</span>
-</span><span id="__span-13-12"><a id="__codelineno-13-12" name="__codelineno-13-12" href="#__codelineno-13-12"></a>vi<span class="w"> </span>web/src/main/webResources/WEB-INF/config-db/database_migration.xml
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-34-1"><a id="__codelineno-34-1" name="__codelineno-34-1" href="#__codelineno-34-1"></a><span class="c1"># Set version number to SNAPSHOT</span>
+</span><span id="__span-34-2"><a id="__codelineno-34-2" name="__codelineno-34-2" href="#__codelineno-34-2"></a>./update-version.sh<span class="w"> </span><span class="nv">$newversion</span><span class="w"> </span><span class="nv">$nextversion</span>
+</span><span id="__span-34-3"><a id="__codelineno-34-3" name="__codelineno-34-3" href="#__codelineno-34-3"></a>
+</span><span id="__span-34-4"><a id="__codelineno-34-4" name="__codelineno-34-4" href="#__codelineno-34-4"></a><span class="nv">nextversionnosnapshot</span><span class="o">=</span><span class="si">${</span><span class="nv">nextversion</span><span class="p">//[-SNAPSHOT]/</span><span class="si">}</span>
+</span><span id="__span-34-5"><a id="__codelineno-34-5" name="__codelineno-34-5" href="#__codelineno-34-5"></a>
+</span><span id="__span-34-6"><a id="__codelineno-34-6" name="__codelineno-34-6" href="#__codelineno-34-6"></a><span class="c1"># Add SQL migration step for the next version</span>
+</span><span id="__span-34-7"><a id="__codelineno-34-7" name="__codelineno-34-7" href="#__codelineno-34-7"></a>mkdir<span class="w"> </span>web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v<span class="si">${</span><span class="nv">nextversionnosnapshot</span><span class="p">//[.]/</span><span class="si">}</span>
+</span><span id="__span-34-8"><a id="__codelineno-34-8" name="__codelineno-34-8" href="#__codelineno-34-8"></a>cat<span class="w"> </span><span class="s">&lt;&lt;EOF &gt; web/src/main/webapp/WEB-INF/classes/setup/sql/migrate/v${nextversionnosnapshot//[.]/}/migrate-default.sql</span>
+</span><span id="__span-34-9"><a id="__codelineno-34-9" name="__codelineno-34-9" href="#__codelineno-34-9"></a><span class="s">UPDATE Settings SET value='${nextversionnosnapshot}' WHERE name='system/platform/version';</span>
+</span><span id="__span-34-10"><a id="__codelineno-34-10" name="__codelineno-34-10" href="#__codelineno-34-10"></a><span class="s">UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';</span>
+</span><span id="__span-34-11"><a id="__codelineno-34-11" name="__codelineno-34-11" href="#__codelineno-34-11"></a><span class="s">EOF</span>
+</span><span id="__span-34-12"><a id="__codelineno-34-12" name="__codelineno-34-12" href="#__codelineno-34-12"></a>vi<span class="w"> </span>web/src/main/webResources/WEB-INF/config-db/database_migration.xml
 </span></code></pre></div>
 <p>In <code>WEB-INF/config-db/database_migration.xml</code> add an entry for the new version in the 2 steps:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-14-1"><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a><span class="nt">&lt;entry</span><span class="w"> </span><span class="na">key=</span><span class="s">"4.2.2"</span><span class="nt">&gt;</span>
-</span><span id="__span-14-2"><a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a><span class="w">  </span><span class="nt">&lt;list&gt;</span>
-</span><span id="__span-14-3"><a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a><span class="w">    </span><span class="nt">&lt;value&gt;</span>WEB-INF/classes/setup/sql/migrate/v422/migrate-<span class="nt">&lt;/value&gt;</span>
-</span><span id="__span-14-4"><a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a><span class="w">  </span><span class="nt">&lt;/list&gt;</span>
-</span><span id="__span-14-5"><a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a><span class="nt">&lt;/entry&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-35-1"><a id="__codelineno-35-1" name="__codelineno-35-1" href="#__codelineno-35-1"></a><span class="nt">&lt;entry</span><span class="w"> </span><span class="na">key=</span><span class="s">"4.4.2"</span><span class="nt">&gt;</span>
+</span><span id="__span-35-2"><a id="__codelineno-35-2" name="__codelineno-35-2" href="#__codelineno-35-2"></a><span class="w">  </span><span class="nt">&lt;list&gt;</span>
+</span><span id="__span-35-3"><a id="__codelineno-35-3" name="__codelineno-35-3" href="#__codelineno-35-3"></a><span class="w">    </span><span class="nt">&lt;value&gt;</span>WEB-INF/classes/setup/sql/migrate/v442/migrate-<span class="nt">&lt;/value&gt;</span>
+</span><span id="__span-35-4"><a id="__codelineno-35-4" name="__codelineno-35-4" href="#__codelineno-35-4"></a><span class="w">  </span><span class="nt">&lt;/list&gt;</span>
+</span><span id="__span-35-5"><a id="__codelineno-35-5" name="__codelineno-35-5" href="#__codelineno-35-5"></a><span class="nt">&lt;/entry&gt;</span>
 </span></code></pre></div>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-15-1"><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
-</span><span id="__span-15-2"><a id="__codelineno-15-2" name="__codelineno-15-2" href="#__codelineno-15-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Update version to </span><span class="nv">$nextversion</span><span class="s2">"</span>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-36-1"><a id="__codelineno-36-1" name="__codelineno-36-1" href="#__codelineno-36-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span><span id="__span-36-2"><a id="__codelineno-36-2" name="__codelineno-36-2" href="#__codelineno-36-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Update version to </span><span class="nv">$nextversion</span><span class="s2">"</span>
 </span></code></pre></div>
 </li>
 <li>
 <p>Publishing</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-16-1"><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a><span class="c1"># Push the branch and tag</span>
-</span><span id="__span-16-2"><a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span><span class="nv">$versionbranch</span>
-</span><span id="__span-16-3"><a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span><span class="nv">$version</span>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a><span class="c1"># Push the branch and tag</span>
+</span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span><span class="nv">$versionbranch</span>
+</span><span id="__span-37-3"><a id="__codelineno-37-3" name="__codelineno-37-3" href="#__codelineno-37-3"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span><span class="nv">$version</span>
 </span></code></pre></div>
 </li>
 <li>
@@ -1661,50 +2049,50 @@ Once running check the new page:
 <ul>
 <li>
 <p>If using Linux:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-17-1"><a id="__codelineno-17-1" name="__codelineno-17-1" href="#__codelineno-17-1"></a><span class="nb">cd</span><span class="w"> </span>web/target<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sha256sum<span class="w"> </span>geonetwork.war<span class="w"> </span>&gt;<span class="w"> </span>geonetwork.war.sha256<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../..
-</span><span id="__span-17-2"><a id="__codelineno-17-2" name="__codelineno-17-2" href="#__codelineno-17-2"></a><span class="nb">cd</span><span class="w"> </span>release/target/GeoNetwork-<span class="nv">$version</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sha256sum<span class="w"> </span>geonetwork-bundle-<span class="nv">$newversion</span>.zip<span class="w"> </span>&gt;<span class="w">  </span>geonetwork-bundle-<span class="nv">$newversion</span>.zip.sha256<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../../..
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-38-1"><a id="__codelineno-38-1" name="__codelineno-38-1" href="#__codelineno-38-1"></a><span class="nb">cd</span><span class="w"> </span>web/target<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sha256sum<span class="w"> </span>geonetwork.war<span class="w"> </span>&gt;<span class="w"> </span>geonetwork.war.sha256<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../..
+</span><span id="__span-38-2"><a id="__codelineno-38-2" name="__codelineno-38-2" href="#__codelineno-38-2"></a><span class="nb">cd</span><span class="w"> </span>release/target/GeoNetwork-<span class="nv">$version</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>sha256sum<span class="w"> </span>geonetwork-bundle-<span class="nv">$newversion</span>.zip<span class="w"> </span>&gt;<span class="w">  </span>geonetwork-bundle-<span class="nv">$newversion</span>.zip.sha256<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>../../..
 </span></code></pre></div>
 </li>
 <li>
 <p>If using Mac OS X:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-18-1"><a id="__codelineno-18-1" name="__codelineno-18-1" href="#__codelineno-18-1"></a>shasum<span class="w"> </span>-a<span class="w"> </span><span class="m">256</span><span class="w"> </span>web/target/geonetwork.war<span class="w"> </span>&gt;<span class="w"> </span>web/target/geonetwork.war.sha256
-</span><span id="__span-18-2"><a id="__codelineno-18-2" name="__codelineno-18-2" href="#__codelineno-18-2"></a>shasum<span class="w"> </span>-a<span class="w"> </span><span class="m">256</span><span class="w"> </span>release/target/GeoNetwork-<span class="nv">$version</span>/geonetwork-bundle-<span class="nv">$newversion</span>.zip<span class="w"> </span>&gt;<span class="w"> </span>release/target/GeoNetwork-<span class="nv">$version</span>/geonetwork-bundle-<span class="nv">$newversion</span>.zip.sha256
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-39-1"><a id="__codelineno-39-1" name="__codelineno-39-1" href="#__codelineno-39-1"></a>shasum<span class="w"> </span>-a<span class="w"> </span><span class="m">256</span><span class="w"> </span>web/target/geonetwork.war<span class="w"> </span>&gt;<span class="w"> </span>web/target/geonetwork.war.sha256
+</span><span id="__span-39-2"><a id="__codelineno-39-2" name="__codelineno-39-2" href="#__codelineno-39-2"></a>shasum<span class="w"> </span>-a<span class="w"> </span><span class="m">256</span><span class="w"> </span>release/target/GeoNetwork-<span class="nv">$version</span>/geonetwork-bundle-<span class="nv">$newversion</span>.zip<span class="w"> </span>&gt;<span class="w"> </span>release/target/GeoNetwork-<span class="nv">$version</span>/geonetwork-bundle-<span class="nv">$newversion</span>.zip.sha256
 </span></code></pre></div>
 </li>
 </ul>
 <p>On sourceforge first:</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-19-1"><a id="__codelineno-19-1" name="__codelineno-19-1" href="#__codelineno-19-1"></a>sftp<span class="w"> </span><span class="nv">$sourceforge_username</span>,geonetwork@frs.sourceforge.net
-</span><span id="__span-19-2"><a id="__codelineno-19-2" name="__codelineno-19-2" href="#__codelineno-19-2"></a><span class="c1"># For stable release</span>
-</span><span id="__span-19-3"><a id="__codelineno-19-3" name="__codelineno-19-3" href="#__codelineno-19-3"></a><span class="nb">cd</span><span class="w"> </span>/home/frs/project/g/ge/geonetwork/GeoNetwork_opensource
-</span><span id="__span-19-4"><a id="__codelineno-19-4" name="__codelineno-19-4" href="#__codelineno-19-4"></a><span class="c1"># or for RC release</span>
-</span><span id="__span-19-5"><a id="__codelineno-19-5" name="__codelineno-19-5" href="#__codelineno-19-5"></a><span class="nb">cd</span><span class="w"> </span>/home/frs/project/g/ge/geonetwork/GeoNetwork_unstable_development_versions/
-</span><span id="__span-19-6"><a id="__codelineno-19-6" name="__codelineno-19-6" href="#__codelineno-19-6"></a>mkdir<span class="w"> </span>v4.2.1
-</span><span id="__span-19-7"><a id="__codelineno-19-7" name="__codelineno-19-7" href="#__codelineno-19-7"></a><span class="nb">cd</span><span class="w"> </span>v4.2.1
-</span><span id="__span-19-8"><a id="__codelineno-19-8" name="__codelineno-19-8" href="#__codelineno-19-8"></a>put<span class="w"> </span>docs/changes/changes4.2.1-0.txt
-</span><span id="__span-19-9"><a id="__codelineno-19-9" name="__codelineno-19-9" href="#__codelineno-19-9"></a>put<span class="w"> </span>release/target/GeoNetwork*/geonetwork-bundle*.zip*
-</span><span id="__span-19-10"><a id="__codelineno-19-10" name="__codelineno-19-10" href="#__codelineno-19-10"></a>put<span class="w"> </span>web/target/geonetwork.war*
-</span><span id="__span-19-11"><a id="__codelineno-19-11" name="__codelineno-19-11" href="#__codelineno-19-11"></a>bye
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-40-1"><a id="__codelineno-40-1" name="__codelineno-40-1" href="#__codelineno-40-1"></a>sftp<span class="w"> </span><span class="nv">$sourceforge_username</span>,geonetwork@frs.sourceforge.net
+</span><span id="__span-40-2"><a id="__codelineno-40-2" name="__codelineno-40-2" href="#__codelineno-40-2"></a><span class="c1"># For stable release</span>
+</span><span id="__span-40-3"><a id="__codelineno-40-3" name="__codelineno-40-3" href="#__codelineno-40-3"></a><span class="nb">cd</span><span class="w"> </span>/home/frs/project/g/ge/geonetwork/GeoNetwork_opensource
+</span><span id="__span-40-4"><a id="__codelineno-40-4" name="__codelineno-40-4" href="#__codelineno-40-4"></a><span class="c1"># or for RC release</span>
+</span><span id="__span-40-5"><a id="__codelineno-40-5" name="__codelineno-40-5" href="#__codelineno-40-5"></a><span class="nb">cd</span><span class="w"> </span>/home/frs/project/g/ge/geonetwork/GeoNetwork_unstable_development_versions/
+</span><span id="__span-40-6"><a id="__codelineno-40-6" name="__codelineno-40-6" href="#__codelineno-40-6"></a>mkdir<span class="w"> </span>v4.4.1
+</span><span id="__span-40-7"><a id="__codelineno-40-7" name="__codelineno-40-7" href="#__codelineno-40-7"></a><span class="nb">cd</span><span class="w"> </span>v4.4.1
+</span><span id="__span-40-8"><a id="__codelineno-40-8" name="__codelineno-40-8" href="#__codelineno-40-8"></a>put<span class="w"> </span>docs/changes/changes4.4.1-0.txt
+</span><span id="__span-40-9"><a id="__codelineno-40-9" name="__codelineno-40-9" href="#__codelineno-40-9"></a>put<span class="w"> </span>release/target/GeoNetwork*/geonetwork-bundle*.zip*
+</span><span id="__span-40-10"><a id="__codelineno-40-10" name="__codelineno-40-10" href="#__codelineno-40-10"></a>put<span class="w"> </span>web/target/geonetwork.war*
+</span><span id="__span-40-11"><a id="__codelineno-40-11" name="__codelineno-40-11" href="#__codelineno-40-11"></a>bye
 </span></code></pre></div>
 </li>
 <li>
-<p>Close the milestone on github <a href="https://github.com/geonetwork/core-geonetwork/milestones?state=closed">https://github.com/geonetwork/core-geonetwork/milestones?state=closed</a> with link to sourceforge download.</p>
-<p>Publish the release on github <a href="https://github.com/geonetwork/core-geonetwork/releases">https://github.com/geonetwork/core-geonetwork/releases</a> .</p>
-<p>Update the website links <a href="https://github.com/geonetwork/website">https://github.com/geonetwork/website</a> .</p>
+<p><a href="https://github.com/geonetwork/core-geonetwork/milestones?state=closed">Close the milestone on GitHub</a> with a link to the SourceForge download.</p>
+<p><a href="https://github.com/geonetwork/core-geonetwork/releases">Publish the release on GitHub</a>.</p>
+<p>Update the <a href="https://github.com/geonetwork/website">website repository</a>:</p>
 <ul>
-<li>Add the changes file for the release to <a href="https://github.com/geonetwork/doc/tree/develop/source/overview/change-log">https://github.com/geonetwork/doc/tree/develop/source/overview/change-log</a></li>
-<li>List the previous file in <a href="https://github.com/geonetwork/doc/blob/develop/source/overview/change-log/index.rst">https://github.com/geonetwork/doc/blob/develop/source/overview/change-log/index.rst</a></li>
-<li>Update the version: <a href="https://github.com/geonetwork/website/blob/master/docsrc/conf.py">https://github.com/geonetwork/website/blob/master/docsrc/conf.py</a></li>
-<li>Update the download link: <a href="https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst">https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst</a></li>
-<li>Add the section for the new release: <a href="https://github.com/geonetwork/website/blob/master/docsrc/news.rst">https://github.com/geonetwork/website/blob/master/docsrc/news.rst</a></li>
+<li>Add the changes file for the release to <a href="https://github.com/geonetwork/doc/tree/develop/source/overview/change-log">geonetwork/doc change-log</a></li>
+<li>List the previous file in <a href="https://github.com/geonetwork/doc/blob/develop/source/overview/change-log/index.rst">change-log/index.rst</a></li>
+<li>Update the version in <a href="https://github.com/geonetwork/website/blob/master/docsrc/conf.py">docsrc/conf.py</a></li>
+<li>Update the download link in <a href="https://github.com/geonetwork/website/blob/master/docsrc/downloads.rst">docsrc/downloads.rst</a></li>
+<li>Add the section for the new release in <a href="https://github.com/geonetwork/website/blob/master/docsrc/news.rst">docsrc/news.rst</a></li>
 </ul>
 <p>Send an email to the mailing lists.</p>
 </li>
 <li>
 <p>Merge in depending branches</p>
-<p>If a major version, then master version has to be updated to the next one (eg. if 3.8.0, then 3.7.x is 3.9.x).</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-20-1"><a id="__codelineno-20-1" name="__codelineno-20-1" href="#__codelineno-20-1"></a><span class="c1"># Create it if it does not exist yet</span>
-</span><span id="__span-20-2"><a id="__codelineno-20-2" name="__codelineno-20-2" href="#__codelineno-20-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>master
-</span><span id="__span-20-3"><a id="__codelineno-20-3" name="__codelineno-20-3" href="#__codelineno-20-3"></a>./update-version.sh<span class="w"> </span><span class="nv">$currentversion</span><span class="w"> </span><span class="nv">$nextMajorVersion</span>
+<p>If a major version, then the main branch version has to be updated to the next one (e.g. if 3.8.0, then 3.7.x becomes 3.9.x).</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-41-1"><a id="__codelineno-41-1" name="__codelineno-41-1" href="#__codelineno-41-1"></a><span class="c1"># Create it if it does not exist yet</span>
+</span><span id="__span-41-2"><a id="__codelineno-41-2" name="__codelineno-41-2" href="#__codelineno-41-2"></a>git<span class="w"> </span>checkout<span class="w"> </span>main
+</span><span id="__span-41-3"><a id="__codelineno-41-3" name="__codelineno-41-3" href="#__codelineno-41-3"></a>./update-version.sh<span class="w"> </span><span class="nv">$currentversion</span><span class="w"> </span><span class="nv">$nextMajorVersion</span>
 </span></code></pre></div>
 <p>Update documentation to reflect series change of <code>latest</code>, <code>stable</code>, <code>maintenance</code> and <code>archive</code>:</p>
 <ul>
@@ -1715,9 +2103,9 @@ Once running check the new page:
 <li><code>docs/manual/docs/overview/change-log/archive.md</code></li>
 </ul>
 <p>Commit the new version</p>
-<div class="language-shell highlight"><pre><span></span><code><span id="__span-21-1"><a id="__codelineno-21-1" name="__codelineno-21-1" href="#__codelineno-21-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
-</span><span id="__span-21-2"><a id="__codelineno-21-2" name="__codelineno-21-2" href="#__codelineno-21-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Update version to </span><span class="nv">$nextMajorVersion</span><span class="s2">"</span>
-</span><span id="__span-21-3"><a id="__codelineno-21-3" name="__codelineno-21-3" href="#__codelineno-21-3"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>master
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-42-1"><a id="__codelineno-42-1" name="__codelineno-42-1" href="#__codelineno-42-1"></a>git<span class="w"> </span>add<span class="w"> </span>.
+</span><span id="__span-42-2"><a id="__codelineno-42-2" name="__codelineno-42-2" href="#__codelineno-42-2"></a>git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">"Update version to </span><span class="nv">$nextMajorVersion</span><span class="s2">"</span>
+</span><span id="__span-42-3"><a id="__codelineno-42-3" name="__codelineno-42-3" href="#__codelineno-42-3"></a>git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </span>main
 </span></code></pre></div>
 </li>
 </ol>
@@ -1818,7 +2206,7 @@ Once running check the new page:
 <div class="md-copyright">
   
   <span class="md-copyright__highlight">
-    Copyright &copy; 2001 - 2025 FAO-UN and others
+    Copyright &copy; 2001 - 2026 FAO-UN and others
   </span>
   
   
@@ -1899,7 +2287,7 @@ Once running check the new page:
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>

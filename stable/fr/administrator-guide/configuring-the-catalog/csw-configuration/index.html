@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.2/fr/administrator-guide/configuring-the-catalog/csw-configuration/">
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.4/fr/administrator-guide/configuring-the-catalog/csw-configuration/">
       
       
         <link rel="prev" href="../css-configuration/">
@@ -31,7 +31,7 @@
     
     
       
-        <title>Configuring CSW - GeoNetwork opensource (FR)</title>
+        <title>Configuring CSW - GeoNetwork opensource</title>
       
     
     
@@ -98,7 +98,7 @@
           <aside class="md-banner md-banner--warning">
             <div class="md-banner__inner md-grid md-typeset">
               
-  GeoNetwork 4.2 is outdated.
+  GeoNetwork 4.4 is latest.
   <a href="../../../../.."><strong>Click here to go to stable.</strong></a>
 
             </div>
@@ -112,7 +112,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="En-tête">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (FR)" class="md-header__button md-logo" aria-label="GeoNetwork opensource (FR)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-header__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../../../assets/images/geonetwork-logo.svg" alt="logo">
 
@@ -125,7 +125,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            GeoNetwork opensource (FR)
+            GeoNetwork opensource
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -481,12 +481,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (FR)" class="md-nav__button md-logo" aria-label="GeoNetwork opensource (FR)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-nav__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
-    GeoNetwork opensource (FR)
+    GeoNetwork opensource
   </label>
   
     <div class="md-nav__source">
@@ -1249,6 +1249,8 @@
       
         
       
+        
+      
     
     
     
@@ -1335,6 +1337,8 @@
       
         
           
+        
+      
         
       
         
@@ -1962,6 +1966,70 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+  
+    <a href="../../managing-anonymous-links/" class="md-nav__link">
+      
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Managing Anonymous Links
+  
+
+    
+  </span>
+  
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -2401,7 +2469,7 @@
 <h1 id="csw-configuration">Configuring CSW</h1>
 <p>To get to the CSW server configuration, you must be logged on as administrator first. Open 'Settings' from the Administration page and select CSW Server configuration.</p>
 <p><img alt="" src="../../../../administrator-guide/configuring-the-catalog/img/csw.png" /></p>
-<p>The CSW service provides a description of itself, the human who administers it, and other information through a <code>GetCapabilities</code> request (eg. <a href="http://localhost:8080/geonetwork/srv/en/csw?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2">http://localhost:8080/geonetwork/srv/en/csw?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2</a>). This form allows you to configure the CSW server and fill out some of the properties returned in response to a GetCapabilities request.</p>
+<p>The CSW service provides a description of itself, the human who administers it, and other information through a <code>GetCapabilities</code> request (e.g. <code>http://localhost:8080/geonetwork/srv/en/csw?request=GetCapabilities&amp;service=CSW&amp;version=2.0.2</code>). This form allows you to configure the CSW server and fill out some of the properties returned in response to a GetCapabilities request.</p>
 <p>Configuration options:</p>
 <ul>
 <li>
@@ -2417,6 +2485,9 @@
 </li>
 <li>
 <p><em>Create element if it does not exist when using XPath in CSW transaction.</em>: If not checked, only existing elements can be updated.</p>
+</li>
+<li>
+<p><em>Ignore metadata not supporting requested outputSchema.</em>: If checked, when a metadata record does not support the requested outputSchema in GetRecords operation, it will be skipped from the search results. If not checked, an exception will be returned.</p>
 </li>
 </ul>
 <h2 id="csw-configuration_service_record">Service Metadata Record</h2>
@@ -2447,7 +2518,7 @@
 <p>In some situation, user may want to modify XML encoding of records when retrieved using CSW. For example:</p>
 <ul>
 <li>to make record more consistent</li>
-<li>to adapt encoding in order to validate records with INSPIRE rules (eg. as a workaround for workaround for <a href="https://github.com/inspire-eu-validation/community/issues/95">https://github.com/inspire-eu-validation/community/issues/95</a>)</li>
+<li>to adapt encoding in order to validate records with INSPIRE rules (e.g. as a workaround for <a href="https://github.com/inspire-eu-validation/community/issues/95">issue #95</a>)</li>
 </ul>
 <p>For this, user can add extra conversion step during output of GetRecords and GetRecordById operation:</p>
 <ul>
@@ -2589,7 +2660,7 @@
 <div class="md-copyright">
   
   <span class="md-copyright__highlight">
-    Copyright &copy; 2001 - 2025 FAO-UN and others
+    Copyright &copy; 2001 - 2026 FAO-UN and others
   </span>
   
   
@@ -2670,7 +2741,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
       <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>

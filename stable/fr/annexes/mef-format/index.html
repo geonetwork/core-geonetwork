@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.2/fr/annexes/mef-format/">
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.4/fr/annexes/mef-format/">
       
       
         <link rel="prev" href="../gallery/">
@@ -31,7 +31,7 @@
     
     
       
-        <title>Metadata Exchange Format (MEF) - GeoNetwork opensource (FR)</title>
+        <title>Metadata Exchange Format (MEF) - GeoNetwork opensource</title>
       
     
     
@@ -98,7 +98,7 @@
           <aside class="md-banner md-banner--warning">
             <div class="md-banner__inner md-grid md-typeset">
               
-  GeoNetwork 4.2 is outdated.
+  GeoNetwork 4.4 is latest.
   <a href="../../../.."><strong>Click here to go to stable.</strong></a>
 
             </div>
@@ -112,7 +112,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="En-tête">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (FR)" class="md-header__button md-logo" aria-label="GeoNetwork opensource (FR)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-header__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../../assets/images/geonetwork-logo.svg" alt="logo">
 
@@ -125,7 +125,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            GeoNetwork opensource (FR)
+            GeoNetwork opensource
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -481,12 +481,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (FR)" class="md-nav__button md-logo" aria-label="GeoNetwork opensource (FR)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-nav__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
-    GeoNetwork opensource (FR)
+    GeoNetwork opensource
   </label>
   
     <div class="md-nav__source">
@@ -1452,7 +1452,7 @@
 </ol>
 <p>In the paragraphs below, some terms should be intended as follows:</p>
 <ol>
-<li>the term actor is used to indicate any system (application, service etc...) that operates on metadata.</li>
+<li>the term actor is used to indicate any system (application, service etc.) that operates on metadata.</li>
 <li>the term reader will be used to indicate any actor that can import metadata from a MEF file.</li>
 <li>the term writer will be used to indicate any actor that can generate a MEF file.</li>
 </ol>
@@ -1471,7 +1471,7 @@
 <li><em>metadata.xml</em>: this file contains the metadata itself, in XML format. The text encoding of the metadata (eg. UTF-8) is specified in the XML declaration.</li>
 <li><em>info.xml</em>: this is a special XML file which contains information related to the metadata (metadata about the metadata). Examples of the information in the info.xml file are: creation date, modification date, privileges This information is needed by GeoNetwork.</li>
 <li><em>public</em>: this is a directory used to store the metadata thumbnails and other public files. There are no restrictions on the image format but it is strongly recommended to use the portable network graphics (PNG), JPEG or GIF format.</li>
-<li><em>private</em>: this is a directory used to store all data (maps, shape files etc...) uploaded with the metadata in the GeoNetwork editor. Files in this directory are <em>private</em> in the sense that authorisation is required to access them. There are no restrictions on the file types that can be stored into this directory.</li>
+<li><em>private</em>: this is a directory used to store all data (maps, shape files etc.) uploaded with the metadata in the GeoNetwork editor. Files in this directory are <em>private</em> in the sense that authorisation is required to access them. There are no restrictions on the file types that can be stored into this directory.</li>
 </ol>
 <p>Any other file or directory present in the MEF file should be ignored by readers that don't recognise them. This allows actors to add custom extensions to the MEF file.</p>
 <p>A MEF file can have empty public and private folders depending upon the export format, which can be:</p>
@@ -1482,12 +1482,12 @@
 </ul>
 <p>It is recommended to use the .mef extension when naming MEF files.</p>
 <h2 id="mef-v2-file-format">MEF v2 file format</h2>
-<p>MEF version 2 support the following:</p>
+<p>MEF version 2 supports the following:</p>
 <ul>
 <li>multi-metadata support: more than one metadata record and data can be stored in a single MEF file.</li>
 <li>multi-schema support: be able to store in a single MEF n formats (eg. for an ISO profile, also store a version of that record in the base ISO19115/ISO19139 schema).</li>
 </ul>
-<p>Current export services that create MEF files from a metadata record with related records (eg. paent, feature catalog etc), can include these related metadata records in the MEF.</p>
+<p>Current export services that create MEF files from a metadata record with related records (e.g. parent, feature catalog, etc.) can include these related metadata records in the MEF.</p>
 <p>MEF v2 format structure is the following:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>Root
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>  |
@@ -1537,7 +1537,7 @@
 </ol>
 <p>Any other element or attribute should be ignored by readers that don't understand them. This allows actors to add custom attributes or subtrees to the XML.</p>
 <h3 id="info_xml">Date format</h3>
-<p>Unless differently specified, all dates in this file must be in the ISO/8601 format. The pattern must be <code>YYYY-MM-DDTHH:mm:SS</code> and the timezone should be the local one.</p>
+<p>Unless otherwise specified, all dates in this file must be in the ISO 8601 format. The pattern must be <code>YYYY-MM-DDTHH:mm:SS</code> and the timezone should be the local one.</p>
 <p>Example of info file:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&lt;info</span><span class="w"> </span><span class="na">version=</span><span class="s">"1.0"</span><span class="nt">&gt;</span>
 </span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">    </span><span class="nt">&lt;general&gt;</span>
@@ -1667,7 +1667,7 @@
 <div class="md-copyright">
   
   <span class="md-copyright__highlight">
-    Copyright &copy; 2001 - 2025 FAO-UN and others
+    Copyright &copy; 2001 - 2026 FAO-UN and others
   </span>
   
   
@@ -1748,7 +1748,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>

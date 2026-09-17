@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.2/user-guide/associating-resources/linking-parent/">
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.4/user-guide/associating-resources/linking-parent/">
       
       
         <link rel="prev" href="../linking-records/">
@@ -31,7 +31,7 @@
     
     
       
-        <title>Grouping datasets in a series (ie. parent/child relation) - GeoNetwork opensource (EN)</title>
+        <title>Grouping datasets in a series (ie. parent/child relation) - GeoNetwork opensource</title>
       
     
     
@@ -98,7 +98,7 @@
           <aside class="md-banner md-banner--warning">
             <div class="md-banner__inner md-grid md-typeset">
               
-  GeoNetwork 4.2 is outdated.
+  GeoNetwork 4.4 is latest.
   <a href="../../../.."><strong>Click here to go to stable.</strong></a>
 
             </div>
@@ -112,7 +112,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-header__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../../assets/images/geonetwork-logo.svg" alt="logo">
 
@@ -125,7 +125,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            GeoNetwork opensource (EN)
+            GeoNetwork opensource
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -481,12 +481,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-nav__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
-    GeoNetwork opensource (EN)
+    GeoNetwork opensource
   </label>
   
     <div class="md-nav__source">
@@ -1046,6 +1046,8 @@
       
         
       
+        
+      
     
     
     
@@ -1255,7 +1257,7 @@
   <span class="md-ellipsis">
     
   
-    Other types of resources (eg. sensor, publication)
+    Other types of resources (eg. sensor, publication, revision)
   
 
     
@@ -1284,6 +1286,34 @@
     
   
     Linking to a remote record
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../linking-panel-configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Associated resources panel configuration
   
 
     
@@ -1670,6 +1700,8 @@
       
         
       
+        
+      
     
     
     
@@ -1754,6 +1786,8 @@
       
         
           
+        
+      
         
       
         
@@ -2206,12 +2240,13 @@
 </ul>
 </li>
 </ul>
-<p>Parent/child relations can be set on ISO19139 and Dublin Core records. In ISO19139, the link to a parent record is encoded in the child record using the following:</p>
+<p>Parent/child relations can be set on ISO and Dublin Core records. </p>
+<p>In ISO19139, the link to a parent record is encoded in the child record using the following:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;gmd:parentIdentifier&gt;</span>
 </span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">   </span><span class="nt">&lt;gco:CharacterString&gt;</span>78f93047-74f8-4419-ac3d-fc62e4b0477b<span class="nt">&lt;/gco:CharacterString&gt;</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">&lt;/gmd:parentIdentifier&gt;</span>
 </span></code></pre></div>
-<p>Parent/Child relation in ISO19139 may also be encoded using aggregates (see <a href="../linking-others/">Other types of resources (eg. sensor, publication)</a>).</p>
+<p>Parent/Child relation in ISO may also be encoded using aggregates to clarify the type of the association (see <a href="../linking-others/">Other types of resources (eg. sensor, publication)</a>). By default, ISO19115-3 is using the <code>associatedResource</code> element with association type set to <code>partOfSeamlessDatabase</code> for parent/child relation.</p>
 <p>When creating such relationship, users will be able to navigate between the records in the search and record view.</p>
 <p><img alt="" src="../img/nav-series.png" /></p>
 <p>Click on <code>Link to parent</code> to access the panel providing a simple search to select the target parent metadata</p>
@@ -2313,7 +2348,7 @@
 <div class="md-copyright">
   
   <span class="md-copyright__highlight">
-    Copyright &copy; 2001 - 2025 FAO-UN and others
+    Copyright &copy; 2001 - 2026 FAO-UN and others
   </span>
   
   
@@ -2394,7 +2429,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>

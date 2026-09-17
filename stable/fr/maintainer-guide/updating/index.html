@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.2/fr/maintainer-guide/updating/">
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.4/fr/maintainer-guide/updating/">
       
       
         <link rel="prev" href="../production-use/">
@@ -31,7 +31,7 @@
     
     
       
-        <title>Updating the application - GeoNetwork opensource (FR)</title>
+        <title>Updating the application - GeoNetwork opensource</title>
       
     
     
@@ -98,7 +98,7 @@
           <aside class="md-banner md-banner--warning">
             <div class="md-banner__inner md-grid md-typeset">
               
-  GeoNetwork 4.2 is outdated.
+  GeoNetwork 4.4 is latest.
   <a href="../../../.."><strong>Click here to go to stable.</strong></a>
 
             </div>
@@ -112,7 +112,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="En-tête">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (FR)" class="md-header__button md-logo" aria-label="GeoNetwork opensource (FR)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-header__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../../assets/images/geonetwork-logo.svg" alt="logo">
 
@@ -125,7 +125,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            GeoNetwork opensource (FR)
+            GeoNetwork opensource
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -481,12 +481,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (FR)" class="md-nav__button md-logo" aria-label="GeoNetwork opensource (FR)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-nav__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
-    GeoNetwork opensource (FR)
+    GeoNetwork opensource
   </label>
   
     <div class="md-nav__source">
@@ -1004,10 +1004,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upgrade-from-geonetwork-3x-to-geonetwork-42" class="md-nav__link">
+  <a href="#updating-from-geonetwork-42-to-geonetwork-44" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upgrade from GeoNetwork 3.X to GeoNetwork 4.2
+        Updating from GeoNetwork 4.2 to GeoNetwork 4.4
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-from-geonetwork-30-to-geonetwork-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade from GeoNetwork 3.0 to GeoNetwork 4.4
       
     </span>
   </a>
@@ -1351,10 +1362,21 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upgrade-from-geonetwork-3x-to-geonetwork-42" class="md-nav__link">
+  <a href="#updating-from-geonetwork-42-to-geonetwork-44" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Upgrade from GeoNetwork 3.X to GeoNetwork 4.2
+        Updating from GeoNetwork 4.2 to GeoNetwork 4.4
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#upgrade-from-geonetwork-30-to-geonetwork-44" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Upgrade from GeoNetwork 3.0 to GeoNetwork 4.4
       
     </span>
   </a>
@@ -1402,10 +1424,10 @@
 <div class="tabbed-set tabbed-alternate" data-tabs="1:2"><input checked="checked" id="__tabbed_1_1" name="__tabbed_1" type="radio" /><input id="__tabbed_1_2" name="__tabbed_1" type="radio" /><div class="tabbed-labels"><label for="__tabbed_1_1">Application data directory</label><label for="__tabbed_1_2">External data directory</label></div>
 <div class="tabbed-content">
 <div class="tabbed-block">
-<p>If you are using the application data direcotry, the encryption password is stored in the file <strong><code>/geonetwork/WEB-INF/data/config/encryptor.properties</code></strong>. </p>
+<p>If you are using the application data directory, the encryption password is stored in the file <strong><code>/geonetwork/WEB-INF/data/config/encryptor.properties</code></strong>.</p>
 <div class="admonition warning">
 <p class="admonition-title">Warning</p>
-<p>This <strong><code>encryptor.propertie</code></strong> file <strong>must be copied</strong> to the new installation when upgrading the application; otherwise, it will not be possible to decrypt the existing passwords stored in the database.</p>
+<p>This <strong><code>encryptor.properties</code></strong> file <strong>must be copied</strong> to the new installation when upgrading the application; otherwise, it will not be possible to decrypt the existing passwords stored in the database.</p>
 </div>
 </div>
 <div class="tabbed-block">
@@ -1414,33 +1436,133 @@
 </div>
 </div>
 </div>
-<h2 id="upgrade-from-geonetwork-3x-to-geonetwork-42">Upgrade from GeoNetwork 3.X to GeoNetwork 4.2</h2>
-<p>Upgrading from GeoNetwork 3.X to GeoNetwork 4.2 is a major upgrade.</p>
-<p>We do not recommend updating a production system. Instead treat this as a migration, setting up a new GeoNetwork 4.2 installation and transfer data and settings.</p>
+<h2 id="updating-from-geonetwork-42-to-geonetwork-44">Updating from GeoNetwork 4.2 to GeoNetwork 4.4</h2>
+<p>Updating from GeoNetwork 4.2 to GeoNetwork 4.4 is a minor upgrade and may be performed in place.</p>
 <p>Before you start:</p>
-<ul>
-<li>
-<p>Backup your database</p>
-</li>
-<li>
-<p>Backup your data directory</p>
-</li>
-</ul>
-<p>GeoNetwork for Migration:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="2:2"><input checked="checked" id="__tabbed_2_1" name="__tabbed_2" type="radio" /><input id="__tabbed_2_2" name="__tabbed_2" type="radio" /><div class="tabbed-labels"><label for="__tabbed_2_1">Application data directory</label><label for="__tabbed_2_2">External data directory</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
 <ol>
 <li>
-<p>GeoNetwork 4.2 requires a Java 8 environment (JRE) to be installed on your system.</p>
+<p>Stop the services:</p>
+<ul>
+<li>Application server running GeoNetwork</li>
+</ul>
+</li>
+<li>
+<p>When using the application data directory, be sure to back up <strong><code>/geonetwork/WEB-INF/data/config/encryptor/encryptor.properties</code></strong></p>
+</li>
+</ol>
+</div>
+<div class="tabbed-block">
+<p>Before you start:</p>
+<ol>
+<li>
+<p>Stop the services:</p>
+<ul>
+<li>Application server running GeoNetwork</li>
+</ul>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<p>Update:</p>
+<div class="tabbed-set tabbed-alternate" data-tabs="3:2"><input checked="checked" id="__tabbed_3_1" name="__tabbed_3" type="radio" /><input id="__tabbed_3_2" name="__tabbed_3" type="radio" /><div class="tabbed-labels"><label for="__tabbed_3_1">Application data directory</label><label for="__tabbed_3_2">External data directory</label></div>
+<div class="tabbed-content">
+<div class="tabbed-block">
+<ol>
+<li>
+<p>GeoNetwork 4.4 requires a Java 11 environment (JRE) to be installed on your system.</p>
 <p>Later versions of Java will not work at present. This must be done prior to installation.</p>
 </li>
 <li>
-<p>GeoNetwork 4.2 changes the search engine to Elasticsearch.</p>
+<p>This release of GeoNetwork 4.4 is developed and tested with Elasticsearch <code>7.17.15</code>.</p>
+<p>If required update Elasticsearch, see <a href="../../install-guide/installing-index/">Installing search platform</a>.</p>
+</li>
+<li>
+<p>Minor update may be performed in place, update <strong><code>geonetwork</code></strong> according to <a href="../../install-guide/">installation approach</a> used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Configurations changes made to application  <strong><code>/WEB-INF/</code></strong> files should be backed up, and the same configuration changes reapplied to the new application.</p>
+<p>With the service stopped you may find it easier to manually deploy (by unzipping the <strong><code>geonetwork.war</code></strong>
+into the correct <strong><code>webapps/geonetwork/</code></strong> location) in order to apply configuration changes to **<code>/WEB-INF/**</code>.</p>
+<p>Read more at <a href="../../install-guide/configuring-database/">Configuration</a>.</p>
+</div>
+</li>
+<li>
+<p>Restore the backup of <strong><code>encryptor.properties</code></strong> to the application data directory.</p>
+</li>
+<li>
+<p>Restart services:</p>
+<ul>
+<li>Application server for GeoNetwork</li>
+</ul>
+</li>
+</ol>
+</div>
+<div class="tabbed-block">
+<ol>
+<li>
+<p>GeoNetwork 4.4 requires a Java 11 environment (JRE) to be installed on your system.</p>
+<p>Later versions of Java will not work at present. This must be done prior to installation.</p>
+</li>
+<li>
+<p>This release of GeoNetwork 4.4 is developed and tested with Elasticsearch <code>7.17.15</code>.</p>
+<p>If required update Elasticsearch, see <a href="../../install-guide/installing-index/">Installing search platform</a>.</p>
+</li>
+<li>
+<p>Minor update may be performed in place, update <strong><code>geonetwork</code></strong> according to <a href="../../install-guide/">installation approach</a> used.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Configurations changes made to application  <strong><code>/WEB-INF/</code></strong> files should be backed up, and the same configuration changes reapplied to the new application.</p>
+<p>With the service stopped you may find it easier to manually deploy (by unzipping the <strong><code>geonetwork.war</code></strong>
+into the correct <strong><code>webapps/geonetwork/</code></strong> location) in order to apply configuration changes to **<code>/WEB-INF/**</code>.</p>
+<p>Read more at <a href="../../install-guide/configuring-database/">Configuration</a>.</p>
+</div>
+</li>
+<li>
+<p>Restart services:</p>
+<ul>
+<li>Application server for GeoNetwork</li>
+</ul>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<p>Guidance:</p>
+<ul>
+<li><a href="../../overview/change-log/history/#44">Changelog 4.4</a></li>
+<li>No additional guidance provided at this time.</li>
+</ul>
+<h2 id="upgrade-from-geonetwork-30-to-geonetwork-44">Upgrade from GeoNetwork 3.0 to GeoNetwork 4.4</h2>
+<p>Upgrading from GeoNetwork 3.0 to GeoNetwork 4.4 is a major upgrade.</p>
+<p>We do not recommend upgrading a production system in place. Instead, treat this as a migration: set up a new GeoNetwork 4.0 installation and transfer data and settings.</p>
+<p>Before you start:</p>
+<ul>
+<li>
+<p>Back up your database</p>
+</li>
+<li>
+<p>Back up your data directory</p>
+</li>
+</ul>
+<p>Migration steps:</p>
+<ol>
+<li>
+<p>GeoNetwork 4.4 requires a Java 11 environment (JRE) to be installed on your system.</p>
+<p>Later versions of Java will not work at present. This must be done prior to installation.</p>
+</li>
+<li>
+<p>GeoNetwork 4 changes the search engine to Elasticsearch.</p>
 <p>For installation instructions see <a href="../../install-guide/installing-index/">Installing search platform</a>.</p>
 </li>
 <li>
-<p>Perform a new install of GeoNetwork 4.2, according to <a href="../../install-guide/">installation approach</a> used.</p>
+<p>Perform a new install of GeoNetwork 4.0, according to the <a href="../../install-guide/">installation approach</a> used.</p>
 </li>
 <li>
-<p>Configure GeoNetwork use to your database and data directory.</p>
+<p>Configure GeoNetwork to use your database and data directory.</p>
 </li>
 <li>
 <p>Start services:</p>
@@ -1451,11 +1573,11 @@
 </ul>
 </li>
 <li>
-<p>GeoNetwork 4.2 encrypts stored passwords using Jasypt as described at the top of this page.</p>
+<p>GeoNetwork 4 encrypts stored passwords using Jasypt as described at the top of this page.</p>
 <p>During startup a random encryption password will be generated and stored in data directory <strong><code>data/config/encryptor/encryptor.properties</code></strong>.</p>
 </li>
 <li>
-<p>During startup the database schema will be updated to match the table structure required for GeoNetwork 4.2.</p>
+<p>During startup the database schema will be updated to match the table structure required for GeoNetwork 4.</p>
 </li>
 <li>
 <p>GeoNetwork will create indices automatically when connecting to Elasticsearch.</p>
@@ -1464,31 +1586,31 @@
 <p>Guidance:</p>
 <ul>
 <li>
-<p>Be advised of the following changes in application functionality:</p>
+<p>Note the following changes in application functionality:</p>
 </li>
 <li>
-<p><a href="../../user-guide/quick-start/#upgrading-from-geonetwork-3-guidance">Permalink to search page from GeoNetwork 3.x will need to be updated to work with 4.x. </a></p>
+<p><a href="../../user-guide/quick-start/#upgrading-from-geonetwork-3-guidance">Permalinks to search pages from GeoNetwork 3.x will need to be updated to work with 4.x.</a></p>
 </li>
 <li>
-<p>Please be advised of the following changes to application services:</p>
+<p>Note the following changes to application services:</p>
 </li>
 <li><a href="../../api/q-search/#upgrading-from-geonetwork-30-guidance">Search / q service is replaced by Elasticsearch</a></li>
 <li><a href="../../api/csw/#upgrading-from-geonetwork-30-guidance">Virtual CSW end-points are replaced by sub-portals</a></li>
-<li><a href="../../api/rdf-dcat/#upgrading-from-geonetwork-30-guidance">RDF DCAT API no longer available</a></li>
 <li><a href="../../api/z39-50/#upgrading-from-geonetwork-30-guidance">Z39-50 API is no longer available</a></li>
 <li><a href="../../api/opensearch/#upgrading-from-geonetwork-30-guidance">OpenSearch no longer available</a></li>
 <li><a href="../../api/oai-pmh/#upgrading-from-geonetwork-30-guidance">Open Archives Initiative Protocol for Metadata Harvesting (OAI-PMH) is not migrated</a></li>
 <li><a href="../../api/the-geonetwork-api/#upgrading-from-geonetwork-3-guidance">GeoNetwork API support for Report Uploads not migrated</a></li>
 </ul>
-<p>The above links provided recommendations and mitigation measures where appropriate.</p>
+<p>The above links provide recommendations and mitigation measures where appropriate.</p>
 <ul>
 <li>
 <p>For information on new features and functionality:</p>
 </li>
 <li>
-<p><a href="../../overview/change-log/history/#42">Changelog 4.2</a></p>
+<p><a href="../../overview/change-log/history/#44">Changelog 4.4</a></p>
 </li>
-<li>[Changelog 4.0](../../overview/change-log/history/index.md#40]</li>
+<li><a href="../../overview/change-log/history/#42">Changelog 4.2</a></li>
+<li><a href="../../overview/change-log/history/#40">Changelog 4.0</a></li>
 </ul>
 
 
@@ -1587,7 +1709,7 @@
 <div class="md-copyright">
   
   <span class="md-copyright__highlight">
-    Copyright &copy; 2001 - 2025 FAO-UN and others
+    Copyright &copy; 2001 - 2026 FAO-UN and others
   </span>
   
   
@@ -1668,7 +1790,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
       <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>

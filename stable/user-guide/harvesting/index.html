@@ -10,7 +10,7 @@
       
       
       
-        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.2/user-guide/harvesting/">
+        <link rel="canonical" href="https://docs.geonetwork-opensource.org/4.4/user-guide/harvesting/">
       
       
         <link rel="prev" href="../workflow/versioning/">
@@ -31,7 +31,7 @@
     
     
       
-        <title>Harvesting - GeoNetwork opensource (EN)</title>
+        <title>Harvesting - GeoNetwork opensource</title>
       
     
     
@@ -98,7 +98,7 @@
           <aside class="md-banner md-banner--warning">
             <div class="md-banner__inner md-grid md-typeset">
               
-  GeoNetwork 4.2 is outdated.
+  GeoNetwork 4.4 is latest.
   <a href="../../.."><strong>Click here to go to stable.</strong></a>
 
             </div>
@@ -112,7 +112,7 @@
 
 <header class="md-header" data-md-component="header">
   <nav class="md-header__inner md-grid" aria-label="Header">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (EN)" class="md-header__button md-logo" aria-label="GeoNetwork opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-header__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../assets/images/geonetwork-logo.svg" alt="logo">
 
@@ -125,7 +125,7 @@
       <div class="md-header__ellipsis">
         <div class="md-header__topic">
           <span class="md-ellipsis">
-            GeoNetwork opensource (EN)
+            GeoNetwork opensource
           </span>
         </div>
         <div class="md-header__topic" data-md-component="header-topic">
@@ -481,12 +481,12 @@
 
 <nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
-    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource (EN)" class="md-nav__button md-logo" aria-label="GeoNetwork opensource (EN)" data-md-component="logo">
+    <a href="https://geonetwork-opensource.org/" title="GeoNetwork opensource" class="md-nav__button md-logo" aria-label="GeoNetwork opensource" data-md-component="logo">
       
   <img src="../../assets/images/geonetwork-logo.svg" alt="logo">
 
     </a>
-    GeoNetwork opensource (EN)
+    GeoNetwork opensource
   </label>
   
     <div class="md-nav__source">
@@ -1251,6 +1251,8 @@
       
         
       
+        
+      
     
     
     
@@ -1725,6 +1727,34 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="harvesting-stac/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Simple URL harvesting (STAC Collection)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -1772,6 +1802,8 @@
       
         
           
+        
+      
         
       
         
@@ -2347,6 +2379,7 @@
 <li><a href="harvesting-wfs-features/">WFS GetFeature Harvesting</a></li>
 <li><a href="harvesting-sftp/">SFTP Server Harvesting</a></li>
 <li><a href="harvesting-database/">Database Harvesting</a></li>
+<li><a href="harvesting-stac/">Simple URL harvesting (STAC Collection)</a></li>
 </ul>
 <h2 id="mechanism-overview">Mechanism overview</h2>
 <p>The harvesting mechanism relies on the concept of a <code>universally unique identifier (UUID)</code>. This is a special id because it is not only unique locally to the node that generated it but it is globally unique. It is a combination of :</p>
@@ -2365,7 +2398,7 @@
 <li>The harvesting is periodic so any local change to harvested metadata will be lost during the next run.</li>
 <li>The change date may be used to keep track of changes so if the metadata gets changed, the harvesting mechanism may be compromised.</li>
 </ol>
-<p>Metadata properties (like categories, privileges etc...) on harvested metadata records can be updated but will be updated on next run.</p>
+<p>Metadata properties (like categories, privileges etc.) on harvested metadata records can be updated but will be updated on next run.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>if you really want to edit harvested metadata records and aren't worried by the possible issues described above, there is now a configuration setting which will permit this. See <a href="../../administrator-guide/configuring-the-catalog/system-configuration/#editing_harvested_records">Metadata import</a> for more details.</p>
@@ -2432,7 +2465,7 @@
 </span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="c1">#sudo cp jssecacerts /Library/Java/Home/lib/security/</span>
 </span></code></pre></div>
 <p>To use the script, the Java compiler must be installed and the file <a href="https://github.com/escline/InstallCert">InstallCert.java</a>, must be downloaded and placed in the same directory as the script.</p>
-<p>The script will add the certificate to the JVM keystore, if you run it as follows::</p>
+<p>The script will add the certificate to the JVM keystore, if you run it as follows:</p>
 <div class="language-text highlight"><pre><span></span><code>$ ./ssl_key_import.sh https_server_name 443
 </code></pre></div>
 <h2 id="harvesting-page">Harvesting page</h2>
@@ -2560,7 +2593,7 @@
 <div class="md-copyright">
   
   <span class="md-copyright__highlight">
-    Copyright &copy; 2001 - 2025 FAO-UN and others
+    Copyright &copy; 2001 - 2026 FAO-UN and others
   </span>
   
   
@@ -2641,7 +2674,7 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
       <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
