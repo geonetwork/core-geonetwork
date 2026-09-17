@@ -65,11 +65,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.*;
+import org.springframework.lang.NonNull;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.nio.file.Files;
@@ -185,50 +185,59 @@ public class MetadataApi {
             required = true)
         @PathVariable
         String metadataUuid,
+        @Parameter(description = "Language used for localization of the record and response (e.g. 'eng', 'fre')." +
+            "If invalid or not specified, the Accept-Language header is used to determine the language.")
+        @RequestParam(required = false)
+        String language,
         @Parameter(description = "Formatter to use on the record view page. " +
-            "If invalid or not specified, no redirect to the record view page is performed.")
+            "If not specified, attempts to use the default formatter from UI configuration. " +
+            "If invalid or no default is configured, no redirect to the record view page is performed.")
         @RequestParam(required = false)
         String recordViewFormatter,
         HttpServletResponse response,
         HttpServletRequest request
     )
         throws Exception {
+        AbstractMetadata metadata;
         try {
-            ApiUtils.canViewRecord(metadataUuid, request);
+            metadata = ApiUtils.canViewRecord(metadataUuid, request);
         } catch (SecurityException e) {
             Log.debug(API.LOG_MODULE_NAME, e.getMessage(), e);
             throw new NotAllowedException(ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_VIEW);
         }
 
-        // Check if a redirect to the record view page is required.
-        String redirect = getRedirect(recordViewFormatter, languageUtils.getIso3langCode(request.getLocales()), metadataUuid);
-
-        // If a redirect is required, perform it.
-        if (redirect != null) {
-            return redirect;
-        }
-
         String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? MediaType.APPLICATION_XML_VALUE : request.getHeader(HttpHeaders.ACCEPT);
         List<String> accept = Arrays.asList(acceptHeader.split(","));
 
-        String defaultFormatter = "xsl-view";
-        if (accept.contains(MediaType.TEXT_HTML_VALUE)
-            || accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE)
-            || accept.contains("application/pdf")) {
-            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+        // Use the uuid from the abstract metadata instead of the path variable to address URL forwarding vulnerabilities
+        String formatterBasePath = metadata.getUuid() + "/formatters/";
+        String defaultFormatterPath = formatterBasePath + "xsl-view";
+        if (accept.contains(MediaType.TEXT_HTML_VALUE) || accept.contains(MediaType.APPLICATION_XHTML_XML_VALUE)) {
+            // Check if the language query parameter is a real language supported by the system. If not, fallback to the request language.
+            String resolvedLanguage = (StringUtils.isNotBlank(language) && languageUtils.getUiLanguages().contains(language.toLowerCase()))
+                ? language.toLowerCase()
+                : languageUtils.getIso3langCode(request.getLocales());
+            // If there is a redirect to a record view formatter configured use it, otherwise fallback to the default xsl-view formatter.
+            String redirect = getRecordViewFormatterRedirect(resolvedLanguage, metadata.getUuid(), recordViewFormatter);
+            if (StringUtils.isNotBlank(redirect)) {
+                return redirect;
+            }
+            return "forward:" + defaultFormatterPath;
+        } else if (accept.contains("application/pdf")) {
+            return "forward:" + defaultFormatterPath;
         } else if (accept.contains(MediaType.APPLICATION_XML_VALUE)) {
-            return "forward:" + (metadataUuid + "/formatters/xml");
+            return "forward:" + (formatterBasePath + "xml");
         } else if (accept.contains(MediaType.APPLICATION_JSON_VALUE)) {
-            return "forward:" + (metadataUuid + "/formatters/json");
+            return "forward:" + (formatterBasePath + "json");
         } else if (accept.contains("application/zip")
             || accept.contains(MEF_V1_ACCEPT_TYPE)
             || accept.contains(MEF_V2_ACCEPT_TYPE)) {
-            return "forward:" + (metadataUuid + "/formatters/zip");
+            return "forward:" + (formatterBasePath + "zip");
         } else {
             // FIXME this else is never reached because any of the accepted medias match one of the previous if conditions.
             response.setHeader(HttpHeaders.ACCEPT, MediaType.APPLICATION_XHTML_XML_VALUE);
             //response.sendRedirect(metadataUuid + "/formatters/" + defaultFormatter);
-            return "forward:" + (metadataUuid + "/formatters/" + defaultFormatter);
+            return "forward:" + defaultFormatterPath;
         }
     }
 
@@ -896,16 +905,27 @@ public class MetadataApi {
     }
 
     /**
-     * Constructs a redirect string based on the provided formatter label, language, and metadata UUID
+     * Constructs a redirect string based on the provided formatter flag, language, and metadata UUID.
+     * This method determines the appropriate redirect URL for a metadata record view page based on
+     * the formatter label provided, the language parameter, and the metadata UUID. If no formatter
+     * label is provided, it attempts to retrieve a default formatter from the UI configuration.
      *
-     * @param recordViewFormatter The label of the formatter to use on the record view page
-     * @param language            The language code to include in the URL
-     * @param metadataUuid        The unique identifier of the metadata record
-     * @return A redirect string if a matching formatter is found, or null if no formatter matches the provided label
+     * @param language       The language code to use in the redirect URL.
+     * @param metadataUuid   The unique identifier of the metadata record for which the redirect URL
+     *                       is being constructed.
+     * @param recordViewFormatterParam The formatter label to look for in the UI configuration. If null, the
+     *                       method attempts to retrieve a default formatter from the configuration.
+     * @return A redirect string if a valid formatter is found and configured, or null otherwise.
      */
-    private String getRedirect(@Nullable String recordViewFormatter, String language, String metadataUuid) {
+    private String getRecordViewFormatterRedirect(@NonNull String language, String metadataUuid, String recordViewFormatterParam) {
+        // If the formatter label is not provided as a parameter, try to get it from the UI configuration
+        String recordViewFormatter = recordViewFormatterParam;
         if (StringUtils.isBlank(recordViewFormatter)) {
-            return null; // If no formatter is specified, return null
+            recordViewFormatter = XslUtil.getUiConfigurationJsonProperty(null, "mods.search.formatter.recordLinkFormatter");
+            if (StringUtils.isBlank(recordViewFormatter)) {
+                // If the record link formatter is not set in the UI configuration, return null as no formatter can be applied
+                return null;
+            }
         }
 
         // Parse the UI configuration
