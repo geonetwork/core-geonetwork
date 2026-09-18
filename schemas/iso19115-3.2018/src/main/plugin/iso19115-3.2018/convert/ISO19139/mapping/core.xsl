@@ -98,9 +98,11 @@
     <xsl:variable name="nameSpacePrefix">
       <xsl:call-template name="getNamespacePrefix"/>
     </xsl:variable>
-    <xsl:variable name="elementName" select="if (local-name() = 'language' and gmd:LanguageCode/@codeListValue = $mainLanguage) then 'defaultLocale' else 'otherLocale'"/>
+    <xsl:variable name="elementName"
+                  select="if (local-name() = 'language' and gmd:LanguageCode/@codeListValue = $mainLanguage)
+                          then 'defaultLocale' else 'otherLocale'"/>
+
     <xsl:element name="{concat($nameSpacePrefix, ':', $elementName)}">
-      <!--<xsl:element name="{'mdb:defaultLocale'}">-->
       <xsl:apply-templates select="@*" mode="from19139to19115-3.2018"/>
       <lan:PT_Locale>
         <xsl:copy-of select="gmd:PT_Locale/@*"/>
@@ -114,6 +116,9 @@
             gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
         </xsl:call-template>
         <xsl:choose>
+          <xsl:when test="gmd:characterEncoding">
+            <xsl:apply-templates select="gmd:characterEncoding" mode="from19139to19115-3.2018"/>
+          </xsl:when>
           <xsl:when test="../gmd:characterSet">
             <xsl:call-template name="writeCodelistElement">
               <xsl:with-param name="elementName" select="'lan:characterEncoding'"/>
@@ -128,9 +133,10 @@
       </lan:PT_Locale>
     </xsl:element>
   </xsl:template>
+
   <xsl:template match="gmd:characterSet" priority="5" mode="from19139to19115-3.2018">
     <xsl:choose>
-      <!-- if ../gmd/language exists, characterSet has already been translated to defaultLocale -->
+      <!-- if ../gmd:language exists, characterSet has already been translated to defaultLocale -->
       <xsl:when test="../gmd:language"/>
       <xsl:otherwise>
         <xsl:variable name="nameSpacePrefix">
