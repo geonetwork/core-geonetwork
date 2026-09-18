@@ -39,6 +39,13 @@ dedicated GeoNetwork 4.x harvester type.
   - **Groups**: List one or more groups (owners of the metadata) numeric IDs, comma-separated.
   - **Catalog**: Identify a source sub-catalogue, if needed.
 
+### MEF Version Negotiation
+
+When downloading each record's content from the remote catalogue, the harvester requests the
+[MEF](../../annexes/mef-format.md) v3 format by default. If the remote server doesn't support MEF v3 (for example,
+an older GeoNetwork instance), the harvester automatically retries the same request asking for MEF v2 instead, so
+harvesting still succeeds without any extra configuration.
+
 ### Response Processing
 
 - **Action on UUID collision**: Choose how to configure the action when a harvester finds the same UUID on a record collected by another method (another harvester, importer, dashboard editor, etc.):

@@ -33,10 +33,12 @@ import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.MetadataFileUpload;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.util.LimitedInputStream;
 import org.slf4j.Logger;
@@ -57,7 +59,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -128,6 +132,14 @@ public abstract class AbstractStore implements Store {
         // Resolve the version that actually exists so a draft/working copy is served (and reported
         // as not approved) instead of failing when no approved copy exists (see issue #9433).
         boolean effectiveApproved = resolveApproved(metadataUuid, approved);
+        MetadataResourceVisibility visibility = resolveVisibility(metadataUuid, approved, resourceId);
+        if (visibility != null) {
+            try {
+                return getResource(context, metadataUuid, visibility, resourceId, approved);
+            } catch (ResourceNotFoundException ignored) {
+                // Tracked visibility didn't match reality (eg. stale/backfill-pending row) - fall through to probing both.
+            }
+        }
         try {
             return getResource(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, effectiveApproved);
         } catch (ResourceNotFoundException ignored) {
@@ -138,6 +150,14 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
         boolean effectiveApproved = resolveApproved(metadataUuid, approved);
+        MetadataResourceVisibility visibility = resolveVisibility(metadataUuid, approved, resourceId);
+        if (visibility != null) {
+            try {
+                return getResourceMetadata(context, metadataUuid, visibility, resourceId, approved);
+            } catch (ResourceNotFoundException ignored) {
+                // Tracked visibility didn't match reality (eg. stale/backfill-pending row) - fall through to probing both.
+            }
+        }
         try {
             return getResourceMetadata(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, effectiveApproved);
         } catch (ResourceNotFoundException ignored) {
@@ -148,11 +168,80 @@ public abstract class AbstractStore implements Store {
     @Override
     public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, String resourceId, Boolean approved, long start, long end) throws Exception {
         boolean effectiveApproved = resolveApproved(metadataUuid, approved);
+        MetadataResourceVisibility visibility = resolveVisibility(metadataUuid, approved, resourceId);
+        if (visibility != null) {
+            try {
+                return getResourceWithRange(context, metadataUuid, visibility, resourceId, approved, start, end);
+            } catch (ResourceNotFoundException ignored) {
+                // Tracked visibility didn't match reality (eg. stale/backfill-pending row) - fall through to probing both.
+            }
+        }
         try {
             return getResourceWithRange(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, effectiveApproved, start, end);
         } catch (ResourceNotFoundException ignored) {
         }
         return getResourceWithRange(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, effectiveApproved, start, end);
+    }
+
+    /**
+     * Resolve a resource's tracked visibility from the MetadataFileUploads ledger (now the
+     * source of truth for access, populated on every put/patch - see {@link ResourceLoggerStore}),
+     * so operations that aren't given an explicit visibility can go straight to the right
+     * location instead of probing both.
+     *
+     * @return the tracked visibility, or {@code null} if there is no tracking row (eg. legacy
+     * data predating this ledger) - callers must fall back to probing both visibilities in that case.
+     */
+    protected MetadataResourceVisibility resolveVisibility(String metadataUuid, Boolean approved, String resourceId) {
+        try {
+            int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+            String filename = getFilename(metadataUuid, resourceId);
+            MetadataFileUploadRepository repo = ApplicationContextHolder.get().getBean(MetadataFileUploadRepository.class);
+            return repo.findByMetadataIdAndFileNameNotDeleted(metadataId, filename).getAccess();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * {@link MetadataResourceVisibility#values()}, reordered so the tracked visibility (if any -
+     * see {@link #resolveVisibility}) comes first. A drop-in replacement for {@code values()} in
+     * a "probe every visibility until one matches" loop: the common case now finds the resource
+     * on the first attempt instead of unconditionally starting from {@code PUBLIC}, while a
+     * stale/missing tracking row still falls back to trying every visibility, unchanged.
+     */
+    protected MetadataResourceVisibility[] visibilityCandidates(String metadataUuid, Boolean approved, String resourceId) {
+        MetadataResourceVisibility resolved = resolveVisibility(metadataUuid, approved, resourceId);
+        MetadataResourceVisibility[] all = MetadataResourceVisibility.values();
+        if (resolved == null) {
+            return all;
+        }
+        MetadataResourceVisibility[] ordered = new MetadataResourceVisibility[all.length];
+        ordered[0] = resolved;
+        int i = 1;
+        for (MetadataResourceVisibility v : all) {
+            if (v != resolved) {
+                ordered[i++] = v;
+            }
+        }
+        return ordered;
+    }
+
+    /**
+     * Batch-load the tracked access for every logged upload of a metadata record, keyed by
+     * filename, for callers that need to check many files at once (eg. {@code getResources}
+     * once a store stops using a per-visibility folder/prefix and must otherwise ask the
+     * database once per file). Untracked or soft-deleted rows are simply absent from the map.
+     */
+    protected Map<String, MetadataResourceVisibility> loadTrackedAccessByFilename(int metadataId) {
+        MetadataFileUploadRepository repo = ApplicationContextHolder.get().getBean(MetadataFileUploadRepository.class);
+        Map<String, MetadataResourceVisibility> result = new HashMap<>();
+        for (MetadataFileUpload upload : repo.findAllByMetadataIdNotDeleted(metadataId)) {
+            if (upload.getAccess() != null) {
+                result.put(upload.getFileName(), upload.getAccess());
+            }
+        }
+        return result;
     }
 
     protected static AccessManager getAccessManager(final ServiceContext context) {
@@ -251,6 +340,12 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final MultipartFile file,
             final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
+        return putResource(context, metadataUuid, file, null, visibility, approved);
+    }
+
+    @Override
+    public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final MultipartFile file,
+            final String folder, final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
         if (org.apache.commons.lang3.StringUtils.contains(file.getOriginalFilename(),';')) {
             throw new NotAllowedException(String.format(
                 "Uploaded resource '%s' contains forbidden character ; for metadata '%s'.", file.getOriginalFilename(), metadataUuid));
@@ -259,8 +354,12 @@ public abstract class AbstractStore implements Store {
         if (fileSize > maxUploadSize) {
             throw new InputStreamLimitExceededException(maxUploadSize, fileSize);
         }
+        // The folder (if any) is just a "/"-separated path prefix, validated the same way as any
+        // other nested resourceId once combined - see checkResourceId, called downstream by the
+        // filename-based putResource below.
+        String filename = StringUtils.isNotEmpty(folder) ? folder + "/" + file.getOriginalFilename() : file.getOriginalFilename();
         try (LimitedInputStream is = new LimitedInputStream(file.getInputStream(), maxUploadSize, fileSize)) {
-            return putResource(context, metadataUuid, file.getOriginalFilename(), is, null, visibility, approved);
+            return putResource(context, metadataUuid, filename, is, null, visibility, approved);
         }
     }
 
@@ -286,6 +385,12 @@ public abstract class AbstractStore implements Store {
 
     @Override
     public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
+            MetadataResourceVisibility visibility, Boolean approved) throws Exception {
+        return putResource(context, metadataUuid, fileUrl, null, visibility, approved);
+    }
+
+    @Override
+    public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl, String folder,
             MetadataResourceVisibility visibility, Boolean approved) throws Exception {
 
         // Open a connection to the URL
@@ -314,6 +419,12 @@ public abstract class AbstractStore implements Store {
         }
         if (StringUtils.isEmpty(filename)) {
             filename = getFilenameFromUrl(fileUrl);
+        }
+        // The folder (if any) is just a "/"-separated path prefix, validated the same way as any
+        // other nested resourceId once combined - see checkResourceId, called downstream by the
+        // filename-based putResource below.
+        if (StringUtils.isNotEmpty(folder)) {
+            filename = folder + "/" + filename;
         }
 
         // Check if the content length is within the allowed limit
@@ -411,11 +522,16 @@ public abstract class AbstractStore implements Store {
         if (resourceId == null) {
             throw new IllegalArgumentException("Resource identifier cannot be null.");
         }
-        if (resourceId.contains("..") || resourceId.startsWith("/") || resourceId.startsWith("file:/")) {
+        // A resource id may contain "/"-separated subfolders (nested paths), but must still be a
+        // single relative file reference: no ".." traversal, no absolute/scheme-prefixed path, no
+        // empty path segment ("//"), and no trailing slash (a directory, not a file).
+        if (resourceId.contains("..") || resourceId.startsWith("/") || resourceId.startsWith("file:/")
+                || resourceId.endsWith("/") || resourceId.contains("//")) {
             throw new SecurityException(String.format("Invalid resource identifier '%s'.", resourceId));
         }
-        if (resourceId.length() > 255) {
-            throw new IllegalArgumentException(String.format("Resource identifier '%s' exceeds maximum allowed length of 255 characters.", resourceId));
+        if (resourceId.length() > MetadataFileUpload.FILENAME_MAX_LENGTH) {
+            throw new IllegalArgumentException(String.format("Resource identifier '%s' exceeds maximum allowed length of %d characters.",
+                resourceId, MetadataFileUpload.FILENAME_MAX_LENGTH));
         }
     }
 

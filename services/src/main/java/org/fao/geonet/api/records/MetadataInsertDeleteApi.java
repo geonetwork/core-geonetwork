@@ -441,7 +441,8 @@ public class MetadataInsertDeleteApi {
                 if (MEFLib.isValidArchiveExtensionForMEF(f.getFileName().toString())) {
                     try {
                         MEFLib.Version version = MEFLib.getMEFVersion(f);
-                        List<String> ids = MEFLib.doImport(version == MEFLib.Version.V1 ? "mef" : "mef2",
+                        String fileType = version == MEFLib.Version.V1 ? "mef" : version == MEFLib.Version.V3 ? "mef3" : "mef2";
+                        List<String> ids = MEFLib.doImport(fileType,
                             uuidProcessing, transformWith, settingManager.getSiteId(), metadataType, category,
                             group, rejectIfInvalid, assignToCatalog, context, f);
                         for (String id : ids) {
@@ -650,8 +651,9 @@ public class MetadataInsertDeleteApi {
                         FileUtils.copyInputStreamToFile(f.getInputStream(), tempFile.toFile());
 
                         MEFLib.Version version = MEFLib.getMEFVersion(tempFile);
+                        String fileType = version == MEFLib.Version.V1 ? "mef" : version == MEFLib.Version.V3 ? "mef3" : "mef2";
 
-                        List<String> ids = MEFLib.doImport(version == MEFLib.Version.V1 ? "mef" : "mef2",
+                        List<String> ids = MEFLib.doImport(fileType,
                                 uuidProcessing, transformWith, settingManager.getSiteId(), metadataType, category,
                                 group, rejectIfInvalid, assignToCatalog, context, tempFile);
                         if (ids.isEmpty()) {

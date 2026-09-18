@@ -78,6 +78,7 @@ import org.fao.geonet.kernel.mef.IMEFVisitor;
 import org.fao.geonet.kernel.mef.IVisitor;
 import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEF2Visitor;
+import org.fao.geonet.kernel.mef.MEF3Visitor;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.mef.MEFVisitor;
 import org.fao.geonet.kernel.search.IndexingMode;
@@ -315,8 +316,10 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
     private void updateMetadata(final RecordInfo ri, final String id, final boolean localRating,
                                 final boolean useChangeDate, String localChangeDate, Boolean force) throws Exception {
         final Element[] md = {null};
-        final Element[] publicFiles = {null};
-        final Element[] privateFiles = {null};
+        @SuppressWarnings("unchecked")
+        final List<Element>[] publicFiles = new List[]{null};
+        @SuppressWarnings("unchecked")
+        final List<Element>[] privateFiles = new List[]{null};
 
         if (localUuids.getID(ri.uuid) == null && !force) {
             log.info("  - Skipped metadata managed by another harvesting node. uuid:" + ri.uuid + ", name:" + params.getName());
@@ -329,11 +332,20 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
 
                     String fileType = "mef";
                     MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
-                    if (version != null && version.equals(MEFLib.Version.V2)) {
+                    if (version == MEFLib.Version.V2) {
                         fileType = "mef2";
+                    } else if (version == MEFLib.Version.V3) {
+                        fileType = "mef3";
                     }
 
-                    IVisitor visitor = fileType.equals("mef2") ? new MEF2Visitor() : new MEFVisitor();
+                    IVisitor visitor;
+                    if (fileType.equals("mef2")) {
+                        visitor = new MEF2Visitor();
+                    } else if (fileType.equals("mef3")) {
+                        visitor = new MEF3Visitor();
+                    } else {
+                        visitor = new MEFVisitor();
+                    }
 
                     //
                     MEFLib.visit(mefFile, visitor, new IMEFVisitor() {
@@ -353,8 +365,10 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
 
                         public void handleInfo(Element info, int index) throws Exception {
                             updateMetadata(ri, id, md[index], info, localRating, force);
-                            publicFiles[index] = info.getChild("public");
-                            privateFiles[index] = info.getChild("private");
+                            // Reads either the MEF 3.0 unified <store> element (filtered by
+                            // access) or the legacy <public>/<private> elements; never null.
+                            publicFiles[index] = MEFLib.getFilesElement(info, "public");
+                            privateFiles[index] = MEFLib.getFilesElement(info, "private");
                         }
 
                         public void handlePublicFile(String file, String changeDate, InputStream is, int index) throws Exception {
@@ -527,15 +541,18 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
      * @param log          the logger used to track and debug the removal process details
      * @param store        the storage mechanism handling metadata resource operations (e.g., retrieval, deletion)
      * @param metadataUuid the unique identifier of the metadata record whose files are being processed
-     * @param infoFiles    an XML element containing a list of currently valid file references for comparison
+     * @param infoFiles    the list of currently valid {@code <file>} elements for comparison
      * @param visibility   the visibility level of the resources to manage (e.g., public, private)
      * @throws Exception if an error occurs during the process of retrieving or deleting metadata resources
      */
-    protected void removeOldFile(ServiceContext context, Logger log, Store store, String metadataUuid, Element infoFiles,
+    protected void removeOldFile(ServiceContext context, Logger log, Store store, String metadataUuid, List<Element> infoFiles,
                                  MetadataResourceVisibility visibility) throws Exception {
         final List<MetadataResource> resources = store.getResources(context, metadataUuid, visibility, null, true);
         for (MetadataResource resource : resources) {
-            if (infoFiles != null && !existsFile(resource.getId(), infoFiles)) {
+            // Compare against the bare filename, not resource.getId() (a composite
+            // "uuid/attachments/filename" string that would never match the "name"
+            // attribute in info.xml).
+            if (!existsFile(resource.getFilename(), infoFiles)) {
                 if (log.isDebugEnabled()) {
                     log.debug("  - Removing old " + metadataUuid + " file with name=" + resource.getFilename());
                 }
@@ -707,14 +724,11 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
      * Checks if a file with the specified name exists within the provided XML element.
      *
      * @param fileName the name of the file being searched for
-     * @param files    the XML element containing a list of file elements
+     * @param files    the list of {@code <file>} elements to search
      * @return true if a file with the given name exists, otherwise false
      */
-    protected boolean existsFile(String fileName, Element files) {
-        @SuppressWarnings("unchecked")
-        List<Element> list = files.getChildren("file");
-
-        for (Element elem : list) {
+    protected boolean existsFile(String fileName, List<Element> files) {
+        for (Element elem : files) {
             String name = elem.getAttributeValue("name");
 
             if (fileName.equals(name)) {
@@ -782,12 +796,12 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
      * @param visibility the visibility level of the resource, determining its accessibility
      * @param changeDate the date of the modification or update to the file
      * @param is         the input stream of the file content to be processed
-     * @param files      the XML element containing file information to assist with the file update
+     * @param files      the list of {@code <file>} elements from info.xml to assist with the file update
      * @throws Exception if any error occurs during the processing of the file
      */
     protected void handleFile(String id, String file, MetadataResourceVisibility visibility, String changeDate,
-                              InputStream is, Element files) throws Exception {
-        if (files == null) {
+                              InputStream is, List<Element> files) throws Exception {
+        if (files.isEmpty()) {
             if (log.isDebugEnabled())
                 log.debug("  - No file found in info.xml. Cannot update file:" + file);
         } else {
@@ -835,11 +849,20 @@ public abstract class BaseGeoNetworkAligner<P extends BaseGeonetParams> extends 
             mefFile = retrieveMEF(uuid);
             String fileType = "mef";
             MEFLib.Version version = MEFLib.getMEFVersion(mefFile);
-            if (version != null && version.equals(MEFLib.Version.V2)) {
+            if (version == MEFLib.Version.V2) {
                 fileType = "mef2";
+            } else if (version == MEFLib.Version.V3) {
+                fileType = "mef3";
             }
 
-            IVisitor visitor = fileType.equals("mef2") ? new MEF2Visitor() : new MEFVisitor();
+            IVisitor visitor;
+            if (fileType.equals("mef2")) {
+                visitor = new MEF2Visitor();
+            } else if (fileType.equals("mef3")) {
+                visitor = new MEF3Visitor();
+            } else {
+                visitor = new MEFVisitor();
+            }
 
             MEFLib.visit(mefFile, visitor, new IMEFVisitor() {
                 public void handleMetadata(Element mdata, int index) throws Exception {
