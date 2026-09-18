@@ -208,6 +208,20 @@
       };
 
       /**
+       * Escape the separators used by the 'relatedRecords' parameter so that
+       * a value containing them survives the round trip. '%' is escaped
+       * first, which makes the encoding reversible: every '%' left in the
+       * output starts one of the three escapes below. The XSLT processes
+       * decode it with the geonet:unescape function, decoding '%25' last.
+       */
+      var escapeSeparators = function (value) {
+        return (value || "")
+          .replaceAll("%", "%25")
+          .replaceAll(",", "%2C")
+          .replaceAll("#", "%23");
+      };
+
+      /**
        * Run batch process, then refresh form with process
        * response and reload the updated online resources list.
        * The first save is done in 'runProcessMd'
@@ -538,30 +552,62 @@
          * @methodOf gn_onlinesrc.service:gnOnlinesrc
          *
          * @description
-         * The `linkToMd` method links to another metadata, could be
+         * The `linkToMd` method links to one or more metadata, could be
          * - parent
          * - source dataset
          * - feature catalog
          *
+         * Only one parent can be linked as parentIdentifier (ISO19139) and
+         * parentMetadata (ISO19115-3) are single values.
+         *
          * @param {string} mode type of the metadata to link
-         * @param {Object} record metadata to link.
+         * @param {Object|Array} records metadata(s) to link.
          * @param {string} popupid id of the popup to close after process.
          */
-        linkToMd: function (mode, record, popupid) {
-          var md = new Metadata(record);
+        linkToMd: function (mode, records, popupid) {
+          var list = (angular.isArray(records) ? records : [records]).filter(Boolean);
+          if (list.length === 0) {
+            $rootScope.$broadcast("StatusUpdated", {
+              title: $translate.instant("linkToMdNoRecordError"),
+              timeout: 0,
+              type: "danger"
+            });
+            return $q.reject("No record to link.");
+          }
+
           var params = {
             process: mode + "-add"
           };
-          if (mode == "fcats") {
-            params.uuidref = md.uuid;
+
+          if (mode === "parent" || list.length < 2) {
+            var md = new Metadata(list[0]);
+            if (mode == "fcats") {
+              params.uuidref = md.uuid;
+            } else {
+              params[mode + "Uuid"] = md.uuid;
+            }
+            params[mode + "Url"] = md.remoteUrl || "";
+            params[mode + "Title"] =
+              md.title || // Remote
+              md.resourceTitle || // not multilingual eg. 19110
+              md.resourceTitleObject.default;
           } else {
-            params[mode + "Uuid"] = md.uuid;
+            params.relatedRecords = list
+              .map(function (record) {
+                var md = new Metadata(record);
+                return [
+                  md.uuid,
+                  escapeSeparators(
+                    md.title || // Remote
+                      md.resourceTitle || // not multilingual eg. 19110
+                      (md.resourceTitleObject || {}).default
+                  ),
+                  escapeSeparators(md.remoteUrl)
+                ].join("#");
+              })
+              .join(",");
           }
-          params[mode + "Url"] = md.remoteUrl || "";
-          params[mode + "Title"] =
-            md.title || // Remote
-            md.resourceTitle || // not multilingual eg. 19110
-            md.resourceTitleObject.default;
+
           return runProcess(this, params).then(function () {
             closePopup(popupid);
           });
