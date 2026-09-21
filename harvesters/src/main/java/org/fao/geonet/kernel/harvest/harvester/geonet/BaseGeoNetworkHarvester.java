@@ -1,5 +1,5 @@
 //=============================================================================
-//===    Copyright (C) 2001-2025 Food and Agriculture Organization of the
+//===    Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===    United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===    and United Nations Environment Programme (UNEP)
 //===
@@ -34,16 +34,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import bsh.StringUtil;
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.Logger;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.kernel.harvest.harvester.HarvestError;
 import org.fao.geonet.kernel.harvest.harvester.RecordInfo;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.resources.Resources;
+import org.fao.geonet.utils.FilePathChecker;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
 import org.fao.geonet.utils.XmlRequest;
 
@@ -54,7 +59,7 @@ import org.fao.geonet.utils.XmlRequest;
  * records during the harvesting process.
  *
  * @param <P> A type parameter extending BaseGeonetParams, representing the specific
- *            configuration or parameters utilized by the harvester.
+ *            configuration or parameters used by the harvester.
  */
 public abstract class BaseGeoNetworkHarvester<P extends BaseGeonetParams> {
     protected final AtomicBoolean cancelMonitor;
@@ -115,7 +120,7 @@ public abstract class BaseGeoNetworkHarvester<P extends BaseGeonetParams> {
                 Source source = remoteSources.get(sourceUuid);
 
                 if (source != null) {
-                    retrieveLogo(context, resources, params.host, sourceUuid);
+                    retrieveLogo(context, resources, params.host, source);
                 } else {
                     String sourceName = "(unknown)";
                     source = new Source(sourceUuid, sourceName, new HashMap<>(), SourceType.harvester);
@@ -134,30 +139,66 @@ public abstract class BaseGeoNetworkHarvester<P extends BaseGeonetParams> {
      * @param context the {@link ServiceContext} instance providing access to system-level resources and services
      * @param resources the {@link Resources} object used to locate and manipulate the logos directory
      * @param url the base URL from which the logo file is retrieved
-     * @param uuid the unique identifier corresponding to the logo, typically used as the logo's filename
-     * @throws MalformedURLException if the constructed URL for the logo retrieval or proxy setup is malformed
+     * @param source the metadata source from which the logo is retrieved
      */
-    protected void retrieveLogo(ServiceContext context, final Resources resources, String url, String uuid) throws MalformedURLException {
-        String logo = uuid + ".gif";
+    protected void retrieveLogo(ServiceContext context, final Resources resources, final String url, final Source source)  {
+        if (StringUtils.isNotEmpty(source.getLogo())) {
+            // use the source logo name
+            String logoFileName = source.getLogo();
+
+            try {
+                FilePathChecker.verify(logoFileName);
+
+                createLogoImage(resources, logoFileName, url);
+            } catch (IOException | BadParameterEx e) {
+                context.warning(String.format("Cannot retrieve logo file from : %s", url));
+                context.warning(String.format("  (C) Logo  : %s", logoFileName));
+                context.warning(String.format("  (C) Excep : %s",  e.getMessage()));
+
+                resources.copyUnknownLogo(context, logoFileName);
+            }
+        } else {
+            String[] allowedLogoFileExtensions = {".png", ".gif", ".jpg", ".jpeg"};
+
+            for (String logoFileExtension : allowedLogoFileExtensions) {
+                String logoFileName = source.getUuid() + logoFileExtension;
+                try {
+                    FilePathChecker.verify(logoFileName);
+
+                    createLogoImage(resources, logoFileName, url);
+                    return;
+                } catch (IOException | BadParameterEx e)  {
+                    // Ignore the exception
+                }
+            }
+
+            try {
+                // No logo found, use the default logo
+                FilePathChecker.verify(source.getLogo());
+
+                context.warning(String.format("Cannot retrieve logo file from : %s for logo '%s' with the file extensions '%s'",
+                    url, source.getUuid(), String.join(",", allowedLogoFileExtensions)));
+                context.warning(String.format("Cannot retrieve logo file from : %s", url));
+                resources.copyUnknownLogo(context, source.getLogo());
+            } catch (BadParameterEx e)  {
+                // Ignore the exception
+            }
+        }
+    }
+
+    private void createLogoImage(final Resources resources, final String logo, final String url) throws IOException {
+        final Path logoDir = resources.locateLogosDir(context);
+
         String baseUrl = url;
         if (!new URL(baseUrl).getPath().endsWith("/")) {
             // Needed to make it work when harvesting from a GN deployed at ROOT ("/")
             baseUrl += "/";
         }
+
         XmlRequest req = context.getBean(GeonetHttpRequestFactory.class).createXmlRequest(new URL(baseUrl));
         Lib.net.setupProxy(context, req);
         req.setAddress(req.getAddress() + "images/logos/" + logo);
 
-        final Path logoDir = resources.locateLogosDir(context);
-
-        try {
-            resources.createImageFromReq(context, logoDir, logo, req);
-        } catch (IOException e) {
-            context.warning("Cannot retrieve logo file from : " + url);
-            context.warning("  (C) Logo  : " + logo);
-            context.warning("  (C) Excep : " + e.getMessage());
-
-            resources.copyUnknownLogo(context, uuid);
-        }
+        resources.createImageFromReq(context, logoDir, logo, req);
     }
 }
