@@ -120,7 +120,7 @@
                 <xsl:value-of select="concat($nodeUrl, 'api/records/', $uuid, '/formatters/xml')"/>
               </xsl:when>
               <xsl:otherwise>
-                <xsl:value-of select="util:getPermalink($uuid, $lang)"/>
+                <xsl:value-of select="util:getPlainHtmlUrl($uuid, $lang)"/>
               </xsl:otherwise>
             </xsl:choose>
           </loc>
