@@ -39,10 +39,15 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.api.registries.model.ThesaurusInfo;
@@ -53,6 +58,8 @@ import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.*;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.kernel.url.UrlAllowlistService;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.util.FileMimetypeChecker;
@@ -125,6 +132,9 @@ public class KeywordsApi {
 
     @Autowired
     GeonetHttpRequestFactory httpRequestFactory;
+
+    @Autowired
+    UrlAllowlistService urlAllowlistService;
     /**
      * The mapper.
      */
@@ -713,9 +723,9 @@ public class KeywordsApi {
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Thesaurus uploaded in SKOS format."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
-    @PreAuthorize("hasAuthority('Reviewer')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.CREATED)
     public String uploadThesaurus(
@@ -838,9 +848,9 @@ public class KeywordsApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Thesaurus converted and imported in SKOS format."),
         @ApiResponse(responseCode = "200", description = "Thesaurus converted and returned in response in SKOS format."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
-    @PreAuthorize("hasAuthority('Reviewer')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     public void importCsvAsThesaurus(
         @Parameter(
@@ -1147,9 +1157,9 @@ public class KeywordsApi {
     )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Thesaurus uploaded in SKOS format."),
-        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_REVIEWER)
+        @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_ADMIN)
     })
-    @PreAuthorize("hasAuthority('Reviewer')")
+    @PreAuthorize("hasAuthority('Administrator')")
     @ResponseBody
     @ResponseStatus(value = HttpStatus.CREATED)
     public String uploadThesaurusFromUrl(
@@ -1198,6 +1208,7 @@ public class KeywordsApi {
 
         // Specific upload steps
         if (urlUpload) {
+            checkUrlAllowed(url);
 
             Log.debug(Geonet.THESAURUS, "Uploading thesaurus from URL: " + url);
 
@@ -1211,6 +1222,8 @@ public class KeywordsApi {
 
 
         } else if (registryUpload) {
+            checkUrlAllowed(registryUrl);
+
             if (ArrayUtils.isEmpty(registryLanguage)) {
                 throw new MissingServletRequestParameterException("Select at least one language.", "language");
             }
@@ -1226,6 +1239,8 @@ public class KeywordsApi {
 
         } else if (thesaurusInfo != null) {
             final ConfigurableApplicationContext applicationContext = ApplicationContextHolder.get();
+
+            FilePathChecker.verify(thesaurusInfo.getFilename());
 
             rdfFile = thesaurusMan.buildThesaurusFilePath(thesaurusInfo.getFilename(), thesaurusInfo.getType(), thesaurusInfo.getDname());
 
@@ -1285,6 +1300,23 @@ public class KeywordsApi {
 
         return String.format("Thesaurus '%s' loaded in %d sec.",
             fname, duration);
+    }
+
+    /**
+     * Checks that a URL used to import a thesaurus (either the direct {@code url} parameter or
+     * the {@code registryUrl} parameter of {@link #uploadThesaurusFromUrl}) is allowed by the
+     * {@link Settings#SYSTEM_METADATA_THESAURUS_URL_ALLOWLIST} system setting.
+     *
+     * @param url the URL to check
+     * @throws NotAllowedException if the URL is not allowed by the allowlist
+     */
+    private void checkUrlAllowed(String url) {
+        String allowlist = settingManager.getValue(Settings.SYSTEM_METADATA_THESAURUS_URL_ALLOWLIST);
+        if (!urlAllowlistService.isUrlAllowed(url, allowlist)) {
+            throw new NotAllowedException(String.format(
+                "The URL '%s' is not allowed. Check the 'Thesaurus URL allowlist' system setting.",
+                url));
+        }
     }
 
     /**
@@ -1456,9 +1488,21 @@ public class KeywordsApi {
             tsXml = xml;
         }
 
+        // Validate that the resulting document is well-formed RDF/XML.
+        // Checked here (after the optional XSL conversion) so that OWL/SDMX uploads
+        // are validated on their SKOS/RDF output, not on their original, non-RDF format.
+        try {
+            validateRdfXml(tsXml);
+        } catch (WebApplicationException e) {
+            IO.deleteFile(rdfFile, false, Geonet.THESAURUS);
+            throw e;
+        }
+
         // Load document and check namespace
         if (tsXml.getNamespacePrefix().equals("rdf")
             && tsXml.getName().equals("RDF")) {
+
+            FilePathChecker.verify(fname);
 
             // copy to directory according to type
             Path path = thesaurusMan.buildThesaurusFilePath(fname, type, dir);
@@ -1472,6 +1516,28 @@ public class KeywordsApi {
         } else {
             IO.deleteFile(rdfFile, false, Geonet.THESAURUS);
             throw new WebApplicationException("Unknown format (Must be in SKOS format).");
+        }
+    }
+
+    /**
+     * Validates that the given XML content is a well-formed RDF/XML document, using Apache Jena.
+     * <p>
+     * This is a stricter check than looking at the root element name: it ensures the content
+     * can actually be parsed as RDF/XML (correct namespaces, well-formed RDF constructs, etc.),
+     * catching thesaurus uploads (either from a file or from a URL) that are XML but are not
+     * valid RDF/XML (e.g. an HTML error page, or an unrelated XML document).
+     *
+     * @param xml the XML content to validate
+     * @throws WebApplicationException if the content is not a valid RDF/XML document
+     */
+    private void validateRdfXml(Element xml) {
+        String xmlContent = Xml.getString(xml);
+        Model model = ModelFactory.createDefaultModel();
+        try (InputStream in = IOUtils.toInputStream(xmlContent, StandardCharsets.UTF_8)) {
+            RDFDataMgr.read(model, in, Lang.RDFXML);
+        } catch (Exception e) {
+            throw new WebApplicationException(
+                "The uploaded thesaurus is not a valid RDF/XML file. " + e.getMessage(), e);
         }
     }
 
