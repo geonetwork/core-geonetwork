@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -47,6 +47,7 @@ public abstract class WebappMetricsFilter implements Filter {
     private final String registryAttribute;
 
     // initialized after call of init method
+    private MetricsRegistry metricsRegistry;
     private ConcurrentMap<Integer, Meter> metersByStatusCode;
     private Meter otherMeter;
     private Counter activeRequests;
@@ -71,9 +72,9 @@ public abstract class WebappMetricsFilter implements Filter {
 
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        final MetricsRegistry metricsRegistry = getMetricsFactory(filterConfig);
+        this.metricsRegistry = getMetricsFactory(filterConfig);
 
-        this.metersByStatusCode = new ConcurrentHashMap<Integer, Meter>(meterNamesByStatusCode
+        this.metersByStatusCode = new ConcurrentHashMap<>(meterNamesByStatusCode
             .size());
         for (Entry<Integer, String> entry : meterNamesByStatusCode.entrySet()) {
             metersByStatusCode.put(entry.getKey(),
@@ -107,7 +108,12 @@ public abstract class WebappMetricsFilter implements Filter {
     }
 
     public void destroy() {
-        Metrics.defaultRegistry().shutdown();
+        // Shutdown the registry this filter actually used. Do not touch Metrics.defaultRegistry()
+        // here: destroy() runs while the JVM is shutting down, and the first load of the Metrics
+        // class registers a shutdown hook, which then fails with "Shutdown in progress".
+        if (metricsRegistry != null) {
+            metricsRegistry.shutdown();
+        }
     }
 
     public void doFilter(ServletRequest request,
