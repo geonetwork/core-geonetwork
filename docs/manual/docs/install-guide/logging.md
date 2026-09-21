@@ -91,6 +91,15 @@ Harvester logs are written to separate files via a **Routing** appender. Each ha
     ```
 -   Even when JSON logging is enabled, harvester logs continue to use plain-text `PatternLayout` since they are consumed separately from the main log file.
 
+!!! warning "Harvester logs must sit next to `geonetwork.log`"
+
+    The *Harvester* history in *Admin* → *Harvesting* offers a **log file** download button for each
+    run. It locates the run's log file in the directory of the `File` appender attached to the
+    `geonetwork` logger. A configuration whose `Harvester` routing appender writes somewhere else,
+    or that omits the routing appender or the `geonetwork` logger altogether, makes that button
+    disappear without any visible error. When customising a `log4j2-*.xml` file, keep the `File`
+    and `Harvester` appenders pointing at the same directory.
+
 ## Logger modules
 
 The Log4j2 configuration files define logger categories that administrators can adjust. Each log level preset (PROD, INDEX, DEV, etc.) sets these loggers to different levels.
