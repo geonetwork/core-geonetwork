@@ -756,6 +756,9 @@
   <xsl:template match="gmd:dataQualityInfo[count(*) = 0]"/>
   <xsl:template match="gmd:transferOptions[gmd:MD_DigitalTransferOptions/count(*) = 0]"/>
 
+  <!-- Delete empty temporal elements -->
+  <xsl:template match="gmd:temporalElement[count(*) = 0]"/>
+
   <!-- ================================================================= -->
   <!-- copy everything else as is -->
 
