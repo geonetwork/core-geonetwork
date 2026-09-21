@@ -31,8 +31,8 @@ import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.ResourceUploadTask;
 import org.fao.geonet.domain.ResourceUploadTaskStatus;
-import org.fao.geonet.repository.AbstractSpringDataTest;
 import org.fao.geonet.repository.ResourceUploadTaskRepository;
+import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,7 +74,7 @@ import static org.mockito.Mockito.when;
  */
 @Transactional(propagation = Propagation.NOT_SUPPORTED)
 public class AsyncResourceUploadServiceIntegrationTest
-    extends AbstractSpringDataTest {
+    extends AbstractServiceIntegrationTest {
 
     private static final String METADATA_UUID = "metadata-uuid";
     private static final String SOURCE_URL =
@@ -190,7 +190,7 @@ public class AsyncResourceUploadServiceIntegrationTest
      * Stops the service-owned scheduler and removes persisted test tasks.
      */
     @After
-    public void tearDown() {
+    public void cleanUpUploadService() {
         if (service != null) {
             service.destroy();
         }
