@@ -266,6 +266,14 @@
                     scope.newStatus.status === "2"
                   ) {
                     scope.md.draft = "n";
+
+                    // If the current location is a draft, update the URL to the metadata view
+                    if (window.location.hash.indexOf("/metadraf/") > 0) {
+                      window.location.hash = window.location.hash.replace(
+                        "/metadraf/",
+                        "/metadata/"
+                      );
+                    }
                   }
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit("metadataStatusUpdated", true);

@@ -313,11 +313,16 @@
                   .then(
                     function (r) {
                       if (r.data.hits.total.value > 0) {
+                        // Check if the draft version is available
+                        var draftFound = false;
+                        r.data.hits.hits.forEach(function (md) {
+                          if (md._source.draft == "y") {
+                            draftFound = true;
+                          }
+                        });
+
                         //If trying to show a draft that is not a draft, correct url:
-                        if (
-                          r.data.hits.total.value == 1 &&
-                          window.location.hash.indexOf("/metadraf/") > 0
-                        ) {
+                        if (getDraft && !draftFound) {
                           window.location.hash = window.location.hash.replace(
                             "/metadraf/",
                             "/metadata/"
