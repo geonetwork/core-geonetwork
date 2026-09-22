@@ -307,10 +307,12 @@
             </srv:serviceType>
           </xsl:if>
 
-          <xsl:call-template name="writeCharacterStringElement">
-            <xsl:with-param name="elementName" select="'srv:serviceTypeVersion'"/>
-            <xsl:with-param name="nodeWithStringToWrite" select="srv2:serviceTypeVersion"/>
-          </xsl:call-template>
+          <xsl:for-each select="srv2:serviceTypeVersion">
+            <xsl:call-template name="writeCharacterStringElement">
+              <xsl:with-param name="elementName" select="'srv:serviceTypeVersion'"/>
+              <xsl:with-param name="nodeWithStringToWrite" select="."/>
+            </xsl:call-template>
+          </xsl:for-each>
 
           <xsl:apply-templates select="mri:extent | srv:extent"/>
           <xsl:call-template name="writeCharacterStringElement">
@@ -514,16 +516,18 @@
                                        then 'DQ_NonQuantitativeAttributeAccuracy' else local-name()"/>
 
             <xsl:element name="{concat('gmd:', $dataQualityReportType)}">
-              <xsl:call-template name="writeCharacterStringElement">
-                <xsl:with-param name="elementName" select="'gmd:nameOfMeasure'"/>
-                <xsl:with-param name="nodeWithStringToWrite" select="mdq:measure/mdq:DQ_MeasureReference/mdq:nameOfMeasure"/>
-              </xsl:call-template>
+              <xsl:for-each select="mdq:measure/mdq:DQ_MeasureReference/mdq:nameOfMeasure">
+                <xsl:call-template name="writeCharacterStringElement">
+                  <xsl:with-param name="elementName" select="'gmd:nameOfMeasure'"/>
+                  <xsl:with-param name="nodeWithStringToWrite" select="."/>
+                </xsl:call-template>
+              </xsl:for-each>
+
               <xsl:apply-templates select="mdq:measure/mdq:DQ_MeasureReference/mdq:measureIdentification"/>
               <xsl:call-template name="writeCharacterStringElement">
                 <xsl:with-param name="elementName" select="'gmd:measureDescription'"/>
                 <xsl:with-param name="nodeWithStringToWrite" select="mdq:measure/mdq:DQ_MeasureReference/mdq:measureDescription"/>
               </xsl:call-template>
-
 
               <xsl:call-template name="writeCodelistElement">
                 <xsl:with-param name="elementName" select="'gmd:evaluationMethodType'"/>
@@ -841,7 +845,8 @@
     <xsl:apply-templates select=".//gmd:onlineResource"/>
   </xsl:template>
 
-  <xsl:template match="cit:CI_OnlineResource/cit:linkage/lan:*"/>
+  <xsl:template match="cit:CI_OnlineResource/cit:linkage/lan:*|
+                     cit:CI_OnlineResource/cit:linkage/@xsi:type" priority="10"/>
 
   <xsl:template match="cit:CI_OnlineResource/cit:linkage/gco2:CharacterString">
     <gmd:URL>

@@ -116,8 +116,13 @@
             gmd:PT_Locale/gmd:languageCode/gmd:LanguageCode/@codeListValue"/>
         </xsl:call-template>
         <xsl:choose>
-          <xsl:when test="gmd:characterEncoding">
-            <xsl:apply-templates select="gmd:characterEncoding" mode="from19139to19115-3.2018"/>
+          <xsl:when test="gmd:PT_Locale/gmd:characterEncoding">
+            <xsl:call-template name="writeCodelistElement">
+              <xsl:with-param name="elementName" select="'lan:characterEncoding'"/>
+              <xsl:with-param name="codeListName" select="'lan:MD_CharacterSetCode'"/>
+              <xsl:with-param name="codeListValue"
+                              select="gmd:PT_Locale/gmd:characterEncoding/gmd:MD_CharacterSetCode/@codeListValue"/>
+            </xsl:call-template>
           </xsl:when>
           <xsl:when test="../gmd:characterSet">
             <xsl:call-template name="writeCodelistElement">

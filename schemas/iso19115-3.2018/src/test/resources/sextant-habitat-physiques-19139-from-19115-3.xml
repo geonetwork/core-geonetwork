@@ -1077,7 +1077,7 @@
         <gmd:MD_DigitalTransferOptions>
           <gmd:onLine>
             <gmd:CI_OnlineResource>
-              <gmd:linkage xsi:type="gmd:PT_FreeText_PropertyType">
+              <gmd:linkage>
                 <gmd:URL>http://archimer.ifremer.fr/doc/00026/13751/</gmd:URL>
               </gmd:linkage>
               <gmd:protocol>
@@ -1105,7 +1105,7 @@
         <gmd:MD_DigitalTransferOptions>
           <gmd:onLine>
             <gmd:CI_OnlineResource>
-              <gmd:linkage xsi:type="gmd:PT_FreeText_PropertyType">
+              <gmd:linkage>
                 <gmd:URL>https://sextant.ifremer.fr/services/wms/biologie</gmd:URL>
               </gmd:linkage>
               <gmd:protocol>
@@ -1151,7 +1151,7 @@
           </gmd:onLine>
           <gmd:onLine>
             <gmd:CI_OnlineResource>
-              <gmd:linkage xsi:type="gmd:PT_FreeText_PropertyType">
+              <gmd:linkage>
                 <gmd:URL>https://sextant.ifremer.fr/services/wfs/biologie</gmd:URL>
               </gmd:linkage>
               <gmd:protocol>
@@ -1182,7 +1182,7 @@
         <gmd:MD_DigitalTransferOptions>
           <gmd:onLine>
             <gmd:CI_OnlineResource>
-              <gmd:linkage xsi:type="gmd:PT_FreeText_PropertyType">
+              <gmd:linkage>
                 <gmd:URL>https://sextant.ifremer.fr/services/wms/biologie</gmd:URL>
               </gmd:linkage>
               <gmd:protocol>
@@ -1228,7 +1228,7 @@
           </gmd:onLine>
           <gmd:onLine>
             <gmd:CI_OnlineResource>
-              <gmd:linkage xsi:type="gmd:PT_FreeText_PropertyType">
+              <gmd:linkage>
                 <gmd:URL>https://sextant.ifremer.fr/services/wfs/biologie</gmd:URL>
               </gmd:linkage>
               <gmd:protocol>
