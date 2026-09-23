@@ -83,7 +83,7 @@ public class BuildEditorFormTest {
 		XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat().setLineSeparator("\n"));
 		String actual = xmlOutputter.outputString(editorForm);
 
-		TestSupport.assertGeneratedDataByteMatchExpected("raw-UpperRhineCastles-editor-form.xml", actual, GENERATE_EXPECTED_FILE);
+		TestSupport.assertGeneratedDataByteMatchExpected("raw-UpperRhineCastles-editor-form.html", actual, GENERATE_EXPECTED_FILE);
 	}
 
 	@Test
