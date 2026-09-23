@@ -176,7 +176,7 @@ Synchronous URL uploads also check for an active asynchronous filename claim bef
 
 Upload-task state and filename claims are stored in the database rather than application memory.
 
-The download itself, including its active network stream and worker future, remains local to the application process that accepted the task. If that process becomes unavailable, a later task-state synchronization marks the task as `FAILED` after its heartbeat becomes stale. The upload is not automatically resumed.
+The download itself, including its active network stream and worker future, remains local to the application process that accepted the task. The worker updates its heartbeat while the task remains non-terminal, including while a cancellation is in progress. If that process becomes unavailable, a later task-state synchronization marks the task as `FAILED` after its heartbeat becomes stale. The upload is not automatically resumed.
 
 ### Asynchronous upload configuration
 

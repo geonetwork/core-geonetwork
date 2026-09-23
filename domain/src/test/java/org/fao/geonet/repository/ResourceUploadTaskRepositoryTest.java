@@ -90,7 +90,7 @@ public class ResourceUploadTaskRepositoryTest
     }
 
     @Test
-    public void progressUpdateRequiresWorkerAndAllowedStatus() {
+    public void progressUpdateRequiresWorkerAndNonTerminalStatus() {
         ResourceUploadTask task = saveTask("worker");
 
         repository.startTask(
@@ -106,10 +106,7 @@ public class ResourceUploadTaskRepositoryTest
             repository.updateProgress(
                 task.getId(),
                 "worker",
-                Arrays.asList(
-                    ResourceUploadTaskStatus.UPLOADING,
-                    ResourceUploadTaskStatus.FINALIZING
-                ),
+                ResourceUploadTaskStatus.getNonTerminalStatuses(),
                 50,
                 100,
                 new Date()
@@ -127,15 +124,48 @@ public class ResourceUploadTaskRepositoryTest
         );
 
         assertEquals(
+            1,
+            repository.updateProgress(
+                task.getId(),
+                "worker",
+                ResourceUploadTaskStatus.getNonTerminalStatuses(),
+                75,
+                100,
+                new Date()
+            )
+        );
+        assertEquals(75, reload(task).getBytesTransferred());
+
+        assertEquals(
+            0,
+            repository.updateProgress(
+                task.getId(),
+                "other-worker",
+                ResourceUploadTaskStatus.getNonTerminalStatuses(),
+                90,
+                100,
+                new Date()
+            )
+        );
+
+        repository.markCancelled(
+            task.getId(),
+            "worker",
+            ResourceUploadTaskStatus.CANCELLING,
+            ResourceUploadTaskStatus.CANCELLED,
+            75,
+            100,
+            new Date(),
+            ResourceUploadTask.releasedClaimKey(task.getId())
+        );
+
+        assertEquals(
             0,
             repository.updateProgress(
                 task.getId(),
                 "worker",
-                Arrays.asList(
-                    ResourceUploadTaskStatus.UPLOADING,
-                    ResourceUploadTaskStatus.FINALIZING
-                ),
-                75,
+                ResourceUploadTaskStatus.getNonTerminalStatuses(),
+                90,
                 100,
                 new Date()
             )
@@ -317,7 +347,7 @@ public class ResourceUploadTaskRepositoryTest
         assertEquals(
             1,
             repository.failStaleTasks(
-                ResourceUploadTaskStatus.getActiveStatuses(),
+                ResourceUploadTaskStatus.getNonTerminalStatuses(),
                 ResourceUploadTaskStatus.FAILED,
                 "worker unavailable",
                 new Date(),

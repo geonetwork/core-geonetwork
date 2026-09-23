@@ -414,7 +414,7 @@ public class AsyncResourceUploadService implements DisposableBean {
                                 updated = taskRepository.updateProgress(
                                     execution.getTaskId(),
                                     workerId,
-                                    ResourceUploadTaskStatus.getProgressUpdateStatuses(),
+                                    ResourceUploadTaskStatus.getNonTerminalStatuses(),
                                     execution.getBytesTransferred(),
                                     execution.getTotalBytes(),
                                     now
@@ -488,7 +488,7 @@ public class AsyncResourceUploadService implements DisposableBean {
         );
 
         taskRepository.failStaleTasks(
-            ResourceUploadTaskStatus.getActiveStatuses(),
+            ResourceUploadTaskStatus.getNonTerminalStatuses(),
             ResourceUploadTaskStatus.FAILED,
             "The upload stopped because the server processing it " +
                 "is no longer available.",

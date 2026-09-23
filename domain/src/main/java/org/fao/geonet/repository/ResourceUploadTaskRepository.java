@@ -495,9 +495,9 @@ public interface ResourceUploadTaskRepository
     );
 
     /**
-     * Fails active tasks whose heartbeat is older than the supplied cutoff.
+     * Fails non-terminal tasks whose heartbeat is older than the supplied cutoff.
      *
-     * @param activeStatuses statuses eligible for stale-task recovery
+     * @param nonTerminalStatuses statuses eligible for stale-task recovery
      * @param failedStatus terminal failed status
      * @param error failure description
      * @param now failure and heartbeat time
@@ -514,12 +514,12 @@ public interface ResourceUploadTaskRepository
             "t.endedDateTime = :now, " +
             "t.lastHeartbeatDateTime = :now, " +
             "t.claimKey = CONCAT(:releasedClaimPrefix, t.id) " +
-            "WHERE t.status IN :activeStatuses " +
+            "WHERE t.status IN :nonTerminalStatuses " +
             "AND t.lastHeartbeatDateTime < :cutoff"
     )
     int failStaleTasks(
-        @Param("activeStatuses")
-        Collection<ResourceUploadTaskStatus> activeStatuses,
+        @Param("nonTerminalStatuses")
+        Collection<ResourceUploadTaskStatus> nonTerminalStatuses,
         @Param("failedStatus")
         ResourceUploadTaskStatus failedStatus,
         @Param("error") String error,

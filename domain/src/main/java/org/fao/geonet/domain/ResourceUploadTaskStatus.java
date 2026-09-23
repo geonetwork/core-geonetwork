@@ -35,31 +35,31 @@ public enum ResourceUploadTaskStatus {
     /**
      * The task is pending and has not started yet.
      */
-    PENDING(true, true, false, false),
+    PENDING(true, false),
     /**
      * The task is currently being uploaded.
      */
-    UPLOADING(true, true, false, true),
+    UPLOADING(true, false),
     /**
      * The task is finalizing after the upload is complete.
      */
-    FINALIZING(true, true, false, true),
+    FINALIZING(true, false),
     /**
      * The task is being cancelled.
      */
-    CANCELLING(false, true, false, false),
+    CANCELLING(false, false),
     /**
      * The task has been completed successfully.
      */
-    COMPLETED(false, false, true, false),
+    COMPLETED(false, true),
     /**
      * The task has failed.
      */
-    FAILED(false, false, true, false),
+    FAILED(false, true),
     /**
      * The task has been cancelled.
      */
-    CANCELLED(false, false, true, false);
+    CANCELLED(false, true);
 
     /**
      * Indicates whether the task can fail in this status.
@@ -67,35 +67,20 @@ public enum ResourceUploadTaskStatus {
     private final boolean failable;
 
     /**
-     * Indicates whether the task is active in this status.
-     */
-    private final boolean active;
-
-    /**
      * Indicates whether the task is in a terminal status.
      */
     private final boolean terminal;
-
-    /**
-     * Indicates whether the task can provide progress updates in this status.
-     */
-    private final boolean progressUpdateAllowed;
 
     /**
      * Creates a task status with its supported state classifications.
      *
      * @param failable whether an execution failure may transition this status
      *                 to {@link #FAILED}
-     * @param active whether the task is still active
      * @param terminal whether no further state transition is expected
-     * @param progressUpdateAllowed whether a worker may persist progress and
-     *                              heartbeat updates in this status
      */
-    ResourceUploadTaskStatus(boolean failable, boolean active, boolean terminal, boolean progressUpdateAllowed) {
+    ResourceUploadTaskStatus(boolean failable, boolean terminal) {
         this.failable = failable;
-        this.active = active;
         this.terminal = terminal;
-        this.progressUpdateAllowed = progressUpdateAllowed;
     }
 
     /**
@@ -108,15 +93,6 @@ public enum ResourceUploadTaskStatus {
     }
 
     /**
-     * Returns whether the task is still active.
-     *
-     * @return {@code true} for non-terminal task states
-     */
-    public boolean isActive() {
-        return active;
-    }
-
-    /**
      * Returns whether the task has finished.
      *
      * @return {@code true} for completed, failed, or cancelled tasks
@@ -126,29 +102,19 @@ public enum ResourceUploadTaskStatus {
     }
 
     /**
-     * Returns whether worker progress and heartbeat updates are accepted in this
-     * status.
+     * Returns statuses that have not finished for worker progress, heartbeats,
+     * and stale-task processing.
      *
-     * @return {@code true} while uploading or finalizing
+     * @return non-terminal task statuses in declaration order
      */
-    public boolean isProgressUpdateAllowed() {
-        return progressUpdateAllowed;
-    }
-
-    /**
-     * Returns all statuses considered active for heartbeat and stale-task
-     * processing.
-     *
-     * @return active task statuses in declaration order
-     */
-    public static List<ResourceUploadTaskStatus> getActiveStatuses() {
-        List<ResourceUploadTaskStatus> activeStatuses = new ArrayList<>();
+    public static List<ResourceUploadTaskStatus> getNonTerminalStatuses() {
+        List<ResourceUploadTaskStatus> nonTerminalStatuses = new ArrayList<>();
         for (ResourceUploadTaskStatus status : ResourceUploadTaskStatus.values()) {
-            if (status.isActive()) {
-                activeStatuses.add(status);
+            if (!status.isTerminal()) {
+                nonTerminalStatuses.add(status);
             }
         }
-        return activeStatuses;
+        return nonTerminalStatuses;
     }
 
     /**
@@ -164,22 +130,6 @@ public enum ResourceUploadTaskStatus {
             }
         }
         return terminalStatuses;
-    }
-
-    /**
-     * Returns the statuses in which a worker may persist byte counts and a
-     * heartbeat.
-     *
-     * @return progress-update statuses in declaration order
-     */
-    public static List<ResourceUploadTaskStatus> getProgressUpdateStatuses() {
-        List<ResourceUploadTaskStatus> progressUpdateStatuses = new ArrayList<>();
-        for (ResourceUploadTaskStatus status : ResourceUploadTaskStatus.values()) {
-            if (status.isProgressUpdateAllowed()) {
-                progressUpdateStatuses.add(status);
-            }
-        }
-        return progressUpdateStatuses;
     }
 
     /**

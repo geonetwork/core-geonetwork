@@ -144,7 +144,7 @@ public class ResourceUploadTaskTest {
                 ResourceUploadTaskStatus.FINALIZING,
                 ResourceUploadTaskStatus.CANCELLING
             ),
-            ResourceUploadTaskStatus.getActiveStatuses()
+            ResourceUploadTaskStatus.getNonTerminalStatuses()
         );
 
         assertEquals(
@@ -165,13 +165,6 @@ public class ResourceUploadTaskTest {
             ResourceUploadTaskStatus.getFailableStatuses()
         );
 
-        assertEquals(
-            Arrays.asList(
-                ResourceUploadTaskStatus.UPLOADING,
-                ResourceUploadTaskStatus.FINALIZING
-            ),
-            ResourceUploadTaskStatus.getProgressUpdateStatuses()
-        );
     }
 
     private ResourceUploadTask task() {
