@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2011 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -27,10 +27,7 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.Set;
 
-import javax.annotation.Nonnull;
-
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.datamanager.IMetadataCategory;
@@ -38,7 +35,6 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataCategoryRepository;
 import org.fao.geonet.repository.MetadataRepository;
-import org.fao.geonet.repository.Updater;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import jeeves.server.context.ServiceContext;
@@ -63,25 +59,19 @@ public class BaseMetadataCategory implements IMetadataCategory {
     @Override
     public boolean setCategory(ServiceContext context, String mdId, String categId) throws Exception {
 
-        if (!getMetadataRepository().existsById(Integer.valueOf(mdId))) {
+        // Can be an approved record or a working copy
+        AbstractMetadata metadata = getMetadataUtils().findOne(mdId);
+        if (metadata == null) {
             return false;
         }
 
         final Optional<MetadataCategory> newCategory = metadataCategoryRepository.findById(Integer.valueOf(categId));
-        if (!newCategory.isPresent()) {
+        if (newCategory.isEmpty()) {
             return false;
         }
 
-        final boolean[] changed = new boolean[1];
-        getMetadataRepository().update(Integer.valueOf(mdId), new Updater<Metadata>() {
-            @Override
-            public void apply(@Nonnull Metadata entity) {
-                changed[0] = !entity.getMetadataCategories().contains(newCategory.get());
-                entity.getMetadataCategories().add(newCategory.get());
-            }
-        });
-
-        if (changed[0]) {
+        if (metadata.getCategories().add(newCategory.get())) {
+            context.getBean(IMetadataManager.class).save(metadata);
             if (getSvnManager() != null) {
                 getSvnManager().setHistory(mdId, context);
             }
@@ -133,7 +123,7 @@ public class BaseMetadataCategory implements IMetadataCategory {
         if (changed) {
             context.getBean(IMetadataManager.class).save(metadata);
             if (getSvnManager() != null) {
-                getSvnManager().setHistory(mdId + "", context);
+                getSvnManager().setHistory(mdId, context);
             }
         }
 
