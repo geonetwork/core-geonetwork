@@ -122,4 +122,27 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
         @Param("pattern") String search,
         @Param("replace") String replace,
         @Param("flags") String flags);
+
+    /**
+     * Increment the popularity of the metadata by one.
+     * <p>
+     * Only the popularity column is updated, so a concurrent update of the record is not overwritten
+     * with the values loaded in this persistence context.
+     *
+     * @param mdId the id of the metadata
+     */
+    @Modifying
+    @Transactional
+    @Query("UPDATE " + Metadata.TABLENAME + " m SET m.dataInfo.popularity = m.dataInfo.popularity + 1 WHERE m.id = ?1")
+    void incrementPopularity(int mdId);
+
+    /**
+     * Get the popularity of the metadata from the database, bypassing any entity already loaded.
+     *
+     * @param mdId the id of the metadata
+     * @return the popularity, or null if the metadata doesn't exist.
+     */
+    @Nullable
+    @Query("SELECT m.dataInfo.popularity FROM " + Metadata.TABLENAME + " m WHERE m.id = ?1")
+    Integer findPopularityById(int mdId);
 }

@@ -83,6 +83,33 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
     }
 
     @Test
+    public void testIncrementPopularity() throws Exception {
+        final Metadata template = newMetadata();
+        template.getDataInfo().setPopularity(32);
+        final int id = _repo.save(template).getId();
+        _entityManager.flush();
+        _entityManager.clear();
+
+        // Entity loaded in this persistence context, then the record is updated elsewhere
+        final Metadata loaded = _repo.findOneById(id);
+        _entityManager.createQuery("UPDATE " + Metadata.TABLENAME + " m SET m.data = :data WHERE m.id = :id")
+            .setParameter("data", "<md>updated</md>")
+            .setParameter("id", id)
+            .executeUpdate();
+
+        _repo.incrementPopularity(loaded.getId());
+        assertEquals(Integer.valueOf(33), _repo.findPopularityById(id));
+
+        _entityManager.flush();
+        _entityManager.clear();
+
+        final Metadata reloaded = _repo.findOneById(id);
+        assertEquals(33, reloaded.getDataInfo().getPopularity());
+        assertEquals("The popularity update must not overwrite other columns",
+            "<md>updated</md>", reloaded.getData());
+    }
+
+    @Test
     public void testFindByUUID() throws Exception {
         Metadata metadata = _repo.save(newMetadata());
 

@@ -611,16 +611,17 @@ public class BaseMetadataUtils implements IMetadataUtils {
         // READONLYMODE
         if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             int iId = Integer.parseInt(id);
-            metadataRepository.update(iId, entity -> entity.getDataInfo().setPopularity(
-                entity.getDataInfo().getPopularity() + 1
-            ));
+            // Update only the popularity column. Saving the whole entity writes back every column
+            // as loaded, which can overwrite an update of the record committed in the meantime.
+            metadataRepository.incrementPopularity(iId);
             final java.util.Optional<Metadata> metadata = metadataRepository.findById(iId);
+            final Integer popularity = metadataRepository.findPopularityById(iId);
 
-            if (metadata.isPresent()) {
+            if (metadata.isPresent() && popularity != null) {
                 searchManager.updateFieldAsynch(
                     metadata.get().getUuid(),
                     Geonet.IndexFieldNames.POPULARITY,
-                    metadata.get().getDataInfo().getPopularity());
+                    popularity);
 
             }
         } else {
