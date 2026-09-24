@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2022 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -29,21 +29,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.Constants;
-import org.fao.geonet.GeonetContext;
 import org.fao.geonet.ZipUtil;
 import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.api.records.attachments.StoreUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLib.Format;
 import org.fao.geonet.kernel.mef.MEFLib.Version;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingInfo;
 import org.fao.geonet.lib.Lib;
-import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
@@ -51,6 +52,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -91,7 +93,6 @@ class MEF2Exporter {
 
         Path file = Files.createTempFile("mef-", ".mef");
         EsSearchManager searchManager = context.getBean(EsSearchManager.class);
-        String contextLang = context.getLanguage() == null ? Geonet.DEFAULT_LANGUAGE : context.getLanguage();
         try (
             FileSystem zipFs = ZipUtil.createZipFs(file)
         ) {
@@ -139,8 +140,8 @@ class MEF2Exporter {
 
                 final SearchResponse result = searchManager.query("+id:" + id, null, from, size);
 
-                String mdSchema = null, mdTitle = null, mdAbstract = null, isHarvested = null;
-                MetadataType mdType = null;
+                String mdSchema, mdTitle, mdAbstract, isHarvested;
+                MetadataType mdType;
 
                 List<Hit> hits = result.hits().hits();
                 ObjectMapper objectMapper = new ObjectMapper();
@@ -211,10 +212,10 @@ class MEF2Exporter {
 
     /**
      * Create a metadata folder according to MEF {@link Version} 2 specification. If current record
-     * is based on an ISO profil, the stylesheet /convert/to19139.xsl is used to map to ISO. Both
-     * files are included in MEF file. Export relevant information according to format parameter.
+     * is based on an ISO profile, the stylesheet /convert/to19139.xsl is used to map to ISO. Both
+     * files are included in the MEF file. Export relevant information according to format parameter.
      *
-     * @param zipFs Zip file to add new record
+     * @param zipFs Zip file to add the new record.
      * @param includeAttachments If true, include attachments according to the export format and permissions.
      *                        If false, no attachments are included.
      */
@@ -233,7 +234,6 @@ class MEF2Exporter {
         String xmlDocumentAsString = recordAndMetadataForExport.two();
 
         String id = "" + record.getId();
-        String isTemp = record.getDataInfo().getType().codeString;
 
         final Path metadataXmlDir = metadataRootDir.resolve(MD_DIR);
         Files.createDirectories(metadataXmlDir);
@@ -246,13 +246,36 @@ class MEF2Exporter {
         Files.write(metadataXmlDir.resolve(FILE_METADATA), xmlDocumentAsString.getBytes(CHARSET));
 
 
-        // --- save Feature Catalog
-        String ftUUID = getFeatureCatalogID(context, record.getId());
-        if (!ftUUID.equals("")) {
-            Pair<AbstractMetadata, String> ftrecordAndMetadata = MEFLib.retrieveMetadata(context, record, resolveXlink, removeXlinkAttribute, addSchemaLocation);
-            Path featureMdDir = metadataRootDir.resolve(SCHEMA);
-            Files.createDirectories(featureMdDir);
-            Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));
+        // --- save Feature Catalogue
+        String featCatalogueUUID = getFeatureCatalogID(record, Xml.loadString(xmlDocumentAsString, false));
+        if (featCatalogueUUID.isEmpty()) {
+            Log.debug(Geonet.MEF, String.format(
+                "No feature catalogue found while exporting metadata '%s'.",
+                metadata.getUuid()
+            ));
+        } else {
+            AbstractMetadata ftRecord = context.getBean(IMetadataUtils.class).findOneByUuid(featCatalogueUUID);
+            if (ftRecord != null) {
+                boolean canViewFeatureCatalogue = true;
+                try {
+                    // Only include the feature catalogue when the current user is allowed to view it.
+                    Lib.resource.checkPrivilege(context, "" + ftRecord.getId(), ReservedOperation.view);
+                } catch (Exception e) {
+                    canViewFeatureCatalogue = false;
+                    Log.debug(Geonet.MEF, String.format(
+                        "Skipping feature catalogue '%s' while exporting metadata '%s' because the current user cannot view it. %s",
+                        featCatalogueUUID, metadata.getUuid(), e.getMessage()
+                    ), e);
+                }
+
+                if (canViewFeatureCatalogue) {
+                    Pair<AbstractMetadata, String> featureCatalogueRecordAndMetadata =
+                        MEFLib.retrieveMetadata(context, ftRecord.getId(), resolveXlink, removeXlinkAttribute, addSchemaLocation);
+                    Path featureMdDir = metadataRootDir.resolve(SCHEMA);
+                    Files.createDirectories(featureMdDir);
+                    Files.write(featureMdDir.resolve(FILE_METADATA), featureCatalogueRecordAndMetadata.two().getBytes(CHARSET));
+                }
+            }
         }
 
         final Store store = context.getBean("resourceStore", Store.class);
@@ -296,27 +319,28 @@ class MEF2Exporter {
     }
 
     /**
-     * Get Feature Catalog ID if exists using relation table.
+     * Get the feature catalogue UUID referenced by a record through its feature
+     * catalogue citation, if any.
      *
-     * @param metadataId Metadata record id to search for feature catalogue for.
-     * @return String Feature catalogue uuid.
+     * @param metadata Metadata record to look for an associated feature catalogue.
+     * @param md       The metadata document to extract the citation from.
+     * @return the feature catalogue UUID, or an empty string when none is referenced.
      */
-    private static String getFeatureCatalogID(ServiceContext context, int metadataId) throws Exception {
-        GeonetContext gc = (GeonetContext) context
-            .getHandlerContext(Geonet.CONTEXT_NAME);
-        DataManager dm = gc.getBean(DataManager.class);
-
-        List<MetadataRelation> relations = context.getBean(MetadataRelationRepository.class).findAllById_MetadataId(metadataId);
-
-        if (relations.isEmpty()) {
+    private static String getFeatureCatalogID(AbstractMetadata metadata, Element md) {
+        SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(metadata.getDataInfo().getSchemaId());
+        if (!(schemaPlugin instanceof AssociatedResourcesSchemaPlugin)) {
             return "";
         }
 
-        // Assume only one feature catalogue is available for a metadata record.
-        int ftId = relations.get(0).getId().getRelatedId();
+        Set<String> featureCatalogueUUIDs =
+            ((AssociatedResourcesSchemaPlugin) schemaPlugin).getAssociatedFeatureCatalogueUUIDs(md);
+        if (featureCatalogueUUIDs == null || featureCatalogueUUIDs.isEmpty()) {
+            return "";
+        }
 
-        String ftUuid = dm.getMetadataUuid("" + ftId);
-
-        return ftUuid != null ? ftUuid : "";
+        // A record may cite more than one feature catalogue but the MEF layout only
+        // carries one. Pick the first UUID in natural order so the exported record
+        // is deterministic.
+        return Collections.min(featureCatalogueUUIDs);
     }
 }
