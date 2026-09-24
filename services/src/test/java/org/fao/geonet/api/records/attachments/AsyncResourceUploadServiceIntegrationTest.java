@@ -27,6 +27,7 @@ import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.domain.ResourceUploadTask;
@@ -55,6 +56,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -335,5 +337,38 @@ public class AsyncResourceUploadServiceIntegrationTest
                 persisted.getClaimKey()
             );
         }
+    }
+
+    /**
+     * Verifies that a size-limit failure gives the caller its specific reason.
+     */
+    @Test
+    public void sizeLimitFailureReportsMaximumSize() throws Exception {
+        InputStreamLimitExceededException sizeError =
+            new InputStreamLimitExceededException(FILE_SIZE - 1);
+
+        doThrow(sizeError).when(store).putResource(
+            eq(workerContext),
+            eq(METADATA_UUID),
+            eq(sourceUrl),
+            eq(MetadataResourceVisibility.PUBLIC),
+            eq(false),
+            any(ResourceUploadProgressListener.class)
+        );
+
+        ResourceUploadTask submitted = service.submit(
+            store,
+            requestContext,
+            METADATA_UUID,
+            sourceUrl,
+            MetadataResourceVisibility.PUBLIC,
+            false
+        );
+
+        ResourceUploadTask persisted = repository.findById(submitted.getId())
+            .orElseThrow(() -> new AssertionError("Upload task was not persisted."));
+
+        assertEquals(ResourceUploadTaskStatus.FAILED, persisted.getStatus());
+        assertEquals(sizeError.getMessage(), persisted.getError());
     }
 }

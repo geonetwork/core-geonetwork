@@ -29,6 +29,7 @@ import jeeves.server.dispatchers.ServiceManager;
 import jeeves.transaction.TransactionManager;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -361,7 +362,14 @@ public class AsyncResourceUploadService implements DisposableBean {
                     e
                 );
 
-                failTask(taskId, execution, "The upload failed. Please try again or contact an administrator.");
+                String error;
+                if (e instanceof InputStreamLimitExceededException) {
+                    error = e.getMessage();
+                } else {
+                    error = "The upload failed. Please try again or contact an administrator.";
+                }
+
+                failTask(taskId, execution, error);
             }
         } finally {
             if (execution.isCancelled()) {

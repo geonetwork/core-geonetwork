@@ -146,7 +146,7 @@ Cancellation of a running task is cooperative. After requesting cancellation, co
 | `FINALIZING` | The attachment transaction is being finalized. Cancellation is no longer accepted. |
 | `CANCELLING` | Cancellation was requested and the worker is still stopping. |
 | `COMPLETED`  | The attachment was stored successfully. |
-| `FAILED`     | The upload failed. The `error` property contains a safe failure message. Detailed unexpected errors are logged on the server. |
+| `FAILED`     | The upload failed. The `error` property gives the size limit when that limit is exceeded; unexpected failures have a generic message, with details in the server logs. |
 | `CANCELLED`  | The worker stopped after cancellation. |
 
 The resolved `filename` is stored as soon as it becomes known. It may therefore be available on `FAILED` or `CANCELLED` tasks as well as completed tasks.
