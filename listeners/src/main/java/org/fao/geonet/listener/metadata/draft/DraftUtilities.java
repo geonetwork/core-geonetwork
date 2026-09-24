@@ -20,7 +20,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class DraftUtilities {
@@ -148,6 +150,13 @@ public class DraftUtilities {
             ServiceContext context = ServiceContext.get();
             Element xmlData = draft.getXmlData(false);
             String changeDate = draft.getDataInfo().getChangeDate().getDateAndTime();
+
+            // Reassign categories
+            Set<MetadataCategory> draftCategories = new HashSet<>(draft.getCategories());
+            metadataManager.update(md.getId(), (Updater<Metadata>) entity -> {
+                entity.getCategories().clear();
+                entity.getCategories().addAll(draftCategories);
+            });
 
             removeDraft((MetadataDraft) draft);
 

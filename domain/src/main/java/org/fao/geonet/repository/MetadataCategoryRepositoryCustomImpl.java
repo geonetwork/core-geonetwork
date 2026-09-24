@@ -26,6 +26,7 @@ package org.fao.geonet.repository;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataCategory_;
+import org.fao.geonet.domain.MetadataDraft;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Nonnull;
@@ -81,6 +82,11 @@ public class MetadataCategoryRepositoryCustomImpl implements MetadataCategoryRep
             + Metadata.METADATA_CATEG_JOIN_TABLE_CATEGORY_ID + "=?");
         nativeQuery.setParameter(1, id);
         nativeQuery.executeUpdate();
+
+        final Query draftNativeQuery = _entityManager.createNativeQuery("DELETE FROM " + MetadataDraft.METADATA_DRAFT_CATEG_JOIN_TABLE_NAME + " WHERE "
+            + Metadata.METADATA_CATEG_JOIN_TABLE_CATEGORY_ID + "=?");
+        draftNativeQuery.setParameter(1, id);
+        draftNativeQuery.executeUpdate();
 
 
         _entityManager.flush();
