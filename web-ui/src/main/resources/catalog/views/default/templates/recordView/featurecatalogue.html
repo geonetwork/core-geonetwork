@@ -37,7 +37,16 @@
     <tbody>
       <tr data-ng-if="featureType.definition">
         <th data-translate="">featureDefinition</th>
-        <td>{{featureType.definition}}</td>
+        <td>
+          {{featureType.definitionObject ? featureType.definitionObject.default :
+          featureType.definition}}
+        </td>
+      </tr>
+      <tr data-ng-if="featureType.designation">
+        <th data-translate="">featureDesignation</th>
+        <td
+          data-ng-bind-html="(featureType.designationObject ? featureType.designationObject.default : featureType.designation) | newlines"
+        ></td>
       </tr>
       <tr data-ng-if="featureType.code">
         <th data-translate="">featureCode</th>
