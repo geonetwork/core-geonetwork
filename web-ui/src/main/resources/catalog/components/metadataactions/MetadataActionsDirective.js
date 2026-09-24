@@ -200,7 +200,8 @@
     "$translate",
     "$http",
     "gnMetadataManager",
-    function ($translate, $http, gnMetadataManager) {
+    "gnSearchLocation",
+    function ($translate, $http, gnMetadataManager, gnSearchLocation) {
       return {
         restrict: "A",
         replace: true,
@@ -266,6 +267,9 @@
                     scope.newStatus.status === "2"
                   ) {
                     scope.md.draft = "n";
+
+                    // If the current location is a draft, update the URL to the metadata view
+                    gnSearchLocation.switchDraftToMetadata();
                   }
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit("metadataStatusUpdated", true);
