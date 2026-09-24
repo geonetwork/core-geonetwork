@@ -37,7 +37,7 @@ import java.nio.file.Path;
 import static org.fao.geonet.schema.TestSupport.getResource;
 import static org.fao.geonet.schema.TestSupport.getResourceInsideSchema;
 
-public class FromIso19139ConversionTest {
+public class Iso19139ConversionTest {
 
 	private static final boolean GENERATE_EXPECTED_FILE = false;
 
@@ -47,9 +47,24 @@ public class FromIso19139ConversionTest {
 	}
 
 	@Test
-	public void upperRhineCastles() throws Exception {
+	public void fromISO19139File1() throws Exception {
 		transformAndCompare("convert/fromISO19139.xsl", "UpperRhineCastles-iso19139.xml", "UpperRhineCastles-iso19115-3.2018.xml");
 	}
+
+    @Test
+    public void fromISO19139File2() throws Exception {
+        transformAndCompare("convert/fromISO19139.xsl", "sextant-habitat-physiques-19139-from-19115-3.xml", "sextant-habitat-physiques-19115-3-from-19139.xml");
+    }
+
+    @Test
+    public void toISO19139File1() throws Exception {
+        transformAndCompare("convert/ISO19139/toISO19139.xsl", "UpperRhineCastles-iso19115-3.2018.xml", "UpperRhineCastles-iso19139-from-19115-3.xml");
+    }
+
+    @Test
+    public void toISO19139File2() throws Exception {
+        transformAndCompare("convert/ISO19139/toISO19139.xsl", "sextant-habitat-physiques-19115-3.xml", "sextant-habitat-physiques-19139-from-19115-3.xml");
+    }
 
 	private void transformAndCompare(String scriptName, String inputFileName, String expectedFileName) throws Exception {
 		Path xslFile = getResourceInsideSchema(scriptName);

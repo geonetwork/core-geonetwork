@@ -17,6 +17,7 @@
             <xd:p><xd:b>Author:</xd:b>thabermann@hdfgroup.org</xd:p>
         </xd:desc>
     </xd:doc>
+
     <xsl:template name="writeCharacterStringElement">
         <!-- Parameters
         elementName = the name of the element (with namespace prefix) that contains the codelist, i.e. cit:name
