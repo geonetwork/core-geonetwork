@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.collections.MapUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.InputStreamLimitExceededException;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -587,6 +588,78 @@ public class JCloudStore extends AbstractStore {
         }
     }
 
+    /**
+     * Copy a blob to a new blob with the specified properties.
+     * @param sourceKey of the blob to copy
+     * @param targetKey of the new blob
+     * @param properties to set on the new blob
+     */
+    private void copyBlobWithMetadata(String sourceKey, String targetKey, Map<String, String> properties) {
+        jCloudConfiguration.getClient().getBlobStore().copyBlob(
+            jCloudConfiguration.getContainerName(),
+            sourceKey,
+            jCloudConfiguration.getContainerName(),
+            targetKey,
+            CopyOptions.builder().userMetadata(properties).build());
+    }
+
+    @Override
+    public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId,
+                                           String newName, Boolean approved) throws Exception {
+        int metadataId = canEdit(context, metadataUuid, approved);
+        checkResourceId(newName);
+
+        for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
+            final String sourceKey = getKey(context, metadataUuid, metadataId, visibility, resourceId);
+            final BlobMetadata sourceMetadata;
+
+            try {
+                sourceMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(
+                    jCloudConfiguration.getContainerName(), sourceKey);
+            } catch (ContainerNotFoundException ignored) {
+                continue;
+            }
+
+            if (sourceMetadata == null) {
+                continue;
+            }
+
+            final String targetKey = getKey(context, metadataUuid, metadataId, visibility, newName);
+
+            if (sourceKey.equals(targetKey)) {
+                return createResourceDescription(
+                    context, metadataUuid, visibility, newName, sourceMetadata, metadataId, approved, false);
+            }
+
+            if (jCloudConfiguration.getClient().getBlobStore().blobExists(
+                jCloudConfiguration.getContainerName(), targetKey)) {
+                throw new ResourceAlreadyExistException(
+                    String.format(
+                        "A resource with name '%s' and status '%s' already exists for metadata '%d'.",
+                        newName, visibility, metadataId));
+            }
+
+            Map<String, String> properties = new HashMap<>(sourceMetadata.getUserMetadata());
+
+            copyBlobWithMetadata(sourceKey, targetKey, properties);
+
+            jCloudConfiguration.getClient().getBlobStore().removeBlob(
+                jCloudConfiguration.getContainerName(), sourceKey);
+
+            BlobMetadata renamedMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(
+                jCloudConfiguration.getContainerName(), targetKey);
+
+            return createResourceDescription(
+                context, metadataUuid, visibility, newName, renamedMetadata, metadataId, approved, false);
+        }
+
+        throw new ResourceNotFoundException(
+            String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+            .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+            .withDescriptionKey("exception.resourceNotFound.resource.description",
+                new String[]{resourceId, metadataUuid});
+    }
+
     @Override
     public String delResources(final ServiceContext context, final int metadataId) throws Exception {
         try {
@@ -759,12 +832,7 @@ public class JCloudStore extends AbstractStore {
                         }
 
                         // Use the copyBlob to copy the resource with updated metadata.
-                        jCloudConfiguration.getClient().getBlobStore().copyBlob(
-                            jCloudConfiguration.getContainerName(),
-                            sourceBlobName,
-                            jCloudConfiguration.getContainerName(),
-                            targetBlobName,
-                            CopyOptions.builder().userMetadata(targetProperties).build());
+                        copyBlobWithMetadata(sourceBlobName, targetBlobName, targetProperties);
                     }
                 }
                 marker = page.getNextMarker();
