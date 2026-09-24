@@ -245,7 +245,7 @@ public class AttachmentsApi {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "Attachment added."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_CAN_EDIT),
-        @ApiResponse(responseCode = "409", description = "An asynchronous upload is already active for the resolved filename.")
+        @ApiResponse(responseCode = "400", description = "Invalid request.")
     })
     @ResponseBody
     public MetadataResource putResourceFromURL(
