@@ -39,7 +39,6 @@ import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.languages.IsoLanguagesMapper;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.JCloudConfiguration;
-import org.fao.geonet.util.LimitedInputStream;
 import org.fao.geonet.utils.Log;
 import org.jclouds.blobstore.ContainerNotFoundException;
 import org.jclouds.blobstore.domain.*;
@@ -367,13 +366,7 @@ public class JCloudStore extends AbstractStore {
                 // Update/set version
                 setPropertiesVersion(context, properties, isNewResource, metadataUuid, metadataId, visibility, approved, filename);
 
-                long contentLength;
-                // If the input stream is a LimitedInputStream and the file size is known then use that value otherwise use the available value.
-                if (is instanceof LimitedInputStream && ((LimitedInputStream) is).getFileSize() > 0) {
-                    contentLength = ((LimitedInputStream) is).getFileSize();
-                } else {
-                    contentLength = is.available();
-                }
+                long contentLength = resolveExpectedSize(is);
 
                 Blob blob = jCloudConfiguration.getClient().getBlobStore().blobBuilder(key)
                     .payload(is)
