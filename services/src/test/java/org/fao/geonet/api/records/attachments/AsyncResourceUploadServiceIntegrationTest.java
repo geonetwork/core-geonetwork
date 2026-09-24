@@ -324,7 +324,7 @@ public class AsyncResourceUploadServiceIntegrationTest
             assertNotNull(persisted.getEndedDateTime());
             assertNotNull(persisted.getLastHeartbeatDateTime());
             assertEquals(
-                "Failure after entering finalizing.",
+                "The upload failed. Please try again or contact an administrator.",
                 persisted.getError()
             );
             assertTrue(persisted.isTerminal());

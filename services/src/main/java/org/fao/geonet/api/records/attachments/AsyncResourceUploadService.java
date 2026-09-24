@@ -361,13 +361,7 @@ public class AsyncResourceUploadService implements DisposableBean {
                     e
                 );
 
-                failTask(
-                    taskId,
-                    execution,
-                    e.getMessage() != null
-                        ? e.getMessage()
-                        : e.toString()
-                );
+                failTask(taskId, execution, "The upload failed. Please try again or contact an administrator.");
             }
         } finally {
             if (execution.isCancelled()) {
