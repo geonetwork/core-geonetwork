@@ -929,11 +929,14 @@
                   templates: {
                     suggestion: function (data) {
                       var def = data.props.definitions[searchLanguage];
-                      var text = "<p>" + data.props.values[searchLanguage] + "";
+                      var suggestion = $("<p></p>").text(
+                        data.props.values[searchLanguage]
+                      );
                       if (displayDefinition && def != "") {
-                        text += " - <i>" + def + "</i>";
+                        suggestion.append(document.createTextNode(" - "));
+                        suggestion.append($("<i></i>").text(def));
                       }
-                      return text + "</p>";
+                      return suggestion;
                     }
                     // header: '<h4>' + scope.thesaurusKey + '</h4>'
                   }
