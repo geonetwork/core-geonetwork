@@ -47,6 +47,7 @@ import org.jclouds.blobstore.options.CopyOptions;
 import org.jclouds.blobstore.options.GetOptions;
 import org.jclouds.blobstore.options.ListContainerOptions;
 import org.jclouds.http.HttpResponseException;
+import org.jclouds.io.ContentMetadata;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
@@ -113,7 +114,10 @@ public class JCloudStore extends AbstractStore {
             FileSystems.getDefault().getPathMatcher("glob:" + filter);
 
         ListContainerOptions opts = new ListContainerOptions();
-        opts.delimiter(jCloudConfiguration.getFolderDelimiter()).prefix(resourceTypeDir);
+        // Recursive (not delimiter-based) listing, so resources in subfolders (nested paths) are
+        // returned too, not just those directly under resourceTypeDir - matches the convention
+        // already used by delResources()/copyResources() in this same class.
+        opts.prefix(resourceTypeDir).recursive();
 
         // Page through the data
         String marker = null;
@@ -128,7 +132,11 @@ public class JCloudStore extends AbstractStore {
                 // Only add to the list if it is a blob, and it matches the filter.
                 Path keyPath = new File(storageMetadata.getName()).toPath().getFileName();
                 if (storageMetadata.getType() == StorageType.BLOB && matcher.matches(keyPath)){
-                    final String filename = getFilename(storageMetadata.getName());
+                    // Keep the blob's path relative to resourceTypeDir (subfolders included),
+                    // not just its last segment, so nested-path resources round-trip correctly.
+                    String blobName = storageMetadata.getName();
+                    final String filename = blobName.startsWith(resourceTypeDir)
+                        ? blobName.substring(resourceTypeDir.length()) : getFilename(blobName);
                     MetadataResource resource = createResourceDescription(context, metadataUuid, visibility, filename, storageMetadata, metadataId, approved, includeAdditionalIndexedProperties);
                     resourceList.add(resource);
                 }
@@ -214,8 +222,21 @@ public class JCloudStore extends AbstractStore {
                     validationStatus);
         }
 
+        String mimeType = null;
+        if (storageMetadata instanceof BlobMetadata) {
+            ContentMetadata contentMetadata = ((BlobMetadata) storageMetadata).getContentMetadata();
+            if (contentMetadata != null) {
+                mimeType = contentMetadata.getContentType();
+            }
+        }
+        // Plain StorageMetadata (as returned when listing) does not carry the Content-Type; avoid
+        // an extra blobMetadata() round trip per listed object and detect from the filename.
+        if (mimeType == null || mimeType.isEmpty()) {
+            mimeType = MimeTypeDetector.detect(filename);
+        }
+
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
-            settingManager.getNodeURL() + "api/records/", visibility, storageMetadata.getSize(), changedDate, versionValue, metadataResourceExternalManagementProperties, approved);
+            settingManager.getNodeURL() + "api/records/", visibility, storageMetadata.getSize(), changedDate, versionValue, metadataResourceExternalManagementProperties, approved, mimeType);
     }
 
     protected static String getFilename(final String key) {
@@ -378,6 +399,7 @@ public class JCloudStore extends AbstractStore {
                 Blob blob = jCloudConfiguration.getClient().getBlobStore().blobBuilder(key)
                     .payload(is)
                     .contentLength(contentLength)
+                    .contentType(MimeTypeDetector.detect(filename))
                     .userMetadata(properties)
                     .build();
 
@@ -553,7 +575,7 @@ public class JCloudStore extends AbstractStore {
 
         String sourceKey = null;
         StorageMetadata storageMetadata;
-        for (MetadataResourceVisibility sourceVisibility : MetadataResourceVisibility.values()) {
+        for (MetadataResourceVisibility sourceVisibility : visibilityCandidates(metadataUuid, approved, resourceId)) {
             final String key = getKey(context, metadataUuid, metadataId, sourceVisibility, resourceId);
             try {
                 storageMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(jCloudConfiguration.getContainerName(), key);
@@ -625,7 +647,7 @@ public class JCloudStore extends AbstractStore {
         throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
 
-        for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
+        for (MetadataResourceVisibility visibility : visibilityCandidates(metadataUuid, approved, resourceId)) {
             if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId)) {
                 return String.format("Metadata resource '%s' removed.", resourceId);
             }

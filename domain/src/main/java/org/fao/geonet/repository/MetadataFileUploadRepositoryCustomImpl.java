@@ -25,6 +25,7 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.*;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
@@ -57,5 +58,22 @@ public class MetadataFileUploadRepositoryCustomImpl implements MetadataFileUploa
         );
 
         return _entityManager.createQuery(cbQuery).getSingleResult();
+    }
+
+    @Override
+    public List<MetadataFileUpload> findAllByMetadataIdNotDeleted(int metadataId) {
+        final CriteriaBuilder cb = _entityManager.getCriteriaBuilder();
+        final CriteriaQuery<MetadataFileUpload> cbQuery = cb.createQuery(MetadataFileUpload.class);
+        final Root<MetadataFileUpload> root = cbQuery.from(MetadataFileUpload.class);
+
+        final Expression<Integer> metadataIdPath = root.get(MetadataFileUpload_.metadataId);
+        final Expression<String> deletedPath = root.get(MetadataFileUpload_.deletedDate);
+
+        cbQuery.where(cb.and(
+            cb.equal(metadataIdPath, metadataId),
+            cb.isNull(deletedPath)
+        ));
+
+        return _entityManager.createQuery(cbQuery).getResultList();
     }
 }

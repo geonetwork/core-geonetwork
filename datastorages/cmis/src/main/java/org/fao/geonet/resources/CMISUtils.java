@@ -23,10 +23,8 @@
 
 package org.fao.geonet.resources;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 
 import java.util.Date;
@@ -52,6 +50,7 @@ import org.apache.chemistry.opencmis.commons.exceptions.CmisPermissionDeniedExce
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fao.geonet.api.exception.NotAllowedException;
+import org.fao.geonet.api.records.attachments.MimeTypeDetector;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
@@ -199,12 +198,15 @@ public class CMISUtils {
         Map<String, Document> documentMap = new HashMap<>();
         for (CmisObject cmisObject : folder.getChildren(oc)) {
             if (cmisObject instanceof Folder) {
-                documentMap.putAll(getCmisObjectMap((Folder) cmisObject, baseFolder + cmisConfiguration.getFolderDelimiter() + cmisObject.getName(), suffixlessKeyFilename));
-                return documentMap;
-            } else {
-                if (cmisObject instanceof Document && (suffixlessKeyFilename == null || cmisObject.getName().startsWith(suffixlessKeyFilename))) {
-                    documentMap.put(baseFolder + cmisConfiguration.getFolderDelimiter() + cmisObject.getName(), (Document) cmisObject);
-                }
+                // Recurse into the same 4-arg overload directly (not the 3-arg one, which
+                // silently discards oc/suffixlessKeyFilename and rebuilds its own context), and
+                // keep iterating our own siblings afterwards - a subfolder's presence must not
+                // stop the rest of this folder's children (including further subfolders) from
+                // being visited too, or nested-path resources go missing from listings.
+                documentMap.putAll(getCmisObjectMap((Folder) cmisObject,
+                    baseFolder + cmisConfiguration.getFolderDelimiter() + cmisObject.getName(), oc, suffixlessKeyFilename));
+            } else if (cmisObject instanceof Document && (suffixlessKeyFilename == null || cmisObject.getName().startsWith(suffixlessKeyFilename))) {
+                documentMap.put(baseFolder + cmisConfiguration.getFolderDelimiter() + cmisObject.getName(), (Document) cmisObject);
             }
         }
         return documentMap;
@@ -230,7 +232,8 @@ public class CMISUtils {
         }
 
         int isLength = is.available();
-        ContentStream contentStream = cmisConfiguration.getClient().getObjectFactory().createContentStream(key, isLength, Files.probeContentType(new File(key).toPath()), is);
+        ContentStream contentStream = cmisConfiguration.getClient().getObjectFactory().createContentStream(key, isLength,
+            MimeTypeDetector.detect(filenameKey), is);
 
         Document doc;
         if (cmisObject != null) {
