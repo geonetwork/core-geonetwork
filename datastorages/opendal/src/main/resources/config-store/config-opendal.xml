@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+    ">
+
+    <context:property-placeholder location="classpath:config-store/config-opendal-overrides.properties"
+                                  file-encoding="UTF-8"
+                                  ignore-unresolvable="true"
+    />
+
+    <bean id="opendalConfiguration" class="org.fao.geonet.resources.OpenDALConfiguration">
+        <property name="scheme" value="${opendal.scheme}"/>
+        <property name="options">
+            <map>
+                <entry key="root" value="${opendal.root}"/>
+                <entry key="endpoint" value="${opendal.endpoint}"/>
+                <entry key="bucket" value="${opendal.bucket}"/>
+                <entry key="access_key_id" value="${opendal.access_key_id}"/>
+                <entry key="secret_access_key" value="${opendal.secret_access_key}"/>
+                <entry key="region" value="${opendal.region}"/>
+                <entry key="username" value="${opendal.username}"/>
+                <entry key="password" value="${opendal.password}"/>
+            </map>
+        </property>
+    </bean>
+
+    <bean id="filesystemStore" class="org.fao.geonet.api.records.attachments.OpenDALStore" />
+
+    <bean id="resourceStore" class="org.fao.geonet.api.records.attachments.ResourceLoggerStore">
+        <constructor-arg index="0" ref="filesystemStore"/>
+    </bean>
+
+    <bean id="resources" class="org.fao.geonet.resources.OpenDALResources"/>
+</beans>
