@@ -588,21 +588,6 @@ public class JCloudStore extends AbstractStore {
         }
     }
 
-    /**
-     * Copy a blob to a new blob with the specified properties.
-     * @param sourceKey of the blob to copy
-     * @param targetKey of the new blob
-     * @param properties to set on the new blob
-     */
-    private void copyBlobWithMetadata(String sourceKey, String targetKey, Map<String, String> properties) {
-        jCloudConfiguration.getClient().getBlobStore().copyBlob(
-            jCloudConfiguration.getContainerName(),
-            sourceKey,
-            jCloudConfiguration.getContainerName(),
-            targetKey,
-            CopyOptions.builder().userMetadata(properties).build());
-    }
-
     @Override
     public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId,
                                            String newName, Boolean approved) throws Exception {
@@ -611,46 +596,89 @@ public class JCloudStore extends AbstractStore {
 
         for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
             final String sourceKey = getKey(context, metadataUuid, metadataId, visibility, resourceId);
-            final BlobMetadata sourceMetadata;
-
-            try {
-                sourceMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(
-                    jCloudConfiguration.getContainerName(), sourceKey);
-            } catch (ContainerNotFoundException ignored) {
-                continue;
-            }
-
-            if (sourceMetadata == null) {
-                continue;
-            }
-
             final String targetKey = getKey(context, metadataUuid, metadataId, visibility, newName);
 
-            if (sourceKey.equals(targetKey)) {
-                return createResourceDescription(
-                    context, metadataUuid, visibility, newName, sourceMetadata, metadataId, approved, false);
+            // Lock both resources in a consistent order so concurrent opposite renames
+            // cannot deadlock while still sharing the same locks used by putResource.
+            final String firstKey = sourceKey.compareTo(targetKey) <= 0 ? sourceKey : targetKey;
+            final String secondKey = sourceKey.compareTo(targetKey) <= 0 ? targetKey : sourceKey;
+            final Object firstLock = locks.computeIfAbsent(firstKey, k -> new Object());
+            final Object secondLock = firstKey.equals(secondKey)
+                ? firstLock
+                : locks.computeIfAbsent(secondKey, k -> new Object());
+
+            synchronized (firstLock) {
+                synchronized (secondLock) {
+                    try {
+                        final BlobMetadata sourceMetadata;
+
+                        try {
+                            sourceMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(
+                                jCloudConfiguration.getContainerName(), sourceKey);
+                        } catch (ContainerNotFoundException ignored) {
+                            continue;
+                        }
+
+                        if (sourceMetadata == null) {
+                            continue;
+                        }
+
+                        if (sourceKey.equals(targetKey)) {
+                            return createResourceDescription(
+                                context, metadataUuid, visibility, newName,
+                                sourceMetadata, metadataId, approved, false);
+                        }
+
+                        if (jCloudConfiguration.getClient().getBlobStore().blobExists(
+                            jCloudConfiguration.getContainerName(), targetKey)) {
+                            throw new ResourceAlreadyExistException(
+                                String.format(
+                                    "A resource with name '%s' and status '%s' already exists for metadata '%d'.",
+                                    newName, visibility, metadataId));
+                        }
+
+                        // No metadata override is required for a rename; the blob copy
+                        // preserves the existing metadata and properties.
+                        jCloudConfiguration.getClient().getBlobStore().copyBlob(
+                            jCloudConfiguration.getContainerName(),
+                            sourceKey,
+                            jCloudConfiguration.getContainerName(),
+                            targetKey,
+                            CopyOptions.NONE);
+
+                        try {
+                            jCloudConfiguration.getClient().getBlobStore().removeBlob(
+                                jCloudConfiguration.getContainerName(), sourceKey);
+                        } catch (Exception deleteException) {
+                            // Roll back the new copy if the original cannot be removed.
+                            try {
+                                jCloudConfiguration.getClient().getBlobStore().removeBlob(
+                                    jCloudConfiguration.getContainerName(), targetKey);
+                            } catch (Exception rollbackException) {
+                                Log.error(Geonet.RESOURCES, String.format(
+                                    "Unable to roll back resource '%s' created while renaming '%s' "
+                                        + "for metadata %d (%s): %s",
+                                    newName, resourceId, metadataId, metadataUuid,
+                                    rollbackException.getMessage()), rollbackException);
+                            }
+                            throw deleteException;
+                        }
+
+                        BlobMetadata renamedMetadata =
+                            jCloudConfiguration.getClient().getBlobStore().blobMetadata(
+                                jCloudConfiguration.getContainerName(), targetKey);
+
+                        return createResourceDescription(
+                            context, metadataUuid, visibility, newName,
+                            renamedMetadata, metadataId, approved, false);
+                    } finally {
+                        if (!firstKey.equals(secondKey)) {
+                            locks.remove(secondKey, secondLock);
+                        }
+                        locks.remove(firstKey, firstLock);
+                    }
+                }
             }
-
-            if (jCloudConfiguration.getClient().getBlobStore().blobExists(
-                jCloudConfiguration.getContainerName(), targetKey)) {
-                throw new ResourceAlreadyExistException(
-                    String.format(
-                        "A resource with name '%s' and status '%s' already exists for metadata '%d'.",
-                        newName, visibility, metadataId));
-            }
-
-            Map<String, String> properties = new HashMap<>(sourceMetadata.getUserMetadata());
-
-            copyBlobWithMetadata(sourceKey, targetKey, properties);
-
-            jCloudConfiguration.getClient().getBlobStore().removeBlob(
-                jCloudConfiguration.getContainerName(), sourceKey);
-
-            BlobMetadata renamedMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(
-                jCloudConfiguration.getContainerName(), targetKey);
-
-            return createResourceDescription(
-                context, metadataUuid, visibility, newName, renamedMetadata, metadataId, approved, false);
         }
 
         throw new ResourceNotFoundException(
@@ -832,7 +860,12 @@ public class JCloudStore extends AbstractStore {
                         }
 
                         // Use the copyBlob to copy the resource with updated metadata.
-                        copyBlobWithMetadata(sourceBlobName, targetBlobName, targetProperties);
+                        jCloudConfiguration.getClient().getBlobStore().copyBlob(
+                            jCloudConfiguration.getContainerName(),
+                            sourceBlobName,
+                            jCloudConfiguration.getContainerName(),
+                            targetBlobName,
+                            CopyOptions.builder().userMetadata(targetProperties).build());
                     }
                 }
                 marker = page.getNextMarker();
