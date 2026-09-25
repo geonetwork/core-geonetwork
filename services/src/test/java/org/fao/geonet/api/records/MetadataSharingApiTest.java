@@ -45,6 +45,7 @@ import org.fao.geonet.domain.UserGroup;
 import org.fao.geonet.domain.MetadataStatus;
 import org.fao.geonet.domain.StatusValue;
 import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataRepository;
@@ -75,12 +76,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
@@ -124,6 +127,9 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
 
     private User editorUser;
     private User reviewerUser;
+    private User anotherEditorUser;
+    private User targetUser;
+    private Group foreignGroup;
     private int metadataId;
     private String metadataUuid;
     private ServiceContext context;
@@ -492,7 +498,21 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
         _userRepo.save(reviewerUser);
         _userGroupRepo.save(new UserGroup().setGroup(sampleGroup).setProfile(Profile.Reviewer).setUser(reviewerUser));
 
-        Metadata metadata = (Metadata) injectMetadataInDb(getSampleMetadataXml(), context);
+        anotherEditorUser = UserRepositoryTest.newUser(_inc);
+        anotherEditorUser.setUsername("anothereditor");
+        anotherEditorUser.setProfile(Profile.Editor);
+        _userRepo.save(anotherEditorUser);
+        _userGroupRepo.save(new UserGroup().setGroup(sampleGroup).setProfile(Profile.Editor).setUser(anotherEditorUser));
+
+        targetUser = UserRepositoryTest.newUser(_inc);
+        targetUser.setUsername("targetuser");
+        targetUser.setProfile(Profile.Editor);
+        _userRepo.save(targetUser);
+        _userGroupRepo.save(new UserGroup().setGroup(sampleGroup).setProfile(Profile.Editor).setUser(targetUser));
+
+        foreignGroup = _groupRepo.save(new Group().setName("foreignGroup"));
+
+        Metadata metadata = (Metadata) injectMetadataInDb(getSampleMetadataXml(), context, IndexingMode.full);
         metadata.getSourceInfo().setOwner(editorUser.getId());
         metadata.getSourceInfo().setGroupOwner(SAMPLE_GROUP_ID);
         metadataRepository.save(metadata);
@@ -805,5 +825,83 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
         List<OperationAllowed> ops = operationAllowedRepository.findAllById_MetadataId(metadataId);
         boolean published = ops.stream().anyMatch(op -> ReservedGroup.isReserved(op.getId().getGroupId()));
         assertTrue("Template should be published even when it has an invalid validation record", published);
+    }
+
+    @Test
+    public void transferOwnershipAsEditorSucceeds() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(editorUser);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(SAMPLE_GROUP_ID))
+                .param("userIdentifier", String.valueOf(targetUser.getId()))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(1))
+            .andExpect(jsonPath("$.numberOfRecordsNotEditable").value(0));
+    }
+
+    @Test
+    public void transferOwnershipAsEditorForNotOwnedRecordFails() throws Exception {
+        // Grant editing permission to SAMPLE_GROUP_ID so that anotherEditorUser passes
+        // canEdit(), but the ownership check in updateOwnership() still blocks the transfer.
+        OperationAllowed editOp = new OperationAllowed();
+        editOp.getId().setMetadataId(metadataId).setGroupId(SAMPLE_GROUP_ID)
+            .setOperationId(ReservedOperation.editing.getId());
+        operationAllowedRepository.save(editOp);
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(anotherEditorUser);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(SAMPLE_GROUP_ID))
+                .param("userIdentifier", String.valueOf(targetUser.getId()))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecordsNotEditable").value(1));
+    }
+
+    @Test
+    public void transferOwnershipAsEditorToForeignGroupFails() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(editorUser);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(foreignGroup.getId()))
+                .param("userIdentifier", String.valueOf(targetUser.getId()))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(0));
+    }
+
+    @Test
+    public void transferOwnershipAsReviewerForGroupRecordSucceeds() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(reviewerUser);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(SAMPLE_GROUP_ID))
+                .param("userIdentifier", String.valueOf(targetUser.getId()))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(1));
+    }
+
+    @Test
+    public void retrieveUserGroupsAsEditorReturnsWorkgroupUsers() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(editorUser);
+
+        mockMvc.perform(get("/srv/api/users/groups")
+                .session(mockHttpSession)
+                .param("groupTypes", "Workspace")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$").isArray())
+            .andExpect(jsonPath("$.length()").value(greaterThan(0)));
     }
 }
