@@ -123,6 +123,8 @@ import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_OPS;
 import static org.fao.geonet.api.ApiParams.API_CLASS_RECORD_TAG;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUID;
 import static org.fao.geonet.api.ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION;
+import static org.fao.geonet.kernel.mef.MEFLib.ValidationMode;
+import static org.fao.geonet.kernel.mef.MEFLib.ValidationMode.VALIDATE_XSD_AND_SCHEMATRON;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 
@@ -140,7 +142,7 @@ public class MetadataInsertDeleteApi {
     public static final String API_PARAM_RECORD_GROUP = "The group the record is attached to.";
     public static final String API_PARAM_RECORD_UUID_PROCESSING = "Record identifier processing.";
     private static final String API_PARAM_RECORD_TAGS = "Tags to assign to the record.";
-    private static final String API_PARAM_RECORD_VALIDATE = "Validate the record first and reject it if not valid.";
+    private static final String API_PARAM_RECORD_VALIDATION = "What kind of validation to perform on the record.";
     private static final String API_PARAM_RECORD_XSL = "XSL transformation to apply to the record.";
     private static final String API_PARAM_FORCE_SCHEMA = "Force the schema of the record. If not set, schema autodetection "
         + "is used (and is the preferred method).";
@@ -335,7 +337,7 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = API_PARAM_RECORD_UUID_PROCESSING, required = false) @RequestParam(required = false, defaultValue = "NOTHING") final MEFLib.UuidAction uuidProcessing,
         @Parameter(description = API_PARAM_RECORD_GROUP, required = false) @RequestParam(required = false) final String group,
         @Parameter(description = API_PARAM_RECORD_TAGS, required = false) @RequestParam(required = false) final String[] category,
-        @Parameter(description = API_PARAM_RECORD_VALIDATE, required = false) @RequestParam(required = false, defaultValue = "false") final boolean rejectIfInvalid,
+        @Parameter(description = API_PARAM_RECORD_VALIDATION, required = false) @RequestParam(required = false, defaultValue = "NO_VALIDATION") final ValidationMode validationMode,
         @Parameter(description = API_PARAM_RECORD_XSL, required = false) @RequestParam(required = false, defaultValue = "_none_") final String transformWith,
         @Parameter(description = API_PARAM_FORCE_SCHEMA, required = false) @RequestParam(required = false) String schema,
         @Parameter(description = "Is editable by group members with editor profile? "
@@ -374,7 +376,7 @@ public class MetadataInsertDeleteApi {
             }
 
             Pair<Integer, String> pair = loadRecord(metadataType, element, uuidProcessing, group, category,
-                    rejectIfInvalid, publishToAll, allowEditGroupMembers, transformWith, schema, extra, request);
+                    validationMode, publishToAll, allowEditGroupMembers, transformWith, schema, extra, request);
             report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false, String.format(messages.getString("api.metadata.import.importedFromXMLWithUuid"), pair.two()));
 
             triggerImportEvent(request, pair.two());
@@ -399,7 +401,7 @@ public class MetadataInsertDeleteApi {
                 }
                 if (xmlContent != null) {
                     Pair<Integer, String> pair = loadRecord(metadataType, xmlContent, uuidProcessing, group, category,
-                            rejectIfInvalid, publishToAll, allowEditGroupMembers, transformWith, schema, extra, request);
+                            validationMode, publishToAll, allowEditGroupMembers, transformWith, schema, extra, request);
                     report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false,
                             String.format(messages.getString("api.metadata.import.importedFromUrl"), pair.two()));
                     triggerImportEvent(request, pair.two());
@@ -443,7 +445,7 @@ public class MetadataInsertDeleteApi {
                         MEFLib.Version version = MEFLib.getMEFVersion(f);
                         List<String> ids = MEFLib.doImport(version == MEFLib.Version.V1 ? "mef" : "mef2",
                             uuidProcessing, transformWith, settingManager.getSiteId(), metadataType, category,
-                            group, rejectIfInvalid, assignToCatalog, context, f);
+                            group, validationMode, assignToCatalog, context, f);
                         for (String id : ids) {
                             report.addMetadataInfos(Integer.parseInt(id), id, !publishToAll, false,
                                     String.format(messages.getString("api.metadata.import.importedFromMEF"), id));
@@ -459,7 +461,7 @@ public class MetadataInsertDeleteApi {
                 } else {
                     try {
                         Pair<Integer, String> pair = loadRecord(metadataType, Xml.loadFile(f), uuidProcessing, group,
-                                category, rejectIfInvalid, publishToAll, allowEditGroupMembers, transformWith, schema, extra, request);
+                                category, validationMode, publishToAll, allowEditGroupMembers, transformWith, schema, extra, request);
                         report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false,
                                 String.format(messages.getString("api.metadata.import.importedFromServerFolder"), pair.two()));
 
@@ -612,7 +614,7 @@ public class MetadataInsertDeleteApi {
         @Parameter(description = API_PARAM_RECORD_UUID_PROCESSING, required = false) @RequestParam(required = false, defaultValue = "NOTHING") final MEFLib.UuidAction uuidProcessing,
         @Parameter(description = API_PARAM_RECORD_GROUP, required = false) @RequestParam(required = false) final String group,
         @Parameter(description = API_PARAM_RECORD_TAGS, required = false) @RequestParam(required = false) final String[] category,
-        @Parameter(description = API_PARAM_RECORD_VALIDATE, required = false) @RequestParam(required = false, defaultValue = "false") final boolean rejectIfInvalid,
+        @Parameter(description = API_PARAM_RECORD_VALIDATION, required = false) @RequestParam(required = false, defaultValue = "NO_VALIDATION") final ValidationMode validationMode,
         @Parameter(description = "(XML file only) Publish record.", required = false) @RequestParam(required = false, defaultValue = "false") boolean publishToAll,
         @Parameter(description = "(MEF file only) Assign to current catalog.", required = false) @RequestParam(required = false, defaultValue = "false") final boolean assignToCatalog,
         @Parameter(description = API_PARAM_RECORD_XSL, required = false) @RequestParam(required = false, defaultValue = "_none_") final String transformWith,
@@ -653,7 +655,7 @@ public class MetadataInsertDeleteApi {
 
                         List<String> ids = MEFLib.doImport(version == MEFLib.Version.V1 ? "mef" : "mef2",
                                 uuidProcessing, transformWith, settingManager.getSiteId(), metadataType, category,
-                                group, rejectIfInvalid, assignToCatalog, context, tempFile);
+                                group, validationMode, assignToCatalog, context, tempFile);
                         if (ids.isEmpty()) {
                             //we could have used a finer-grained error handling inside the MEFLib import call (MEF MD file processing)
                             //This is a catch-for-call for the case when there is no record is imported, to notify the user the import is not successful.
@@ -684,7 +686,7 @@ public class MetadataInsertDeleteApi {
                     }
                 } else {
                     Pair<Integer, String> pair = loadRecord(metadataType, Xml.loadStream(f.getInputStream()),
-                            uuidProcessing, group, category, rejectIfInvalid, publishToAll, allowEditGroupMembers, transformWith, schema,
+                            uuidProcessing, group, category, validationMode, publishToAll, allowEditGroupMembers, transformWith, schema,
                             extra, request);
                     report.addMetadataInfos(pair.one(), pair.two(), !publishToAll, false, String.format(messages.getString("api.metadata.import.importedWithUuid"), pair.two()));
 
@@ -916,7 +918,7 @@ public class MetadataInsertDeleteApi {
 
     private Pair<Integer, String> loadRecord(MetadataType metadataType, Element xmlElement,
                                              final MEFLib.UuidAction uuidProcessing, final String group, final String[] category,
-                                             final boolean rejectIfInvalid, final boolean publishToAll,
+                                             final ValidationMode validationMode, final boolean publishToAll,
                                              final boolean allowEditGroupMembers, final String transformWith, String schema,
                                              final String extra, HttpServletRequest request) throws Exception {
 
@@ -944,16 +946,10 @@ public class MetadataInsertDeleteApi {
             // TODO: Check that the schema is supported
         }
 
-        if (rejectIfInvalid) {
-            try {
-                Integer groupId = null;
-                if (StringUtils.isNotEmpty(group)) {
-                    groupId = Integer.parseInt(group);
-                }
-                DataManager.validateExternalMetadata(schema, xmlElement, context, groupId);
-            } catch (XSDValidationErrorEx e) {
-                throw new IllegalArgumentException(e);
-            }
+        try {
+            MEFLib.validate(metadataValidator, validationMode, schema, xmlElement, context, " ", group);
+        } catch (XSDValidationErrorEx e) {
+            throw new IllegalArgumentException(e);
         }
 
         // --- if the uuid does not exist we generate it for metadata and templates
@@ -1031,7 +1027,7 @@ public class MetadataInsertDeleteApi {
             });
         }
 
-        if (rejectIfInvalid) {
+        if (validationMode == VALIDATE_XSD_AND_SCHEMATRON) {
             // Persist the validation status
             AbstractMetadata metadata = metadataUtils.findOne(iId);
 
