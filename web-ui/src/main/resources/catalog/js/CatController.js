@@ -344,6 +344,12 @@
               ],
               score_mode: "multiply"
             },
+            knn: {
+              field: "text_vector",
+              query_vector: "",
+              k: 10,
+              num_candidates: 100
+            },
             autocompleteConfig: {
               query: {
                 bool: {
