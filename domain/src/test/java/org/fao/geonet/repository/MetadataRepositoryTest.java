@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -98,7 +98,9 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
             .executeUpdate();
 
         _repo.incrementPopularity(loaded.getId());
-        assertEquals(Integer.valueOf(33), _repo.findPopularityById(id));
+        final MetadataRepository.UuidAndPopularity uuidAndPopularity = _repo.findUuidAndPopularityById(id);
+        assertEquals(template.getUuid(), uuidAndPopularity.getUuid());
+        assertEquals(33, uuidAndPopularity.getPopularity());
 
         _entityManager.flush();
         _entityManager.clear();
@@ -107,6 +109,11 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         assertEquals(33, reloaded.getDataInfo().getPopularity());
         assertEquals("The popularity update must not overwrite other columns",
             "<md>updated</md>", reloaded.getData());
+    }
+
+    @Test
+    public void testFindUuidAndPopularityByIdMissing() {
+        assertNull(_repo.findUuidAndPopularityById(Integer.MAX_VALUE));
     }
 
     @Test

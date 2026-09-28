@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -137,12 +137,18 @@ public interface MetadataRepository extends GeonetRepository<Metadata, Integer>,
     void incrementPopularity(int mdId);
 
     /**
-     * Get the popularity of the metadata from the database, bypassing any entity already loaded.
+     * Get the uuid and popularity of the metadata from the database, bypassing any entity already loaded.
      *
      * @param mdId the id of the metadata
-     * @return the popularity, or null if the metadata doesn't exist.
+     * @return the uuid and popularity, or null if the metadata doesn't exist.
      */
     @Nullable
-    @Query("SELECT m.dataInfo.popularity FROM " + Metadata.TABLENAME + " m WHERE m.id = ?1")
-    Integer findPopularityById(int mdId);
+    @Query("SELECT m.uuid AS uuid, m.dataInfo.popularity AS popularity FROM " + Metadata.TABLENAME + " m WHERE m.id = ?1")
+    UuidAndPopularity findUuidAndPopularityById(int mdId);
+
+    interface UuidAndPopularity {
+        String getUuid();
+
+        int getPopularity();
+    }
 }
