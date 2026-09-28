@@ -10,7 +10,9 @@
   {
     "version": "4.2",
     "title": "4.2",
-    "aliases": []
+    "aliases": [
+      "maintenance"
+    ]
   },
   {
     "version": "3.12",
