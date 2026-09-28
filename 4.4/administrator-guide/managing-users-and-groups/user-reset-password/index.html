@@ -1682,6 +1682,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    User 'Forgot your password?' function
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1698,6 +1716,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#admin_reset_password" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Administrator reset without old password
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2268,6 +2316,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#admin_reset_password" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Administrator reset without old password
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2328,6 +2395,37 @@ If you did not change this password contact the Greenhouse GeoNetwork Site helpd
 The Greenhouse GeoNetwork Site team
 </code></pre></div>
 <p>If you want to change the content of this email, you should modify <code>xslt/service/account/password-changed-email.xsl</code>.</p>
+<h2 id="admin_reset_password">Administrator reset without old password</h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The setting below is not created by default, and it cannot be turned on
+from the Admin Console or the settings API. It must be inserted directly
+into the <code>Settings</code> database table before it can be used.</p>
+</div>
+<p>An <code>Administrator</code> can reset another user's password without knowing that
+user's current password. This is controlled by the setting
+<code>system/security/password/allowAdminReset</code>, which does not exist in the
+<code>Settings</code> table until it is added manually:</p>
+<div class="language-sql highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="k">INSERT</span><span class="w"> </span><span class="k">INTO</span><span class="w"> </span><span class="n">Settings</span><span class="w"> </span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="n">datatype</span><span class="p">,</span><span class="w"> </span><span class="k">position</span><span class="p">,</span><span class="w"> </span><span class="n">internal</span><span class="p">)</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">VALUES</span><span class="w"> </span><span class="p">(</span><span class="s1">'system/security/password/allowAdminReset'</span><span class="p">,</span><span class="w"> </span><span class="s1">'true'</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">12004</span><span class="p">,</span><span class="w"> </span><span class="s1">'n'</span><span class="p">);</span>
+</span></code></pre></div>
+<p><strong>GeoNetwork must be restarted</strong> after inserting the row.</p>
+<p>Once enabled, log in as a user with the <code>Administrator</code> profile (<code>UserAdmin</code>
+is not sufficient) and either:</p>
+<ul>
+<li>In the Admin Console, go to <strong>Users</strong>, select the target user, and click
+    <strong>Reset password</strong>. The current password field is no longer required.</li>
+<li>Call the API directly, omitting <code>passwordOld</code>:<div class="language-text highlight"><pre><span></span><code>POST /{portal}/api/users/{userIdentifier}/actions/forget-password
+{
+  "password": "...",
+  "password2": "..."
+}
+</code></pre></div>
+</li>
+</ul>
+<p>Only enable this setting when no mail server is configured for the
+<a href="#user_forgot_password">Forgot your password?</a> flow described above, since it
+lets an administrator take over any account without email verification.</p>
 
 
 
