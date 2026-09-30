@@ -74,6 +74,9 @@
 
     <link href="{/root/gui/url}/static/gn_metadata_pdf.css?v={$buildNumber}&amp;{$minimizedParam}" rel="stylesheet"
           media="print"/>
+
+    <link href="{/root/gui/url}/static/{/root/gui/nodeId}_custom_style.css?v={$buildNumber}&amp;{$minimizedParam}"
+          rel="stylesheet" media="screen"/>
   </xsl:template>
 
 

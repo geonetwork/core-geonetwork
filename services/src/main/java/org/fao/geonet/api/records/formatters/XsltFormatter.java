@@ -24,6 +24,7 @@
 package org.fao.geonet.api.records.formatters;
 
 import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.JSONLocCacheLoader;
@@ -157,6 +158,11 @@ public class XsltFormatter implements FormatterImpl {
         gui.addContent(new Element("baseUrl").setText(baseUrl));
         gui.addContent(new Element("serverUrl").setText(settingManager.getServerURL()));
         gui.addContent(new Element("language").setText(fparams.context.getLanguage()));
+        // 'all' only applies to the record content, the page header needs a real UI language
+        gui.addContent(new Element("uiLanguage").setText(
+            "all".equalsIgnoreCase(fparams.context.getLanguage())
+                ? configurableApplicationContext.getBean(LanguageUtils.class).getDefaultUiLanguage()
+                : fparams.context.getLanguage()));
         gui.addContent(new Element("reqService").setText("md.format.html"));
         Element env = new Element("systemConfig");
         env.addContent(settingManager.getAllAsXML(true));
