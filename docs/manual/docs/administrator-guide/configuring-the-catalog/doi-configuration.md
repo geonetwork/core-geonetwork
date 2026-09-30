@@ -20,7 +20,7 @@ Configure the DOI API access point to publish the metadata in the `Admin console
 
 ![](img/doi-create-server.png)
 
-Providing the following information:
+Provide the following information:
 
 - `Name`: A descriptive name for the server.
 - `Description`: (Optional) A verbose description of the server.
