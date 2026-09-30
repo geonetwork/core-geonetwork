@@ -16,7 +16,7 @@ The catalogue supports DOI creation using:
 -   [DataCite API](https://support.datacite.org/docs/mds-api-guide).
 -   EU publication office API <https://ra.publications.europa.eu/servlet/ws/doidata?api=medra.org>
 
-Configure the DOI API access point to publish the metadata in the `Admin console --> Settings --> Doi servers`:
+Configure the DOI API access point to publish the metadata in the `Admin console --> Settings --> DOI servers`:
 
 ![](img/doi-create-server.png)
 
