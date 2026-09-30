@@ -469,6 +469,20 @@ public interface Store {
      */
     MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception;
 
+    /**
+     * Rename a resource in the metadata store.
+     *
+     * <p>The resource content and store-specific properties should be preserved when the
+     * underlying storage implementation supports them.</p>
+     *
+     * @param context      the service context
+     * @param metadataUuid the UUID of the metadata record containing the resource
+     * @param resourceId   the resource identifier
+     * @param newName      the new resource name
+     * @param approved     whether to rename the resource on the approved version of the record
+     * @return the renamed resource description
+     * @throws Exception if the resource cannot be renamed
+     */
     MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception;
 
     interface ResourceHolder extends Closeable {
