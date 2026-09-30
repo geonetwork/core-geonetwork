@@ -27,10 +27,13 @@ import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
+import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.OperationAllowed;
 import org.fao.geonet.domain.OperationAllowedId;
 import org.fao.geonet.domain.ReservedGroup;
 import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.OperationAllowedRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.After;
@@ -51,6 +54,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import static org.fao.geonet.api.records.formatters.FormatterWidth._100;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -125,12 +129,36 @@ public class FormatterApiConditionalRequestIntegrationTest extends AbstractServi
         assertFalse(conditional.containsHeader(HttpHeaders.ETAG));
     }
 
+    @Test
+    public void editedRecordIsNotAnsweredAsNotModified() throws Exception {
+        MockHttpServletResponse first = request(loginAsAnonymous(), null);
+        String etag = first.getHeader(HttpHeaders.ETAG);
+        String lastModified = first.getHeader(HttpHeaders.LAST_MODIFIED);
+
+        MetadataRepository metadataRepository = applicationContext.getBean(MetadataRepository.class);
+        Metadata metadata = metadataRepository.findOneByUuid(metadataUuid);
+        metadata.getDataInfo().setChangeDate(new ISODate(System.currentTimeMillis() + 60000));
+        metadataRepository.save(metadata);
+
+        // A browser revalidates its copy sending both validators.
+        MockHttpServletResponse revalidated = request(loginAsAnonymous(), etag, lastModified);
+        assertEquals("The record was edited, the copy of the browser is old", 200, revalidated.getStatus());
+        assertNotEquals("The validator changes with the record", etag, revalidated.getHeader(HttpHeaders.ETAG));
+    }
+
     private MockHttpServletResponse request(MockHttpSession session, String ifNoneMatch) throws Exception {
+        return request(session, ifNoneMatch, null);
+    }
+
+    private MockHttpServletResponse request(MockHttpSession session, String ifNoneMatch, String ifModifiedSince) throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest("GET", "/srv/api/records/" + metadataUuid + "/formatters/xsl-view");
         request.setSession(session);
         request.setPathInfo("/eng/blahblah");
         if (ifNoneMatch != null) {
             request.addHeader(HttpHeaders.IF_NONE_MATCH, ifNoneMatch);
+        }
+        if (ifModifiedSince != null) {
+            request.addHeader(HttpHeaders.IF_MODIFIED_SINCE, ifModifiedSince);
         }
         MockHttpServletResponse response = new MockHttpServletResponse();
         final String srvAppContext = "srvAppContext";
