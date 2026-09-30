@@ -30,7 +30,7 @@ Provide the following information:
 - `Final DOI URL prefix`: (Optional) Keep it empty to use the default https://doi.org prefix. Use https://mds.test.datacite.org/doi when using the test API.
 - `DOI pattern`: Default is `{{uuid}}` but the DOI structure can be customized with database id and/or record group eg. `example-{{groupOwner}}-{{id}}`.
 - `DataCite prefix`: Usually looks like `10.xxxx`. You will be allowed to register DOI names only under the prefixes that have been assigned to you.
-- `Record groups`: (Optional) When creating a DOI, only DOI server(s) associated with the record group are proposed. If record group is not associated with any DOI servers, then DOI servers with no group are proposed.
+- `Record groups`: (Optional) When creating a DOI, only DOI server(s) associated with the  selected record group(s) will be suggested in the editor. If a record belongs to a group that is not matched against any DOI server, only DOI servers without associated groups will be suggested.
 
 A record can be downloaded using the DataCite format from the API using: `http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml`
 
