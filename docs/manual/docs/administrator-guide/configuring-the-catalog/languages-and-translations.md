@@ -4,7 +4,7 @@ Go to `Admin console` --> `Settings` --> `Languages and translations` to manage 
 
 The `Registered languages in database` panel lists the languages stored in the database, used for database entities such as group names or portal titles. This is not the list of languages offered to catalog users, which is configured separately (see [User Interface Configuration](user-interface-configuration.md)).
 
-The `Manage translations` panel lets an administrator add a translation for any key used by the application, or override an existing one, without rebuilding the application. This is useful, for example, to configure the [Application banner](system-configuration.md#application-banner) message, to correct a wording, or to translate a label that has no translation yet in your language.
+The `Manage translations` panel lets an administrator add a translation for any key used by the application, or override an existing one, without rebuilding the application. For example, this is useful when configuring the [Application banner](system-configuration.md#application-banner) message, if you want to improve the choice of words, or need to add a label for which no translation exists in your language yet.
 
 -   **Table mode** Enter the key to translate in the `Add a new translation for` field and click `Add`. This creates one translation field per registered language for that key.
 
