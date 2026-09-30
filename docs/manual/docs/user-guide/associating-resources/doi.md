@@ -20,7 +20,7 @@ The task is assigned to a specific user. An optional due date and comment can be
 
 ![](img/doi-request-popup.png)
 
-After submission of the task, the task owner is notified by email (if the mail server is configured, see [Feedback](../../administrator-guide/configuring-the-catalog/system-configuration.md#system-config-feedback)). The task can then be resolved in the admin console ---> information --> versioning section.
+After submission of the task, the task owner is notified by email. Please note that this requires a working mail server configuration (see [Feedback](../../administrator-guide/configuring-the-catalog/system-configuration.md#system-config-feedback)). The task can then be resolved in **Admin Console** --> **Statistics and status** --> **Versioning**.
 
 If the configuration is missing or wrong, the error is reported:
 
