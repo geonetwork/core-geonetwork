@@ -172,6 +172,7 @@
     "linkToDatasetTitle": "Link a dataset to the current metadata",
     "linkToFeatureCatalog": "Link to a feature catalog",
     "linkToFeatureCatalogTitle": "Link a feature catalog to the current metadata",
+    "linkToMdNoRecordError": "Select at least one record to link.",
     "linkToParent": "Link to parent",
     "linkToParentTitle": "Link a parent metadata record to the current metadata",
     "linkToService": "Link to a service",
