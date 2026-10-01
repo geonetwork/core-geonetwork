@@ -22,12 +22,20 @@
  */
 package org.fao.geonet.proxy;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpVersion;
+import org.apache.http.ProtocolException;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.message.BasicHttpRequest;
+import org.apache.http.message.BasicHttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.net.URI;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -300,6 +308,53 @@ public class URITemplateProxyServletTest {
     public void aSingleUrlParameterIsUnaffected() {
         assertFalse(isQueryExcluded("url=http%3A%2F%2Fexample.com%2F"));
         assertTrue(isQueryExcluded("url=http%3A%2F%2F127.0.0.1%2F"));
+    }
+
+    /**
+     * Drive the redirect strategy with a 302 towards the given location.
+     */
+    private URI followRedirectTo(String location) throws Exception {
+        DefaultRedirectStrategy strategy = servlet.createRedirectStrategy();
+        HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 302, "Found");
+        response.addHeader("Location", location);
+        return strategy.getLocationURI(
+            new BasicHttpRequest("GET", "http://example.com/"), response, HttpClientContext.create());
+    }
+
+    private void assertRedirectRefused(String location) throws Exception {
+        try {
+            URI followed = followRedirectTo(location);
+            fail("a redirect to " + location + " should be refused, it returned " + followed);
+        } catch (ProtocolException expected) {
+            // The destination is not one the caller could have named directly.
+        }
+    }
+
+    @Test
+    public void aRedirectToAnAllowedHostIsFollowed() throws Exception {
+        assertEquals(new URI("http://example.org/data"), followRedirectTo("http://example.org/data"));
+    }
+
+    @Test
+    public void aRedirectToAnExcludedHostIsRefused() throws Exception {
+        assertRedirectRefused("http://127.0.0.1/");
+        assertRedirectRefused("http://localhost/");
+        assertRedirectRefused("http://LOCALHOST/");
+        assertRedirectRefused("http://192.168.1.1/");
+        assertRedirectRefused("http://169.254.169.254/latest/meta-data/");
+        assertRedirectRefused("http://[::1]/");
+        assertRedirectRefused("http://[fd00::1]/");
+        assertRedirectRefused("http://2130706433/");
+    }
+
+    @Test
+    public void aRedirectToADisallowedPortIsRefused() throws Exception {
+        assertRedirectRefused("http://example.org:8081/");
+    }
+
+    @Test
+    public void aRedirectToAnAllowedPortIsFollowed() throws Exception {
+        assertEquals(new URI("https://example.org:443/x"), followRedirectTo("https://example.org:443/x"));
     }
 
     @Test

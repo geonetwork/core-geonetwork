@@ -27,7 +27,9 @@ import jeeves.server.sources.http.ServletPathFinder;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
+import org.apache.http.ProtocolException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -37,9 +39,11 @@ import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
+import org.apache.http.protocol.HttpContext;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.api.ApiUtils;
@@ -324,6 +328,8 @@ public class URITemplateProxyServlet extends ProxyServlet {
             clientBuilder.setDefaultCredentialsProvider(credentialsProvider);
         }
 
+        clientBuilder.setRedirectStrategy(createRedirectStrategy());
+
         clientBuilder = clientBuilder.useSystemProperties();
         return buildHttpClient(clientBuilder);
     }
@@ -494,28 +500,74 @@ public class URITemplateProxyServlet extends ProxyServlet {
         }
 
         try {
-            URI uri = new URI(url);
-            String host = uri.getHost();
-
-            // A URL the parser cannot attribute a host to cannot be checked against the exclusion
-            // list, so it is not allowed.
-            if (isBlank(host)) {
-                return false;
-            }
-
-            if (isExcludedHost(host)) {
-                return false;
-            }
-
-            int port = uri.getPort();
-
-            // Default port for the protocol has value -1
-            return (port == -1) || this.allowPorts.contains(port);
+            return isUriAllowed(new URI(url));
         } catch (URISyntaxException e) {
             throw new IllegalArgumentException(String.format(
                 "The provided URL is invalid. Error is: '%s'",
                 e.getMessage()
             ));
+        }
+    }
+
+    /**
+     * Check the host and the port of a URI the proxy is about to request.
+     *
+     * <p>Applied to the URL the caller asked for and to the destination of every redirect that
+     * answers it, so that a request cannot arrive somewhere the caller could not have named
+     * directly.</p>
+     *
+     * @param uri URI the proxy would request
+     * @return {@code true} if the host is not excluded and the port is one of the allowed ones
+     */
+    boolean isUriAllowed(URI uri) {
+        String host = uri.getHost();
+
+        // A URI the parser cannot attribute a host to cannot be checked against the exclusion
+        // list, so it is not allowed.
+        if (isBlank(host)) {
+            return false;
+        }
+
+        if (isExcludedHost(host)) {
+            return false;
+        }
+
+        int port = uri.getPort();
+
+        // Default port for the protocol has value -1
+        return (port == -1) || this.allowPorts.contains(port);
+    }
+
+    /**
+     * Build the redirect strategy the proxy client follows redirects with.
+     *
+     * @return a strategy that checks the destination of every hop
+     */
+    DefaultRedirectStrategy createRedirectStrategy() {
+        return new ExcludedHostAwareRedirectStrategy();
+    }
+
+    /**
+     * Redirect strategy that puts the destination of each redirect through the same check as the
+     * URL the caller asked for.
+     *
+     * <p>A redirect is followed inside the client, so without this the checks would apply to the
+     * first URL only and the answer to it could send the request anywhere. Keeping the behaviour of
+     * {@link DefaultRedirectStrategy} in every other respect, each hop is refused unless its host
+     * and port would have been accepted had the caller named them.</p>
+     */
+    private class ExcludedHostAwareRedirectStrategy extends DefaultRedirectStrategy {
+        @Override
+        public URI getLocationURI(HttpRequest request, HttpResponse response, HttpContext context)
+            throws ProtocolException {
+            URI location = super.getLocationURI(request, response, context);
+
+            if (!isUriAllowed(location)) {
+                throw new ProtocolException(
+                    "The proxy does not allow to access to the redirect destination.");
+            }
+
+            return location;
         }
     }
 
