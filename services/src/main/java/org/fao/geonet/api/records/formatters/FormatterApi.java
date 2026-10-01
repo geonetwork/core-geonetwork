@@ -326,7 +326,11 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
             long roundedChangeDate = changeDateAsTime / 1000 * 1000;
-            if (request.checkNotModified(language, roundedChangeDate) &&
+            // The validator changes with the record, the language and the format of the output.
+            final String etag = language + "-" + formatType.name() + "-" + changeDateAsTime;
+            // The output depends on the user: the validators are only sent to anonymous visitors.
+            if (!context.getUserSession().isAuthenticated() &&
+                request.checkNotModified(etag, roundedChangeDate) &&
                 context.getBean(CacheConfig.class).allowCaching(key)) {
                 if (!skipPopularityBool && approved) {
                     context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));

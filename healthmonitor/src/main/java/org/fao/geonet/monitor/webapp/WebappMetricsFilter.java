@@ -28,7 +28,6 @@ import com.yammer.metrics.core.*;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 
 import java.io.IOException;
 import java.util.Map;
@@ -113,16 +112,18 @@ public abstract class WebappMetricsFilter implements Filter {
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
-        final StatusExposingServletResponse wrappedResponse =
-            new StatusExposingServletResponse((HttpServletResponse) response);
         activeRequests.inc();
         final TimerContext context = requestTimer.time();
+        // An exception that escapes the chain becomes a 500 later, when the container handles it.
+        boolean failed = true;
         try {
-            chain.doFilter(request, wrappedResponse);
+            chain.doFilter(request, response);
+            failed = false;
         } finally {
             context.stop();
             activeRequests.dec();
-            markMeterForStatusCode(wrappedResponse.getStatus());
+            markMeterForStatusCode(failed ? HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+                : ((HttpServletResponse) response).getStatus());
         }
     }
 
@@ -132,36 +133,6 @@ public abstract class WebappMetricsFilter implements Filter {
             metric.mark();
         } else {
             otherMeter.mark();
-        }
-    }
-
-    private static class StatusExposingServletResponse extends HttpServletResponseWrapper {
-        private int httpStatus;
-
-        public StatusExposingServletResponse(HttpServletResponse response) {
-            super(response);
-        }
-
-        @Override
-        public void sendError(int sc) throws IOException {
-            httpStatus = sc;
-            super.sendError(sc);
-        }
-
-        @Override
-        public void sendError(int sc, String msg) throws IOException {
-            httpStatus = sc;
-            super.sendError(sc, msg);
-        }
-
-        public int getStatus() {
-            return httpStatus;
-        }
-
-        @Override
-        public void setStatus(int sc) {
-            httpStatus = sc;
-            super.setStatus(sc);
         }
     }
 }
