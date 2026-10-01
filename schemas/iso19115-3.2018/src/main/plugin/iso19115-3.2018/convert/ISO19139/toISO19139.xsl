@@ -136,6 +136,17 @@
     </gmd:fileIdentifier>
   </xsl:template>
 
+  <xsl:template match="mdb:MD_Metadata/mdb:otherLocale" priority="5">
+    <gmd:locale>
+      <xsl:apply-templates select="@*|*"/>
+    </gmd:locale>
+  </xsl:template>
+
+  <xsl:template match="mdb:MD_Metadata/mdb:otherLocale/lan:PT_Locale/lan:language" priority="5">
+    <gmd:languageCode>
+      <xsl:apply-templates select="@*|*"/>
+    </gmd:languageCode>
+  </xsl:template>
 
   <xsl:template match="mdb:defaultLocale" priority="5">
     <gmd:language>
@@ -239,15 +250,19 @@
             <xsl:with-param name="elementName" select="'gmd:purpose'"/>
             <xsl:with-param name="nodeWithStringToWrite" select="mri:purpose"/>
           </xsl:call-template>
-          <xsl:call-template name="writeCharacterStringElement">
-            <xsl:with-param name="elementName" select="'gmd:credit'"/>
-            <xsl:with-param name="nodeWithStringToWrite" select="mri:credit"/>
-          </xsl:call-template>
-          <xsl:call-template name="writeCodelistElement">
-            <xsl:with-param name="elementName" select="'gmd:status'"/>
-            <xsl:with-param name="codeListValue" select="mri:status/mcc:MD_ProgressCode/@codeListValue"/>
-            <xsl:with-param name="codeListName" select="'gmd:MD_ProgressCode'"/>
-          </xsl:call-template>
+          <xsl:for-each select="mri:credit">
+            <xsl:call-template name="writeCharacterStringElement">
+              <xsl:with-param name="elementName" select="'gmd:credit'"/>
+              <xsl:with-param name="nodeWithStringToWrite" select="."/>
+            </xsl:call-template>
+          </xsl:for-each>
+          <xsl:for-each select="mri:status">
+            <xsl:call-template name="writeCodelistElement">
+              <xsl:with-param name="elementName" select="'gmd:status'"/>
+              <xsl:with-param name="codeListValue" select="mcc:MD_ProgressCode/@codeListValue"/>
+              <xsl:with-param name="codeListName" select="'gmd:MD_ProgressCode'"/>
+            </xsl:call-template>
+          </xsl:for-each>
           <xsl:apply-templates select="mri:pointOfContact"/>
           <xsl:apply-templates select="mri:resourceMaintenance"/>
           <xsl:apply-templates select="mri:graphicOverview"/>
@@ -266,14 +281,15 @@
           <xsl:apply-templates select="mri:temporalResolution"/>
           <xsl:apply-templates select="mri:defaultLocale/lan:PT_Locale/lan:language"/>
           <xsl:apply-templates select="mri:otherLocale/lan:PT_Locale/lan:language"/>
-          <xsl:for-each select="mri:defaultLocale/lan:PT_Locale/lan:characterEncoding|
-                                mri:otherLocale/lan:PT_Locale/lan:characterEncoding">
+          <xsl:for-each-group select="mri:defaultLocale/lan:PT_Locale/lan:characterEncoding|
+                                mri:otherLocale/lan:PT_Locale/lan:characterEncoding"
+                              group-by="lan:MD_CharacterSetCode/@codeListValue">
             <xsl:call-template name="writeCodelistElement">
               <xsl:with-param name="elementName" select="'gmd:characterSet'"/>
               <xsl:with-param name="codeListName" select="'gmd:MD_CharacterSetCode'"/>
               <xsl:with-param name="codeListValue" select="lan:MD_CharacterSetCode/@codeListValue"/>
             </xsl:call-template>
-          </xsl:for-each>
+          </xsl:for-each-group>
           <xsl:apply-templates select="mri:topicCategory"/>
 
           <xsl:call-template name="writeCharacterStringElement">
@@ -291,10 +307,12 @@
             </srv:serviceType>
           </xsl:if>
 
-          <xsl:call-template name="writeCharacterStringElement">
-            <xsl:with-param name="elementName" select="'srv:serviceTypeVersion'"/>
-            <xsl:with-param name="nodeWithStringToWrite" select="srv2:serviceTypeVersion"/>
-          </xsl:call-template>
+          <xsl:for-each select="srv2:serviceTypeVersion">
+            <xsl:call-template name="writeCharacterStringElement">
+              <xsl:with-param name="elementName" select="'srv:serviceTypeVersion'"/>
+              <xsl:with-param name="nodeWithStringToWrite" select="."/>
+            </xsl:call-template>
+          </xsl:for-each>
 
           <xsl:apply-templates select="mri:extent | srv:extent"/>
           <xsl:call-template name="writeCharacterStringElement">
@@ -498,16 +516,18 @@
                                        then 'DQ_NonQuantitativeAttributeAccuracy' else local-name()"/>
 
             <xsl:element name="{concat('gmd:', $dataQualityReportType)}">
-              <xsl:call-template name="writeCharacterStringElement">
-                <xsl:with-param name="elementName" select="'gmd:nameOfMeasure'"/>
-                <xsl:with-param name="nodeWithStringToWrite" select="mdq:measure/mdq:DQ_MeasureReference/mdq:nameOfMeasure"/>
-              </xsl:call-template>
+              <xsl:for-each select="mdq:measure/mdq:DQ_MeasureReference/mdq:nameOfMeasure">
+                <xsl:call-template name="writeCharacterStringElement">
+                  <xsl:with-param name="elementName" select="'gmd:nameOfMeasure'"/>
+                  <xsl:with-param name="nodeWithStringToWrite" select="."/>
+                </xsl:call-template>
+              </xsl:for-each>
+
               <xsl:apply-templates select="mdq:measure/mdq:DQ_MeasureReference/mdq:measureIdentification"/>
               <xsl:call-template name="writeCharacterStringElement">
                 <xsl:with-param name="elementName" select="'gmd:measureDescription'"/>
                 <xsl:with-param name="nodeWithStringToWrite" select="mdq:measure/mdq:DQ_MeasureReference/mdq:measureDescription"/>
               </xsl:call-template>
-
 
               <xsl:call-template name="writeCodelistElement">
                 <xsl:with-param name="elementName" select="'gmd:evaluationMethodType'"/>
@@ -824,6 +844,9 @@
     -->
     <xsl:apply-templates select=".//gmd:onlineResource"/>
   </xsl:template>
+
+  <xsl:template match="cit:CI_OnlineResource/cit:linkage/lan:*|
+                     cit:CI_OnlineResource/cit:linkage/@xsi:type" priority="10"/>
 
   <xsl:template match="cit:CI_OnlineResource/cit:linkage/gco2:CharacterString">
     <gmd:URL>
