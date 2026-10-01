@@ -432,6 +432,7 @@
     </entry>
     <entry key="4.4.13">
       <list>
+        <value>java:v4413.ClearFormatterCacheMigration</value>
         <value>WEB-INF/classes/setup/sql/migrate/v4413/migrate-</value>
       </list>
     </entry>

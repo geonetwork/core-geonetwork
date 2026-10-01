@@ -31,6 +31,8 @@ import org.fao.geonet.SystemInfo;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,8 +51,10 @@ import javax.annotation.Nullable;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class FormatterCacheTest {
 
@@ -168,26 +172,6 @@ public class FormatterCacheTest {
     }
 
     @Test
-    public void testGetPublicCachePopulatedWithNonWithheld() throws Exception {
-        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
-        this.formatterCache = new FormatterCache(persistentStore, 100, 5000);
-
-        final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", false, FormatterWidth._100);
-        final Key key2 = new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
-
-        formatterCache.get(key, new ChangeDateValidator(changeDate), new Callable<StoreInfoAndDataLoadResult>() {
-            @Override
-            public StoreInfoAndDataLoadResult call() throws Exception {
-                return new StoreInfoAndDataLoadResult("result", changeDate, true, key2, new TestLoader("result", changeDate, true));
-            }
-        }, true);
-
-        assertNull(formatterCache.getPublished(key));
-        assertNotNull(formatterCache.getPublished(key2));
-    }
-
-    @Test
     public void testMemoryCache() throws Exception {
         final AtomicBoolean persistentStoreHit = new AtomicBoolean(false);
         this.formatterCache = new FormatterCache(new PersistentStore() {
@@ -280,6 +264,56 @@ public class FormatterCacheTest {
             Thread.sleep(100);
         }
         assertNotNull(persistentStore.get(key));
+    }
+
+    @Test
+    public void testOnApplicationEventWhenClearRequired() throws Exception {
+        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
+        this.formatterCache = new FormatterCache(persistentStore, 100, 5000);
+
+        final boolean hideWithheld = true;
+        final long changeDate = new Date().getTime();
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
+
+        formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), true);
+
+        formatterCache.setClearCacheRequired(true);
+        assertTrue(formatterCache.isClearCacheRequired());
+
+        GeonetworkDataDirectory dataDirectory = Mockito.mock(GeonetworkDataDirectory.class);
+        ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        GeonetworkDataDirectoryInitializedEvent event = new GeonetworkDataDirectoryInitializedEvent(applicationContext, dataDirectory);
+
+        formatterCache.onApplicationEvent(event);
+
+        assertFalse(formatterCache.isClearCacheRequired());
+        assertArrayEquals("newVal".getBytes(Constants.CHARSET), formatterCache.get(key, new ChangeDateValidator(changeDate),
+            new TestLoader("newVal", changeDate, false), true));
+    }
+
+    @Test
+    public void testOnApplicationEventWhenClearNotRequired() throws Exception {
+        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
+        this.formatterCache = new FormatterCache(persistentStore, 100, 5000);
+
+        final boolean hideWithheld = true;
+        final long changeDate = new Date().getTime();
+        final Key key = new Key(1, "eng", FormatType.html, "full_view", hideWithheld, FormatterWidth._100);
+
+        formatterCache.get(key, new ChangeDateValidator(changeDate), new TestLoader("result", changeDate, false), true);
+
+        formatterCache.setClearCacheRequired(false);
+        assertFalse(formatterCache.isClearCacheRequired());
+
+        GeonetworkDataDirectory dataDirectory = Mockito.mock(GeonetworkDataDirectory.class);
+        ConfigurableApplicationContext applicationContext = Mockito.mock(ConfigurableApplicationContext.class);
+        GeonetworkDataDirectoryInitializedEvent event = new GeonetworkDataDirectoryInitializedEvent(applicationContext, dataDirectory);
+
+        formatterCache.onApplicationEvent(event);
+
+        assertFalse(formatterCache.isClearCacheRequired());
+        assertArrayEquals("result".getBytes(Constants.CHARSET), formatterCache.get(key, new ChangeDateValidator(changeDate),
+            new TestLoader("newVal", changeDate, false), true));
     }
 
 }

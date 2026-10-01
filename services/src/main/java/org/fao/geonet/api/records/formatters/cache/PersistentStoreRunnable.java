@@ -83,14 +83,6 @@ public class PersistentStoreRunnable implements Runnable {
 
     @VisibleForTesting
     void doStore(Pair<Key, StoreInfoAndDataLoadResult> request) throws Exception {
-        Key key = request.one();
-        StoreInfoAndDataLoadResult result = request.two();
-        store.put(key, result);
-
-        while (result.getKey() != null && result.getToCache() != null) {
-            key = result.getKey();
-            result = result.getToCache().call();
-            store.put(key, result);
-        }
+        store.put(request.one(), request.two());
     }
 }

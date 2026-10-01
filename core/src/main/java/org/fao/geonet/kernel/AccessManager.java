@@ -41,6 +41,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.sql.SQLException;
@@ -83,7 +84,11 @@ public class AccessManager {
     UserRepository userRepository;
 
     public static Stream<AnonymousAccessLink> anonymousAccessLinkStreamFromSecurityContext() {
-        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return Stream.empty();
+        }
+        return authentication.getAuthorities().stream()
                 .filter(ViewMdGrantedAuthority.class::isInstance)
                 .map(ViewMdGrantedAuthority.class::cast)
                 .map(ViewMdGrantedAuthority::getAnonymousAccessLink);
