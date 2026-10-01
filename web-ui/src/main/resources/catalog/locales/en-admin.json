@@ -890,6 +890,8 @@
     "system/translation/provider": "Translation service provider",
     "system/translation/serviceUrl": "Service URL",
     "system/translation/apiKey": "API Key",
+    "system/metadata/recordCreationDateFromXml": "Read the metadata creation date from the XML document when possible",
+    "system/metadata/recordCreationDateFromXml-help": "If set, GeoNetwork will attempt to read the metadata creation date from the XML document. This is possible only for some standards, e.g. ISO 19115-3. IF no creation date is found there, GeoNetwork will fall back to the creation date stored in the database, which is the default behavior. Requires reindexing.",
     "metadata/url": "Link to metadata",
     "metadata/url/sitemapDoiFirst": "Use DOI for sitemap URL if present",
     "metadata/url/sitemapLinkUrl": "Sitemap and permalink URL template",
