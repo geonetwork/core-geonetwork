@@ -327,6 +327,21 @@
                                   $fieldName, ., $allLanguages)"/>
       </xsl:for-each-group>
 
+      <xsl:for-each select="mdb:dateInfo">
+        <xsl:variable name="dateType"
+                          select="cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue"
+                          as="xs:string?"/>
+            <xsl:variable name="date"
+                          select="string(cit:CI_Date/cit:date/gco:DateTime)"/>
+
+            <xsl:variable name="zuluDate"
+                          select="date-util:convertToISOZuluDateTime($date)"/>
+            <xsl:if test="$zuluDate != ''">
+              <recordDate type="object">
+                {"type": "<xsl:value-of select="$dateType"/>", "date": "<xsl:value-of select="$zuluDate"/>"}
+              </recordDate>
+            </xsl:if>
+      </xsl:for-each>
 
 
       <!-- Indexing resource information
