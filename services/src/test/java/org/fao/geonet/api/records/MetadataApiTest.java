@@ -58,6 +58,7 @@ import java.util.*;
 
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V3_ACCEPT_TYPE;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -444,15 +445,16 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
 
-//        TODOES
-//        mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
-//            .session(mockHttpSession)
-//            .accept("application/zip"))
-//            .andExpect(status().isOk())
-//            .andExpect(content().contentType(MEF_V2_ACCEPT_TYPE))
-//            .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
-//                equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "zip"))))
-//            .andExpect(content().string(startsWith(zipMagicNumber)));
+        // No specific MEF Accept type (a generic "application/zip") should get MEF version 3 -
+        // the modern default export format for this endpoint, not version 2.
+        mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
+                .session(mockHttpSession)
+                .accept("application/zip"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MEF_V3_ACCEPT_TYPE))
+            .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
+                equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "zip"))))
+            .andExpect(content().string(startsWith(zipMagicNumber)));
 
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
                 .session(mockHttpSession)
@@ -463,11 +465,24 @@ public class MetadataApiTest extends AbstractServiceIntegrationTest {
                 equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "zip"))))
             .andExpect(content().string(startsWith(zipMagicNumber)));
 
+        // Explicitly requesting MEF version 2 should actually get version 2 back, not silently
+        // upgraded to version 3 with a version-2 label (the bug this test guards against).
         mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
                 .session(mockHttpSession)
-                .accept(MEF_V1_ACCEPT_TYPE))
+                .accept(MEF_V2_ACCEPT_TYPE))
             .andExpect(status().isOk())
-            .andExpect(content().contentType(MEF_V1_ACCEPT_TYPE))
+            .andExpect(content().contentType(MEF_V2_ACCEPT_TYPE))
+            .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
+                equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "zip"))))
+            .andExpect(content().string(startsWith(zipMagicNumber)));
+
+        // Explicitly requesting MEF version 3 should be correctly labeled as version 3, not the
+        // version-2 label the buggy version of this endpoint always used to send.
+        mockMvc.perform(get("/srv/api/records/" + this.uuid + "/formatters/zip")
+                .session(mockHttpSession)
+                .accept(MEF_V3_ACCEPT_TYPE))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(MEF_V3_ACCEPT_TYPE))
             .andExpect(header().string(HttpHeaders.CONTENT_DISPOSITION,
                 equalTo(String.format("inline; filename=\"%s.%s\"", this.uuid, "zip"))))
             .andExpect(content().string(startsWith(zipMagicNumber)));

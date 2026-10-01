@@ -411,7 +411,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> implements Aut
         try {
             String xsl = params.getImportXslt();
             MEFLib.Version version = MEFLib.getMEFVersion(file);
-            String fileType = version == MEFLib.Version.V1 ? "mef" : "mef2";
+            String fileType = version == MEFLib.Version.V1 ? "mef" : version == MEFLib.Version.V3 ? "mef3" : "mef2";
             String style = (xsl == null || xsl.equals("none")) ? "_none_" : xsl;
             MetadataType isTemplate = MetadataType.lookup(params.recordType);
 

@@ -25,6 +25,7 @@ package org.fao.geonet.kernel.mef;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PRIVATE;
 import static org.fao.geonet.kernel.mef.MEFConstants.DIR_PUBLIC;
+import static org.fao.geonet.kernel.mef.MEFConstants.DIR_STORE;
 import static org.fao.geonet.kernel.mef.MEFConstants.FS;
 import static org.fao.geonet.kernel.mef.MEFConstants.VERSION;
 
@@ -42,6 +43,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Nonnull;
 
+import com.google.common.net.UrlEscapers;
 import org.apache.commons.io.IOUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
@@ -144,6 +146,24 @@ public class MEFLib {
 
     // --------------------------------------------------------------------------
 
+    /**
+     * Create a MEF {@link Version#V3} archive: the same one-folder-per-record container as
+     * {@link #doMEF2Export}, but with each record's attachments written flat under a single
+     * {@code store} directory (see {@link MEF3Exporter}) instead of split across
+     * {@code public}/{@code private}.
+     */
+    public static Path doMEF3Export(ServiceContext context,
+                                    Set<String> uuids, String format, boolean skipUUID, Path stylePath, boolean resolveXlink,
+                                    boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation,
+                                    boolean approved, boolean includeAttachments)
+        throws Exception {
+        return MEF3Exporter.doExport(context, uuids, Format.parse(format),
+            skipUUID, stylePath, resolveXlink, removeXlinkAttribute,
+            skipError, addSchemaLocation, approved, includeAttachments);
+    }
+
+    // --------------------------------------------------------------------------
+
     public static void visit(Path mefFile, IVisitor visitor, IMEFVisitor v)
         throws Exception {
         visitor.visit(mefFile, v);
@@ -153,9 +173,14 @@ public class MEFLib {
 
     /**
      * Return MEF file version according to ZIP file content.
+     * <p>
+     * {@link Version#V2} and {@link Version#V3} share the same one-folder-per-record container,
+     * distinguished only by their attachment layout (legacy {@code public}/{@code private} split
+     * vs flat {@code store}) - telling them apart requires peeking at the first per-record folder
+     * found, since that's not visible from the zip root alone.
      *
      * @param mefFile mefFile to check version
-     * @return v1
+     * @return the MEF version the archive is written in
      */
     public static Version getMEFVersion(Path mefFile) {
         try (FileSystem fileSystem = ZipUtil.openZipFs(mefFile)) {
@@ -163,10 +188,17 @@ public class MEFLib {
             final Path infoXmlFile = fileSystem.getPath("info.xml");
             if (Files.exists(metadataXmlFile) || Files.exists(infoXmlFile)) {
                 return Version.V1;
-            } else {
-
-                return Version.V2;
             }
+
+            Path root = fileSystem.getRootDirectories().iterator().next();
+            try (DirectoryStream<Path> paths = Files.newDirectoryStream(root)) {
+                for (Path recordDir : paths) {
+                    if (Files.isDirectory(recordDir)) {
+                        return Files.isDirectory(recordDir.resolve(DIR_STORE)) ? Version.V3 : Version.V2;
+                    }
+                }
+            }
+            return Version.V2;
         } catch (URISyntaxException | IOException e) {
             throw new RuntimeException(e);
         }
@@ -315,10 +347,26 @@ public class MEFLib {
 
     /**
      * Build an info file.
+     *
+     * @param unifiedStore Whether the caller physically writes attachments into a single flat
+     *                     {@code store} directory ({@link MEF3Exporter}) or splits them across
+     *                     {@code public}/{@code private} directories (legacy MEF1/MEF2 - see
+     *                     {@link MEFExporter}/{@link MEF2Exporter}). Must match the caller's
+     *                     actual physical layout: the info.xml file section shape (a single
+     *                     unified {@code <store>} element vs. separate {@code <public>}/
+     *                     {@code <private>} elements) needs to describe the same layout the ZIP
+     *                     itself was written with, or a reader relying on info.xml alone (eg.
+     *                     {@link org.fao.geonet.kernel.harvest.harvester.geonet.BaseGeoNetworkAligner})
+     *                     would look for files in the wrong place.
+     * @param flattenedResourceNames Only meaningful when {@code unifiedStore} is false - the
+     *                     name mapping from {@link #flattenResourceNames}, so a flattened
+     *                     resource is registered under the same name it was actually written
+     *                     under. Ignored (may be null) when {@code unifiedStore} is true.
      */
     static String buildInfoFile(ServiceContext context, AbstractMetadata md,
                                 Format format, List<MetadataResource> pubResources,
-                                List<MetadataResource> priResources, boolean skipUUID)
+                                List<MetadataResource> priResources, boolean skipUUID,
+                                boolean unifiedStore, Map<String, String> flattenedResourceNames)
         throws Exception {
         Element info = new Element("info");
         info.setAttribute("version", VERSION);
@@ -327,14 +375,117 @@ public class MEFLib {
         info.addContent(buildInfoCategories(md));
         info.addContent(buildInfoPrivileges(context, md));
 
-        info.addContent(buildInfoFiles("public", pubResources));
-        if (priResources != null) {
-            info.addContent(buildInfoFiles("private", priResources));
+        if (unifiedStore) {
+            List<MetadataResource> allResources = new ArrayList<>();
+            if (pubResources != null) {
+                allResources.addAll(pubResources);
+            }
+            if (priResources != null) {
+                allResources.addAll(priResources);
+            }
+            info.addContent(buildInfoFiles("store", allResources));
         } else {
-            info.addContent(new Element("private"));
+            info.addContent(buildInfoFiles("public", pubResources, flattenedResourceNames));
+            if (priResources != null) {
+                info.addContent(buildInfoFiles("private", priResources, flattenedResourceNames));
+            } else {
+                info.addContent(new Element("private"));
+            }
         }
 
         return Xml.getString(new Document(info));
+    }
+
+    /**
+     * Compute a MEF v1/v2-safe flat name for each resource in the given list, replacing every
+     * "/" in a nested resource's name with "__" (eg. {@code test/document.pdf} becomes
+     * {@code test__document.pdf}), so it can be written directly into a flat public/private
+     * directory without creating any real subdirectory there. This matters because GeoNetwork
+     * versions that predate subfolder support list that directory non-recursively with no check
+     * for a nested directory entry, and fail (eg. {@code .../public/test -> is a directory}) the
+     * moment they reach one - flattening avoids ever writing one in the first place. MEF version 3
+     * ({@link MEF3Exporter}, the modern, recommended default) is unaffected by any of this and
+     * keeps exporting nested resources under their real path.
+     * <p>
+     * A name that doesn't need flattening (no "/") is still included in the returned map, mapped
+     * to itself, so callers can look up every resource's target name uniformly rather than special
+     * -casing the identity mapping. Only a genuine collision - two different original names that
+     * flatten (or already are) the exact same string, eg. a nested {@code test/document.pdf}
+     * flattening to the same name as an existing, unrelated top-level {@code test__document.pdf} -
+     * gets a disambiguating numeric suffix inserted before the file extension; expected to be rare
+     * in practice.
+     *
+     * @return a map from each resource's original name to the name it should actually be written
+     * under (and referenced as, in both info.xml and any URL inside the record's own metadata.xml
+     * that points at it) for this export. Never null; empty if {@code resources} is null or empty.
+     */
+    static Map<String, String> flattenResourceNames(List<MetadataResource> resources) {
+        Map<String, String> flattenedNames = new LinkedHashMap<>();
+        if (resources == null) {
+            return flattenedNames;
+        }
+        Set<String> usedNames = new HashSet<>();
+        for (MetadataResource resource : resources) {
+            String originalName = resource.getFilename();
+            String candidate = originalName.replace("/", "__");
+            String finalName = candidate;
+            int suffix = 1;
+            while (!usedNames.add(finalName)) {
+                int dot = candidate.lastIndexOf('.');
+                finalName = dot > 0
+                    ? candidate.substring(0, dot) + "-" + suffix + candidate.substring(dot)
+                    : candidate + "-" + suffix;
+                suffix++;
+            }
+            flattenedNames.put(originalName, finalName);
+        }
+        return flattenedNames;
+    }
+
+    /**
+     * Rewrite any reference, inside the given serialized record XML, to a resource whose name was
+     * changed by {@link #flattenResourceNames} - eg. a distribution link or thumbnail URL pointing
+     * at {@code .../attachments/test/document.pdf} gets rewritten to
+     * {@code .../attachments/test__document.pdf} - so the record's own online resource links still
+     * resolve correctly against the flattened layout a legacy MEF v1/v2 export actually writes to
+     * disk. Without this, a record that *links* (not just uploads) a nested attachment would
+     * export with a dangling reference in its own metadata.xml.
+     * <p>
+     * This is a plain string substitution, not schema-aware XPath rewriting: the exact old and new
+     * URLs are both fully known here (same base URL/UUID prefix as {@code resource.getUrl()}, only
+     * the escaped filename tail changes), so it works correctly regardless of which element or
+     * namespace happens to hold the link in any given metadata schema, without needing to parse
+     * the XML at all.
+     *
+     * @param xmlDocumentAsString The serialized record XML to rewrite.
+     * @param resources           The resources whose names were (possibly) changed.
+     * @param flattenedNames      The name mapping from {@link #flattenResourceNames}.
+     * @return The rewritten XML, or the original string unchanged if nothing needed rewriting.
+     */
+    static String rewriteFlattenedResourceUrls(String xmlDocumentAsString, List<MetadataResource> resources,
+                                               Map<String, String> flattenedNames) {
+        if (resources == null || flattenedNames == null || flattenedNames.isEmpty()) {
+            return xmlDocumentAsString;
+        }
+        for (MetadataResource resource : resources) {
+            String originalName = resource.getFilename();
+            String flattenedName = flattenedNames.get(originalName);
+            String oldUrl = resource.getUrl();
+            if (flattenedName == null || flattenedName.equals(originalName) || oldUrl == null) {
+                continue;
+            }
+            String escapedOldName = UrlEscapers.urlFragmentEscaper().escape(originalName);
+            if (!oldUrl.endsWith(escapedOldName)) {
+                // Unexpected URL shape (eg. a Store implementation building URLs differently
+                // than FilesystemStoreResource's baseUrl + uuid + "/attachments/" + escaped
+                // filename convention) - skip rather than risk a wrong substitution.
+                continue;
+            }
+            String escapedFlattenedName = UrlEscapers.urlFragmentEscaper().escape(flattenedName);
+            String newUrl = oldUrl.substring(0, oldUrl.length() - escapedOldName.length()) + escapedFlattenedName;
+            xmlDocumentAsString = xmlDocumentAsString.replace(oldUrl, newUrl);
+        }
+        return xmlDocumentAsString;
     }
 
     /**
@@ -494,6 +645,19 @@ public class MEFLib {
      * Build file section of info file.
      */
     static Element buildInfoFiles(String name, List<MetadataResource> resources) {
+        return buildInfoFiles(name, resources, null);
+    }
+
+    /**
+     * Build file section of info file.
+     *
+     * @param flattenedNames Optional name mapping from {@link #flattenResourceNames} - when a
+     *                       resource's original name is a key in this map, the corresponding
+     *                       value is registered as its {@code name} attribute instead of the
+     *                       resource's own {@link MetadataResource#getFilename()}. May be null,
+     *                       equivalent to an empty map (every resource keeps its own name).
+     */
+    static Element buildInfoFiles(String name, List<MetadataResource> resources, Map<String, String> flattenedNames) {
         Element root = new Element(name);
 
 
@@ -502,8 +666,17 @@ public class MEFLib {
                 String date = new ISODate(resource.getLastModification().getTime(), false).toString();
 
                 Element el = new Element("file");
-                el.setAttribute("name", resource.getFilename());
+                String filename = (flattenedNames != null && flattenedNames.containsKey(resource.getFilename()))
+                    ? flattenedNames.get(resource.getFilename())
+                    : resource.getFilename();
+                el.setAttribute("name", filename);
                 el.setAttribute("changeDate", date);
+                if (resource.getVisibility() != null) {
+                    el.setAttribute("access", resource.getVisibility().toString());
+                }
+                if (resource.getMimeType() != null && !resource.getMimeType().isEmpty()) {
+                    el.setAttribute("mimetype", resource.getMimeType());
+                }
 
                 root.addContent(el);
             }
@@ -523,6 +696,62 @@ public class MEFLib {
         }
 
         throw new Exception("File not found in info.xml : " + fileName);
+    }
+
+    /**
+     * Whether a file with the given name is registered in the given {@code <file>} element list
+     * (from {@link #getFilesElement}). Used by {@link MEFVisitor}/{@link MEF3Visitor} to decide
+     * which handler (public/private) to invoke for a resource read from the flat, visibility-less
+     * {@code store/} folder introduced with MEF 3.0, since the folder itself no longer implies
+     * visibility the way the legacy {@code public/}/{@code private/} folders did.
+     */
+    static boolean isRegisteredFile(List<Element> files, String fileName) {
+        for (Element file : files) {
+            if (fileName.equals(file.getAttributeValue("name"))) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get the {@code <file>} elements for a given access level ("public" or "private") from an
+     * {@code <info>} element, for use as a {@code changeDate} lookup table (see
+     * {@link #getChangeDate}) by {@link MEFVisitor}, {@link MEF2Visitor} and {@link MEF3Visitor}.
+     * <p>
+     * Supports both the MEF 3.0 unified {@code <store>} format (info.xml version "3.0"), where
+     * files are filtered by their own {@code access} attribute, and the pre-3.0
+     * {@code <public>}/{@code <private>} format, for archives written before this format existed.
+     * This is independent of a record's physical attachment layout: a MEF 3.0-schema info.xml can
+     * be paired with either the flat {@code store/} folder (see {@link MEFConstants#DIR_STORE},
+     * read by {@link MEFVisitor}/{@link MEF3Visitor}) or the legacy {@code public/}/{@code private/}
+     * folders (see {@link MEFConstants#DIR_PUBLIC}/{@link MEFConstants#DIR_PRIVATE}, read by
+     * {@link MEFVisitor}/{@link MEF2Visitor}) - this method itself is only about locating the
+     * changeDate/mimetype metadata for a given file, not about which physical folder(s) to read.
+     * <p>
+     * Also used directly by {@link org.fao.geonet.kernel.harvest.harvester.geonet.BaseGeoNetworkAligner},
+     * which parses info.xml independently of the visitor classes above.
+     */
+    public static List<Element> getFilesElement(Element info, String access) {
+        Element store = info.getChild("store");
+        if (store != null) {
+            List<Element> files = new ArrayList<>();
+            @SuppressWarnings("unchecked")
+            List<Element> children = store.getChildren("file");
+            for (Element file : children) {
+                if (access.equals(file.getAttributeValue("access"))) {
+                    files.add(file);
+                }
+            }
+            return files;
+        }
+        Element legacy = info.getChild(access);
+        if (legacy != null) {
+            @SuppressWarnings("unchecked")
+            List<Element> children = legacy.getChildren();
+            return children;
+        }
+        return new ArrayList<>();
     }
 
     public static void backupRecord(AbstractMetadata metadata, ServiceContext context) {
@@ -667,7 +896,29 @@ public class MEFLib {
          *          +---- all private documents and thumbnails
          * </pre>
          */
-        V2(Constants.MEF_V2_ACCEPT_TYPE);
+        V2(Constants.MEF_V2_ACCEPT_TYPE),
+        /**
+         * Version 3 uses the same one-folder-per-record container as version 2, but each
+         * record's attachments - public and private alike - live in a single flat {@code store}
+         * directory instead of being split across {@code public}/{@code private}. Visibility is
+         * recorded per file via the {@code access} attribute on info.xml's unified
+         * {@code <store>} element (see {@link MEFLib#buildInfoFiles}), not by physical location.
+         *
+         * <pre>
+         * Root
+         * |
+         * + 0..n metadata
+         *   +--- metadata
+         *   |      +--- metadata.xml (ISO19139)
+         *   |      +--- (optional) metadata.profil.xml (ISO19139profil) Require a
+         * schema/convert/toiso19139.xsl to map to ISO.
+         *   +--- info.xml
+         *   +--- applschema ISO 19110 record
+         *   +--- store
+         *          +---- all public and private documents and thumbnails
+         * </pre>
+         */
+        V3(Constants.MEF_V3_ACCEPT_TYPE);
 
         String acceptType;
 
@@ -695,6 +946,7 @@ public class MEFLib {
         public static class Constants {
             public static final String MEF_V1_ACCEPT_TYPE = "application/x-gn-mef-1-zip";
             public static final String MEF_V2_ACCEPT_TYPE = "application/x-gn-mef-2-zip";
+            public static final String MEF_V3_ACCEPT_TYPE = "application/x-gn-mef-3-zip";
         }
     }
 
