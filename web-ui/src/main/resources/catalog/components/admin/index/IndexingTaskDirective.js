@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -145,7 +145,8 @@
           "../../catalog/components/admin/index/partials/indexingstatuscontainer.html",
         controllerAs: "ctrl",
         controller: [
-          function () {
+          "$scope",
+          function ($scope) {
             this.tasks = [];
 
             var me = this;
@@ -165,6 +166,8 @@
                     return;
                   }
 
+                  var requireRefresh = false;
+
                   var probes = result.data.value;
                   Object.keys(probes).forEach(function (probeName) {
                     var probe = probes[probeName];
@@ -174,12 +177,23 @@
                       processed: probe.Processed,
                       total: probe.ToProcessCount
                     });
+
+                    if (probe.ToProcessCount - probe.Processed > 0) {
+                      requireRefresh = true;
+                    }
                   });
 
-                  // loop
-                  setTimeout(me.refresh, 1000);
+                  // Loop only while a task is still running, otherwise the
+                  // finished task stays displayed and polling stops.
+                  if (requireRefresh) {
+                    me.timeout = setTimeout(me.refresh, 1000);
+                  }
                 });
             };
+
+            $scope.$on("$destroy", function () {
+              clearTimeout(me.timeout);
+            });
 
             gnConfigService.load().then(function (c) {
               me.refresh();

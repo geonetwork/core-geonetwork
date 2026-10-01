@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -41,9 +41,6 @@
 
 package org.fao.geonet.kernel.search.index;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.Lists;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
@@ -53,15 +50,17 @@ import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.Log;
 import org.springframework.jmx.export.MBeanExporter;
+import org.springframework.scheduling.TaskScheduler;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
 
 import javax.management.ObjectName;
 import java.util.*;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -72,11 +71,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ManagedResource()
 public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implements Runnable {
 
-    private static final JmxRemovalListener REMOVAL_LISTENER = new JmxRemovalListener();
-    private static final Cache<ObjectName, ObjectName> PROBE_CACHE = CacheBuilder.newBuilder()
-        .expireAfterWrite(1, TimeUnit.MINUTES)
-        .removalListener(REMOVAL_LISTENER)
-        .build();
+    /**
+     * How long a finished task's probe stays registered, so that the admin
+     * dashboard can still display its completed status.
+     */
+    private static final long PROBE_RETENTION_MINUTES = 1;
     private static final Set<CompletableFuture<Void>> RUNNING_INDEXERS = Collections.synchronizedSet(Collections.newSetFromMap(new WeakHashMap<>()));
 
     public static boolean isIndexing() {
@@ -92,13 +91,14 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
     private final AtomicInteger inError = new AtomicInteger();
     private CompletableFuture<Void> allCompleted;
     private final MBeanExporter exporter;
+    private final TaskScheduler probeCleaner;
 
     public BatchOpsMetadataReindexer(DataManager dm, Collection<Integer> metadata) {
         super(dm);
         this.metadata = metadata;
         this.toProcessCount = metadata.size();
         exporter = ApplicationContextHolder.get().getBean(MBeanExporter.class);
-        REMOVAL_LISTENER.setExporter(exporter);
+        probeCleaner = ApplicationContextHolder.get().getBean("probeCleaner", TaskScheduler.class);
     }
 
     @ManagedAttribute
@@ -191,21 +191,11 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
         if (executor != null) {
             executor.shutdown();
         }
-        PROBE_CACHE.cleanUp();
-        PROBE_CACHE.put(probeName, probeName);
-    }
-
-    private static class JmxRemovalListener implements com.google.common.cache.RemovalListener<ObjectName, ObjectName> {
-        private MBeanExporter exporter;
-
-        @Override
-        public void onRemoval(RemovalNotification<ObjectName, ObjectName> removalNotification) {
-            exporter.unregisterManagedResource(removalNotification.getValue());
-        }
-
-        public void setExporter(MBeanExporter exporter) {
-            this.exporter = exporter;
-        }
+        // Unregister the probe on its own, after a short retention delay: the
+        // dashboard polls it to show the completed status one last time.
+        probeCleaner.schedule(
+            () -> exporter.unregisterManagedResource(probeName),
+            Instant.now().plus(Duration.ofMinutes(PROBE_RETENTION_MINUTES)));
     }
 
     private final class BatchOpsCallable implements Runnable {
