@@ -25,12 +25,16 @@ package org.fao.geonet.api.records.formatters;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.domain.Group;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.JSONLocCacheLoader;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
+import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -44,6 +48,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static org.fao.geonet.api.records.formatters.SchemaLocalizations.loadSchemaLocalizations;
 
@@ -62,6 +67,12 @@ import static org.fao.geonet.api.records.formatters.SchemaLocalizations.loadSche
  */
 @Component
 public class XsltFormatter implements FormatterImpl {
+
+    @Autowired
+    GroupRepository groupRepository;
+
+    @Autowired
+    SettingManager settingManager;
 
     private final Map<String, Element> translationElements =  new HashMap<>();
 
@@ -111,12 +122,33 @@ public class XsltFormatter implements FormatterImpl {
 
     public String format(FormatterParams fparams) throws Exception {
 
+        Element root = buildTransformationSource(fparams);
+
+        // Create a map of request parameters to be passed to the XSL transformation
+        // For a formatter to retrieve a request parameter
+        // an xsl:param should be defined
+        // eg. <xsl:param name="view"/>
+        Map<String, Object> requestParameters = new HashMap<String, Object>();
+
+        if (fparams.webRequest != null) {
+            Iterator<String> iterator = fparams.webRequest.getParameterMap().keySet().iterator();
+            while (iterator.hasNext()) {
+                String key = iterator.next();
+                requestParameters.put(key, fparams.webRequest.getParameterMap().get(key));
+            }
+        }
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        Xml.transform(root, fparams.viewFile, requestParameters, baos);
+        String transformed = baos.toString(StandardCharsets.UTF_8);
+        return transformed.startsWith("<textResponse") ?
+            Xml.loadString(transformed, false).getText() :
+            transformed;
+    }
+
+    Element buildTransformationSource(FormatterParams fparams) throws Exception {
         String lang = fparams.config.getLang(fparams.context.getLanguage());
 
         Element root = new Element("root");
-
-        SettingManager settingManager = ApplicationContextHolder.get().getBean(SettingManager.class);
-
         root.addContent(new Element("lang").setText(fparams.context.getLanguage()));
         root.addContent(new Element("url").setText(fparams.url));
 
@@ -174,6 +206,9 @@ public class XsltFormatter implements FormatterImpl {
 
         // Add metadata information (ie. harvested, categories, schema, dates, ...)
         Element info = fparams.metadataInfo.asXml();
+
+        enrichTransformSourceWithGroupLogoOrSourceId(fparams, info);
+
         // metadataInfo contains the XML in data which is not needed
         info.removeChild("data");
         root.addContent(new Element("info")
@@ -197,25 +232,22 @@ public class XsltFormatter implements FormatterImpl {
                 schemas.addContent(e);
             }
         }
+        return root;
+    }
 
-        // Create a map of request parameters to be passed to the XSL transformation
-        // For a formatter to retrieve a request parameter
-        // an xsl:param should be defined
-        // eg. <xsl:param name="view"/>
-        Map<String, Object> requestParameters = new HashMap<String, Object>();
-
-        if (fparams.webRequest != null) {
-            Iterator<String> iterator = fparams.webRequest.getParameterMap().keySet().iterator();
-            while (iterator.hasNext()) {
-                String key = iterator.next();
-                requestParameters.put(key, fparams.webRequest.getParameterMap().get(key));
+    private void enrichTransformSourceWithGroupLogoOrSourceId(FormatterParams fparams, Element info) throws JDOMException {
+        Element sourceInfo = (Element) Xml.selectNodes(info, "sourceinfo").get(0);
+        Element grouplogo = new Element("grouplogo");
+        sourceInfo.addContent(grouplogo);
+        if (!settingManager.getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true)) {
+            grouplogo.setText("api/sources/" + fparams.metadataInfo.getSourceInfo().getSourceId() + "/logo");
+            return;
+        }
+        if (fparams.metadataInfo.getSourceInfo().getGroupOwner() != null) {
+            Optional<Group> group = groupRepository.findById(fparams.metadataInfo.getSourceInfo().getGroupOwner());
+            if (group.isPresent() && group.get().getLogo() != null && !group.get().getLogo().isEmpty()) {
+                grouplogo.setText("../images/harvesting/" + group.get().getLogo());
             }
         }
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Xml.transform(root, fparams.viewFile, requestParameters, baos);
-        String transformed = baos.toString(StandardCharsets.UTF_8);
-        return transformed.startsWith("<textResponse") ?
-            Xml.loadString(transformed, false).getText() :
-            transformed;
     }
 }
