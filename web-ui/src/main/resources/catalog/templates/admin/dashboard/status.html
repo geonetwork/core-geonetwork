@@ -12,19 +12,20 @@
           <table class="table table-striped">
             <tr
               class="health-check"
-              data-ng-class="info.status === 'OK' ? '' : 'alert-danger'"
+              data-ng-class="isHealthy(info) ? '' : 'alert-danger'"
               data-ng-repeat="info in criticalhealthcheck"
             >
               <td>
                 <h4
                   class="list-group-item-heading"
-                  ng-show="info.status === 'OK'"
+                  ng-show="isHealthy(info)"
+                  title="{{info.msg}}"
                   translate
                 >
                   {{info.name}}
                 </h4>
 
-                <div ng-hide="info.status === 'OK'" class="dropdown">
+                <div ng-hide="isHealthy(info)" class="dropdown">
                   <a
                     data-target="#"
                     href="http://example.com"
@@ -48,10 +49,7 @@
                 </div>
               </td>
               <td>
-                <span
-                  class="badge"
-                  data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-danger'"
-                >
+                <span class="badge" data-ng-class="badgeClass(info, 'badge-danger')">
                   {{info.status}}
                 </span>
               </td>
@@ -69,19 +67,20 @@
           <table class="table table-striped">
             <tr
               class="health-check"
-              data-ng-class="info.status === 'OK' ? '' : 'alert-warning'"
+              data-ng-class="isHealthy(info) ? '' : 'alert-warning'"
               data-ng-repeat="info in warninghealthcheck"
             >
               <td>
                 <h4
                   class="list-group-item-heading"
-                  ng-show="info.status === 'OK'"
+                  ng-show="isHealthy(info)"
+                  title="{{info.msg}}"
                   translate
                 >
                   {{info.name}}
                 </h4>
 
-                <div ng-hide="info.status === 'OK'" class="dropdown">
+                <div ng-hide="isHealthy(info)" class="dropdown">
                   <a
                     data-target="#"
                     href=""
@@ -105,10 +104,7 @@
                 </div>
               </td>
               <td>
-                <span
-                  class="badge"
-                  data-ng-class="info.status === 'OK' ? 'badge-success' : 'badge-warning'"
-                >
+                <span class="badge" data-ng-class="badgeClass(info, 'badge-warning')">
                   {{info.status}}
                 </span>
               </td>

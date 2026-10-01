@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -40,6 +40,43 @@ import jeeves.server.context.ServiceContext;
  * User: jeichar Date: 3/29/12 Time: 3:29 PM
  */
 public interface HealthCheckFactory {
+    /**
+     * Prefix for the message of a healthy {@link HealthCheck.Result} indicating that the
+     * checked component was intentionally disabled via configuration rather than actively
+     * verified. Use {@link #disabled(String)} to build such a result and {@link #isDisabled}
+     * / {@link #getDisabledMessage} to recognize and unwrap it, rather than matching on this
+     * constant directly, so the convention stays in one place.
+     */
+    String DISABLED_RESULT_PREFIX = "DISABLED: ";
+
+    /**
+     * Builds a healthy {@link HealthCheck.Result} indicating that the checked component was
+     * intentionally disabled via configuration (e.g. a feature not configured) rather than
+     * actively verified. Callers such as {@code GeonetworkHealthCheckServlet} report this as a
+     * {@code DISABLED} status instead of {@code OK}, without failing the overall health check.
+     *
+     * @param message a message describing why the component is disabled
+     */
+    static HealthCheck.Result disabled(String message) {
+        return HealthCheck.Result.healthy(DISABLED_RESULT_PREFIX + message);
+    }
+
+    /**
+     * Returns {@code true} if the given result was built by {@link #disabled(String)}.
+     */
+    static boolean isDisabled(HealthCheck.Result result) {
+        return result.isHealthy() && result.getMessage() != null
+            && result.getMessage().startsWith(DISABLED_RESULT_PREFIX);
+    }
+
+    /**
+     * Returns the original message passed to {@link #disabled(String)}, with the
+     * {@link #DISABLED_RESULT_PREFIX} stripped. Only valid when {@link #isDisabled} is {@code true}.
+     */
+    static String getDisabledMessage(HealthCheck.Result result) {
+        return result.getMessage().substring(DISABLED_RESULT_PREFIX.length());
+    }
+
     /**
      * Create a HealthCheck object of type Type
      */
