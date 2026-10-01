@@ -207,4 +207,8 @@ public class XslUtil {
     public static String html2text(String html, boolean substituteHtmlToTextLayoutElement) {
         return html;
     }
+
+    public static String buildEmbedding(String text) {
+        return text;
+    }
 }

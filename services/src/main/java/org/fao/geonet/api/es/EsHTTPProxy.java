@@ -495,6 +495,8 @@ public class EsHTTPProxy {
                 || esQuery.toString().contains("-draft:"));
         JsonNode nodeFilter = objectMapper.readTree(esFilter);
         EsQueryFilterUtils.addFilterToQuery(objectMapper, esQuery, nodeFilter);
+        KnnUtils.addFilterToKnnQuery(esQuery, nodeFilter);
+        KnnUtils.replaceEmbeddingInKnnQuery(esQuery, objectMapper);
     }
 
     /**
