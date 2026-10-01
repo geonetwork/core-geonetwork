@@ -30,8 +30,12 @@ import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Pair;
+import org.fao.geonet.kernel.GeonetworkDataDirectory.GeonetworkDataDirectoryInitializedEvent;
+import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
 
 import javax.annotation.Nullable;
@@ -61,7 +65,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  *
  * @author Jesse on 3/5/2015.
  */
-public class FormatterCache {
+public class FormatterCache implements ApplicationListener<GeonetworkDataDirectoryInitializedEvent> {
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final PersistentStore persistentStore;
     private final Cache<Key, StoreInfoAndData> memoryCache;
@@ -70,6 +74,7 @@ public class FormatterCache {
     private final BlockingQueue<Pair<Key, StoreInfoAndDataLoadResult>> storeRequests;
     @Autowired
     private final CacheConfig cacheConfig;
+    private boolean clearCacheRequired = false;
 
     public FormatterCache(PersistentStore persistentStore, int memoryCacheSize, int maxStoreRequests) {
         this(persistentStore, memoryCacheSize, maxStoreRequests, new ConfigurableCacheConfig());
@@ -280,6 +285,27 @@ public class FormatterCache {
             this.persistentStore.clear();
         } finally {
             writeLock.unlock();
+        }
+    }
+
+    public boolean isClearCacheRequired() {
+        return clearCacheRequired;
+    }
+
+    public void setClearCacheRequired(boolean clearCacheRequired) {
+        this.clearCacheRequired = clearCacheRequired;
+    }
+
+    @Override
+    public void onApplicationEvent(GeonetworkDataDirectoryInitializedEvent event) {
+        if (clearCacheRequired) {
+            Log.info(Geonet.GEONETWORK, "Clearing formatter cache (migration requested)...");
+            try {
+                clear();
+                clearCacheRequired = false;
+            } catch (Exception e) {
+                Log.error(Geonet.GEONETWORK, "Error clearing formatter cache on data directory initialization: " + e.getMessage(), e);
+            }
         }
     }
 
