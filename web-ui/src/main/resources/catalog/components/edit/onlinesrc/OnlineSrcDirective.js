@@ -1009,7 +1009,6 @@
                       url: fields.url,
                       protocol: linkToEdit.protocol,
                       mimeType: linkToEdit.mimeType,
-                      mimeTypeStrategy: "mimeType",
                       name: fields.name,
                       desc: fields.desc,
                       applicationProfile: linkToEdit.applicationProfile,
@@ -1023,7 +1022,6 @@
                     scope.params.linkType = typeConfig;
                     scope.params.protocol = null;
                     scope.params.mimeType = "";
-                    scope.mimeTypeStrategy = "mimeType";
                     scope.params.name = "";
                     scope.params.desc = "";
                     initMultilingualFields();
@@ -1208,6 +1206,15 @@
                     processParams[key] = scope.params[key];
                   }
                 });
+
+                // mimeTypeStrategy is a configuration option and not a user input.
+                // Take it from the link type configuration rather than from the form
+                // state, which is reset on protocol change and may be turned into a
+                // multilingual object on a multilingual record.
+                var mimeTypeStrategy = scope.params.linkType.fields.mimeTypeStrategy;
+                if (angular.isDefined(mimeTypeStrategy)) {
+                  processParams.mimeTypeStrategy = mimeTypeStrategy.value || "mimeType";
+                }
 
                 if (scope.isEditing) {
                   processParams.updateKey = scope.editingKey;
@@ -1540,7 +1547,7 @@
                 if (newValue !== oldValue) {
                   scope.config.multilingualFields = [];
                   angular.forEach(newValue.fields, function (f, k) {
-                    if (f.isMultilingual !== false) {
+                    if (scope.isMdMultilingual && f.isMultilingual !== false) {
                       scope.config.multilingualFields.push(k);
                     }
                   });
