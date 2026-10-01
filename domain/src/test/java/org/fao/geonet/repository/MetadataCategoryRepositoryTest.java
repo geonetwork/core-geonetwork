@@ -26,6 +26,7 @@ package org.fao.geonet.repository;
 
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
+import org.fao.geonet.domain.MetadataDraft;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -44,6 +45,9 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
 
     @Autowired
     MetadataRepository _metadataRepo;
+
+    @Autowired
+    MetadataDraftRepository _metadataDraftRepo;
 
     @PersistenceContext
     EntityManager _entityManager;
@@ -125,6 +129,34 @@ public class MetadataCategoryRepositoryTest extends AbstractSpringDataTest {
         assertEquals(cat2.getId(), foundCategories.iterator().next().getId());
 
         assertEquals(0, _metadataRepo.findById(metadata2.getId()).get().getCategories().size());
+    }
+
+    @Test
+    public void testDraftCategoriesArePersistedAndDeleted() throws Exception {
+        MetadataCategory cat1 = _repo.save(newMetadataCategory(_inc));
+        MetadataCategory cat2 = _repo.save(newMetadataCategory(_inc));
+
+        Metadata metadata = _metadataRepo.save(MetadataRepositoryTest.newMetadata(_inc));
+
+        MetadataDraft draft = new MetadataDraft();
+        draft.setUuid(metadata.getUuid()).setData(metadata.getData());
+        draft.getDataInfo().setSchemaId(metadata.getDataInfo().getSchemaId());
+        draft.getSourceInfo().setSourceId(metadata.getSourceInfo().getSourceId()).setOwner(1);
+        draft.setApprovedVersion(metadata);
+        draft.getCategories().add(cat1);
+        draft.getCategories().add(cat2);
+        draft = _metadataDraftRepo.save(draft);
+
+        _entityManager.flush();
+        _entityManager.clear();
+
+        assertEquals(2, _metadataDraftRepo.findById(draft.getId()).get().getCategories().size());
+
+        _repo.deleteCategoryAndMetadataReferences(cat1.getId());
+
+        final Set<MetadataCategory> foundCategories = _metadataDraftRepo.findById(draft.getId()).get().getCategories();
+        assertEquals(1, foundCategories.size());
+        assertEquals(cat2.getId(), foundCategories.iterator().next().getId());
     }
 
     private MetadataCategory newMetadataCategory() {

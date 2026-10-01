@@ -28,18 +28,23 @@ import org.fao.geonet.entitylistener.MetadataDraftEntityListenerManager;
 import javax.annotation.Nonnull;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.util.Set;
 
 /**
  * This is a normal {@link Metadata} but on its draft version.
  * <p>
- * Privileges, categories and non-XML properties will not be stored.
+ * Privileges and non-XML properties will not be stored. Categories are stored
+ * so they can be reviewed with the working copy and applied on approval.
  *
  * @author María Arias de Reyna
  */
@@ -51,6 +56,7 @@ public class MetadataDraft extends AbstractMetadata implements Serializable {
 
     private static final long serialVersionUID = -1933627969445820867L;
     public static final String TABLENAME = "MetadataDraft";
+    public static final String METADATA_DRAFT_CATEG_JOIN_TABLE_NAME = "MetadataDraftCateg";
 
     public MetadataDraft() {
     }
@@ -66,6 +72,26 @@ public class MetadataDraft extends AbstractMetadata implements Serializable {
 
     public void setApprovedVersion(Metadata approvedVersion) {
         this.approvedVersion = approvedVersion;
+    }
+
+    /**
+     * Get the set of metadata categories of the working copy.
+     *
+     * @return the metadata categories
+     */
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.REFRESH},
+        fetch = FetchType.EAGER)
+    @JoinTable(name = METADATA_DRAFT_CATEG_JOIN_TABLE_NAME,
+        joinColumns = @JoinColumn(name = "metadataId"),
+        inverseJoinColumns = @JoinColumn(name =
+            METADATA_CATEG_JOIN_TABLE_CATEGORY_ID))
+    @Nonnull
+    public Set<MetadataCategory> getMetadataCategories() {
+        return metadataCategories;
+    }
+
+    protected void setMetadataCategories(@Nonnull Set<MetadataCategory> categories) {
+        this.metadataCategories = categories;
     }
 
 }
