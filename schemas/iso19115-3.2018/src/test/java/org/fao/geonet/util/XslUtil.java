@@ -91,6 +91,10 @@ public class XslUtil {
         return "";
     }
 
+    public static String getNodeName(String key, String lang, boolean withOrganization) {
+        return "";
+    }
+
     public static String getCodelistTranslation(Object codelist, Object value, Object langCode) {
         return String.format("%s--%s--%s", codelist, value, langCode);
     }
