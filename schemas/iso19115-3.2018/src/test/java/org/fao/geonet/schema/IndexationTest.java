@@ -85,9 +85,15 @@ public class IndexationTest {
 		transformAndCompare("gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018/index-fields/index.xsl",  "UpperRhineCastles-iso19115-3.2018.xml", "UpperRhineCastles-index.xml");
 	}
 
+	@Test
+	public void readCreateDateFromXml() throws Exception {
+		XslUtil.READ_CREATE_DATE_FROM_XML = true;
+		transformAndCompare("gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018/index-fields/index.xsl",  "UpperRhineCastles-iso19115-3.2018-createDate.xml", "UpperRhineCastles-index-createDateFromXml.xml");
+	}
+
 	private void transformAndCompare(String scriptName, String inputFileName, String expectedFileName) throws Exception {
 		Path xslFile = getResource(scriptName);
-		Path xmlFile = getResource( inputFileName);
+		Path xmlFile = getResource(inputFileName);
 		Element md = Xml.loadFile(xmlFile);
 
 		Element mdIso19115_3 = Xml.transform(md, xslFile);
