@@ -16,8 +16,30 @@
       </Policies>
       <DefaultRolloverStrategy max="3" fileIndex="min"/>
     </RollingFile>
+    <Routing name="Harvester">
+      <Routes pattern="$${ctx:logfile}">
+        <!-- value dynamically determines the name of the log file. -->
+        <Route>
+          <File name="harvester-${ctx:harvester}" fileName="${sys:log_dir:-${logs_dir}}/${ctx:logfile:-harvester_default.log}">
+            <PatternLayout>
+              <pattern>%date{ISO8601}{${ctx:timeZone}} %-5level [%logger] - %message%n</pattern>
+            </PatternLayout>
+          </File>
+        </Route>
+      </Routes>
+    </Routing>
   </Appenders>
   <Loggers>
+    <!-- Required: Log.getLogfile() resolves the catalogue log directory from the 'File'
+         appender of the 'geonetwork' logger, and the harvester history uses that directory
+         to locate per-run harvester logs. -->
+    <Logger name="geonetwork" level="warn" additivity="false">
+      <AppenderRef ref="Console"/>
+      <AppenderRef ref="File"/>
+    </Logger>
+    <Logger name="geonetwork.harvester" level="info">
+      <AppenderRef ref="Harvester"/>
+    </Logger>
     <Logger name="org.springframework.aop.framework.CglibAopProxy" level="error"/>
     <Logger name="net.sf.ehcache.config.ConfigurationFactory" level="error"/>
     <Logger name="org.apache.jcs.auxiliary" level="error"/>

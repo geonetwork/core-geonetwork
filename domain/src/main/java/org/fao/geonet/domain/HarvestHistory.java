@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2020 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -305,10 +305,19 @@ public class HarvestHistory extends GeonetEntity {
            if (logfileElements.size() != 1) {
                Log.debug(Constants.DOMAIN_LOG_MODULE, "Harvest history unexpectedly lists multiple logfiles: " + logfileElements.size());
            }
+           File mainLogFile = Log.getLogfile();
+           if (mainLogFile == null) {
+               // Log configuration does not expose a catalogue log directory, so the harvester
+               // log location cannot be checked. Keep the reference: downloading it reports a
+               // clear error, which is easier to diagnose than a silently missing button.
+               Log.warning(Constants.DOMAIN_LOG_MODULE,
+                   "Unable to locate the catalogue log directory, harvest history logfiles can not be verified. Check log file configuration.");
+               return infoAsXml;
+           }
            boolean isLogFileFound = false;
            for (Iterator iter = logfileElements.iterator(); iter.hasNext();) {
                Element logfile = (Element) iter.next();
-               String path = Paths.get(Log.getLogfile().getParent()).resolve(logfile.getText()).toString();
+               String path = Paths.get(mainLogFile.getParent()).resolve(logfile.getText()).toString();
                File file = new File(path);
                if (file.exists() && file.canRead()) {
                    if (isLogFileFound) {
@@ -319,6 +328,8 @@ public class HarvestHistory extends GeonetEntity {
                        isLogFileFound = true;
                    }
                } else {
+                   // Expected for old runs whose logs were rotated away; also happens when the
+                   // log4j2 Harvester routing appender does not write next to the 'File' appender.
                    Log.debug(Constants.DOMAIN_LOG_MODULE, "Harvest history logfile `" + path + "` ignored, no longer available");
                    iter.remove();
                }
