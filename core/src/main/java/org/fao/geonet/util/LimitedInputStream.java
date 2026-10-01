@@ -32,7 +32,7 @@ import java.io.InputStream;
  * Implementation of {@link org.apache.commons.fileupload.util.LimitedInputStream} that throws a
  * {@link InputStreamLimitExceededException} when the configured limit is exceeded.
  */
-public class LimitedInputStream extends org.apache.commons.fileupload.util.LimitedInputStream {
+public class LimitedInputStream extends org.apache.commons.fileupload.util.LimitedInputStream implements KnownSizeInputStream {
 
     /**
      * The size of the file being uploaded if known.
@@ -56,7 +56,8 @@ public class LimitedInputStream extends org.apache.commons.fileupload.util.Limit
      * @param inputStream The input stream, which shall be limited.
      * @param pSizeMax    The limit; no more than this number of bytes
      *                    shall be returned by the source stream.
-     * @param fileSize    The size of the file being uploaded.
+     * @param fileSize    Expected size of the source in bytes, or {@code -1}
+     *                    when the source size is unknown.
      */
     public LimitedInputStream(InputStream inputStream, long pSizeMax, long fileSize) {
         super(inputStream, pSizeMax);
@@ -68,7 +69,17 @@ public class LimitedInputStream extends org.apache.commons.fileupload.util.Limit
         throw new InputStreamLimitExceededException(pSizeMax);
     }
 
+    /**
+     * Returns the expected size supplied when the stream was created.
+     *
+     * @return expected size in bytes, or {@code -1} when unknown
+     */
     public long getFileSize() {
+        return fileSize;
+    }
+
+    @Override
+    public long getKnownSize() {
         return fileSize;
     }
 }

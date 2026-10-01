@@ -53,6 +53,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
+import org.fao.geonet.api.records.attachments.AbstractStore;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -229,7 +230,8 @@ public class CMISUtils {
             properties.put(PropertyIds.LAST_MODIFICATION_DATE, changeDate);
         }
 
-        int isLength = is.available();
+        long isLength = AbstractStore.resolveExpectedSize(is);
+
         ContentStream contentStream = cmisConfiguration.getClient().getObjectFactory().createContentStream(key, isLength, Files.probeContentType(new File(key).toPath()), is);
 
         Document doc;

@@ -322,6 +322,26 @@ public interface Store {
     MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl, MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception;
 
     /**
+     * Add a new resource from a URL, reporting progress as the remote file is downloaded
+     * and stored. Used by the asynchronous upload flow so that a long running transfer
+     * can be polled instead of blocking the caller until it completes.
+     *
+     * @param context
+     * @param metadataUuid               The metadata UUID
+     * @param fileUrl                    The resource file URL
+     * @param metadataResourceVisibility The type of sharing policy {@link MetadataResourceVisibility}
+     * @param approved                   Return the approved version or not
+     * @param progressListener           Notified as bytes are transferred from the remote URL
+     * @return The resource description
+     * @throws Exception if the remote resource cannot be downloaded or stored
+     */
+    default MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
+                                          MetadataResourceVisibility metadataResourceVisibility, Boolean approved,
+                                          ResourceUploadProgressListener progressListener) throws Exception {
+        return putResource(context, metadataUuid, fileUrl, metadataResourceVisibility, approved);
+    }
+
+    /**
      * Change the resource sharing policy
      *
      * @param context
