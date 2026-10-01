@@ -70,7 +70,7 @@
             code: false
           };
           angular.forEach(scope.attributeTable, function (elem) {
-            if (elem.code > "") {
+            if (elem.code > "" || attribute.designationObject || attribute.designation) {
               scope.columnVisibility.code = true;
             }
           });

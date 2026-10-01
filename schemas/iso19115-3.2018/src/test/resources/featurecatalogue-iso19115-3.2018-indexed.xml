@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doc>
+  <docType>metadata</docType>
+  <document />
+  <metadataIdentifier>d7dbb069-f405-4dfb-940f-2ced611998e8</metadataIdentifier>
+  <indexingDate>2025-04-11T17:46:21+02:00</indexingDate>
+  <mainLanguage>fre</mainLanguage>
+  <otherLanguage>dut</otherLanguage>
+  <otherLanguageId>NL</otherLanguageId>
+  <cl_characterSet type="object">{"key":"utf8","default":"lan:MD_CharacterSetCode--utf8--fre","langfre":"lan:MD_CharacterSetCode--utf8--fre","langdut":"lan:MD_CharacterSetCode--utf8--dut","link":"http:\/\/standards.iso.org\/iso\/19115\/resources\/Codelists\/cat\/codelists.xml#MD_CharacterSetCode"}</cl_characterSet>
+  <resourceType>featureCatalog</resourceType>
+  <resourceType>dataset</resourceType>
+  <resourceTypeNameObject type="object">{"default":"Couche de donn\u00E9es th\u00E9matiques", "langfre":"Couche de donn\u00E9es th\u00E9matiques", "langdut":"Thematische gegevenslaag"}</resourceTypeNameObject>
+  <cl_resourceScope type="object">{"key":"dataset","default":"mcc:MD_ScopeCode--dataset--fre","langfre":"mcc:MD_ScopeCode--dataset--fre","langdut":"mcc:MD_ScopeCode--dataset--dut","link":"http:\/\/standards.iso.org\/iso\/19115\/resources\/Codelists\/cat\/codelists.xml#MD_ScopeCode"}</cl_resourceScope>
+  <resourceType>featureCatalog</resourceType>
+  <resourceTitleObject type="object">{"default":"Am\u00E9nagements Cyclables en Wallonie", "langfre":"Am\u00E9nagements Cyclables en Wallonie", "langdut":"Fietsen in Walloni\u00EB"}</resourceTitleObject>
+  <contactForResource type="object">{
+      
+        "organisationObject": 
+            {"default":"\n                    \n                  ", "lang":"\n                    \n                  "}
+            ,
+      
+      "role":"author",
+      "email":"",
+      "website":"",
+      "logo":"",
+      "individual":"",
+      "position":"",
+      "phone":"",
+      "address":""
+      
+      }</contactForResource>
+  <featureTypes type="object">[
+        {
+
+          "typeName" : "AC_AUTH_LINES",
+          
+            "definitionObject" : 
+            {"default":"Am\u00E9nagements cyclables lin\u00E9aires issus de source authentitique (GAP, RAVeL ou communes)", "langfre":"Am\u00E9nagements cyclables lin\u00E9aires issus de source authentitique (GAP, RAVeL ou communes)", "langdut":"Fietsverbeteringen in authentieke gebieden (GAP, RAVEL of gemeenten)"}
+            ,
+          
+          "designationObject" : 
+            {"default":"DDD", "langfre":"DDD"}
+            ,
+          
+          "code" :"AC_AUTH_LINES",
+          "isAbstract" :"false",
+          "aliases" : [
+          
+          ]
+          
+          
+          
+            ,"attributeTable" : [
+            
+              {"name": "AGRICULTURE",
+              
+                "definitionObject": 
+            {"default":"Accessibilit\u00E9 aux v\u00E9hicules agricoles", "langfre":"Accessibilit\u00E9 aux v\u00E9hicules agricoles", "langdut":"Toegang tot landbouwvoertuigen"}
+            ,
+              
+              "code": "AGRI",
+              "link": "",
+              "type": "number (5)"
+              
+                ,"designationObject": 
+            {"default":"V\u00E9hicules agricoles", "langfre":"V\u00E9hicules agricoles", "langdut":"Landbouw"}
+            
+                ,"cardinality": "1..1"
+              
+                ,"values": [
+                {
+                  "labelObject": 
+            {"default":"Oui", "langfre":"Oui", "langdut":"Ja"}
+            ,
+                  "code": "1",
+                  "definitionObject": 
+            {}
+            
+                  }
+                  ,{
+                  "labelObject": 
+            {"default":"Non", "langfre":"Non", "langdut":"Nee"}
+            ,
+                  "code": "0",
+                  "definitionObject": 
+            {}
+            
+                  }
+                  
+                ]
+              
+              }
+              
+            ]
+          
+          }
+          
+        ]</featureTypes>
+  <recordGroup>d7dbb069-f405-4dfb-940f-2ced611998e8</recordGroup>
+</doc>
+
