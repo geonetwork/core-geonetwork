@@ -340,7 +340,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final FormatMetadata formatMetadata = new FormatMetadata(context, key, request);
 
         byte[] bytes;
-        if (hasNonStandardParameters(request)) {
+        if (!canUseSharedCache(context, request)) {
             // the http headers can cause a formatter to output custom output due to the parameters.
             // because it is not known how the parameters may affect the output then we have two choices
             // 1. make a unique cache for each configuration of parameters
@@ -499,7 +499,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final FormatMetadata formatMetadata = new FormatMetadata(context, key, request);
 
         byte[] bytes;
-        if (hasNonStandardParameters(request)) {
+        if (!canUseSharedCache(context, request)) {
             // the http headers can cause a formatter to output custom output due to the parameters.
             // because it is not known how the parameters may affect the output then we have two choices
             // 1. make a unique cache for each configuration of parameters
@@ -518,6 +518,15 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
             writer.writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
+    }
+
+    /**
+     * The output of a formatter depends on the user that requests it (for example, the links of the
+     * record depend on the privileges of the user). The shared cache only stores the output
+     * generated for anonymous visitors, authenticated users get the output generated for them.
+     */
+    private boolean canUseSharedCache(ServiceContext context, NativeWebRequest request) {
+        return !hasNonStandardParameters(request) && !context.getUserSession().isAuthenticated();
     }
 
     private boolean hasNonStandardParameters(NativeWebRequest request) {
@@ -789,14 +798,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(key.mdId);
             final Optional<OperationAllowed> one = serviceContext.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
             final boolean isPublishedMd = one.isPresent();
-
-            Key withheldKey = null;
-            FormatMetadata loadWithheld = null;
-            if (!key.hideWithheld && isPublishedMd) {
-                withheldKey = new Key(key.mdId, key.lang, key.formatType, key.formatterId, true, key.width);
-                loadWithheld = new FormatMetadata(serviceContext, withheldKey, request);
-            }
-            return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd, withheldKey, loadWithheld);
+            return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd);
         }
     }
 }

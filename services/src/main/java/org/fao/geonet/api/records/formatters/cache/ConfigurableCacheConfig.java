@@ -108,7 +108,11 @@ public class ConfigurableCacheConfig extends AbstractCacheConfig {
     }
 
     /**
-     * If false then the full metadata will not be cached (when an editor obtains the metadata).
+     * Applies to the keys of the users that can edit the record (the full metadata). The output for
+     * those users is not stored in the shared cache, which only stores the output generated for
+     * anonymous requests, so this property only decides the result of
+     * {@link CacheConfig#allowCaching(Key)} for them. The formatter API checks it before answering a
+     * conditional request with 304 Not Modified.
      */
     public void setCacheFullMetadata(boolean cacheFullMetadata) {
         this.cacheFullMetadata = cacheFullMetadata;

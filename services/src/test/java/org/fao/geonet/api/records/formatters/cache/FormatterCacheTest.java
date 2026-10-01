@@ -168,26 +168,6 @@ public class FormatterCacheTest {
     }
 
     @Test
-    public void testGetPublicCachePopulatedWithNonWithheld() throws Exception {
-        final MemoryPersistentStore persistentStore = new MemoryPersistentStore();
-        this.formatterCache = new FormatterCache(persistentStore, 100, 5000);
-
-        final long changeDate = new Date().getTime();
-        final Key key = new Key(1, "eng", FormatType.html, "full_view", false, FormatterWidth._100);
-        final Key key2 = new Key(1, "eng", FormatType.html, "full_view", true, FormatterWidth._100);
-
-        formatterCache.get(key, new ChangeDateValidator(changeDate), new Callable<StoreInfoAndDataLoadResult>() {
-            @Override
-            public StoreInfoAndDataLoadResult call() throws Exception {
-                return new StoreInfoAndDataLoadResult("result", changeDate, true, key2, new TestLoader("result", changeDate, true));
-            }
-        }, true);
-
-        assertNull(formatterCache.getPublished(key));
-        assertNotNull(formatterCache.getPublished(key2));
-    }
-
-    @Test
     public void testMemoryCache() throws Exception {
         final AtomicBoolean persistentStoreHit = new AtomicBoolean(false);
         this.formatterCache = new FormatterCache(new PersistentStore() {

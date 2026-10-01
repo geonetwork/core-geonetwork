@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -21,25 +21,25 @@
  * Rome - Italy. email: geonetwork@osgeo.org
  */
 
-package org.fao.geonet.api.records.formatters.cache;
+package org.fao.geonet.kernel;
+
+import org.junit.Test;
+import org.springframework.security.core.context.SecurityContextHolder;
+
+import static org.junit.Assert.assertEquals;
 
 /**
- * Controls which requests should be cached by the {@link org.fao.geonet.api.records.formatters.cache.FormatterCache}.
- * <p>
- * For example which formatters to cache, what types (only html and xml).
- *
- * @author Jesse on 3/6/2015.
+ * Tests for {@link AccessManager#anonymousAccessLinkStreamFromSecurityContext()}.
  */
-public interface CacheConfig {
+public class AccessManagerAnonymousAccessLinkTest {
+
     /**
-     * Check if the output of the formatter for the key can be reused.
-     * <p>
-     * It is used by {@link FormatterCache} to decide if the output is stored in the shared cache and
-     * by the formatter API to decide if a conditional request can be answered with 304 Not Modified.
-     * The shared cache only stores the output generated for anonymous requests.
-     *
-     * @param key the key of the output.
-     * @return true if the output can be reused.
+     * Threads that don't handle a web request have no authentication.
      */
-    boolean allowCaching(Key key);
+    @Test
+    public void withoutAuthenticationThereAreNoAnonymousAccessLinks() {
+        SecurityContextHolder.clearContext();
+
+        assertEquals(0, AccessManager.anonymousAccessLinkStreamFromSecurityContext().count());
+    }
 }
