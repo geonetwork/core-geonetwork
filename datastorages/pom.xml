@@ -78,6 +78,19 @@
         <module>jcloud</module>
       </modules>
     </profile>
+    <!-- Profile to include OpenDAL datastorage -->
+    <profile>
+      <id>datastorage-opendal</id>
+      <activation>
+        <property>
+          <!-- include when making a release -->
+          <name>release</name>
+        </property>
+      </activation>
+      <modules>
+        <module>opendal</module>
+      </modules>
+    </profile>
   </profiles>
 
   <properties>
