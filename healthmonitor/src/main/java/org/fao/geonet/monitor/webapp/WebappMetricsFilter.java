@@ -114,12 +114,16 @@ public abstract class WebappMetricsFilter implements Filter {
                          FilterChain chain) throws IOException, ServletException {
         activeRequests.inc();
         final TimerContext context = requestTimer.time();
+        // An exception that escapes the chain becomes a 500 later, when the container handles it.
+        boolean failed = true;
         try {
             chain.doFilter(request, response);
+            failed = false;
         } finally {
             context.stop();
             activeRequests.dec();
-            markMeterForStatusCode(((HttpServletResponse) response).getStatus());
+            markMeterForStatusCode(failed ? HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+                : ((HttpServletResponse) response).getStatus());
         }
     }
 

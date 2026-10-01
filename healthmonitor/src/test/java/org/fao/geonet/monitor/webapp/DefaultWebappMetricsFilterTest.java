@@ -34,9 +34,11 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class DefaultWebappMetricsFilterTest {
 
@@ -76,6 +78,20 @@ public class DefaultWebappMetricsFilterTest {
             (request, response) -> ((HttpServletResponse) response).sendError(HttpServletResponse.SC_NOT_FOUND));
 
         assertEquals(1, count("responseCodes.notFound"));
+        assertEquals(0, count("responseCodes.ok"));
+    }
+
+    @Test
+    public void exceptionThatEscapesTheChainIsCountedAsServerError() throws Exception {
+        try {
+            filter.doFilter(new MockHttpServletRequest(), new MockHttpServletResponse(),
+                (request, response) -> { throw new ServletException("boom"); });
+            fail("The exception is rethrown");
+        } catch (ServletException expected) {
+            // expected
+        }
+
+        assertEquals(1, count("responseCodes.serverError"));
         assertEquals(0, count("responseCodes.ok"));
     }
 
