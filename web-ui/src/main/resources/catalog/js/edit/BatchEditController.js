@@ -498,8 +498,7 @@
             }
           } catch (e) {
             $rootScope.$broadcast("StatusUpdated", {
-              msg: $translate.instant("batchEditConfigIsNotJson"),
-              error: e,
+              msg: $translate.instant("batchEditConfigIsNotValid"),
               timeout: 2,
               type: "danger"
             });
