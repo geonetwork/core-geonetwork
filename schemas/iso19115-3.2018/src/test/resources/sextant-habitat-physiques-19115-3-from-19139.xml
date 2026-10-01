@@ -1144,7 +1144,7 @@
         <mrd:MD_DigitalTransferOptions>
           <mrd:onLine>
             <cit:CI_OnlineResource>
-              <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
+              <cit:linkage>
                 <gco:CharacterString>http://archimer.ifremer.fr/doc/00026/13751/</gco:CharacterString>
               </cit:linkage>
               <cit:protocol>
@@ -1172,7 +1172,7 @@
         <mrd:MD_DigitalTransferOptions>
           <mrd:onLine>
             <cit:CI_OnlineResource>
-              <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
+              <cit:linkage>
                 <gco:CharacterString>https://sextant.ifremer.fr/services/wms/biologie</gco:CharacterString>
               </cit:linkage>
               <cit:protocol>
@@ -1218,7 +1218,7 @@
           </mrd:onLine>
           <mrd:onLine>
             <cit:CI_OnlineResource>
-              <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
+              <cit:linkage>
                 <gco:CharacterString>https://sextant.ifremer.fr/services/wfs/biologie</gco:CharacterString>
               </cit:linkage>
               <cit:protocol>
@@ -1249,7 +1249,7 @@
         <mrd:MD_DigitalTransferOptions>
           <mrd:onLine>
             <cit:CI_OnlineResource>
-              <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
+              <cit:linkage>
                 <gco:CharacterString>https://sextant.ifremer.fr/services/wms/biologie</gco:CharacterString>
               </cit:linkage>
               <cit:protocol>
@@ -1295,7 +1295,7 @@
           </mrd:onLine>
           <mrd:onLine>
             <cit:CI_OnlineResource>
-              <cit:linkage xsi:type="lan:PT_FreeText_PropertyType">
+              <cit:linkage>
                 <gco:CharacterString>https://sextant.ifremer.fr/services/wfs/biologie</gco:CharacterString>
               </cit:linkage>
               <cit:protocol>
