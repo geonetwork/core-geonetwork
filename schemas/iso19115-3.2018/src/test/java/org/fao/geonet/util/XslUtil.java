@@ -35,6 +35,7 @@ import java.util.List;
 
 public class XslUtil {
     public static Boolean IS_INSPIRE_ENABLED = false;
+    public static Boolean READ_CREATE_DATE_FROM_XML = false;
 
     public static String twoCharLangCode(String iso3code) {
         return twoCharLangCode(iso3code, iso3code.substring(0, 2));
@@ -49,6 +50,8 @@ public class XslUtil {
                 return "false";
             case "system/inspire/enable":
                 return IS_INSPIRE_ENABLED.toString();
+            case "system/metadata/recordCreationDateFromXml":
+                return READ_CREATE_DATE_FROM_XML.toString();
             default:
                 return "true";
         }

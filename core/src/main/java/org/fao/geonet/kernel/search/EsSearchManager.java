@@ -227,8 +227,14 @@ public class EsSearchManager implements ISearchManager {
     }
 
     private void addMoreFields(Element doc, Multimap<String, Object> fields) {
-        fields.entries().forEach(e -> doc.addContent(getNewElement(e.getKey(), e.getValue())
-            .setText(String.valueOf(e.getValue()))));
+        fields.entries().forEach(e -> {
+            // skipping a field if it's already there (e.g. added by the index.xsl file)
+            if (doc.getChild(e.getKey()) != null) {
+                return;
+            }
+            doc.addContent(getNewElement(e.getKey(), e.getValue())
+                .setText(String.valueOf(e.getValue())));
+        });
     }
 
     /**
