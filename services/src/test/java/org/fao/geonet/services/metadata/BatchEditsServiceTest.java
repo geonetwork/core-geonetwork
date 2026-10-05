@@ -39,6 +39,7 @@ import org.fao.geonet.csw.common.util.Xml;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
+import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018Namespaces;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -321,6 +322,66 @@ public class BatchEditsServiceTest extends AbstractServiceIntegrationTest {
             xml.getAdditionalNamespaces());
         Assert.assertEquals("value", ((Element) scope.get(0)).getAttributeValue("newAttribute"));
     }
+
+    @Test
+    public void testUpdateRecordAddAndDeleteAttributeWithNamespace() throws Exception {
+        final String uuid = "db07463b-6769-401e-944b-f22e2e3bcc26";
+        BatchEditParameter[] listOfupdates = new BatchEditParameter[]{
+            new BatchEditParameter(
+                "/mdb:MD_Metadata/mdb:metadataScope/@gco:nilReason",
+                "<gn_add>withheld</gn_add>"
+            )
+        };
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        Gson gson = new GsonBuilder()
+            .create();
+        JsonElement jsonEl = gson.toJsonTree(listOfupdates);
+
+        this.mockMvc.perform(put("/srv/api/records/batchediting?uuids=" + uuid)
+                .content(jsonEl.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(201));
+
+        AbstractMetadata updatedRecord = repository.findOneByUuid(uuid);
+        Element xml = Xml.loadString(updatedRecord.getData(), false);
+
+        List scope = org.fao.geonet.utils.Xml.selectNodes(xml,
+            "./mdb:metadataScope",
+            xml.getAdditionalNamespaces());
+        Assert.assertEquals("withheld", ((Element) scope.get(0)).getAttributeValue("nilReason", ISO19115_3_2018Namespaces.GCO));
+
+
+        listOfupdates = new BatchEditParameter[]{
+            new BatchEditParameter(
+                "/mdb:MD_Metadata/mdb:metadataScope/@gco:nilReason",
+                "<gn_delete/>"
+            )
+        };
+
+        jsonEl = gson.toJsonTree(listOfupdates);
+
+        this.mockMvc.perform(put("/srv/api/records/batchediting?uuids=" + uuid)
+                .content(jsonEl.toString())
+                .contentType(MediaType.APPLICATION_JSON)
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(201));
+
+        updatedRecord = repository.findOneByUuid(uuid);
+        xml = Xml.loadString(updatedRecord.getData(), false);
+
+        scope = org.fao.geonet.utils.Xml.selectNodes(xml,
+            "./mdb:metadataScope/gco:nilReason",
+            xml.getAdditionalNamespaces());
+        Assert.assertEquals(0, scope.size());
+
+    }
+
 
     @Test
     public void testUpdateRecordElement() throws Exception {
