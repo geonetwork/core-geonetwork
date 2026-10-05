@@ -361,6 +361,32 @@ Specifies the **file types** that can be attached to a metadata record.
 - `image/*|text/plain|application/xml|application/pdf` — allows images, text, XML, and PDF files.
 - `*/*` — allows all file types.
 
+### Read metadata creation date from XML
+
+This option allows GeoNetwork to attempt reading the metadata creation date from the XML document when possible. This is not possible for all standards, e.g. ISO 19139 does not offer an explicit field for metadata creation.
+
+In ISO19115-3, such a date can be specified like so:
+
+```xml
+<mdb:dateInfo>
+ <cit:CI_Date>
+   <cit:date>
+     <gco:DateTime>2024-01-01T02:30:00Z</gco:DateTime>
+   </cit:date>
+   <cit:dateType>
+     <cit:CI_DateTypeCode codeList="https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="creation"/>
+   </cit:dateType>
+ </cit:CI_Date>
+</mdb:dateInfo>
+```
+
+When no creation date can be read from the XML document, the date of creation in the database (i.e. date when the metadata was first inserted) is used by GeoNetwork. This is also the standard behavior if this option is disabled.
+
+Disabled by default.
+
+!!! info "Reminder"
+    Keep in mind that if no creation date is present in the XML, then one will automatically be added from the database creation date when the XML document is saved from the first time in GeoNetwork.
+
 ### Other metadata configuration settings
 
 -   **Prefer Group Logo** If enabled, the logo of the record owner group is displayed for the record instead of the catalog (source) logo.
