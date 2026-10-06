@@ -110,6 +110,15 @@
     </foaf:page>
   </xsl:template>
 
+  <xsl:template mode="iso19115-3-to-dcat"
+                match="mdb:distributionInfo/mrd:MD_Distribution/mrd:distributionFormat">
+    <dcat:distribution>
+      <dcat:Distribution>
+        <xsl:apply-templates mode="iso19115-3-to-dcat-distribution" select="*/mrd:formatSpecificationCitation"/>
+      </dcat:Distribution>
+    </dcat:distribution>
+  </xsl:template>
+
   <!--
   RDF Property:	dcat:distribution
   Definition:	An available distribution of the dataset.

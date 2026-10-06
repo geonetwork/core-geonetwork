@@ -51,7 +51,7 @@
 
     <xsl:choose>
       <xsl:when test="$dcatElementConfig">
-        <xsl:for-each-group select="$allIndividualOrOrganisationWithoutIndividual" group-by="cit:name">
+        <xsl:for-each-group select="$allIndividualOrOrganisationWithoutIndividual" group-by="(cit:name,'individualDoesNotCarryACitName')[1]">
           <xsl:element name="{$dcatElementConfig/@key}">
             <xsl:choose>
               <xsl:when test="$dcatElementConfig/@as = 'vcard'">
@@ -73,7 +73,7 @@
           Range: prov:Attribution
           Usage note:	Used to link to an Agent where the nature of the relationship is known but does not match one of the standard [DCTERMS] properties (dcterms:creator, dcterms:publisher). Use dcat:hadRole on the prov:Attribution to capture the responsibility of the Agent with respect to the Resource. See 15.1 Relationships between datasets and agents for usage examples.
         -->
-        <xsl:for-each-group select="$allIndividualOrOrganisationWithoutIndividual" group-by="cit:name">
+        <xsl:for-each-group select="$allIndividualOrOrganisationWithoutIndividual" group-by="(cit:name, 'individualDoesNotCarryACitName')[1]">
           <prov:qualifiedAttribution>
             <prov:Attribution>
               <prov:agent>
