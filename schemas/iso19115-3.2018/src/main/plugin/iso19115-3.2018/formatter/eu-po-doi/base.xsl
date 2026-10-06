@@ -71,7 +71,7 @@
       <eu:DOIData>
         <eu:DOI><xsl:value-of select="gn-doi:createDoi($doiServerId, $metadataUuid)"/></eu:DOI>
         <eu:DOIWebsiteLink>
-          <xsl:value-of select="util:getPermalink($metadataUuid, util:getLanguage())"/>
+          <xsl:value-of select="util:getPlainHtmlUrl($metadataUuid, util:getLanguage())"/>
         </eu:DOIWebsiteLink>
         <eu:Metadata>
           <xsl:copy-of select="$dataciteResource"/>

@@ -121,7 +121,30 @@ public interface IMetadataUtils {
 
     LinkedHashMap<String, String> extractTitles(@Nonnull String id) throws Exception;
 
+    /**
+     * Build the canonical public link for a record.
+     *
+     * The result may come from the configured permalink template. If no custom
+     * template is configured, this falls back to the default record URL.
+     *
+     * @param uuid metadata UUID
+     * @param language UI language code to include in the generated URL when applicable
+     * @return canonical public link for the record
+     */
     String getPermalink(String uuid, String language);
+
+    /**
+     * Build the plain HTML record link.
+     *
+     * When DOI-first mode is enabled and a DOI exists, the DOI URL is returned.
+     * Otherwise, this returns a direct server-rendered HTML endpoint suitable for
+     * search-engine crawlers (no SPA redirect).
+     *
+     * @param uuid metadata UUID
+     * @param language UI language code to include in the generated URL when applicable
+     * @return plain HTML public link for the record
+     */
+    String getPlainHtmlUrl(String uuid, String language);
 
     String getDefaultUrl(String uuid, String language);
 
