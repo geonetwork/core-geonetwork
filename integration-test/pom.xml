@@ -37,13 +37,13 @@
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-java</artifactId>
-      <version>3.5.3</version>
+      <version>3.6.0</version>
     </dependency>
 
     <dependency>
       <groupId>org.seleniumhq.selenium</groupId>
       <artifactId>selenium-server</artifactId>
-      <version>3.5.3</version>
+      <version>3.141.0</version>
     </dependency>
 
     <!-- These are the selenium-cucumber methods dependencies -->
