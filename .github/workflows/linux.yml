@@ -67,7 +67,7 @@ jobs:
     - name: Test with maven
       run: |
         mvn -B resources:resources@copy-index-schema-to-source -f web
-        mvn -B -ntp -V -fae verify -Drelesae -Pit
+        mvn -B -ntp -V -fae verify -Drelease -Pit
     - name: Check for uncommitted changes such as formatting changes
       run: |
         if [[ -n "$(git status -s)" ]]; then
