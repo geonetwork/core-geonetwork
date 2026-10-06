@@ -25,9 +25,7 @@ package org.fao.geonet.proxy;
 import jeeves.server.UserSession;
 import jeeves.server.sources.http.ServletPathFinder;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.HttpEntityEnclosingRequest;
-import org.apache.http.HttpRequest;
-import org.apache.http.NameValuePair;
+import org.apache.http.*;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -97,7 +95,12 @@ public class URITemplateProxyServlet extends ProxyServlet {
     private static final long serialVersionUID = 4847856943273604410L;
     private static final String P_SECURITY_MODE = "securityMode";
     private static final String P_IS_SECURED = "isSecured";
+
+    /** these headers are removed from the request**/
     private static final String P_DISALLOW_HEADERS = "disallowHeaders";
+
+    /** these headers are removed from the response **/
+    private static final String P_DISALLOW_RESPONSE_HEADERS = "disallowResponseHeaders";
 
     private static final String TARGET_URI_NAME = "targetUri";
     private static final String P_EXCLUDE_HOSTS = "excludeHosts";
@@ -106,6 +109,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
         URITemplateProxyServlet.class.getSimpleName() + ".queryString";
 
     protected List<String> disallowHeaders = new ArrayList<>();
+    protected List<String> disallowResponseHeaders = new ArrayList<>();
 
     /*
      * These are the "hop-by-hop" headers that should not be copied.
@@ -177,6 +181,9 @@ public class URITemplateProxyServlet extends ProxyServlet {
         //parse the disallowHeaders
         if (!isBlank(getConfigParam(P_DISALLOW_HEADERS))) {
             disallowHeaders =  Arrays.asList(getConfigParam(P_DISALLOW_HEADERS).split(","));
+        }
+        if (!isBlank(getConfigParam(P_DISALLOW_RESPONSE_HEADERS))) {
+            disallowResponseHeaders =  Arrays.asList(getConfigParam(P_DISALLOW_RESPONSE_HEADERS).split(","));
         }
 
         securityMode = SECURITY_MODE.parse(getConfigParam(P_SECURITY_MODE));
@@ -598,6 +605,32 @@ public class URITemplateProxyServlet extends ProxyServlet {
         servletRequest.setAttribute(ATTR_QUERY_STRING, newQueryBuf.toString());
 
         super.service(servletRequest, servletResponse);
+    }
+
+    /**
+     *  See ProxyServlet.java#copyResponseHeaders.
+     *
+     *  Copy proxied response headers back to the servlet client.
+     *  DO NOT COPY HEADERS IN THE HEADERS MENTIONED IN disallowResponseHeaders
+     *
+     * @param proxyResponse   response from the proxy-ed server
+     * @param servletRequest  incoming request
+     * @param servletResponse outgoing response
+     */
+    @Override
+    protected void copyResponseHeaders(HttpResponse proxyResponse, HttpServletRequest servletRequest,
+                                       HttpServletResponse servletResponse) {
+        if (disallowResponseHeaders == null || disallowResponseHeaders.isEmpty()) {
+            //Nothing to do, use the standard method.
+            super.copyResponseHeaders(proxyResponse, servletRequest, servletResponse);
+            return;
+        }
+        for (Header header : proxyResponse.getAllHeaders()) {
+            if (disallowResponseHeaders.contains(header.getName())) {
+                continue;
+            }
+            copyResponseHeader(servletRequest, servletResponse, header);
+        }
     }
 
     @Override
