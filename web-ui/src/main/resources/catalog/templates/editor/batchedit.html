@@ -743,9 +743,14 @@
                   ></div>
                 </div>
               </div>
-              <div class="row" data-ng-show="previewError">
+              <div class="row" data-ng-if="previewError">
                 <div class="col-md-11">
-                  <div data-gn-batch-report="previewError"></div>
+                  <div class="alert alert-danger"
+                       data-ng-if="previewError.message">
+                    {{previewError.message}}
+                  </div>
+                  <div data-ng-if="!previewError.message"
+                       data-gn-batch-report="previewError"></div>
                 </div>
               </div>
 
