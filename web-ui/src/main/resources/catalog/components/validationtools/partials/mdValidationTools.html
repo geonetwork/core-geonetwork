@@ -86,5 +86,24 @@
         <span class="visible-lg" data-translate="">reportLink</span> - {{reportStatus}}
       </a>
     </li>
+
+    <li class="divider"></li>
+    <li class="dropdown-header">
+      <span class="visible-lg" data-translate="">shaclValidation</span>
+    </li>
+    <li
+      role="presentation"
+      data-ng-repeat="t in shaclTestsuites"
+      title="DCAT AP validation"
+    >
+      <a
+        role="menuitem"
+        tabindex="-1"
+        data-gn-click-and-spin="validateShacl('eu-dcat-ap-hvd', t)"
+      >
+        <i class="fa fa-chevron-right"></i>&nbsp;
+        <span>{{t}}</span>
+      </a>
+    </li>
   </ul>
 </div>
