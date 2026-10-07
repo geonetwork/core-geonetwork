@@ -68,6 +68,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.utils.Xml.isRDFLike;
 import static org.fao.geonet.utils.Xml.isXMLLike;
@@ -182,7 +183,8 @@ class Harvester implements IHarvester<HarvestResult> {
                     for (int i = 0; i < listOfUrlForPages.size(); i++) {
                         if (i != 0 || isCrawlerMode) {
                             content = retrieveUrl(listOfUrlForPages.get(i));
-                            if (type == SimpleUrlResourceType.XML) {
+                            if (type == SimpleUrlResourceType.XML
+                                || type == SimpleUrlResourceType.RDFXML) {
                                 xmlObj = Xml.loadString(content, false);
                             } else {
                                 jsonObj = objectMapper.readTree(content);
@@ -467,20 +469,10 @@ class Harvester implements IHarvester<HarvestResult> {
     }
 
     private List<String> findAllUrlsInJson(String urlCrawlerPath, JsonNode jsonObj) {
-        List <String> urlList = new ArrayList<>();
-//        JsonPath path = JsonPath.compile(urlCrawlerPath);
-//        Configuration configuration = Configuration.defaultConfiguration()
-//            .jsonProvider(new JacksonJsonNodeJsonProvider())
-//            .mappingProvider(new JacksonMappingProvider());
-//
-//        ArrayNode nodes = path.read(jsonObj, configuration);
+        List <String> urlList;
         List<JsonNode> nodes = selectJsonRecords(jsonObj, determineJsonPathMode(urlCrawlerPath), urlCrawlerPath);
         log.debug(String.format("%d URL found in JSON response.", nodes.size()));
-        for (JsonNode node : nodes) {
-            if (node.isTextual()) {
-                urlList.add(node.asText());
-            }
-        }
+        urlList = nodes.stream().filter(JsonNode::isTextual).map(JsonNode::asText).collect(Collectors.toList());
         return urlList;
     }
 
