@@ -114,7 +114,7 @@ public class DoiServersApi {
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_METADATA_DOI),
         @ApiResponse(responseCode = "404", description = ApiParams.API_RESPONSE_RESOURCE_NOT_FOUND)
     })
-    List<AnonymousDoiServer> getDoiServers(
+    List<AnonymousDoiServer> getDoiServersForMetadata(
         @Parameter(description = "Metadata UUID",
             required = true)
         @PathVariable Integer metadataId,
