@@ -708,12 +708,12 @@
         },
         "OGC API Processes": {
           defaultValues: {
-            loopElement: ".",
+            loopElement: "$",
             numberOfRecordPath: "",
-            urlCrawlerPath: "$..links[?(@.title == 'Process description as JSON')].href",
+            urlCrawlerPath: "$.processes[*].links[?(@.rel=='self')].href",
             pageSizeParam: "",
             pageFromParam: "",
-            recordIdPath: "/id",
+            recordIdPath: "$.id",
             toISOConversion: "schema:iso19115-3.2018:convert/fromOGCAPIProcesses"
           }
         },
