@@ -160,9 +160,9 @@
                 <xsl:copy-of select="$title"/>
                 <xsl:if test="$root = 'div'">
                   <span class="text-muted badge"
-                        data-ng-class="{{ 'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4 }}"
-                        data-ng-if="user.isEditorOrMore() &amp;&amp; md.mdStatus &lt; 50 &amp;&amp; isMdWorkflowEnable"
-                  >{{('status-' + md.mdStatus) | translate}}</span>
+                        data-ng-class="{{ 'text-success': mdView.current.record.mdStatus == 2, 'text-warning': mdView.current.record.mdStatus == 4 }}"
+                        data-ng-if="user.isEditorOrMore() &amp;&amp; mdView.current.record.mdStatus &lt; 50 &amp;&amp; isMdWorkflowEnable"
+                  >{{('status-' + mdView.current.record.mdStatus) | translate}}</span>
                 </xsl:if>
               </h1>
 
@@ -170,12 +170,13 @@
 
               <xsl:apply-templates mode="getMetadataHeader" select="$metadata"/>
 
-              <xsl:if test="$related != ''">
-                <div gn-related="md"
-                     data-user="user"
-                     data-layout="card"
-                     data-types="{$related}"></div>
-              </xsl:if>
+              <div
+                data-ng-if="mdView.current.record.link"
+                data-gn-distribution-resources-container="mdView.current.record"
+                data-mode="::viewConfig.distributionConfig.layout || ''"
+                data-editable="false"
+                data-related-config="::viewConfig.distributionConfig.sections"
+              ></div>
             </header>
 
             <div>
