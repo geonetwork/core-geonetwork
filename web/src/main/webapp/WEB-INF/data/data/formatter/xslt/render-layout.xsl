@@ -220,7 +220,7 @@
                 <i class="fa fa-fw fa-cog"></i>
                 <span><xsl:value-of select="$schemaStrings/providedBy"/></span>
               </h2>
-              <img class="gn-source-logo"
+              <img class="gn-provider-logo"
                    alt="{$schemaStrings/logo}"
                    src="{$nodeUrl}{$providerlogo}" />
             </section>
