@@ -3448,7 +3448,7 @@
                 <groupowner>2</groupowner>
                 <sourceid>4e87228d-10f0-4f6d-92ac-a7243a8bec78</sourceid>
                 <owner>1</owner>
-                <grouplogo>api/sources/4e87228d-10f0-4f6d-92ac-a7243a8bec78/logo</grouplogo>
+                <providerlogo>api/sources/4e87228d-10f0-4f6d-92ac-a7243a8bec78/logo</providerlogo>
             </sourceinfo>
             <harvestinfo>
                 <harvested_jpaworkaround>n</harvested_jpaworkaround>

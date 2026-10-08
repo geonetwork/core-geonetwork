@@ -58,18 +58,18 @@ public class XsltFormatterTest extends AbstractServiceIntegrationTest {
 	SettingManager settingManager;
 
 	@Test
-	public void transformationSourceGroupLogoWhenPreferringGroupLogo() throws Exception {
+	public void transformationSourceProviderLogoWhenPreferringGroupLogo() throws Exception {
 		Group adminGroup = groupRepository.findById(0).get();
 		adminGroup.setLogo("test.png");
 		groupRepository.save(adminGroup);
 
-		buildTransformationSourceSetGrouplogoTo("true",
+		buildTransformationSourceSetProviderLogoTo("true",
 				"api/groups/" + adminGroup.getId() + "/logo");
 	}
 
 	@Test
-	public void transformationSourceGroupLogoWhenNotPreferringGroupLogo() throws Exception {
-		buildTransformationSourceSetGrouplogoTo("false",
+	public void transformationSourceProviderLogoWhenNotPreferringGroupLogo() throws Exception {
+		buildTransformationSourceSetProviderLogoTo("false",
 				"api/sources/" + sourceRepository.findAll().get(0).getUuid() + "/logo");
 	}
 
@@ -90,13 +90,13 @@ public class XsltFormatterTest extends AbstractServiceIntegrationTest {
 		return params;
 	}
 
-	private void buildTransformationSourceSetGrouplogoTo(String preferGroupLogo, String expectedGroupLogo) throws Exception {
+	private void buildTransformationSourceSetProviderLogoTo(String preferGroupLogo, String expectedProviderLogo) throws Exception {
 		settingManager.setValue(Settings.SYSTEM_PREFER_GROUP_LOGO, preferGroupLogo);
 		FormatterParams params = buildFormatterParams();
 
 		Element transformed = toTest.buildTransformationSource(params);
 
-		assertEqualsText(expectedGroupLogo, transformed, "*//grouplogo");
+		assertEqualsText(expectedProviderLogo, transformed, "*//providerlogo");
 	}
 
 }

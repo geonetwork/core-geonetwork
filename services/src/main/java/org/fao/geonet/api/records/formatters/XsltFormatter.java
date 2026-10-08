@@ -207,7 +207,7 @@ public class XsltFormatter implements FormatterImpl {
         // Add metadata information (ie. harvested, categories, schema, dates, ...)
         Element info = fparams.metadataInfo.asXml();
 
-        enrichTransformSourceWithGroupLogoOrSourceId(fparams, info);
+        enrichTransformSourceWithProviderLogo(fparams, info);
 
         // metadataInfo contains the XML in data which is not needed
         info.removeChild("data");
@@ -235,18 +235,18 @@ public class XsltFormatter implements FormatterImpl {
         return root;
     }
 
-    private void enrichTransformSourceWithGroupLogoOrSourceId(FormatterParams fparams, Element info) throws JDOMException {
+    private void enrichTransformSourceWithProviderLogo(FormatterParams fparams, Element info) throws JDOMException {
         Element sourceInfo = (Element) Xml.selectNodes(info, "sourceinfo").get(0);
-        Element grouplogo = new Element("grouplogo");
-        sourceInfo.addContent(grouplogo);
+        Element providerlogo = new Element("providerlogo");
+        sourceInfo.addContent(providerlogo);
         if (!settingManager.getValueAsBool(Settings.SYSTEM_PREFER_GROUP_LOGO, true)) {
-            grouplogo.setText("api/sources/" + fparams.metadataInfo.getSourceInfo().getSourceId() + "/logo");
+            providerlogo.setText("api/sources/" + fparams.metadataInfo.getSourceInfo().getSourceId() + "/logo");
             return;
         }
         if (fparams.metadataInfo.getSourceInfo().getGroupOwner() != null) {
             Optional<Group> group = groupRepository.findById(fparams.metadataInfo.getSourceInfo().getGroupOwner());
             if (group.isPresent()) {
-                grouplogo.setText("api/groups/" + group.get().getId() + "/logo");
+                providerlogo.setText("api/groups/" + group.get().getId() + "/logo");
             }
         }
     }
