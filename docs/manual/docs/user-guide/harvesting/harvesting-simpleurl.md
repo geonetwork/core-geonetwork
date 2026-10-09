@@ -27,16 +27,20 @@ Provide the following information:
       If both Basic Auth and API Key are configured, both will be sent in the request as headers. This supports servers that require or accept multiple authentication schemes.
     - *Element to loop on*: Property/element containing a list of the record entries. (Indicated as an absolute path from the document root.) eg. `/datasets`
     - *Element for the UUID of each record* : Property containing the record id. eg. `/datasetid`
+    - *JSON path or XPath pointing to element containing URL pointing to the documents to harvest* : Collect all URLs in a given property.
     - *Pagination parameters*: (optional)
         - *Element for the number of records to collect*: Property indicating the total count of record entries. (Indicated as an absolute path from the document root.) eg. `/nhits`
         - *From URL parameter*: Property indicating the first record item on the current "page" eg. `start`
         - *Size URL parameter*: Property indicating the number of records contained in the current "page" eg. `rows`
+    - *Path mode* : Auto will detect the path mode (JSONPath, JSONPointer or XPath) based on the path provided. You can also force a specific mode if needed.
+
+![Path mode](img/harvesting-simpleurl-pathmode.png)
 
 - **Configure response processing for Simple URL**
-    - *XSL transformation to apply*: Name of the conversion schema to use, which must be available as XSL on the GeoNetwork instance. eg. `OPENDATASOFT-to-ISO19115-3-2018`
-        !!! note
+    - *XSL transformation to apply*: Name of the conversion schema to use, which must be available as XSL on the GeoNetwork instance.
 
-            GN looks for schemas by name in <https://github.com/geonetwork/core-geonetwork/tree/4.0.x/web/src/main/webapp/xsl/conversion/import>. These schemas might internally include schemas from other locations like <https://github.com/geonetwork/core-geonetwork/tree/4.0.x/schemas/iso19115-3.2018/src/main/plugin/iso19115-3.2018/convert>. To indicate the `fromJsonOpenDataSoft` schema for example, from the latter location directly in the admin UI the following syntax can be used: `schema:iso19115-3.2018:convert/fromJsonOpenDataSoft`.
+      ![XSL conversions](img/xsl-conversions.png)
+
     - *Batch edits*: (Optional) Allows updating harvested records using XPath syntax. It can be used to add, replace, or delete elements.
     - *Category*: (Optional) A GeoNetwork category to assign to each metadata record.
     - *Validate records before import*: Defines the criteria to reject metadata that is invalid according to XML structure (XSD) and validation rules (schematron).
@@ -64,7 +68,7 @@ If Basic Auth is also set, both forms of authentication will be sent.
 - *Element for the UUID of each record* : `/datasetid`
 - *From URL parameter* : `start`
 - *Size URL parameter* : `rows`
-- *XSL transformation to apply* : `OPENDATASOFT-to-ISO19115-3-2018`
+- *XSL transformation to apply* : `schema:iso19115-3.2018:convert/fromJsonOpenDataSoft`
 
 ### Sample configuration for opendatasoft v2
 
@@ -73,7 +77,7 @@ If Basic Auth is also set, both forms of authentication will be sent.
 - *Element for the UUID of each record* : `/dataset/datasetid`
 - *From URL parameter* : `start`
 - *Size URL parameter* : `rows`
-- *XSL transformation to apply* : `OPENDATASOFT-to-ISO19115-3-2018`
+- *XSL transformation to apply* : `schema:iso19115-3.2018:convert/fromJsonOpenDataSoft`
 
 ### Sample configuration for ESRI
 
@@ -82,7 +86,7 @@ If Basic Auth is also set, both forms of authentication will be sent.
 - *Element for the UUID of each record* : `/landingPage`
 - *From URL parameter* : `start`
 - *Size URL parameter* : `rows`
-- *XSL transformation to apply* : `ESRIDCAT-to-ISO19115-3-2018`
+- *XSL transformation to apply* : `schema:iso19115-3.2018:convert/fromJsonLdEsri`
 
 ### Sample configuration for DKAN
 
@@ -91,4 +95,20 @@ If Basic Auth is also set, both forms of authentication will be sent.
 - *Element for the UUID of each record* : `/id`
 - *From URL parameter* : `start`
 - *Size URL parameter* : `rows`
-- *XSL transformation to apply* : `DKAN-to-ISO19115-3-2018`
+- *XSL transformation to apply* : `schema:iso19115-3.2018:convert/fromJsonDkan`
+
+### Sample configuration for STAC
+
+- *Element to loop on* - `/collections`
+- *Element for the UUID of each record* : `/id`
+- *From URL parameter* : `page`
+- *Size URL parameter* : `from`
+- *XSL transformation to apply* : `schema:iso19115-3.2018:convert/stac-to-iso19115-3`
+
+### Sample configuration for OGC API Processes
+
+- *URL* - URL of the OGC API Processes endpoint, e.g., `https://demo.pygeoapi.io/master/collections`
+- *Element to loop on* - `$.processes[*].links[?(@.rel=='self')].href`
+- *Element to loop on* - `$`
+- *Element for the UUID of each record* : `$.id`
+- *XSL transformation to apply* : `schema:iso19115-3.2018:convert/fromOGCAPIProcesses`

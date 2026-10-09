@@ -44,31 +44,33 @@ import java.util.Collection;
 import static org.junit.Assert.assertFalse;
 
 @RunWith(Parameterized.class)
-public class OdsConversionTest extends XslProcessTest {
+public class JsonToIsoConversionTest extends XslProcessTest {
 
     private String jsonFilename;
 
-    public OdsConversionTest(String xmlFilename, String jsonFilename) {
+    public JsonToIsoConversionTest(String xmlFilename, String jsonFilename, String xslFilename) {
         super();
         this.setNs(ISO19115_3_2018SchemaPlugin.allNamespaces);
         this.xmlFilename = xmlFilename;
+        this.xslFilename = xslFilename;
         this.jsonFilename = jsonFilename;
     }
 
-    @Parameterized.Parameters(name = "{index}: xml={0}, json={1}")
+    @Parameterized.Parameters(name = "{index}: xml={0}, json={1}, xsl={2}")
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-            { "ods.xml", "ods.json" },
-            { "ods_v1.xml", "ods_v1.json" },
-            { "ods_v2.0.xml", "ods_v2.0.json" },
-            { "ods_v2.0.xml", "ods_v2.1.json" },
-            { "ods_asset.xml", "ods_asset.json" }
+            { "ods.xml", "ods.json", "convert/fromJsonOpenDataSoft.xsl" },
+            { "ods_v1.xml", "ods_v1.json", "convert/fromJsonOpenDataSoft.xsl" },
+            { "ods_v2.0.xml", "ods_v2.0.json", "convert/fromJsonOpenDataSoft.xsl" },
+            { "ods_v2.0.xml", "ods_v2.1.json", "convert/fromJsonOpenDataSoft.xsl" },
+            { "ods_asset.xml", "ods_asset.json", "convert/fromJsonOpenDataSoft.xsl" },
+            { "ogcapiprocess.xml", "ogcapiprocess.json", "convert/fromOGCAPIProcesses.xsl" }
         });
     }
 
     @Test
-    public void testOdsConversion() throws Exception {
-        xslFile = Paths.get(testClass.getClassLoader().getResource("convert/fromJsonOpenDataSoft.xsl").toURI());
+    public void testJsonToIsoConversion() throws Exception {
+        xslFile = Paths.get(testClass.getClassLoader().getResource(xslFilename).toURI());
         // xmlFile is initialized by parent setup() method because we set xmlFilename in constructor
 
         Path jsonFile = Paths.get(testClass.getClassLoader().getResource(jsonFilename).toURI());
