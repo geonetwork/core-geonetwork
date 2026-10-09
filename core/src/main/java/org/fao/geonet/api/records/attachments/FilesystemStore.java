@@ -26,6 +26,7 @@
 package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
+import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.InputStreamLimitExceededException;
 import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
@@ -45,27 +46,35 @@ import org.springframework.core.io.Resource;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.DirectoryStream;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.PathMatcher;
 import java.nio.file.StandardCopyOption;
 import java.nio.file.FileSystem;
 import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
- * A FileSystemStore store resources files in the catalog data directory. Each metadata record as a directory in the data directory
- * containing a public and a private folder.
+ * A FileSystemStore store resources files in the catalog data directory. Each metadata record has
+ * a directory in the data directory; visibility (public/private) is tracked in the database
+ * ({@code MetadataFileUploads.resourceaccess}, populated by {@link ResourceLoggerStore}), not by
+ * which folder a file is in - the {@code public}/{@code private} subfolders below are the legacy
+ * layout, kept only as a read/write fallback for files that predate this and haven't been
+ * touched since (every put, rename, or visibility change migrates a file to the flat layout).
  *
  * <pre>
  *     datadir
  *      |-{{sequence_folder}}
  *      |    |-{{metadata_id}}
- *      |    |    |-private
- *      |    |    |-public
+ *      |    |    |--doc.pdf
+ *      |    |    |-private        (legacy, pre-existing files only)
+ *      |    |    |-public          (legacy, pre-existing files only)
  *      |    |        |--doc.pdf
  * </pre>
  */
@@ -84,19 +93,49 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
 
         Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
-        Path resourceTypeDir = metadataDir.resolve(visibility.toString());
 
         List<MetadataResource> resourceList = new ArrayList<>();
         if (filter == null) {
             filter = FilesystemStore.DEFAULT_FILTER;
         }
-        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(resourceTypeDir, filter)) {
-            for (Path path: directoryStream) {
-                MetadataResource resource = new FilesystemStoreResource(metadataUuid, metadataId, path.getFileName().toString(),
-                                                                        settingManager.getNodeURL() + "api/records/", visibility,
-                                                                        Files.size(path),
-                                                                        new Date(Files.getLastModifiedTime(path).toMillis()), approved);
-                resourceList.add(resource);
+        PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + filter);
+
+        // Legacy layout: files still sitting in the old <visibility>/ subfolder (not yet
+        // touched since the flat layout was introduced) are that visibility by construction.
+        Path legacyDir = metadataDir.resolve(visibility.toString());
+        try (Stream<Path> paths = Files.walk(legacyDir)) {
+            for (Path path : (Iterable<Path>) paths.filter(Files::isRegularFile)::iterator) {
+                if (!matcher.matches(path.getFileName())) {
+                    continue;
+                }
+                String relativeFilename = IO.toUnixStylePath(legacyDir.relativize(path));
+                resourceList.add(new FilesystemStoreResource(metadataUuid, metadataId, relativeFilename,
+                                                             settingManager.getNodeURL() + "api/records/", visibility,
+                                                             Files.size(path),
+                                                             new Date(Files.getLastModifiedTime(path).toMillis()), null, null,
+                                                             approved, MimeTypeDetector.detect(path, path.getFileName().toString())));
+            }
+        } catch (IOException ignored) {
+        }
+
+        // Flat layout: everything else directly under the metadata folder, excluding the legacy
+        // public/private subfolders (already listed above) - filtered to files whose tracked
+        // access matches the requested visibility, since location alone no longer implies it.
+        Map<String, MetadataResourceVisibility> trackedAccess = loadTrackedAccessByFilename(metadataId);
+        try (Stream<Path> paths = Files.walk(metadataDir)) {
+            for (Path path : (Iterable<Path>) paths.filter(Files::isRegularFile)::iterator) {
+                String relativeFilename = IO.toUnixStylePath(metadataDir.relativize(path));
+                if (isUnderLegacyVisibilityFolder(relativeFilename) || !matcher.matches(path.getFileName())) {
+                    continue;
+                }
+                if (trackedAccess.get(relativeFilename) != visibility) {
+                    continue;
+                }
+                resourceList.add(new FilesystemStoreResource(metadataUuid, metadataId, relativeFilename,
+                                                             settingManager.getNodeURL() + "api/records/", visibility,
+                                                             Files.size(path),
+                                                             new Date(Files.getLastModifiedTime(path).toMillis()), null, null,
+                                                             approved, MimeTypeDetector.detect(path, path.getFileName().toString())));
             }
         } catch (IOException ignored) {
         }
@@ -106,17 +145,34 @@ public class FilesystemStore extends AbstractStore {
         return resourceList;
     }
 
+    /**
+     * Whether a flat-tree-relative filename falls under one of the legacy {@code public}/
+     * {@code private} subfolders (already covered by the legacy-layout listing in
+     * {@link #getResources}, so must be skipped when walking the flat tree to avoid double
+     * counting). A nested-path resource whose own first segment happens to be literally
+     * "public" or "private" is indistinguishable from this and will also be skipped here - a
+     * narrow, pre-existing ambiguity of keeping both layouts side by side.
+     */
+    private static boolean isUnderLegacyVisibilityFolder(String relativeFilename) {
+        for (MetadataResourceVisibility v : MetadataResourceVisibility.values()) {
+            if (relativeFilename.equals(v.toString()) || relativeFilename.startsWith(v.toString() + "/")) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public ResourceHolder getResource(final ServiceContext context, final String metadataUuid, final MetadataResourceVisibility visibility,
                                       final String resourceId, Boolean approved) throws Exception {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         checkResourceId(resourceId);
 
-        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
-                resolve(getFilename(metadataUuid, resourceId));
+        String filename = getFilename(metadataUuid, resourceId);
+        final Path resourceFile = resolveExistingPath(metadataUuid, metadataId, visibility, filename, approved);
 
-        if (Files.exists(resourceFile)) {
-            return new FilesystemResourceHolder(resourceFile, getResourceDescription(context, metadataUuid, visibility, resourceFile, approved));
+        if (resourceFile != null) {
+            return new FilesystemResourceHolder(resourceFile, getResourceDescription(context, metadataUuid, visibility, filename, resourceFile, approved));
         } else {
             throw new ResourceNotFoundException(
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -130,11 +186,11 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         checkResourceId(resourceId);
 
-        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
-            resolve(getFilename(metadataUuid, resourceId));
+        String filename = getFilename(metadataUuid, resourceId);
+        final Path resourceFile = resolveExistingPath(metadataUuid, metadataId, visibility, filename, approved);
 
-        if (Files.exists(resourceFile)) {
-            return getResourceDescription(context, metadataUuid, visibility, resourceFile, approved);
+        if (resourceFile != null) {
+            return getResourceDescription(context, metadataUuid, visibility, filename, resourceFile, approved);
         } else {
             throw new ResourceNotFoundException(
                 String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
@@ -159,10 +215,9 @@ public class FilesystemStore extends AbstractStore {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         checkResourceId(resourceId);
 
-        final Path resourceFile = Lib.resource.getDir(visibility.toString(), metadataId).
-            resolve(getFilename(metadataUuid, resourceId));
+        final Path resourceFile = resolveExistingPath(metadataUuid, metadataId, visibility, getFilename(metadataUuid, resourceId), approved);
 
-        if (Files.exists(resourceFile)) {
+        if (resourceFile != null) {
             return new FilesystemResourceHolder(resourceFile, null);
         } else {
             throw new ResourceNotFoundException(
@@ -172,8 +227,41 @@ public class FilesystemStore extends AbstractStore {
 
     public MetadataResource getResourceDescription(final ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
                                                    String filename, Boolean approved) throws Exception {
-        Path path = getPath(context, metadataUuid, visibility, filename, approved);
-        return getResourceDescription(context, metadataUuid, visibility, path, approved);
+        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        Path path = resolveExistingPath(metadataUuid, metadataId, visibility, filename, approved);
+        if (path == null) {
+            return null;
+        }
+        return getResourceDescription(context, metadataUuid, visibility, filename, path, approved);
+    }
+
+    /**
+     * Resolve the on-disk path of an existing resource. Prefers the flat, visibility-less
+     * layout (see the class Javadoc) and falls back to the legacy {@code <visibility>/}
+     * subfolder for files that predate it and haven't been touched since.
+     * <p>
+     * Once flat, a file's location no longer enforces which visibility it may be fetched as -
+     * that was the folder split's job. So a flat match is only honoured if its <em>tracked</em>
+     * access agrees with {@code visibility}; a mismatch (or an untracked flat file, which
+     * shouldn't happen since every write path logs a tracking row) is treated as not found at
+     * this visibility, exactly as an actually-private file can't be read today by asking for
+     * the public one.
+     * <p>
+     * Takes no {@link ServiceContext} since {@link #getResourceInternal} - one of this method's
+     * callers - doesn't have one to give; the data directory is resolved the same context-free
+     * way {@code ResourceLib.getRemovedDir} already does.
+     *
+     * @return the resolved path, or {@code null} if not found at all, or not at this visibility.
+     */
+    private Path resolveExistingPath(String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String filename,
+                                     Boolean approved) {
+        Path metadataDir = Lib.resource.getMetadataDir(ApplicationContextHolder.get().getBean(GeonetworkDataDirectory.class), metadataId);
+        Path flatPath = metadataDir.resolve(filename);
+        if (Files.exists(flatPath)) {
+            return visibility == resolveVisibility(metadataUuid, approved, filename) ? flatPath : null;
+        }
+        Path legacyPath = Lib.resource.getDir(visibility.toString(), metadataId).resolve(filename);
+        return Files.exists(legacyPath) ? legacyPath : null;
     }
 
     /**
@@ -181,20 +269,25 @@ public class FilesystemStore extends AbstractStore {
      * @param context the service context.
      * @param metadataUuid the uuid of the owner metadata record.
      * @param visibility is the resource is public or not.
+     * @param filename the resource's filename (may include nested-path subfolder segments),
+     *                 already resolved relative to {@code filePath} - not re-derived from
+     *                 {@code filePath} since {@link Path#getFileName()} would only give the last segment.
      * @param filePath the path to the resource.
      * @param approved if the metadata draft has been approved or not
      * @return the resource description or {@code null} if there is any problem accessing the file.
      */
     private MetadataResource getResourceDescription(final ServiceContext context, final String metadataUuid,
-                                                    final MetadataResourceVisibility visibility, final Path filePath, Boolean approved) {
+                                                    final MetadataResourceVisibility visibility, final String filename,
+                                                    final Path filePath, Boolean approved) {
         FilesystemStoreResource result = null;
 
         try {
             int metadataId = getAndCheckMetadataId(metadataUuid, approved);
             long fileSize = Files.size(filePath);
-            result = new FilesystemStoreResource(metadataUuid, metadataId, filePath.getFileName().toString(),
+            result = new FilesystemStoreResource(metadataUuid, metadataId, filename,
                 settingManager.getNodeURL() + "api/records/", visibility, fileSize,
-                new Date(Files.getLastModifiedTime(filePath).toMillis()), approved);
+                new Date(Files.getLastModifiedTime(filePath).toMillis()), null, null, approved,
+                MimeTypeDetector.detect(filePath, filePath.getFileName().toString()));
         } catch (IOException e) {
             Log.error(Geonet.RESOURCES, "Error getting size of file " + filePath + ": "
                 + e.getMessage(), e);
@@ -235,7 +328,7 @@ public class FilesystemStore extends AbstractStore {
                     String.format("A resource with name '%s' and status '%s' already exists for metadata '%d'.", newName, visibility, metadataId));
             }
             Files.move(currentFilePath, newFilePath);
-            return getResourceDescription(context, metadataUuid, visibility, newFilePath, approved);
+            return getResourceDescription(context, metadataUuid, visibility, newName, newFilePath, approved);
         } catch (IOException e) {
             throw new IOException(
                 String.format("Unable to rename resource '%s' for metadata %d (%s). %s", resourceId, metadataId, metadataUuid, e.getMessage()), e);
@@ -260,7 +353,7 @@ public class FilesystemStore extends AbstractStore {
             IO.touch(filePath, FileTime.from(changeDate.getTime(), TimeUnit.MILLISECONDS));
         }
 
-        return getResourceDescription(context, metadataUuid, visibility, filePath, approved);
+        return getResourceDescription(context, metadataUuid, visibility, filename, filePath, approved);
     }
 
     private Path getPath(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String fileName,
@@ -271,9 +364,13 @@ public class FilesystemStore extends AbstractStore {
 
     private Path getPath(ServiceContext context, int metadataId, MetadataResourceVisibility visibility, String fileName,
                          Boolean approved) throws Exception {
-        final Path folderPath = ensureDirectory(context, metadataId, fileName, visibility);
+        final Path folderPath = ensureDirectory(context, metadataId, fileName);
         Path filePath = folderPath.resolve(fileName);
-        if (Files.exists(filePath) && !approved) {
+        // A same-named legacy file for this visibility (not yet migrated to the flat layout)
+        // counts as "already exists" too, matching today's per-visibility uniqueness.
+        boolean alreadyExists = Files.exists(filePath)
+            || Files.exists(Lib.resource.getDir(visibility.toString(), metadataId).resolve(fileName));
+        if (alreadyExists && !approved) {
             throw new ResourceAlreadyExistException(
                     String.format("A resource with name '%s' and status '%s' already exists for metadata '%d'.", fileName, visibility,
                                   metadataId));
@@ -339,26 +436,71 @@ public class FilesystemStore extends AbstractStore {
             // already the wanted visibility
             return resourceHolder.getMetadata();
         }
-        final Path newFolderPath = ensureDirectory(context, metadataId, resourceId, visibility);
-        Path newFilePath = newFolderPath.resolve(resourceHolder.getMetadata().getFilename());
-        Files.move(getResourcePath(resourceHolder.getResource(), context), newFilePath);
-        return getResourceDescription(context, metadataUuid, visibility, newFilePath, approved);
+        String filename = resourceHolder.getMetadata().getFilename();
+        final Path newFolderPath = ensureDirectory(context, metadataId, filename);
+        Path newFilePath = newFolderPath.resolve(filename);
+        Path currentFilePath = getResourcePath(resourceHolder.getResource(), context);
+        // A resource already in the flat layout doesn't need to move at all - visibility is
+        // purely a database attribute there (updated by ResourceLoggerStore regardless of what
+        // happens here). A legacy resource (still in its old <visibility>/ subfolder) is
+        // migrated to the flat layout as a side effect of this move, same as put/rename.
+        if (!currentFilePath.equals(newFilePath)) {
+            Files.move(currentFilePath, newFilePath);
+        }
+        return getResourceDescription(context, metadataUuid, visibility, filename, newFilePath, approved);
     }
 
-    private Path ensureDirectory(final ServiceContext context, final int metadataId, final String resourceId,
-                                 final MetadataResourceVisibility visibility) throws IOException {
+    @Override
+    public void migrateResourceToFlatLayout(ServiceContext context, MetadataResource resource) throws Exception {
+        int metadataId = resource.getMetadataId();
+        String filename = resource.getFilename();
+        Path legacyPath = Lib.resource.getDir(resource.getVisibility().toString(), metadataId).resolve(filename);
+        if (!Files.exists(legacyPath)) {
+            // Already flat, or this particular resource isn't a legacy one.
+            return;
+        }
+        Path newFilePath = ensureDirectory(context, metadataId, filename).resolve(filename);
+        if (Files.exists(newFilePath)) {
+            // A flat file already occupies this name (eg. re-uploaded after the legacy copy was
+            // orphaned, or the same filename also exists under the other legacy visibility folder).
+            // Leave the legacy copy in place rather than overwrite or lose data.
+            return;
+        }
+        Files.move(legacyPath, newFilePath);
+    }
+
+    @Override
+    public void deleteLegacyVisibilityFolderIfEmpty(ServiceContext context, int metadataId, MetadataResourceVisibility visibility)
+            throws Exception {
+        Path legacyDir = Lib.resource.getDir(visibility.toString(), metadataId);
+        if (!Files.isDirectory(legacyDir)) {
+            return;
+        }
+        try (Stream<Path> entries = Files.list(legacyDir)) {
+            if (entries.findAny().isPresent()) {
+                // Not empty - a resource wasn't migrated (eg. a same-named flat file already
+                // existed, see migrateResourceToFlatLayout) or a nested subfolder is still there.
+                return;
+            }
+        }
+        Files.delete(legacyDir);
+    }
+
+    private Path ensureDirectory(final ServiceContext context, final int metadataId, final String resourceId) throws IOException {
         final Path metadataDir = Lib.resource.getMetadataDir(getDataDirectory(context), metadataId);
-        final Path newFolderPath = metadataDir.resolve(visibility.toString());
-        if (!Files.exists(newFolderPath)) {
+        // resourceId may contain subfolder segments (nested paths); make sure their parent
+        // directories exist too, not just the metadata folder itself.
+        final Path targetParent = metadataDir.resolve(resourceId).getParent();
+        if (targetParent != null && !Files.exists(targetParent)) {
             try {
-                Files.createDirectories(newFolderPath);
+                Files.createDirectories(targetParent);
             } catch (Exception e) {
                 throw new IOException(
-                        String.format("Can't create folder '%s' to store resource with name '%s' for metadata '%d'.", visibility,
+                        String.format("Can't create folder to store resource with name '%s' for metadata '%d'.",
                                       resourceId, metadataId));
             }
         }
-        return newFolderPath;
+        return metadataDir;
     }
 
     private static GeonetworkDataDirectory getDataDirectory(ServiceContext context) {

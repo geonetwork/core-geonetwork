@@ -91,7 +91,7 @@ public class ResourceLoggerStore extends AbstractStore {
             ResourceHolder holder = decoratedStore.getResource(context, metadataUuid, visibility, resourceId, approved);
             if (holder != null) {
                 // TODO: Add Requester details which may have been provided by a form ?
-                storeGetRequest(context, metadataUuid, holder.getMetadata().getId(), "", "", "", "", new ISODate().toString(), approved);
+                storeGetRequest(context, metadataUuid, holder.getMetadata().getFilename(), "", "", "", "", new ISODate().toString(), approved);
             }
             return holder;
         }
@@ -112,7 +112,7 @@ public class ResourceLoggerStore extends AbstractStore {
             ResourceHolder holder = decoratedStore.getResourceWithRange(context, metadataUuid, visibility, resourceId, approved, start, end);
             if (holder != null) {
                 // TODO: Add Requester details which may have been provided by a form ?
-                storeGetRequest(context, metadataUuid, holder.getMetadata().getId(), "", "", "", "", new ISODate().toString(), approved);
+                storeGetRequest(context, metadataUuid, holder.getMetadata().getFilename(), "", "", "", "", new ISODate().toString(), approved);
             }
             return holder;
         }
@@ -132,7 +132,8 @@ public class ResourceLoggerStore extends AbstractStore {
             final MetadataResource resource = decoratedStore
                     .putResource(context, metadataUuid, filename, is, changeDate, visibility, approved);
             if (resource != null) {
-                storePutRequest(context, metadataUuid, resource.getId(), resource.getSize(), approved);
+                storePutRequest(context, metadataUuid, resource.getFilename(), resource.getSize(), resource.getVisibility(),
+                    resource.getMimeType(), approved);
             }
             return resource;
         }
@@ -143,7 +144,11 @@ public class ResourceLoggerStore extends AbstractStore {
     public MetadataResource patchResourceStatus(ServiceContext context, String metadataUuid, String resourceId,
                                                 MetadataResourceVisibility metadataResourceVisibility, Boolean approved) throws Exception {
         if (decoratedStore != null) {
-            return decoratedStore.patchResourceStatus(context, metadataUuid, resourceId, metadataResourceVisibility, approved);
+            MetadataResource resource = decoratedStore.patchResourceStatus(context, metadataUuid, resourceId, metadataResourceVisibility, approved);
+            if (resource != null) {
+                storeAccessUpdateRequest(metadataUuid, resourceId, metadataResourceVisibility, approved);
+            }
+            return resource;
         }
         return null;
     }
@@ -167,7 +172,7 @@ public class ResourceLoggerStore extends AbstractStore {
         if (decoratedStore != null) {
             String response = decoratedStore.delResource(context, metadataUuid, resourceId, approved);
             if (response != null) {
-                storeDeleteRequest(metadataUuid, resourceId, approved);
+                storeDeleteRequest(metadataUuid, getFilename(metadataUuid, resourceId), approved);
             }
         }
         return null;
@@ -180,7 +185,7 @@ public class ResourceLoggerStore extends AbstractStore {
         if (decoratedStore != null) {
             String response = decoratedStore.delResource(context, metadataUuid, metadataResourceVisibility, resourceId, approved);
             if (response != null) {
-                storeDeleteRequest(metadataUuid, resourceId, approved);
+                storeDeleteRequest(metadataUuid, getFilename(metadataUuid, resourceId), approved);
             }
         }
         return null;
@@ -277,7 +282,8 @@ public class ResourceLoggerStore extends AbstractStore {
     /**
      * Stores a file upload request in the MetadataFileUploads table.
      */
-    private void storePutRequest(ServiceContext context, final String metadataUuid, final String fileName, final double fileSize, Boolean approved)
+    private void storePutRequest(ServiceContext context, final String metadataUuid, final String fileName, final double fileSize,
+                                 final MetadataResourceVisibility access, final String mimeType, Boolean approved)
             throws Exception {
         final MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
         final int metadataId = getAndCheckMetadataId(metadataUuid, approved);
@@ -292,8 +298,29 @@ public class ResourceLoggerStore extends AbstractStore {
         metadataFileUpload.setFileSize(fileSize);
         metadataFileUpload.setUploadDate(new ISODate().toString());
         metadataFileUpload.setUserName(context.getUserSession().getUsername());
+        metadataFileUpload.setAccess(access);
+        metadataFileUpload.setMimeType(mimeType);
 
         repo.save(metadataFileUpload);
+    }
+
+    /**
+     * Updates the access/visibility of a previously logged file upload in the MetadataFileUploads table.
+     */
+    private void storeAccessUpdateRequest(final String metadataUuid, final String resourceId, final MetadataResourceVisibility access,
+                                          Boolean approved) throws Exception {
+        final ConfigurableApplicationContext context = ApplicationContextHolder.get();
+        final int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+
+        MetadataFileUploadRepository repo = context.getBean(MetadataFileUploadRepository.class);
+
+        try {
+            MetadataFileUpload metadataFileUpload = repo.findByMetadataIdAndFileNameNotDeleted(metadataId, getFilename(metadataUuid, resourceId));
+            metadataFileUpload.setAccess(access);
+            repo.save(metadataFileUpload);
+        } catch (org.springframework.dao.EmptyResultDataAccessException ex) {
+            // No upload record to update. May happen for resources uploaded before this logger tracked access.
+        }
     }
 
     @Override
@@ -334,7 +361,18 @@ public class ResourceLoggerStore extends AbstractStore {
         }
 
         if (metadataFileUpload != null) {
-            String targetName = metadataFileUpload.getFileName().contains("/") ? renamedResource.getId() : renamedResource.getFilename();
+            // Some rows predate this table storing plain relative filenames and instead have their
+            // fileName column set to the full resourceId form (metadataUuid + "/attachments/" +
+            // filename, see AbstractStore#getFilename) - keep saving those in that same form so
+            // later lookups (which try that form first, above) keep finding them. Checking for "/"
+            // alone doesn't work to detect this any more: a plain relative filename for a resource
+            // in a subfolder also legitimately contains "/", which used to make this wrongly treat
+            // every nested-path rename as if it were one of these legacy rows and store
+            // renamedResource.getId() (metadataUuid + "/attachments/" + new path) into fileName
+            // instead of just the new relative path.
+            String legacyFullResourceIdPrefix = metadataUuid + "/attachments/";
+            String targetName = metadataFileUpload.getFileName().startsWith(legacyFullResourceIdPrefix)
+                ? renamedResource.getId() : renamedResource.getFilename();
             metadataFileUpload.setFileName(targetName);
             repo.save(metadataFileUpload);
         }
@@ -351,5 +389,20 @@ public class ResourceLoggerStore extends AbstractStore {
         }
 
         return null;
+    }
+
+    @Override
+    public void migrateResourceToFlatLayout(ServiceContext context, MetadataResource resource) throws Exception {
+        if (decoratedStore != null) {
+            decoratedStore.migrateResourceToFlatLayout(context, resource);
+        }
+    }
+
+    @Override
+    public void deleteLegacyVisibilityFolderIfEmpty(ServiceContext context, int metadataId, MetadataResourceVisibility visibility)
+            throws Exception {
+        if (decoratedStore != null) {
+            decoratedStore.deleteLegacyVisibilityFolderIfEmpty(context, metadataId, visibility);
+        }
     }
 }

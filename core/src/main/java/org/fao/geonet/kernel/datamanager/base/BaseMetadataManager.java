@@ -91,7 +91,6 @@ import javax.annotation.Nullable;
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.Root;
 import javax.transaction.Transactional;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -315,16 +314,9 @@ public class BaseMetadataManager implements IMetadataManager {
         metadataValidationRepository.deleteAllById_MetadataId(intId);
         userSavedSelectionRepository.deleteAllByUuid(metadataUtils.getMetadataUuid(id));
 
-        // Logical delete for metadata file uploads
-        PathSpec<MetadataFileUpload, String> deletedDatePathSpec = new PathSpec<MetadataFileUpload, String>() {
-            @Override
-            public javax.persistence.criteria.Path<String> getPath(Root<MetadataFileUpload> root) {
-                return root.get(MetadataFileUpload_.deletedDate);
-            }
-        };
-
-        metadataFileUploadRepository
-            .createBatchUpdateQuery(deletedDatePathSpec, new ISODate().toString(), MetadataFileUploadSpecs.isNotDeletedForMetadata(intId));
+        // Remove metadata file upload tracking rows, matching the pattern already used for the
+        // same table on draft->approved replacement (DraftUtilities/DraftMetadataUtils).
+        metadataFileUploadRepository.deleteAll(MetadataFileUploadSpecs.hasMetadataId(intId));
 
         // --- remove metadata
         getXmlSerializer().delete(id, context);

@@ -47,10 +47,13 @@ import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 
+import java.io.IOException;
 import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -59,6 +62,17 @@ import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 import static org.fao.geonet.Constants.CHARSET;
 import static org.fao.geonet.kernel.mef.MEFConstants.*;
 
+/**
+ * Writes a MEF {@link Version} 2 (multi-record) archive using the legacy, pre-3.0
+ * {@code public/}/{@code private/} attachment folder split. Kept only so that format can still
+ * be produced/read against if ever needed again - live exports (see {@link MEFLib#doMEF3Export})
+ * use {@link MEF3Exporter} instead, which writes the same V2 container with the current, flat
+ * MEF 3.0 {@code store/} layout.
+ * <p>
+ * Everything here except {@link #getResourcesPath} - where a record's attachments of a given
+ * visibility are written - is identical between the two formats, so {@link MEF3Exporter} extends
+ * this class and overrides just that one method.
+ */
 class MEF2Exporter {
     /**
      * Create a MEF2 file in ZIP format.
@@ -88,6 +102,20 @@ class MEF2Exporter {
                                 Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
                                 boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation,
                                 boolean approved, boolean includeAttachments) throws Exception {
+        return new MEF2Exporter().export(context, uuids, format, skipUUID, stylePath, resolveXlink,
+            removeXlinkAttribute, skipError, addSchemaLocation, approved, includeAttachments);
+    }
+
+    /**
+     * Instance form of {@link #doExport}, kept non-static purely so {@link MEF3Exporter} can
+     * subclass and override {@link #getResourcesPath} to change where attachments are written,
+     * without duplicating the index building, metadata/feature-catalog writing and info.xml
+     * generation below.
+     */
+    protected Path export(ServiceContext context, Set<String> uuids,
+                          Format format, boolean skipUUID, Path stylePath, boolean resolveXlink,
+                          boolean removeXlinkAttribute, boolean skipError, boolean addSchemaLocation,
+                          boolean approved, boolean includeAttachments) throws Exception {
 
         Path file = Files.createTempFile("mef-", ".mef");
         EsSearchManager searchManager = context.getBean(EsSearchManager.class);
@@ -195,18 +223,41 @@ class MEF2Exporter {
         return file;
     }
 
-    private static String cleanXml(String xmlTextContent) {
+    private String cleanXml(String xmlTextContent) {
         if (xmlTextContent != null) {
             return xmlContentEscaper().escape(xmlTextContent);
         }
         return "-";
     }
 
-    private static String cleanForCsv(String csvColumnText) {
+    private String cleanForCsv(String csvColumnText) {
         if (csvColumnText != null) {
             return csvColumnText.replace("\"", "'");
         }
         return "-";
+    }
+
+    /**
+     * Where a record's resources of the given visibility should be extracted, creating the
+     * directory if needed. MEF2Exporter uses the legacy, pre-3.0 split - a separate directory per
+     * visibility; {@link MEF3Exporter} overrides this to use the flat MEF 3.0 {@code store}
+     * directory for both visibilities.
+     */
+    protected Path getResourcesPath(Path metadataRootDir, MetadataResourceVisibility visibility) throws IOException {
+        Path path = metadataRootDir.resolve(visibility.toString());
+        Files.createDirectories(path);
+        return path;
+    }
+
+    /**
+     * Whether info.xml should describe this export's resources with the unified MEF 3.0
+     * {@code <store>} element or the legacy, pre-3.0 separate {@code <public>}/{@code <private>}
+     * elements - must match whichever physical layout {@link #getResourcesPath} actually writes
+     * to. {@link MEF2Exporter} uses the legacy split, so this is {@code false}; {@link MEF3Exporter}
+     * overrides it to {@code true}.
+     */
+    protected boolean isUnifiedStoreLayout() {
+        return false;
     }
 
     /**
@@ -218,11 +269,11 @@ class MEF2Exporter {
      * @param includeAttachments If true, include attachments according to the export format and permissions.
      *                        If false, no attachments are included.
      */
-    private static void createMetadataFolder(ServiceContext context,
-                                             AbstractMetadata metadata, FileSystem zipFs, boolean skipUUID,
-                                             Path stylePath, Format format, boolean resolveXlink,
-                                             boolean removeXlinkAttribute,
-                                             boolean addSchemaLocation, boolean includeAttachments) throws Exception {
+    private void createMetadataFolder(ServiceContext context,
+                                      AbstractMetadata metadata, FileSystem zipFs, boolean skipUUID,
+                                      Path stylePath, Format format, boolean resolveXlink,
+                                      boolean removeXlinkAttribute,
+                                      boolean addSchemaLocation, boolean includeAttachments) throws Exception {
 
         final Path metadataRootDir = zipFs.getPath(metadata.getUuid());
         Files.createDirectories(metadataRootDir);
@@ -235,6 +286,51 @@ class MEF2Exporter {
         String id = "" + record.getId();
         String isTemp = record.getDataInfo().getType().codeString;
 
+        final Store store = context.getBean("resourceStore", Store.class);
+
+        Path publicResourcesPath = getResourcesPath(metadataRootDir, MetadataResourceVisibility.PUBLIC);
+        Path privateResourcesPath = getResourcesPath(metadataRootDir, MetadataResourceVisibility.PRIVATE);
+
+        // Add the resources if the specified format allows it. This has to happen before
+        // metadata.xml is written below: for a legacy (non-unified-store) export, a nested
+        // resource's stored name is flattened (see MEFLib#flattenResourceNames), and any
+        // reference to its original URL inside the record's own metadata.xml needs rewriting to
+        // match before that XML is serialized to disk.
+        List<MetadataResource> publicResources = List.of();
+        List<MetadataResource> privateResources = List.of();
+        Map<String, String> publicFlattenedNames = Collections.emptyMap();
+        Map<String, String> privateFlattenedNames = Collections.emptyMap();
+        if (includeAttachments) {
+            if (format == Format.PARTIAL || format == Format.FULL) {
+                // Include public resources only for PARTIAL and FULL formats so the info file matches the MEF contents.
+                publicResources = store.getResources(context, metadata.getUuid(),
+                    MetadataResourceVisibility.PUBLIC, null, true);
+                // Resources in a subfolder break old GeoNetwork versions reading a legacy V1/V2
+                // archive (see MEFLib#flattenResourceNames) - not a concern for MEF3Exporter's
+                // unified store/ layout, which only ever needs to be read by subfolder-aware code.
+                if (!isUnifiedStoreLayout()) {
+                    publicFlattenedNames = MEFLib.flattenResourceNames(publicResources);
+                    xmlDocumentAsString = MEFLib.rewriteFlattenedResourceUrls(xmlDocumentAsString, publicResources, publicFlattenedNames);
+                }
+                StoreUtils.extract(context, metadata.getUuid(), publicResources, publicResourcesPath, true, publicFlattenedNames);
+            }
+
+            if (format == Format.FULL) {
+                try {
+                    Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
+                    privateResources = store.getResources(context, metadata.getUuid(),
+                        MetadataResourceVisibility.PRIVATE, null, true);
+                    if (!isUnifiedStoreLayout()) {
+                        privateFlattenedNames = MEFLib.flattenResourceNames(privateResources);
+                        xmlDocumentAsString = MEFLib.rewriteFlattenedResourceUrls(xmlDocumentAsString, privateResources, privateFlattenedNames);
+                    }
+                    StoreUtils.extract(context, metadata.getUuid(), privateResources, privateResourcesPath, true, privateFlattenedNames);
+                } catch (Exception e) {
+                    // Current user could not download private data
+                }
+            }
+        }
+
         final Path metadataXmlDir = metadataRootDir.resolve(MD_DIR);
         Files.createDirectories(metadataXmlDir);
 
@@ -242,7 +338,7 @@ class MEF2Exporter {
             Files.write(metadataXmlDir.resolve(output.one()), output.two().getBytes(CHARSET));
         }
 
-        // --- save native metadata
+        // --- save native metadata (using the URL-rewritten string, if any resource was flattened)
         Files.write(metadataXmlDir.resolve(FILE_METADATA), xmlDocumentAsString.getBytes(CHARSET));
 
 
@@ -255,42 +351,11 @@ class MEF2Exporter {
             Files.write(featureMdDir.resolve(FILE_METADATA), ftrecordAndMetadata.two().getBytes(CHARSET));
         }
 
-        final Store store = context.getBean("resourceStore", Store.class);
-
-        // Get the paths to the public and private resources directories
-        Path publicResourcesPath = metadataRootDir.resolve("public");
-        Path privateResourcesPath = metadataRootDir.resolve("private");
-
-        // Create the resources directories
-        Files.createDirectories(publicResourcesPath);
-        Files.createDirectories(privateResourcesPath);
-
-        // Add the resources if the specified format allows it
-        List<MetadataResource> publicResources = List.of();
-        List<MetadataResource> privateResources = List.of();
-        if (includeAttachments) {
-            if (format == Format.PARTIAL || format == Format.FULL) {
-                // Include public resources only for PARTIAL and FULL formats so the info file matches the MEF contents.
-                publicResources = store.getResources(context, metadata.getUuid(),
-                    MetadataResourceVisibility.PUBLIC, null, true);
-                StoreUtils.extract(context, metadata.getUuid(), publicResources, publicResourcesPath, true);
-            }
-
-            if (format == Format.FULL) {
-                try {
-                    Lib.resource.checkPrivilege(context, id, ReservedOperation.download);
-                    privateResources = store.getResources(context, metadata.getUuid(),
-                        MetadataResourceVisibility.PRIVATE, null, true);
-                    StoreUtils.extract(context, metadata.getUuid(), privateResources, privateResourcesPath, true);
-                } catch (Exception e) {
-                    // Current user could not download private data
-                }
-            }
-        }
-
         // --- save info file
+        Map<String, String> flattenedNames = new HashMap<>(publicFlattenedNames);
+        flattenedNames.putAll(privateFlattenedNames);
         byte[] binData = MEFLib.buildInfoFile(context, record, format, publicResources,
-            privateResources, skipUUID).getBytes(Constants.ENCODING);
+            privateResources, skipUUID, isUnifiedStoreLayout(), flattenedNames).getBytes(Constants.ENCODING);
 
         Files.write(metadataRootDir.resolve(FILE_INFO), binData);
     }
@@ -301,7 +366,7 @@ class MEF2Exporter {
      * @param metadataId Metadata record id to search for feature catalogue for.
      * @return String Feature catalogue uuid.
      */
-    private static String getFeatureCatalogID(ServiceContext context, int metadataId) throws Exception {
+    private String getFeatureCatalogID(ServiceContext context, int metadataId) throws Exception {
         GeonetContext gc = (GeonetContext) context
             .getHandlerContext(Geonet.CONTEXT_NAME);
         DataManager dm = gc.getBean(DataManager.class);
