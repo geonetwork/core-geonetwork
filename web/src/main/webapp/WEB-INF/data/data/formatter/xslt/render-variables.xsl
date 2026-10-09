@@ -60,6 +60,7 @@
                 select="/root/info/record/id"/>
   <xsl:variable name="metadataUuid"
                 select="/root/info/record/uuid"/>
+  <xsl:variable name="providerlogo" select="/root/info/record/sourceinfo/providerlogo"/>
 
   <xsl:variable name="schemaCodelists">
     <null/>
