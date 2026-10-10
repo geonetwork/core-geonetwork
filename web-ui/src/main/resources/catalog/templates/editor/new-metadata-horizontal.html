@@ -1,10 +1,23 @@
 <div class="container" id="gn-new-metadata-container">
   <div class="row">
     <div class="col-md-12 gn-margin-bottom">
-      <h1>{{resourceTitle | translate}}</h1>
-
-      <div class="alert alert-warning" data-ng-hide="hasTemplates" data-translate="">
+      <h1>
+        {{resourceTitle | translate}}
+        <span data-ng-if="!hasTemplates">{{ 'metadata' | translate}}</span>
+      </h1>
+      <div
+        class="alert alert-warning"
+        data-ng-if="!hasTemplates && user.isAdministrator()"
+        data-translate=""
+      >
         noTemplatesAvailable
+      </div>
+      <div
+        class="alert alert-warning"
+        data-ng-if="!hasTemplates && !user.isAdministrator()"
+        data-translate=""
+      >
+        noTemplatesAvailableContactAdmin
       </div>
       <div
         class="alert alert-warning"
