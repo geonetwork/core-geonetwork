@@ -43,6 +43,11 @@ public class XslUtil {
         return "fre";
     }
 
+    public static String md5Hex(String str) {
+        return org.apache.commons.codec.digest.DigestUtils.md5Hex(str);
+    }
+
+
     public static String getSettingValue(String key) {
         switch (key) {
             case "system/metadata/validation/removeSchemaLocation":
