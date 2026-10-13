@@ -25,7 +25,7 @@
   <xsl:template name="create-namespaces-eu-dcat-mobilitydcatap">
     <xsl:call-template name="create-namespaces-eu-dcat-ap"/>
     <xsl:namespace name="mobilitydcatap" select="'https://w3id.org/mobilitydcat-ap#'"/>
-    <xsl:namespace name="geodcatap" select="'http://data.europa.eu/930'"/>
+    <xsl:namespace name="geodcatap" select="'http://data.europa.eu/930/'"/>
   </xsl:template>
 
   <xsl:template mode="iso19115-3-to-dcat-resource"

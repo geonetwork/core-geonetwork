@@ -359,10 +359,22 @@ public class EsSearchManager implements ISearchManager {
         return client.getClient().update(updateRequest, Void.class);
     }
 
-    public BulkResponse updateFields(String id, Multimap<String, Object> fields, Set<String> fieldsToRemove) throws IOException {
+    Map<String, Object> toFieldMap(Multimap<String, Object> fields) {
         Map<String, Object> fieldMap = new HashMap<>();
-        fields.asMap().forEach((e, v) -> fieldMap.put(e, v.toArray()));
-        return updateFields(id, fieldMap, fieldsToRemove);
+        fields.asMap().forEach((fieldName, values) -> {
+            if (values == null || values.isEmpty()) {
+                return;
+            }
+
+            boolean isMultivaluedField = fieldName.startsWith(Geonet.IndexFieldNames.OP_PREFIX) || arrayFields.contains(fieldName)
+                || values.size() > 1;
+            fieldMap.put(fieldName, isMultivaluedField ? values.toArray() : values.iterator().next());
+        });
+        return fieldMap;
+    }
+
+    public BulkResponse updateFields(String id, Multimap<String, Object> fields, Set<String> fieldsToRemove) throws IOException {
+        return updateFields(id, toFieldMap(fields), fieldsToRemove);
     }
 
     public BulkResponse updateFields(String id, Map<String, Object> fieldMap, Set<String> fieldsToRemove) throws IOException {

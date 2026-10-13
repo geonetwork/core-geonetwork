@@ -325,10 +325,13 @@ nav:
       - 'Catalog':
         - administrator-guide/configuring-the-catalog/index.md
         - administrator-guide/configuring-the-catalog/system-configuration.md
+        - administrator-guide/configuring-the-catalog/languages-and-translations.md
         - administrator-guide/configuring-the-catalog/user-interface-configuration.md
         - administrator-guide/configuring-the-catalog/css-configuration.md
         - administrator-guide/configuring-the-catalog/csw-configuration.md
         - administrator-guide/configuring-the-catalog/portal-configuration.md
+        - administrator-guide/configuring-the-catalog/static-pages.md
+        - administrator-guide/configuring-the-catalog/doi-configuration.md
         - administrator-guide/configuring-the-catalog/inspire-configuration.md
         - administrator-guide/configuring-the-catalog/map-server-configuration.md
       - 'Users and Groups':

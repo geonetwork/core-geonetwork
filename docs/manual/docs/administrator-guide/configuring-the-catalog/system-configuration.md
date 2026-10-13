@@ -31,6 +31,7 @@ Since the settings form is a long form, the `save` button is repeated between th
 -   **Port** The server's port number (usually 80 or 8080). If using HTTP, set it to 80.
 -   **Preferred Protocol** Defined the protocol to access the catalog. The HTTP protocol used to access the server. Choosing http means that all communication with the catalog will be visible to anyone listening to the protocol. Since this includes usernames and passwords this is not secure. Choosing https means that all communication with the catalog will be encrypted and thus much harder for a listener to decode.
 -   **Log level** Define the logging level of the application. After modification, log can be checked in the `Statistics & status` section under `Activity`.
+-   **Timezone** The timezone used to store dates in the database and to interpret the time in the cron expressions of the harvesters `Frequency` field. If not set, the JVM default timezone is used.
 
 ![](img/log-view.png)
 
@@ -56,6 +57,17 @@ The settings page offers to set the configuration of a proxy server. This config
 
 JVM proxy parameters may also be required to properly set the proxy for all remote access.
 
+## CORS configuration
+
+-   **CORS allowed hosts** Comma separated list of hosts for which CORS headers are added. Use `*` to allow all hosts, or an empty value to disable CORS. This setting is only used when the `allowedHosts` parameter of the `CORSResponseFilter` in `WEB-INF/web.xml` is set to `db`, otherwise it is ignored. See [Cross-origin resource sharing](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) for more details.
+
+## Documentation configuration
+
+-   **Base manual url** Base URL of the application manual used by the help links in the user interface. Defaults to the official manual (`https://docs.geonetwork-opensource.org/{{version}}/{{lang}}`) and can be customised to use a self hosted documentation with a custom branding. The following placeholders are supported:
+    -   `{{lang}}` to display the manual in the user interface language, when available.
+    -   `{{version}}` to use the application version.
+    -   `{{section}}` to insert the manual sub section of the current page. When this placeholder is not provided, the sub section is appended to the end of the URL.
+
 ## Feedback {#system-config-feedback}
 
 Email notifications are sent by the catalog.
@@ -72,7 +84,8 @@ This section configure the mail server to use.
 -   **Use SSL** Enable Secure Sockets Layer (SSL) mode
 -   **User name** Username if connection is required on the SMTP server
 -   **Password** Username password if connection is required on the SMTP server
--   **Use TLS** Enable use of Transport Layer Security (TLS) 
+-   **Use TLS** Enable use of Transport Layer Security (TLS)
+-   **Ignore errors caused by the mail server's SSL certificate** Accept the mail server certificate even if it is not valid (eg. self-signed certificate). Only use it for trusted mail servers.
 
 ![](img/feedback-email.png)
 
@@ -111,42 +124,22 @@ See [Configuring Shibboleth](../managing-users-and-groups/authentication-mode.md
 
 Enable the self registration form. See [User Self-Registration](../managing-users-and-groups/user-self-registration.md).
 
-You can configure optionally re-Captcha, to protect you and your users from spam and abuse. And a list of email domains (separated by commas)
-that can request an account. If not configured any email address is allowed.
+-   **Enable self-registration** Enables the self-registration form. When enabled, make sure a mail server is also configured (see [Feedback](#system-config-feedback)).
+-   **Enable re-captcha** Protects you and your users from spam and abuse. This is highly recommended when you enable feedback or self-registration. Create your re-captcha key on <https://www.google.com/recaptcha/>.
+-   **Re-captcha public key** / **Re-captcha secret key** The keys provided by the re-captcha service.
+-   **Email domains allowed** Comma separated list of email domains that can request an account. If not configured, any email address is allowed.
 
-## User application feedback
+## User feedback
 
-Enabling the setting, displays in the application footer a link to a page that allows sending comments about the application.
+It requires an email server configured. See [Feedback](#system-config-feedback).
 
-![](img/application-feedback-link.png)
+-   **Enable application feedback** Displays the link to send feedback about the application to the system administrator. Displays in the application footer a link to a page that allows sending comments about the application.
 
-![](img/application-feedback.png)
+    ![](img/application-feedback-link.png)
+    
+    ![](img/application-feedback.png)
 
-It requires an email server configured.
-
-## Languages and translations
-
-Go to `Admin console` --> `Settings` --> `Languages and translations` to manage the languages registered in the catalog and to add or override any translation used in the user interface.
-
-The `Registered languages in database` panel lists the languages stored in the database, used for database entities such as group names or portal titles. This is not the list of languages offered to catalog users, which is configured separately (see [User Interface Configuration](user-interface-configuration.md)).
-
-The `Manage translations` panel lets an administrator add a translation for any key used by the application, or override an existing one, without rebuilding the application. This is useful, for example, to configure the [Application banner](#application-banner) message below, to correct a wording, or to translate a label that has no translation yet in your language.
-
--   **Table mode** Enter the key to translate in the `Add a new translation for` field and click `Add`. This creates one translation field per registered language for that key.
-
-![](img/manage-translations-add-key.png)
-
-![](img/manage-translations-key-rows.png)
-
--   **JSON mode** Provides direct access to the same data as a JSON array, which can be useful to review or edit several translations at once.
-
-![](img/manage-translations-json-mode.png)
-
-Once the translations are entered, click `Save all translations` to persist them.
-
-!!! tip "Finding the key of an untranslated string"
-
-    When the interface has no translation for a key, it displays the raw key instead of a readable label, for example `SortBy-resourceTitleObject.default.sortAsc` in a sort-by dropdown. If you come across this, copy the text exactly as shown and use it as the key in the `Manage translations` panel to add the missing translation.
+-   **Enable metadata feedback** Allows users to send feedback about a metadata record to the metadata owner and the system administrator.
 
 ## Application banner
 
@@ -158,7 +151,7 @@ Enabling this setting displays a banner in the public pages of the application.
 
 ![](img/application-banner-config.png)
 
-To configure the banner message, go to `Admin console` --> `Settings` --> `Languages and translations` and add a translation entry with the key **application-banner**. See [Languages and translations](#languages-and-translations) above for details.
+To configure the banner message, go to `Admin console` --> `Settings` --> `Languages and translations` and add a translation entry with the key **application-banner**. See [Languages and translations](languages-and-translations.md) for details.
 
 ![](img/application-banner-config2.png)
 
@@ -172,10 +165,14 @@ The banner is shown at the top of the public search page.
 
     3.0.0 Defined by the formatter.
 
+-   **Clickable hyperlinks** If set, the catalog displays clickable hyperlinks in the metadata.
+
 
 ## Metadata rating
 
-If enabled, the catalog will calculate user ratings for metadata from this node only (not distributed among other GeoNetwork nodes). This only applies to records harvested using the GeoNetwork protocol.
+-   **Local rating** If enabled, the catalog will calculate user ratings for metadata from this node only (not distributed among other GeoNetwork nodes). This only applies to records harvested using the GeoNetwork protocol.
+-   **Notification level** Define which users to alert when a metadata is rated.
+-   **Groups to notify in case of rating** List of groups, separated by the char `|`, to notify in case of rating (for `Notify the group(s) emails` notification level).
 
 ## Metadata XLink {#xlink_config}
 
@@ -183,6 +180,8 @@ The XLink resolver replaces the content of elements with an attribute @xlink:hre
 
 -   **Enable XLink resolution**: Enables/disables the XLink resolver.
 -   **Enable local XLink** Local XLinks are using local://<lang>/<service> URL to make references to related sections instead of HTTP URL. Local XLinks are usually faster than HTTP XLinks.
+-   **Elements to ignore by XLink resolution** Comma separated list of elements to ignore by the XLink resolver (eg. `srv:operatesOn`).
+-   **Allow deletion of subtemplates referenced through an xlink** If enabled, a subtemplate (eg. a contact from the directory) can be removed even if it is referenced by records.
 
 !!! info "See Also"
 
@@ -220,12 +219,18 @@ Options in this group control the way in which the OAI Server responds to OAIPMH
 -   **Enable**: Enable or disable the OAI-PMH service. If disabled, the OAI-PMH API returns an error message.
 -   **Resumption Token Timeout**: Metadata records that match an OAI harvest search request are usually returned to the harvester in groups with a fixed size (eg. in groups of 10 records). With each group a resumption token is included so that the harvester can request the next group of records. The resumption token timeout is the time (in seconds) that GeoNetwork OAI server will wait for a resumption token to be used. If the timeout is exceeded GeoNetwork OAI server will drop the search results and refuse to recognize the resumption token. The aim of this feature is to ensure that resources in the GeoNetwork OAI server are released.
 -   **Cache size**: The maximum number of concurrent OAI harvests that the GeoNetwork OAI server can support.
+-   **Maximum records**: The maximum number of records to return in OAI responses.
 
 Restart the catalog to take all OAI settings into account.
 
 ## INSPIRE Directive configuration
 
 See [Configuring for the INSPIRE Directive](inspire-configuration.md).
+
+-   **INSPIRE** Enables INSPIRE CSW (ie. language support and INSPIRE GetCapabilities document) and INSPIRE indexing. The INSPIRE themes thesaurus must be installed to properly index themes and annexes. It does not enable the INSPIRE editor view mode (see `iso19139/layout/config-editor.xml`).
+-   **INSPIRE remote validation URL** URL of the INSPIRE validator, to enable the remote validation of records from the editor. See [INSPIRE validation](inspire-configuration.md).
+-   **INSPIRE remote validation URL (Query)** When using the official INSPIRE validator, in order to preserve the quotas, set this value to `https://inspire.ec.europa.eu/validator/`. It is used for all operations except `/v2/TestRuns`, which uses the INSPIRE remote validation URL (API gateway). If you use your own instance of the INSPIRE validator, leave this value empty.
+-   **Node id** / **API key** Credentials used to access the INSPIRE validator API gateway, when required.
 
 ## INSPIRE Atom Feed
 
@@ -272,13 +277,17 @@ In the service feed of your download service make sure to add the GeoNetwork Ope
 
 The INSPIRE Atom/OpenSearch implementation can be verified with the Atom tests in Esdin Test Framework (<http://elfproject.eu/documentation/geotool/etf>) or INSPIRE metadata validator (<http://inspire-geoportal.ec.europa.eu/validator2>).
 
-## Multi-Threaded Indexing
+## Indexing
 
-Configuration settings in this group determine how many processor threads are allocated to indexing tasks in GeoNetwork. If your machine has many processor cores, you can now determine how many to allocate to GeoNetwork indexing tasks. This can bring dramatic speed improvements on large indexing tasks (eg. changing the privileges on 20,000 records) because GeoNetwork can split the indexing task into a number of pieces and assign them to different processor cores.
+Configuration settings in this group determine how many processor threads are allocated to indexing tasks. When indexing a large set of records (eg. changing the privileges on 20,000 records), the catalog can split the task into a number of pieces and process them in parallel, which can bring significant speed improvements on machines with many processor cores.
 
-*Number of processing threads* The maximum number of processing threads that can be allocated to an indexing task.
+-   **Number of indexing threads** The maximum number of processing threads that can be allocated to an indexing task. The default value is `1`.
 
-Note: this option is only available for databases that have been tested. Those databases are PostGIS and Oracle. You should also carefully consider how many connections to the database you allocate in the database configuration as each thread could tie up one database connection for the duration of a long indexing session (for example). See the advanced configuration for more details of how to configure the number of connections in the database connection pool.
+!!! note
+
+    Multi-threaded indexing is only used with databases that have been tested: PostgreSQL/PostGIS and Oracle. With other databases, only one thread is used whatever the value of this setting.
+
+    Each thread may use a database connection for the duration of the indexing task, so make sure the database connection pool is large enough (see the advanced configuration for details).
 
 ## Metadata Privileges
 
@@ -287,6 +296,10 @@ Note: this option is only available for databases that have been tested. Those d
 - **Manage the publication date automatically**: When enabled the publication date of the metadata is set automatically when the metadata is published and removed when the metadata is unpublished.
 - **Notification level when a metadata is published / unpublished**: Define which users to alert when a metadata is published / unpublished.
 - **Groups to notify when a metadata is published / unpublished**: List of groups, separated by the char |, to notify when a metadata is published / unpublished (for 'Notify the group(s) emails' notification level).
+
+## Groups & users
+
+-   **User identicon** Icon displayed for users without an avatar. Set to an empty value for no icon. Use `gravatar` to use the default [Gravatar](https://en.gravatar.com/site/implement/images/) mode. The icon type can be defined using `mp`, `identicon`, `monsterid`, `wavatar`, `retro` or `robohash`, and forced using a configuration like `gravatar:identicon` or `gravatar:retro:y`.
 
 ## Metadata create
 
@@ -348,9 +361,40 @@ Specifies the **file types** that can be attached to a metadata record.
 - `image/*|text/plain|application/xml|application/pdf` — allows images, text, XML, and PDF files.
 - `*/*` — allows all file types.
 
+### Other metadata configuration settings
+
+-   **Prefer Group Logo** If enabled, the logo of the record owner group is displayed for the record instead of the catalog (source) logo.
+-   **Virtual 'All' Thesaurus** If enabled, a virtual thesaurus is created that contains all keywords from all other thesauri. This is useful in the editor when only the keyword matters, not the thesaurus it comes from. To keep the keyword blocks consistent, `update-fixed-info` assigns each keyword selected from the `All` thesaurus to a keyword block with the correct thesaurus.
+-   **Local thesaurus namespace pattern** Pattern used to suggest a namespace when creating a new thesaurus. The pattern can contain `{{type}}` and `{{filename}}` placeholders.
+-   **Remove schema location for validation** If enabled, the `schemaLocation` attribute in the root element of the metadata is removed during validation and on metadata save. It ensures that the local schema is always used for the metadata.
+
+## Link to metadata
+
+-   **Sitemap and permalink URL template** URL template to build the links to the metadata in the catalogue sitemap (`/api/sitemap`) and permalinks. The following placeholders are supported: `{{UUID}}` (metadata UUID), `{{LANG}}` (request language) and `{{RESOURCEID}}` (resource identifier). For example, `http://www.example.com/external/metadata/html?uuid={{UUID}}`. If not set, the default URL is used.
+-   **Use DOI for sitemap URL if present** If enabled, the record DOI is used in the sitemap instead of the URL template when the record has one.
+-   **Portal URL template** Link in the record landing page to open the catalogue application. If not set, the default application is used.
+
+## Resource identifier prefix
+
+-   **Resource identifier prefix** In the editor, a suggestion allows to compute the resource identifier automatically, by concatenating this prefix with the metadata identifier (eg. `http://localhost:8080/geonetwork/srv/a1fd6bb7-6425-48b6-bca3-13c9e1bc4ab1`).
+
+## Metadata links analysis
+
+-   **Excluded URL pattern** Regular expression of URLs to exclude when analysing the links of the metadata records (see `Admin console` --> `Statistics & status` --> `Link analysis`).
+
+## Version Control System (VCS)
+
+-   **Enable VCS** Records metadata changes using SVN. This functionality is experimental and it is not operational on NFS filesystems. The application needs a restart once enabled.
+
+## Metadata / ISO19139 / Nil reason attribute withheld
+
+-   **Enable logging** Logs the elements with the `gco:nilReason="withheld"` attribute that are removed from the records returned to users without editing rights.
+
 ## Metadata History
 
 Allows to view metadata history
+
+-   **Enable record history recording** When enabled, every event that alters metadata records is registered in the database.
 
 ![](img/metadata_history.png)
 
@@ -368,11 +412,19 @@ Allows to view metadata history
 
 ![](img/metadata-import.png)
 
+## Metadata Batch Editing
+
+-   **Minimum user profile allowed to access batch editing** Minimum user profile allowed to access batch editing (`Editor`, `Reviewer` or `Administrator`). The default value is `Editor`.
+
 ## Metadata delete
 
 Allows to configure the user profile allowed to delete published metadata.
 
 -   **Minimum user profile allowed to delete published metadata** Minimum user profile allowed to delete metadata (`Editor`, `Reviewer` or `Administrator`). The default value is `Editor`.
+-   **Backup Options** Overrides the backup option sent by the API client when deleting a record:
+    -   `Force backup` Always makes a backup, ignoring the API parameter.
+    -   `Force no backup` Never makes a backup, ignoring the API parameter.
+    -   `Use API parameter` Uses the value provided by the API client. If not provided, a backup is made (default).
 
 ![](img/metadata-delete.png)
 
@@ -397,6 +449,7 @@ The required user profile is evaluated on the metadata owner group (per-group ro
 -   **Required profile to un-publish metadata** Profile required to un-publish metadata, evaluated in the record owner group (`Reviewer` or `Administrator`). The default value is `Reviewer`.
 -   **Allow publication of invalid metadata** Allows the publication of metadata that is not valid according to xsd or schematron rules. When disabled, a record that is invalid cannot be published to the `All` group. The default value is enabled.
 -   **Automatic unpublication of invalid metadata** Automatically unpublishes metadata that, once edited, becomes not valid according to xsd or schematron rules. The default value is disabled.
+-   **Enable scheduled publication** If disabled, the scheduled publication task is not available and the scheduled publication process is not executed.
 
 ![](img/metadata-publication.png)
 
@@ -413,6 +466,25 @@ This setting applies whether or not the metadata approval workflow is enabled.
 Allows to configure the zip export of metadata records and their attachments.
 
 -   **Total size of attachments allowed in zip export (MB)** Maximum total size of attachments allowed in zip export (in MB). If the total size of attachments linked to the selected metadata is above this value, exporting as zip (with attachments) is not allowed. Leave empty for no limit.
+
+## Metadata selection - pdf report
+
+Allows to configure the PDF report generated from a selection of metadata records.
+
+-   **Cover pdf** URL of the cover pdf for the PDF report. If not defined, no cover page is added.
+-   **Introduction pages pdf** URL of the pdf with the introduction pages for the PDF report. If not defined, no introduction pages are added.
+-   **Add table of contents (TOC) page** Adds a table of contents page to the report.
+-   **Header text (left)** / **Header text (right)** / **Footer text (left)** / **Footer text (right)** Text displayed in the header and footer of the pages. The template values `{date}` and `{siteInfo}` are allowed.
+-   **Report file name** File name of the report. The template fields `{year}`, `{month}`, `{day}`, `{date}` (`yyyyMMdd` format) and `{datetime}` (`yyyyMMddHHmmss` format) are replaced with the related date values.
+-   **Top banner file name** Image used as the top banner of the report instead of the default one. Add the image first using the `Logos` feature in the `Admin console`.
+
+## Metadata selection - csv export
+
+-   **CSV export file name** File name of the CSV export. The same template fields as the pdf report file name are allowed.
+
+## Backup archive
+
+-   **Enable** Activates a nightly backup archive of the metadata on the server, and adds a button to download the archive in `Admin console` --> `Tools`.
 
 ## Metadata workflow
 
@@ -432,4 +504,67 @@ The following settings control what metadata can be published when the metadata 
 
 ## Harvesting
 
-*Allow editing on harvested records*: Enables/Disables editing of harvested records in the catalogue. By default, harvested records cannot be edited.
+-   **Allow editing on harvested records** Enables/Disables editing of harvested records in the catalogue. By default, harvested records cannot be edited.
+-   **Only allow privileges management on harvested records** Allows to manage the privileges of harvested records without enabling editing. Configure the harvester to append to existing privileges if the record exists.
+-   **Disabled harvester protocols** Comma or space separated list of harvester protocols that cannot be used. For example: `arcsde, csw, filesystem, geonetwork, geonetwork20, geoPREST, oaipmh, ogcwxs, thredds, wfsfeatures`.
+
+### Harvester email notifications
+
+-   **Activate harvester notification** Sends an email when a harvester run finishes.
+-   **Email notification to** Recipient of the notification emails.
+-   **... on success** / **... on warning** / **... on error** Harvester results that trigger a notification.
+-   **Subject** Subject of the notification email.
+-   **Success template** / **Warning template** / **Error template** Body of the notification email for each result.
+
+The following strings can be used in the subject and templates. They will be replaced by the actual values:
+
+| Placeholder             | Value                                      |
+|-------------------------|--------------------------------------------|
+| `$$total$$`             | Total number of metadata imported          |
+| `$$added$$`             | Number of metadata added                   |
+| `$$updated$$`           | Number of metadata updated                 |
+| `$$unchanged$$`         | Number of metadata unchanged               |
+| `$$unretrievable$$`     | Number of metadata unretrievable           |
+| `$$removed$$`           | Number of metadata removed                 |
+| `$$doesNotValidate$$`   | Number of metadata that does not validate  |
+| `$$harvesterName$$`     | Harvester name                             |
+| `$$harvesterType$$`     | Harvester type                             |
+| `$$errorMsg$$`          | Error message                              |
+
+## Translation service
+
+Configures an automatic translation service, used to translate metadata content (eg. in the editor or during harvesting).
+
+-   **Translation service provider** The translation service to use.
+-   **Service URL** URL of the translation service.
+-   **API Key** API key to access the translation service.
+
+## Region API
+
+Configures the `GetMap` request used to render the region and metadata extent images (eg. in the metadata extent thumbnail).
+
+-   **Background map, URL or Named Layer ID** Background layer of the map. Use a WMS GetMap URL or the id of a named layer (eg. `osm`).
+-   **Width** Width (in pixels) of the map image.
+-   **Summary width** Width (in pixels) of the map image in summary views.
+-   **Map projection** Projection of the map image (eg. `EPSG:3857`).
+-   **Display geodesic extents** By default, the displayed metadata extents are planar (i.e. rectangular). If enabled, the metadata extents are geodesic. If the map uses a projected coordinate system, this may lead to non-rectangular extents (e.g. trapezoid).
+
+## User interface configuration
+
+-   **Choose the user interface to use** The user interface configuration used by default. See [User Interface Configuration](user-interface-configuration.md).
+
+## Publication
+
+-   **Enable DOI publication** Enables the creation of Digital Object Identifiers (DOI) for metadata records. See [DOI configuration](doi-configuration.md).
+-   **Notify DOI task owner** Sends a mail notification to the DOI task owner when a metadata DOI is published.
+
+## Security
+
+-   **Password min. length** / **Password max. length** Minimum and maximum length of user passwords.
+-   **Password restrictions** Requires that the password contains at least 1 uppercase, 1 lowercase, 1 number and 1 symbol.
+
+An additional setting, not available by default, allows administrators to reset a user password without the old password. See [Administrator reset without old password](../managing-users-and-groups/user-reset-password.md#admin_reset_password).
+
+## Audit changes
+
+-   **Allow auditing changes** When enabled, changes in users configuration are audited.

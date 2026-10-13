@@ -35,7 +35,7 @@
               data-ng-if="g.logo"
               class="gn-source-logo"
               onerror="this.style.display='none'"
-              data-ng-src="{{'../api/groups/' + g.id + '/logo'}}"
+              data-ng-src="../api/groups/{{g.id}}/logo"
             />
           </a>
           <span

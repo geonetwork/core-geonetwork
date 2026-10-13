@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -80,6 +80,40 @@ public class MetadataRepositoryTest extends AbstractSpringDataTest {
         metadata.getHarvestInfo().setUuid("huuid" + val);
         metadata.getHarvestInfo().setHarvested(val % 2 == 0);
         return metadata;
+    }
+
+    @Test
+    public void testIncrementPopularity() throws Exception {
+        final Metadata template = newMetadata();
+        template.getDataInfo().setPopularity(32);
+        final int id = _repo.save(template).getId();
+        _entityManager.flush();
+        _entityManager.clear();
+
+        // Entity loaded in this persistence context, then the record is updated elsewhere
+        final Metadata loaded = _repo.findOneById(id);
+        _entityManager.createQuery("UPDATE " + Metadata.TABLENAME + " m SET m.data = :data WHERE m.id = :id")
+            .setParameter("data", "<md>updated</md>")
+            .setParameter("id", id)
+            .executeUpdate();
+
+        _repo.incrementPopularity(loaded.getId());
+        final MetadataRepository.UuidAndPopularity uuidAndPopularity = _repo.findUuidAndPopularityById(id);
+        assertEquals(template.getUuid(), uuidAndPopularity.getUuid());
+        assertEquals(33, uuidAndPopularity.getPopularity());
+
+        _entityManager.flush();
+        _entityManager.clear();
+
+        final Metadata reloaded = _repo.findOneById(id);
+        assertEquals(33, reloaded.getDataInfo().getPopularity());
+        assertEquals("The popularity update must not overwrite other columns",
+            "<md>updated</md>", reloaded.getData());
+    }
+
+    @Test
+    public void testFindUuidAndPopularityByIdMissing() {
+        assertNull(_repo.findUuidAndPopularityById(Integer.MAX_VALUE));
     }
 
     @Test

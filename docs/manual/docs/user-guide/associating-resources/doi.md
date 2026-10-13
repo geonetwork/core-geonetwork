@@ -1,33 +1,12 @@
 # Digital Object Identifier (DOI) {#doi}
 
-## Configuration
+The catalogue supports the creation of Digital Object Identifiers (DOI) for metadata records, using the [DataCite API](https://support.datacite.org/docs/mds-api-guide) or the EU publication office API.
 
-The catalogue support DOI creation using:
-
--   [DataCite API](https://support.datacite.org/docs/mds-api-guide).
--   EU publication office API <https://ra.publications.europa.eu/servlet/ws/doidata?api=medra.org>
-
-Configure the DOI API access point to publish the metadata in the `Admin console --> Settings --> Doi servers`:
-
-![](img/doi-create-server.png)
-
-Providing the following information:
-
-- `Name`: A descriptive name for the server.
-- `Description`: (Optional) A verbose description of the server.
-- `DataCite API endpoint`: The API url, usually https://mds.datacite.org or https://mds.test.datacite.org for testing.
-- `DataCite username` / `DataCite password`: Credentials required to publish the DOI resources.
-- `Landing page URL template`: The URL to use to register the DOI. A good default for GeoNetwork is http://localhost:8080/geonetwork/srv/resources/records/{{uuid}}. The landing page URL MUST contains the UUID of the record.
-- `Final DOI URL prefix`: (Optional) Keep it empty to use the default https://doi.org prefix. Use https://mds.test.datacite.org/doi when using the test API.
-- `DOI pattern`: Default is `{{uuid}}` but the DOI structure can be customized with database id and/or record group eg. `example-{{groupOwner}}-{{id}}`.
-- `DataCite prefix`: Usually looks like `10.xxxx`. You will be allowed to register DOI names only under the prefixes that have been assigned to you.
-- `Record groups`: (Optional) When creating a DOI, only DOI server(s) associated with the record group are proposed. If record group is not associated with any DOI servers, then DOI servers with no group are proposed.
-
-A record can be downloaded using the DataCite format from the API using: `http://localhost:8080/geonetwork/srv/api/records/da165110-88fd-11da-a88f-000d939bc5d8/formatters/datacite?output=xml`
+The DOI servers must first be configured by an administrator. See [DOI configuration](../../administrator-guide/configuring-the-catalog/doi-configuration.md).
 
 ## Creating the DOI
 
-Once configured, DOI can be created using the interface. DOI is created on demand. It means that a user must ask for creation of a DOI. It can be created by:
+Once the DOI servers are configured, DOI can be created using the interface. DOI is created on demand. It means that a user must ask for creation of a DOI. It can be created by:
 
 - The user who created the metadata.
 - A user with Reviewer profile in the metadata group owner.
@@ -41,7 +20,7 @@ The task is assigned to a specific user. An optional due date and comment can be
 
 ![](img/doi-request-popup.png)
 
-After submission of the task, the task owner is notified by email (if the mail server is configured, see admin console --> settings). The task can then be resolved in the admin console ---> information --> versioning section.
+After submission of the task, the task owner is notified by email. Please note that this requires a working mail server configuration (see [Feedback](../../administrator-guide/configuring-the-catalog/system-configuration.md#system-config-feedback)). The task can then be resolved in **Admin Console** --> **Statistics and status** --> **Versioning**.
 
 If the configuration is missing or wrong, the error is reported:
 
@@ -71,10 +50,7 @@ The mapping with ISO standards is the following:
 | PublicationYear | ``gmd:identificationInfo/*/gmd:citation/*/gmd:date/*[gmd:dateType/*/@codeListValue = 'publication'`` | ``mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication'`` |
 | ResourceType    | ``gmd:hierarchyLevel/*/@codeListValue`` `                                                                 | mdb:metadataScope/*/mdb:resourceScope/*/@codeListValue`                                                              |
 
-The mapping can be customized in:
-
--   ISO19139 `schemas/iso19139/src/main/plugin/iso19139/formatter/datacite/view.xsl`
--   ISO19115-3.2018 `schemas/iso19139/src/main/plugin/iso19139/formatter/datacite/view.xsl`
+The mapping can be customized by an administrator (see [Customizing the DataCite mapping](../../administrator-guide/configuring-the-catalog/doi-configuration.md#doi-datacite-mapping)).
 
 See the [DataCite Metadata Kernel documentation](http://schema.datacite.org/meta/kernel-4.1/doc/DataCite-MetadataKernel_v4.1.pdf) for more details on the format.
 
