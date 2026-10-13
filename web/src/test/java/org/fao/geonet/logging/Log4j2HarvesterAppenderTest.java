@@ -57,8 +57,11 @@ public class Log4j2HarvesterAppenderTest {
         assertNotNull("No log4j2 configuration found in " + CONFIG_DIR.getAbsolutePath(), configs);
         assertTrue("No log4j2 configuration found in " + CONFIG_DIR.getAbsolutePath(), configs.length > 0);
 
+        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+
         for (File config : configs) {
-            Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(config);
+            Document document = factory.newDocumentBuilder().parse(config);
             String name = config.getName();
 
             // Log.getLogfile() accepts both a RollingFile and a plain File appender named "File"
