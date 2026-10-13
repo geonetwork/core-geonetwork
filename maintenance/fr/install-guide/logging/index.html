@@ -2179,6 +2179,15 @@ Each configuration file defines which log levels apply to each logger module.</p
 </span></code></pre></div></li>
 <li>Even when JSON logging is enabled, harvester logs continue to use plain-text <code>PatternLayout</code> since they are consumed separately from the main log file.</li>
 </ul>
+<div class="admonition warning">
+<p class="admonition-title">Harvester logs must sit next to <code>geonetwork.log</code></p>
+<p>The <em>Harvester</em> history in <em>Admin</em> → <em>Harvesting</em> offers a <strong>log file</strong> download button for each
+run. It locates the run's log file in the directory of the <code>File</code> appender attached to the
+<code>geonetwork</code> logger. A configuration whose <code>Harvester</code> routing appender writes somewhere else,
+or that omits the routing appender or the <code>geonetwork</code> logger altogether, makes that button
+disappear without any visible error. When customising a <code>log4j2-*.xml</code> file, keep the <code>File</code>
+and <code>Harvester</code> appenders pointing at the same directory.</p>
+</div>
 <h2 id="logger-modules">Logger modules</h2>
 <p>The Log4j2 configuration files define logger categories that administrators can adjust. Each log level preset (PROD, INDEX, DEV, etc.) sets these loggers to different levels.</p>
 <h3 id="geonetwork-loggers">GeoNetwork loggers</h3>
