@@ -96,6 +96,13 @@
   <bean id="esClient"
         class="org.fao.geonet.index.es.EsRestClient"/>
 
+  <bean id="semanticUtils" class="org.fao.geonet.util.SemanticUtils">
+    <property name="serverUrl" value="\${semantic.server.url}"/>
+    <property name="serverModel" value="\${semantic.server.model}"/>
+    <property name="serverModelType" value="\${semantic.server.modelType}"/>
+    <property name="serverApiKey" value="\${semantic.server.apikey}"/>
+  </bean>
+
   <bean id="HarvesterSettingsManager" class="org.fao.geonet.kernel.setting.HarvesterSettingsManager"
         lazy-init="true"/>
   <bean id="SettingInfo" class="org.fao.geonet.kernel.setting.SettingInfo" lazy-init="true"/>
