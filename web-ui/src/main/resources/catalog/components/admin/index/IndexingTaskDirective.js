@@ -63,6 +63,10 @@
             return STATUS_UNDEFINED;
           };
 
+          scope.isRunning = function () {
+            return scope.getStatusCode() === STATUS_INPROGRESS;
+          };
+
           scope.getStatusLabel = function () {
             switch (scope.getStatusCode()) {
               case STATUS_UNDEFINED:
@@ -135,7 +139,8 @@
     "$http",
     "gnConfig",
     "gnConfigService",
-    function ($http, gnConfig, gnConfigService) {
+    "$rootScope",
+    function ($http, gnConfig, gnConfigService, $rootScope) {
       return {
         restrict: "E",
         scope: {},
@@ -149,6 +154,20 @@
 
             var me = this;
             var destroyed = false;
+            var wasRunning = false;
+            // Poll quickly while a task runs. Otherwise check slowly, so that
+            // a task started elsewhere (other tab or admin) shows up too.
+            var POLL_RUNNING_MS = 5000;
+            var POLL_IDLE_MS = 60000;
+
+            var scheduleRefresh = function (taskRunning) {
+              if (!destroyed) {
+                me.timeout = setTimeout(
+                  me.refresh,
+                  taskRunning ? POLL_RUNNING_MS : POLL_IDLE_MS
+                );
+              }
+            };
 
             this.refresh = function () {
               $http
@@ -158,40 +177,47 @@
                     gnConfig["system.site.siteId"] +
                     ":name=indexing-task,idx=*"
                 )
-                .then(function (result) {
-                  // A response can arrive after the page was left.
-                  if (destroyed) {
-                    return;
-                  }
-                  me.tasks.length = 0;
+                .then(
+                  function (result) {
+                    // A response can arrive after the page was left.
+                    if (destroyed) {
+                      return;
+                    }
+                    var probes = (result.data && result.data.value) || {};
+                    // Once a finished task's probe is unregistered, keep showing
+                    // it until another task starts or the page is left.
+                    if (Object.keys(probes).length > 0) {
+                      me.tasks.length = 0;
+                    }
 
-                  if (!result.data || !result.data.value) {
-                    return;
-                  }
+                    var taskRunning = false;
+                    Object.keys(probes).forEach(function (probeName) {
+                      var probe = probes[probeName];
+                      me.tasks.push({
+                        id: probeName,
+                        errors: probe.InError,
+                        processed: probe.Processed,
+                        total: probe.ToProcessCount
+                      });
 
-                  var requireRefresh = false;
-
-                  var probes = result.data.value;
-                  Object.keys(probes).forEach(function (probeName) {
-                    var probe = probes[probeName];
-                    me.tasks.push({
-                      id: probeName,
-                      errors: probe.InError,
-                      processed: probe.Processed,
-                      total: probe.ToProcessCount
+                      if (probe.ToProcessCount - probe.Processed - probe.InError > 0) {
+                        taskRunning = true;
+                      }
                     });
 
-                    if (probe.ToProcessCount - probe.Processed - probe.InError > 0) {
-                      requireRefresh = true;
+                    // Let the page refresh what depends on the index content.
+                    if (wasRunning && !taskRunning) {
+                      $rootScope.$broadcast("indexingTaskFinished");
                     }
-                  });
+                    wasRunning = taskRunning;
 
-                  // Loop only while a task is still running, otherwise the
-                  // finished task stays displayed and polling stops.
-                  if (requireRefresh) {
-                    me.timeout = setTimeout(me.refresh, 1000);
+                    scheduleRefresh(taskRunning);
+                  },
+                  function () {
+                    // Keep checking after a failed request.
+                    scheduleRefresh(false);
                   }
-                });
+                );
             };
 
             $scope.$on("$destroy", function () {
