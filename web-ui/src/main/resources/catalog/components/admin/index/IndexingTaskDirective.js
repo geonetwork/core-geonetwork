@@ -148,6 +148,7 @@
             this.tasks = [];
 
             var me = this;
+            var destroyed = false;
 
             this.refresh = function () {
               $http
@@ -158,6 +159,10 @@
                     ":name=indexing-task,idx=*"
                 )
                 .then(function (result) {
+                  // A response can arrive after the page was left.
+                  if (destroyed) {
+                    return;
+                  }
                   me.tasks.length = 0;
 
                   if (!result.data || !result.data.value) {
@@ -190,6 +195,7 @@
             };
 
             $scope.$on("$destroy", function () {
+              destroyed = true;
               clearTimeout(me.timeout);
             });
 
