@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -246,8 +246,7 @@ public class MetadataInsertDeleteApi {
         recordDeletedEvent.publish(ApplicationContextHolder.get());
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Delete one or more records", description ="User MUST be able to edit the record to delete it. "
-        + "")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Delete one or more records", description ="User MUST be able to edit the record to delete it.")
     @RequestMapping(
         method = RequestMethod.DELETE,
         produces = {
@@ -1088,6 +1087,10 @@ public class MetadataInsertDeleteApi {
      * @throws IllegalArgumentException if the group is not a workspace
      */
     private void checkGroupIsWorkspace(String groupId, Locale locale) throws ResourceNotFoundException {
+        if (StringUtils.isBlank(groupId)) {
+            return;
+        }
+
         // Find the group by its ID
         Group group = groupRepository.findById(Integer.parseInt(groupId)).orElse(null);
 
