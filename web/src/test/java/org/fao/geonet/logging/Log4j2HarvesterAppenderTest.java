@@ -49,7 +49,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class Log4j2HarvesterAppenderTest {
 
-    private static final File CONFIG_DIR = new File("src/main/webapp/WEB-INF/classes");
+    private static final File CONFIG_DIR = new File(System.getProperty("basedir", "."), "src/main/webapp/WEB-INF/classes");
 
     @Test
     public void everyConfigurationRoutesHarvesterLogsNextToTheCatalogueLog() throws Exception {
