@@ -328,7 +328,7 @@
           </fieldset>
         </form>
 
-        <div data-ng-hide="!groupSelected.label">
+        <div data-ng-hide="!groupSelected.label || (groupSelected.label | json) === '{}'">
           <h3>
             <span data-translate="">translationForGroup</span> {{groupSelected.name}}
           </h3>
