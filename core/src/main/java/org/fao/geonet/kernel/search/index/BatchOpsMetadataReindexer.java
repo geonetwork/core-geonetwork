@@ -50,9 +50,9 @@ import org.fao.geonet.kernel.search.submission.batch.BatchingIndexSubmitter;
 import org.fao.geonet.util.ThreadUtils;
 import org.fao.geonet.utils.Log;
 import org.springframework.jmx.export.MBeanExporter;
-import org.springframework.scheduling.TaskScheduler;
 import org.springframework.jmx.export.annotation.ManagedAttribute;
 import org.springframework.jmx.export.annotation.ManagedResource;
+import org.springframework.scheduling.TaskScheduler;
 
 import javax.management.ObjectName;
 import java.util.*;
@@ -182,7 +182,9 @@ public class BatchOpsMetadataReindexer extends MetadataIndexerProcessor implemen
             allCompleted = CompletableFuture.allOf(submitList.toArray(new CompletableFuture[0]));
             RUNNING_INDEXERS.add(allCompleted);
         }
-        allCompleted.thenRun(this);
+        // Also run on exceptional completion, so the executor is shut down and
+        // the probe is unregistered whatever happens to the jobs.
+        allCompleted.whenComplete((result, error) -> run());
         return probeName.toString();
     }
 
