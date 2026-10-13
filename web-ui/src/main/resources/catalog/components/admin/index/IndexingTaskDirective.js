@@ -49,18 +49,16 @@
         templateUrl: "../../catalog/components/admin/index/partials/indexingstatus.html",
         link: function (scope, element, attrs) {
           scope.getStatusCode = function () {
-            if (scope.taskInfo && scope.taskInfo.total > scope.taskInfo.processed) {
+            var info = scope.taskInfo;
+            if (!info) {
+              return STATUS_UNDEFINED;
+            }
+            var done = info.processed + info.errors;
+            if (info.total > done) {
               return STATUS_INPROGRESS;
             }
-            if (
-              scope.taskInfo &&
-              scope.taskInfo.total === scope.taskInfo.processed &&
-              scope.taskInfo.errors > 0
-            ) {
-              return STATUS_ERRORS;
-            }
-            if (scope.taskInfo && scope.taskInfo.total === scope.taskInfo.processed) {
-              return STATUS_FINISHED;
+            if (info.total === done) {
+              return info.errors > 0 ? STATUS_ERRORS : STATUS_FINISHED;
             }
             return STATUS_UNDEFINED;
           };
@@ -178,7 +176,7 @@
                       total: probe.ToProcessCount
                     });
 
-                    if (probe.ToProcessCount - probe.Processed > 0) {
+                    if (probe.ToProcessCount - probe.Processed - probe.InError > 0) {
                       requireRefresh = true;
                     }
                   });
