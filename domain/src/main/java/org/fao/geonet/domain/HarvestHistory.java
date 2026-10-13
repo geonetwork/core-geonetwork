@@ -310,7 +310,8 @@ public class HarvestHistory extends GeonetEntity {
                // Log configuration does not expose a catalogue log directory, so the harvester
                // log location cannot be checked. Keep the reference: downloading it reports a
                // clear error, which is easier to diagnose than a silently missing button.
-               Log.warning(Constants.DOMAIN_LOG_MODULE,
+               // Debug only: Log.getLogfile() already warns, and this runs once per history row.
+               Log.debug(Constants.DOMAIN_LOG_MODULE,
                    "Unable to locate the catalogue log directory, harvest history logfiles can not be verified. Check log file configuration.");
                return infoAsXml;
            }
