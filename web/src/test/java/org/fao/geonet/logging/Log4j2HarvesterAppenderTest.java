@@ -61,8 +61,12 @@ public class Log4j2HarvesterAppenderTest {
             Document document = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(config);
             String name = config.getName();
 
+            // Log.getLogfile() accepts both a RollingFile and a plain File appender named "File"
             Element file = appenderNamed(document, "RollingFile", "File");
-            assertNotNull(name + ": missing <RollingFile name=\"File\"> appender", file);
+            if (file == null) {
+                file = appenderNamed(document, "File", "File");
+            }
+            assertNotNull(name + ": missing <RollingFile name=\"File\"> or <File name=\"File\"> appender", file);
 
             Element routing = appenderNamed(document, "Routing", "Harvester");
             assertNotNull(name + ": missing <Routing name=\"Harvester\"> appender, "
