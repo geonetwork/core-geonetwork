@@ -962,7 +962,9 @@ You can use the standard role source options in GeoNetwork (`Request Header`, `U
 | JWTHEADERS_JwtHeaderRoleSource |Which Role Source to use:<br> `JSON` - The header is a JSON string.  Use "JSON path" for where the roles are in the JSON. <br> `JWT` -  The header is a JWT (base64) string.  Use "JSON path" for where the roles are in the JWT claims. |
 | JWTHEADERS_RolesJsonPath| Path in the JSON object or JWT claims that contains the roles.  This should either be a simple string (single role) or a list of strings.|
 
- 
+!!! note
+
+    When Access Token validation is enabled (`JWTHEADERS_ValidateToken=true`), the roles are taken from the claims of the validated user name token. A separate `JWTHEADERS_RolesHeaderName` that is not the validated token is ignored, so roles cannot be supplied in a header that was never validated. To read roles from a different header, point `JWTHEADERS_RolesHeaderName` at the same header as the user name, or disable token validation for deployments that trust the headers set by an authenticating proxy.
 
 Using the example `OIDC_id_token_payload` (JSON) or `OIDC_access_token` (JWT) shown above, the claims are:
 

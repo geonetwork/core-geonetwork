@@ -84,41 +84,79 @@ public class JwtHeadersTrivialUser {
         }
 
         var tokenValidator = new TokenValidator(config);
+        Map<String, Object> validatedClaims;
         try {
-//            var accessToken = userNameHeader.replaceFirst("^Bearer", "");
-//            accessToken = accessToken.replaceFirst("^bearer", "");
-//            accessToken = accessToken.trim();
-            tokenValidator.validate(userNameHeader);
+            // returns the claims of the validated token, or null when token validation is disabled
+            validatedClaims = tokenValidator.validateAndParse(userNameHeader);
         } catch (Exception e) {
             throw new IOException("JWT Token is invalid", e);
         }
 
         //get roles from the headers (pay attention to config)
         var result = new JwtHeadersTrivialUser(userName);
-        handleRoles(result, config, request);
+        handleRoles(result, config, request, validatedClaims);
 
         return result;
     }
 
     /**
-     * @param user    user to be modified
-     * @param config  configuration (i.e. where to get the roles from and how to convert them)
-     * @param request header to get the roles from
+     * Updates the user with the roles derived from the request.
+     *
+     * <p>When token validation is enabled the roles are taken from the claims of the validated token, so they come from
+     * the very token whose signature and expiry were checked. A roles header that is not the validated token is then
+     * ignored, so a caller cannot supply roles in a header that was never validated. When token validation is disabled
+     * the deployment is trusting the headers set by its authenticating proxy, and the roles header is read as before.
+     *
+     * @param user            user to be modified
+     * @param config          configuration (i.e. where to get the roles from and how to convert them)
+     * @param request         request to read the roles header from
+     * @param validatedClaims claims of the validated token, or {@code null} when token validation is disabled
      */
-    public static void handleRoles(JwtHeadersTrivialUser user, JwtConfiguration config, HttpServletRequest request) {
+    public static void handleRoles(
+            JwtHeadersTrivialUser user,
+            JwtConfiguration config,
+            HttpServletRequest request,
+            Map<String, Object> validatedClaims) {
         if (!config.getJwtHeaderRoleSource().equals("JSON") && !config.getJwtHeaderRoleSource().equals("JWT"))
             return; // nothing to do - we aren't configured to handle roles extraction (get from GN DB).
+
+        JwtHeadersRolesExtractor rolesExtractor = new JwtHeadersRolesExtractor(config);
+
+        if (validatedClaims != null) {
+            // token validation is enabled: roles must come from the validated token, not a re-read header
+            if (rolesHeaderIsUserNameHeader(config)) {
+                updateUserWithRoles(user, rolesExtractor.getRolesFromClaims(validatedClaims));
+            } else {
+                Log.warning(Geonet.SECURITY, String.format(
+                    "JwtHeaders: ignoring roles header '%s'; with token validation enabled roles are taken only from "
+                        + "the validated token", config.getRolesHeaderName()));
+                updateUserWithRoles(user, new ArrayList<>());
+            }
+            return;
+        }
 
         if (config.getRolesHeaderName() == null)
             return; //misconfigured
 
         //get the header value and extract the set of roles in it (processed by the RoleConverter)
         var rolesHeader = request.getHeader(config.getRolesHeaderName());
-        JwtHeadersRolesExtractor rolesExtractor = new JwtHeadersRolesExtractor(config);
-        var roles = rolesExtractor.getRoles(rolesHeader);
+        updateUserWithRoles(user, rolesExtractor.getRoles(rolesHeader));
+    }
 
-
-        updateUserWithRoles(user, roles);
+    /**
+     * Tells whether the roles header is the user name header, in which case the roles come from the validated token
+     * rather than from a separate header. A blank roles header name means the user name header is used.
+     *
+     * @param config configuration
+     * @return {@code true} when the roles header is the user name header
+     */
+    static boolean rolesHeaderIsUserNameHeader(JwtConfiguration config) {
+        String rolesHeader = config.getRolesHeaderName();
+        if (rolesHeader == null || rolesHeader.trim().isEmpty()) {
+            return true;
+        }
+        String userNameHeader = config.getUserNameHeaderAttributeName();
+        return userNameHeader != null && rolesHeader.trim().equalsIgnoreCase(userNameHeader.trim());
     }
 
     public static void updateUserWithRoles(JwtHeadersTrivialUser user, Collection<String> roles) {

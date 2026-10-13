@@ -170,7 +170,7 @@ public class JwtHeadersTrivialUserTest {
         var request = new MockHttpServletRequest();
         request.addHeader("oidc_id_token_payload", "{\"preferred_username\":\"david.blasby2@geocat.net\",\"resource_access\":{\"live-key2\":{\"roles\":[\"GeonetworkAdministrator\",\"group1:Reviewer\"]}}}");
 
-        JwtHeadersTrivialUser.handleRoles(user, config.getJwtConfiguration(), request);
+        JwtHeadersTrivialUser.handleRoles(user, config.getJwtConfiguration(), request, null);
 
         Assert.assertEquals(Profile.Administrator, user.getProfile());
         var profileGroups = user.getProfileGroups();
@@ -189,13 +189,62 @@ public class JwtHeadersTrivialUserTest {
         var request = new MockHttpServletRequest();
         request.addHeader("TOKEN", JwtHeadersIntegrationTest.JWT);
 
-        JwtHeadersTrivialUser.handleRoles(user, config.getJwtConfiguration(), request);
+        JwtHeadersTrivialUser.handleRoles(user, config.getJwtConfiguration(), request, null);
 
         Assert.assertEquals(Profile.Administrator, user.getProfile());
         var profileGroups = user.getProfileGroups();
         Assert.assertEquals(1, profileGroups.size());
         Assert.assertTrue(profileGroups.containsKey(Profile.Administrator));
         Assert.assertEquals(0, profileGroups.get(Profile.Administrator).size());
+    }
+
+    /**
+     * With token validation enabled, roles come from the validated token's claims, even when a (same-named) roles
+     * header is configured.
+     */
+    @Test
+    public void testHandleRolesFromValidatedToken() {
+        var config = JwtHeadersIntegrationTest.getBasicConfig();
+        var user = new JwtHeadersTrivialUser("testCaseUser");
+        var request = new MockHttpServletRequest();
+
+        JwtHeadersTrivialUser.handleRoles(
+            user, config.getJwtConfiguration(), request, claimsWithRoles("GeonetworkAdministrator"));
+
+        Assert.assertEquals(Profile.Administrator, user.getProfile());
+    }
+
+    /**
+     * With token validation enabled and the roles configured to come from a header other than the validated token,
+     * that header is ignored: a forged administrator roles header does not grant the Administrator profile.
+     * Regression test for GHSA-jpg7-rw5r-p8gw.
+     */
+    @Test
+    public void testHandleRolesIgnoresUnvalidatedRolesHeader() {
+        var config = JwtHeadersIntegrationTest.getBasicConfig();
+        config.getJwtConfiguration().setRolesHeaderName("X-Roles");
+        var user = new JwtHeadersTrivialUser("testCaseUser");
+        var request = new MockHttpServletRequest();
+        request.addHeader("X-Roles",
+            "{\"resource_access\":{\"live-key2\":{\"roles\":[\"GeonetworkAdministrator\"]}}}");
+
+        // the validated token carries no administrator role
+        JwtHeadersTrivialUser.handleRoles(user, config.getJwtConfiguration(), request, claimsWithRoles());
+
+        Assert.assertEquals(Profile.RegisteredUser, user.getProfile());
+    }
+
+    /**
+     * Builds token claims with the given roles at the configured roles path {@code resource_access.live-key2.roles}.
+     */
+    private static Map<String, Object> claimsWithRoles(String... roles) {
+        Map<String, Object> rolesLevel = new HashMap<>();
+        rolesLevel.put("roles", Arrays.asList(roles));
+        Map<String, Object> liveKeyLevel = new HashMap<>();
+        liveKeyLevel.put("live-key2", rolesLevel);
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("resource_access", liveKeyLevel);
+        return claims;
     }
 
     /**
