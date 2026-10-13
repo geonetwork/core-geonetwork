@@ -373,6 +373,8 @@
     "createChild": "Búa til afkomanda",
     "privileges": "Sérréttindi",
     "whoCanAccess": "Sem hefur aðgang",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Aðgerðir",
     "reset": "Endurstilla",
     "stop": "Stopp",

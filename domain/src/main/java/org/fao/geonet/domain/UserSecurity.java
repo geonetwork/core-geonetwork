@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -24,7 +24,6 @@
 package org.fao.geonet.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.jdom.Element;
 
 import javax.annotation.Nonnull;
 import javax.persistence.Column;
@@ -33,7 +32,6 @@ import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.IdentityHashMap;
 import java.util.Set;
 
 /**
@@ -199,9 +197,9 @@ public class UserSecurity extends GeonetEntity implements Serializable {
     }
 
     @Override
-    protected Element asXml(IdentityHashMap<Object, Void> alreadyEncoded) {
-        final Element element = super.asXml(alreadyEncoded);
-        element.removeChild("password");
-        return element;
+    protected Set<String> propertiesToExcludeFromXml() {
+        Set<String> properties = new HashSet<>(super.propertiesToExcludeFromXml());
+        properties.add("getPassword");
+        return properties;
     }
 }

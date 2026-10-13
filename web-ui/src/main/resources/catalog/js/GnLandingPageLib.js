@@ -22,6 +22,7 @@
  */
 (function () {
   var gnLandingPage = {};
+  window.gnLandingPage = gnLandingPage;
   gnLandingPage.displayLanguage = function (lang, target) {
     target.parentElement.parentElement.querySelectorAll("li").forEach(function (li) {
       li.classList.remove("active");

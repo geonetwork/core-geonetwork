@@ -10,4 +10,4 @@ Run with docker
 docker run --name some-geonetwork -d geonetwork
 ```
 
-See <https://github.com/docker-library/docs/tree/master/geonetwork> for more details.
+See [docker-library/docs](https://github.com/docker-library/docs/tree/master/geonetwork) for more details.

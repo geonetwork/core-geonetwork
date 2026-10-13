@@ -18,6 +18,13 @@
                               */gmd:linkage/gmd:URL = $doi]"
                 priority="2"/>
 
+  <!-- Remove transferOptions whose only content is the DOI link being removed -->
+  <xsl:template match="gmd:transferOptions[
+      not(*/gmd:onLine[not(*/gmd:linkage/gmd:URL = $doi)]) and
+      not(*/gmd:offLine) and
+      not(*/gmd:unitsOfDistribution) and
+      not(*/gmd:transferSize)]"/>
+
   <xsl:template match="gmd:identifier[*/gmd:code/gmx:Anchor/@xlink:href = $doi]"
                 priority="2"/>
 

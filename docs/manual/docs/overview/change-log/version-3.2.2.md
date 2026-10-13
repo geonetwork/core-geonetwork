@@ -8,4 +8,4 @@ This is a maintenance release with [lots of bug fixed](https://github.com/geonet
 -   Remove duplicated postgres driver
 -   HTTP requests / connection not released
 
-and more \... see [3.2.2 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.2.2+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.2.2+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.2.2 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.2.2+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.2.2+is%3Aclosed+is%3Apr) for full details.

@@ -2,7 +2,7 @@
 
 Open a web browser and go to the GeoNetwork homepage. If you installed it on your computer, this is probably at `http://localhost:8080/geonetwork`.
 
-When you use Docker, you can find our what IP and Port to connect to from the Kitematic application. Or run `docker ps` in a terminal (on Linux or OSX). This should give you the port the Docker is running on.
+When you use Docker, you can find out what IP and port to connect to from the Kitematic application. Or run `docker ps` in a terminal (on Linux or OSX). This should give you the port the Docker is running on.
 
 ![](img/docker.png)
 

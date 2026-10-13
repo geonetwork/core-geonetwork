@@ -2,7 +2,7 @@
 
 Follow [instructions](../../../customizing-application/search-ui/customview.md) and create your first custom view.
 
-## Exercices
+## Exercises
 
 1.  Create a new view with almost no content
 2.  Make your new view looks like the default one

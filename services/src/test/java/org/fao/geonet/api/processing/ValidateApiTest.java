@@ -31,6 +31,7 @@ import org.fao.geonet.domain.SchematronCriteriaGroup;
 import org.fao.geonet.domain.SchematronCriteriaType;
 import org.fao.geonet.domain.SchematronRequirement;
 import org.fao.geonet.domain.User;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.MetadataValidationRepository;
@@ -96,7 +97,7 @@ public class ValidateApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void validateMd() throws Exception {
         Element holoceneElem = getSample("kernel/holocene.xml");
-        AbstractMetadata metadata = injectMetadataInDb(holoceneElem, context, true);
+        AbstractMetadata metadata = injectMetadataInDb(holoceneElem, context);
 
         validateAndCheckIsoSchematronOk(context, metadata);
     }
@@ -111,7 +112,7 @@ public class ValidateApiTest extends AbstractServiceIntegrationTest {
             Element extentElem = Xml.selectElement(holoceneElem, "gmd:identificationInfo/gmd:MD_DataIdentification/gmd:extent");
             extentElem.setAttribute("href", "local://srv/api/registries/entries/"+ subtemplate.getUuid() + "?lang=ger,fre,ita,eng,roh&amp;schema=iso19139.che", XLINK);
             extentElem.removeChild("EX_Extent", GMD);
-            AbstractMetadata metadata = injectMetadataInDb(holoceneElem, context, true);
+            AbstractMetadata metadata = injectMetadataInDb(holoceneElem, context);
 
             validateAndCheckIsoSchematronOk(context, metadata);
         } finally {

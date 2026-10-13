@@ -373,6 +373,8 @@
     "createChild": "Создать отпрыск",
     "privileges": "Привилегии",
     "whoCanAccess": "Кто имеет доступ",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Действия",
     "reset": "Восстановление",
     "stop": "Остановить",

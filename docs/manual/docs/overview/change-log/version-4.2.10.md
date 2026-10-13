@@ -14,4 +14,4 @@ Release highlights:
 - [Update Jetty to version 9.4.54.v20240208](https://github.com/geonetwork/core-geonetwork/pull/7965)
 - [Upgrade springdoc to 1.7.0](https://github.com/geonetwork/core-geonetwork/pull/7596)
 
-and more \... see [4.2.10 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.10+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.2.10+is%3Aclosed) for full details.
+and more ... see [4.2.10 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.2.10+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.2.10+is%3Aclosed) for full details.

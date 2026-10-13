@@ -5,6 +5,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.ISearchManager;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.fao.geonet.util.ThreadUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +17,10 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.jmx.export.MBeanExporter;
+import org.springframework.scheduling.TaskScheduler;
 
+import javax.management.ObjectName;
+import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -33,6 +37,8 @@ public class BatchOpsMetadatReindexerTest {
 
     MBeanExporter mockExporter;
 
+    TaskScheduler mockProbeCleaner;
+
     @Before
     public void setUpMocks() {
         mockAppContext = Mockito.mock(ConfigurableApplicationContext.class);
@@ -40,6 +46,39 @@ public class BatchOpsMetadatReindexerTest {
         Mockito.when(mockAppContext.getBean(Mockito.eq(MBeanExporter.class))).thenReturn(mockExporter);
         searchManager = Mockito.mock(EsSearchManager.class);
         Mockito.when(mockAppContext.getBean(Mockito.eq(EsSearchManager.class))).thenReturn(searchManager);
+        mockProbeCleaner = Mockito.mock(TaskScheduler.class);
+        Mockito.when(mockAppContext.getBean(Mockito.eq("probeCleaner"), Mockito.eq(TaskScheduler.class)))
+            .thenReturn(mockProbeCleaner);
+    }
+
+    /**
+     * The dashboard polls the probe to display the indexing status, so a finished task must
+     * schedule its own removal instead of relying on the next task to clean it up.
+     */
+    @Test
+    public void unregistersProbeOfFinishedTask() throws Exception {
+        try (
+            MockedStatic<ThreadUtils> threadUtilsMockedStatic = Mockito.mockStatic(ThreadUtils.class);
+            MockedStatic<ApplicationContextHolder> applicationContextHolderMockedStatic = Mockito.mockStatic(ApplicationContextHolder.class);
+        ) {
+            applicationContextHolderMockedStatic.when(ApplicationContextHolder::get).thenReturn(mockAppContext);
+            threadUtilsMockedStatic.when(ThreadUtils::getNumberOfThreads).thenReturn(1);
+
+            DataManager mockDataMan = createMockDataManager(new HashSet<>());
+
+            BatchOpsMetadataReindexer toTest = new BatchOpsMetadataReindexer(mockDataMan, createMetadataToIndex());
+            toTest.process("siteId", false);
+
+            Mockito.verify(mockExporter).registerManagedResource(Mockito.eq(toTest), Mockito.any(ObjectName.class));
+
+            ArgumentCaptor<Runnable> unregisterTask = ArgumentCaptor.forClass(Runnable.class);
+            Mockito.verify(mockProbeCleaner, Mockito.timeout(5000))
+                .schedule(unregisterTask.capture(), Mockito.any(Instant.class));
+            Mockito.verifyNoMoreInteractions(mockExporter);
+
+            unregisterTask.getValue().run();
+            Mockito.verify(mockExporter).unregisterManagedResource(Mockito.any(ObjectName.class));
+        }
     }
 
     @Test
@@ -233,7 +272,7 @@ public class BatchOpsMetadatReindexerTest {
                 usedTread.add(Thread.currentThread());
                 return null;
             }
-        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.anyBoolean());
+        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.any(IIndexSubmitter.class));
         return mockDataMan;
     }
 
@@ -247,7 +286,7 @@ public class BatchOpsMetadatReindexerTest {
                 latch.await();
                 return null;
             }
-        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.anyBoolean());
+        }).when(mockDataMan).indexMetadata(Mockito.anyString(), Mockito.any(IIndexSubmitter.class));
         return mockDataMan;
     }
 
@@ -262,10 +301,10 @@ public class BatchOpsMetadatReindexerTest {
 
     private ArgumentCaptor<String> captureIndexationLaunched(DataManager mockDataMan) throws Exception {
         ArgumentCaptor<String> metadataIdCaptor = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<Boolean> forceRefreshCaptor = ArgumentCaptor.forClass(Boolean.class);
+        ArgumentCaptor<IIndexSubmitter> indexSubmittorCaptor = ArgumentCaptor.forClass(IIndexSubmitter.class);
         ArgumentCaptor<ISearchManager> isearchManagerCaptor = ArgumentCaptor.forClass(ISearchManager.class);
 
-        Mockito.verify(mockDataMan, Mockito.times(4)).indexMetadata(metadataIdCaptor.capture(), forceRefreshCaptor.capture());
+        Mockito.verify(mockDataMan, Mockito.times(4)).indexMetadata(metadataIdCaptor.capture(), indexSubmittorCaptor.capture());
         return metadataIdCaptor;
     }
 }

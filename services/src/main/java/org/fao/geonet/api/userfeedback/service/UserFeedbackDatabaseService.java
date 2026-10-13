@@ -39,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -94,21 +95,32 @@ public class UserFeedbackDatabaseService implements IUserFeedbackService {
      * removeUserFeedback(java.lang.String)
      */
     @Override
+    @Transactional
     public void removeUserFeedback(String feedbackUuid, String ip) throws Exception {
         final UserFeedback userFeedback = userFeedbackRepository.findByUuid(feedbackUuid);
         final Metadata metadata = userFeedback.getMetadata();
 
-        userFeedbackRepository.delete(userFeedback);
+        deleteUserFeedbackWithChildren(userFeedback);
 
         // Then update global metadata rating
         List<UserFeedback> listFeedbacks = retrieveUserFeedbackForMetadata(metadata.getUuid(), -1, true);
         Integer average = 0;
-        if (listFeedbacks.size() > 0) {
+        if (!listFeedbacks.isEmpty()) {
             UserFeedbackUtils.RatingAverage averageRating = new UserFeedbackUtils()
                 .getAverage(listFeedbacks);
             average = averageRating.getRatingAverages().get(AVERAGE_ID);
         }
         dataManager.rateMetadata(metadata.getId(), ip, average);
+    }
+
+    private void deleteUserFeedbackWithChildren(UserFeedback userFeedback) {
+        List<UserFeedback> childFeedbacks = userFeedbackRepository.findByParent_Uuid(userFeedback.getUuid());
+
+        for (UserFeedback childFeedback : childFeedbacks) {
+            deleteUserFeedbackWithChildren(childFeedback);
+        }
+
+        userFeedbackRepository.delete(userFeedback);
     }
 
     /*

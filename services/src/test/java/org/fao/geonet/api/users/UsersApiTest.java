@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2025 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.users.model.PasswordResetDto;
@@ -38,6 +39,8 @@ import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Profile;
 import org.fao.geonet.domain.User;
 import org.fao.geonet.domain.UserGroup;
+import org.fao.geonet.domain.userfeedback.UserFeedback;
+import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Assert;
 import org.junit.Before;
@@ -70,6 +73,9 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
     private WebApplicationContext wac;
 
     private MockMvc mockMvc;
+
+    @Autowired
+    private UserFeedbackRepository userFeedbackRepository;
 
     private MockHttpSession mockHttpSession;
 
@@ -135,6 +141,59 @@ public class UsersApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$", hasSize(1)))
             .andExpect(jsonPath("$[0].id.groupId", is(sampleGroup.getId())))
             .andExpect(content().contentType(API_JSON_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void deleteUserWithFeedback() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockHttpSession = loginAsAdmin();
+
+        // 1. Create a user to delete
+        User userToDelete = new User()
+            .setUsername("user-with-feedback")
+            .setProfile(Profile.Editor)
+            .setEnabled(true);
+        userToDelete.getSecurity().setPassword("Password123!");
+        userToDelete = _userRepo.save(userToDelete);
+
+        // 2. Create feedback entries
+        UserFeedback feedback1 = new UserFeedback();
+        feedback1.setUuid(UUID.randomUUID().toString());
+        feedback1.setAuthorId(userToDelete);
+        feedback1.setCommentText("Feedback from author");
+        feedback1.setStatus(UserFeedback.UserRatingStatus.PUBLISHED);
+        userFeedbackRepository.save(feedback1);
+
+        UserFeedback feedback2 = new UserFeedback();
+        feedback2.setUuid(UUID.randomUUID().toString());
+        feedback2.setApprover(userToDelete);
+        feedback2.setCommentText("Feedback to be approved");
+        feedback2.setStatus(UserFeedback.UserRatingStatus.PUBLISHED);
+        userFeedbackRepository.save(feedback2);
+
+        // 3. Delete the user
+        this.mockMvc.perform(delete("/srv/api/users/" + userToDelete.getId())
+                .session(this.mockHttpSession)
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().is(204));
+
+        // 4. Verify user is deleted
+        Assert.assertFalse(_userRepo.findById(userToDelete.getId()).isPresent());
+
+        // Flush and clear the persistence context so the assertions below read
+        // from the database instead of returning the stale managed instances
+        // cached before the nullify bulk updates ran.
+        _entityManager.flush();
+        _entityManager.clear();
+
+        // 5. Verify feedback entries still exist and author/approver are null
+        UserFeedback updatedFeedback1 = userFeedbackRepository.findByUuid(feedback1.getUuid());
+        Assert.assertNotNull(updatedFeedback1);
+        Assert.assertNull(updatedFeedback1.getAuthorId());
+
+        UserFeedback updatedFeedback2 = userFeedbackRepository.findByUuid(feedback2.getUuid());
+        Assert.assertNotNull(updatedFeedback2);
+        Assert.assertNull(updatedFeedback2.getApprover());
     }
 
     @Test

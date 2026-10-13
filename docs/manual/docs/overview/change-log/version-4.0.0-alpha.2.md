@@ -23,4 +23,4 @@
 -   [OpenAPI support](https://github.com/geonetwork/core-geonetwork/pull/4749)
 -   [Translation API](https://github.com/geonetwork/core-geonetwork/pull/4823) to override default translations.
 
-and more \... see [4.0.0-alpha.2 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.0-alpha.2+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.0-alpha.2+is%3Aclosed) for full details.
+and more ... see [4.0.0-alpha.2 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.0-alpha.2+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.0-alpha.2+is%3Aclosed) for full details.

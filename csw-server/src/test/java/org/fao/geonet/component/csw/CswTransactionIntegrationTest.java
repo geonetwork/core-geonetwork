@@ -36,6 +36,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.repository.MetadataRepositoryTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Content;
@@ -48,9 +49,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.fao.geonet.constants.Geonet.Namespaces.GCO;
@@ -390,7 +388,7 @@ public class CswTransactionIntegrationTest extends AbstractCoreIntegrationTest {
         extras.put("_isTemplate", "n");
         extras.put("_owner", "" + ownerId);
         _searchManager.index(schemaDir, metadata.getXmlData(false), "" + metadata.getId(), extras,
-            MetadataType.METADATA,false, IndexingMode.full);
+            MetadataType.METADATA, DirectIndexSubmitter.INSTANCE, IndexingMode.full);
     }
 
     private Element createUpdateTransaction(String property, Object newValue) {

@@ -373,6 +373,8 @@
     "createChild": "Maak een child-record",
     "privileges": "Privileges",
     "whoCanAccess": "Wie heeft toegang",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Acties",
     "reset": "Reset",
     "stop": "Stop",

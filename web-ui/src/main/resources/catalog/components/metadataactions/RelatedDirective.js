@@ -48,6 +48,34 @@
     "$http",
     "$q",
     function ($http, $q) {
+      this.sortByField = function (records, sortBy) {
+        if (!sortBy || !records) {
+          return records;
+        }
+
+        var descOrder = sortBy.startsWith("-");
+        var sortField = descOrder ? sortBy.substring(1) : sortBy;
+        records.sort(function (a, b) {
+          var aProperty = a[sortField] || (a.properties && a.properties[sortField]);
+          var bProperty = b[sortField] || (b.properties && b.properties[sortField]);
+
+          if (!aProperty && !bProperty) {
+            return 0;
+          }
+          if (!aProperty) {
+            return 1;
+          }
+          if (!bProperty) {
+            return -1;
+          }
+
+          var comparison = String(aProperty).localeCompare(String(bProperty));
+          return descOrder ? -comparison : comparison;
+        });
+
+        return records;
+      };
+
       this.get = function (uuidOrId, types, approved) {
         var canceller = $q.defer();
         var request = $http({
@@ -962,7 +990,8 @@
   ]);
 
   module.directive("gnRelatedWithStats", [
-    function () {
+    "gnRelatedService",
+    function (gnRelatedService) {
       return {
         restrict: "A",
         templateUrl: function (elem, attrs) {
@@ -1025,11 +1054,7 @@
           }
 
           function sort() {
-            if (scope.sortBy) {
-              scope.displayedRecords.sort(function (a, b) {
-                return a[scope.sortBy] && a[scope.sortBy].localeCompare(b[scope.sortBy]);
-              });
-            }
+            gnRelatedService.sortByField(scope.displayedRecords, scope.sortBy);
           }
 
           function reset() {
@@ -1196,8 +1221,9 @@
 
   module.directive("gnRecordsTable", [
     "Metadata",
+    "gnConfigService",
     "gnRelatedService",
-    function (Metadata, gnRelatedService) {
+    function (Metadata, gnConfigService, gnRelatedService) {
       return {
         restrict: "A",
         templateUrl: function (elem, attrs) {
@@ -1214,6 +1240,7 @@
           // * links by type eg. link:OGC
           columns: "@",
           labels: "@",
+          sortBy: "@",
           agg: "="
         },
         link: function (scope, element, attrs, controller) {
@@ -1262,10 +1289,7 @@
           });
 
           function sort() {
-            scope.displayedRecords.sort(function (a, b) {
-              var sortBy = scope.columnsConfig[0];
-              return a[sortBy] && a[sortBy].localeCompare(b[sortBy]);
-            });
+            gnRelatedService.sortByField(scope.displayedRecords, scope.sortBy);
           }
 
           function reset() {
@@ -1368,6 +1392,7 @@
           scope.gnCurrentEdit = gnCurrentEdit;
           scope.relations = [];
           scope.relatedConfigUI = [];
+          gnCurrentEdit.relatedConfigUI = scope.relatedConfigUI;
           scope.relatedResourcesConfig = gnRelatedResources;
           if ($injector.has("gnOnlinesrc")) {
             scope.onlinesrcService = $injector.get("gnOnlinesrc");

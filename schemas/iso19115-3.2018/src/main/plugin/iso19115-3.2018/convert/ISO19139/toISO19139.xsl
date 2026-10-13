@@ -955,17 +955,14 @@
     <xsl:param name="nodeWithStringToWrite"/>
 
     <xsl:variable name="isMultilingual"
-      select="count($nodeWithStringToWrite/gmd:PT_FreeText) > 0"/>
+      select="count($nodeWithStringToWrite/lan:PT_FreeText) > 0"/>
     <xsl:variable name="hasCharacterString"
       select="count($nodeWithStringToWrite/gco2:CharacterString) = 1"/>
 
     <xsl:choose>
       <xsl:when test="$nodeWithStringToWrite">
         <xsl:element name="{$elementName}">
-          <xsl:copy-of select="$nodeWithStringToWrite/@*"/>
-          <xsl:if test="$isMultilingual">
-            <xsl:attribute name="xsi:type" select="'gmd:PT_FreeText_PropertyType'"/>
-          </xsl:if>
+          <xsl:apply-templates select="$nodeWithStringToWrite/@*"/>
 
           <xsl:if test="$hasCharacterString">
             <gco:CharacterString>
@@ -973,11 +970,15 @@
             </gco:CharacterString>
           </xsl:if>
           <xsl:if test="$isMultilingual">
-            <xsl:copy-of select="$nodeWithStringToWrite/gmd:PT_FreeText"/>
+            <xsl:apply-templates select="$nodeWithStringToWrite/lan:PT_FreeText"/>
           </xsl:if>
         </xsl:element>
       </xsl:when>
     </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="@xsi:type[. = 'lan:PT_FreeText_PropertyType']">
+    <xsl:attribute name="xsi:type" select="'gmd:PT_FreeText_PropertyType'"/>
   </xsl:template>
 
   <xsl:template name="writeDateTime">

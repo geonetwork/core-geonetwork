@@ -118,7 +118,15 @@
                 required=""
                 data-ng-readonly="isUpdate"
                 data-ng-model="staticPageSelected.pageId"
+                data-ng-pattern="pageIdPattern"
               />
+              <p
+                class="help-block"
+                data-ng-if="gnStaticPageEdit.pageId.$error.pattern"
+                data-translate=""
+              >
+                pageId-gn-prefix-error
+              </p>
 
               <input
                 type="hidden"
@@ -298,6 +306,49 @@
 
             <div class="col-sm-9 col-sm-offset-3">
               <p class="help-block" data-translate="">pageSection-help</p>
+            </div>
+          </div>
+
+          <div
+            class="form-group"
+            data-ng-show="staticPageSelected.sections.indexOf('RECORD_VIEW_MENU') > -1"
+          >
+            <label class="control-label col-sm-3" data-translate=""
+              >pageVisibilityConditions</label
+            >
+
+            <div class="col-sm-9">
+              <div class="checkbox">
+                <label>
+                  <input
+                    type="checkbox"
+                    data-ng-model="staticPageSelected.showOnNonApproved"
+                  />
+                  {{'pageVisibility-showOnNonApproved' | translate}}
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input
+                    type="checkbox"
+                    data-ng-model="staticPageSelected.showOnApproved"
+                  />
+                  {{'pageVisibility-showOnApproved' | translate}}
+                </label>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input
+                    type="checkbox"
+                    data-ng-model="staticPageSelected.showWhenWorkflowDisabled"
+                  />
+                  {{'pageVisibility-showWhenWorkflowDisabled' | translate}}
+                </label>
+              </div>
+            </div>
+
+            <div class="col-sm-9 col-sm-offset-3">
+              <p class="help-block" data-translate="">pageVisibilityConditions-help</p>
             </div>
           </div>
 

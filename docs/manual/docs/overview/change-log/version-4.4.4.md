@@ -26,4 +26,4 @@ Fixes:
 
 * [Metadata feedback / Fix email to multiple recipients](https://github.com/geonetwork/core-geonetwork/pull/7875)
 
-and more \... see [4.4.4-0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.4.4+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.4.4+is%3Aclosed) for full details.
+and more ... see [4.4.4-0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.4.4+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.4.4+is%3Aclosed) for full details.

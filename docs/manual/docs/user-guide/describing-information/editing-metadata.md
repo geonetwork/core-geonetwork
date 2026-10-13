@@ -16,7 +16,7 @@ From left to right:
 -   `Validate` to run metadata validation
 -   `Cancel` to cancel all changes made since the beginning of the editing session
 -   `Save & Close` to save and close the editor
--   `Save` to save the metadata or the template. The dropdown also allows to set if the edits are minor or not (i.e. the change date of the metadata will not be updated if case of minor edits).
+-   `Save` to save the metadata or the template. The dropdown also allows to set if the edits are minor or not (i.e. the change date of the metadata will not be updated in case of minor edits).
 -   Change view mode for the editor form, enable tooltips or switch to advanced editor mode
 
 ## Navigating the form
@@ -31,7 +31,7 @@ To switch from one view to another, use the following menu:
 
 ![](img/view-mode.png)
 
-Once the view is selected, the editor can browse the list of fields to populate. He can also use the scroll-spy in the lower right corner to quickly access a section.
+Once the view is selected, the editor can browse the list of fields to populate. They can also use the scroll-spy in the lower right corner to quickly access a section.
 
 ![](img/scoll-spy.png)
 

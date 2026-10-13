@@ -23,6 +23,8 @@
 
 package org.fao.geonet.kernel.harvest.harvester.geonet.v4.client;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -33,16 +35,30 @@ import java.util.Set;
 public class SearchResponse {
     private final long total;
     private final Set<SearchResponseHit> hits;
+    private final List<String> failedHits;
 
     /**
-     * Constructs a new SearchResponse instance.
+     * Constructs a new SearchResponse instance with no failed hits.
      *
      * @param total the total number of search hits returned
      * @param hits  a set of individual search result hits
      */
     public SearchResponse(long total, Set<SearchResponseHit> hits) {
+        this(total, hits, Collections.<String>emptyList());
+    }
+
+    /**
+     * Constructs a new SearchResponse instance.
+     *
+     * @param total      the total number of search hits returned
+     * @param hits       a set of individual search result hits that could be parsed
+     * @param failedHits the identifiers (or {@code "unknown"} when not extractable) of the hits that
+     *                   could not be parsed and were skipped
+     */
+    public SearchResponse(long total, Set<SearchResponseHit> hits, List<String> failedHits) {
         this.total = total;
         this.hits = hits;
+        this.failedHits = failedHits;
     }
 
     public long getTotal() {
@@ -51,5 +67,15 @@ public class SearchResponse {
 
     public Set<SearchResponseHit> getHits() {
         return hits;
+    }
+
+    /**
+     * Returns the identifiers of the hits that could not be parsed from the search response and were
+     * therefore skipped. The list is empty when every hit was parsed successfully.
+     *
+     * @return the list of skipped hit identifiers (never {@code null})
+     */
+    public List<String> getFailedHits() {
+        return failedHits;
     }
 }

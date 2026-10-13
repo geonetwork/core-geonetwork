@@ -213,6 +213,14 @@
         <dateStamp><xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
       </xsl:for-each>
 
+      <!-- Publication date -->
+      <xsl:for-each select="(mdb:dateInfo/
+                              cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']/
+                                cit:date/*[gn-fn-index:is-isoDate(.)])[1]">
+
+        <publicationDate><xsl:value-of select="text()"/></publicationDate>
+      </xsl:for-each>
+
 
       <xsl:copy-of select="gn-fn-index:add-field('mainLanguage', $mainLanguage)"/>
 

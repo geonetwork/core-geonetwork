@@ -4,6 +4,7 @@ import jeeves.server.context.ServiceContext;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.Setting;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.SettingRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
@@ -53,7 +54,7 @@ public class AlternateLogoForPdfExportTest extends AbstractServiceIntegrationTes
     public void createTestData() throws Exception {
         context = createServiceContext();
         loginAsAdmin(context);
-        metadata = injectMetadataInDbDoNotRefreshHeader(getSampleISO19139MetadataXml(), context);
+        metadata = injectMetadataInDb(getSampleISO19139MetadataXml(), context);
     }
 
     @Before
@@ -84,7 +85,7 @@ public class AlternateLogoForPdfExportTest extends AbstractServiceIntegrationTes
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAsAdmin();
         settingManager.setValue("metadata/pdfReport/headerLogoFileName", "pdf_test_banner_to_use.png");
-        String siteId = settingManager.getValue("system/site/siteId");
+        settingManager.setValue(Settings.SYSTEM_PREFER_GROUP_LOGO, false);
 
         String url = "/srv/api/records/" + metadata.getUuid() + "/formatters/xsl-view?language=fre";
         mockMvc.perform(get(url)
@@ -96,7 +97,7 @@ public class AlternateLogoForPdfExportTest extends AbstractServiceIntegrationTes
         ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
         Mockito.verify(responseWriterSpy).writeOutResponse(any(ServiceContext.class), any(String.class), any(String.class), any(HttpServletResponse.class), any(FormatType.class), captor.capture());
         assertFalse(new String(captor.getValue(), StandardCharsets.UTF_8).contains("pdf_test_banner_to_use.png"));
-        assertTrue(new String(captor.getValue(), StandardCharsets.UTF_8).contains("images/logos/" + siteId + ".png"));
+        assertTrue(new String(captor.getValue(), StandardCharsets.UTF_8).contains("srv/api/sources/" + metadata.getSourceInfo().getSourceId() + "/logo"));
     }
 
     @Test
@@ -105,7 +106,7 @@ public class AlternateLogoForPdfExportTest extends AbstractServiceIntegrationTes
         MockHttpSession mockHttpSession = loginAsAdmin();
         Optional<Setting> se = settingRepository.findById("metadata/pdfReport/headerLogoFileName");
         se.ifPresent(settingRepository::delete);
-        String siteId = settingManager.getValue("system/site/siteId");
+        settingManager.setValue(Settings.SYSTEM_PREFER_GROUP_LOGO, false);
 
         String url = "/srv/api/records/" + metadata.getUuid() + "/formatters/xsl-view?output=pdf&language=fre";
         mockMvc.perform(get(url)
@@ -117,6 +118,6 @@ public class AlternateLogoForPdfExportTest extends AbstractServiceIntegrationTes
         ArgumentCaptor<byte[]> captor = ArgumentCaptor.forClass(byte[].class);
         Mockito.verify(responseWriterSpy).writeOutResponse(any(ServiceContext.class), any(String.class), any(String.class), any(HttpServletResponse.class), any(FormatType.class), captor.capture());
         assertFalse(new String(captor.getValue(), StandardCharsets.UTF_8).contains("pdf_test_banner_to_use.png"));
-        assertTrue(new String(captor.getValue(), StandardCharsets.UTF_8).contains("images/logos/" + siteId + ".png"));
+        assertTrue(new String(captor.getValue(), StandardCharsets.UTF_8).contains("srv/api/sources/" + metadata.getSourceInfo().getSourceId() + "/logo"));
     }
 }

@@ -313,9 +313,9 @@
             <!-- Index each values in a field. -->
             <xsl:for-each select="distinct-values($element[. != ''])">
               <value><xsl:value-of select="concat($doubleQuote, 'default', $doubleQuote, ':',
-                                           $doubleQuote, util:escapeForJson(.), $doubleQuote)"/></value>
+                                           $doubleQuote, util:escapeForJson(normalize-space(.)), $doubleQuote)"/></value>
               <value><xsl:value-of select="concat($doubleQuote, 'lang', $mainLanguage, $doubleQuote, ':',
-                                           $doubleQuote, util:escapeForJson(.), $doubleQuote)"/></value>
+                                           $doubleQuote, util:escapeForJson(normalize-space(.)), $doubleQuote)"/></value>
             </xsl:for-each>
           </xsl:otherwise>
         </xsl:choose>

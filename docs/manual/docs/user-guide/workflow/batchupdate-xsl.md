@@ -141,7 +141,7 @@ An XSLT process can be used in the editor to trigger specific actions. For examp
                           )]) = 0"/>
 ```
 
-See ref:``creating-custom-editor``.
+See [Creating a custom editor](../../customizing-application/editor-ui/creating-custom-editor.md).
 
 ## Adding XSLT conversion for import {#customizing-xslt-conversion}
 

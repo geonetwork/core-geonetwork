@@ -1,4 +1,4 @@
-# Linking website, web services, \... using URL {#linking-online-resources}
+# Linking website, web services, ... using URL {#linking-online-resources}
 
 This section applies mainly to ISO19139 records and partially to Dublin Core (ie. only documents can be associated in Dublin Core) standards.
 
@@ -16,7 +16,7 @@ To add a new one, click on the + caret button then `Add an online resource` butt
 To link a URL, set the following properties:
 
 -   `Protocol` to describe the type of document attached (`Web address (URL)` is the default)
--   `Linkage` to point to the target document. It can be any type of links like <http://>, <ftp://>, <file:///>, \...
+-   `Linkage` to point to the target document. It can be any type of links like `http://`, `ftp://`, `file:///`, ...
 -   `Name` is optional and provides a label for making an hyperlink
 -   `Description` is optional and provides more details about the link
 
@@ -122,8 +122,8 @@ To reference a GIS file or a database table, user can upload or link to a that r
 
 | Type of resource | Vector file on the network                                         |
 |------------------|--------------------------------------------------------------------|
-| URL              | File path. eg. <file:///shared/geodata/world/hydrology/rivers.shp> |
-| Protocol         | <FILE:GEO> or <FILE:RASTER>                                        |
+| URL              | File path. eg. `file:///shared/geodata/world/hydrology/rivers.shp` |
+| Protocol         | `FILE:GEO` or `FILE:RASTER`                                        |
 | Name             | File description                                                   |
 
 | Type of resource | Vector (Table PostGIS)                               |

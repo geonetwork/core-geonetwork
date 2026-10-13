@@ -13,4 +13,4 @@
 -   [Support MEF in LocalFilesystemHarvester](https://github.com/geonetwork/core-geonetwork/pull/2667)
 -   [Fix deadlock threads while indexing](https://github.com/geonetwork/core-geonetwork/pull/2740)
 
-and more \... see [3.4.2 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.4.2+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.4.2+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.4.2 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.4.2+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.4.2+is%3Aclosed+is%3Apr) for full details.

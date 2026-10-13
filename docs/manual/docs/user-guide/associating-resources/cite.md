@@ -4,7 +4,7 @@ The catalogue can provide an automatic citation based on information provided in
 
 ![](img/citation.png)
 
-The citation can be use to cite a dataset in publications.
+The citation can be used to cite a dataset in publications.
 
 ## Citation text
 
@@ -27,7 +27,7 @@ An additional text may be stored in an online resource description with protocol
 
 ![](img/citation-with-addition.png)
 
-Example: <https://doi.org/10.12770/ad07a55f-5de7-4abc-ba89-8899b16c4b59>
+Example: `https://doi.org/10.12770/ad07a55f-5de7-4abc-ba89-8899b16c4b59`
 
 ## Configuration
 
@@ -46,11 +46,11 @@ Citation can be provided in various formats:
 
 ## API
 
-The citation can be displayed in the default XSL formatter used for the full view using: <http://localhost:8080/geonetwork/srv/api/records/a46af25c-f949-48a2-9b7e-ac472230cda8?language=all&citation=true>
+The citation can be displayed in the default XSL formatter used for the full view using: `http://localhost:8080/geonetwork/srv/api/records/a46af25c-f949-48a2-9b7e-ac472230cda8?language=all&citation=true`
 
-The formatter producing the citation can be accessed directly using: <http://localhost:8080/geonetwork/srv/api/records/31255efc-c5c1-7787-2ae6-b8fc4bcd6e55/formatters/citation?format=ris>
+The formatter producing the citation can be accessed directly using: `http://localhost:8080/geonetwork/srv/api/records/31255efc-c5c1-7787-2ae6-b8fc4bcd6e55/formatters/citation?format=ris`
 
-To list available formats use: <http://localhost:8080/geonetwork/srv/api/records/31255efc-c5c1-7787-2ae6-b8fc4bcd6e55/formatters/citation?format=?>
+To list available formats use: `http://localhost:8080/geonetwork/srv/api/records/31255efc-c5c1-7787-2ae6-b8fc4bcd6e55/formatters/citation?format=?`
 
 Formatter parameters:
 

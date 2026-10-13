@@ -26,14 +26,7 @@ package org.fao.geonet.harvester.wfsfeatures.worker;
 import co.elastic.clients.elasticsearch._helpers.bulk.BulkIngester;
 import co.elastic.clients.elasticsearch._helpers.bulk.BulkListener;
 import co.elastic.clients.elasticsearch._types.Result;
-import co.elastic.clients.elasticsearch.core.BulkRequest;
-import co.elastic.clients.elasticsearch.core.BulkResponse;
-import co.elastic.clients.elasticsearch.core.IndexRequest;
-import co.elastic.clients.elasticsearch.core.IndexResponse;
-import co.elastic.clients.elasticsearch.core.bulk.BulkOperation;
-import co.elastic.clients.elasticsearch.core.bulk.IndexOperation;
-import co.elastic.clients.json.JsonData;
-import co.elastic.clients.json.JsonpMapper;
+import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.util.BinaryData;
 import co.elastic.clients.util.ContentType;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -43,7 +36,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
-import jakarta.json.spi.JsonProvider;
 import org.apache.camel.Exchange;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.jcs.access.exception.InvalidArgumentException;
@@ -74,7 +66,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
-import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -84,9 +75,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Phaser;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 
@@ -233,11 +221,11 @@ public class EsWFSFeatureIndexer {
             new Object[]{url, typeName, index, indexType});
         try {
             long begin = System.currentTimeMillis();
-            client.deleteByQuery(index, String.format("+featureTypeId:\"%s\"", getIdentifier(url, typeName)));
+            deleteByQuery(String.format("+featureTypeId:\"%s\"", getIdentifier(url, typeName)));
             LOGGER.info("  Features deleted in {} ms.", System.currentTimeMillis() - begin);
 
             begin = System.currentTimeMillis();
-            client.deleteByQuery(index, String.format("+id:\"%s\"",
+            deleteByQuery(String.format("+id:\"%s\"",
                 getIdentifier(url, typeName)));
             LOGGER.info("  Report deleted in {} ms.", System.currentTimeMillis() - begin);
 
@@ -245,6 +233,21 @@ public class EsWFSFeatureIndexer {
             e.printStackTrace();
             LOGGER.error("Error connecting to ES at '{}'. Error is {}.", index, e.getMessage());
         }
+    }
+
+    private void deleteByQuery(String query) throws IOException {
+        DeleteByQueryRequest deleteByQueryRequest = client.buildDeleteByQuery(index, query);
+        DeleteByQueryResponse deleteByQueryResponse = client.getClient().deleteByQuery(deleteByQueryRequest);
+        if (!deleteByQueryResponse.failures().isEmpty()) {
+            StringBuilder stringBuilder = new StringBuilder();
+
+            deleteByQueryResponse.failures().forEach(f -> stringBuilder.append(f.toString()));
+
+            throw new RuntimeException(String.format(
+                "Error during removal of query %s. Errors are '%s'.", query, stringBuilder.toString()
+            ));
+        }
+
     }
 
     interface TitleResolver {
@@ -634,7 +637,7 @@ public class EsWFSFeatureIndexer {
                 }
             };
 
-            this.bulk = BulkIngester.of(b -> b.client(client.getAsynchClient())
+            this.bulk = BulkIngester.of(b -> b.client(client.getAsyncClient())
                 .listener(listener)
                 // .maxConcurrentRequests(1)
                 // .flushInterval(10, TimeUnit.SECONDS)

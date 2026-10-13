@@ -31,6 +31,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
+import java.util.List;
 
 public class JCloudConfiguration {
 
@@ -54,6 +55,11 @@ public class JCloudConfiguration {
      * Property name for storing the metadata uuid that is expected to be a String
      */
     private String metadataUUIDPropertyName;
+    /**
+     * List of field names that are copied from the storage metadata into the geonetwork index.
+     * Can be set as a comma-separated string which will be automatically parsed into a List.
+     */
+    private List<String> additionalIndexedProperties;
     /**
      * Url used for managing enhanced resource properties related to the metadata.
      */
@@ -286,6 +292,32 @@ public class JCloudConfiguration {
 
     public void setMetadataUUIDPropertyName(String metadataUUIDPropertyName) {
         this.metadataUUIDPropertyName = metadataUUIDPropertyName;
+    }
+
+    /**
+     * Gets the additional indexed properties as a list of field names.
+     *
+     * @return List of field names
+     */
+    public List<String> getAdditionalIndexedProperties() {
+        return this.additionalIndexedProperties;
+    }
+
+    /**
+     * Sets the additional indexed properties from a comma-separated string.
+     * Empty values are filtered out.
+     *
+     * @param additionalIndexedProperties Comma-separated list of field names
+     */
+    public void setAdditionalIndexedProperties(String additionalIndexedProperties) {
+        if (StringUtils.hasLength(additionalIndexedProperties)) {
+            this.additionalIndexedProperties = java.util.Arrays.stream(additionalIndexedProperties.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(java.util.stream.Collectors.toList());
+        } else {
+            this.additionalIndexedProperties = null;
+        }
     }
 
     public String getExternalResourceManagementChangedDatePropertyName() {

@@ -33,6 +33,7 @@
     "applySuggestion": "Применить предложение",
     "assignToCatalog": "Назначить к текущему каталогу",
     "assignToCategory": "Назначить категории",
+    "assignToCategory-help": "This value is not used when importing metadata in MEF (ZIP) format, as the value defined in the ZIP file is used instead.",
     "assignToGroup": "Назначить группе",
     "associationType": "Тип ассоциации",
     "chooseContactRole": "Choose contact role",

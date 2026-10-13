@@ -534,6 +534,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (61,'tur','Record del
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (62,'tur','Record imported.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'tur','Record restored.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'tur','DOI creation requested.');
+INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'tur','Scheduled publication');
 
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'tur','Preferred records');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'tur','Watch list');

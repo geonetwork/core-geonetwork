@@ -14,7 +14,7 @@ Elasticsearch Java client version: 8.19.13
 | Elasticsearch 8.19.13 | recommended   |
 | Elasticsearch 8.14.x  | minimum       |
 
-Older version may be supported but are untested.
+Older versions may be supported but are untested.
 
 
 ## Installation
@@ -42,7 +42,7 @@ Older version may be supported but are untested.
         
 === "Install using Maven"
 
-    1. Developers are encouraged to run Elasticseach using maven in order to test against the version of Elasticsearch intended for the next release.
+    1. Developers are encouraged to run Elasticsearch using Maven in order to test against the version of Elasticsearch intended for the next release.
     
         !!! note
             
@@ -89,13 +89,13 @@ Older version may be supported but are untested.
     
     ``` shell
     cd $GN_DATA_DIRECTORY/config/index
-    curl -X DELETE http://localhost:9200/features
-    curl -X DELETE http://localhost:9200/records
-    curl -X DELETE http://localhost:9200/searchlogs
+    curl -X DELETE http://localhost:9200/gn-features
+    curl -X DELETE http://localhost:9200/gn-records
+    curl -X DELETE http://localhost:9200/gn-searchlogs
     
-    curl -X PUT http://localhost:9200/features -H 'Content-Type: application/json' -d @features.json
-    curl -X PUT http://localhost:9200/records -H 'Content-Type: application/json' -d @records.json
-    curl -X PUT http://localhost:9200/searchlogs -H 'Content-Type: application/json' -d @searchlogs.json
+    curl -X PUT http://localhost:9200/gn-features -H 'Content-Type: application/json' -d @features.json
+    curl -X PUT http://localhost:9200/gn-records -H 'Content-Type: application/json' -d @records.json
+    curl -X PUT http://localhost:9200/gn-searchlogs -H 'Content-Type: application/json' -d @searchlogs.json
     ```
 
 ## Check Elasticsearch installation

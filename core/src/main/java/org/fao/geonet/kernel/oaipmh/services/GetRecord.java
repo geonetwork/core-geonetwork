@@ -35,6 +35,8 @@ import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDataInfo;
+import org.fao.geonet.domain.ReservedOperation;
+import org.fao.geonet.exceptions.OperationNotAllowedEx;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.oaipmh.Lib;
@@ -52,6 +54,7 @@ import org.fao.oaipmh.responses.Record;
 import org.jdom.Attribute;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.access.AccessDeniedException;
 
 import jeeves.server.context.ServiceContext;
 
@@ -65,8 +68,20 @@ public class GetRecord implements OaiPmhService {
         SchemaManager sm = gc.getBean(SchemaManager.class);
 
         AbstractMetadata metadata = context.getBean(IMetadataUtils.class).findOne(spec);
+
         if (metadata == null)
             throw new IdDoesNotExistException(spec.toString());
+
+        try {
+            org.fao.geonet.lib.Lib.resource.checkPrivilege(
+                context, String.valueOf(metadata.getId()), ReservedOperation.view);
+        } catch (AccessDeniedException | OperationNotAllowedEx e) {
+            // The record exists but the caller is not allowed to view it. Report
+            // it as non-existent so a restricted record cannot be distinguished
+            // from an unknown one, and so ListRecords skips it instead of aborting
+            // the whole response. Any other error propagates unchanged.
+            throw new IdDoesNotExistException(metadata.getUuid());
+        }
 
         String uuid = metadata.getUuid();
         final MetadataDataInfo dataInfo = metadata.getDataInfo();

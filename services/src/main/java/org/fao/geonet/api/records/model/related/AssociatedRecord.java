@@ -65,7 +65,7 @@ public class AssociatedRecord {
 
     @JsonProperty("_id")
     public String getUuid() {
-        return uuid;
+        return uuid == null ? "" : uuid;
     }
 
     public Map<String, String> getProperties() {

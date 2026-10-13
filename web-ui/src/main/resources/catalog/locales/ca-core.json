@@ -373,6 +373,8 @@
     "createChild": "Crear un fill",
     "privileges": "Privilegis",
     "whoCanAccess": "Qui hi té accés",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Accions",
     "reset": "Reiniciar",
     "stop": "Aturar",

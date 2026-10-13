@@ -43,6 +43,8 @@ import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.datamanager.*;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.*;
@@ -455,7 +457,7 @@ public class Importer {
                     }
                 }
 
-                metadataIndexer.indexMetadata(metadataIdMap.get(index), true, IndexingMode.full);
+                metadataIndexer.indexMetadata(metadataIdMap.get(index), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
             }
 
             // --------------------------------------------------------------------
@@ -476,7 +478,7 @@ public class Importer {
             }
 
             public void indexMetadata(int index) throws Exception {
-                metadataIndexer.indexMetadata(metadataIdMap.get(index), true, IndexingMode.full);
+                metadataIndexer.indexMetadata(metadataIdMap.get(index), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
             }
 
         });
@@ -590,7 +592,8 @@ public class Importer {
                     if (Log.isDebugEnabled(Geonet.MEF)) {
                         Log.debug(Geonet.MEF, "Deleting existing metadata with UUID : " + uuid);
                     }
-                    metadataManager.deleteMetadata(context, metadataUtils.getMetadataId(uuid));
+
+                    metadataManager.deleteMetadata(context, metadataUtils.getMetadataId(uuid), DirectDeletionSubmitter.INSTANCE);
                     metadataManager.flush();
                 } else {
                     throw new UnAuthorizedException("User has no privilege to replace existing metadata", null);

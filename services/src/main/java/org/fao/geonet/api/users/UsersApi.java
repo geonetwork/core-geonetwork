@@ -27,7 +27,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.regex.Pattern;
 import jeeves.server.UserSession;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
@@ -54,6 +53,7 @@ import org.fao.geonet.repository.*;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.util.PasswordUtil;
 import org.fao.geonet.util.XslUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +67,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletRequest;
@@ -79,7 +85,16 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
+import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_SECURITY_PASSWORD_ALLOWADMINRESET;
@@ -139,6 +154,9 @@ public class UsersApi {
 
     @Autowired
     private IMetadataStatus metadataStatus;
+
+    @Autowired
+    UserFeedbackRepository userFeedbackRepository;
 
     private final BufferedImage pixel;
 
@@ -366,7 +384,8 @@ public class UsersApi {
             List.of(userIdentifier));
 
         userSavedSelectionRepository.deleteAllByUser(userIdentifier);
-
+        userFeedbackRepository.nullifyAuthor(userIdentifier);
+        userFeedbackRepository.nullifyApprover(userIdentifier);
 
 
         try {
@@ -386,6 +405,9 @@ public class UsersApi {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Check if a user property already exist"
+        //       authorizations = {
+        //           @Authorization(value = "basicAuth")
+        //      })
     )
     @RequestMapping(
         value = "/properties/{property}",
@@ -398,7 +420,7 @@ public class UsersApi {
         @ApiResponse(responseCode = "404", description = "A property with that value already exist."),
         @ApiResponse(responseCode = "403", description = ApiParams.API_RESPONSE_NOT_ALLOWED_ONLY_USER_ADMIN)
     })
-    public ResponseEntity<HttpStatus> checkUserPropertyExist(
+    public ResponseEntity<Void> checkUserPropertyExist(
         @Parameter(
             description = "The user property to check"
         )

@@ -38,6 +38,16 @@
 .gn-row-tools {
   border-bottom: 1px solid #ddd;
   margin-bottom: 15px;
+  display: flex;
+
+  > div:first-child,
+  > div:last-child {
+    flex: 1 1 0;
+  }
+
+  > div:nth-child(2) {
+    flex: 0 0 auto;
+  }
 
   .btn-default {
     border: 0;
@@ -52,7 +62,7 @@
     }
   }
   .pagination {
-    > li > a, .pagination > li > span {
+    > li > a, > li > span {
       border: 0;
       color: @btn-default-color;
       &:hover {

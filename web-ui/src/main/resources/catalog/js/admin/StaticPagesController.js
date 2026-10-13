@@ -52,6 +52,9 @@
       $scope.uploadScope = angular.element("#gn-static-page-edit").scope();
       $scope.groups = [];
 
+      // Reject identifiers that start with "gn-" (reserved for built-in menu entries)
+      $scope.pageIdPattern = /^(?!gn-).+$/;
+
       $scope.unsupportedFile = false;
       $scope.$watchCollection("queue", function (n, o) {
         if (n != o && n.length == 1) {
@@ -171,7 +174,10 @@
           status: "HIDDEN",
           groups: "",
           label: "",
-          sections: []
+          sections: [],
+          showOnNonApproved: true,
+          showOnApproved: true,
+          showWhenWorkflowDisabled: true
         };
 
         $scope.pageApiLink = "";

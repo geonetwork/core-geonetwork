@@ -1184,7 +1184,6 @@
                       url: fields.url,
                       protocol: linkToEdit.protocol,
                       mimeType: linkToEdit.mimeType,
-                      mimeTypeStrategy: "mimeType",
                       name: fields.name,
                       desc: fields.desc,
                       applicationProfile: linkToEdit.applicationProfile,
@@ -1198,7 +1197,6 @@
                     scope.params.linkType = typeConfig;
                     scope.params.protocol = null;
                     scope.params.mimeType = "";
-                    scope.mimeTypeStrategy = "mimeType";
                     scope.params.name = "";
                     scope.params.desc = "";
                     initMultilingualFields();
@@ -1383,6 +1381,15 @@
                     processParams[key] = scope.params[key];
                   }
                 });
+
+                // mimeTypeStrategy is a configuration option and not a user input.
+                // Take it from the link type configuration rather than from the form
+                // state, which is reset on protocol change and may be turned into a
+                // multilingual object on a multilingual record.
+                var mimeTypeStrategy = scope.params.linkType.fields.mimeTypeStrategy;
+                if (angular.isDefined(mimeTypeStrategy)) {
+                  processParams.mimeTypeStrategy = mimeTypeStrategy.value || "mimeType";
+                }
 
                 if (scope.isEditing) {
                   processParams.updateKey = scope.editingKey;
@@ -1799,7 +1806,7 @@
                 if (newValue !== oldValue) {
                   scope.config.multilingualFields = [];
                   angular.forEach(newValue.fields, function (f, k) {
-                    if (f.isMultilingual !== false) {
+                    if (scope.isMdMultilingual && f.isMultilingual !== false) {
                       scope.config.multilingualFields.push(k);
                     }
                   });
@@ -1970,6 +1977,12 @@
                     // ie. dataset, series, ...
                     searchParams["-resourceType"] = "service";
                   }
+
+                  scope.searchObj.filters = gnOnlinesrc.getSearchFilterForType(
+                    gnCurrentEdit,
+                    scope.mode
+                  );
+
                   scope.$broadcast("resetSearch", searchParams);
                   scope.layers = [];
 
@@ -2194,9 +2207,10 @@
      */
     .directive("gnLinkToMetadata", [
       "gnOnlinesrc",
+      "gnCurrentEdit",
       "$translate",
       "gnGlobalSettings",
-      function (gnOnlinesrc, $translate, gnGlobalSettings) {
+      function (gnOnlinesrc, gnCurrentEdit, $translate, gnGlobalSettings) {
         return {
           restrict: "A",
           scope: {},
@@ -2270,6 +2284,11 @@
                   $("#linktomd-search input").val("");
                   scope.searchObj.any = "";
 
+                  scope.searchObj.filters = gnOnlinesrc.getSearchFilterForType(
+                    gnCurrentEdit,
+                    scope.mode
+                  );
+
                   var searchParams =
                     scope.config.sources && scope.config.sources.metadataStore
                       ? scope.config.sources.metadataStore.params || {}
@@ -2304,9 +2323,9 @@
      */
     .directive("gnLinkToSibling", [
       "gnOnlinesrc",
+      "gnCurrentEdit",
       "gnGlobalSettings",
-      "gnOnlinesrcConfig",
-      function (gnOnlinesrc, gnGlobalSettings, gnOnlinesrcConfig) {
+      function (gnOnlinesrc, gnCurrentEdit, gnGlobalSettings) {
         return {
           restrict: "A",
           scope: {},
@@ -2322,7 +2341,6 @@
               },
               post: function postLink(scope, iElement, iAttrs) {
                 scope.popupid = iAttrs["gnLinkToSibling"];
-
                 /**
                  * Register a method on popup open to reset
                  * the search form and trigger a search.
@@ -2331,6 +2349,11 @@
                   if (config && !angular.isObject(config)) {
                     config = angular.fromJson(config);
                   }
+
+                  scope.searchObj.filters = gnOnlinesrc.getSearchFilterForType(
+                    gnCurrentEdit,
+                    "siblings"
+                  );
 
                   scope.config = {
                     associationTypeForced: angular.isDefined(
@@ -2375,13 +2398,7 @@
                   if (scope.searchObj.any == "") {
                     scope.$broadcast("resetSearch");
                   } else {
-                    var addWildcard =
-                      scope.searchObj.any.indexOf('"') === -1 &&
-                      scope.searchObj.any.indexOf("*") === -1 &&
-                      scope.searchObj.any.indexOf("q(") !== 0;
-                    scope.searchObj.params.any = addWildcard
-                      ? "*" + scope.searchObj.any + "*"
-                      : scope.searchObj.any;
+                    scope.searchObj.params.any = scope.searchObj.any;
                   }
                 };
 

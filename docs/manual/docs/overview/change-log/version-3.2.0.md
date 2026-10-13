@@ -11,7 +11,7 @@
 -   User feedback form
 -   Editor / Associated resources can be updated without the advanced view
 -   Editor / Filter contact directory with facets
--   Editor / XML view provides code editing with syntax highlighting and more, \...
+-   Editor / XML view provides code editing with syntax highlighting and more, ...
 -   Directories can be populated from catalog content
 -   Metadata import improved (import by URL, import multiple files at once, better error reports)
 -   GeoServer updated to [version 2.9.0](https://geoserver.org/)
@@ -22,4 +22,4 @@
 -   ExtJS user interface removed
 -   Z39.50 server removed (SRU support still available)
 
-and more \... see [3.2.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.2.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.2.0+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.2.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.2.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.2.0+is%3Aclosed+is%3Apr) for full details.

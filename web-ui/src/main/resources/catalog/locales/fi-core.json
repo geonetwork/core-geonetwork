@@ -373,6 +373,8 @@
     "createChild": "Luo alatietue",
     "privileges": "Oikeudet",
     "whoCanAccess": "Pääsyt",
+    "reservedGroup": "Reserved Group",
+    "recordPrivilegeGroup": "Record Privilege Group",
     "actions": "Toiminteet",
     "reset": "Nollaa",
     "stop": "Pysäytä",

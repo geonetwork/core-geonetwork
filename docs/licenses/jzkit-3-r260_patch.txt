@@ -1,3 +1,20 @@
+# What this file is
+#
+# This is the patch that was applied to upstream JZKit (SVN revision 260) to build the
+# jzkit-core, jzkit-service, jzkit-z3950-server and jzkit-z3950-plugin jars published as
+# version 3.r260.geonetwork.patch.1. Those jars provided GeoNetwork's Z39.50 server and,
+# later, its SRU endpoint. They were added in 2010 and removed in 4.4.x, when the SRU
+# endpoint was dropped: it had been unable to answer a search since the move to
+# Elasticsearch, and both Z39.50 and SRU are listed as unsupported in issue #4727.
+#
+# The file is kept because it is the only surviving record of what those jars contain.
+# No source was ever published for them, and the upstream JZKit project is gone, so this
+# diff is the only way to know how the binaries differed from upstream r260. It answers
+# the question raised in issue #4780, where it was agreed the file should be kept rather
+# than deleted.
+#
+# Nothing in the build reads this file.
+
 Index: jzkit_z3950_plugin/src/main/java/org/jzkit/search/provider/z3950/Z3950SearchTask.java
 ===================================================================
 --- jzkit_z3950_plugin/src/main/java/org/jzkit/search/provider/z3950/Z3950SearchTask.java	(revision 260)

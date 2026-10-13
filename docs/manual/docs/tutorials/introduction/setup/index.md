@@ -40,7 +40,7 @@ Sample data has no use on real world catalogues, it is just used to show how the
 
 Templates, on the other hand, are needed if you want to edit metadata. Instead of using empty xml files for the metadata creation, a template is used when creating a new record. You can always import or harvest already created metadata instead of using the editor to create manually records if that fits your usecase.
 
-One you add some templates, your catalog is ready to be used.
+Once you add some templates, your catalog is ready to be used.
 
 ## Creating Users
 
