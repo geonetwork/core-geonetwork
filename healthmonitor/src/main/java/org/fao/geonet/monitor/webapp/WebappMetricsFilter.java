@@ -109,8 +109,9 @@ public abstract class WebappMetricsFilter implements Filter {
 
     public void destroy() {
         // Shutdown the registry this filter actually used. Do not touch Metrics.defaultRegistry()
-        // here: destroy() runs while the JVM is shutting down, and the first load of the Metrics
-        // class registers a shutdown hook, which then fails with "Shutdown in progress".
+        // here: destroy() may run while the JVM is shutting down (Ctrl+C or SIGTERM), and the
+        // first load of the Metrics class registers a shutdown hook, which then fails with
+        // "Shutdown in progress".
         if (metricsRegistry != null) {
             metricsRegistry.shutdown();
         }
