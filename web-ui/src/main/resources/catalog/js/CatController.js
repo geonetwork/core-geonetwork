@@ -1395,6 +1395,7 @@
         current: null,
         isDisableLoginForm: false,
         isShowLoginAsLink: false,
+        isUserProfileCreateEnabled: true,
         isUserProfileUpdateEnabled: true,
         isUserGroupUpdateEnabled: true,
         init: function (
@@ -1805,6 +1806,7 @@
       $scope.isDebug = window.location.search.indexOf("debug") !== -1;
       $scope.isDisableLoginForm = gnGlobalSettings.isDisableLoginForm;
       $scope.isShowLoginAsLink = gnGlobalSettings.isShowLoginAsLink;
+      $scope.isUserProfileCreateEnabled = gnGlobalSettings.isUserProfileCreateEnabled;
       $scope.isUserProfileUpdateEnabled = gnGlobalSettings.isUserProfileUpdateEnabled;
       $scope.isUserGroupUpdateEnabled = gnGlobalSettings.isUserGroupUpdateEnabled;
       $scope.isExternalViewerEnabled = gnExternalViewer.isEnabled();

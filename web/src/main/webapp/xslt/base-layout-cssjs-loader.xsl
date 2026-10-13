@@ -300,6 +300,7 @@
         function(gnGlobalSettings) {
         gnGlobalSettings.isDisableLoginForm = <xsl:value-of select="$isDisableLoginForm"/>;
         gnGlobalSettings.isShowLoginAsLink = <xsl:value-of select="$isShowLoginAsLink"/>;
+        gnGlobalSettings.isUserProfileCreateEnabled = <xsl:value-of select="$isUserProfileCreateEnabled"/>;
         gnGlobalSettings.isUserProfileUpdateEnabled = <xsl:value-of select="$isUserProfileUpdateEnabled"/>;
         gnGlobalSettings.isUserGroupUpdateEnabled = <xsl:value-of select="$isUserGroupUpdateEnabled"/>;
         }]);
