@@ -82,6 +82,11 @@ public class LogUtil {
         ThreadContext.put("logfile", logfile);
         ThreadContext.put("timeZone", timeZoneSetting);
 
+        if (Log.getLogfile() == null) {
+            // No catalogue log directory to resolve against (Log.getLogfile() already warned).
+            return logfile;
+        }
+
         try {
             return getHarvesterLogfilePath();
         } catch (Exception e) {
