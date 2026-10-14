@@ -122,6 +122,17 @@
     }
   ]);
 
+  /**
+   * @ngdoc directive
+   * @name gnRecordHistoryStep
+   * @attr {Object} gnRecordHistoryStep - The history step object to display.
+   * @attr {boolean} [noTitle] - When true, hides the record title link.
+   * @attr {boolean} [noSourceViewOption] - When true, hides the "View previous
+   *   version" and "View changed version" buttons.
+   * @attr {boolean} [noRecoverOption] - When true, hides the "Restore" button.
+   * @attr {boolean} [allowRemoval] - When true, shows the remove step button
+   *   (restricted to administrators).
+   */
   module.directive("gnRecordHistoryStep", [
     "gnDoiService",
     "gnRecordHistoryService",
@@ -134,8 +145,8 @@
         scope: {
           h: "=gnRecordHistoryStep",
           noTitle: "@noTitle",
-          noSourceViewOption: "@noTitle",
-          noRecoverOption: "@noTitle",
+          noSourceViewOption: "@noSourceViewOption",
+          noRecoverOption: "@noRecoverOption",
           allowRemoval: "=allowRemoval"
         },
         templateUrl: "../../catalog/components/history/partials/historyStep.html",
