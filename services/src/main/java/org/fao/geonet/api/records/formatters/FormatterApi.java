@@ -326,7 +326,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
             long roundedChangeDate = changeDateAsTime / 1000 * 1000;
-            if (request.checkNotModified(language, roundedChangeDate) &&
+            if (request.checkNotModified(eTag(context, language), roundedChangeDate) &&
                 context.getBean(CacheConfig.class).allowCaching(key)) {
                 if (!skipPopularityBool && approved) {
                     context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
@@ -340,7 +340,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final FormatMetadata formatMetadata = new FormatMetadata(context, key, request);
 
         byte[] bytes;
-        if (hasNonStandardParameters(request)) {
+        if (!canUseSharedCache(context, request)) {
             // the http headers can cause a formatter to output custom output due to the parameters.
             // because it is not known how the parameters may affect the output then we have two choices
             // 1. make a unique cache for each configuration of parameters
@@ -499,7 +499,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         final FormatMetadata formatMetadata = new FormatMetadata(context, key, request);
 
         byte[] bytes;
-        if (hasNonStandardParameters(request)) {
+        if (!canUseSharedCache(context, request)) {
             // the http headers can cause a formatter to output custom output due to the parameters.
             // because it is not known how the parameters may affect the output then we have two choices
             // 1. make a unique cache for each configuration of parameters
@@ -518,6 +518,38 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
 
             writer.writeOutResponse(context, resolvedId, lang, request.getNativeResponse(HttpServletResponse.class), formatType, bytes);
         }
+    }
+
+    /**
+     * The output of a formatter depends on the user that requests it (for example, the links of the
+     * record depend on the privileges of the user). The shared cache only stores the output
+     * generated for anonymous visitors, authenticated users get the output generated for them.
+     * Anonymous visitors from the intranet get the privileges of the intranet group, so their output
+     * is not stored in the shared cache either.
+     */
+    private boolean canUseSharedCache(ServiceContext context, NativeWebRequest request) {
+        return !hasNonStandardParameters(request)
+            && !context.getUserSession().isAuthenticated()
+            && !isIntranet(context);
+    }
+
+    /**
+     * The ETag identifies who the output was generated for, so a browser does not reuse the output
+     * generated for another user (for example, after signing out).
+     */
+    private String eTag(ServiceContext context, String language) {
+        String viewer;
+        if (context.getUserSession().isAuthenticated()) {
+            viewer = "user" + context.getUserSession().getUserId();
+        } else {
+            viewer = isIntranet(context) ? "intranet" : "anonymous";
+        }
+        return language + "-" + viewer;
+    }
+
+    private boolean isIntranet(ServiceContext context) {
+        String ip = context.getIpAddress();
+        return ip != null && context.getBean(AccessManager.class).isIntranet(ip);
     }
 
     private boolean hasNonStandardParameters(NativeWebRequest request) {
@@ -789,14 +821,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
             final Specification<OperationAllowed> hasMdId = OperationAllowedSpecs.hasMetadataId(key.mdId);
             final Optional<OperationAllowed> one = serviceContext.getBean(OperationAllowedRepository.class).findOne(where(hasMdId).and(isPublished));
             final boolean isPublishedMd = one.isPresent();
-
-            Key withheldKey = null;
-            FormatMetadata loadWithheld = null;
-            if (!key.hideWithheld && isPublishedMd) {
-                withheldKey = new Key(key.mdId, key.lang, key.formatType, key.formatterId, true, key.width);
-                loadWithheld = new FormatMetadata(serviceContext, withheldKey, request);
-            }
-            return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd, withheldKey, loadWithheld);
+            return new StoreInfoAndDataLoadResult(bytes, changeDate, isPublishedMd);
         }
     }
 }
