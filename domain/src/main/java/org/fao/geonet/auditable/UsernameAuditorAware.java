@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,10 +23,14 @@
 package org.fao.geonet.auditable;
 
 import java.util.Optional;
-import org.fao.geonet.domain.User;
+import org.keycloak.KeycloakPrincipal;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 
 /**
  * Extracts the current user used, to store the information in the auditable entities.
@@ -41,6 +45,28 @@ public class UsernameAuditorAware implements AuditorAware<String> {
             return Optional.empty();
         }
 
-        return Optional.of(((User) authentication.getPrincipal()).getUsername());
+        return Optional.ofNullable(getUsername(authentication));
+    }
+
+    /**
+     * Returns the username of the authenticated user.
+     * The principal type depends on the authentication provider (database/LDAP, Keycloak, OIDC, JWT...),
+     * so it can't be cast to {@link org.fao.geonet.domain.User}.
+     */
+    public static String getUsername(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        } else if (principal instanceof KeycloakPrincipal
+            && ((KeycloakPrincipal<?>) principal).getKeycloakSecurityContext().getToken() != null) {
+            return ((KeycloakPrincipal<?>) principal).getKeycloakSecurityContext().getToken().getPreferredUsername();
+        } else if (principal instanceof OidcUser) {
+            return ((OidcUser) principal).getPreferredUsername();
+        } else if (principal instanceof OAuth2User) {
+            return ((OAuth2User) principal).getAttribute(StandardClaimNames.PREFERRED_USERNAME);
+        }
+        // Covers JwtAuthenticationToken (returns the principal claim, "sub" by default)
+        // and plain principals such as "anonymousUser" (returns principal.toString()).
+        return authentication.getName();
     }
 }

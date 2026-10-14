@@ -1,50 +1,41 @@
-/**
- * SchematronCriteriaType.java
+/*
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
+ * United Nations (FAO-UN), United Nations World Food Programme (WFP)
+ * and United Nations Environment Programme (UNEP)
  *
- * Copyright (C) 2013
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or (at
+ * your option) any later version.
  *
- * This file is part of project geonetwork
+ * This program is distributed in the hope that it will be useful, but
+ * WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * General Public License for more details.
  *
- * This software is free software; you can redistribute it and/or modify it under the terms of the
- * GNU General Public License as published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
  *
- * This software is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See
- * the GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License along with this library; if
- * not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
- * 02110-1301  USA
- *
- * As a special exception, if you link this library with other files to produce an executable, this
- * library does not by itself cause the resulting executable to be covered by the GNU General Public
- * License. This exception does not however invalidate any other reasons why the executable file
- * might be covered by the GNU General Public License.
- *
- * @author delawen
+ * Contact: Jeroen Ticheler - FAO - Viale delle Terme di Caracalla 2,
+ * Rome - Italy. email: geonetwork@osgeo.org
  */
 package org.fao.geonet.domain;
 
 import java.util.Arrays;
 import java.util.List;
 
+import org.fao.geonet.auditable.UsernameAuditorAware;
 import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.UserRepository;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.jdom.Element;
 import org.jdom.Namespace;
-import org.keycloak.KeycloakPrincipal;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 /**
  * Used on {@link SchematronCriteria}
@@ -109,25 +100,7 @@ public enum SchematronCriteriaType {
 
             final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             if (authentication != null) {
-                final Object principal = authentication.getPrincipal();
-                String username;
-                if (principal instanceof UserDetails) {
-                    username = ((UserDetails)principal).getUsername();
-                } else if (principal instanceof KeycloakPrincipal && ((KeycloakPrincipal) authentication.getPrincipal()).getKeycloakSecurityContext().getIdToken() != null) {
-                    username = ((KeycloakPrincipal) authentication.getPrincipal()).getKeycloakSecurityContext().getIdToken().getPreferredUsername();
-                }
-                else if (principal instanceof OidcUser) {
-                    username =  ((OidcUser)principal).getPreferredUsername();
-                }
-                else if (principal instanceof OAuth2User) {
-                    username =  ((OAuth2User)principal).getAttribute(StandardClaimNames.PREFERRED_USERNAME);
-                }
-                else if (authentication instanceof JwtAuthenticationToken) {
-                    username = authentication.getName();
-                }
-                else {
-                    username = principal.toString();
-                }
+                String username = UsernameAuditorAware.getUsername(authentication);
 
                 UserRepository userRepo = applicationContext.getBean(UserRepository.class);
                 User user = userRepo.findOneByUsername(username);
