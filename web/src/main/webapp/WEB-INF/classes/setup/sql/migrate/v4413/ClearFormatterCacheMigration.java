@@ -48,7 +48,8 @@ public class ClearFormatterCacheMigration extends DatabaseMigrationTask {
             formatterCache = applicationContext.getBean(FormatterCache.class);
             formatterCache.setClearCacheRequired(true);
         } catch (Exception e) {
-            Log.error(Geonet.GEONETWORK, "Error obtaining FormatterCache bean: " + e.getMessage(), e);
+            Log.warning(Geonet.GEONETWORK, "Error obtaining FormatterCache bean: " + e.getMessage() + ". "
+                + FormatterCache.CLEAR_CACHE_HINT, e);
         }
     }
 
@@ -59,13 +60,15 @@ public class ClearFormatterCacheMigration extends DatabaseMigrationTask {
             formatterCache.setClearCacheRequired(true);
             try {
                 GeonetworkDataDirectory dataDirectory = applicationContext.getBean(GeonetworkDataDirectory.class);
+                // If the data directory is not initialized yet (startup migration), FormatterCache
+                // clears the cache on GeonetworkDataDirectoryInitializedEvent.
                 if (dataDirectory.getSystemDataDir() != null) {
                     formatterCache.clear();
                     formatterCache.setClearCacheRequired(false);
                 }
             } catch (Exception e) {
-                // If dataDirectory is not yet initialized (startup migration),
-                // FormatterCache will clear the cache via GeonetworkDataDirectoryInitializedEvent once dataDirectory is initialized.
+                Log.warning(Geonet.GEONETWORK, "Error clearing formatter cache: " + e.getMessage() + ". "
+                    + FormatterCache.CLEAR_CACHE_HINT, e);
             }
         }
     }

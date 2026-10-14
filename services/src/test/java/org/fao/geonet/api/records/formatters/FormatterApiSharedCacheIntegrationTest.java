@@ -71,6 +71,8 @@ public class FormatterApiSharedCacheIntegrationTest extends AbstractServiceInteg
 
     private static final String DOWNLOAD_URL = "http://example.org/shared-cache-test-download";
     private static final String FORMATTER = "xsl-view";
+    private static final String INTERNET_IP = "203.0.113.10";
+    private static final String INTRANET_IP = "127.0.0.1";
 
     @Autowired
     private ApplicationContext applicationContext;
@@ -100,7 +102,7 @@ public class FormatterApiSharedCacheIntegrationTest extends AbstractServiceInteg
         metadataId = metadata.getId();
         metadataUuid = metadata.getUuid();
 
-        // The group "all" can only view the record, the members of the test group can also download.
+        // The group "all" can only view the record, the intranet and the members of the test group can also download.
         Group group = _groupRepo.save(new Group().setName("shared-cache-test-group"));
         groupMember = _userRepo.save(new User()
             .setUsername("shared-cache-member")
@@ -112,6 +114,8 @@ public class FormatterApiSharedCacheIntegrationTest extends AbstractServiceInteg
         allow(ReservedGroup.all.getId(), ReservedOperation.view);
         allow(group.getId(), ReservedOperation.view);
         allow(group.getId(), ReservedOperation.download);
+        allow(ReservedGroup.intranet.getId(), ReservedOperation.view);
+        allow(ReservedGroup.intranet.getId(), ReservedOperation.download);
     }
 
     @After
@@ -145,6 +149,16 @@ public class FormatterApiSharedCacheIntegrationTest extends AbstractServiceInteg
             viewedByAnonymousAgain.contains(DOWNLOAD_URL));
     }
 
+    @Test
+    public void outputGeneratedForIntranetVisitorsIsNotReusedForInternetVisitors() throws Exception {
+        String viewedFromIntranet = render(loginAsAnonymous(), INTRANET_IP);
+        assertTrue("The output for an intranet visitor that can download has the download link",
+            viewedFromIntranet.contains(DOWNLOAD_URL));
+
+        String viewedFromInternet = render(loginAsAnonymous());
+        assertFalse("The output for an internet visitor has no download link", viewedFromInternet.contains(DOWNLOAD_URL));
+    }
+
     private void allow(int groupId, ReservedOperation operation) {
         operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId()
             .setMetadataId(metadataId)
@@ -169,7 +183,12 @@ public class FormatterApiSharedCacheIntegrationTest extends AbstractServiceInteg
     }
 
     private String render(MockHttpSession session) throws Exception {
+        return render(session, INTERNET_IP);
+    }
+
+    private String render(MockHttpSession session, String ip) throws Exception {
         MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setRemoteAddr(ip);
         request.setSession(session);
         request.setPathInfo("/eng/blahblah");
         MockHttpServletResponse response = new MockHttpServletResponse();

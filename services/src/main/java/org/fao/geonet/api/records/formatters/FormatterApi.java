@@ -524,9 +524,14 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * The output of a formatter depends on the user that requests it (for example, the links of the
      * record depend on the privileges of the user). The shared cache only stores the output
      * generated for anonymous visitors, authenticated users get the output generated for them.
+     * Anonymous visitors from the intranet get the privileges of the intranet group, so their output
+     * is not stored in the shared cache either.
      */
     private boolean canUseSharedCache(ServiceContext context, NativeWebRequest request) {
-        return !hasNonStandardParameters(request) && !context.getUserSession().isAuthenticated();
+        String ip = context.getIpAddress();
+        return !hasNonStandardParameters(request)
+            && !context.getUserSession().isAuthenticated()
+            && (ip == null || !context.getBean(AccessManager.class).isIntranet(ip));
     }
 
     private boolean hasNonStandardParameters(NativeWebRequest request) {

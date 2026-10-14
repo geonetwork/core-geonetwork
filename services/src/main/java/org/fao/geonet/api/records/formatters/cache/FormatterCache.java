@@ -66,6 +66,8 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * @author Jesse on 3/5/2015.
  */
 public class FormatterCache implements ApplicationListener<GeonetworkDataDirectoryInitializedEvent> {
+    public static final String CLEAR_CACHE_HINT =
+        "Clear it as an administrator with DELETE /api/formatters/cache.";
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private final PersistentStore persistentStore;
     private final Cache<Key, StoreInfoAndData> memoryCache;
@@ -304,7 +306,8 @@ public class FormatterCache implements ApplicationListener<GeonetworkDataDirecto
                 clear();
                 clearCacheRequired = false;
             } catch (Exception e) {
-                Log.error(Geonet.GEONETWORK, "Error clearing formatter cache on data directory initialization: " + e.getMessage(), e);
+                Log.warning(Geonet.GEONETWORK, "Error clearing formatter cache on data directory initialization: "
+                    + e.getMessage() + ". " + CLEAR_CACHE_HINT, e);
             }
         }
     }
