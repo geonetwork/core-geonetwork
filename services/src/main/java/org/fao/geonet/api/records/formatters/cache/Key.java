@@ -23,6 +23,8 @@
 
 package org.fao.geonet.api.records.formatters.cache;
 
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.records.formatters.FormatType;
 import org.fao.geonet.api.records.formatters.FormatterWidth;
 
@@ -38,6 +40,7 @@ public class Key {
     public final String formatterId;
     public final boolean hideWithheld;
     public final FormatterWidth width;
+    public final String nodeId;
 
     /**
      * Constructor.
@@ -56,6 +59,19 @@ public class Key {
         this.formatterId = formatterId;
         this.hideWithheld = hideWithheld;
         this.width = width;
+        this.nodeId = currentNodeId();
+    }
+
+    /**
+     * The formatter output depends on the portal (logo, name, links, styles),
+     * so the cache is split per portal.
+     */
+    private static String currentNodeId() {
+        try {
+            return ApplicationContextHolder.get().getBean(NodeInfo.class).getId();
+        } catch (Exception e) {
+            return NodeInfo.DEFAULT_NODE;
+        }
     }
 
     @Override
@@ -70,6 +86,7 @@ public class Key {
         if (formatType != key.formatType) return false;
         if (width != key.width) return false;
         if (!formatterId.equals(key.formatterId)) return false;
+        if (!nodeId.equals(key.nodeId)) return false;
         return lang.equals(key.lang);
     }
 
@@ -81,6 +98,7 @@ public class Key {
         result = 31 * result + width.ordinal();
         result = 31 * result + formatterId.hashCode();
         result = 31 * result + (hideWithheld ? 1 : 0);
+        result = 31 * result + nodeId.hashCode();
         return result;
     }
 
@@ -93,6 +111,7 @@ public class Key {
             ", formatType=" + formatType +
             ", formatterId='" + formatterId + '\'' +
             ", hideWithheld=" + hideWithheld +
+            ", nodeId='" + nodeId + '\'' +
             '}';
     }
 }

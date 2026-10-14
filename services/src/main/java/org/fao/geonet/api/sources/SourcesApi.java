@@ -33,6 +33,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.fao.geonet.NodeInfo;
 import org.fao.geonet.api.ApiError;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
@@ -42,6 +43,7 @@ import org.fao.geonet.api.tools.i18n.TranslationPackBuilder;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.guiapi.search.XsltResponseWriter;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.LanguageRepository;
 import org.fao.geonet.repository.SortUtils;
 import org.fao.geonet.repository.SourceRepository;
@@ -84,6 +86,9 @@ public class SourcesApi {
 
     @Autowired
     LanguageRepository langRepository;
+
+    @Autowired
+    SettingManager settingManager;
 
     @Autowired
     private TranslationPackBuilder translationPackBuilder;
@@ -213,7 +218,9 @@ public class SourcesApi {
         HttpServletRequest request,
         HttpServletResponse response
     ) throws ResourceNotFoundException {
-        Optional<Source> source = sourceRepository.findById(sourceIdentifier);
+        // The main catalogue is identified as 'srv' in URLs, but its source is stored under the site id.
+        String sourceId = NodeInfo.DEFAULT_NODE.equals(sourceIdentifier) ? settingManager.getSiteId() : sourceIdentifier;
+        Optional<Source> source = sourceRepository.findById(sourceId);
         if (source.isEmpty()) {
             throw new ResourceNotFoundException(String.format(
                 "Source with uuid '%s' does not exist.",

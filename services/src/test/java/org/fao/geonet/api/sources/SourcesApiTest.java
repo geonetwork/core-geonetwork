@@ -29,6 +29,7 @@ import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
@@ -62,6 +63,9 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private SourceRepository sourceRepo;
 
+    @Autowired
+    private SettingManager settingManager;
+
     private MockMvc mockMvc;
 
     private MockHttpSession mockHttpSession;
@@ -94,6 +98,25 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         this.mockMvc.perform(get("/srv/api/sources/" + source.getUuid() + "/logo"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void getMainCatalogueLogoUsingNodeId() throws Exception {
+        // The main catalogue is 'srv' in URLs but its source is stored under the site id.
+        String siteId = settingManager.getSiteId();
+        if (!sourceRepo.existsById(siteId)) {
+            Source siteSource = new Source();
+            siteSource.setName("site-source-test");
+            siteSource.setUuid(siteId);
+            siteSource.setCreationDate(new ISODate());
+            siteSource.setType(SourceType.portal);
+            sourceRepo.save(siteSource);
+        }
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(get("/srv/api/sources/srv/logo"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING));
     }

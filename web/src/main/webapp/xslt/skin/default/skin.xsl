@@ -25,8 +25,12 @@
   </xsl:function>
 
   <xsl:template name="header">
+    <!-- 'all' (eg. record displayed with ?language=all) is not a UI language,
+    use the UI language provided by the formatter instead. -->
     <xsl:variable name="lang"
-                  select="/root/gui/language"/>
+                  select="if (/root/gui/language = 'all' and /root/gui/uiLanguage != '')
+                          then /root/gui/uiLanguage
+                          else /root/gui/language"/>
 
     <xsl:variable name="isHeaderEnabled"
                   select="if (util:getUiConfigurationJsonProperty(/root/request/ui, 'mods.header.enabled') = 'false')
@@ -84,9 +88,10 @@
                           <xsl:otherwise>
                             <img class="gn-logo"
                                  alt="{$i18n/siteLogo}"
-                                 src="{/root/gui/nodeUrl}api/site/logo"/>
+                                 src="{/root/gui/nodeUrl}api/sources/{/root/gui/nodeId}/logo"/>
                             <xsl:if test="$isShowGNName">
-                              <xsl:value-of select="$env//system/site/name"/>
+                              <xsl:value-of select="(tokenize(util:getNodeName('', $lang, false()), '\|')[1][. != ''],
+                                                    $env//system/site/name)[1]"/>
                             </xsl:if>
                           </xsl:otherwise>
                         </xsl:choose>
