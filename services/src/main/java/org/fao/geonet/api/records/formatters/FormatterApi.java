@@ -326,7 +326,7 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
             long roundedChangeDate = changeDateAsTime / 1000 * 1000;
-            if (request.checkNotModified(language, roundedChangeDate) &&
+            if (request.checkNotModified(eTag(context, language), roundedChangeDate) &&
                 context.getBean(CacheConfig.class).allowCaching(key)) {
                 if (!skipPopularityBool && approved) {
                     context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
@@ -528,10 +528,28 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
      * is not stored in the shared cache either.
      */
     private boolean canUseSharedCache(ServiceContext context, NativeWebRequest request) {
-        String ip = context.getIpAddress();
         return !hasNonStandardParameters(request)
             && !context.getUserSession().isAuthenticated()
-            && (ip == null || !context.getBean(AccessManager.class).isIntranet(ip));
+            && !isIntranet(context);
+    }
+
+    /**
+     * The ETag identifies who the output was generated for, so a browser does not reuse the output
+     * generated for another user (for example, after signing out).
+     */
+    private String eTag(ServiceContext context, String language) {
+        String viewer;
+        if (context.getUserSession().isAuthenticated()) {
+            viewer = "user" + context.getUserSession().getUserId();
+        } else {
+            viewer = isIntranet(context) ? "intranet" : "anonymous";
+        }
+        return language + "-" + viewer;
+    }
+
+    private boolean isIntranet(ServiceContext context) {
+        String ip = context.getIpAddress();
+        return ip != null && context.getBean(AccessManager.class).isIntranet(ip);
     }
 
     private boolean hasNonStandardParameters(NativeWebRequest request) {

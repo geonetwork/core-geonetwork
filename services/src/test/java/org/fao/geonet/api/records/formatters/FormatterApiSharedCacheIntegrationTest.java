@@ -57,6 +57,7 @@ import org.springframework.web.context.request.ServletWebRequest;
 import java.util.Arrays;
 
 import static org.fao.geonet.api.records.formatters.FormatterWidth._100;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -159,6 +160,18 @@ public class FormatterApiSharedCacheIntegrationTest extends AbstractServiceInteg
         assertFalse("The output for an internet visitor has no download link", viewedFromInternet.contains(DOWNLOAD_URL));
     }
 
+    @Test
+    public void browserDoesNotReuseTheOutputOfAUserAfterSigningOut() throws Exception {
+        MockHttpServletResponse viewedByMember = request(loginAs(groupMember), INTERNET_IP, null, 0);
+        String eTag = viewedByMember.getHeader("ETag");
+        long lastModified = viewedByMember.getDateHeader("Last-Modified");
+
+        MockHttpServletResponse viewedByAnonymous = request(loginAsAnonymous(), INTERNET_IP, eTag, lastModified);
+        assertEquals(200, viewedByAnonymous.getStatus());
+        assertFalse("The output for an anonymous visitor has no download link",
+            viewedByAnonymous.getContentAsString().contains(DOWNLOAD_URL));
+    }
+
     private void allow(int groupId, ReservedOperation operation) {
         operationAllowedRepository.save(new OperationAllowed(new OperationAllowedId()
             .setMetadataId(metadataId)
@@ -187,9 +200,18 @@ public class FormatterApiSharedCacheIntegrationTest extends AbstractServiceInteg
     }
 
     private String render(MockHttpSession session, String ip) throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
+        return request(session, ip, null, 0).getContentAsString();
+    }
+
+    private MockHttpServletResponse request(MockHttpSession session, String ip, String ifNoneMatch,
+                                            long ifModifiedSince) throws Exception {
+        MockHttpServletRequest request = new MockHttpServletRequest("GET", "");
         request.setRemoteAddr(ip);
         request.setSession(session);
+        if (ifNoneMatch != null) {
+            request.addHeader("If-None-Match", ifNoneMatch);
+            request.addHeader("If-Modified-Since", ifModifiedSince);
+        }
         request.setPathInfo("/eng/blahblah");
         MockHttpServletResponse response = new MockHttpServletResponse();
         final String srvAppContext = "srvAppContext";
@@ -200,6 +222,6 @@ public class FormatterApiSharedCacheIntegrationTest extends AbstractServiceInteg
         formatService.getRecordFormattedBy(FORMATTER, metadataUuid, _100, null, "eng", FormatType.html, true,
             new ServletWebRequest(request, response), request);
 
-        return response.getContentAsString();
+        return response;
     }
 }
