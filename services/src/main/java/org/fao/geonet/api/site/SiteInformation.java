@@ -244,7 +244,7 @@ public class SiteInformation {
             }
 
             Stats stats = new Stats(context);
-            if (stats.maxActive >= 0) {
+            if (stats.numActive >= 0) {
                 databaseProperties.put("db.numactive", "" + stats.numActive);
                 databaseProperties.put("db.numidle", "" + stats.numIdle);
                 databaseProperties.put("db.maxactive", "" + stats.maxActive);

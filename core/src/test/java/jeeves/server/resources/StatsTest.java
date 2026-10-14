@@ -45,6 +45,16 @@ public class StatsTest {
     }
 
     @Test
+    public void testDbcp2UnboundedPool() throws Exception {
+        try (BasicDataSource source = new BasicDataSource()) {
+            source.setMaxTotal(-1);
+            Stats stats = new Stats(source);
+            assertEquals(0, stats.numActive.intValue());
+            assertEquals(-1, stats.maxActive.intValue());
+        }
+    }
+
+    @Test
     public void testPoolWithMaxActiveOnly() {
         // Shape of commons-dbcp 1.x and Tomcat jdbc-pool
         Stats stats = new Stats(new MaxActivePool());
