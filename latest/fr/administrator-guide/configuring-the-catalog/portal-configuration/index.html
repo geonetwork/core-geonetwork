@@ -1721,6 +1721,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#customizing-the-style-of-a-sub-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing the style of a sub-portal
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2547,6 +2558,17 @@
   
 </li>
         
+          <li class="md-nav__item">
+  <a href="#customizing-the-style-of-a-sub-portal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customizing the style of a sub-portal
+      
+    </span>
+  </a>
+  
+</li>
+        
       </ul>
     </nav>
   
@@ -2661,23 +2683,40 @@
 <p class="admonition-title">Note</p>
 <p>If no configuration is given for a portal or sub-portal, the default configuration will be used.</p>
 </div>
+<h3 id="customizing-the-style-of-a-sub-portal">Customizing the style of a sub-portal</h3>
+<p>A sub-portal can have its own CSS styles, applied on top of the default ones. The styles are defined in a file named after the sub-portal identifier: <code>{portalId}_custom_style.less</code> (or <code>.css</code>). The file has to be in the <code>catalog/style/</code> folder:</p>
+<ul>
+<li>In the source code: <code>web-ui/src/main/resources/catalog/style/</code></li>
+<li>In a deployed application: <code>&lt;webapp&gt;/catalog/style/</code></li>
+</ul>
+<p>For example, for a sub-portal with the identifier <code>inspire</code>, create the file <code>inspire_custom_style.less</code>:</p>
+<div class="language-css highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">.</span><span class="nc">navbar</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="k">background-color</span><span class="p">:</span><span class="w"> </span><span class="mh">#005a9c</span><span class="w"> </span><span class="cp">!important</span><span class="p">;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="p">}</span>
+</span></code></pre></div>
+<p>Restart the application (or rebuild it if the file was added in the source code). The styles are then available at <code>http://localhost:8080/geonetwork/static/inspire_custom_style.css</code> and are loaded by the pages of that sub-portal, including the page of a record opened from its permalink (<code>http://localhost:8080/geonetwork/inspire/api/records/{uuid}</code>).</p>
+<p>The main catalogue uses the file <code>srv_custom_style.less</code>, which is provided empty in the source code.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>A sub-portal without a styles file uses the default styles. In that case the request to <code>.../static/{portalId}_custom_style.css</code> returns a 404, which is expected.</p>
+</div>
 <h2 id="example-of-usage">Example of usage</h2>
 <p>To find terms available for filtering you can query a record in your ElasticSearch instance: </p>
 <p><code>POST /gn-records*/_search
 {"query":{"query_string":{"query":"+uuid:\"EXT_DS120344\""}}}</code></p>
 <p>This shows elements such as keywords are grouped together under a "tag" element. A tag element in a multilingual catalogue looks something like this:
-<div class="language-text highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>"tag" : [
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>            {
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>              "default" : "BIRDS",
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>              "langeng" : "BIRDS"
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>            },
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>            {
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>              "default" : "MARINE",
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>              "langeng" : "MARINE",
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>              "key" : "https://registry.geonetwork-opensource.org/theme/nrw-keywords/marine-uc"
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>            },
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>...
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>]
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>"tag" : [
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>            {
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>              "default" : "BIRDS",
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>              "langeng" : "BIRDS"
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>            },
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>            {
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>              "default" : "MARINE",
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>              "langeng" : "MARINE",
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>              "key" : "https://registry.geonetwork-opensource.org/theme/nrw-keywords/marine-uc"
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>            },
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>...
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>]
 </span></code></pre></div></p>
 <p>You can use the Query string syntax search <code>+tag.default:"BIRDS"</code> as the filter for a sub-portal.</p>
 <p>You can use the <code>+</code> + (this term must be present) and <code>-</code> (this term must not be present).</p>
