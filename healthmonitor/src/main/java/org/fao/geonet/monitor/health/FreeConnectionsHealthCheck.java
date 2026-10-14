@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -48,6 +48,9 @@ public class FreeConnectionsHealthCheck implements HealthCheckFactory {
                 Stats stats;
                 try {
                     stats = new Stats(context);
+                    if (stats.maxActive < 0 || stats.numActive < 0) {
+                        return Result.healthy("Connection pool statistics not available for database " + Geonet.Res.MAIN_DB);
+                    }
                     int free = stats.maxActive - stats.numActive;
                     double fivePercent = Math.max(2.0, ((double) stats.maxActive) * 0.01);
                     if (free < fivePercent) {
