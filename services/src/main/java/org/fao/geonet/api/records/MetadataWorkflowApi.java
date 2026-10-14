@@ -529,7 +529,10 @@ public class MetadataWorkflowApi {
                     .withDescriptionKey("exception.resourceNotEnabled.groupWorkflow.description", new Object[]{groupOwner.getName()});
             }
 
-            isEnableWorkflowForPublishedMetadataAction = metadataUtils.isMetadataPublished(metadata.getId());
+            // Enabling workflow (DRAFT) on a published record: it will also be set to APPROVED below,
+            // so the published version keeps an approved status
+            isEnableWorkflowForPublishedMetadataAction = status.getStatus() == Integer.parseInt(StatusValue.Status.DRAFT)
+                && metadataUtils.isMetadataPublished(metadata.getId());
         }
 
 
@@ -553,9 +556,14 @@ public class MetadataWorkflowApi {
             boolean isInvalid = MetadataUtils.retrieveMetadataValidationStatus(metadata, context);
 
             if (isInvalid) {
-                throw new NotAllowedException("Metadata is invalid: can't be submitted or approved")
-                    .withMessageKey("exception.resourceInvalid.metadata")
-                    .withDescriptionKey("exception.resourceInvalid.metadata.description");
+                if (!isEnableWorkflowForPublishedMetadataAction) {
+                    throw new NotAllowedException("Metadata is invalid: can't be submitted or approved")
+                        .withMessageKey("exception.resourceInvalid.metadata")
+                        .withDescriptionKey("exception.resourceInvalid.metadata.description");
+                }
+
+                // Published but invalid record: only enable workflow (DRAFT), don't approve it
+                isEnableWorkflowForPublishedMetadataAction = false;
             }
         }
 
@@ -581,7 +589,11 @@ public class MetadataWorkflowApi {
             listOfStatusChange.clear();
             listOfStatusChange.add(metadataStatusApprovedValue);
 
-            statusUpdate = sa.onStatusChange(listOfStatusChange, false);
+            Map<Integer, StatusChangeType> approvedStatusUpdate = sa.onStatusChange(listOfStatusChange, false);
+            // Keep UPDATED if either change was applied, so the record is reindexed
+            if (approvedStatusUpdate.get(metadata.getId()) == StatusChangeType.UPDATED) {
+                statusUpdate = approvedStatusUpdate;
+            }
         }
 
         int metadataIdApproved = metadata.getId();
