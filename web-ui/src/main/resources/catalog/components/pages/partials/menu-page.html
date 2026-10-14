@@ -1,8 +1,4 @@
-<li
-  data-ng-class="{'dropdown': isSubmenu, 'btn-group': renderAsButton}"
-  role="menuitem"
-  data-ng-hide="isSubmenu && page.pages.length < 1"
->
+<li data-ng-class="{'dropdown': isSubmenu, 'btn-group': renderAsButton}" role="menuitem">
   <!-- Submenu dropdown toggle -->
   <a
     data-ng-if="isSubmenu"
@@ -17,7 +13,7 @@
       data-ng-show="page.icon && page.icon.length > 0"
       class="fa fa-fw {{page.icon}}"
     ></span>
-    <span>{{page.label}}</span>
+    <span>{{page.label | translate}}</span>
     <span class="caret hidden-xs"></span>
   </a>
 

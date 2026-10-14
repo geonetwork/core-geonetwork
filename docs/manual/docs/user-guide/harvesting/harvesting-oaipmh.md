@@ -42,7 +42,7 @@ Providing the following information:
 -   **Privileges** - Assign privileges to harvested metadata.
 
 
-!!! Notes
+!!! note
 
     -   If you request the oai_dc output format, GeoNetwork will convert it to Dublin Core format.
     -   When you edit a previously created OAIPMH harvester instance, both the *set* and *prefix* drop down lists will be empty. You have to press the retrieve info button again to connect to the remote server and retrieve set and prefix information.

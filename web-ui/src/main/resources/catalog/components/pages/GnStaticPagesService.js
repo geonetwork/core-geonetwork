@@ -39,35 +39,8 @@
         });
       };
 
-      function buildMenu(pagesMenu, staticPages, pagesConfig) {
-        pagesConfig.forEach(function (menu) {
-          if (typeof menu === "string") {
-            if (staticPages[menu]) {
-              pagesMenu.push(staticPages[menu]);
-            } else {
-              console.warn(
-                menu +
-                  " not found in pages configuration." +
-                  " Check your UI configuration."
-              );
-            }
-          } else if (angular.isObject(menu)) {
-            var key = Object.keys(menu)[0],
-              submenu = {
-                label: key,
-                type: "submenu",
-                pages: []
-              };
-            buildMenu(submenu.pages, staticPages, menu[key]);
-            pagesMenu.push(submenu);
-          }
-        });
-        return pagesMenu;
-      }
-
       return {
-        loadPages: loadPages,
-        buildMenu: buildMenu
+        loadPages: loadPages
       };
     }
   ]);

@@ -22,7 +22,7 @@ Standard OAI-PMH requests can be done using the url above and the 6 verbs provid
 
 This verb is used to retrieve information about a repository.
 
-http://localhost:8080/geonetwork/srv/api/oaipmh?verb=Identify
+`http://localhost:8080/geonetwork/srv/api/oaipmh?verb=Identify`
 
 ```xml
 <OAI-PMH xmlns="http://www.openarchives.org/OAI/2.0/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -50,7 +50,7 @@ This verb is used to retrieve the metadata formats available from a repository.
 
 In the catalogue, this corresponds to the schema plugins that are installed.
 
-http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListMetadataFormats
+`http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListMetadataFormats`
 
 ```xml
 
@@ -97,7 +97,7 @@ This verb is used to retrieve the set structure of a repository, useful for sele
 
 In the catalogue, this corresponds to the categories.
 
-http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListSets
+`http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListSets`
 
 ```xml
 
@@ -124,9 +124,9 @@ http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListSets
 
 This verb is used to harvest records from a repository.
 
-http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&metadataPrefix=oai_dc
-http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&metadataPrefix=iso19139
-http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&metadataPrefix=datacite
+`http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&metadataPrefix=oai_dc`
+`http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&metadataPrefix=iso19139`
+`http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&metadataPrefix=datacite`
 
 `metadataPrefix` is the metadata format to be returned, it can be a schema plugin identifier such as `iso19139`, `iso19115-3.2018`, ...
 or a conversion defined in each schema plugin `formatter` folder (eg. `oai_dc`).
@@ -163,7 +163,7 @@ The maximum number of records in the response is limited by the setting `system/
 
 To paginate over records use the `resumptionToken` parameter in the request. The response will include a `resumptionToken` element if there are more records to retrieve.
 
-http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&metadataPrefix=oai_dc&resumptionToken=/-/oai_dc/-//-//-/7ucugfvmh534od2bzcz267oay/-/1
+`http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&metadataPrefix=oai_dc&resumptionToken=/-/oai_dc/-//-//-/7ucugfvmh534od2bzcz267oay/-/1`
 
 
 [More information](https://www.openarchives.org/OAI/openarchivesprotocol.html#ListRecords).
@@ -173,7 +173,7 @@ http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListRecords&metadataPrefix=
 
 This verb is an abbreviated form of ListRecords, retrieving only headers rather than records.
 
-http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListIdentifiers&metadataPrefix=iso19139
+`http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListIdentifiers&metadataPrefix=iso19139`
 
 [More information](https://www.openarchives.org/OAI/openarchivesprotocol.html#ListIdentifiers).
 
@@ -182,10 +182,16 @@ http://localhost:8080/geonetwork/srv/api/oaipmh?verb=ListIdentifiers&metadataPre
 
 This verb is used to retrieve an individual metadata record from a repository.
 
-http://localhost:8080/geonetwork/srv/api/oaipmh?verb=GetRecord&identifier=da165110-88fd-11da-a88f-000d939bc5d8&metadataPrefix=iso19139
+`http://localhost:8080/geonetwork/srv/api/oaipmh?verb=GetRecord&identifier=da165110-88fd-11da-a88f-000d939bc5d8&metadataPrefix=iso19139`
 
 [More information](https://www.openarchives.org/OAI/openarchivesprotocol.html#GetRecord).
 
+## Upgrading from GeoNetwork 3.0 Guidance
+
+OAI-PMH was unavailable between GeoNetwork 4.0 and 4.2 and was restored in a later 4.x release using the Elasticsearch engine.
+
+The endpoint URL has changed from `/geonetwork/srv/{lang}/oaipmh` to `/geonetwork/srv/api/oaipmh`.
+
 ## Reference
 
-Please see <https://www.openarchives.org/OAI/openarchivesprotocol.html> for further details.
+Please see the [OAI-PMH specification](https://www.openarchives.org/OAI/openarchivesprotocol.html) for further details.

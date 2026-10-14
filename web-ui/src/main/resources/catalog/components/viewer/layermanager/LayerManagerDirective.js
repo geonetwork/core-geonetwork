@@ -354,11 +354,21 @@
               });
             }
           }
+
+          function isWMSLayer(layerSource) {
+            return (
+              layerSource instanceof ol.source.ImageWMS ||
+              layerSource instanceof ol.source.TileWMS
+            );
+          }
+
           function init() {
-            scope.params = scope.layer.getSource().getParams() || {};
-            angular.forEach(scope.parameters, function (icon, p) {
-              initDimension(p);
-            });
+            if (isWMSLayer(scope.layer.getSource())) {
+              scope.params = scope.layer.getSource().getParams() || {};
+              angular.forEach(scope.parameters, function (icon, p) {
+                initDimension(p);
+              });
+            }
           }
 
           init();

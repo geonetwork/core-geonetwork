@@ -41,7 +41,7 @@ and press :guilabel:`Add`` to create a new layer.
 
 ## User input
 
-Use `` `item` `` for user supplied input, or item in a list or tree::
+Use `` `item` `` for user-supplied input, or an item in a list or tree:
 
 Preview:
 
@@ -95,7 +95,7 @@ Rich structured text:
 Press :key:``Control-s`` to search.
 ```
 
-Use definition list to document data entry. The field names use strong as they name a user interface element. Field values to input uses monspace as user input to type in.
+Use a definition list to document data entry. The field names use strong as they name a user interface element. Field values use monospace as user input to type in.
 
 Preview:
 
@@ -109,7 +109,7 @@ Preview:
 
     :   `geoserver`
 
-    **Remeber me**
+    **Remember me**
 
     :   Unchecked
 
@@ -128,7 +128,7 @@ Markdown: definition lists
 
     :   `geoserver`
 
-    **Remeber me**
+    **Remember me**
 
     :   Unchecked
 
@@ -161,12 +161,12 @@ Use **bold** and *italics* for proper names of applications, commands, tools, an
 
 Preview:
 
-Launch ***pgAdmin*** and connect to the databsae `tutorial`.
+Launch ***pgAdmin*** and connect to the database `tutorial`.
 
 Markdown:
 
 ```markdown
-Launch ***pgAdmin*** and connect to the databsae `tutorial`.
+Launch ***pgAdmin*** and connect to the database `tutorial`.
 ```
 
 Rich structured text:
@@ -229,7 +229,7 @@ Material for markdown has extensive icon support, for most user interface elemen
 1.  Press the *Validate :fontawesome-solid-check:* button at the top of the page.
 ```
 
-Add cusotm icons to **`overrides/.icons/geocat`**:
+Add custom icons to **`overrides/.icons/geocat`**:
 
 ```markdown
 Thank you from the GeoCat team!

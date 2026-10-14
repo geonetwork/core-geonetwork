@@ -244,7 +244,7 @@
           types ||
           "parent|children|sources|hassources|" +
             "brothersAndSisters|services|datasets|" +
-            "siblings|associated|fcats|hasfeaturecats|related";
+            "siblings|associated|fcats|hasfeaturecats|related|versions";
         return "relatedType=" + types.split("|").join("&relatedType=");
       };
 
@@ -313,16 +313,15 @@
                   .then(
                     function (r) {
                       if (r.data.hits.total.value > 0) {
+                        // Check if the draft version is available
+                        var draftFound = r.data.hits.hits.some(function (md) {
+                          return md._source.draft === "y";
+                        });
+
                         //If trying to show a draft that is not a draft, correct url:
-                        if (
-                          r.data.hits.total.value == 1 &&
-                          window.location.hash.indexOf("/metadraf/") > 0
-                        ) {
-                          window.location.hash = window.location.hash.replace(
-                            "/metadraf/",
-                            "/metadata/"
-                          );
-                          //Now the location change event handles this
+                        if (getDraft && !draftFound) {
+                          gnSearchLocation.switchDraftToMetadata();
+                          // Now the location change event handles this
                           return;
                         }
 

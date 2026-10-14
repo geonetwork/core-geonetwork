@@ -35,4 +35,4 @@
 > -   Keycloak / [Fix csrf token when integrated with keycloak](https://github.com/geonetwork/core-geonetwork/pull/5672)
 > -   Keycloak / [User Profile Readonly for keycloak users](https://github.com/geonetwork/core-geonetwork/pull/5769)
 
-and more \... see [3.12.1 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.1+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.1+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.12.1 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.1+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.1+is%3Aclosed+is%3Apr) for full details.

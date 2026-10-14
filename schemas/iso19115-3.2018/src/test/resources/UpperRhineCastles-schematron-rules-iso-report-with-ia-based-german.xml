@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svrl:schematron-output xmlns:svrl="http://purl.oclc.org/dsdl/svrl" title="Règles ISO" schemaVersion="">
+  <!--
+         
+        
+         
+        
+         
+        -->
+  <svrl:ns-prefix-in-attribute-values uri="http://www.opengis.net/gml/3.2" prefix="gml" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/srv/2.0" prefix="srv" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/cit/2.0" prefix="cit" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/gex/1.0" prefix="gex" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/mco/1.0" prefix="mco" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/mdb/2.0" prefix="mdb" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/mex/1.0" prefix="mex" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/mmi/1.0" prefix="mmi" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/gmw/1.0" prefix="gmw" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/mrc/2.0" prefix="mrc" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/mrd/1.0" prefix="mrd" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/mri/1.0" prefix="mri" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/mrs/1.0" prefix="mrs" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/mcc/1.0" prefix="mcc" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/lan/1.0" prefix="lan" />
+  <svrl:ns-prefix-in-attribute-values uri="http://standards.iso.org/iso/19115/-3/gco/1.0" prefix="gco" />
+  <svrl:ns-prefix-in-attribute-values uri="http://www.fao.org/geonetwork" prefix="geonet" />
+  <svrl:ns-prefix-in-attribute-values uri="http://www.w3.org/1999/xlink" prefix="xlink" />
+  <svrl:ns-prefix-in-attribute-values uri="http://www.w3.org/2001/XMLSchema" prefix="xsi" />
+  <svrl:active-pattern document="" id="rule.cit.individualnameandposition" name_en="Individual MUST have a name or a position" name_fr="Une personne DOIT avoir un nom ou une fonction" name_de="Eine Person MUSS einen Namen oder eine Funktion haben" name="Une personne DOIT avoir un nom ou une fonction" />
+  <svrl:fired-rule context="//cit:CI_Individual" />
+  <svrl:successful-report ref="#_" test="$hasName or $hasPosition" location="/*[local-name()='MD_Metadata']/*[local-name()='identificationInfo']/*[local-name()='MD_DataIdentification']/*[local-name()='pointOfContact']&#xA;          [&#xA;          1&#xA;          ]&#xA;        /*[local-name()='CI_Responsibility']/*[local-name()='party']/*[local-name()='CI_Organisation']/*[local-name()='individual']/*[local-name()='CI_Individual']">
+    <svrl:text />
+    <svrl:diagnostic-reference ref="#_" diagnostic="rule.cit.individualnameandposition-success-en" xml:lang="en">Individual name is
+      "
+          GeoRhena GeoRhena GeoRhena GeoRhena
+          "
+      and position
+      "
+          
+          "
+      .</svrl:diagnostic-reference>
+    <svrl:diagnostic-reference ref="#_" diagnostic="rule.cit.individualnameandposition-success-fr" xml:lang="fr">Le nom de la personne est
+      "
+          GeoRhena GeoRhena GeoRhena GeoRhena
+          "
+      ,sa fonction
+      "
+          
+          "
+      .</svrl:diagnostic-reference>
+    <svrl:diagnostic-reference ref="#_" diagnostic="rule.cit.individualnameandposition-success-de" xml:lang="de">Der Name der Person ist
+      "
+          GeoRhena GeoRhena GeoRhena GeoRhena
+          "
+      und die Position
+      "
+
+          "
+      .</svrl:diagnostic-reference>
+  </svrl:successful-report>
+</svrl:schematron-output>
+

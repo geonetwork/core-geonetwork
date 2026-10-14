@@ -29,8 +29,13 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import org.apache.commons.lang.StringUtils;
+import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.utils.Log;
 
 /**
  * A custom deserializer for parsing JSON responses into instances of {@link SearchResponse}.
@@ -74,6 +79,7 @@ public class SearchResponseDeserializer extends StdDeserializer<SearchResponse> 
     public static final String DATE_STAMP = "dateStamp";
     public static final String SOURCE_CATALOGUE = "sourceCatalogue";
     public static final String ID = "_id";
+    public static final String UNKNOWN_ID = "unknown";
 
     public SearchResponseDeserializer() {
         this(null);
@@ -91,15 +97,31 @@ public class SearchResponseDeserializer extends StdDeserializer<SearchResponse> 
         long total = node.get(HITS).get(TOTAL).get(VALUE).asLong();
 
         Set<SearchResponseHit> searchResponseHits = new HashSet<>();
+        List<String> failedHits = new ArrayList<>();
         node.get(HITS).get(HITS).forEach(hitNode -> {
-            String uuid = hitNode.get(ID).asText();
-            String schema = hitNode.get(SOURCE).get(DOCUMENT_STANDARD).asText();
-            String changeDate = hitNode.get(SOURCE).get(DATE_STAMP).asText();
-            String source = hitNode.get(SOURCE).get(SOURCE_CATALOGUE).asText();
-            SearchResponseHit searchResponseHit = new SearchResponseHit(uuid, schema, changeDate, source);
-            searchResponseHits.add(searchResponseHit);
+            // Parse each hit defensively so a single malformed record does not abort the whole page
+            // (and therefore the whole harvest). Failures are collected and reported by the harvester.
+            String uuid = hitNode.path(ID).asText(null);
+            try {
+                if (StringUtils.isBlank(uuid)) {
+                    // Without a uuid the record cannot be harvested, treat it as a failed hit.
+                    Log.warning(Geonet.HARVESTER,
+                        "Skipping search hit without a usable '" + ID + "': " + hitNode);
+                    failedHits.add(UNKNOWN_ID);
+                    return;
+                }
+                String schema = hitNode.path(SOURCE).path(DOCUMENT_STANDARD).asText();
+                // null signals RecordInfo to set dateWasNull=true and always harvest the record
+                String changeDate = hitNode.path(SOURCE).path(DATE_STAMP).asText(null);
+                String source = hitNode.path(SOURCE).path(SOURCE_CATALOGUE).asText();
+                searchResponseHits.add(new SearchResponseHit(uuid, schema, changeDate, source));
+            } catch (Exception e) {
+                Log.warning(Geonet.HARVESTER,
+                    "Skipping malformed search hit with " + ID + " '" + uuid + "': " + e.getMessage(), e);
+                failedHits.add(StringUtils.isBlank(uuid) ? UNKNOWN_ID : uuid);
+            }
         });
 
-        return new SearchResponse(total, searchResponseHits);
+        return new SearchResponse(total, searchResponseHits, failedHits);
     }
 }

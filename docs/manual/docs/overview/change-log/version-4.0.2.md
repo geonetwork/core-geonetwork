@@ -89,4 +89,4 @@ For more details check [Configuring search fields](../../customizing-application
 -   [User searches / Add portals with filter in the list](https://github.com/geonetwork/core-geonetwork/pull/5181)
 -   [Index / improvements](https://github.com/geonetwork/core-geonetwork/pull/5175)
 
-and more \... see [4.0.2 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.2+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.2+is%3Aclosed) for full details.
+and more ... see [4.0.2 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.0.2+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=is%3Apr+milestone%3A4.0.2+is%3Aclosed) for full details.

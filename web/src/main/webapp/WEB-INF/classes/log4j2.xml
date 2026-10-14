@@ -68,8 +68,6 @@
     <Logger name="geonetwork.search" level="error"/>
     <Logger name="geonetwork.security" level="error"/>
     <Logger name="geonetwork.spatineo" level="error"/>
-    <Logger name="geonetwork.sru" level="error"/>
-    <Logger name="geonetwork.sru.search" level="error"/>
     <Logger name="geonetwork.thesaurus" level="error"/>
     <Logger name="geonetwork.thesaurus-man" level="error"/>
     <Logger name="geonetwork.userwatchlist" level="error"/>
@@ -100,14 +98,6 @@
       <AppenderRef ref="Console"/>
       <AppenderRef ref="File"/>
     </Logger>
-
-    <!--  JZKIT logging configuration -->
-    <Logger name="org.jzkit" level="error" additivity="false">
-      <AppenderRef ref="Console"/>
-      <AppenderRef ref="File"/>
-    </Logger>
-    <Logger name="org.jzkit.a2j" level="error"/>
-    <Logger name="org.jzkit.search.impl.LRUCache" level="error"/>
 
     <Logger name="ro.isdc.wro.http" level="error" additivity="false">
       <AppenderRef ref="Console"/>

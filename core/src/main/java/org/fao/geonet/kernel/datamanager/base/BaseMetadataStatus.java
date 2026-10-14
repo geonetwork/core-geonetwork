@@ -38,6 +38,7 @@ import org.fao.geonet.kernel.datamanager.IMetadataIndexer;
 import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.GroupRepository;
 import org.fao.geonet.repository.MetadataStatusRepository;
@@ -155,7 +156,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
     public MetadataStatus setStatus(ServiceContext context, int id, int status, ISODate changeDate,
             String changeMessage) throws Exception {
         MetadataStatus statusObject = setStatusExt(context, id, status, changeDate, changeMessage);
-        metadataIndexer.indexMetadata(Integer.toString(id), true, IndexingMode.full);
+        metadataIndexer.indexMetadata(Integer.toString(id), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
         return statusObject;
     }
 
@@ -163,7 +164,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
     public MetadataStatus setStatusExt(MetadataStatus metatatStatus, boolean updateIndex) throws Exception {
         metadataStatusRepository.save(metatatStatus);
         if (updateIndex) {
-            metadataIndexer.indexMetadata(metatatStatus.getMetadataId() + "", true, IndexingMode.full);
+            metadataIndexer.indexMetadata(metatatStatus.getMetadataId() + "", DirectIndexSubmitter.INSTANCE, IndexingMode.full);
         }
         return metatatStatus;
     }
@@ -250,7 +251,7 @@ public class BaseMetadataStatus implements IMetadataStatus {
         metatatStatus.setTitles(metadataUtils.extractTitles(Integer.toString(metadataId)));
 
         metadataStatusRepository.save(metatatStatus);
-        metadataIndexer.indexMetadata(metadataId + "", true, IndexingMode.full);
+        metadataIndexer.indexMetadata(metadataId + "", DirectIndexSubmitter.INSTANCE, IndexingMode.full);
     }
 
     // Utility to verify workflow status transitions

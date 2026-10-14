@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -47,6 +47,7 @@ import org.fao.geonet.kernel.search.EsFilterBuilder;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.index.IndexingList;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.lib.Lib;
@@ -540,7 +541,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void setTemplate(final int id, final MetadataType type, final String title) throws Exception {
         setTemplateExt(id, type);
-        metadataIndexer.indexMetadata(Integer.toString(id), true, IndexingMode.full);
+        metadataIndexer.indexMetadata(Integer.toString(id), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
     }
 
     @Override
@@ -554,7 +555,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void setHarvested(int id, String harvestUuid) throws Exception {
         setHarvestedExt(id, harvestUuid);
-        metadataIndexer.indexMetadata(Integer.toString(id), true, IndexingMode.full);
+        metadataIndexer.indexMetadata(Integer.toString(id), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
     }
 
     /**
@@ -610,16 +611,16 @@ public class BaseMetadataUtils implements IMetadataUtils {
         // READONLYMODE
         if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             int iId = Integer.parseInt(id);
-            metadataRepository.update(iId, entity -> entity.getDataInfo().setPopularity(
-                entity.getDataInfo().getPopularity() + 1
-            ));
-            final java.util.Optional<Metadata> metadata = metadataRepository.findById(iId);
+            // Update only the popularity column. Saving the whole entity writes back every column
+            // as loaded, which can overwrite an update of the record committed in the meantime.
+            metadataRepository.incrementPopularity(iId);
+            final MetadataRepository.UuidAndPopularity metadataInfo = metadataRepository.findUuidAndPopularityById(iId);
 
-            if (metadata.isPresent()) {
+            if (metadataInfo != null) {
                 searchManager.updateFieldAsynch(
-                    metadata.get().getUuid(),
+                    metadataInfo.getUuid(),
                     Geonet.IndexFieldNames.POPULARITY,
-                    metadata.get().getDataInfo().getPopularity());
+                    metadataInfo.getPopularity());
 
             }
         } else {
@@ -795,7 +796,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
         getXmlSerializer().update(metadataId, md, changeDate, true, uuid, context);
 
         if (indexAfterChange) {
-            metadataIndexer.indexMetadata(metadataId, true, IndexingMode.full);
+            metadataIndexer.indexMetadata(metadataId, DirectIndexSubmitter.INSTANCE, IndexingMode.full);
         }
     }
 

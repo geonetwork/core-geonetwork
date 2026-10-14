@@ -115,6 +115,7 @@ public class AbstractSchematronTest {
             params.put("lang", "eng");
             params.put("thesaurusDir", THESAURUS_DIR.toAbsolutePath().toString().replace("\\", "/"));
             params.put("rule", ruleName + ".xsl");
+            params.put("metadataId", "0");
 
             Path outputFile = temporaryFolder.getRoot().toPath().resolve("path/requiredtoFind/utilsfile/" + ruleName + ".xsl");
             Files.createDirectories(outputFile.getParent());

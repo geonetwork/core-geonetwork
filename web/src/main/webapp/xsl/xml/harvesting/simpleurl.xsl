@@ -25,6 +25,16 @@
     <recordIdPath>
       <xsl:value-of select="recordIdPath/value"/>
     </recordIdPath>
+    <recordIdPathMode>
+      <xsl:choose>
+        <xsl:when test="recordIdPathMode/value">
+          <xsl:value-of select="recordIdPathMode/value" />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>auto</xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
+    </recordIdPathMode>
     <pageSizeParam>
       <xsl:value-of select="pageSizeParam/value"/>
     </pageSizeParam>

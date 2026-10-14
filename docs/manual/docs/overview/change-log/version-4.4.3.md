@@ -41,4 +41,4 @@ Major changes:
 - Documentation / Manual improvements
 - Documentation / API SpringDoc fixes
 
-and more \... see [4.4.3 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.4.3+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.4.3+is%3Aclosed) for full details.
+and more ... see [4.4.3 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.4.3+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.4.3+is%3Aclosed) for full details.

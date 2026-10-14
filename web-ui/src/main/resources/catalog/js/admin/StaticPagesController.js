@@ -52,6 +52,9 @@
       $scope.uploadScope = angular.element("#gn-static-page-edit").scope();
       $scope.groups = [];
 
+      // Reject identifiers that start with "gn-" (reserved for built-in menu entries)
+      $scope.pageIdPattern = /^(?!gn-).+$/;
+
       $scope.unsupportedFile = false;
       $scope.$watchCollection("queue", function (n, o) {
         if (n != o && n.length == 1) {
@@ -82,7 +85,7 @@
 
       function loadStaticPages() {
         $scope.staticPageSelected = null;
-        $http.get("../api/pages").then(function (r) {
+        $http.get("../api/pages?includeAll=true").then(function (r) {
           $scope.staticPages = r.data;
         });
       }
@@ -171,7 +174,10 @@
           status: "HIDDEN",
           groups: "",
           label: "",
-          sections: []
+          sections: [],
+          showOnNonApproved: true,
+          showOnApproved: true,
+          showWhenWorkflowDisabled: true
         };
 
         $scope.pageApiLink = "";
@@ -182,7 +188,9 @@
       $scope.selectStaticPage = function (v) {
         $scope.isUpdate = true;
         $scope.staticPageSelected = v;
-        $scope.isGroupEnabled = $scope.staticPageSelected.status == "GROUPS";
+        $scope.isGroupEnabled =
+          $scope.staticPageSelected.status == "GROUPS" ||
+          $scope.staticPageSelected.status == "GROUPS_AND_ADMIN";
 
         var link =
           "api/pages/" +
@@ -258,7 +266,10 @@
         }
       };
       $scope.updateGroupSelection = function () {
-        if ($scope.staticPageSelected.status === "GROUPS") {
+        if (
+          $scope.staticPageSelected.status === "GROUPS" ||
+          $scope.staticPageSelected.status === "GROUPS_AND_ADMIN"
+        ) {
           $scope.isGroupEnabled = true;
         } else {
           $scope.isGroupEnabled = false;

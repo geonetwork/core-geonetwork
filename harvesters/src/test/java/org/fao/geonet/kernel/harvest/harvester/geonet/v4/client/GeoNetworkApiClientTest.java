@@ -26,8 +26,10 @@ package org.fao.geonet.kernel.harvest.harvester.geonet.v4.client;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -35,6 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadParameterEx;
@@ -42,10 +45,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.client.ClientHttpResponse;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 /**
@@ -270,5 +279,35 @@ public class GeoNetworkApiClientTest {
         } catch (URISyntaxException | IOException ex) {
             fail("Error retrieving sources");
         }
+    }
+
+    @Test
+    public void testRetrieveSourcesIgnoresUnknownFields() throws URISyntaxException, IOException {
+        String sourcesJson = "[{\"uuid\":\"abc-123\",\"name\":\"test-source\",\"datahubEnabled\":true,\"futureUnknownField\":\"value\"}]";
+
+        GeoNetwork4ApiClient client = spy(new GeoNetwork4ApiClient());
+        ClientHttpResponse mockResponse = mock(ClientHttpResponse.class);
+        doReturn(new ByteArrayInputStream(sourcesJson.getBytes(StandardCharsets.UTF_8))).when(mockResponse).getBody();
+        doReturn(mockResponse).when(client).doExecute(any(HttpUriRequest.class), anyString(), anyString());
+
+        Map<String, Source> sources = client.retrieveSources("http://localhost:8080/geonetwork", "", "");
+
+        assertEquals(1, sources.size());
+        assertEquals("test-source", sources.get("abc-123").getName());
+    }
+
+    @Test
+    public void testRetrieveGroupsIgnoresUnknownFields() throws URISyntaxException, IOException {
+        String groupsJson = "[{\"id\":1,\"name\":\"test-group\",\"futureUnknownField\":\"value\"}]";
+
+        GeoNetwork4ApiClient client = spy(new GeoNetwork4ApiClient());
+        ClientHttpResponse mockResponse = mock(ClientHttpResponse.class);
+        doReturn(new ByteArrayInputStream(groupsJson.getBytes(StandardCharsets.UTF_8))).when(mockResponse).getBody();
+        doReturn(mockResponse).when(client).doExecute(any(HttpUriRequest.class), anyString(), anyString());
+
+        List<Group> groups = client.retrieveGroups("http://localhost:8080/geonetwork", "", "");
+
+        assertEquals(1, groups.size());
+        assertEquals("test-group", groups.get(0).getName());
     }
 }

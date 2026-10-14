@@ -85,7 +85,7 @@ public class LanguageXslProcessTest extends XslProcessTest {
         params.put("defaultLanguage", "fre");
         Element resultElement = Xml.transform(inputElement, xslFile, params);
         resultString = Xml.getString(resultElement);
-        check(resultString, "fre", new String[]{}, 224, 9);
+        check(resultString, "fre", new String[]{}, 222, 8);
         assertThat(
             resultString,
             hasXPath(XPATH_MAIN_TITLE, equalTo("Modèle pour les données vecteur (multilingue)"))
@@ -186,7 +186,7 @@ public class LanguageXslProcessTest extends XslProcessTest {
         Element resultElement = Xml.transform(inputElement, xslFile, params);
         String resultString = Xml.getString(resultElement);
 
-        check(resultString, "eng", new String[]{}, 224, 9);
+        check(resultString, "eng", new String[]{}, 222, 8);
         assertThat(
             resultString,
             hasXPath(XPATH_MAIN_TITLE, equalTo("Template for Vector data (multilingual)"))

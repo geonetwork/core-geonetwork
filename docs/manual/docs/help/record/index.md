@@ -1,6 +1,6 @@
 # View Record
 
-View record contents to discovering more in depth details about record and the dataset described.
+View record contents to discover more in-depth details about the record and the dataset it describes.
 
 Locate record to view:
 
@@ -41,7 +41,7 @@ Locate record to view:
 
 ## Default View
 
-The **Default view**, provides a quick summary of record contents:
+The **Default view** provides a quick summary of record contents:
 
 1.  Use **Display mode** drop-down menu to select **Default view**.
 
@@ -60,7 +60,7 @@ The **Default view**, provides a quick summary of record contents:
     ![](img/about.png)
     *About this resource*
 
-4.  **Technical information** provides details such data format.
+4.  **Technical information** provides details such as data format.
 
     ![](img/technical.png)
     *Technical information*
@@ -133,8 +133,8 @@ The **Full view** is used to show complete record contents.
 
     This is provided as a machine readable code to the reference system.
     
-    The example uses the code  `http://www.opengis.net/def/crs/EPSG/0/26917` for the 
-    `NAD83 / UTM zone 17N]` reference system.
+    The example uses the code `http://www.opengis.net/def/crs/EPSG/0/26917` for the
+    `NAD83 / UTM zone 17N` reference system.
 
 8.  The **Metadata** tab covers the unique File Identifier, providing a link to view the XML document,
     along with point of contact information for the record.
@@ -161,7 +161,7 @@ The **Full view** is used to show complete record contents.
     <div class="browser-mockup">
     ![](img/record-xml.png)
     </div>
-    *XML download shown in FireFox*
+    *XML download shown in Firefox*
 
 3.  Keep in mind XML record does not include any attached documents or thumbnails.
 
@@ -216,7 +216,7 @@ Download the contents of a single record.
     <div class="browser-mockup">
     ![](img/record-xml.png)
     </div>
-    *XML download shown in FireFox*
+    *XML download shown in Firefox*
 
 6.  **Export (RDF)** machine readable
     definition of vocabulary used.

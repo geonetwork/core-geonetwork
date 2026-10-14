@@ -2,6 +2,8 @@
 <xsl:stylesheet   xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                   xmlns:gco="http://www.isotc211.org/2005/gco"
                   xmlns:gmd="http://www.isotc211.org/2005/gmd"
+                  xmlns:gmx="http://www.isotc211.org/2005/gmx"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
                   xmlns:geonet="http://www.fao.org/geonetwork"
                   exclude-result-prefixes="#all">
 
@@ -15,6 +17,13 @@
   <xsl:template match="gmd:onLine[
                               */gmd:linkage/gmd:URL = $doi]"
                 priority="2"/>
+
+  <!-- Remove transferOptions whose only content is the DOI link being removed -->
+  <xsl:template match="gmd:transferOptions[
+      not(*/gmd:onLine[not(*/gmd:linkage/gmd:URL = $doi)]) and
+      not(*/gmd:offLine) and
+      not(*/gmd:unitsOfDistribution) and
+      not(*/gmd:transferSize)]"/>
 
   <xsl:template match="gmd:identifier[*/gmd:code/gmx:Anchor/@xlink:href = $doi]"
                 priority="2"/>

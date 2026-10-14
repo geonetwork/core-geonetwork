@@ -41,4 +41,4 @@ Fixes:
 * [Directory entries / Fix parsing of sorting configuration](https://github.com/geonetwork/core-geonetwork/pull/8482)
 * [Update file upload so that it has better error support.](https://github.com/geonetwork/core-geonetwork/pull/8427)
 
-and more \... see [4.4.7-0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.4.7+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.4.7+is%3Aclosed) for full details.
+and more ... see [4.4.7-0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A4.4.7+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A4.4.7+is%3Aclosed) for full details.

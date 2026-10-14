@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -37,10 +37,12 @@ import java.io.IOException;
 public class AddElemValue {
     private final String stringValue;
     private final Element nodeValue;
+    private final boolean isAddMode;
 
     public AddElemValue(String stringValue) throws JDOMException, IOException {
         Element finalNodeVal = null;
         String finalStringVal = stringValue.replaceAll("</?gn_(add|replace)>", "");
+        boolean isAddElement = !stringValue.startsWith("<gn_replace>");
         if (Xml.isXMLLike(finalStringVal)) {
             try {
                 finalNodeVal = Xml.loadString(stringValue, false);
@@ -55,11 +57,13 @@ public class AddElemValue {
         }
         this.nodeValue = finalNodeVal;
         this.stringValue = finalStringVal;
+        this.isAddMode = isAddElement;
     }
 
     public AddElemValue(Element nodeValue) {
         this.nodeValue = nodeValue;
         this.stringValue = null;
+        isAddMode = false;
     }
 
     public boolean isXml() {
@@ -72,5 +76,9 @@ public class AddElemValue {
 
     public Element getNodeValue() {
         return nodeValue;
+    }
+
+    public boolean isAddMode() {
+        return isAddMode;
     }
 }

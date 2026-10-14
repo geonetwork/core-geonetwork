@@ -26,7 +26,7 @@ A sub-portal is defined by:
 
 ![](img/portal-subportal.png)
 
-When creating a sub-portal with an identifier `ìnspire` for example, a new entry point on your catalogue will be available: <http://localhost:8080/geonetwork/inspire/>. Accessing the catalogue through it will only provide access to records matching the filter defined for this sub-portal. The `search filter` parameter value uses the Lucene query parser syntax (see <http://lucene.apache.org/java/2_9_1/queryparsersyntax.html>) and is applied to all searches.
+When creating a sub-portal with an identifier `ìnspire` for example, a new entry point on your catalogue will be available: `http://localhost:8080/geonetwork/inspire/`. Accessing the catalogue through it will only provide access to records matching the filter defined for this sub-portal. The `search filter` parameter value uses the [Lucene query parser syntax](http://lucene.apache.org/java/2_9_1/queryparsersyntax.html) and is applied to all searches.
 
 User privileges apply as in the main instance.
 
@@ -34,11 +34,11 @@ The logo and name of the sub-portal will be displayed instead of the main instan
 
 ![](img/portal-header.png)
 
-A CSW service is also available for this sub-portal <http://localhost:8080/geonetwork/inspire/eng/csw> (and replacing the virtual CSW feature).
+A CSW service is also available for this sub-portal at `http://localhost:8080/geonetwork/inspire/eng/csw` (replacing the virtual CSW feature).
 
 A sub-portal can also use a specific user interface configuration.
 
-The list of sub-portal available is at <http://localhost:8080/geonetwork/srv/api/sources>
+The list of available sub-portals is at `http://localhost:8080/geonetwork/srv/api/sources`
 
 ![](img/portal-list.png)
 
@@ -223,10 +223,10 @@ To configure this, apply the following steps:
 
 -   Create a group for the partner eg. `oca` (see [Creating group](../managing-users-and-groups/creating-group.md)).
 -   Create at least one user for the partner (see [Creating user](../managing-users-and-groups/creating-user.md)). The user must be member of the group `oca`. If you want the user to be able to configure the sub-portal (eg. change the name, choose a logo), the user must have at least the `UserAdmin` profile for the group `oca`.
--   Create a sub-portal. This can have the same name as the group, eg. `oca` but this is not essential. The filter can be created using the fact that a record published in the group `oca` should be in this sub-portal, using the syntax `+_groupPublished:oca`. Once created the sub-portal is accessible at <http://localhost:8080/geonetwork/oca>.
+-   Create a sub-portal. This can have the same name as the group, eg. `oca` but this is not essential. The filter can be created using the fact that a record published in the group `oca` should be in this sub-portal, using the syntax `+_groupPublished:oca`. Once created the sub-portal is accessible at `http://localhost:8080/geonetwork/oca`.
 -   (Optional) Link the sub-portal to a user admin group to allow `UserAdmin` to configure their sub-portal.
 
-With this type configuration, ie. one partner = one group = one sub-portal and users are only member of one group, then when connecting to a partner sub-portal:
+With this type of configuration, i.e. one partner = one group = one sub-portal and users are only member of one group, then when connecting to a partner sub-portal:
 
 -   user will only see records published in that group in the entire application
 -   when creating new records, no group selection is provided because user is member of one group only

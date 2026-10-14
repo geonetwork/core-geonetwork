@@ -13,6 +13,6 @@
     -   [BP] [Workflow / Restrict search by status to record that user can edit](https://github.com/geonetwork/core-geonetwork/pull/6889)
     -   [BP] [Update userapi so that it will allow administrators to pre-create/update user profile information when using service provider](https://github.com/geonetwork/core-geonetwork/pull/6712)
 
-and more \... see [3.12.9 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.9+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.9+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.12.9 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.9+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.12.9+is%3Aclosed+is%3Apr) for full details.
 
 **Full Changelog**: [here](https://github.com/geonetwork/core-geonetwork/compare/3.12.8...3.12.9)

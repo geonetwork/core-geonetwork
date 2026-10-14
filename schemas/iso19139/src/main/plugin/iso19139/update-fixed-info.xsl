@@ -752,6 +752,10 @@
     </xsl:copy>
   </xsl:template>
 
+  <!-- Remove empty DQ elements, empty transfer options. -->
+  <xsl:template match="gmd:dataQualityInfo[count(*) = 0]"/>
+  <xsl:template match="gmd:transferOptions[gmd:MD_DigitalTransferOptions/count(*) = 0]"/>
+
   <!-- ================================================================= -->
   <!-- copy everything else as is -->
 

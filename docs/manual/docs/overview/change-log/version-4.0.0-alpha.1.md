@@ -43,7 +43,7 @@ This release is all about user search experience:
 ![](img/3990-es-facet-histogram.png)
 
 -   Facets / Configuration from the admin --> Settings --> UI based on [Elasticsearch API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations.html)
--   Record view / More like this \...
+-   Record view / More like this ...
 
 ![](img/3990-es-morelikethis.png)
 
@@ -61,7 +61,7 @@ This release is all about user search experience:
 
 ![](img/3990-es-indexing-errors.png)
 
-Regarding search protocols, only CSW has been migrated for now (ie. OAI-PMH, RDF, Z39.50/SRU, OpenSearch, \... are not available in this version). This means that a GeoNetwork 3.x can only harvest GeoNetwork 3.99 using CSW.
+Regarding search protocols, only CSW has been migrated for now (ie. OAI-PMH, RDF, Z39.50/SRU, OpenSearch, ... are not available in this version). This means that a GeoNetwork 3.x can only harvest GeoNetwork 3.99 using CSW.
 
 More details can be found in <https://github.com/geonetwork/core-geonetwork/pull/2830>.
 

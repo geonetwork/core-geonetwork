@@ -200,7 +200,8 @@
     "$translate",
     "$http",
     "gnMetadataManager",
-    function ($translate, $http, gnMetadataManager) {
+    "gnSearchLocation",
+    function ($translate, $http, gnMetadataManager, gnSearchLocation) {
       return {
         restrict: "A",
         replace: true,
@@ -210,12 +211,18 @@
           md: "=gnMetadataStatusUpdater",
           statusType: "@",
           task: "=",
-          statusToSelect: "@"
+          statusToSelect: "@",
+          dueDate: "@"
         },
         link: function (scope) {
           var user = scope.$parent.user;
           var metadataId = scope.md.id;
           var defaultType = "workflow";
+
+          scope.minDate = new Date();
+          var requestedDueDate = new Date(moment(scope.dueDate).format("YYYY-MM-DD"));
+          var dueDate =
+            requestedDueDate > scope.minDate ? requestedDueDate : scope.minDate;
 
           scope.statusType = scope.statusType || defaultType;
           scope.lang = scope.$parent.lang;
@@ -223,7 +230,7 @@
           scope.newStatus = {
             status: scope.task ? scope.task.id : -1,
             owner: null,
-            dueDate: null,
+            dueDate: dueDate,
             changeMessage: ""
           };
 
@@ -240,20 +247,6 @@
                   scope.status = data !== "null" ? data.status : null;
                   scope.newStatus.status = scope.statusToSelect;
                   scope.lastStatus = data.currentStatus.id.statusId;
-                });
-            } else {
-              return $http
-                .get("../api/status/" + scope.statusType)
-                .then(function (response) {
-                  var data = response.data;
-
-                  scope.status = data;
-                  scope.newStatus = {
-                    status: scope.task ? scope.task.id : 0,
-                    owner: null,
-                    dueDate: null,
-                    changeMessage: ""
-                  };
                 });
             }
           }
@@ -274,6 +267,9 @@
                     scope.newStatus.status === "2"
                   ) {
                     scope.md.draft = "n";
+
+                    // If the current location is a draft, update the URL to the metadata view
+                    gnSearchLocation.switchDraftToMetadata();
                   }
                   gnMetadataManager.updateMdObj(scope.md);
                   scope.$emit("metadataStatusUpdated", true);

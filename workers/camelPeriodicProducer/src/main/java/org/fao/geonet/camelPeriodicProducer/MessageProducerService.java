@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2015 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -26,7 +26,6 @@ package org.fao.geonet.camelPeriodicProducer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import org.apache.commons.lang.StringUtils;
-import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.records.MetadataSavedQueryApi;
 import org.fao.geonet.domain.MessageProducerEntity;
 import org.fao.geonet.domain.Metadata;
@@ -34,7 +33,6 @@ import org.fao.geonet.events.server.ServerStartup;
 import org.fao.geonet.harvester.wfsfeatures.model.WFSHarvesterParameter;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterExchangeState;
 import org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder;
-import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.repository.MessageProducerRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.slf4j.Logger;
@@ -47,11 +45,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.fao.geonet.harvester.wfsfeatures.worker.WFSHarvesterRouteBuilder.MESSAGE_HARVEST_WFS_FEATURES;
-
 @Component
 public class MessageProducerService implements ApplicationListener<ServerStartup> {
-    private static final String DEFAULT_CONSUMER_URI = "activemq://queue:" + MESSAGE_HARVEST_WFS_FEATURES + "?concurrentConsumers=5";
+    private static final String DEFAULT_CONSUMER_URI = WFSHarvesterRouteBuilder.HARVEST_WFS_FEATURES_SEDA_URI;
     private static Logger LOGGER = LoggerFactory.getLogger(WFSHarvesterRouteBuilder.LOGGER_NAME);
     private static boolean isConfigured = false;
     protected String consumerUri = DEFAULT_CONSUMER_URI;

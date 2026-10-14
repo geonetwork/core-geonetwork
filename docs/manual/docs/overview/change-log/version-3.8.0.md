@@ -41,4 +41,4 @@
     -   New user interface settings for: humanizing date, enable user searches, enable saved selections, fluid or not container
 -   Security fixes and library updates
 
-And more \... see [3.8.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.8.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.8.0+is%3Aclosed+is%3Apr) for full details.
+And more ... see [3.8.0 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.8.0+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.8.0+is%3Aclosed+is%3Apr) for full details.

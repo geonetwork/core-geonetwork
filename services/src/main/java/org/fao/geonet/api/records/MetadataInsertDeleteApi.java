@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -70,6 +70,8 @@ import org.fao.geonet.kernel.mef.Importer;
 import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmitter;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.repository.GroupRepository;
@@ -240,14 +242,11 @@ public class MetadataInsertDeleteApi {
 
         store.delResources(context, metadata.getUuid(), approved);
         RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, metadata.getId() + "");
-        metadataManager.deleteMetadata(context, metadata.getId() + "");
+        metadataManager.deleteMetadata(context, metadata.getId() + "", DirectDeletionSubmitter.INSTANCE);
         recordDeletedEvent.publish(ApplicationContextHolder.get());
-
-        dataManager.forceIndexChanges();
     }
 
-    @io.swagger.v3.oas.annotations.Operation(summary = "Delete one or more records", description ="User MUST be able to edit the record to delete it. "
-        + "")
+    @io.swagger.v3.oas.annotations.Operation(summary = "Delete one or more records", description ="User MUST be able to edit the record to delete it.")
     @RequestMapping(
         method = RequestMethod.DELETE,
         produces = {
@@ -301,7 +300,7 @@ public class MetadataInsertDeleteApi {
                 store.delResources(context, metadata.getUuid());
 
                 RecordDeletedEvent recordDeletedEvent = triggerDeletionEvent(request, String.valueOf(metadata.getId()));
-                metadataManager.deleteMetadata(context, String.valueOf(metadata.getId()));
+                metadataManager.deleteMetadata(context, String.valueOf(metadata.getId()), DirectDeletionSubmitter.INSTANCE);
                 recordDeletedEvent.publish(ApplicationContextHolder.get());
 
                 report.incrementProcessedRecords();
@@ -1038,7 +1037,7 @@ public class MetadataInsertDeleteApi {
             metadataValidator.doValidate(metadata, context.getLanguage());
         }
 
-        dataManager.indexMetadata(id.get(0), true);
+        dataManager.indexMetadata(id.get(0), DirectIndexSubmitter.INSTANCE);
         return Pair.read(Integer.valueOf(id.get(0)), uuid);
     }
 
@@ -1088,6 +1087,10 @@ public class MetadataInsertDeleteApi {
      * @throws IllegalArgumentException if the group is not a workspace
      */
     private void checkGroupIsWorkspace(String groupId, Locale locale) throws ResourceNotFoundException {
+        if (StringUtils.isBlank(groupId)) {
+            return;
+        }
+
         // Find the group by its ID
         Group group = groupRepository.findById(Integer.parseInt(groupId)).orElse(null);
 

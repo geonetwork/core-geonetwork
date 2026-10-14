@@ -1,0 +1,38 @@
+{
+  "visibility": "domain",
+  "is_content_visible": true,
+  "title": "Galaxy Ecology plateforme d'analyses",
+  "description": "\u003Cp style='margin-bottom: 1rem; color: rgb(33, 37, 41); font-family: Lato, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"; font-size: 16px; text-align: justify;'\u003E\u003Cspan style=\"color: rgb(0, 0, 0);\"\u003E\u003Ca href=\"https://ecology.usegalaxy.eu/\" style=\"color: rgba(var(--bs-link-color-rgb),var(--bs-link-opacity,1)); text-decoration: underline;\"\u003EGalaxy-Ecology\u003C/a\u003E (aka Galaxy-E) est une plateforme open source en ligne qui permet :\u003C/span\u003E\u003C/p\u003E\u003Cul style='padding-left: 2rem; margin-top: 0px; margin-bottom: 1rem; color: rgb(33, 37, 41); font-family: Lato, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"; font-size: 16px;'\u003E\u003Cli style=\"list-style-type: disc;\"\u003E\u003Cspan style=\"color: rgb(0, 0, 0);\"\u003Ele nettoyage des données\u003C/span\u003E\u003C/li\u003E\u003Cli style=\"list-style-type: disc;\"\u003E\u003Cspan style=\"color: rgb(0, 0, 0);\"\u003Ela visualisation et les tendances\u003C/span\u003E\u003C/li\u003E\u003Cli style=\"list-style-type: disc;\"\u003E\u003Cspan style=\"color: rgb(0, 0, 0);\"\u003Ela personnalisation et/ou l’utilisation de cadre analytiques robustes et reproductibles\u003C/span\u003E\u003C/li\u003E\u003Cli style=\"list-style-type: disc;\"\u003E\u003Cspan style=\"color: rgb(0, 0, 0);\"\u003Ela production d’indicateurs \u003C/span\u003E\u003C/li\u003E\u003C/ul\u003E\u003Cp style='margin-bottom: 1rem; color: rgb(33, 37, 41); font-family: Lato, -apple-system, \"system-ui\", \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif, \"Apple Color Emoji\", \"Segoe UI Emoji\", \"Segoe UI Symbol\"; font-size: 16px; text-align: justify;'\u003E\u003Cspan style=\"color: rgb(0, 0, 0);\"\u003E\u003Cem\u003EC'est un outil opérationnel et en cours d’alimentation.\u003C/em\u003E\u003C/span\u003E\u003C/p\u003E",
+  "metadata_languages": [
+    "en"
+  ],
+  "update_frequency": null,
+  "uid": "sp_vsje7j",
+  "slug": "galaxy-e-plateforme-danalyses",
+  "asset_type": "ods_studiopage",
+  "themes": [
+    "Education, Training, Research, Teaching"
+  ],
+  "keywords": [
+    "Galaxy-E",
+    "Analyse",
+    "indicateurs",
+    "nettoyage"
+  ],
+  "category": "Services and products",
+  "created_at": "2025-03-28T09:44:54.685000+00:00",
+  "updated_at": "2025-05-26T07:51:50.019000+00:00",
+  "creator": "Yvan LE BRAS",
+  "is_showcase": true,
+  "content_link": "/p/galaxy-e-plateforme-danalyses/",
+  "contact_name": "Yvan LE BRAS",
+  "contact_email": "yvan.le-bras@mnhn.fr",
+  "thumbnail": {
+    "filename": "thumbnail.png",
+    "mimetype": "image/png",
+    "url": "https://www.pndb.fr/api/explore/v2.1/catalog/assets?select=thumbnail&where=slug='galaxy-e-plateforme-danalyses' and asset_type='ods_studiopage'&thumbnail_format=inline&limit=1"
+  },
+  "is_excluded_from_catalog": false,
+  "is_access_request_disabled": false,
+  "total_bookmarks": 2
+}

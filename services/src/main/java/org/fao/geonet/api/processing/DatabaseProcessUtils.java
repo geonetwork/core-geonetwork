@@ -26,23 +26,18 @@ package org.fao.geonet.api.processing;
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.lang.StringUtils;
 import org.fao.geonet.api.processing.report.MetadataReplacementProcessingReport;
-import org.fao.geonet.api.processing.report.XsltMetadataProcessingReport;
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
-import org.fao.geonet.kernel.SchemaManager;
-import org.fao.geonet.kernel.datamanager.IMetadataManager;
-import org.fao.geonet.kernel.datamanager.IMetadataSchemaUtils;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.kernel.search.IndexingMode;
-import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.lib.Lib;
+import org.fao.geonet.repository.MetadataRepository;
 import org.fao.geonet.repository.MetadataValidationRepository;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-
-import java.util.Map;
 
 public class DatabaseProcessUtils {
     /**
@@ -109,7 +104,7 @@ public class DatabaseProcessUtils {
                         dataMan.updateMetadata(context, id, wellFormedXml, validate, ufo, language, new ISODate().toString(),
                             updateDateStamp, index ? IndexingMode.full : IndexingMode.none);
                         if (index) {
-                            dataMan.indexMetadata(id, true);
+                            dataMan.indexMetadata(id, DirectIndexSubmitter.INSTANCE);
                         }
                     }
                 }

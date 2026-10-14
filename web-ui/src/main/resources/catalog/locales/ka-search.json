@@ -159,6 +159,7 @@
     "exportCSV": "ექსპორტი (CSV)",
     "exportPDF": "ექსპორტი (PDF)",
     "exportMEF": "ექსპორტი (ZIP)",
+    "exportMEF-excludeAttachments": "Export (ZIP) without attachments",
     "welcomeText": "აქ ნახავთ მონაცემებს, სერვისებს და რუქებს და სხვა.",
     "searchOver": "მოძებნეთ <strong>{{ჩანაწერები}}</strong> მონაცემთა ნაკრები, სერვისები და რუკები, ...",
     "browseBy": "დათვალიერება მიერ",
@@ -559,5 +560,8 @@
     "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "გაფრთხილება / ველის რესურსიTemporalDateRange / ქვედა დიაპაზონის ზღვარი {{lowerBound}} არ შეიძლება იყოს ზედა ზღვარზე {{upperBound}}. თარიღის დიაპაზონი არ არის ინდექსირებული.",
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "გაფრთხილება / ველის რესურსიTemporalDateRange / ქვედა დიაპაზონის ზღვარი {{lowerBound}} არ შეიძლება იყოს ზედა ზღვარზე {{upperBound}}.",
     "indexingErrorMsg-schemaNotRegistered": "ჩანაწერი {{ ჩანაწერი}} / სქემა &#39;{{schema}}&#39; არ არის რეგისტრირებული ამ კატალოგში. დააინსტალირეთ ან წაშალეთ ეს ჩანაწერები. ჩანაწერი არის ინდექსირებული ინდექსირების შეცდომის დროშა.",
-    "indexingErrorMsg-indexingStyleSheetError": "ინდექსირების სტილის ცხრილი შეიცავს შეცდომებს: {{ შეტყობინება }}\n მეტამონაცემების მონიშვნა, როგორც _indexingError=1 ინდექსში."
+    "indexingErrorMsg-indexingStyleSheetError": "ინდექსირების სტილის ცხრილი შეიცავს შეცდომებს: {{ შეტყობინება }}\n მეტამონაცემების მონიშვნა, როგორც _indexingError=1 ინდექსში.",
+    "createAnonymousAccess": "Share unpublished record preview",
+    "deleteAnonymousAccess": "Revoke unpublished record preview",
+    "anonymousAccessTo": "Anonymous access to {{title}}"
 }

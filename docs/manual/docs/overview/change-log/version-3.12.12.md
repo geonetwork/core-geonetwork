@@ -19,6 +19,6 @@ GeoNetwork 3.12.12 is a minor release.
     - Update `commons-fileupload` from version 1.3.3 to 1.5
     - Documentation / Manual improvements
 
-and more \... see [3.12.12 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.12+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A3.12.12+is%3Aclosed) for full details.
+and more ... see [3.12.12 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.12.12+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?page=3&q=is%3Apr+milestone%3A3.12.12+is%3Aclosed) for full details.
 
 **Full Changelog**: [here](https://github.com/geonetwork/core-geonetwork/compare/3.12.11...3.12.12)

@@ -23,11 +23,11 @@
 
 package org.fao.geonet.kernel.datamanager;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.fao.geonet.domain.AbstractMetadata;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.IIndexSubmitter;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -49,11 +49,6 @@ public interface IMetadataIndexer {
      * @throws Exception
      */
     public void init(ServiceContext context, Boolean force) throws Exception;
-
-    /**
-     * Force the index to wait until all changes are processed and the next reader obtained will get the latest data.
-     */
-    void forceIndexChanges() throws IOException;
 
     /**
      * Remove the records that matches the specification
@@ -89,13 +84,6 @@ public interface IMetadataIndexer {
     void batchIndexInThreadPool(ServiceContext context, List<?> metadataIds, TransactionStatus transactionStatus);
 
     /**
-     * Is the platform currently indexing?
-     *
-     * @return
-     */
-    boolean isIndexing();
-
-    /**
      * Index the list of records passed as parameter in order.
      *
      * @param metadataIds
@@ -103,7 +91,7 @@ public interface IMetadataIndexer {
      */
     void indexMetadata(List<String> metadataIds) throws Exception;
 
-    void indexMetadata(String metadataId, boolean forceRefreshReaders, IndexingMode indexingMode) throws Exception;
+    void indexMetadata(String metadataId, IIndexSubmitter indexSubmittor, IndexingMode indexingMode) throws Exception;
 
     void indexMetadataPrivileges(String uuid, int id) throws Exception;
 

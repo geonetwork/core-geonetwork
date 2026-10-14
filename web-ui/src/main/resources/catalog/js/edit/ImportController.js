@@ -78,6 +78,31 @@
       };
       $scope.importing = false;
 
+      var overwriteReplaceEnabled = false;
+      function setUuidProcessingOverwrite() {
+        $scope.params.uuidProcessing = overwriteReplaceEnabled
+          ? "REMOVE_AND_REPLACE"
+          : "OVERWRITE";
+      }
+      $scope.uuidProcessingOverwriteGetSet = function (uuidProcessing) {
+        if (uuidProcessing === undefined) {
+          // is getter
+          return $scope.params.uuidProcessing === "OVERWRITE" ||
+            $scope.params.uuidProcessing === "REMOVE_AND_REPLACE"
+            ? "OVERWRITE_OR_REMOVE_AND_REPLACE"
+            : "";
+        }
+        setUuidProcessingOverwrite();
+      };
+      $scope.overwriteReplaceRecordGetSet = function (enableReplace) {
+        if (enableReplace === undefined) {
+          // is getter
+          return overwriteReplaceEnabled;
+        }
+        overwriteReplaceEnabled = enableReplace;
+        setUuidProcessingOverwrite();
+      };
+
       gnConfigService.load().then(function (c) {
         $scope.isMdWorkflowEnable = gnConfig["metadata.workflow.enable"];
         $scope.params.group = gnConfig["system.metadatacreate.preferredGroup"];
@@ -100,7 +125,10 @@
         autoUpload: false,
         done: uploadImportMdDone,
         fail: uploadImportMdError,
-        headers: { "X-XSRF-TOKEN": $rootScope.csrf, "Accept-Language": $scope.lang }
+        headers: {
+          "X-XSRF-TOKEN": $rootScope.csrf,
+          "Accept-Language": $scope.lang
+        }
       };
 
       var formatExceptionArray = function () {

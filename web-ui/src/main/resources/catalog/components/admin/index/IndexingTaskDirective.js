@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -49,18 +49,16 @@
         templateUrl: "../../catalog/components/admin/index/partials/indexingstatus.html",
         link: function (scope, element, attrs) {
           scope.getStatusCode = function () {
-            if (scope.taskInfo && scope.taskInfo.total > scope.taskInfo.processed) {
+            var info = scope.taskInfo;
+            if (!info) {
+              return STATUS_UNDEFINED;
+            }
+            var done = info.processed + info.errors;
+            if (info.total > done) {
               return STATUS_INPROGRESS;
             }
-            if (
-              scope.taskInfo &&
-              scope.taskInfo.total === scope.taskInfo.processed &&
-              scope.taskInfo.errors > 0
-            ) {
-              return STATUS_ERRORS;
-            }
-            if (scope.taskInfo && scope.taskInfo.total === scope.taskInfo.processed) {
-              return STATUS_FINISHED;
+            if (info.total === done) {
+              return info.errors > 0 ? STATUS_ERRORS : STATUS_FINISHED;
             }
             return STATUS_UNDEFINED;
           };
@@ -145,10 +143,12 @@
           "../../catalog/components/admin/index/partials/indexingstatuscontainer.html",
         controllerAs: "ctrl",
         controller: [
-          function () {
+          "$scope",
+          function ($scope) {
             this.tasks = [];
 
             var me = this;
+            var destroyed = false;
 
             this.refresh = function () {
               $http
@@ -159,11 +159,17 @@
                     ":name=indexing-task,idx=*"
                 )
                 .then(function (result) {
+                  // A response can arrive after the page was left.
+                  if (destroyed) {
+                    return;
+                  }
                   me.tasks.length = 0;
 
                   if (!result.data || !result.data.value) {
                     return;
                   }
+
+                  var requireRefresh = false;
 
                   var probes = result.data.value;
                   Object.keys(probes).forEach(function (probeName) {
@@ -174,12 +180,24 @@
                       processed: probe.Processed,
                       total: probe.ToProcessCount
                     });
+
+                    if (probe.ToProcessCount - probe.Processed - probe.InError > 0) {
+                      requireRefresh = true;
+                    }
                   });
 
-                  // loop
-                  setTimeout(me.refresh, 1000);
+                  // Loop only while a task is still running, otherwise the
+                  // finished task stays displayed and polling stops.
+                  if (requireRefresh) {
+                    me.timeout = setTimeout(me.refresh, 1000);
+                  }
                 });
             };
+
+            $scope.$on("$destroy", function () {
+              destroyed = true;
+              clearTimeout(me.timeout);
+            });
 
             gnConfigService.load().then(function (c) {
               me.refresh();

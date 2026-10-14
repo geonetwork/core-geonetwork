@@ -20,3 +20,11 @@
     data-ng-bind-html="mdView.current.record.supplementalInformation | linky | newlines"
   ></p>
 </div>
+
+<div
+  data-ng-if="mdView.current.record.related.uuids"
+  data-gn-related="mdView.current.record"
+  data-user="user"
+  data-layout="versions"
+  data-types="versions"
+></div>

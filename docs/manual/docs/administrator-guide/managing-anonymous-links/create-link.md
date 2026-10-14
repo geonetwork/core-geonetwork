@@ -6,7 +6,7 @@ Each time a new metadata needs to be reviewed before it can be published, the re
 
 ![](img/share.png)
 
-The link can be copied to the clipboard by clicking on the copy to clipboard icon. The administrator can then share the link with the anonymous user, by any means, he sees fit.
+The link can be copied to the clipboard by clicking on the copy to clipboard icon. The administrator can then share the link with the anonymous user by any means they see fit.
 
 ![](img/copy_to_clipboard.png)
 

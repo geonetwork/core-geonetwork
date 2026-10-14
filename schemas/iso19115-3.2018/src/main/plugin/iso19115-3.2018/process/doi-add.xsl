@@ -8,6 +8,7 @@
                 xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
                 xmlns:geonet="http://www.fao.org/geonetwork"
                 exclude-result-prefixes="#all">
 
@@ -36,7 +37,7 @@
 <!--                select="count(//mdb:distributionInfo//mrd:onLine/*[matches(cit:protocol/gco:CharacterString, $doiProtocolRegex)]/cit:linkage/gco:CharacterString[. != '']) > 0"/>-->
 
 
-  <xsl:template match="mdb:identificationInfo[1]/*/mri:citation/*[not($isDoiAlreadySet)]"
+  <xsl:template match="mdb:identificationInfo[1]/*/mri:citation/*[not($isDoiAlreadySet) and string($doi)]"
                 priority="2">
     <xsl:copy>
       <xsl:copy-of select="@*"/>
@@ -78,34 +79,71 @@
   </xsl:template>
 
 
-  <xsl:template match="mdb:distributionInfo[not($isDoiAlreadySet) and position() = 1]">
+  <xsl:template match="mdb:distributionInfo[not($isDoiAlreadySet) and string($doi) and position() = 1]">
     <xsl:copy>
       <xsl:apply-templates select="@*"/>
       <mrd:MD_Distribution>
         <xsl:apply-templates select="*/@*"/>
         <xsl:apply-templates select="*/mrd:distributionFormat"/>
         <xsl:apply-templates select="*/mrd:distributor"/>
-        <xsl:apply-templates select="*/mrd:transferOptions"/>
-        <mrd:transferOptions>
-          <mrd:MD_DigitalTransferOptions>
-            <mrd:onLine>
-              <cit:CI_OnlineResource>
-                <cit:linkage>
-                  <gco:CharacterString><xsl:value-of select="concat($doiProxy, $doi)"/></gco:CharacterString>
-                </cit:linkage>
-                <cit:protocol>
-                  <gco:CharacterString><xsl:value-of select="$doiProtocol"/></gco:CharacterString>
-                </cit:protocol>
-                <cit:name>
-                  <gco:CharacterString><xsl:value-of select="$doiName"/></gco:CharacterString>
-                </cit:name>
-              </cit:CI_OnlineResource>
-            </mrd:onLine>
-          </mrd:MD_DigitalTransferOptions>
-        </mrd:transferOptions>
+        <xsl:choose>
+          <xsl:when test="*/mrd:transferOptions">
+            <xsl:apply-templates select="*/mrd:transferOptions[1]" mode="doi-add"/>
+            <xsl:apply-templates select="*/mrd:transferOptions[position() > 1]"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <mrd:transferOptions>
+              <mrd:MD_DigitalTransferOptions>
+                <xsl:call-template name="add-doi-resource">
+                  <xsl:with-param name="linkage" select="concat($doiProxy, $doi)" />
+                  <xsl:with-param name="protocol" select="$doiProtocol" />
+                  <xsl:with-param name="name" select="$doiName" />
+                </xsl:call-template>
+              </mrd:MD_DigitalTransferOptions>
+            </mrd:transferOptions>
+          </xsl:otherwise>
+        </xsl:choose>
       </mrd:MD_Distribution>
     </xsl:copy>
   </xsl:template>
+
+  <xsl:template match="mrd:transferOptions" mode="doi-add">
+    <xsl:copy>
+      <xsl:apply-templates select="@*"/>
+      <mrd:MD_DigitalTransferOptions>
+        <xsl:apply-templates select="mrd:MD_DigitalTransferOptions/@*|mrd:MD_DigitalTransferOptions/(mrd:unitsOfDistribution|mrd:transferSize|mrd:onLine)"/>
+
+        <xsl:call-template name="add-doi-resource">
+          <xsl:with-param name="linkage" select="concat($doiProxy, $doi)" />
+          <xsl:with-param name="protocol" select="$doiProtocol" />
+          <xsl:with-param name="name" select="$doiName" />
+        </xsl:call-template>
+
+        <xsl:apply-templates select="mrd:MD_DigitalTransferOptions/(mrd:offLine|mrd:transferFrequency|mrd:distributionFormat)"/>
+      </mrd:MD_DigitalTransferOptions>
+    </xsl:copy>
+  </xsl:template>
+
+  <xsl:template name="add-doi-resource">
+    <xsl:param name="linkage" as="xs:string" />
+    <xsl:param name="protocol" as="xs:string" />
+    <xsl:param name="name" as="xs:string" />
+
+    <mrd:onLine>
+      <cit:CI_OnlineResource>
+        <cit:linkage>
+          <gco:CharacterString><xsl:value-of select="$linkage"/></gco:CharacterString>
+        </cit:linkage>
+        <cit:protocol>
+          <gco:CharacterString><xsl:value-of select="$protocol"/></gco:CharacterString>
+        </cit:protocol>
+        <cit:name>
+          <gco:CharacterString><xsl:value-of select="$name"/></gco:CharacterString>
+        </cit:name>
+      </cit:CI_OnlineResource>
+    </mrd:onLine>
+  </xsl:template>
+
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">

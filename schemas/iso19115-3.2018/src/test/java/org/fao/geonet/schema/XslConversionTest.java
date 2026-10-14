@@ -22,16 +22,10 @@
  */
 package org.fao.geonet.schema;
 
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin;
 import org.fao.geonet.schemas.XslProcessTest;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-
 import org.junit.Test;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.builder.Input;
@@ -39,40 +33,15 @@ import org.xmlunit.diff.DefaultNodeMatcher;
 import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.ElementSelectors;
 
-public class XslConversionTest extends XslProcessTest {
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
+import static org.junit.Assert.assertFalse;
+
+public class XslConversionTest extends XslProcessTest {
     public XslConversionTest() {
         super();
         this.setNs(ISO19115_3_2018SchemaPlugin.allNamespaces);
-    }
-
-    @Test
-    public void testOdsConversion() throws Exception {
-        xslFile = Paths.get(testClass.getClassLoader().getResource("convert/fromJsonOpenDataSoft.xsl").toURI());
-        xmlFile = Paths.get(testClass.getClassLoader().getResource("ods.xml").toURI());
-        Path jsonFile = Paths.get(testClass.getClassLoader().getResource("ods.json").toURI());
-        String jsonString = Files.readString(jsonFile);
-        Element xmlFromJSON = Xml.getXmlFromJSON(jsonString);
-        xmlFromJSON.setName("record");
-        xmlFromJSON.addContent(new Element("nodeUrl").setText("https://www.odwb.be"));
-
-        Element inputElement = Xml.loadFile(xmlFile);
-        String expectedXml = Xml.getString(inputElement);
-
-        Element resultElement = Xml.transform(xmlFromJSON, xslFile);
-        String resultOfConversion = Xml.getString(resultElement);
-
-        Diff diff = DiffBuilder
-            .compare(Input.fromString(resultOfConversion))
-            .withTest(Input.fromString(expectedXml))
-            .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byName))
-            .normalizeWhitespace()
-            .ignoreComments()
-            .checkForSimilar()
-            .build();
-        assertFalse(
-            String.format("Differences: %s", diff.toString()),
-            diff.hasDifferences());
     }
 
     @Test

@@ -45,7 +45,9 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.records.model.*;
+import org.fao.geonet.api.records.model.MetadataPublicationNotificationInfo;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
+import org.fao.geonet.kernel.metadata.MetadataPublicationService;
 import org.fao.geonet.constants.Edit;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
@@ -58,6 +60,7 @@ import org.fao.geonet.kernel.metadata.StatusActionsFactory;
 import org.fao.geonet.kernel.metadata.StatusChangeType;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.search.IndexingMode;
+import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
 import org.fao.geonet.kernel.search.Translator;
 import org.fao.geonet.kernel.search.TranslatorFactory;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -154,6 +157,9 @@ public class MetadataWorkflowApi {
 
     @Autowired
     MetadataPublicationMailNotifier metadataPublicationMailNotifier;
+
+    @Autowired
+    MetadataPublicationService metadataPublicationService;
 
     @Autowired
     RoleHierarchy roleHierarchy;
@@ -416,7 +422,7 @@ public class MetadataWorkflowApi {
                 AbstractMetadata metadata = metadataUtils.findOneByUuid(uuid);
                 if (metadata == null) {
                     report.incrementNullRecords();
-                } else if (!accessManager.isOwner(
+                } else if (!accessManager.canEdit(
                     ApiUtils.createServiceContext(request), String.valueOf(metadata.getId()))) {
                     report.addNotEditableMetadataId(metadata.getId());
                 } else {
@@ -538,20 +544,40 @@ public class MetadataWorkflowApi {
 
 
 
-        // --- only allow the owner of the record to set its status
-        if (!accessManager.isOwner(context, String.valueOf(metadata.getId()))) {
+        // --- check permission to change status based on the target status
+        boolean canChangeStatus = false;
+        if (status.getStatus() == Integer.parseInt(StatusValue.Status.SUBMITTED) ||
+            status.getStatus() == Integer.parseInt(StatusValue.Status.DRAFT)) {
+            // For SUBMITTED or DRAFT status, allow editors to submit records for review or cancel the submission
+            canChangeStatus = accessManager.canEdit(context, String.valueOf(metadata.getId()));
+        } else if (status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED)) {
+            // For APPROVED status, only reviewers can approve
+            canChangeStatus = accessManager.hasReviewPermission(context, metadata);
+        } else if ("scheduledPublicationTask".equals(metadataStatusValue.getStatusValue().getName())) {
+            // A scheduled publication is performed later by a background job that runs with
+            // administrator privileges. Require the same authorization as an immediate publication,
+            // so a user cannot schedule a publication that they are not allowed to perform themselves.
+            metadataPublicationService.checkUserCanPublishMetadata(context, metadata);
+            canChangeStatus = true;
+        } else {
+            // For other statuses, only owners can change status
+            canChangeStatus = accessManager.isOwner(context, String.valueOf(metadata.getId()));
+        }
+
+        if (!canChangeStatus) {
             throw new SecurityException(
                 messages.getString("api.metadata.status.errorSetStatusNotAllowed"));
         }
 
         boolean isAllowedSubmitApproveInvalidMd = settingManager
             .getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD);
+        boolean metadataTypeRequiresValidation = metadata.getDataInfo().getType().requiresValidation;
 
         boolean hasSubmittedOrApprovedStatus = (status.getStatus() == Integer.parseInt(StatusValue.Status.SUBMITTED))
             || (status.getStatus() == Integer.parseInt(StatusValue.Status.APPROVED))
             || isEnableWorkflowForPublishedMetadataAction;
 
-        if (hasSubmittedOrApprovedStatus && !isAllowedSubmitApproveInvalidMd) {
+        if (hasSubmittedOrApprovedStatus && !isAllowedSubmitApproveInvalidMd && metadataTypeRequiresValidation) {
             metadataValidator.doValidate(metadata, context.getLanguage());
             boolean isInvalid = MetadataUtils.retrieveMetadataValidationStatus(metadata, context);
 
@@ -600,7 +626,7 @@ public class MetadataWorkflowApi {
 
         if (statusUpdate.get(metadata.getId()) == StatusChangeType.UPDATED) {
             //--- reindex metadata
-            metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), true, IndexingMode.full);
+            metadataIndexer.indexMetadata(String.valueOf(metadata.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
 
             // Reindex the metadata table record to update the field _statusWorkflow that contains the composite
             // status of the published and draft versions
@@ -609,7 +635,7 @@ public class MetadataWorkflowApi {
 
                 if (metadataApproved != null) {
                     metadataIdApproved = metadataApproved.getId();
-                    metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), true, IndexingMode.full);
+                    metadataIndexer.indexMetadata(String.valueOf(metadataApproved.getId()), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
                 }
             }
         }
@@ -985,7 +1011,7 @@ public class MetadataWorkflowApi {
             recoveredMetadataId = reloadRecord(element, metadataManager, httpSession, request);
         }
 
-        metadataIndexer.indexMetadata(String.valueOf(recoveredMetadataId), true, IndexingMode.full);
+        metadataIndexer.indexMetadata(String.valueOf(recoveredMetadataId), DirectIndexSubmitter.INSTANCE, IndexingMode.full);
 
         UserSession session = ApiUtils.getUserSession(request.getSession());
         if (session != null) {
@@ -1334,7 +1360,8 @@ public class MetadataWorkflowApi {
                                                   MetadataProcessingReport report) throws Exception {
         boolean isAllowedSubmitApproveInvalidMd = settingManager
             .getValueAsBool(Settings.METADATA_WORKFLOW_ALLOW_SUBMIT_APPROVE_INVALID_MD);
-        if (!isAllowedSubmitApproveInvalidMd) {
+        boolean metadataTypeRequiresValidation = metadata.getDataInfo().getType().requiresValidation;
+        if (!isAllowedSubmitApproveInvalidMd && metadataTypeRequiresValidation) {
             boolean isInvalid = MetadataUtils.retrieveMetadataValidationStatus(metadata, context);
 
             if (isInvalid) {

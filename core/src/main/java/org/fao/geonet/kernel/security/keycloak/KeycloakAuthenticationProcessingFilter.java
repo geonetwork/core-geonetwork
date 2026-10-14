@@ -27,6 +27,7 @@ import org.apache.commons.lang.LocaleUtils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.fao.geonet.constants.Geonet;
+import org.fao.geonet.kernel.security.RedirectUtil;
 import org.fao.geonet.utils.Log;
 import org.keycloak.KeycloakPrincipal;
 
@@ -53,7 +54,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.net.URLDecoder;
 import java.util.IllformedLocaleException;
 import java.util.LinkedHashMap;
@@ -147,20 +147,10 @@ public class KeycloakAuthenticationProcessingFilter extends org.keycloak.adapter
                             }
                         } else {
                             Map<String, List<String>> qsMap = splitQueryString(request.getQueryString());
-                            if (qsMap.containsKey("redirectUrl")) {
-                                URI redirectUri = new URI(qsMap.get("redirectUrl").get(0));
-                                // redirectUrl should only be relative to the current server. So only redirect if it is not an absolute path
-                                if (redirectUri != null && !redirectUri.isAbsolute()) {
-                                    response.sendRedirect(redirectUri.toString());
-                                } else {
-                                    // If the redirect url ends up being null or absolute url then lets redirect back to the context home.
-                                    Log.warning(Geonet.SECURITY, "Failed to perform login redirect to '" + qsMap.get("redirectUrl").get(0) + "'. Redirected to context home");
-                                    response.sendRedirect(request.getContextPath());
-                                }
-                            } else {
-                                // If the redirect url did not exist then lets redirect back to the context home.
-                                response.sendRedirect(request.getContextPath());
-                            }
+                            // redirectUrl should only be relative to the current server, otherwise
+                            // fall back to the context home.
+                            String redirectUrl = qsMap.containsKey("redirectUrl") ? qsMap.get("redirectUrl").get(0) : null;
+                            RedirectUtil.sendSafeRedirect(request, response, redirectUrl);
                         }
 
                     } else {

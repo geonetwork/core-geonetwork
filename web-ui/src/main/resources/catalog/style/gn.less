@@ -217,6 +217,35 @@ div[gn-transfer-ownership] * .list-group {
 a {
   word-wrap: break-word;
 }
+
+.gn-legend {
+  display: inline-flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.gn-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.gn-legend-box {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.gn-legend-info {
+  background-color: @state-info-bg !important;
+}
+
+.gn-legend-warning {
+  background-color: @state-warning-bg !important;
+}
+
 .gn-break {
   word-wrap: break-word;
   word-break: break-word;

@@ -247,8 +247,30 @@
 
     <xsl:variable name="elementName" select="name()"/>
 
+    <!-- In table mode, the context is lost; the parent element is called ‘col’.
+
+        This does not match the multilingual exclusion settings: <name ancestor="gmd:MD_Format">gmd:name</name>
+
+         In this case, we set the `multilingual=false` attribute in the table configuration. For example, for `gmd:name` in the distribution formats:
+
+         <table for="gmd:MD_Format">
+          <header>
+            <col label="gmd:name"/>
+            <col label="gmd:version"/>
+            <col/>
+          </header>
+          <row>
+            <col xpath="gmd:name" multilingual="false"/>
+            <col xpath="gmd:version" />
+            <col del=".."/>
+          </row>
+        </table>
+
+        This allows the ‘gmd:name’ element to be managed in a multilingual manner within other elements, such as online resources.
+    -->
     <xsl:variable name="excluded"
-                  select="gn-fn-iso19139:isNotMultilingualField(., $editorConfig)"/>
+                  select="(gn-fn-iso19139:isNotMultilingualField(., $editorConfig) or ((name(..) = 'col') and ../@multilingual = 'false'))"/>
+
 
     <xsl:variable name="hasPTFreeText"
                   select="count(gmd:PT_FreeText) > 0"/>

@@ -95,7 +95,7 @@
     "mapLinkonlinesrc": "Karte laden",
     "openRecord": "Datensatz ansehen",
     "openRecordhasfeaturecat": "Assoziierter Datensatz",
-    "openRecordfcat": "Objektartenkatalaog",
+    "openRecordfcat": "Objektarten-Katalog",
     "openRecordparent": "Eltern-Datensatz",
     "openRecordsources": "Quelldaten",
     "openRecordchildren": "Kind-Datensatz",
@@ -159,6 +159,7 @@
     "exportCSV": "Export (CSV)",
     "exportPDF": "Export (PDF)",
     "exportMEF": "Export (ZIP)",
+    "exportMEF-excludeAttachments": "Export (ZIP) ohne Anhänge",
     "welcomeText": "Hier finden Sie Daten, Dienste und Karten und vieles mehr.",
     "searchOver": "Suche <strong>{{records}}</strong> Datensätze, Dienste und Karten, ...",
     "browseBy": "Filtern nach",
@@ -559,5 +560,8 @@
     "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper": "Warnung / Feld resourceTemporalDateRange / Die untere Bereichsgrenze {{lowerBound}} kann nicht größer als die obere Grenze {{upperBound}} sein. Datumsbereich nicht indiziert.",
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Warnung/Feld resourceTemporalDateRange/Untere Bereichsgrenze {{lowerBound}} kann nicht größer sein als die obere Grenze {{upperBound}}.",
     "indexingErrorMsg-schemaNotRegistered": "Datensatz {{record}} / Schema „{{schema}}“ ist in diesem Katalog nicht registriert. Installieren Sie es oder entfernen Sie diese Datensätze. Datensatz ist indexiert als  Indexierungs-Fehler bzw. einer Fehler-Flag.",
-    "indexingErrorMsg-indexingStyleSheetError": "Das Indizierungs-Stylesheet enthält Fehler: {{message}}\nDie Metadaten werden als _indexingError=1 im Index markiert."
+    "indexingErrorMsg-indexingStyleSheetError": "Das Indizierungs-Stylesheet enthält Fehler: {{message}}\nDie Metadaten werden als _indexingError=1 im Index markiert.",
+    "createAnonymousAccess": "Vorschau des nicht veröffentlichten Datensatzes teilen",
+    "deleteAnonymousAccess": "Vorschau des unveröffentlichten Datensätze widerrufen",
+    "anonymousAccessTo": "Anonymer Zugriff auf {{title}}"
 }

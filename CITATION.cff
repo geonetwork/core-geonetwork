@@ -18,7 +18,7 @@ authors:
     family-names: Ticheler
     affiliation: GeoCat BV
     orcid: 'https://orcid.org/0009-0003-3896-0437'
-    email: jeroen.ticheler@geocat.net
+    email: jeroen.ticheler@geocat.com
   - given-names: Florent
     family-names: Gravin
     affiliation: CamptoCamp
@@ -31,8 +31,8 @@ authors:
     country: NL
     post-code: 6721 WD
     tel: +31 (0) 318 416 664
-    website: 'https://www.geocat.net/'
-    email: info@geocat.net
+    website: 'https://www.geocat.com/'
+    email: info@geocat.com
   - name: Titellus
     address: 321 Route de la Mollière
     city: Saint Pierre de Genebroz

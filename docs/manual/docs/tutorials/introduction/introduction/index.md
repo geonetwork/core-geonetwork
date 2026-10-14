@@ -1,8 +1,18 @@
 # Metadata and Catalogues {#introduction.rst}
 
-This paragraph introduces metadata and catalogues. In the process of registering an asset in a catalog, one typically describes properties of the asset. This results in a metadata record being created. Metadata, or 'data about data', is used in a variety of contexts. In the spatial domain the term is generally used for documents that describe spatial assets, such as datasets, web services/processes, maps, scientific articles, sensors, documents, etc.
+This section introduces metadata and catalogues. In the process of listing an asset in a catalog, one creates a **record** (a document describing the properties of the asset).
 
-In order to faciliate sharing of metadata between organisations, common metadata models, such as Dublin Core, DCAT and ISO19115 have been adopted. These models are generally tailored for a specific organisational or domain context in 'metadata profiles'.
+Metadata, or 'data about data', is used in a variety of contexts. In the spatial domain metadata is used for documents that describe spatial assets, such as datasets, web services/processes, maps, scientific articles, sensors, along with documents such as PDFs.
+
+In order to share metadata between organisations, common metadata models, such as Dublin Core, DCAT and ISO19115 have been adopted. When the common models are tailored for a specific organisational or domain context they are referred to as a 'metadata profiles'.
+
+*   Catalog: Assist an organization with managing assets, offering discovery and search.
+*   Records: Document describing the properties of an asset
+*   Metadata is "data about data":
+    
+    * Common Metadata models are recipes used to create records that can be shared between organizations.
+    * Metadata Profiles adapt a common metadatamodel for an organization, domain, or specific use.
+
 
 ## Metadata in the spatial domain
 
@@ -28,9 +38,16 @@ Catalogues can be populated in three ways:
 
 !!! abstract "Exercise"
 
-    Open a browser and visit a common spatial catalogue like <https://www.geoportal.org>. Answer the following questons:
+    Open a browser and visit a common spatial catalogue like:
+    
+    *  https://data.bev.gv.at
+    *  https://catalogue.ec.gc.ca
+    *  Many others in [gallery](../../../annexes/gallery/index.md)
+    
+    Answer the following questons:
     
     -   What type of assets do the records in this catalogue describe (imagery, vector data, web services, maps, etc)
     -   Try to locate some records that describe data in your area for a topic of your interest.
-    -   For a map like <https://www.maastrichtbereikbaar.nl/nl/slimme-kaart>, try to find out what is the data license of the data represented in the map. What suggestions would you make to the map administrator to improve this aspect.
+    -   Locate a map, try to find out what is the data license of the data represented in the map.
+        What suggestions would you make to the map administrator to improve this aspect.
 

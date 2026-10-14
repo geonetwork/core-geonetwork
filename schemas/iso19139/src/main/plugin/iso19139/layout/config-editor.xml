@@ -427,6 +427,7 @@
       <name>gmd:userDefinedMaintenanceFrequency</name>
       <name>gmd:distance</name>
       <name>gmd:geometricObjectCount</name>
+      <name ancestor="gmd:MD_Format">gmd:name</name>
       <name>srv:name</name>
       <name>srv:invocationName</name>
       <name>srv:serviceTypeVersion</name>
@@ -512,7 +513,7 @@
         <col/>
       </header>
       <row>
-        <col xpath="gmd:name"/>
+        <col xpath="gmd:name" multilingual="false"/>
         <col xpath="gmd:version"/>
         <col del=".."/>
       </row>

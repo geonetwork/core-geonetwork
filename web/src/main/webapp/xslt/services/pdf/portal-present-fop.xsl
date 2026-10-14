@@ -37,7 +37,7 @@
              xmlns:fox="http://xmlgraphics.apache.org/fop/extensions">
       <xsl:call-template name="fop-master"/>
 
-      <xsl:if test="string($env/system/system/metadata/pdfReport/coverPdf)">
+      <xsl:if test="string($env/system/metadata/pdfReport/coverPdf)">
         <fox:external-document content-type="pdf" src="{$env/system/metadata/pdfReport/coverPdf}" />
       </xsl:if>
 

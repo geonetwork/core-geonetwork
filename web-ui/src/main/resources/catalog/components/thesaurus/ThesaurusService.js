@@ -146,7 +146,7 @@
             thesaurus: thesaurus,
             rows: max,
             q: filter || "",
-            uri: "*" + filter + "*" || "",
+            uri: (typeSearch === "MATCH" ? filter : "*" + filter + "*") || "",
             lang: lang || "eng"
           };
           if (outputLang) {

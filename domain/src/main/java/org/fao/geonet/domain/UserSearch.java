@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -42,7 +42,7 @@ import java.util.*;
 public class UserSearch extends Localized implements Serializable {
     static final String ID_SEQ_NAME = "user_search_id_seq";
 
-    public static final long serialVersionUID = 8189762204841260782L;
+    private static final long serialVersionUID = 8189762204841260782L;
 
     private int id;
     private String url;

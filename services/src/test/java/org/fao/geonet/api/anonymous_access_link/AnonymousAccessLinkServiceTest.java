@@ -62,7 +62,7 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 
 	@Test
 	public void createAnonymousAccessLink() throws Exception {
-		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context);
 
 		AnonymousAccessLinkDto created = toTest.createAnonymousAccessLink(md.getUuid());
 
@@ -74,11 +74,11 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 
 	@Test
 	public void listAnonymousAccessLinkWithDocs() throws Exception {
-		AbstractMetadata indexedMd1 = injectMetadataInDb(getSampleMetadataXml(), context, true, IndexingMode.full);
+		AbstractMetadata indexedMd1 = injectMetadataInDb(getSampleMetadataXml(), context, IndexingMode.full);
 		toTest.createAnonymousAccessLink(indexedMd1.getUuid());
-		AbstractMetadata notIndexedMd2 = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata notIndexedMd2 = injectMetadataInDb(getSampleMetadataXml(), context);
 		toTest.createAnonymousAccessLink(notIndexedMd2.getUuid());
-		AbstractMetadata indexedMd3 = injectMetadataInDb(getSampleMetadataXml(), context, true, IndexingMode.full);
+		AbstractMetadata indexedMd3 = injectMetadataInDb(getSampleMetadataXml(), context, IndexingMode.full);
 		toTest.createAnonymousAccessLink(indexedMd3.getUuid());
 
 		List<AnonymousAccessLinkDto> listed = toTest.getAllAnonymousAccessLinksWithMdInfos();
@@ -105,7 +105,7 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 
 	@Test
 	public void deleteAnonymousAccessLink() throws Exception {
-		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context);
 		toTest.createAnonymousAccessLink(md.getUuid());
 
 		toTest.deleteAnonymousAccessLink(md.getUuid());
@@ -115,7 +115,7 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 
 	@Test
 	public void getAnonymousAccessLink() throws Exception {
-		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context);
 		toTest.createAnonymousAccessLink(md.getUuid());
 
 		assertNotNull(toTest.getAnonymousAccessLink(md.getUuid()));
@@ -127,7 +127,7 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 
 	@Test
 	public void cannotBindTwoLinksToTheSameMd() throws Exception {
-		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context);
 		toTest.createAnonymousAccessLink(md.getUuid());
 
 		assertThrows(ResourceAlreadyExistException.class, () -> toTest.createAnonymousAccessLink(md.getUuid()));
@@ -140,7 +140,7 @@ public class AnonymousAccessLinkServiceTest extends AbstractServiceIntegrationTe
 
 	@Test
 	public void deleteAnonymousAccessLinkDoNotErrorWhenLinkDoesNotExist() throws Exception {
-		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context, true);
+		AbstractMetadata md = injectMetadataInDb(getSampleMetadataXml(), context);
 
 		toTest.deleteAnonymousAccessLink(md.getUuid());
 	}

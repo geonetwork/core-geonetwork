@@ -36,6 +36,6 @@
 > -   [BP] Formatter / Datacite / Fix multiple geoLocations.
 > -   [BP] Datacite / XSD validation / valueUri is valueURI.
 
-and more \... see [3.10.8 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.10.8+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.10.8+is%3Aclosed+is%3Apr) for full details.
+and more ... see [3.10.8 issues](https://github.com/geonetwork/core-geonetwork/issues?q=is%3Aissue+milestone%3A3.10.8+is%3Aclosed) and [pull requests](https://github.com/geonetwork/core-geonetwork/pulls?q=milestone%3A3.10.8+is%3Aclosed+is%3Apr) for full details.
 
 **Full Changelog**: [here](https://github.com/geonetwork/core-geonetwork/compare/3.10.7...3.10.8)
