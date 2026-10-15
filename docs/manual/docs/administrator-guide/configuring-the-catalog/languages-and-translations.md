@@ -21,3 +21,9 @@ Once the translations are entered, click `Save all translations` to persist them
 !!! tip "Finding the key of an untranslated string"
 
     When the interface has no translation for a key, it displays the raw key instead of a readable label, for example `SortBy-resourceTitleObject.default.sortAsc` in a sort-by dropdown. If you come across this, copy the text exactly as shown and use it as the key in the `Manage translations` panel to add the missing translation.
+
+## Home page welcome message {#home-welcome-message}
+
+When **Show welcome message in home page** is enabled (see [User Interface Configuration](user-interface-configuration.md#user-interface-config-homepage)), the home page displays the translation of the key `home-welcome-message`. For a sub-portal, use `home-welcome-message-` followed by the portal identifier, for example `home-welcome-message-inspire`.
+
+The message is only displayed in the languages that have a translation for the key. HTML is allowed, for example `<strong>` for bold text or `<br>` for line breaks. The content is sanitised before display: scripts, event handler attributes (such as `onclick`) and inline `style` attributes are removed.

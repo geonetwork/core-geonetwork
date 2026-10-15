@@ -1,3 +1,9 @@
+<div class="row gn-row-welcome" data-ng-if="showWelcomeMessage">
+  <div data-ng-class="fluidLayout ? 'container-fluid' : 'container'">
+    <div class="gn-welcome-message" data-ng-bind-html="welcomeMessage"></div>
+  </div>
+</div>
+
 <div
   class="row gn-row-main hidden-print"
   data-ng-hide="gnCfg.mods.home.showSearch === false"
