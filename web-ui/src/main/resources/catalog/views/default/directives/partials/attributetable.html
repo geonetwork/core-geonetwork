@@ -20,16 +20,25 @@
       </div>
     </td>
     <td data-ng-show="::columnVisibility.code">
-      <strong data-ng-show="{{attribute.link == null || attribute.link == ''}}"
-        >{{attribute.code}}</strong
-      >
-      <a
-        href="{{attribute.link}}"
-        data-ng-show="{{attribute.link != null && attribute.link > ''}}"
-        >{{attribute.code}}</a
-      >
+      <strong data-ng-show="attribute.designationObject || attribute.designation">
+        {{attribute.designationObject ? attribute.designationObject.default :
+        attribute.designation}}
+      </strong>
+      <div data-ng-show="attribute.code !== attribute.name">
+        <strong data-ng-show="{{attribute.link == null || attribute.link == ''}}">
+          {{attribute.code}}
+        </strong>
+        <a
+          href="{{attribute.link}}"
+          data-ng-show="{{attribute.link != null && attribute.link > ''}}"
+          >{{attribute.code}}</a
+        >
+      </div>
     </td>
-    <td>{{attribute.definition}}</td>
+    <td>
+      {{attribute.definitionObject ? attribute.definitionObject.default :
+      attribute.definition}}
+    </td>
   </tr>
   <tr data-ng-if="attribute.values.length > 0">
     <td colspan="3" class="gn-noborder-top gn-nopadding-top gn-nopadding-bottom"></td>
@@ -47,8 +56,8 @@
           </tr>
           <tr data-ng-repeat="v in attribute.values track by $index">
             <td>{{v.code}}</td>
-            <td>{{v.label}}</td>
-            <td>{{v.definition}}</td>
+            <td>{{v.labelObject ? v.labelObject.default : v.label}}</td>
+            <td>{{v.definitionObject ? v.definitionObject.default : v.definition}}</td>
           </tr>
         </table>
       </div>
