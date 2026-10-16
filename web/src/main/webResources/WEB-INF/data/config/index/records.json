@@ -1882,6 +1882,17 @@
           }
         }
       },
+      "recordDate": {
+        "type": "nested",
+        "properties": {
+          "type": {
+            "type": "keyword"
+          },
+          "date": {
+            "type": "date"
+          }
+        }
+      },
       "specificationConformance": {
         "type": "nested",
         "properties": {
