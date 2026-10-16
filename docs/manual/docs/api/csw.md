@@ -81,7 +81,7 @@ The following tables list the available CSW queryables that can be used for sear
 
 !!! note
 
-    In addition to these queryables, any Elasticsearch index field can be used as a property name in a `GetRecords` query (see the [example of a request using an index field name](#csw-index-field-example)). These fields are not reported in the `GetCapabilities` document.
+    Instead of using CSW queryables, you may also use the Elasticsearch index field in a  `GetRecords` query (see the [example of a request using an index field name](#csw-index-field-example)). However, the ES index fields are not listed in the `GetCapabilities` document and may be subject to change. It is therefore recommended to use the standard CSW queryables.
 
 ### Supported ISO queryables
 
