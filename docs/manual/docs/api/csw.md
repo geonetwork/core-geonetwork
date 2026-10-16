@@ -77,7 +77,7 @@ The mapping between CSW standard queryable and the index fields are defined in *
 
 ## Queryables mapping
 
-The following tables list the CSW queryables, the ISO field they refer to and the index field used for searching.
+The following tables list the available CSW queryables that can be used for searching. It shows the ISO field they refer to and the Elasticsearch index field it is mapped to.
 
 !!! note
 
