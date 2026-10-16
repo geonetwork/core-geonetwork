@@ -326,6 +326,19 @@
       };
 
       /**
+       * A user administrator does not administer administrators, so an
+       * administrator account is read only for them. The API enforces this,
+       * the form only avoids offering actions that would be rejected.
+       */
+      $scope.isUserEditable = function () {
+        return (
+          !$scope.userSelected ||
+          $scope.userSelected.profile !== "Administrator" ||
+          $scope.user.isAdministratorOrMore()
+        );
+      };
+
+      /**
        * Select a user and retrieve its groups and
        * metadata records.
        */
