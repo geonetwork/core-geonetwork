@@ -48,6 +48,8 @@ import java.util.TimeZone;
 import java.util.function.Function;
 
 import static org.fao.geonet.schema.TestSupport.getResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class IndexationTest {
 
@@ -90,37 +92,35 @@ public class IndexationTest {
 	@Test
 	public void upperRhineCastles() throws Exception {
 		XslUtil.IS_INSPIRE_ENABLED = false;
-		transformAndCompare("gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018/index-fields/index.xsl",  "UpperRhineCastles-iso19115-3.2018.xml", "UpperRhineCastles-index.xml", Function.identity());
+		transformAndCompare("gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018/index-fields/index.xsl",  "UpperRhineCastles-iso19115-3.2018.xml", "UpperRhineCastles-index.xml");
 	}
 
 	@Test
-	public void readCreateDateFromXml() throws Exception {
+	public void indexXmlCreationDateOrNot() throws Exception {
+		Path xslFile = getResource("gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018/index-fields/index.xsl");
+		Path xmlFile = getResource("UpperRhineCastles-iso19115-3.2018.xml");
+		Element md = Xml.loadFile(xmlFile);
+		Element mdRevisionDate = Xml.selectElement(md, "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'revision']", NAMESPACES);
+		Element mdCreationDate = (Element)mdRevisionDate.clone();
+		Xml.selectElement(mdCreationDate, "cit:CI_Date/cit:date/gco:DateTime", NAMESPACES).setText("2024-01-01T02:30:00Z");
+		Xml.selectElement(mdCreationDate, "cit:CI_Date/cit:dateType/cit:CI_DateTypeCode", NAMESPACES).setAttribute("codeListValue", "creation").setText("creation");
+		md.addContent(md.indexOf(mdRevisionDate), mdCreationDate);
+
 		XslUtil.READ_CREATE_DATE_FROM_XML = true;
-		Function<Element, Element> fn = new Function<Element, Element>() {
-			@Override
-			public Element apply(Element md) {
-				try {
-					// add a creation date in the XML
-					Element mdRevisionDate = Xml.selectElement(md, "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'revision']", NAMESPACES);
-					Element mdCreationDate = (Element)mdRevisionDate.clone();
-					Xml.selectElement(mdCreationDate, "cit:CI_Date/cit:date/gco:DateTime", NAMESPACES).setText("2024-01-01T02:30:00Z");
-					Xml.selectElement(mdCreationDate, "cit:CI_Date/cit:dateType/cit:CI_DateTypeCode", NAMESPACES).setAttribute("codeListValue", "creation").setText("creation");
-					md.addContent(md.indexOf(mdRevisionDate), mdCreationDate);
-				} catch (Exception e) {
-					// fail test
-					throw new RuntimeException("Failed to add creation date in XML", e);
-				}
-				return md;
-			}
-		};
-		transformAndCompare("gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018/index-fields/index.xsl",  "UpperRhineCastles-iso19115-3.2018.xml", "UpperRhineCastles-index-createDateFromXml.xml", fn);
+		Element index = Xml.transform(md, xslFile);
+
+		assertEquals("2024-01-01T02:30:00.000Z", Xml.selectElement(index, "createDate", NAMESPACES).getText());
+
+		XslUtil.READ_CREATE_DATE_FROM_XML = false;
+		index = Xml.transform(md, xslFile);
+
+		assertNull(Xml.selectElement(index, "createDate", NAMESPACES));
 	}
 
-	private void transformAndCompare(String scriptName, String inputFileName, String expectedFileName, Function<Element, Element> preTransformXml) throws Exception {
+	private void transformAndCompare(String scriptName, String inputFileName, String expectedFileName) throws Exception {
 		Path xslFile = getResource(scriptName);
 		Path xmlFile = getResource(inputFileName);
 		Element md = Xml.loadFile(xmlFile);
-		md = preTransformXml.apply(md);
 
 		Element mdIso19115_3 = Xml.transform(md, xslFile);
 
