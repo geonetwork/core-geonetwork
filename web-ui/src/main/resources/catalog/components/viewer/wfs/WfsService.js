@@ -91,7 +91,7 @@
         }
 
         var title = extractString(featureType.title) || extractString(featureType.Title);
-        var name = featureType.name || featureType;
+        var name = featureType.name;
         var layerName = extractString(name.localPart) || extractString(name);
         var prefix = extractString(name.prefix);
         var fullName = prefix ? prefix + ":" + layerName : layerName;
