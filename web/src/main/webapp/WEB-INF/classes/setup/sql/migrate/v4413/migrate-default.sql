@@ -49,3 +49,8 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'wel','Scheduled
 
 UPDATE Settings SET value='4.4.13' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
+
+-- The Relations table is no longer mapped or used by the application (see the
+-- MetadataRelation entity/repository removal in this version), but it is kept
+-- in the database, unmanaged, so its historical data remains available if ever
+-- needed for recovery.
