@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2023 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -40,7 +40,6 @@ import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.AbstractMetadata;
-import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataCategory;
 import org.fao.geonet.domain.MetadataDraft;
 import org.fao.geonet.domain.utils.ObjectJSONUtils;
@@ -50,6 +49,7 @@ import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.repository.MetadataCategoryRepository;
+import org.fao.geonet.repository.MetadataDraftRepository;
 import org.fao.geonet.repository.MetadataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -92,6 +92,9 @@ public class MetadataTagApi {
     MetadataRepository metadataRepository;
 
     @Autowired
+    MetadataDraftRepository metadataDraftRepository;
+
+    @Autowired
     AccessManager accessMan;
 
     @io.swagger.v3.oas.annotations.Operation(
@@ -123,8 +126,7 @@ public class MetadataTagApi {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Add tags to a record",
-        description = "")
+        summary = "Add tags to a record")
     @PutMapping(value = "/{metadataUuid}/tags")
     @ResponseStatus(value = HttpStatus.CREATED)
     @ApiResponses(value = {
@@ -146,8 +148,7 @@ public class MetadataTagApi {
         @RequestParam
             Integer[] id,
         @Parameter(
-            description = ApiParams.API_PARAM_CLEAR_ALL_BEFORE_INSERT,
-            required = false
+            description = ApiParams.API_PARAM_CLEAR_ALL_BEFORE_INSERT
         )
         @RequestParam(
             defaultValue = "false",
@@ -158,7 +159,7 @@ public class MetadataTagApi {
     ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
-        Set<MetadataCategory> before = metadata.getCategories();
+        Set<MetadataCategory> before = new HashSet<>(metadata.getCategories());
 
         if (clear) {
             metadataManager.update(
@@ -178,13 +179,91 @@ public class MetadataTagApi {
             }
         }
 
-        indexTags(metadata);
-
         metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        indexTags(metadata);
         Set<MetadataCategory> after = metadata.getCategories();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);
 
+    }
+
+    /**
+     * Clear, add and remove tags on a record (approved or working copy), save it,
+     * reindex its tags and publish the history event.
+     *
+     * @param report if not null, non existing categories are reported on it
+     */
+    private void updateTags(AbstractMetadata metadata, boolean clear, Integer[] id, Integer[] removeId,
+                            MetadataProcessingReport report, int userId, ApplicationContext context) throws Exception {
+        Set<MetadataCategory> before = new HashSet<>(metadata.getCategories());
+
+        if (clear) {
+            metadata.getCategories().clear();
+        }
+        if (id != null) {
+            for (int c : id) {
+                final Optional<MetadataCategory> category = categoryRepository.findById(c);
+                if (category.isPresent()) {
+                    metadata.getCategories().add(category.get());
+                } else if (report != null) {
+                    report.addMetadataInfos(metadata, String.format(
+                        "Can't assign non existing category with id '%d' to record '%s'",
+                        c, metadata.getUuid()
+                    ));
+                }
+            }
+        }
+        if (removeId != null) {
+            for (int c : removeId) {
+                final Optional<MetadataCategory> category = categoryRepository.findById(c);
+                if (category.isPresent()) {
+                    metadata.getCategories().remove(category.get());
+                } else if (report != null) {
+                    report.addMetadataInfos(metadata, String.format(
+                        "Can't remove non existing category with id '%d' to record '%s'",
+                        c, metadata.getUuid()
+                    ));
+                }
+            }
+        }
+
+        if (metadata instanceof MetadataDraft) {
+            // Save through the draft repository: the metadata manager may be the non-draft
+            // implementation (configurable), which can't save working copies
+            metadataDraftRepository.save((MetadataDraft) metadata);
+        } else {
+            metadataManager.save(metadata);
+        }
+
+        indexTags(metadata);
+        new RecordCategoryChangeEvent(metadata.getId(), userId,
+            ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD),
+            ObjectJSONUtils.convertObjectInJsonObject(metadata.getCategories(), RecordCategoryChangeEvent.FIELD)).publish(context);
+    }
+
+    /**
+     * Update the tags of the approved record and of its working copy, if any,
+     * so the changes are not lost when the working copy is approved.
+     */
+    private void updateRecordTags(String uuid, boolean clear, Integer[] id, Integer[] removeId,
+                                  MetadataProcessingReport report, HttpServletRequest request,
+                                  ApplicationContext context) throws Exception {
+        AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
+        if (info == null) {
+            report.incrementNullRecords();
+        } else if (!accessMan.canEdit(
+            ApiUtils.createServiceContext(request), String.valueOf(info.getId()))) {
+            report.addNotEditableMetadataId(info.getId());
+        } else {
+            int userId = ApiUtils.getUserSession(request.getSession()).getUserIdAsInt();
+            updateTags(info, clear, id, removeId, report, userId, context);
+
+            MetadataDraft draft = metadataDraftRepository.findOneByUuid(uuid);
+            if (draft != null) {
+                updateTags(draft, clear, id, removeId, null, userId, context);
+            }
+            report.incrementProcessedRecords();
+        }
     }
 
     private void indexTags(AbstractMetadata metadata) throws Exception {
@@ -199,18 +278,17 @@ public class MetadataTagApi {
 
         if (metadata instanceof MetadataDraft) {
             searchManager.updateFields(metadata.getUuid() + "-draft", fields,
-                Sets.newHashSet(new String[] {Geonet.IndexFieldNames.CAT}));
+                Sets.newHashSet(Geonet.IndexFieldNames.CAT));
         } else {
             searchManager.updateFields(metadata.getUuid(), fields,
-                Sets.newHashSet(new String[] {Geonet.IndexFieldNames.CAT}));
+                Sets.newHashSet(Geonet.IndexFieldNames.CAT));
         }
 
 
     }
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Delete tags of a record",
-        description = "")
+        summary = "Delete tags of a record")
     @DeleteMapping(value = "/{metadataUuid}/tags")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     @ApiResponses(value = {
@@ -226,8 +304,7 @@ public class MetadataTagApi {
         @PathVariable
             String metadataUuid,
         @Parameter(
-            description = "Tag identifier. If none, all tags are removed.",
-            required = false
+            description = "Tag identifier. If none, all tags are removed."
         )
         @RequestParam(required = false)
             Integer[] id,
@@ -235,7 +312,7 @@ public class MetadataTagApi {
     ) throws Exception {
         AbstractMetadata metadata = ApiUtils.canEditRecord(metadataUuid, request);
         ApplicationContext appContext = ApplicationContextHolder.get();
-        Set<MetadataCategory> before = metadata.getCategories();
+        Set<MetadataCategory> before = new HashSet<>(metadata.getCategories());
 
         if (id == null || id.length == 0) {
             metadataManager.update(
@@ -250,9 +327,8 @@ public class MetadataTagApi {
             }
         }
 
-        indexTags(metadata);
-
         metadata = ApiUtils.canEditRecord(metadataUuid, request);
+        indexTags(metadata);
         Set<MetadataCategory> after = metadata.getCategories();
         UserSession userSession = ApiUtils.getUserSession(request.getSession());
         new RecordCategoryChangeEvent(metadata.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(appContext);
@@ -261,8 +337,7 @@ public class MetadataTagApi {
 
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Add or remove tags to one or more records",
-        description = "")
+        summary = "Add or remove tags to one or more records")
     @PutMapping(
         value = "/tags",
         produces = {
@@ -277,31 +352,26 @@ public class MetadataTagApi {
     @ResponseBody
     public MetadataProcessingReport tagRecords(
         @Parameter(
-            description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
-            required = false)
+            description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION)
         @RequestParam(required = false) String[] uuids,
         @Parameter(
-            description = ApiParams.API_PARAM_BUCKET_NAME,
-            required = false)
+            description = ApiParams.API_PARAM_BUCKET_NAME)
         @RequestParam(
             required = false
         )
             String bucket,
         @Parameter(
-            description = API_PARAM_TAG_IDENTIFIER,
-            required = false
+            description = API_PARAM_TAG_IDENTIFIER
         )
         @RequestParam(required = false)
             Integer[] id,
         @Parameter(
-            description = API_PARAM_TAG_IDENTIFIER + " to remove.",
-            required = false
+            description = API_PARAM_TAG_IDENTIFIER + " to remove."
         )
         @RequestParam(required = false)
             Integer[] removeId,
         @Parameter(
-            description = ApiParams.API_PARAM_CLEAR_ALL_BEFORE_INSERT,
-            required = false
+            description = ApiParams.API_PARAM_CLEAR_ALL_BEFORE_INSERT
         )
         @RequestParam(
             defaultValue = "false",
@@ -311,7 +381,7 @@ public class MetadataTagApi {
         HttpServletRequest request,
         @Parameter(hidden = true)
             HttpSession session
-    ) throws Exception {
+    ) {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         try {
@@ -320,58 +390,8 @@ public class MetadataTagApi {
 
             final ApplicationContext context = ApplicationContextHolder.get();
 
-            List<String> listOfUpdatedRecords = new ArrayList<>();
             for (String uuid : records) {
-                AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
-                Set<MetadataCategory> before = info.getCategories();
-                if (info == null) {
-                    report.incrementNullRecords();
-                } else if (!accessMan.canEdit(
-                    ApiUtils.createServiceContext(request), String.valueOf(info.getId()))) {
-                    report.addNotEditableMetadataId(info.getId());
-                } else {
-                    if (clear) {
-                        info.getCategories().clear();
-                    }
-
-                    if (id != null) {
-                        for (int c : id) {
-                            final Optional<MetadataCategory> category = categoryRepository.findById(c);
-                            if (category.isPresent()) {
-                                info.getCategories().add(category.get());
-                                listOfUpdatedRecords.add(String.valueOf(info.getId()));
-                            } else {
-                                report.addMetadataInfos(info, String.format(
-                                    "Can't assign non existing category with id '%d' to record '%s'",
-                                    c, info.getUuid()
-                                ));
-                            }
-                        }
-                    }
-                    if (removeId != null) {
-                        for (int c : removeId) {
-                            final Optional<MetadataCategory> category = categoryRepository.findById(c);
-                            if (category.isPresent()) {
-                                info.getCategories().remove(category.get());
-                                listOfUpdatedRecords.add(String.valueOf(info.getId()));
-                            } else {
-                                report.addMetadataInfos(info, String.format(
-                                    "Can't remove non existing category with id '%d' to record '%s'",
-                                    c, info.getUuid()
-                                ));
-                            }
-                        }
-                        metadataManager.save(info);
-                        report.incrementProcessedRecords();
-                    }
-                }
-
-                info = metadataRepository.findOneByUuid(uuid);
-                Set<MetadataCategory> after = info.getCategories();
-                indexTags(info);
-                UserSession userSession = ApiUtils.getUserSession(request.getSession());
-                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);
-
+                updateRecordTags(uuid, clear, id, removeId, report, request, context);
             }
             dataManager.flush();
         } catch (Exception exception) {
@@ -384,8 +404,7 @@ public class MetadataTagApi {
     }
 
     @io.swagger.v3.oas.annotations.Operation(
-        summary = "Delete tags to one or more records",
-        description = "")
+        summary = "Delete tags to one or more records")
     @DeleteMapping(
         value = "/tags",
         produces = {
@@ -399,25 +418,23 @@ public class MetadataTagApi {
     @PreAuthorize("hasAuthority('Editor')")
     @ResponseBody
     public MetadataProcessingReport deleteTagForRecords(
-        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION,
-            required = false)
+        @Parameter(description = ApiParams.API_PARAM_RECORD_UUIDS_OR_SELECTION)
         @RequestParam(required = false) String[] uuids,
         @Parameter(
-            description = ApiParams.API_PARAM_BUCKET_NAME,
-            required = false)
+            description = ApiParams.API_PARAM_BUCKET_NAME)
         @RequestParam(
             required = false
         )
             String bucket,
         @Parameter(
-            description = API_PARAM_TAG_IDENTIFIER
+            description = "Tag identifier. If none, all tags are removed."
         )
-        @RequestParam
+        @RequestParam(required = false)
             Integer[] id,
         HttpServletRequest request,
         @Parameter(hidden = true)
             HttpSession session
-    ) throws Exception {
+    ) {
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         try {
@@ -425,25 +442,9 @@ public class MetadataTagApi {
             report.setTotalRecords(records.size());
 
             final ApplicationContext context = ApplicationContextHolder.get();
+            boolean clearAll = id == null || id.length == 0;
             for (String uuid : records) {
-                AbstractMetadata info = metadataRepository.findOneByUuid(uuid);
-                Set<MetadataCategory> before = info.getCategories();
-                if (info == null) {
-                    report.incrementNullRecords();
-                } else if (!accessMan.canEdit(
-                    ApiUtils.createServiceContext(request), String.valueOf(info.getId()))) {
-                    report.addNotEditableMetadataId(info.getId());
-                } else {
-                    info.getCategories().clear();
-                    metadataManager.save(info);
-                    report.incrementProcessedRecords();
-                }
-
-                info = metadataRepository.findOneByUuid(uuid);
-                Set<MetadataCategory> after = info.getCategories();
-                indexTags(info);
-                UserSession userSession = ApiUtils.getUserSession(request.getSession());
-                new RecordCategoryChangeEvent(info.getId(), userSession.getUserIdAsInt(), ObjectJSONUtils.convertObjectInJsonObject(before, RecordCategoryChangeEvent.FIELD), ObjectJSONUtils.convertObjectInJsonObject(after, RecordCategoryChangeEvent.FIELD)).publish(context);
+                updateRecordTags(uuid, clearAll, null, id, report, request, context);
             }
             dataManager.flush();
         } catch (Exception exception) {

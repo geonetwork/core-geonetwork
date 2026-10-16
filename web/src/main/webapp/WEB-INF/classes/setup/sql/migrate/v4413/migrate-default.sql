@@ -47,5 +47,11 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'ukr','Scheduled
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'vie','Scheduled publication');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'wel','Scheduled publication');
 
+-- Working copies now store their own categories. Initialize them from the
+-- approved record so existing working copies don't lose them on approval.
+INSERT INTO MetadataDraftCateg (metadataId, categoryId)
+  SELECT d.id, mc.categoryId FROM MetadataDraft d JOIN MetadataCateg mc ON mc.metadataId = d.approvedversion_id
+  WHERE NOT EXISTS (SELECT 1 FROM MetadataDraftCateg dc WHERE dc.metadataId = d.id AND dc.categoryId = mc.categoryId);
+
 UPDATE Settings SET value='4.4.13' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
