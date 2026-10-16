@@ -798,6 +798,8 @@
     "metadata/history/enabled": "Enable record history recording",
     "metadata/history/enabled-help": "When true, every event that alters metadata records is registered in the database.",
     "system/metadata/allThesaurus-help": "If true then a virtual thesaurus will be created that contains all keywords in all other thesauri.  This is useful in editor when the name of the thesaurus is unimportant and only the keyword is important.  In order to ensure that the correct keyword blocks are maintained (with correct thesaurus name) enabling this will also enable a transform in update-fixed-info that will assign the keyword in the 'all' thesaurus to keyword blocks with the correct thesaurus for the keyword",
+    "system/metadata/recordCreationDateFromXml": "Read the metadata creation date from the XML document when possible",
+    "system/metadata/recordCreationDateFromXml-help": "If set, GeoNetwork will attempt to read the metadata creation date from the XML document. If no creation date is found in the XML document, GeoNetwork will fall back to the creation date stored in the database, which is the default behavior. Requires reindexing.<br>Note: this is not supported in ISO 19139; metadata using that standard will always have their creation date read from the database.",
     "system/metadataprivs": "Metadata privileges",
     "system/metadataprivs/usergrouponly": "Only set privileges to user's groups",
     "system/metadataprivs/publicationbyrevieweringroupowneronly": "Publication by users reviewer in record group only",

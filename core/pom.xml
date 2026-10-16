@@ -664,10 +664,10 @@
                   <forkCount>${system.numCores}</forkCount>
                   <groups>org.fao.geonet.repository.AbstractSpringDataTest</groups>
                   <includes>
-                    <includes>**/*.java</includes>
+                    <include>**/*.java</include>
                   </includes>
                   <excludes>
-                    <exludes>**/ElasticsearchIndexingTest.java</exludes>
+                    <exclude>**/ElasticsearchIndexingTest.java</exclude>
                   </excludes>
                 </configuration>
               </execution>

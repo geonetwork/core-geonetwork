@@ -227,23 +227,29 @@ public class EsSearchManager implements ISearchManager {
     }
 
     private void addMoreFields(Element doc, Multimap<String, Object> fields) {
-        fields.entries().forEach(e -> doc.addContent(getNewElement(e.getKey(), e.getValue())
-            .setText(String.valueOf(e.getValue()))));
+        fields.asMap().forEach((key, values) -> {
+            // skipping a field key altogether if it's already there (e.g. added by the index.xsl file)
+            if (doc.getChild(key) != null) {
+                return;
+            }
+            values.forEach(value -> doc.addContent(createElement(key, value)));
+        });
     }
 
     /**
-     * Create a new element with the key as name. If the object is a JsonNode, we set the type attribute to object
-     * Added the type as object will cause it to keep the json structure
+     * Create a new element with the key as name and the value as text value.
+     * If the value is a JsonNode, we set the "type" attribute to object: adding the type as object will cause it to keep the json structure
      * @param key the name of the element
-     * @param obj object to check if it is a JsonNode
+     * @param value value of the element
      * @return new Element with the key as name
      */
     // If the object is a JsonNode, we set the type attribute to object
-    private Element getNewElement(String key, Object obj) {
+    private Element createElement(String key, Object value) {
         Element element =  new Element(key);
-        if (obj instanceof JsonNode) {
+        if (value instanceof JsonNode) {
             element.setAttribute("type", "object");
         }
+        element.setText(String.valueOf(value));
         return element;
     }
 
