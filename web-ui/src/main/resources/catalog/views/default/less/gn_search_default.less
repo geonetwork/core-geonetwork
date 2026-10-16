@@ -84,6 +84,53 @@ a {
 }
 
 
+// Home page mosaic, "grid" layout (mods.home.mosaicLayout): equal size tiles,
+// --gn-mosaic-columns (max 4) set by the directive, last row centred.
+// Spacing uses padding instead of gap so the tile width needs no subtraction:
+// the runtime CSS minifier breaks "- (" inside calc().
+.gn-home-mosaic {
+  background-color: @gray-lighter;
+  padding: 11px 0;
+  .gn-mosaic-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    > a {
+      flex: 0 0 ~"calc(100% / var(--gn-mosaic-columns))";
+      display: block;
+      padding: 4px;
+      &:hover img,
+      &:focus img {
+        opacity: 0.85;
+      }
+    }
+    img {
+      display: block;
+      width: 100%;
+      aspect-ratio: ~"3 / 2";
+      object-fit: cover;
+    }
+  }
+  @media (max-width: @screen-xs-max) {
+    .gn-mosaic-grid > a {
+      flex-basis: 50%;
+    }
+  }
+}
+
+// Home page mosaic, "gallery" layout: linked images fill the gallery cells.
+// Same background and outer spacing (15px) as the grid layout, images have an 8px
+// margin (gn_metadata.less).
+.gallery .gn-mosaic-tile > a {
+  display: block;
+  height: 100%;
+}
+.gallery.gn-home-mosaic-gallery {
+  background-color: @gray-lighter;
+  margin-left: 0;
+  padding: 15px 15px 7px 7px;
+}
+
 .gn-top-records {
   padding-top: 30px;
   padding-bottom: 30px;

@@ -252,6 +252,11 @@
             }
           };
 
+          // Move array item from index to index + delta
+          scope.moveItem = function (array, index, delta) {
+            array.splice(index + delta, 0, array.splice(index, 1)[0]);
+          };
+
           scope.epsgHelpers = gnProjService.helpers;
 
           scope.populateProjSettings = function (context) {

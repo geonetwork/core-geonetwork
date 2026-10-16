@@ -138,6 +138,13 @@
             showSearch: true,
             showSocialBarInFooter: true,
             showMosaic: true,
+            // Random mosaic: records matching this query (used when mosaicRecords is empty)
+            mosaicQuery: "-cl_status.key:obsolete",
+            // Curated mosaic: list of {uuid, link}. An empty link opens the record page.
+            // Links may use {{lang}} for the current language.
+            mosaicRecords: [],
+            // Mosaic layout: "gallery" (full width, mixed sizes) or "grid" (same size tiles, max 4 per row)
+            mosaicLayout: "gallery",
             showMaps: true,
             facetConfig: {
               "th_httpinspireeceuropaeutheme-theme_tree.key": {
@@ -1373,6 +1380,7 @@
           "switcherProjectionList",
           "cookieWarning",
           "facetConfig",
+          "mosaicRecords",
           "searchOptions",
           "graticuleOgcService",
           "geocoder",

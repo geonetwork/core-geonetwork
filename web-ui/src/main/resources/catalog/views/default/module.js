@@ -179,6 +179,11 @@
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.modelOptionsForm = angular.copy(gnGlobalSettings.modelOptions);
       $scope.showMosaic = gnGlobalSettings.gnCfg.mods.home.showMosaic;
+      // Empty query falls back to the default (exclude obsolete records)
+      $scope.mosaicQuery =
+        gnGlobalSettings.gnCfg.mods.home.mosaicQuery || "-cl_status.key:obsolete";
+      $scope.mosaicRecords = gnGlobalSettings.gnCfg.mods.home.mosaicRecords;
+      $scope.mosaicLayout = gnGlobalSettings.gnCfg.mods.home.mosaicLayout;
       $scope.isFilterTagsDisplayedInSearch =
         gnGlobalSettings.gnCfg.mods.search.isFilterTagsDisplayedInSearch;
       $scope.searchMapPlacement = gnGlobalSettings.gnCfg.mods.search.searchMapPlacement;
