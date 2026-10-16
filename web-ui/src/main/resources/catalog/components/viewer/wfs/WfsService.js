@@ -92,7 +92,7 @@
 
         var title = extractString(featureType.title);
         var name = featureType.name;
-        var layerName = extractString(name.localPart) || extractString(name);
+        var layerName = extractString(name.localPart);
         var prefix = extractString(name.prefix);
         var fullName = prefix ? prefix + ":" + layerName : layerName;
 
@@ -100,8 +100,7 @@
           title &&
           layerName &&
           title.toLowerCase() !== layerName.toLowerCase() &&
-          title.toLowerCase() !== fullName.toLowerCase() &&
-          title.toLowerCase().indexOf("(" + layerName.toLowerCase() + ")") === -1
+          title.toLowerCase() !== fullName.toLowerCase()
         ) {
           return title + " (" + layerName + ")";
         }
