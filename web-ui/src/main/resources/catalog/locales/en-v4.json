@@ -372,6 +372,8 @@
   "toggleOptions": "Toggle filter options (open or close filter tree)",
   "ui-showMosaic": "Show overview mosaic in home page",
   "ui-showMaps": "Show latest maps in home page",
+  "ui-showWelcomeMessage": "Show welcome message in home page",
+  "ui-showWelcomeMessage-help": "The message is configured in <a href='#/settings/languages' target='_blank'>Language and translations</a> with the key <strong>home-welcome-message</strong> for the main portal, or <strong>home-welcome-message-</strong> followed by the portal identifier for a sub-portal (eg. <strong>home-welcome-message-inspire</strong>). HTML is allowed. The message is not displayed in languages without a translation.",
   "ui-queryBaseOptions": "Search query options",
   "ui-queryBaseOptions-help": "Check <a href='https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#query-string-top-level-params'>documentation</a> for more details",
   "sortBy": "Sort by",
