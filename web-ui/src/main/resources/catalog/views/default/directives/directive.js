@@ -266,4 +266,71 @@
       };
     }
   ]);
+
+  /**
+   * Drag handle to resize the maximized search map. The height is stored in
+   * the --gn-minimap-split-height CSS variable and remembered in the browser.
+   */
+  module.directive("gnMinimapResize", [
+    "gnSearchSettings",
+    function (gnSearchSettings) {
+      var storageKey = "gnSearchMinimapHeight";
+      var minHeight = 150; // smallest map
+      var minResultsHeight = 200; // space kept above the map for the results
+
+      var setHeight = function (height) {
+        document.documentElement.style.setProperty(
+          "--gn-minimap-split-height",
+          height + "px"
+        );
+      };
+
+      return {
+        restrict: "A",
+        link: function (scope, element) {
+          var mapWindow = element.parent()[0];
+
+          try {
+            var stored = parseInt(window.localStorage.getItem(storageKey), 10);
+            if (stored >= minHeight) {
+              setHeight(stored);
+            }
+          } catch (e) {}
+
+          var resize = function (height) {
+            var bottom = mapWindow.getBoundingClientRect().bottom;
+            height = Math.round(
+              Math.max(minHeight, Math.min(height, bottom - minResultsHeight))
+            );
+            setHeight(height);
+            gnSearchSettings.searchMap.updateSize();
+            try {
+              window.localStorage.setItem(storageKey, height);
+            } catch (e) {}
+          };
+
+          element.on("pointerdown", function (e) {
+            e.preventDefault();
+            element[0].setPointerCapture(e.pointerId);
+            var bottom = mapWindow.getBoundingClientRect().bottom;
+            var move = function (moveEvent) {
+              resize(bottom - moveEvent.clientY);
+            };
+            element.on("pointermove", move);
+            element.one("pointerup pointercancel", function () {
+              element.off("pointermove", move);
+            });
+          });
+
+          element.on("keydown", function (e) {
+            var step = { ArrowUp: 20, ArrowDown: -20 }[e.key];
+            if (step) {
+              e.preventDefault();
+              resize(mapWindow.offsetHeight + step);
+            }
+          });
+        }
+      };
+    }
+  ]);
 })();

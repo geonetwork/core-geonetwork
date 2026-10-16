@@ -162,6 +162,20 @@ To further explore listed records:
         ![](img/search_map_bbox.png)
         *Search bounding box intersects*
 
+    The map is shown in a **Spatial filter** window. Use the buttons in its title bar to change its size:
+
+    -   Maximize :fontawesome-regular-window-maximize: splits the page in two: the search results at the top and a full-width map at the bottom. The results scroll on their own above the map, which makes it easier to draw an extent while browsing the results. Drag the handle on the top edge of the map to make it taller or shorter.
+
+    -   Restore :fontawesome-regular-window-minimize: brings the map back to its small size in the lower right corner.
+
+    -   Close :fontawesome-solid-xmark: hides the map. Use the **Map** button in the lower right corner to show or hide it again.
+
+    The browser remembers whether the map was small, maximized or closed, and shows it the same way on your next visit.
+
+    !!! note
+
+        The **Spatial filter** window is used when the administrator sets **Search result map placement** to **Lower right to results** (the default) in the user interface configuration. With **Above search filter**, the map is shown in a panel above the search filters instead.
+
 9.  Records are selected (using the checkbox located next to each one)
     to quickly download or generate a PDF of one or more records.
 

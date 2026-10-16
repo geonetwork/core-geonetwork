@@ -182,6 +182,8 @@
       $scope.isFilterTagsDisplayedInSearch =
         gnGlobalSettings.gnCfg.mods.search.isFilterTagsDisplayedInSearch;
       $scope.searchMapPlacement = gnGlobalSettings.gnCfg.mods.search.searchMapPlacement;
+      $scope.searchMapShowLargeMapLink =
+        gnGlobalSettings.gnCfg.mods.search.searchMapShowLargeMapLink;
       $scope.showStatusFooterFor = gnGlobalSettings.gnCfg.mods.search.showStatusFooterFor;
       $scope.showBatchDropdown = gnGlobalSettings.gnCfg.mods.search.showBatchDropdown;
       $scope.exactMatchToggle = gnGlobalSettings.gnCfg.mods.search.exactMatchToggle;
@@ -212,10 +214,50 @@
       $scope.sortKeywordsAlphabetically =
         gnGlobalSettings.gnCfg.mods.recordview.sortKeywordsAlphabetically;
 
+      // Floating search map state (normal, max or closed), remembered in the browser
+      var minimapStateKey = "gnSearchMinimapState";
+      var minimapStates = ["normal", "max", "closed"];
+      $scope.minimapState = "normal";
+      try {
+        var storedMinimapState = window.localStorage.getItem(minimapStateKey);
+        if (minimapStates.indexOf(storedMinimapState) !== -1) {
+          $scope.minimapState = storedMinimapState;
+        }
+      } catch (e) {}
+      var lastOpenMinimapState =
+        $scope.minimapState === "closed" ? "normal" : $scope.minimapState;
+
+      // A maximized map splits the search page in two: results on top, map below
+      var updateMinimapSplit = function () {
+        $(document.documentElement).toggleClass(
+          "gn-minimap-split",
+          $scope.searchMapPlacement === "results" &&
+            $scope.minimapState === "max" &&
+            gnSearchLocation.isSearch()
+        );
+      };
+      // Also apply on load: a reload of a search URL may not fire a location change
+      updateMinimapSplit();
+      $scope.$on("$locationChangeSuccess", updateMinimapSplit);
+
+      $scope.setMinimapState = function (state) {
+        $scope.minimapState = state;
+        if (state !== "closed") {
+          lastOpenMinimapState = state;
+        }
+        try {
+          window.localStorage.setItem(minimapStateKey, state);
+        } catch (e) {}
+        updateMinimapSplit();
+        // Let the new size apply before OpenLayers measures the map
+        setTimeout(function () {
+          searchMap.updateSize();
+        }, 0);
+      };
+
       $scope.toggleMap = function () {
-        $(searchMap.getTargetElement()).toggle();
-        $("button.gn-minimap-toggle > i").toggleClass(
-          "fa-angle-double-left fa-angle-double-right"
+        $scope.setMinimapState(
+          $scope.minimapState === "closed" ? lastOpenMinimapState : "closed"
         );
       };
 

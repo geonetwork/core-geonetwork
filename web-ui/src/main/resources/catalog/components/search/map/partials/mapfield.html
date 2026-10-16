@@ -10,7 +10,7 @@
     </button>-->
     <button
       data-ng-click="location.setMap()"
-      data-ng-if="isMapViewerEnabled && !isExternalViewerEnabled"
+      data-ng-if="isMapViewerEnabled && !isExternalViewerEnabled && searchMapShowLargeMapLink !== false"
       type="button"
       title="{{'openLargeMap' | translate}}"
       aria-label="{{'openLargeMap' | translate}}"
