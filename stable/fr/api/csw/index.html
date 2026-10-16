@@ -1048,6 +1048,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#queryables-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Queryables mapping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Queryables mapping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-iso-queryables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported ISO queryables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-queryables-inspire-and-others" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional queryables (INSPIRE and others)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#upgrading-from-geonetwork-30-guidance" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1493,6 +1532,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#queryables-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Queryables mapping
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Queryables mapping">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-iso-queryables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported ISO queryables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#additional-queryables-inspire-and-others" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Additional queryables (INSPIRE and others)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#upgrading-from-geonetwork-30-guidance" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1581,7 +1659,7 @@
 </span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="w">  </span><span class="nt">&lt;/csw:Query&gt;</span>
 </span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="nt">&lt;/csw:GetRecords&gt;</span>
 </span></code></pre></div>
-<p>Example of a request using an index field name:</p>
+<p id="csw-index-field-example">Example of a request using an index field name:</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&lt;csw:GetRecords</span><span class="w"> </span><span class="na">xmlns:csw=</span><span class="s">"http://www.opengis.net/cat/csw/2.0.2"</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">                </span><span class="na">service=</span><span class="s">"CSW"</span><span class="w"> </span><span class="na">version=</span><span class="s">"2.0.2"</span><span class="nt">&gt;</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&lt;csw:Query</span><span class="w"> </span><span class="na">typeNames=</span><span class="s">"csw:Record"</span><span class="nt">&gt;</span>
@@ -1596,7 +1674,277 @@
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="nt">&lt;/csw:Query&gt;</span>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nt">&lt;/csw:GetRecords&gt;</span>
 </span></code></pre></div>
-<p>The mapping between CSW standard queryable and the index fields are defined in <strong><code>web/src/main/webapp/WEB-INF/config-csw.xml</code></strong>.</p>
+<p>The mapping between CSW standard queryables and the index fields is defined in <strong><code>web/src/main/webapp/WEB-INF/config-csw.xml</code></strong>.</p>
+<h2 id="queryables-mapping">Queryables mapping</h2>
+<p>The following tables list the available CSW queryables that can be used for searching. It shows the ISO field they refer to and the Elasticsearch index field it is mapped to.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Instead of using CSW queryables, you may also use the Elasticsearch index field in a  <code>GetRecords</code> query (see the <a href="#csw-index-field-example">example of a request using an index field name</a>). However, the ES index fields are not listed in the <code>GetCapabilities</code> document and may be subject to change. It is therefore recommended to use the standard CSW queryables.</p>
+</div>
+<h3 id="supported-iso-queryables">Supported ISO queryables</h3>
+<table>
+<thead>
+<tr>
+<th>CSW queryable</th>
+<th>ISO field</th>
+<th>Elasticsearch index field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Subject</code></td>
+<td>Keyword</td>
+<td><code>tag.*</code></td>
+</tr>
+<tr>
+<td><code>Title</code></td>
+<td>Resource title</td>
+<td><code>resourceTitleObject.*</code></td>
+</tr>
+<tr>
+<td><code>Abstract</code></td>
+<td>Abstract</td>
+<td><code>resourceAbstractObject.*</code></td>
+</tr>
+<tr>
+<td><code>AnyText</code></td>
+<td>Full text (any field)</td>
+<td><code>any.*</code></td>
+</tr>
+<tr>
+<td><code>Format</code></td>
+<td>Distribution format name</td>
+<td><code>format</code></td>
+</tr>
+<tr>
+<td><code>Identifier</code></td>
+<td>Metadata identifier (UUID)</td>
+<td><code>uuid</code></td>
+</tr>
+<tr>
+<td><code>Modified</code></td>
+<td>Metadata date stamp</td>
+<td><code>changeDate</code></td>
+</tr>
+<tr>
+<td><code>Type</code></td>
+<td>Hierarchy level (resource type)</td>
+<td><code>resourceType</code></td>
+</tr>
+<tr>
+<td><code>RevisionDate</code></td>
+<td>Resource revision date</td>
+<td><code>revisionDateForResource</code></td>
+</tr>
+<tr>
+<td><code>AlternateTitle</code></td>
+<td>Alternate title</td>
+<td><code>resourceAltTitleObject.*</code></td>
+</tr>
+<tr>
+<td><code>CreationDate</code></td>
+<td>Resource creation date</td>
+<td><code>creationDateForResource</code></td>
+</tr>
+<tr>
+<td><code>PublicationDate</code></td>
+<td>Resource publication date</td>
+<td><code>publicationDateForResource</code></td>
+</tr>
+<tr>
+<td><code>OrganisationName</code></td>
+<td>Resource point of contact organisation</td>
+<td><code>OrgForResourceObject.*</code></td>
+</tr>
+<tr>
+<td><code>HasSecurityConstraints</code></td>
+<td>Has security constraints</td>
+<td><code>secConstr</code></td>
+</tr>
+<tr>
+<td><code>Language</code></td>
+<td>Metadata language</td>
+<td><code>mainLanguage</code></td>
+</tr>
+<tr>
+<td><code>ResourceIdentifier</code></td>
+<td>Resource identifier</td>
+<td><code>resourceIdentifier.code</code></td>
+</tr>
+<tr>
+<td><code>ParentIdentifier</code></td>
+<td>Parent identifier</td>
+<td><code>parentUuid</code></td>
+</tr>
+<tr>
+<td><code>KeywordType</code></td>
+<td>Keyword type</td>
+<td><code>cl_type.key</code></td>
+</tr>
+<tr>
+<td><code>GeographicDescriptionCode</code></td>
+<td>Geographic description code</td>
+<td><code>keywordType-place.*</code></td>
+</tr>
+<tr>
+<td><code>TopicCategory</code></td>
+<td>Topic category</td>
+<td><code>cl_topic.key</code></td>
+</tr>
+<tr>
+<td><code>ResourceLanguage</code></td>
+<td>Resource language</td>
+<td><code>resourceLanguage</code></td>
+</tr>
+<tr>
+<td><code>Denominator</code></td>
+<td>Spatial resolution (scale denominator)</td>
+<td><code>resolutionScaleDenominator</code></td>
+</tr>
+<tr>
+<td><code>DistanceValue</code></td>
+<td>Spatial resolution (distance)</td>
+<td><code>resolutionDistance</code></td>
+</tr>
+<tr>
+<td><code>DistanceUOM</code></td>
+<td>Spatial resolution distance unit</td>
+<td><code>distanceUom</code></td>
+</tr>
+<tr>
+<td><code>TempExtent_begin</code></td>
+<td>Temporal extent begin</td>
+<td><code>resourceTemporalDateRange.gte</code></td>
+</tr>
+<tr>
+<td><code>TempExtent_end</code></td>
+<td>Temporal extent end</td>
+<td><code>resourceTemporalDateRange.lte</code></td>
+</tr>
+<tr>
+<td><code>ServiceType</code></td>
+<td>Service type</td>
+<td><code>serviceType</code></td>
+</tr>
+<tr>
+<td><code>ServiceTypeVersion</code></td>
+<td>Service type version</td>
+<td><code>serviceTypeVersion</code></td>
+</tr>
+<tr>
+<td><code>Operation</code></td>
+<td>Service operation name</td>
+<td><code>operation</code></td>
+</tr>
+<tr>
+<td><code>OperatesOn</code></td>
+<td>Operates on (dataset UUID)</td>
+<td><code>recordOperateOn</code></td>
+</tr>
+<tr>
+<td><code>OperatesOnIdentifier</code></td>
+<td>Coupled resource identifier</td>
+<td><code>operatesOnIdentifier</code></td>
+</tr>
+<tr>
+<td><code>OperatesOnName</code></td>
+<td>Coupled resource operation name</td>
+<td><code>operatesOnName</code></td>
+</tr>
+<tr>
+<td><code>CouplingType</code></td>
+<td>Coupling type</td>
+<td><code>couplingType</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="additional-queryables-inspire-and-others">Additional queryables (INSPIRE and others)</h3>
+<table>
+<thead>
+<tr>
+<th>CSW queryable</th>
+<th>ISO field</th>
+<th>Elasticsearch index field</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Degree</code></td>
+<td>Conformity degree (pass)</td>
+<td><code>inspireConformResource</code></td>
+</tr>
+<tr>
+<td><code>SpecificationTitle</code></td>
+<td>Conformity specification title</td>
+<td><code>specificationConformance.title</code></td>
+</tr>
+<tr>
+<td><code>SpecificationDate</code></td>
+<td>Conformity specification date</td>
+<td><code>specificationConformance.date</code></td>
+</tr>
+<tr>
+<td><code>SpecificationDateType</code></td>
+<td>Conformity specification date type</td>
+<td><code>specificationDateType</code></td>
+</tr>
+<tr>
+<td><code>AccessConstraints</code></td>
+<td>Access constraints</td>
+<td><code>cl_accessConstraints.key</code></td>
+</tr>
+<tr>
+<td><code>OtherConstraints</code></td>
+<td>Other constraints</td>
+<td><code>MD_LegalConstraintsOtherConstraintsObject.*</code></td>
+</tr>
+<tr>
+<td><code>Classification</code></td>
+<td>Security classification</td>
+<td><code>cl_classification.key</code></td>
+</tr>
+<tr>
+<td><code>ConditionApplyingToAccessAndUse</code></td>
+<td>Use limitation</td>
+<td><code>MD_ConstraintsUseLimitationObject.*</code></td>
+</tr>
+<tr>
+<td><code>MetadataPointOfContact</code></td>
+<td>Metadata point of contact organisation</td>
+<td><code>OrgObject.*</code></td>
+</tr>
+<tr>
+<td><code>Lineage</code></td>
+<td>Lineage statement</td>
+<td><code>lineageObject.*</code></td>
+</tr>
+<tr>
+<td><code>ResponsiblePartyRole</code></td>
+<td>Responsible party role</td>
+<td><code>contactForResource.role</code></td>
+</tr>
+<tr>
+<td><code>OnlineResourceType</code></td>
+<td>Online resource protocol</td>
+<td><code>linkProtocol</code></td>
+</tr>
+<tr>
+<td><code>OnlineResourceMimeType</code></td>
+<td>Online resource MIME type</td>
+<td><code>mimetype</code></td>
+</tr>
+<tr>
+<td><code>Date</code></td>
+<td>Metadata creation date</td>
+<td><code>createDate</code></td>
+</tr>
+<tr>
+<td><code>Relation</code></td>
+<td>Related resources</td>
+<td><code>relation</code></td>
+</tr>
+</tbody>
+</table>
 <h2 id="upgrading-from-geonetwork-30-guidance">Upgrading from GeoNetwork 3.0 Guidance</h2>
 <p>The configuration of "Virtual CSW" end-points are replaced by <a href="../../administrator-guide/configuring-the-catalog/portal-configuration/">sub-portals</a>.</p>
 
