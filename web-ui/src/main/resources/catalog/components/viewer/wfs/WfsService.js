@@ -90,7 +90,7 @@
           return "";
         }
 
-        var title = extractString(featureType.title) || extractString(featureType.Title);
+        var title = extractString(featureType.title);
         var name = featureType.name;
         var layerName = extractString(name.localPart) || extractString(name);
         var prefix = extractString(name.prefix);
