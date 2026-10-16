@@ -73,7 +73,7 @@ Example of a request using an index field name:
 </csw:GetRecords>
 ```
 
-The mapping between CSW standard queryable and the index fields are defined in **`web/src/main/webapp/WEB-INF/config-csw.xml`**.
+The mapping between CSW standard queryables and the index fields is defined in **`web/src/main/webapp/WEB-INF/config-csw.xml`**.
 
 ## Queryables mapping
 
