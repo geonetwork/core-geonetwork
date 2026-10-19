@@ -1287,6 +1287,7 @@
     "ui-graticuleOgcService-help": "Optional. For now, only WMS services are supported.",
     "ui-usersearches": "User custom searches",
     "ui-savedSelection": "Favorites (saved selections)",
+    "ui-savedSelection-help": "Allow users to mark records as favorites, so they can easily find them again in the <strong>Favorites</strong> panel on the search page. Anonymous users have a favorite records list stored in their browser. Registered users have favorite records and a watch list stored in the catalog; they are notified by email when records in their watch list are updated. A map list is also available to add layers of several records to the map.",
     "ui-enabled": "Enabled",
     "ui-displayFeaturedSearchesPanel": "Display featured user searches panel in home page",
     "confirmDeleteThesaurus": "Are you sure you want to delete this thesaurus?",
