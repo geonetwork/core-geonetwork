@@ -1653,7 +1653,7 @@
               .get("../api/logos/" + scope.orgKey + ".png", { cache: true })
               .then(function (r) {
                 scope.hasIcon = r.status === 200;
-              });
+              }, angular.noop);
           }
         }
       };
