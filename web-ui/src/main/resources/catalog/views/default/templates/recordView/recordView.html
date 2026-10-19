@@ -124,6 +124,13 @@
                 gn-manage-record-menu="mdView.current.record"
               ></div>
 
+              <!-- favorite -->
+              <div
+                data-ng-if="menu == 'gn-recordview-favorite-menu' && mdView.current.record"
+                data-gn-saved-selections-favorite="mdView.current.record"
+                data-user="user"
+              ></div>
+
               <!-- download -->
               <div
                 data-ng-if="menu == 'gn-recordview-download-menu' && mdView.current.record"
