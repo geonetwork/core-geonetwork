@@ -45,7 +45,7 @@ public class DashboardAppHealthCheck implements HealthCheckFactory {
                 final EsSearchManager searchMan = context.getBean(EsSearchManager.class);
                 final String dashboardAppUrl = searchMan.getClient().getDashboardAppUrl();
 
-                if (StringUtils.isNotEmpty(dashboardAppUrl)) {
+                if (StringUtils.isNotBlank(dashboardAppUrl)) {
                     ClientHttpResponse httpResponse = null;
                     try {
                         String url = dashboardAppUrl;
