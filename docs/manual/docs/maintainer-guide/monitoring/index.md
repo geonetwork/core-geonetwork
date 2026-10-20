@@ -87,8 +87,10 @@ The body is a JSON array with one object per check:
 ## Dashboard health check
 
 `DashboardAppHealthCheck` verifies the Kibana instance configured by the `kb.url` property.
-The property is empty by default, so a catalogue that does not use dashboards reports
-`DISABLED` rather than a failure, and the dashboard features are hidden in the admin console.
+The property defaults to `http://localhost:5601`. When it is set to an empty value, the check
+reports `DISABLED` rather than a failure, and the dashboard features are hidden in the admin
+console. Catalogues that do not use dashboards should therefore disable them explicitly, see
+[Disabling the dashboards](#disabling-the-dashboards).
 
 ### Enabling the dashboards
 
@@ -118,8 +120,8 @@ mvn clean install \
 `kb.url` drives the health check and the admin console. The catalogue also proxies the dashboards
 at `/geonetwork/dashboards`, and that proxy resolves its target separately, from the
 `geonetwork.HttpDashboardProxy.targetUri` property, falling back to the `kb.url` value that was
-built into `WEB-INF/web.xml`. When enabling dashboards on an application that was built without a
-URL, set the proxy target as well, either as an environment variable
+built into `WEB-INF/web.xml`. When enabling dashboards on an application that was built with an
+empty URL, or when Kibana is not at the built-in URL, set the proxy target as well, either as an environment variable
 (`GEONETWORK_HTTPDASHBOARDPROXY_TARGETURI`), a system property, or an entry in
 `WEB-INF/config.properties`:
 
@@ -129,8 +131,8 @@ geonetwork.HttpDashboardProxy.targetUri=http://localhost:5601
 
 ### Disabling the dashboards
 
-Leave `kb.url` empty, which is the default. To disable the dashboards on an application that was
-built with a URL, set the environment variable to an empty value:
+The application is built with `kb.url` set to `http://localhost:5601`, so the dashboards are
+enabled by default. To disable them, set the environment variable to an empty value:
 
 ``` bash
 GEONETWORK_KIBANA_URL=
