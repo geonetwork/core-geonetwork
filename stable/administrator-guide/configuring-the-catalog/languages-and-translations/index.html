@@ -1536,6 +1536,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Languages and translations
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1552,6 +1570,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#home-welcome-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Home page welcome message
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -2416,6 +2464,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#home-welcome-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Home page welcome message
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -2465,6 +2532,9 @@
 <p class="admonition-title">Finding the key of an untranslated string</p>
 <p>When the interface has no translation for a key, it displays the raw key instead of a readable label, for example <code>SortBy-resourceTitleObject.default.sortAsc</code> in a sort-by dropdown. If you come across this, copy the text exactly as shown and use it as the key in the <code>Manage translations</code> panel to add the missing translation.</p>
 </div>
+<h2 id="home-welcome-message">Home page welcome message</h2>
+<p>When <strong>Show welcome message in home page</strong> is enabled (see <a href="../user-interface-configuration/#user-interface-config-homepage">User Interface Configuration</a>), the home page displays the translation of the key <code>home-welcome-message</code>. For a sub-portal, use <code>home-welcome-message-</code> followed by the portal identifier, for example <code>home-welcome-message-inspire</code>.</p>
+<p>The message is only displayed in the languages that have a translation for the key. HTML is allowed, for example <code>&lt;strong&gt;</code> for bold text or <code>&lt;br&gt;</code> for line breaks. The content is sanitised before display: scripts, event handler attributes (such as <code>onclick</code>) and inline <code>style</code> attributes are removed.</p>
 
 
 
