@@ -27,9 +27,6 @@ import jeeves.server.context.ServiceContext;
 
 import javax.sql.DataSource;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Encapsulate statistics of a connection.
  *
@@ -39,7 +36,6 @@ public class Stats {
     public final Integer numActive;
     public final Integer numIdle;
     public final Integer maxActive;
-    public final Map<String, String> resourceSpecificStats;
 
 
     /**
@@ -65,7 +61,6 @@ public class Stats {
             Object maxTotal = invoke(source, "getMaxTotal");
             maxActive = toInt(maxTotal != null ? maxTotal : invoke(source, "getMaxActive"));
         }
-        resourceSpecificStats = new HashMap<>();
     }
 
     private static Object invoke(Object target, String method) {
