@@ -209,7 +209,7 @@
         $translate($scope.welcomeMessageKey).then(function (message) {
           $scope.welcomeMessage = message;
           $scope.showWelcomeMessage =
-    message.trim() !== "" && message !== $scope.welcomeMessageKey;
+            message.trim() !== "" && message !== $scope.welcomeMessageKey;
         }, angular.noop);
       }
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
