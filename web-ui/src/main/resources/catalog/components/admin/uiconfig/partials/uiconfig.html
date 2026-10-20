@@ -911,7 +911,10 @@
                   </div>
 
                   <div class="col-lg-7 gn-nopadding-right">
-                    <div data-ng-repeat="(t, value) in mCfg[key]">
+                    <div
+                      data-ng-repeat="(t, value) in mCfg[key]"
+                      data-ng-if="!isToolSubOption(t)"
+                    >
                       <div>
                         <input
                           type="checkbox"
@@ -922,6 +925,24 @@
                         />&nbsp;
                         <label for="{{key}}-{{t}}-checkbox">
                           {{(t + 'Tool') | translate}}
+                        </label>
+                      </div>
+                      <div
+                        data-ng-repeat="s in toolSubOptions[t]"
+                        data-ng-init="mCfg[key][s] = mCfg[key][s] || false"
+                        data-ng-style="{opacity: mCfg[key][t] ? 0.5 : 1}"
+                        style="margin-left: 20px"
+                      >
+                        <input
+                          type="checkbox"
+                          id="{{key}}-{{s}}-checkbox"
+                          data-ng-model="mCfg[key][s]"
+                          data-ng-disabled="mCfg[key][t]"
+                          ng-true-value="false"
+                          ng-false-value="true"
+                        />&nbsp;
+                        <label for="{{key}}-{{s}}-checkbox">
+                          {{(s + 'Tool') | translate}}
                         </label>
                       </div>
                     </div>

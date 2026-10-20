@@ -179,12 +179,57 @@ You can configure each map with different layers and projections.
 
     !!! info "Important"
 
-    If the configuration of a projection is incomplete or invalid, the map may fail to load.
+        If the configuration of a projection is incomplete or invalid, the map may fail to load.
 
-
-    If a projection is defined which is not supported by the source of the map layer, the map application will reproject map images at the client side. This may cause unexpected behaviour, such as rotated or distorted labels.
+        If a projection is defined which is not supported by the source of the map layer, the map application will reproject map images at the client side. This may cause unexpected behaviour, such as rotated or distorted labels.
 
 -   **Optional Map Viewer Tools** The checkboxes in this section define the tools available to the user in the right toolbar of the main map. Elements that are not checked are not visible.
+
+    Below **Add layers**, the sub-options **WMS service**, **WMTS service**, **WFS service**, **ArcGIS REST service** and **Files (KML, KMZ, GPX, GeoJSON, TopoJSON)** define the sources available in the **Add layers** panel. They can only be changed when **Add layers** is checked. When all the services are unchecked, the **Services** tab is hidden. When **Files** is unchecked, the **Files** tab is hidden and files can no longer be dropped on the map.
+
+    ![](img/ui-settings-maptools-addlayers.png)
+
+    These options only control the **Add layers** panel.
+
+    ![](img/ui-settings-maptools-addlayers-panel.png)
+    
+    For WMS and WMTS links in records, they apply as follows:
+
+    -   A link to a service without a layer name opens the service in the **Add layers** panel, so the user can pick a layer. If that service type is disabled, the map shows a warning, for example "Adding WMS services is disabled in this catalog", and the panel does not open. In ISO19139, this is an online resource with a service protocol and no name:
+
+        ```xml
+        <gmd:onLine>
+          <gmd:CI_OnlineResource>
+            <gmd:linkage>
+              <gmd:URL>https://example.org/geoserver/wms</gmd:URL>
+            </gmd:linkage>
+            <gmd:protocol>
+              <gco:CharacterString>OGC:WMS</gco:CharacterString>
+            </gmd:protocol>
+          </gmd:CI_OnlineResource>
+        </gmd:onLine>
+        ```
+
+    -   A link that names a layer adds that layer straight to the map, even when its service type is disabled. In ISO19139, the layer name goes in `gmd:name`:
+
+        ```xml
+        <gmd:onLine>
+          <gmd:CI_OnlineResource>
+            <gmd:linkage>
+              <gmd:URL>https://example.org/geoserver/wms</gmd:URL>
+            </gmd:linkage>
+            <gmd:protocol>
+              <gco:CharacterString>OGC:WMS</gco:CharacterString>
+            </gmd:protocol>
+            <gmd:name>
+              <gco:CharacterString>topp:states</gco:CharacterString>
+            </gmd:name>
+          </gmd:CI_OnlineResource>
+        </gmd:onLine>
+        ```
+
+    WFS and ArcGIS REST links in records are not affected by these options.
+
 -   **OGC Service to use as a graticule**: This is optional and allows the use of an external service to display the graticule on the map.
 
 ### Viewer Map Configuration {#user-interface-config-viewermap}
