@@ -205,8 +205,9 @@
           function updateLayout() {
             var count = Math.min(scope.limit, scope.tiles.length);
             scope.visible = count;
-            // Balanced rows, 4 columns at most (eg. 6 > 3+3, 7 > 4+3)
-            scope.columns = count > 0 ? Math.ceil(count / Math.ceil(count / 4)) : 0;
+            // Balanced rows, 4 columns at most (eg. 6 > 3+3, 7 > 4+3), 3 at least
+            // so 1 or 2 records are not stretched to the full width (centred).
+            scope.columns = Math.max(3, Math.ceil(count / Math.ceil(count / 4)) || 0);
           }
 
           // Hide images failing to load (eg. 404). The error event does not bubble,
