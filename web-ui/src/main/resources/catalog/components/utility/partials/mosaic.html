@@ -1,5 +1,5 @@
 <div
-  data-ng-class="visible > 0 && layout === 'grid' ? 'gn-home-mosaic' : 'gallery gn-record-mosaic' + (tiles && layout !== 'grid' ? ' gn-home-mosaic-gallery' : '')"
+  data-ng-class="visible > 0 && layout === 'grid' ? 'gn-home-mosaic' : 'gallery gn-record-mosaic' + (visible > 0 && layout !== 'grid' ? ' gn-home-mosaic-gallery' : '')"
 >
   <div data-ng-repeat="i in images">
     <img data-ng-src="{{i.data || (i.url | thumbnailUrlSize: imageSize)}}" />
