@@ -89,7 +89,7 @@ a {
 // Spacing uses padding instead of gap so the tile width needs no subtraction:
 // the runtime CSS minifier breaks "- (" inside calc().
 .gn-home-mosaic {
-  background-color: @gray-lighter;
+  background-color: @gn-mosaic-background-color;
   padding: 11px 0;
   .gn-mosaic-grid {
     display: flex;
@@ -126,7 +126,7 @@ a {
   height: 100%;
 }
 .gallery.gn-home-mosaic-gallery {
-  background-color: @gray-lighter;
+  background-color: @gn-mosaic-background-color;
   margin-left: 0;
   padding: 15px 15px 7px 7px;
 }
