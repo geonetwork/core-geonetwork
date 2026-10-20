@@ -16,7 +16,7 @@
         <link rel="prev" href="../../install-guide/loading-samples/">
       
       
-        <link rel="next" href="../updating/">
+        <link rel="next" href="../monitoring/">
       
       
         
@@ -760,6 +760,8 @@
       
         
       
+        
+      
     
     
     
@@ -1039,6 +1041,34 @@
   
 </nav>
       
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1553,7 +1583,7 @@
 <li>Decide whether you want your GeoNetwork instance listed in search engine results. Register the GeoNetwork sitemap in the various search engine administration pages and monitor crawling and search behaviour. This can reveal useful insights, such as search trends and dead links in metadata. To identify yourself to search engines, place an identification file in the root of your website. Also place a robots.txt file there, linking to the sitemap. robots.txt can also be used to prevent search engines from crawling certain parts of the catalogue. If GeoNetwork is installed in the root folder, robots.txt is already in the correct location.</li>
 <li>Verify that the catalogue URIs of records and APIs are persistent over time. Other sites may deep-link into the catalogue, and those links should remain valid after a migration. Fix broken links by setting up redirect rules to new URLs. Prevent future broken links by following <a href="https://www.w3.org/TR/cooluris/">cool URIs</a>. For example, do not use a product name (e.g. GeoNetwork) in a URL.</li>
 <li>Provide a link to the authority managing the catalogue, a disclaimer, cookie warning and/or privacy policy on the header/footer of the site.</li>
-<li>Monitor the availability of the application using a tool like <a href="https://www.zabbix.com/">Zabbix</a>, <a href="https://www.nagios.org/">Nagios</a>, or <a href="https://geohealthcheck.org/">GeoHealthCheck</a>.</li>
+<li>Monitor the availability of the application using a tool like <a href="https://www.zabbix.com/">Zabbix</a>, <a href="https://www.nagios.org/">Nagios</a>, or <a href="https://geohealthcheck.org/">GeoHealthCheck</a>. The catalogue publishes health check endpoints for this purpose, read more at <a href="../monitoring/">Monitoring</a>.</li>
 </ul>
 
 
@@ -1609,13 +1639,13 @@
         
         
           
-          <a href="../updating/" class="md-footer__link md-footer__link--next" aria-label="Next: Updating the application">
+          <a href="../monitoring/" class="md-footer__link md-footer__link--next" aria-label="Next: Monitoring">
             <div class="md-footer__title">
               <span class="md-footer__direction">
                 Next
               </span>
               <div class="md-ellipsis">
-                Updating the application
+                Monitoring
               </div>
             </div>
             <div class="md-footer__button md-icon">
