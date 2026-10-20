@@ -45,7 +45,8 @@ public class Stats {
     /**
      * Pool stats are read by reflection so that any pool works, including the ones provided by the
      * container through JNDI: commons-dbcp / dbcp2 (Jetty), Tomcat dbcp and jdbc-pool, HikariCP.
-     * Values are -1 when the pool doesn't expose them.
+     * Values are -1 when the pool doesn't expose them. A negative maxActive can also mean an
+     * unbounded pool (dbcp / dbcp2), so use numActive to check if stats are available.
      */
     public Stats(final ServiceContext context) {
         this(context.getBean(DataSource.class));
