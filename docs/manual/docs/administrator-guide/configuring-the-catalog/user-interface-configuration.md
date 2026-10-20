@@ -65,6 +65,7 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 -   **Show social bar in footer**: Select this check box to show the social media bar in the footer of the home page.
 -   **Show mosaic**: Select this check box to determine whether the featured records mosaic is visible on the home page.
 -   **Show maps**: Select this check box to determine whether the maps panel is visible on the home page.
+-   **Show welcome message in home page**: Select this check box to display a welcome message at the top of the home page. The message is configured in [Languages and translations](languages-and-translations.md#home-welcome-message) with the key `home-welcome-message` for the main portal, or `home-welcome-message-{portal}` for a sub-portal (for example `home-welcome-message-inspire`). Each sub-portal can enable or disable its own message. The message is not displayed in languages without a translation.
 -   **Fluid container for Home and Search**: Select this check box to determine whether the search box is full width in the browser page or if it is fixed width and centred.
 
 ![](img/ui-settings-homepage.png)
