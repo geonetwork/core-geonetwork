@@ -139,6 +139,7 @@
             showSocialBarInFooter: true,
             showMosaic: true,
             showMaps: true,
+            showWelcomeMessage: false,
             facetConfig: {
               "th_httpinspireeceuropaeutheme-theme_tree.key": {
                 terms: {

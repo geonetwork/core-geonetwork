@@ -65,6 +65,7 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 -   **Show social bar in footer**: Select this check box to show the social media bar in the footer of the home page.
 -   **Show mosaic**: Select this check box to determine whether the featured records mosaic is visible on the home page.
 -   **Show maps**: Select this check box to determine whether the maps panel is visible on the home page.
+-   **Show welcome message in home page**: Select this check box to display a welcome message at the top of the home page. The message is configured in [Languages and translations](languages-and-translations.md#home-welcome-message) with the key `home-welcome-message` for the main portal, or `home-welcome-message-{portal}` for a sub-portal (for example `home-welcome-message-inspire`). Each sub-portal can enable or disable its own message. The message is not displayed in languages without a translation.
 -   **Fluid container for Home and Search**: Select this check box to determine whether the search box is full width in the browser page or if it is fixed width and centred.
 
 ![](img/ui-settings-homepage.png)
@@ -119,9 +120,19 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 -   **Enabled**: If checked the user will have the ability to create and save custom searches in the search tab. This functionality will be visible above the facets list on the left.
 -   **Display featured user searches panel in home page**: If this is also enabled, an additional tab will be shown on the home page alongside `Latest news` and `Most popular`.
 
-### Saved Selections
+### Favorites (saved selections)
 
--   **Enabled**: If checked the user will have the ability to save a selection of records in the search tab. A button is also displayed in the record view to add or remove the record from the user favorites.
+Favorites allow users to mark records as favorites, so they can easily find them again in the **Favorites** panel on the search page. When enabled, an **Add to ...** button is shown on each record in the search results.
+
+The following lists are available:
+
+-   **Favorite records**: Records the user wants to find again. For anonymous users, this list is stored in the browser. For registered users, it is stored in the catalog and available from any browser.
+-   **Watch list**: Only for registered users. Users are notified by email when a record in their watch list is updated.
+-   **Map list**: Records with map layers (WMS or ESRI REST) that can be added to the map in one action. This list is not kept after the page is reloaded.
+
+Settings:
+
+-   **Enabled**: If checked the user will have the ability to add records to their favorites from the search results.
 
 ![](img/ui-settings-searchresults3.png)
 
