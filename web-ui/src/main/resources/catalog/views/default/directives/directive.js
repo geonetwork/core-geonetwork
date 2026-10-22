@@ -297,6 +297,16 @@
             }
           } catch (e) {}
 
+          // Current, smallest and largest map height (px) for screen readers
+          var updateAria = function () {
+            var bottom = mapWindow.getBoundingClientRect().bottom;
+            element.attr({
+              "aria-valuemin": minHeight,
+              "aria-valuemax": Math.round(bottom - minResultsHeight),
+              "aria-valuenow": mapWindow.offsetHeight
+            });
+          };
+
           var resize = function (height) {
             var bottom = mapWindow.getBoundingClientRect().bottom;
             height = Math.round(
@@ -304,13 +314,20 @@
             );
             setHeight(height);
             gnSearchSettings.searchMap.updateSize();
+            updateAria();
             try {
               window.localStorage.setItem(storageKey, height);
             } catch (e) {}
           };
 
+          // Once the maximized size applies, and again on focus after a window resize
+          setTimeout(updateAria, 0);
+          element.on("focus", updateAria);
+
           element.on("pointerdown", function (e) {
             e.preventDefault();
+            // preventDefault stops the focus, which the arrow keys need
+            element[0].focus();
             element[0].setPointerCapture(e.pointerId);
             var bottom = mapWindow.getBoundingClientRect().bottom;
             var move = function (moveEvent) {

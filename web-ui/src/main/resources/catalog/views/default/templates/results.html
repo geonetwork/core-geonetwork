@@ -217,6 +217,7 @@
       <button
         data-ng-click="toggleMap()"
         title="{{'toggleMiniMap' | translate}}"
+        aria-expanded="{{minimapState !== 'closed'}}"
         class="gn-toggle gn-minimap-toggle btn btn-primary gn-minimap-button hidden-xs"
       >
         <i
