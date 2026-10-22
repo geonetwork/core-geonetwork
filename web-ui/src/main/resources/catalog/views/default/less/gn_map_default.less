@@ -102,11 +102,13 @@
 }
 .gn-hide-footer .gn-minimap.gn-minimap-max {
   bottom: 0;
+  height: @gn-minimap-split-height-nofooter;
 }
 // maximized map: the page above the map scrolls on its own (split view).
 // The height can be changed with the drag handle (--gn-minimap-split-height),
 // keeping at least 200px for the results.
 @gn-minimap-split-height: ~"min(var(--gn-minimap-split-height, 33vh), 100vh - @{gn-bottombar-height} - 200px)";
+@gn-minimap-split-height-nofooter: ~"min(var(--gn-minimap-split-height, 33vh), 100vh - 200px)";
 @media screen and (min-width: @screen-sm-min) {
   html.gn-minimap-split {
     overflow: hidden;
@@ -114,7 +116,7 @@
       height: calc(~"100vh - @{gn-minimap-split-height} - @{gn-bottombar-height}");
       overflow-y: auto;
       &.gn-hide-footer {
-        height: calc(~"100vh - @{gn-minimap-split-height}");
+        height: calc(~"100vh - @{gn-minimap-split-height-nofooter}");
       }
     }
   }
