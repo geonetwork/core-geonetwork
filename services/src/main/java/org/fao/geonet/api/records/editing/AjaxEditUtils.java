@@ -732,8 +732,7 @@ public class AjaxEditUtils extends EditUtils {
         editLib.contractElements(md);
         String parentUuid = null;
         md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
-        boolean doXLinks = xmlSerializer.resolveXLinks();
-        if (doXLinks) {
+        if (xmlSerializer.resolveXLinks()) {
             Processor.processXLink(md, this.context);
         }
 
