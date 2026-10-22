@@ -239,13 +239,17 @@
 
     <xsl:variable name="date"
                   as="xs:string?"
-                  select="if (*/text()) then */text() else text()"/>
+                  select="((*[local-name() = 'timePosition']/text(),
+                            */text(),
+                            text())[normalize-space(.) != ''])[1]"/>
 
-    <xsl:element name="{$nodeName}">
-      <xsl:attribute name="rdf:datatype"
-                     select="concat('http://www.w3.org/2001/XMLSchema#date', (if (contains($date, 'T')) then 'Time' else ''))"/>
-      <xsl:value-of select="$date"/>
-    </xsl:element>
+    <xsl:if test="normalize-space($date) != ''">
+      <xsl:element name="{$nodeName}">
+        <xsl:attribute name="rdf:datatype"
+                       select="concat('http://www.w3.org/2001/XMLSchema#date', (if (contains($date, 'T')) then 'Time' else ''))"/>
+        <xsl:value-of select="$date"/>
+      </xsl:element>
+    </xsl:if>
   </xsl:template>
 
 
