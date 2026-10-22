@@ -252,6 +252,25 @@
       updateMinimapSplit();
       $scope.$on("$locationChangeSuccess", updateMinimapSplit);
 
+      // The results scroll on their own above a maximized map, which cuts off a
+      // menu at the top of the map: fit an open menu in the space left above it
+      $(document).on("shown.bs.dropdown", function (e) {
+        var menu = $(e.target).find(".dropdown-menu").first();
+        if (!$(document.documentElement).hasClass("gn-minimap-split") || !menu.length) {
+          return;
+        }
+        var space =
+          document.body.getBoundingClientRect().bottom -
+          menu[0].getBoundingClientRect().top -
+          5;
+        if (menu.outerHeight() > space && space > 50) {
+          menu.css({ maxHeight: space, overflowY: "auto" });
+        }
+      });
+      $(document).on("hidden.bs.dropdown", function (e) {
+        $(e.target).find(".dropdown-menu").first().css({ maxHeight: "", overflowY: "" });
+      });
+
       $scope.setMinimapState = function (state) {
         $scope.minimapState = state;
         if (state !== "closed") {
