@@ -620,7 +620,7 @@ public final class Geonet {
         public static final String XLINK = "xlink";
         public static final String ROOT = "_root";
         public static final String SCHEMA = "documentStandard";
-        public static final String DATABASE_CREATE_DATE = "createDate";
+        public static final String MD_CREATION_DATE = "createDate";
         public static final String DATABASE_CHANGE_DATE = "changeDate";
         public static final String SOURCE = "_source";
         public static final String HARVESTUUID = "harvesterUuid";
