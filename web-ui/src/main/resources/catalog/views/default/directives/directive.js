@@ -315,6 +315,10 @@
             setHeight(height);
             gnSearchSettings.searchMap.updateSize();
             updateAria();
+            return height;
+          };
+
+          var save = function (height) {
             try {
               window.localStorage.setItem(storageKey, height);
             } catch (e) {}
@@ -330,12 +334,17 @@
             element[0].focus();
             element[0].setPointerCapture(e.pointerId);
             var bottom = mapWindow.getBoundingClientRect().bottom;
+            var height;
             var move = function (moveEvent) {
-              resize(bottom - moveEvent.clientY);
+              height = resize(bottom - moveEvent.clientY);
             };
             element.on("pointermove", move);
+            // Remember the height once, when the drag ends
             element.one("pointerup pointercancel", function () {
               element.off("pointermove", move);
+              if (height) {
+                save(height);
+              }
             });
           });
 
@@ -343,7 +352,7 @@
             var step = { ArrowUp: 20, ArrowDown: -20 }[e.key];
             if (step) {
               e.preventDefault();
-              resize(mapWindow.offsetHeight + step);
+              save(resize(mapWindow.offsetHeight + step));
             }
           });
         }
