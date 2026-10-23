@@ -535,7 +535,6 @@
               uuid +
               '" gn-transfer-md-owner="' +
               ownerId +
-              '" ' +
               '" gn-transfer-md-group-owner="' +
               groupOwner +
               '" ' +
