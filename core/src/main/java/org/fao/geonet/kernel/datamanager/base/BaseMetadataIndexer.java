@@ -444,7 +444,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                         User user = userOpt.get();
                         fields.put(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
                             .getName() + "|" + user.getProfile());
-                        fields.put(Geonet.IndexFieldNames.OWNERNAME, user.getName() + " " + user.getSurname());
+                        fields.put(Geonet.IndexFieldNames.OWNERNAME,
+                            StringUtils.trim(StringUtils.join(new String[]{user.getName(), user.getSurname()}, " ")));
                     }
                 }
 
