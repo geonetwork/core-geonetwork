@@ -45,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -176,9 +177,13 @@ public class TransferApi {
 
             return userGroupsResponses;
         } else if (myProfile == Profile.Reviewer || myProfile == Profile.Editor) {
-            List<Integer> myGroups = userGroupRepository.findAll(UserGroupSpecs.hasUserId(session.getUserIdAsInt()))
-                .stream().map(ug -> ug.getGroup().getId()).collect(Collectors.toList());
-            List<UserGroup> userGroups = userGroupRepository.findAll(UserGroupSpecs.hasGroupIds(myGroups));
+            // Only the groups where the user is at least Editor, and their members with at least Editor profile,
+            // as these are the valid targets for an ownership transfer.
+            Specification<UserGroup> isEditorOrMore = UserGroupSpecs.hasProfileIn(Profile.Editor.getProfileAndAllParents());
+            List<Integer> myGroups = userGroupRepository.findGroupIds(
+                Specification.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt())).and(isEditorOrMore));
+            List<UserGroup> userGroups = userGroupRepository.findAll(
+                Specification.where(UserGroupSpecs.hasGroupIds(myGroups)).and(isEditorOrMore));
 
             return getUserGroupsResponse(userGroups, groupTypes);
         } else {
