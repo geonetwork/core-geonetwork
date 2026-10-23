@@ -142,6 +142,12 @@ public class OpenDALStore extends AbstractStore {
     }
 
     @Override
+    public String getResourcePresignedUrl(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
+        int metadataId = canDownload(context, metadataUuid, visibility, approved);
+        return openDALConfiguration.presignRead(getPath(metadataUuid, metadataId, visibility, resourceId));
+    }
+
+    @Override
     public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved, long start, long end) throws Exception {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         String path = getPath(metadataUuid, metadataId, visibility, resourceId);

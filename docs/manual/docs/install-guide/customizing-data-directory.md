@@ -197,6 +197,7 @@ The OpenDAL datastorage can be configured using environment variables:
 |----------|----------|---------|-------------|
 | `OPENDAL_SCHEME` | `opendal.scheme` | `fs` | The storage scheme (e.g., `fs`, `s3`, `azblob`, `gcs`). |
 | `OPENDAL_ROOT` | `opendal.root` | `/tmp/opendal` | The root directory or path for the storage. |
+| `OPENDAL_PRESIGN_EXPIRY_SECONDS` | `opendal.presign_expiry_seconds` | `0` | Validity in seconds of presigned URLs. When greater than 0 and the service supports it (eg. S3), attachment downloads are redirected to a presigned URL so the client reads the file directly from the storage. `0` disables it. |
 | `OPENDAL_ENDPOINT` | `opendal.endpoint` | | The endpoint URL (required for S3-compatible storage). |
 | `OPENDAL_BUCKET` | `opendal.bucket` | | The bucket name (required for S3/GCS/Azblob). |
 | `OPENDAL_ACCESS_KEY_ID` | `opendal.access_key_id` | | Access key ID for authentication. |

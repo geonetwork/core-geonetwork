@@ -24,6 +24,7 @@
  */
 package org.fao.geonet.resources;
 
+import org.apache.opendal.AsyncOperator;
 import org.apache.opendal.Operator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,14 +32,17 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
+import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
 public class OpenDALConfiguration {
     private static final Logger log = LoggerFactory.getLogger(OpenDALConfiguration.class);
 
+    private AsyncOperator asyncOperator;
     private Operator operator;
     private String scheme = "fs";
+    private long presignExpirySeconds = 0;
     private Map<String, String> options = new HashMap<>();
 
     public void setScheme(String scheme) {
@@ -52,10 +56,25 @@ public class OpenDALConfiguration {
         }
     }
 
+    /**
+     * Validity of the presigned URLs used to download attachments directly from the storage.
+     * 0 (default) disables presigned URLs and attachments are served by GeoNetwork.
+     */
+    public void setPresignExpirySeconds(String presignExpirySeconds) {
+        if (presignExpirySeconds != null && !presignExpirySeconds.isEmpty()) {
+            this.presignExpirySeconds = Long.parseLong(presignExpirySeconds);
+        }
+    }
+
     @PostConstruct
     public void init() {
         log.info("Initializing OpenDAL operator with scheme: {}", scheme);
-        this.operator = Operator.of(scheme, options);
+        // Presign is only available in the async API, the blocking operator shares the same service
+        this.asyncOperator = AsyncOperator.of(scheme, options);
+        this.operator = asyncOperator.blocking();
+        if (presignExpirySeconds > 0 && !asyncOperator.info.fullCapability.presignRead) {
+            log.warn("OpenDAL scheme {} does not support presigned URLs, attachments will be served by GeoNetwork.", scheme);
+        }
     }
 
     @PreDestroy
@@ -63,6 +82,19 @@ public class OpenDALConfiguration {
         if (operator != null) {
             operator.close();
         }
+        if (asyncOperator != null) {
+            asyncOperator.close();
+        }
+    }
+
+    /**
+     * @return a presigned URL to read the object at path, or null if presigned URLs are disabled or not supported.
+     */
+    public String presignRead(String path) {
+        if (presignExpirySeconds <= 0 || !asyncOperator.info.fullCapability.presignRead) {
+            return null;
+        }
+        return asyncOperator.presignRead(path, Duration.ofSeconds(presignExpirySeconds)).join().getUri();
     }
 
     @Nonnull
