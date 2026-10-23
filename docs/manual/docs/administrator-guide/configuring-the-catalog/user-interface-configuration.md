@@ -67,7 +67,7 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 -   **Overview mosaic search query**: Search query used to pick random records for the mosaic (8 with the grid layout, 9 with the gallery layout) when no **Overview mosaic records** are configured. Only records with an overview are used, and each record contributes one image (its first overview); an image is never shown twice. Default (also used when the query is empty) is `-cl_status.key:obsolete`, to exclude obsolete records. For example, use `resourceType:dataset` to only show datasets.
 -   **Overview mosaic records**: List of records to always display in the mosaic, instead of random ones. For each entry, set:
     -   **UUID**: the identifier of the record. The first overview of the record is used as image.
-    -   **Link** (optional): the page to open when clicking the image. If empty, the record page is opened. Use a link starting with `#/` to stay in the catalog and keep the user language, for example `#/search?any=land%20cover` for a pre-filtered search. A full URL can contain `{{lang}}`, which is replaced by the user's 3-letter language code, for example `https://example.org/geonetwork/srv/{{lang}}/catalog.search#/search?any=land%20cover`.
+    -   **Link** (optional): the page to open when clicking the image. If empty, the record page is opened. The link must start with `#/` and opens a page of the catalog in the user language, for example `#/search?any=land%20cover` for a pre-filtered search. Other links (eg. full URLs) are ignored and the record page is opened instead.
 
     Use the arrows to change the order of the images.
 

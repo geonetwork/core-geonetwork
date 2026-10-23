@@ -343,6 +343,8 @@
                             id="ui-mosaicRecords-link-{{$index}}"
                             placeholder="{{'ui-mosaicRecords-link' | translate}}"
                             data-ng-model="opt.link"
+                            data-ng-pattern="/^#\//"
+                            data-ng-model-options="{allowInvalid: true}"
                           />
                         </td>
                         <td class="w-30-px">

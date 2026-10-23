@@ -186,14 +186,19 @@
               }
               seen[key] = true;
               var title = h._source.resourceTitleObject || {};
+              // Only links inside the application (#/...), to prevent redirecting
+              // users to other sites.
+              var link = /^#\//.test(item.link) ? item.link : "#/metadata/" + item.uuid;
+              if (item.link && link !== item.link) {
+                console.warn(
+                  "Mosaic: only links starting with #/ are allowed, ignoring " + item.link
+                );
+              }
               tiles.push({
                 id: tiles.length,
                 image: overview,
                 title: title["lang" + gnLangs.current] || title.default,
-                link: (item.link || "#/metadata/" + item.uuid).replace(
-                  /\{\{lang\}\}/g,
-                  gnLangs.current
-                )
+                link: link
               });
             });
             // Extra tiles (beyond max) replace the ones with a broken image.

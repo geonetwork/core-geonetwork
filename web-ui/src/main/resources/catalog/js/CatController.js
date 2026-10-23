@@ -141,7 +141,7 @@
             // Random mosaic: records matching this query (used when mosaicRecords is empty)
             mosaicQuery: "-cl_status.key:obsolete",
             // Curated mosaic: list of {uuid, link}. An empty link opens the record page.
-            // Links may use {{lang}} for the current language.
+            // Only links inside the application (starting with #/) are allowed.
             mosaicRecords: [],
             // Mosaic layout: "gallery" (full width, mixed sizes) or "grid" (same size tiles, max 4 per row)
             mosaicLayout: "gallery",
