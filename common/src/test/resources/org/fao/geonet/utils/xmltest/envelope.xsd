@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Envelope accepting any foreign content in lax mode, like OAI-PMH.xsd metadataType -->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:envelope" elementFormDefault="qualified">
+  <element name="envelope">
+    <complexType>
+      <sequence>
+        <any namespace="##other" processContents="lax"/>
+      </sequence>
+    </complexType>
+  </element>
+</schema>
