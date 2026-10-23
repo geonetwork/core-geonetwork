@@ -62,9 +62,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -102,6 +104,9 @@ public class URITemplateProxyServlet extends ProxyServlet {
     private static final String TARGET_URI_NAME = "targetUri";
     private static final String P_EXCLUDE_HOSTS = "excludeHosts";
     private static final String P_ALLOW_PORTS = "allowPorts";
+    // An IPv4 address can be written as a single number, at most the ten digits of 4294967295.
+    private static final Pattern DECIMAL_ADDRESS_PATTERN = Pattern.compile("\\d{1,10}");
+    private static final long MAX_IPV4_ADDRESS = 4294967295L;
     private static final String ATTR_QUERY_STRING =
         URITemplateProxyServlet.class.getSimpleName() + ".queryString";
 
@@ -222,7 +227,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
 
         if (StringUtils.isNotBlank(excludeHosts)) {
             try {
-                this.excludeHostsPattern = Pattern.compile(excludeHosts);
+                setExcludeHosts(excludeHosts);
             } catch (PatternSyntaxException ex) {
                 throw new ServletException(P_EXCLUDE_HOSTS + " doesn't contain a valid regular expression");
             }
@@ -483,20 +488,23 @@ public class URITemplateProxyServlet extends ProxyServlet {
     }
 
     private boolean isUrlAllowed(HttpServletRequest servletRequest) {
-        String url = servletRequest.getParameter("url");
+        String url = getRequestedUrl(servletRequest.getQueryString());
         if (isBlank(url)) {
             return true;
         }
 
         try {
             URI uri = new URI(url);
+            String host = uri.getHost();
 
-            if (this.excludeHostsPattern != null) {
-                Matcher matcher = this.excludeHostsPattern.matcher(uri.getHost());
+            // A URL the parser cannot attribute a host to cannot be checked against the exclusion
+            // list, so it is not allowed.
+            if (isBlank(host)) {
+                return false;
+            }
 
-                if (matcher.matches()) {
-                    return false;
-                }
+            if (isExcludedHost(host)) {
+                return false;
             }
 
             int port = uri.getPort();
@@ -509,6 +517,150 @@ public class URITemplateProxyServlet extends ProxyServlet {
                 e.getMessage()
             ));
         }
+    }
+
+    /**
+     * Compile the list of hosts to keep out of reach of the proxy.
+     *
+     * <p>Matching ignores case: a host name is not case sensitive, and {@link URI#getHost()} returns
+     * whatever case the caller wrote, so an entry has to match the host in any case it arrives in.
+     * Compiling in one place keeps every caller, the tests included, on the same terms as the
+     * servlet rather than repeating the flags and drifting from them.</p>
+     *
+     * @param excludeHosts regular expression matched against the host of a requested URL
+     * @throws PatternSyntaxException if the expression cannot be compiled
+     */
+    void setExcludeHosts(String excludeHosts) {
+        this.excludeHostsPattern = Pattern.compile(excludeHosts, Pattern.CASE_INSENSITIVE);
+    }
+
+    /**
+     * Read the url parameter as the value the target is built from.
+     *
+     * <p>The target is filled in from the query string, and a parameter given more than once is
+     * joined with commas there, so the string that is fetched is not always the first value
+     * {@link HttpServletRequest#getParameter(String)} returns. Reading it the same way keeps the
+     * value that is checked and the value that is requested the same string, which they are not if
+     * only the first value is read: given two of them, the first can be a host that no entry
+     * excludes while the join denotes another host entirely.</p>
+     *
+     * @param requestQueryString query string of the request, which may be {@code null}
+     * @return the url parameter as the target uses it, or {@code null} if the request carries none
+     */
+    String getRequestedUrl(String requestQueryString) {
+        if (requestQueryString == null) {
+            return null;
+        }
+
+        // Read it exactly as internalService does, fragment removed and parsed from the query.
+        String queryString = "?" + requestQueryString;
+        int hash = queryString.indexOf('#');
+        if (hash >= 0) {
+            queryString = queryString.substring(0, hash);
+        }
+
+        List<String> values = new ArrayList<>();
+        try {
+            for (NameValuePair pair : URLEncodedUtils.parse(new URI(queryString), StandardCharsets.UTF_8)) {
+                if ("url".equals(pair.getName())) {
+                    values.add(pair.getValue());
+                }
+            }
+        } catch (URISyntaxException e) {
+            // internalService rejects the same string, so no request is made from it either.
+            return null;
+        }
+
+        return values.isEmpty() ? null : String.join(",", values);
+    }
+
+    /**
+     * Check the host of the requested URL against the exclusion pattern.
+     *
+     * <p>An IPv6 literal is written in several ways and {@link URI#getHost()} returns it wrapped in
+     * brackets, exactly as the caller spelled it. Matching only that string means an exclusion entry
+     * has to repeat every spelling, and has to carry the brackets, to be of any use. The host is
+     * therefore compared in three forms: as returned, without the brackets of an IPv6 literal, and
+     * in the canonical form of the address that literal denotes, which is the same string for all of
+     * its spellings.</p>
+     *
+     * @param host host part of the requested URL, as returned by {@link URI#getHost()}
+     * @return {@code true} if any form of the host matches the exclusion pattern
+     */
+    boolean isExcludedHost(String host) {
+        if (this.excludeHostsPattern == null) {
+            return false;
+        }
+
+        for (String candidate : getHostVariants(host)) {
+            if (this.excludeHostsPattern.matcher(candidate).matches()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Build the forms of a host that the exclusion pattern is matched against.
+     *
+     * @param host host part of the requested URL, as returned by {@link URI#getHost()}
+     * @return the host as provided, plus the unbracketed and canonical forms of an IPv6 literal
+     */
+    Set<String> getHostVariants(String host) {
+        Set<String> variants = new LinkedHashSet<>();
+        variants.add(host);
+
+        if (host.startsWith("[") && host.endsWith("]")) {
+            variants.add(host.substring(1, host.length() - 1));
+
+            try {
+                // A literal is not resolved, so this does not query the name service.
+                variants.add(InetAddress.getByName(host).getHostAddress());
+            } catch (UnknownHostException e) {
+                LOGGER.debug("Could not read '" + host + "' as an IP address: " + e.getMessage());
+            }
+        }
+
+        String dottedQuad = asDottedQuad(host);
+        if (dottedQuad != null) {
+            variants.add(dottedQuad);
+        }
+
+        return variants;
+    }
+
+    /**
+     * Rewrite an IPv4 address written as a single decimal number into its dotted form.
+     *
+     * <p>An address can be written as one number, so http://2130706433/ is a way of writing
+     * http://127.0.0.1/ that an exclusion entry listing the dotted form does not cover. A host made
+     * only of digits is never a host name, since the last label of a name cannot be all digits, so
+     * it is safe to read as an address. The conversion follows the same rule as the platform, which
+     * reads a lone number as the whole of the address.</p>
+     *
+     * <p>This one form is the only one converted, because it is the only one the platform reads as
+     * an address. Checked on 8, 11, 17, 21 and 25, all of which resolve a lone number and none of
+     * which resolve the hexadecimal or octal spellings, {@code 0x7f000001} and {@code 017700000001},
+     * so those denote no host rather than a host written oddly. A dotted form of fewer than four
+     * parts, {@code 127.1} or {@code 0x7f.0.0.1}, leaves {@link URI#getHost()} returning null and is
+     * refused before reaching this point.</p>
+     *
+     * @param host host part of the requested URL, as returned by {@link URI#getHost()}
+     * @return the dotted form of the address, or {@code null} if the host is not a lone number
+     */
+    private String asDottedQuad(String host) {
+        if (!DECIMAL_ADDRESS_PATTERN.matcher(host).matches()) {
+            return null;
+        }
+
+        long value = Long.parseLong(host);
+        if (value > MAX_IPV4_ADDRESS) {
+            return null;
+        }
+
+        return String.format("%d.%d.%d.%d",
+            (value >>> 24) & 0xFF, (value >>> 16) & 0xFF, (value >>> 8) & 0xFF, value & 0xFF);
     }
 
     /**
