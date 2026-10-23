@@ -79,8 +79,10 @@
 <!-- /.gn-row-main -->
 <div
   data-ng-if="showMosaic"
-  data-gn-record-mosaic="-cl_status.key:obsolete"
-  size="9"
+  data-gn-record-mosaic="{{mosaicQuery}}"
+  data-items="mosaicRecords"
+  data-layout="{{mosaicLayout}}"
+  size="{{mosaicLayout === 'grid' ? 8 : 9}}"
 ></div>
 
 <form
