@@ -21,7 +21,7 @@ How to open the Transfer Ownership page
 
     !!! note
 
-        The drop down only lists the users you can transfer records to. See [Who can transfer ownership](#who-can-transfer-ownership).
+        The drop down only lists the users you can transfer records to. See [Who can transfer ownership](#who-can-transfer-ownership). When transferring a single record, its current owner isn't listed for the record's current group, as that wouldn't change anything.
 
     -   **Select group**: Select one of the groups this user is a member of. Privileges to groups All and Intranet are not transferable.
 
@@ -45,7 +45,7 @@ What you can transfer depends on your profile. For Editors and Reviewers, the pr
 
     Editors and Reviewers can't transfer a record to an Administrator without a group. Only User Administrators and Administrators can do this, and the record then keeps its current group.
 
-If a record can't be transferred, it is skipped and reported at the end of the transfer. The other selected records are still transferred.
+If a record can't be transferred, it is skipped and listed in the report at the end of the transfer, with the reason. The other selected records are still transferred.
 
 #### Examples
 

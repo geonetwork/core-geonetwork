@@ -77,6 +77,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -124,6 +125,9 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
 
     @PersistenceContext
     private EntityManager entityManager;
+
+    private static final String TRANSFER_NOT_ALLOWED_MESSAGE =
+        "Only the record owner or a reviewer of the record group can transfer its ownership.";
 
     private User editorUser;
     private User reviewerUser;
@@ -857,7 +861,9 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
                 .param("userIdentifier", String.valueOf(targetUser.getId()))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.numberOfRecordsNotEditable").value(1));
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(0))
+            .andExpect(jsonPath("$.numberOfRecordsNotEditable").value(0))
+            .andExpect(jsonPath("$.metadataInfos.*[*].message", hasItem(TRANSFER_NOT_ALLOWED_MESSAGE)));
     }
 
     @Test
@@ -891,7 +897,10 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
                 .param("userIdentifier", String.valueOf(foreignUser.getId()))
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(0));
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(0))
+            .andExpect(jsonPath("$.metadataInfos.*[*].message", hasItem(String.format(
+                "Transfer to group '%s' and user 'foreignuser' is not allowed for your profile.",
+                _groupRepo.findById(SAMPLE_GROUP_ID).get().getName()))));
 
         entityManager.flush();
         entityManager.clear();
@@ -1048,7 +1057,8 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.numberOfRecordsProcessed").value(0))
-            .andExpect(jsonPath("$.numberOfRecordsNotEditable").value(1));
+            .andExpect(jsonPath("$.numberOfRecordsNotEditable").value(0))
+            .andExpect(jsonPath("$.metadataInfos.*[*].message", hasItem(TRANSFER_NOT_ALLOWED_MESSAGE)));
     }
 
     /**

@@ -1075,14 +1075,18 @@ public class MetadataSharingApi {
             report.addNotEditableMetadataId(metadata.getId());
         } else {
             if (!canTransferOwnership(metadata, accessMan, serviceContext)) {
-                report.addNotEditableMetadataId(metadata.getId());
+                report.addMetadataInfos(metadata,
+                    "Only the record owner or a reviewer of the record group can transfer its ownership.");
                 return;
             }
 
             if (!destinationAllowed) {
-                report.addMetadataInfos(metadata,
-                    "Transfer to group " + groupIdentifier + " and user " + userIdentifier
-                        + " is not allowed for your profile.");
+                String groupName = groupRepository.findById(groupIdentifier)
+                    .map(Group::getName).orElse(String.valueOf(groupIdentifier));
+                String userName = userRepository.findById(userIdentifier)
+                    .map(User::getUsername).orElse(String.valueOf(userIdentifier));
+                report.addMetadataInfos(metadata, String.format(
+                    "Transfer to group '%s' and user '%s' is not allowed for your profile.", groupName, userName));
                 return;
             }
 

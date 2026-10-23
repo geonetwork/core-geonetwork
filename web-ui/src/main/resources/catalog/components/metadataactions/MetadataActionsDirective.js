@@ -760,6 +760,10 @@
             .then(function (response) {
               var uniqueUserGroups = {};
               angular.forEach(response.data, function (g) {
+                // Skip the record's current owner in its current group, as the transfer would not change anything
+                if (g.userId === ownerId && g.groupId === groupOwner) {
+                  return;
+                }
                 var key = g.groupId + "-" + g.userId;
                 if (!uniqueUserGroups[key]) {
                   uniqueUserGroups[key] = g;
@@ -829,7 +833,12 @@
                   gnUtilityService.openModal(
                     {
                       title: msg,
-                      content: '<div gn-batch-report="processReport"></div>',
+                      // Use the report template that shows the information messages, such as
+                      // the reason a record was not transferred
+                      content:
+                        '<div gn-batch-report="processReport" template-url="' +
+                        "../../catalog/components/utility/partials/batchreport-workflow.html" +
+                        '"></div>',
                       className: "gn-privileges-popup",
                       onCloseCallback: function () {
                         if (bucket != "null") {
