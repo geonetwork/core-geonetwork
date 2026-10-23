@@ -23,6 +23,8 @@ Support for these data storage interfaces is available through the following plu
 * CMIS: `gn-datastorage-cmis`
 * JCloud: `gn-datastorage-jcloud`  
   [See the detailed documentation here](./customizing-data-directory.md#using-a-generic-cloud-object-storage-jcloud)
+* OpenDAL: `gn-datastorage-opendal` (download the package for your specific platform)
+  [See the detailed documentation here](./customizing-data-directory.md#using-opendal-storage)
 
 ## Datahub integration: `gn-datahub-integration`
 
