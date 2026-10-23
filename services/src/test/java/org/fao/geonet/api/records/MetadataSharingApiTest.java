@@ -900,6 +900,51 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void transferOwnershipAsEditorToRegisteredUserInGroupFails() throws Exception {
+        User registeredUser = UserRepositoryTest.newUser(_inc);
+        registeredUser.setUsername("registereduser");
+        registeredUser.setProfile(Profile.RegisteredUser);
+        _userRepo.save(registeredUser);
+        _userGroupRepo.save(new UserGroup().setGroup(_groupRepo.findById(SAMPLE_GROUP_ID).get())
+            .setProfile(Profile.RegisteredUser).setUser(registeredUser));
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(editorUser);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(SAMPLE_GROUP_ID))
+                .param("userIdentifier", String.valueOf(registeredUser.getId()))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(0));
+
+        entityManager.flush();
+        entityManager.clear();
+        Metadata metadata = metadataRepository.findById(metadataId).get();
+        assertEquals(editorUser.getId(), (int) metadata.getSourceInfo().getOwner());
+    }
+
+    @Test
+    public void transferOwnershipAsEditorToReservedGroupFails() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(editorUser);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(ReservedGroup.all.getId()))
+                .param("userIdentifier", String.valueOf(targetUser.getId()))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(0));
+
+        entityManager.flush();
+        entityManager.clear();
+        Metadata metadata = metadataRepository.findById(metadataId).get();
+        assertEquals(editorUser.getId(), (int) metadata.getSourceInfo().getOwner());
+    }
+
+    @Test
     public void transferOwnershipToUnknownUserFails() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAs(editorUser);
@@ -924,6 +969,61 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.numberOfRecordsProcessed").value(1));
+    }
+
+    /**
+     * A user with a global Reviewer profile, who is only Editor in the record group, can transfer a record they own.
+     */
+    @Test
+    public void transferOwnershipAsReviewerForOwnedRecordInEditorGroupSucceeds() throws Exception {
+        User reviewerElsewhere = UserRepositoryTest.newUser(_inc);
+        reviewerElsewhere.setUsername("reviewerelsewhere");
+        reviewerElsewhere.setProfile(Profile.Reviewer);
+        _userRepo.save(reviewerElsewhere);
+        _userGroupRepo.save(new UserGroup().setGroup(foreignGroup).setProfile(Profile.Reviewer).setUser(reviewerElsewhere));
+        _userGroupRepo.save(new UserGroup().setGroup(_groupRepo.findById(SAMPLE_GROUP_ID).get())
+            .setProfile(Profile.Editor).setUser(reviewerElsewhere));
+
+        Metadata metadata = metadataRepository.findById(metadataId).get();
+        metadata.getSourceInfo().setOwner(reviewerElsewhere.getId());
+        metadataRepository.save(metadata);
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(reviewerElsewhere);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(SAMPLE_GROUP_ID))
+                .param("userIdentifier", String.valueOf(targetUser.getId()))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(1))
+            .andExpect(jsonPath("$.numberOfRecordsNotEditable").value(0));
+    }
+
+    /**
+     * A Reviewer can't move a record into a group where they are only a RegisteredUser.
+     */
+    @Test
+    public void transferOwnershipAsReviewerToGroupAsRegisteredUserFails() throws Exception {
+        _userGroupRepo.save(new UserGroup().setGroup(foreignGroup).setProfile(Profile.RegisteredUser).setUser(reviewerUser));
+        _userGroupRepo.save(new UserGroup().setGroup(foreignGroup).setProfile(Profile.Editor).setUser(targetUser));
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(reviewerUser);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(foreignGroup.getId()))
+                .param("userIdentifier", String.valueOf(targetUser.getId()))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(0));
+
+        entityManager.flush();
+        entityManager.clear();
+        Metadata metadata = metadataRepository.findById(metadataId).get();
+        assertEquals(SAMPLE_GROUP_ID, (int) metadata.getSourceInfo().getGroupOwner());
     }
 
     @Test

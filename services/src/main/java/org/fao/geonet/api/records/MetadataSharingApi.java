@@ -1074,9 +1074,7 @@ public class MetadataSharingApi {
             serviceContext, String.valueOf(metadata.getId()))) {
             report.addNotEditableMetadataId(metadata.getId());
         } else {
-            UserSession callerSession = ApiUtils.getUserSession(session);
-
-            if (!canTransferOwnership(metadata, accessMan, callerSession)) {
+            if (!canTransferOwnership(metadata, accessMan, serviceContext)) {
                 report.addNotEditableMetadataId(metadata.getId());
                 return;
             }
@@ -1179,32 +1177,24 @@ public class MetadataSharingApi {
     /**
      * Checks if the caller can transfer the ownership of the metadata, based on the caller profile:
      * <ul>
-     *     <li>Editor: must be the owner of the metadata.</li>
-     *     <li>Reviewer: must be a reviewer of the metadata group owner.</li>
+     *     <li>Editor / Reviewer: must be the owner of the metadata or a reviewer of the metadata group owner
+     *     (see {@link AccessManager#isOwner}). The reviewer check uses the per-group profile, so a user with
+     *     a global Reviewer profile can still transfer a record they own in a group where they are only Editor.</li>
      *     <li>Other profiles (Administrator, UserAdmin): always allowed, as they already passed
      *     the {@link AccessManager#canEdit} check.</li>
      * </ul>
      *
-     * @param metadata      the metadata to transfer.
-     * @param accessMan     the access manager.
-     * @param callerSession the session of the user doing the transfer.
+     * @param metadata       the metadata to transfer.
+     * @param accessMan      the access manager.
+     * @param serviceContext the service context of the user doing the transfer.
      * @return {@code true} if the caller can transfer the metadata ownership, {@code false} otherwise.
      * @throws Exception if the reviewer groups of the caller can't be retrieved.
      */
-    private boolean canTransferOwnership(AbstractMetadata metadata, AccessManager accessMan, UserSession callerSession) throws Exception {
-        Profile callerProfile = callerSession.getProfile();
+    private boolean canTransferOwnership(AbstractMetadata metadata, AccessManager accessMan, ServiceContext serviceContext) throws Exception {
+        Profile callerProfile = serviceContext.getUserSession().getProfile();
 
         if (callerProfile == Profile.Editor || callerProfile == Profile.Reviewer) {
-            int callerUserId = callerSession.getUserIdAsInt();
-            Integer sourceUsr = metadata.getSourceInfo().getOwner();
-            Integer sourceGrp = metadata.getSourceInfo().getGroupOwner();
-
-            if (callerProfile == Profile.Editor) {
-                return Objects.equals(sourceUsr, callerUserId);
-            } else {
-                Set<Integer> reviewerGroups = accessMan.getReviewerGroups(callerSession);
-                return sourceGrp != null && reviewerGroups.contains(sourceGrp);
-            }
+            return accessMan.isOwner(serviceContext, metadata.getSourceInfo());
         }
 
         return true;
@@ -1214,8 +1204,7 @@ public class MetadataSharingApi {
      * Checks if the caller can transfer the metadata ownership to the destination group and user, based on the caller profile:
      * <ul>
      *     <li>Editor / Reviewer: the destination group must be one of the caller groups and the new owner must be
-     *     a member of it. For a reserved group (group owner not changed), the new owner must be a member of one of
-     *     the caller groups.</li>
+     *     a member of it, both with at least the Editor profile in the group. Reserved groups are not allowed.</li>
      *     <li>Other profiles (Administrator, UserAdmin): always allowed.</li>
      * </ul>
      *
@@ -1231,14 +1220,18 @@ public class MetadataSharingApi {
             return true;
         }
 
-        List<Integer> myGroups = userGroupRepository.findGroupIds(
-            UserGroupSpecs.hasUserId(callerSession.getUserIdAsInt()));
-        List<Integer> newOwnerGroups = userGroupRepository.findGroupIds(
-            UserGroupSpecs.hasUserId(userIdentifier));
-
+        // Reserved groups are only used to transfer ownership to an administrator, which is not allowed for these profiles.
         if (ReservedGroup.isReserved(groupIdentifier)) {
-            return !Collections.disjoint(myGroups, newOwnerGroups);
+            return false;
         }
+
+        // Only consider the groups where the caller and the new owner are at least Editor,
+        // so that the new owner can edit the transferred records.
+        Specification<UserGroup> isEditorOrMore = UserGroupSpecs.hasProfileIn(Profile.Editor.getProfileAndAllParents());
+        List<Integer> myGroups = userGroupRepository.findGroupIds(
+            Specification.where(UserGroupSpecs.hasUserId(callerSession.getUserIdAsInt())).and(isEditorOrMore));
+        List<Integer> newOwnerGroups = userGroupRepository.findGroupIds(
+            Specification.where(UserGroupSpecs.hasUserId(userIdentifier)).and(isEditorOrMore));
 
         return myGroups.contains(groupIdentifier) && newOwnerGroups.contains(groupIdentifier);
     }
