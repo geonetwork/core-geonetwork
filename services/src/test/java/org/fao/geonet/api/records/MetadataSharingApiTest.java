@@ -1089,9 +1089,48 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
         assertEquals(foreignGroup.getId(), (int) metadata.getSourceInfo().getGroupOwner());
     }
 
+    /**
+     * The bulk endpoint checks each record: the Editor's own record is transferred, the record owned by
+     * another user is skipped with a message, even if the Editor can edit it.
+     */
+    @Test
+    public void transferOwnershipOfSeveralRecordsAsEditorOnlyTransfersOwnedRecords() throws Exception {
+        Metadata otherMetadata = (Metadata) injectMetadataInDb(getSampleMetadataXml(), context, IndexingMode.full);
+        otherMetadata.getSourceInfo().setOwner(anotherEditorUser.getId());
+        otherMetadata.getSourceInfo().setGroupOwner(SAMPLE_GROUP_ID);
+        metadataRepository.save(otherMetadata);
+        grantEditingToGroup(otherMetadata.getId(), SAMPLE_GROUP_ID);
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(editorUser);
+
+        mockMvc.perform(put("/srv/api/records/ownership")
+                .session(mockHttpSession)
+                .param("uuids", metadataUuid, otherMetadata.getUuid())
+                .param("groupIdentifier", String.valueOf(SAMPLE_GROUP_ID))
+                .param("userIdentifier", String.valueOf(targetUser.getId()))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecords").value(2))
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(1))
+            .andExpect(jsonPath("$.numberOfRecordsNotEditable").value(0))
+            .andExpect(jsonPath("$.metadataInfos." + otherMetadata.getId() + "[*].message",
+                hasItem(TRANSFER_NOT_ALLOWED_MESSAGE)));
+
+        entityManager.flush();
+        entityManager.clear();
+        assertEquals(targetUser.getId(), (int) metadataRepository.findById(metadataId).get().getSourceInfo().getOwner());
+        assertEquals(anotherEditorUser.getId(),
+            (int) metadataRepository.findById(otherMetadata.getId()).get().getSourceInfo().getOwner());
+    }
+
     private void grantEditingToGroup(int groupId) {
+        grantEditingToGroup(metadataId, groupId);
+    }
+
+    private void grantEditingToGroup(int mdId, int groupId) {
         OperationAllowed editOp = new OperationAllowed();
-        editOp.getId().setMetadataId(metadataId).setGroupId(groupId)
+        editOp.getId().setMetadataId(mdId).setGroupId(groupId)
             .setOperationId(ReservedOperation.editing.getId());
         operationAllowedRepository.save(editOp);
     }

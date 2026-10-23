@@ -740,10 +740,21 @@
           scope.ownerUserName = "";
           scope.ownerGroupName = "";
 
-          if (ownerId) {
-            $http.get("../api/users/" + ownerId).then(function (response) {
-              scope.ownerUserName = response.data.username;
-            });
+          // Read the owner name from the index, as only administrators and the user
+          // can read the user details with ../api/users/{id}
+          if (ownerId && mdUuid) {
+            $http
+              .post("../api/search/records/_search", {
+                query: { term: { uuid: mdUuid } },
+                _source: ["recordOwner"],
+                size: 1
+              })
+              .then(function (response) {
+                var hits = response.data.hits.hits;
+                if (hits.length > 0) {
+                  scope.ownerUserName = hits[0]._source.recordOwner;
+                }
+              });
           }
 
           if (groupOwner) {
