@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -78,9 +78,14 @@ public class LogUtil {
             timeZoneSetting = TimeZone.getDefault().getID();
         }
 
-        ThreadContext.put("harvest", harvesterName);
+        ThreadContext.put("harvester", harvesterName);
         ThreadContext.put("logfile", logfile);
         ThreadContext.put("timeZone", timeZoneSetting);
+
+        if (Log.getLogfile() == null) {
+            // No catalogue log directory to resolve against (Log.getLogfile() already warned).
+            return logfile;
+        }
 
         try {
             return getHarvesterLogfilePath();

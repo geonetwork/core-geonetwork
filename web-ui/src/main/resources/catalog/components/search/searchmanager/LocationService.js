@@ -212,6 +212,17 @@
         $rootScope.$on("$locationChangeSuccess", updateTabs);
       };
 
+      this.isDraft = function (path) {
+        return (path || $location.path()).indexOf(this.DRAFT) == 0;
+      };
+
+      // Switch from the working copy view to the approved record view
+      this.switchDraftToMetadata = function () {
+        if (this.isDraft()) {
+          $location.path($location.path().replace(this.DRAFT, this.METADATA));
+        }
+      };
+
       /**
        * Keep history and state of routing to keep the search state.
        * Actually, if you had run a search, then moved to another location,

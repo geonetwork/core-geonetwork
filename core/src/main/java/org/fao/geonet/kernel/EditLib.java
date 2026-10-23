@@ -1041,16 +1041,22 @@ public class EditLib {
 
     private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, Element parent, Element element) throws Exception {
         String parentName = parent.getQualifiedName();
-        fillElement(schema, sugg, parentName, element);
+        fillElement(schema, sugg, parentName, element, Collections.emptySet());
     }
 
     /**
-     * @param schema     The metadata schema
-     * @param sugg       The suggestion configuration for the schema
-     * @param parentName The name of the parent
-     * @param element    The element to fill
+     * @param schema           The metadata schema
+     * @param sugg             The suggestion configuration for the schema
+     * @param parentName       The name of the parent
+     * @param element          The element to fill
+     * @param ancestorTypes    Names of the types of the ancestors of this element that are
+     *                         currently being auto-expanded, used to detect and stop
+     *                         self-referencing / mutually recursive type definitions
+     *                         (eg. gfc feature catalogue types) which would otherwise cause
+     *                         infinite recursion / StackOverflowError.
      */
-    private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, String parentName, Element element) throws Exception {
+    private void fillElement(MetadataSchema schema, SchemaSuggestions sugg, String parentName, Element element,
+                              Set<String> ancestorTypes) throws Exception {
         String elemName = element.getQualifiedName();
         SchemaPlugin plugin = schema.getSchemaPlugin();
         boolean isISOPlugin = plugin instanceof ISOPlugin;
@@ -1069,6 +1075,19 @@ public class EditLib {
         }
 
         MetadataType type = schema.getTypeInfo(schema.getElementType(elemName, parentName));
+
+        // Track the chain of types being auto-expanded on this branch so that
+        // self-referencing / mutually recursive type definitions (eg. gfc feature
+        // catalogue FC_AssociationRole <-> FC_FeatureAssociation) stop expanding
+        // instead of recursing until the stack overflows.
+        if (ancestorTypes.contains(type.getName())) {
+            LOGGER_FILL_ELEMENT.warn("#### Recursive type definition detected for type '{}' while filling element '{}'. " +
+                "Stopping automatic expansion to avoid infinite recursion.", type.getName(), elemName);
+            return;
+        }
+        Set<String> typesInPath = new HashSet<>(ancestorTypes);
+        typesInPath.add(type.getName());
+
         boolean hasSuggestion = sugg.hasSuggestion(elemName, type.getElementList());
 //        List<String> elementSuggestion = sugg.getSuggestedElements(elemName);
 //        boolean hasSuggestion = elementSuggestion.size() != 0;
@@ -1164,7 +1183,7 @@ public class EditLib {
                         }
 
                         // Continue ....
-                        fillElement(schema, sugg, element, child);
+                        fillElement(schema, sugg, element.getQualifiedName(), child, typesInPath);
                     } else {
                         // Logging some cases to avoid
                         if (LOGGER_FILL_ELEMENT.isDebugEnabled()) {

@@ -200,6 +200,18 @@
       $scope.location = gnSearchLocation;
       $scope.fluidLayout = gnGlobalSettings.gnCfg.mods.home.fluidLayout;
       $scope.showMaps = gnGlobalSettings.gnCfg.mods.home.showMaps;
+      $scope.welcomeMessageKey = gnGlobalSettings.isDefaultNode
+        ? "home-welcome-message"
+        : "home-welcome-message-" + gnGlobalSettings.nodeId;
+      $scope.showWelcomeMessage = false;
+      if (gnGlobalSettings.gnCfg.mods.home.showWelcomeMessage) {
+        // Only display the message if translated in the current language
+        $translate($scope.welcomeMessageKey).then(function (message) {
+          $scope.welcomeMessage = message;
+          $scope.showWelcomeMessage =
+            message.trim() !== "" && message !== $scope.welcomeMessageKey;
+        }, angular.noop);
+      }
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;

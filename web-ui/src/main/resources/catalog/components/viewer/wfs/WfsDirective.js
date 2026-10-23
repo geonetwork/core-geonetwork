@@ -38,6 +38,9 @@
           scope.isWfsAvailable = false;
           scope.isInitialized = false;
           scope.mode = "dropdown";
+          scope.getTitle = function (featureType) {
+            return gnWfsService.getTitle(featureType);
+          };
 
           scope.init = function () {
             // Get WFS URL from attrs or try by substituting WFS in WMS URLs.
@@ -97,7 +100,11 @@
                 scope.typenames.forEach(function (typename) {
                   var type = gnWfsService.getTypeName(capabilities, typename);
                   if (type) {
-                    scope.featureTypes.push({ label: typename, type: type });
+                    scope.featureTypes.push({
+                      label: gnWfsService.getTitle(type) || typename,
+                      name: typename,
+                      type: type
+                    });
                   }
                 });
                 scope.formats = gnWfsService.getOutputFormat(capabilities);

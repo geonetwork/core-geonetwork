@@ -59,7 +59,7 @@
               </cit:phone>
               <cit:address>
                 <cit:CI_Address>
-                  <cit:deliveryPoint xsi:type="gmd:PT_FreeText_PropertyType">
+                  <cit:deliveryPoint xsi:type="lan:PT_FreeText_PropertyType">
                     <gco:CharacterString>100, avenue d'Alsace</gco:CharacterString>
                     <lan:PT_FreeText>
                       <lan:textGroup>
@@ -76,7 +76,7 @@
                   <cit:postalCode>
                     <gco:CharacterString>68000</gco:CharacterString>
                   </cit:postalCode>
-                  <cit:country xsi:type="gmd:PT_FreeText_PropertyType">
+                  <cit:country xsi:type="lan:PT_FreeText_PropertyType">
                     <gco:CharacterString>FR</gco:CharacterString>
                     <lan:PT_FreeText>
                       <lan:textGroup>
@@ -269,7 +269,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
                   </cit:phone>
                   <cit:address>
                     <cit:CI_Address>
-                      <cit:deliveryPoint xsi:type="gmd:PT_FreeText_PropertyType">
+                      <cit:deliveryPoint xsi:type="lan:PT_FreeText_PropertyType">
                         <gco:CharacterString>100, avenue d'Alsace</gco:CharacterString>
                         <lan:PT_FreeText>
                           <lan:textGroup>
@@ -286,7 +286,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
                       <cit:postalCode>
                         <gco:CharacterString>68000</gco:CharacterString>
                       </cit:postalCode>
-                      <cit:country xsi:type="gmd:PT_FreeText_PropertyType">
+                      <cit:country xsi:type="lan:PT_FreeText_PropertyType">
                         <gco:CharacterString>FRANCE</gco:CharacterString>
                         <lan:PT_FreeText>
                           <lan:textGroup>
@@ -297,7 +297,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
                           </lan:textGroup>
                         </lan:PT_FreeText>
                       </cit:country>
-                      <cit:electronicMailAddress xsi:type="gmd:PT_FreeText_PropertyType">
+                      <cit:electronicMailAddress xsi:type="lan:PT_FreeText_PropertyType">
                         <gco:CharacterString>contact@georhena.eu</gco:CharacterString>
                         <lan:PT_FreeText>
                           <lan:textGroup>
@@ -321,10 +321,10 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
                       <cit:protocol>
                         <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
                       </cit:protocol>
-                      <cit:name gco:nilReason="missing" xsi:type="gmd:PT_FreeText_PropertyType">
+                      <cit:name gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
                         <gco:CharacterString />
                       </cit:name>
-                      <cit:description gco:nilReason="missing" xsi:type="gmd:PT_FreeText_PropertyType">
+                      <cit:description gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
                         <gco:CharacterString />
                       </cit:description>
                     </cit:CI_OnlineResource>
@@ -378,7 +378,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
                 <cit:CI_Contact>
                   <cit:address>
                     <cit:CI_Address>
-                      <cit:electronicMailAddress xsi:type="gmd:PT_FreeText_PropertyType">
+                      <cit:electronicMailAddress xsi:type="lan:PT_FreeText_PropertyType">
                         <gco:CharacterString>info@chateaux-rhenans.eu</gco:CharacterString>
                         <lan:PT_FreeText>
                           <lan:textGroup>
@@ -399,10 +399,10 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
                       <cit:protocol>
                         <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
                       </cit:protocol>
-                      <cit:name gco:nilReason="missing" xsi:type="gmd:PT_FreeText_PropertyType">
+                      <cit:name gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
                         <gco:CharacterString />
                       </cit:name>
-                      <cit:description gco:nilReason="missing" xsi:type="gmd:PT_FreeText_PropertyType">
+                      <cit:description gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
                         <gco:CharacterString />
                       </cit:description>
                     </cit:CI_OnlineResource>
@@ -476,7 +476,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
           <mcc:fileName>
             <gco:CharacterString>https://geoportal.georhena.eu/geonetwork/srv/api/records/f74f5451-b198-4edf-abdd-a6b6b7caed81/attachments/chateaux_rhenans.jpeg</gco:CharacterString>
           </mcc:fileName>
-          <mcc:fileDescription xsi:type="gmd:PT_FreeText_PropertyType">
+          <mcc:fileDescription xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString>chateaux_rhenans.jpeg</gco:CharacterString>
             <lan:PT_FreeText>
               <lan:textGroup>
@@ -494,7 +494,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
       </mri:graphicOverview>
       <mri:descriptiveKeywords>
         <mri:MD_Keywords>
-          <mri:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+          <mri:keyword xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString>Rhin Supérieur</gco:CharacterString>
             <lan:PT_FreeText>
               <lan:textGroup>
@@ -515,7 +515,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
       </mri:descriptiveKeywords>
       <mri:descriptiveKeywords>
         <mri:MD_Keywords>
-          <mri:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+          <mri:keyword xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString>gestion patrimoniale</gco:CharacterString>
             <lan:PT_FreeText>
               <lan:textGroup>
@@ -529,7 +529,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
               </lan:textGroup>
             </lan:PT_FreeText>
           </mri:keyword>
-          <mri:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+          <mri:keyword xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString>tourisme</gco:CharacterString>
             <lan:PT_FreeText>
               <lan:textGroup>
@@ -579,7 +579,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
       </mri:descriptiveKeywords>
       <mri:descriptiveKeywords>
         <mri:MD_Keywords>
-          <mri:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+          <mri:keyword xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString>Châteaux forts</gco:CharacterString>
             <lan:PT_FreeText>
               <lan:textGroup>
@@ -593,7 +593,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
               </lan:textGroup>
             </lan:PT_FreeText>
           </mri:keyword>
-          <mri:keyword xsi:type="gmd:PT_FreeText_PropertyType">
+          <mri:keyword xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString>Patrimoine castral</gco:CharacterString>
             <lan:PT_FreeText>
               <lan:textGroup>
@@ -614,7 +614,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
       </mri:descriptiveKeywords>
       <mri:resourceConstraints>
         <mco:MD_Constraints>
-          <mco:useLimitation xsi:type="gmd:PT_FreeText_PropertyType">
+          <mco:useLimitation xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString>Licence CC-BY - ©CeA ; ©GeoRhena</gco:CharacterString>
             <lan:PT_FreeText>
               <lan:textGroup>
@@ -638,7 +638,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
           <mco:useConstraints>
             <mco:MD_RestrictionCode codeListValue="otherRestrictions" codeList="http://standards.iso.org/iso/19139/resources/gmxCodelists.xml#MD_RestrictionCode" />
           </mco:useConstraints>
-          <mco:otherConstraints xsi:type="gmd:PT_FreeText_PropertyType">
+          <mco:otherConstraints xsi:type="lan:PT_FreeText_PropertyType">
             <gco:CharacterString>Pas d'autre limitation</gco:CharacterString>
             <lan:PT_FreeText>
               <lan:textGroup>
@@ -725,7 +725,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
                     <cit:CI_Contact>
                       <cit:address>
                         <cit:CI_Address>
-                          <cit:electronicMailAddress gco:nilReason="missing" xsi:type="gmd:PT_FreeText_PropertyType">
+                          <cit:electronicMailAddress gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
                             <gco:CharacterString />
                           </cit:electronicMailAddress>
                         </cit:CI_Address>
@@ -755,7 +755,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
               <cit:protocol>
                 <gco:CharacterString>OGC:WMS</gco:CharacterString>
               </cit:protocol>
-              <cit:name xsi:type="gmd:PT_FreeText_PropertyType">
+              <cit:name xsi:type="lan:PT_FreeText_PropertyType">
                 <gco:CharacterString>chateaux_rhenans</gco:CharacterString>
                 <lan:PT_FreeText>
                   <lan:textGroup>
@@ -769,7 +769,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
                   </lan:textGroup>
                 </lan:PT_FreeText>
               </cit:name>
-              <cit:description xsi:type="gmd:PT_FreeText_PropertyType">
+              <cit:description xsi:type="lan:PT_FreeText_PropertyType">
                 <gco:CharacterString>Châteaux rhénans du Rhin Supérieur - copie</gco:CharacterString>
                 <lan:PT_FreeText>
                   <lan:textGroup>
@@ -793,7 +793,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
               <cit:protocol>
                 <gco:CharacterString>OGC:WFS</gco:CharacterString>
               </cit:protocol>
-              <cit:name xsi:type="gmd:PT_FreeText_PropertyType">
+              <cit:name xsi:type="lan:PT_FreeText_PropertyType">
                 <gco:CharacterString>society:chateaux_rhenans</gco:CharacterString>
                 <lan:PT_FreeText>
                   <lan:textGroup>
@@ -807,7 +807,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
                   </lan:textGroup>
                 </lan:PT_FreeText>
               </cit:name>
-              <cit:description xsi:type="gmd:PT_FreeText_PropertyType">
+              <cit:description xsi:type="lan:PT_FreeText_PropertyType">
                 <gco:CharacterString>Châteaux rhénans du Rhin Supérieur</gco:CharacterString>
                 <lan:PT_FreeText>
                   <lan:textGroup>
@@ -831,7 +831,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
               <cit:protocol>
                 <gco:CharacterString>WWW:DOWNLOAD-1.0-ftp--download</gco:CharacterString>
               </cit:protocol>
-              <cit:name xsi:type="gmd:PT_FreeText_PropertyType">
+              <cit:name xsi:type="lan:PT_FreeText_PropertyType">
                 <gco:CharacterString>Téléchargement du Shapefile</gco:CharacterString>
                 <lan:PT_FreeText>
                   <lan:textGroup>
@@ -855,7 +855,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
               <cit:protocol>
                 <gco:CharacterString>WWW:LINK-1.0-http--link</gco:CharacterString>
               </cit:protocol>
-              <cit:name xsi:type="gmd:PT_FreeText_PropertyType">
+              <cit:name xsi:type="lan:PT_FreeText_PropertyType">
                 <gco:CharacterString>Site internet du projet "Châteaux rhénans"</gco:CharacterString>
                 <lan:PT_FreeText>
                   <lan:textGroup>
@@ -869,7 +869,7 @@ This project is co-financed by the EU as part of the Interreg VI project "Châte
                   </lan:textGroup>
                 </lan:PT_FreeText>
               </cit:name>
-              <cit:description gco:nilReason="missing" xsi:type="gmd:PT_FreeText_PropertyType">
+              <cit:description gco:nilReason="missing" xsi:type="lan:PT_FreeText_PropertyType">
                 <gco:CharacterString />
               </cit:description>
             </cit:CI_OnlineResource>

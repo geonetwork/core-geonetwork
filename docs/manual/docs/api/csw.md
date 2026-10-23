@@ -55,6 +55,7 @@ Example of a request using a standard queryable:
 ```
 
 Example of a request using an index field name:
+{: #csw-index-field-example }
 
 ``` xml
 <csw:GetRecords xmlns:csw="http://www.opengis.net/cat/csw/2.0.2"
@@ -72,7 +73,73 @@ Example of a request using an index field name:
 </csw:GetRecords>
 ```
 
-The mapping between CSW standard queryable and the index fields are defined in **`web/src/main/webapp/WEB-INF/config-csw.xml`**.
+The mapping between CSW standard queryables and the index fields is defined in **`web/src/main/webapp/WEB-INF/config-csw.xml`**.
+
+## Queryables mapping
+
+The following tables list the available CSW queryables that can be used for searching. It shows the ISO field they refer to and the Elasticsearch index field it is mapped to.
+
+!!! note
+
+    Instead of using CSW queryables, you may also use the Elasticsearch index field in a  `GetRecords` query (see the [example of a request using an index field name](#csw-index-field-example)). However, the ES index fields are not listed in the `GetCapabilities` document and may be subject to change. It is therefore recommended to use the standard CSW queryables.
+
+### Supported ISO queryables
+
+| CSW queryable | ISO field | Elasticsearch index field |
+|---|---|----------------------------------------------------------|
+| `Subject` | Keyword | `tag.*`                                                  |
+| `Title` | Resource title | `resourceTitleObject.*`                                  |
+| `Abstract` | Abstract | `resourceAbstractObject.*`                               |
+| `AnyText` | Full text (any field) | `any.*`                                                  |
+| `Format` | Distribution format name | `format`                                                 |
+| `Identifier` | Metadata identifier (UUID) | `uuid`                                                   |
+| `Modified` | Metadata date stamp | `changeDate`                                             |
+| `Type` | Hierarchy level (resource type) | `resourceType`                                           |
+| `RevisionDate` | Resource revision date | `revisionDateForResource`                                |
+| `AlternateTitle` | Alternate title | `resourceAltTitleObject.*`                               |
+| `CreationDate` | Resource creation date | `creationDateForResource`                                |
+| `PublicationDate` | Resource publication date | `publicationDateForResource`                             |
+| `OrganisationName` | Resource point of contact organisation | `OrgForResourceObject.*`                                 |
+| `HasSecurityConstraints` | Has security constraints | `secConstr`                                              |
+| `Language` | Metadata language | `mainLanguage`                                           |
+| `ResourceIdentifier` | Resource identifier | `resourceIdentifier.code`                                |
+| `ParentIdentifier` | Parent identifier | `parentUuid`                                             |
+| `KeywordType` | Keyword type | `cl_type.key`                                            |
+| `GeographicDescriptionCode` | Geographic description code | `keywordType-place.*`                                    |
+| `TopicCategory` | Topic category | `cl_topic.key`                                           |
+| `ResourceLanguage` | Resource language | `resourceLanguage`                                       |
+| `Denominator` | Spatial resolution (scale denominator) | `resolutionScaleDenominator`                             |
+| `DistanceValue` | Spatial resolution (distance) | `resolutionDistance`                                     |
+| `DistanceUOM` | Spatial resolution distance unit | `distanceUom`                                            |
+| `TempExtent_begin` | Temporal extent begin | `resourceTemporalDateRange.gte`                          |
+| `TempExtent_end` | Temporal extent end | `resourceTemporalDateRange.lte`                          |
+| `ServiceType` | Service type | `serviceType`                                            |
+| `ServiceTypeVersion` | Service type version | `serviceTypeVersion`                                     |
+| `Operation` | Service operation name | `operation`                                              |
+| `OperatesOn` | Operates on (dataset UUID) | `recordOperateOn`                                        |
+| `OperatesOnIdentifier` | Coupled resource identifier | `operatesOnIdentifier`                                   |
+| `OperatesOnName` | Coupled resource operation name | `operatesOnName`                                         |
+| `CouplingType` | Coupling type | `couplingType`                                           |
+
+### Additional queryables (INSPIRE and others)
+
+| CSW queryable | ISO field | Elasticsearch index field |
+|---|---|----------------------------------------------------------|
+| `Degree` | Conformity degree (pass) | `inspireConformResource`                                 |
+| `SpecificationTitle` | Conformity specification title | `specificationConformance.title`                         |
+| `SpecificationDate` | Conformity specification date | `specificationConformance.date`                          |
+| `SpecificationDateType` | Conformity specification date type | `specificationDateType`                                  |
+| `AccessConstraints` | Access constraints | `cl_accessConstraints.key`                               |
+| `OtherConstraints` | Other constraints | `MD_LegalConstraintsOtherConstraintsObject.*`            |
+| `Classification` | Security classification | `cl_classification.key`                                  |
+| `ConditionApplyingToAccessAndUse` | Use limitation | `MD_ConstraintsUseLimitationObject.*`                    |
+| `MetadataPointOfContact` | Metadata point of contact organisation | `OrgObject.*`                                            |
+| `Lineage` | Lineage statement | `lineageObject.*`                                        |
+| `ResponsiblePartyRole` | Responsible party role | `contactForResource.role`                                |
+| `OnlineResourceType` | Online resource protocol | `linkProtocol`                                           |
+| `OnlineResourceMimeType` | Online resource MIME type | `mimetype`                                               |
+| `Date` | Metadata creation date | `createDate`                                             |
+| `Relation` | Related resources | `relation`                                               |
 
 ## Upgrading from GeoNetwork 3.0 Guidance
 

@@ -58,6 +58,30 @@ Please refer to the [GeoNetwork-UI Configuration guide](https://geonetwork.githu
     If no configuration is given for a portal or sub-portal, the default configuration will be used.
 
 
+### Customizing the style of a sub-portal
+
+A sub-portal can have its own CSS styles, applied on top of the default ones. The styles are defined in a file named after the sub-portal identifier: `{portalId}_custom_style.less` (or `.css`). The file has to be in the `catalog/style/` folder:
+
+* In the source code: `web-ui/src/main/resources/catalog/style/`
+* In a deployed application: `<webapp>/catalog/style/`
+
+For example, for a sub-portal with the identifier `inspire`, create the file `inspire_custom_style.less`:
+
+```css
+.navbar {
+  background-color: #005a9c !important;
+}
+```
+
+Restart the application (or rebuild it if the file was added in the source code). The styles are then available at `http://localhost:8080/geonetwork/static/inspire_custom_style.css` and are loaded by the pages of that sub-portal, including the page of a record opened from its permalink (`http://localhost:8080/geonetwork/inspire/api/records/{uuid}`).
+
+The main catalogue uses the file `srv_custom_style.less`, which is provided empty in the source code.
+
+!!! note
+
+    A sub-portal without a styles file uses the default styles. In that case the request to `.../static/{portalId}_custom_style.css` returns a 404, which is expected.
+
+
 ## Example of usage
 
 To find terms available for filtering you can query a record in your ElasticSearch instance: 

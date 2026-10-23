@@ -434,6 +434,7 @@
       <list>
         <!-- Adds the MetadataFileUploads.resourceaccess/mimetype columns the Java step below backfills -
              must run first. -->
+        <value>java:v4413.ClearFormatterCacheMigration</value>
         <value>WEB-INF/classes/setup/sql/migrate/v4413/migrate-</value>
         <value>java:v4413.MetadataFileUploadBackfillDatabaseMigration</value>
       </list>

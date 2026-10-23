@@ -31,19 +31,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.util.regex.Pattern;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiParams;
 import org.fao.geonet.api.ApiUtils;
+import org.fao.geonet.api.LogoUtils;
 import org.fao.geonet.api.exception.NotAllowedException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
-import org.fao.geonet.api.records.attachments.AttachmentsApi;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.api.tools.i18n.TranslationPackBuilder;
 import org.fao.geonet.constants.Geonet;
@@ -77,14 +74,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.FileTime;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static org.fao.geonet.api.LogoUtils.API_GET_LOGO_NOTE;
 import static org.springframework.data.jpa.domain.Specification.where;
 
 @RequestMapping(value = {
@@ -111,27 +107,6 @@ public class GroupsApi {
     public static final int GROUPNAME_MAX_LENGHT = 32;
 
 
-    /**
-     * API logo note.
-     */
-    private static final String API_GET_LOGO_NOTE = "If last-modified header "
-        + "is present it is used to check if the logo has been modified since "
-        + "the header date. If it hasn't been modified returns an empty 304 Not"
-        + " Modified response. If modified returns the image. If the group has "
-        + "no logo then returns a transparent 1x1 px PNG image.";
-    /**
-     * Six hours in seconds.
-     */
-    private static final int SIX_HOURS = 60 * 60 * 6;
-    /**
-     * Transparent 1x1 px PNG encoded in Base64.
-     */
-    private static final String TRANSPARENT_1_X_1_PNG_BASE64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR"
-        + "42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==";
-    /**
-     * Transparent 1x1 px PNG.
-     */
-    private static final byte[] TRANSPARENT_1_X_1_PNG = org.apache.commons.codec.binary.Base64.decodeBase64(TRANSPARENT_1_X_1_PNG_BASE64);
     /**
      * Message source.
      */
@@ -168,20 +143,6 @@ public class GroupsApi {
 
     @Autowired
     private PageRepository pageRepository;
-
-    private static Resources.ResourceHolder getImage(Resources resources, ServiceContext serviceContext, Group group) throws IOException {
-        final Path logosDir = resources.locateLogosDir(serviceContext);
-        final Path harvesterLogosDir = resources.locateHarvesterLogosDir(serviceContext);
-        final String logoUUID = group.getLogo();
-        Resources.ResourceHolder image = null;
-        if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
-            image = resources.getImage(serviceContext, logoUUID, logosDir);
-            if (image == null) {
-                image = resources.getImage(serviceContext, logoUUID, harvesterLogosDir);
-            }
-        }
-        return image;
-    }
 
     /**
      * Writes the group logo image to the response. If no image is found, it
@@ -220,35 +181,9 @@ public class GroupsApi {
         }
         try {
             final Resources resources = context.getBean(Resources.class);
-            final String logoUUID = group.get().getLogo();
-            if (StringUtils.isNotBlank(logoUUID) && !logoUUID.startsWith("http://") && !logoUUID.startsWith("https//")) {
-                try (Resources.ResourceHolder image = getImage(resources, serviceContext, group.get())) {
-                    if (image != null) {
-                        FileTime lastModifiedTime = image.getLastModifiedTime();
-                        response.setDateHeader("Expires", System.currentTimeMillis() + SIX_HOURS * 1000L);
-                        if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
-                            // webRequest.checkNotModified sets the right HTTP headers
-                            return;
-                        }
-                        response.setContentType(AttachmentsApi.getFileContentType(image.getPath().getFileName().toString()));
-                        response.setContentLength((int) Files.size(image.getPath()));
-                        response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
-                        FileUtils.copyFile(image.getPath().toFile(), response.getOutputStream());
-                        return;
-                    }
-                }
+            try (Resources.ResourceHolder image = LogoUtils.getImage(resources, serviceContext, group.get().getLogo())) {
+                LogoUtils.writeImageOrTransparentLogo(webRequest, response, image);
             }
-
-            // no logo image found. Return a transparent 1x1 png
-            FileTime lastModifiedTime = FileTime.fromMillis(0);
-            if (webRequest.checkNotModified(lastModifiedTime.toMillis())) {
-                return;
-            }
-            response.setContentType("image/png");
-            response.setContentLength(TRANSPARENT_1_X_1_PNG.length);
-            response.addHeader("Cache-Control", "max-age=" + SIX_HOURS + ", public");
-            response.getOutputStream().write(TRANSPARENT_1_X_1_PNG);
-
         } catch (IOException e) {
             Log.error(LOGGER, String.format("There was an error accessing the logo of the group with id '%d'",
                 groupId));

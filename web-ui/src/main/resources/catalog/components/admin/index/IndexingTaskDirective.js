@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -49,20 +49,22 @@
         templateUrl: "../../catalog/components/admin/index/partials/indexingstatus.html",
         link: function (scope, element, attrs) {
           scope.getStatusCode = function () {
-            if (scope.taskInfo && scope.taskInfo.total > scope.taskInfo.processed) {
+            var info = scope.taskInfo;
+            if (!info) {
+              return STATUS_UNDEFINED;
+            }
+            var done = info.processed + info.errors;
+            if (info.total > done) {
               return STATUS_INPROGRESS;
             }
-            if (
-              scope.taskInfo &&
-              scope.taskInfo.total === scope.taskInfo.processed &&
-              scope.taskInfo.errors > 0
-            ) {
-              return STATUS_ERRORS;
-            }
-            if (scope.taskInfo && scope.taskInfo.total === scope.taskInfo.processed) {
-              return STATUS_FINISHED;
+            if (info.total === done) {
+              return info.errors > 0 ? STATUS_ERRORS : STATUS_FINISHED;
             }
             return STATUS_UNDEFINED;
+          };
+
+          scope.isRunning = function () {
+            return scope.getStatusCode() === STATUS_INPROGRESS;
           };
 
           scope.getStatusLabel = function () {
@@ -137,7 +139,8 @@
     "$http",
     "gnConfig",
     "gnConfigService",
-    function ($http, gnConfig, gnConfigService) {
+    "$rootScope",
+    function ($http, gnConfig, gnConfigService, $rootScope) {
       return {
         restrict: "E",
         scope: {},
@@ -145,10 +148,26 @@
           "../../catalog/components/admin/index/partials/indexingstatuscontainer.html",
         controllerAs: "ctrl",
         controller: [
-          function () {
+          "$scope",
+          function ($scope) {
             this.tasks = [];
 
             var me = this;
+            var destroyed = false;
+            var wasRunning = false;
+            // Poll quickly while a task runs. Otherwise check slowly, so that
+            // a task started elsewhere (other tab or admin) shows up too.
+            var POLL_RUNNING_MS = 5000;
+            var POLL_IDLE_MS = 60000;
+
+            var scheduleRefresh = function (taskRunning) {
+              if (!destroyed) {
+                me.timeout = setTimeout(
+                  me.refresh,
+                  taskRunning ? POLL_RUNNING_MS : POLL_IDLE_MS
+                );
+              }
+            };
 
             this.refresh = function () {
               $http
@@ -158,28 +177,53 @@
                     gnConfig["system.site.siteId"] +
                     ":name=indexing-task,idx=*"
                 )
-                .then(function (result) {
-                  me.tasks.length = 0;
+                .then(
+                  function (result) {
+                    // A response can arrive after the page was left.
+                    if (destroyed) {
+                      return;
+                    }
+                    var probes = (result.data && result.data.value) || {};
+                    // Once a finished task's probe is unregistered, keep showing
+                    // it until another task starts or the page is left.
+                    if (Object.keys(probes).length > 0) {
+                      me.tasks.length = 0;
+                    }
 
-                  if (!result.data || !result.data.value) {
-                    return;
-                  }
+                    var taskRunning = false;
+                    Object.keys(probes).forEach(function (probeName) {
+                      var probe = probes[probeName];
+                      me.tasks.push({
+                        id: probeName,
+                        errors: probe.InError,
+                        processed: probe.Processed,
+                        total: probe.ToProcessCount
+                      });
 
-                  var probes = result.data.value;
-                  Object.keys(probes).forEach(function (probeName) {
-                    var probe = probes[probeName];
-                    me.tasks.push({
-                      id: probeName,
-                      errors: probe.InError,
-                      processed: probe.Processed,
-                      total: probe.ToProcessCount
+                      if (probe.ToProcessCount - probe.Processed - probe.InError > 0) {
+                        taskRunning = true;
+                      }
                     });
-                  });
 
-                  // loop
-                  setTimeout(me.refresh, 1000);
-                });
+                    // Let the page refresh what depends on the index content.
+                    if (wasRunning && !taskRunning) {
+                      $rootScope.$broadcast("indexingTaskFinished");
+                    }
+                    wasRunning = taskRunning;
+
+                    scheduleRefresh(taskRunning);
+                  },
+                  function () {
+                    // Keep checking after a failed request.
+                    scheduleRefresh(false);
+                  }
+                );
             };
+
+            $scope.$on("$destroy", function () {
+              destroyed = true;
+              clearTimeout(me.timeout);
+            });
 
             gnConfigService.load().then(function (c) {
               me.refresh();

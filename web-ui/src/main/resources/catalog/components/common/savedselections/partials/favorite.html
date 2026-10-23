@@ -1,0 +1,20 @@
+<div
+  class="btn-group pull-left gn-favorite-btn"
+  role="group"
+  data-ng-show="isSavedSelectionEnabled && getFavoriteList()"
+>
+  <button
+    type="button"
+    class="btn btn-default"
+    data-ng-class="{'active': isFavorite()}"
+    data-ng-click="toggle()"
+    data-ng-disabled="busy"
+    title="{{(isFavorite() ? 'removeFromFavorites' : 'addToFavorites') | translate}}"
+    aria-label="{{(isFavorite() ? 'removeFromFavorites' : 'addToFavorites') | translate}}"
+  >
+    <span class="fa fa-fw fa-heart"></span>
+    <span class="hidden-sm hidden-xs"
+      >{{(isFavorite() ? 'removeFromFavorites' : 'addToFavorites') | translate}}</span
+    >
+  </button>
+</div>

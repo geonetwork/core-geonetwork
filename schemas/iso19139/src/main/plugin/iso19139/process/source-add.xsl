@@ -33,10 +33,38 @@ Stylesheet used to update metadata adding a reference to a source record.
                 version="2.0"
                 exclude-result-prefixes="#all">
 
+  <!-- Catalogue base URL. Used to build the link to the source record
+     when sourceUrl is empty. -->
   <xsl:param name="siteUrl"/>
+
+  <!-- Parameters describing a single source record.
+       Only used when relatedRecords is empty. -->
+  <!-- UUID of the source record to link.
+       Set as the uuidref attribute. -->
   <xsl:param name="sourceUuid"/>
+  <!-- Link to the source record. Optional: when empty a CSW
+       GetRecordById URL is built from siteUrl and sourceUuid. -->
   <xsl:param name="sourceUrl" select="''"/>
+  <!-- Title of the source record. Optional: when empty no
+       xlink:title attribute is added. -->
   <xsl:param name="sourceTitle" select="''"/>
+
+  <!-- A list of source records as a comma separated list of
+       uuid#title#url tokens. Used when linking more than one source.
+       When set, it takes precedence over the parameters above. -->
+  <xsl:param name="relatedRecords" select="''"/>
+
+  <!-- Decode the separators escaped by the client in the relatedRecords
+       parameter.
+       '%25' is decoded last so that a value which already contained a
+       percent escape (eg. a title with '%2C' in it) is restored as is. -->
+  <xsl:function name="geonet:unescape">
+    <xsl:param name="value"/>
+    <xsl:value-of select="replace(replace(replace($value,
+                            '%23', '#'),
+                            '%2C', ','),
+                            '%25', '%')"/>
+  </xsl:function>
 
   <!-- Do a copy of every nodes and attributes -->
   <xsl:template match="@*|node()">
@@ -96,18 +124,46 @@ Stylesheet used to update metadata adding a reference to a source record.
     </xsl:copy>
   </xsl:template>
 
+  <!-- Add one source per record, either from the single record
+       parameters or from the relatedRecords list. -->
   <xsl:template name="make-source-link">
-    <gmd:source uuidref="{$sourceUuid}">
-      <xsl:if test="$sourceTitle != ''">
-        <xsl:attribute name="xlink:title" select="$sourceTitle"/>
+    <xsl:choose>
+      <xsl:when test="$relatedRecords != ''">
+        <xsl:for-each select="tokenize($relatedRecords, ',')">
+          <xsl:variable name="token" select="tokenize(., '#')"/>
+          <xsl:call-template name="make-one-source-link">
+            <xsl:with-param name="uuid" select="$token[1]"/>
+            <xsl:with-param name="title" select="geonet:unescape(($token[2], '')[1])"/>
+            <xsl:with-param name="url" select="geonet:unescape(($token[3], '')[1])"/>
+          </xsl:call-template>
+        </xsl:for-each>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="make-one-source-link">
+          <xsl:with-param name="uuid" select="$sourceUuid"/>
+          <xsl:with-param name="title" select="$sourceTitle"/>
+          <xsl:with-param name="url" select="$sourceUrl"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template name="make-one-source-link">
+    <xsl:param name="uuid"/>
+    <xsl:param name="title" select="''"/>
+    <xsl:param name="url" select="''"/>
+
+    <gmd:source uuidref="{$uuid}">
+      <xsl:if test="$title != ''">
+        <xsl:attribute name="xlink:title" select="$title"/>
       </xsl:if>
       <xsl:choose>
-        <xsl:when test="$sourceUrl != ''">
-          <xsl:attribute name="xlink:href" select="$sourceUrl"/>
+        <xsl:when test="$url != ''">
+          <xsl:attribute name="xlink:href" select="$url"/>
         </xsl:when>
         <xsl:otherwise>
           <xsl:attribute name="xlink:href"
-                         select="concat($siteUrl, 'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=', $sourceUuid)"/>
+                         select="concat($siteUrl, 'csw?service=CSW&amp;request=GetRecordById&amp;version=2.0.2&amp;outputSchema=http://www.isotc211.org/2005/gmd&amp;elementSetName=full&amp;id=', $uuid)"/>
         </xsl:otherwise>
       </xsl:choose>
     </gmd:source>

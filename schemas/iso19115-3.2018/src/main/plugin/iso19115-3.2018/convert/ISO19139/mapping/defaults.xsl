@@ -64,6 +64,10 @@
     </xsl:attribute>
   </xsl:template>
 
+  <xsl:template match="@xsi:type[. = 'gmd:PT_FreeText_PropertyType']" mode="from19139to19115-3.2018" priority="10">
+    <xsl:attribute name="xsi:type" select="'lan:PT_FreeText_PropertyType'"/>
+  </xsl:template>
+
   <xsl:template match="@*" mode="from19139to19115-3.2018">
     <xsl:copy-of select="."/>
   </xsl:template>

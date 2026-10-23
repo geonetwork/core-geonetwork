@@ -37,6 +37,7 @@
   ]);
 
   module.constant("GN_DEFAULT_RECORD_VIEW_MENU", [
+    "gn-recordview-favorite-menu",
     "gn-recordview-edit-menu",
     "gn-recordview-delete-menu",
     "gn-recordview-manage-menu",

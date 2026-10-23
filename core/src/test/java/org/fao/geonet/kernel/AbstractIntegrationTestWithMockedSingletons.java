@@ -3,6 +3,7 @@ package org.fao.geonet.kernel;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.AbstractCoreIntegrationTest;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Metadata;
 import org.fao.geonet.domain.MetadataType;
 import org.fao.geonet.kernel.datamanager.IMetadataManager;
@@ -51,7 +52,8 @@ public abstract class AbstractIntegrationTestWithMockedSingletons extends Abstra
             .setRoot(element.getQualifiedName())
             .setSchemaId(schemaManager.autodetectSchema(element))
             .setType(type)
-            .setPopularity(1000);
+            .setPopularity(1000)
+            .setCreateDate(new ISODate("2001-01-01T00:00:00Z"));
         metadata.getSourceInfo()
             .setOwner(TEST_OWNER_ID)
             .setSourceId(sourceRepository.findAll().get(0).getUuid());

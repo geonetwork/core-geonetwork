@@ -30,12 +30,13 @@
             data-ng-class="g.id === groupSelected.id ? 'active' : ''"
             data-ng-click="selectGroup(g)"
           >
+            {{g.label[lang]|empty:g.name}}
             <img
               data-ng-if="g.logo"
-              data-ng-src="../../images/harvesting/{{g.logo}}"
-              class="gn-selected-logo"
+              class="gn-source-logo"
+              onerror="this.style.display='none'"
+              data-ng-src="../api/groups/{{g.id}}/logo"
             />
-            {{g.label[lang]|empty:g.name}}
           </a>
           <span
             data-gn-pagination-list=""
@@ -327,7 +328,7 @@
           </fieldset>
         </form>
 
-        <div data-ng-hide="!groupSelected.label">
+        <div data-ng-hide="!groupSelected.label || (groupSelected.label | json) === '{}'">
           <h3>
             <span data-translate="">translationForGroup</span> {{groupSelected.name}}
           </h3>

@@ -24,12 +24,12 @@ package org.fao.geonet.api.sources;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import junit.framework.Assert;
 import org.fao.geonet.api.FieldNameExclusionStrategy;
 import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SourceRepository;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
@@ -44,6 +44,8 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -61,6 +63,9 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     @Autowired
     private SourceRepository sourceRepo;
 
+    @Autowired
+    private SettingManager settingManager;
+
     private MockMvc mockMvc;
 
     private MockHttpSession mockHttpSession;
@@ -73,7 +78,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void getSource() throws Exception {
         Source source = sourceRepo.findOneByName("source-test");
-        Assert.assertNotNull(source);
+        assertNotNull(source);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
@@ -87,9 +92,68 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void getSourceLogo() throws Exception {
+        Source source = sourceRepo.findOneByName("source-test");
+        assertNotNull(source);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(get("/srv/api/sources/" + source.getUuid() + "/logo"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void getMainCatalogueLogoUsingNodeId() throws Exception {
+        // The main catalogue is 'srv' in URLs but its source is stored under the site id.
+        String siteId = settingManager.getSiteId();
+        if (!sourceRepo.existsById(siteId)) {
+            Source siteSource = new Source();
+            siteSource.setName("site-source-test");
+            siteSource.setUuid(siteId);
+            siteSource.setCreationDate(new ISODate());
+            siteSource.setType(SourceType.portal);
+            sourceRepo.save(siteSource);
+        }
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(get("/srv/api/sources/srv/logo"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void getNonExistingSourceLogo() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(get("/srv/api/sources/source-test-2/logo"))
+            .andExpect(status().is(404));
+    }
+
+    @Test
+    public void getSourceLogoWithTraversalReferenceReturnsNoLogo() throws Exception {
+        Source source = sourceRepo.findOneByName("source-test");
+        assertNotNull(source);
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        String url = "/srv/api/sources/" + source.getUuid() + "/logo";
+        byte[] noLogo = this.mockMvc.perform(get(url))
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsByteArray();
+
+        // The logo reference is stored in database and can be set through the API,
+        // it must never be resolved outside of the logo folders.
+        source.setLogo("../../../../../../../../../../../../../../../../etc/hosts");
+        sourceRepo.save(source);
+
+        this.mockMvc.perform(get(url))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING))
+            // The transparent 1x1 px PNG is returned, not the traversed file.
+            .andExpect(content().bytes(noLogo));
+    }
+    @Test
     public void getNonExistingSource() throws Exception {
         Source sourceToUpdate = sourceRepo.findOneByName("source-test-2");
-        Assert.assertNull(sourceToUpdate);
+        assertNull(sourceToUpdate);
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
 
@@ -117,7 +181,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void updateSource() throws Exception {
         Source source = sourceRepo.findOneByName("source-test");
-        Assert.assertNotNull(source);
+        assertNotNull(source);
 
         source.setName("source-test-updated");
 
@@ -142,7 +206,7 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
     @Test
     public void updateNonExistingSource() throws Exception {
         Source sourceToUpdate = sourceRepo.findOneByName("source-test-2");
-        Assert.assertNull(sourceToUpdate);
+        assertNull(sourceToUpdate);
 
         sourceToUpdate = new Source();
         sourceToUpdate.setName("source-test-2");

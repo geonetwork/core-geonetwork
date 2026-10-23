@@ -201,25 +201,22 @@
              RDF Property:	dcterms:issued
              Definition:	Date of formal issuance (e.g., publication) of the distribution.
             -->
-            <xsl:for-each select="ancestor::mrd:MD_Distributor/mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime|
-                                               ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication']">
-              <xsl:apply-templates mode="iso19115-3-to-dcat"
-                                   select=".">
-                <xsl:with-param name="dateType" select="'publication'"/>
-              </xsl:apply-templates>
-            </xsl:for-each>
+            <xsl:call-template name="iso19115-3-to-dcat-date-info">
+              <xsl:with-param name="values" select="ancestor::mrd:MD_Distributor/mrd:distributionOrderProcess/*/mrd:plannedAvailableDateTime|
+                                                   ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'publication']/cit:date"/>
+              <xsl:with-param name="dateType" select="'publication'"/>
+            </xsl:call-template>
 
             <!--
             RDF Property:	dcterms:modified
             Definition:	Most recent date on which the distribution was changed, updated or modified.
             Range:	rdfs:Literal encoded using the relevant ISO 8601 Date and Time compliant string [DATETIME] and typed using the appropriate XML Schema datatype [XMLSCHEMA11-2] (xsd:gYear, xsd:gYearMonth, xsd:date, or xsd:dateTime).
             -->
-            <xsl:for-each select="ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'revision']">
-              <xsl:apply-templates mode="iso19115-3-to-dcat"
-                                   select=".">
-                <xsl:with-param name="dateType" select="'revision'"/>
-              </xsl:apply-templates>
-            </xsl:for-each>
+            <xsl:call-template name="iso19115-3-to-dcat-date-info">
+              <xsl:with-param name="values" select="ancestor::mrd:MD_Distributor/mrd:distributionOrderProcess/*/mrd:revisionDateTime|
+                                                   ancestor::mdb:MD_Metadata/mdb:identificationInfo/*/mri:citation/*/cit:date/*[cit:dateType/*/@codeListValue = 'revision']/cit:date"/>
+              <xsl:with-param name="dateType" select="'revision'"/>
+            </xsl:call-template>
 
 
             <!--
