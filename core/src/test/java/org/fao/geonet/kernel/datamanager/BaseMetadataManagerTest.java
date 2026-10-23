@@ -33,8 +33,12 @@ import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.XmlSerializerIntegrationTest;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataManager;
 import org.fao.geonet.kernel.datamanager.base.BaseMetadataUtils;
+import org.fao.geonet.kernel.mef.MEFLibIntegrationTest;
+import org.fao.geonet.kernel.search.submission.DirectDeletionSubmitter;
 import org.fao.geonet.repository.GroupRepository;
+import org.fao.geonet.repository.MetadataFileUploadRepository;
 import org.fao.geonet.repository.UserRepository;
+import org.fao.geonet.repository.specification.MetadataFileUploadSpecs;
 import org.fao.geonet.repository.specification.MetadataSpecs;
 import org.fao.geonet.utils.Xml;
 import org.junit.After;
@@ -70,6 +74,9 @@ public class BaseMetadataManagerTest extends AbstractCoreIntegrationTest {
 
     @Autowired
     private GroupRepository groupRepository;
+
+    @Autowired
+    private MetadataFileUploadRepository metadataFileUploadRepository;
 
     private User user;
     private Group group;
@@ -130,6 +137,34 @@ public class BaseMetadataManagerTest extends AbstractCoreIntegrationTest {
         assertFalse(metadataUtils.exists(md.getId()));
         assertFalse(metadataUtils.existsMetadata(md.getId()));
         assertFalse(metadataUtils.existsMetadataUuid(md.getUuid()));
+    }
+
+    /**
+     * Regression test: deleting a metadata record must also remove its {@code MetadataFileUploads}
+     * tracking rows, not just its physical attachments. {@code deleteMetadataFromDB} used to build
+     * a {@code BatchUpdateQuery} for this and never call {@code execute()} on it, so the rows were
+     * silently left behind, orphaned, referencing a metadata id that no longer existed.
+     */
+    @Test
+    public void testDeleteRemovesMetadataFileUploads() throws Exception {
+        ServiceContext context = createServiceContext();
+        loginAsAdmin(context);
+
+        final MEFLibIntegrationTest.ImportMetadata importMetadata = new MEFLibIntegrationTest.ImportMetadata(this, context);
+        importMetadata.getMefFilesToLoad().clear();
+        importMetadata.getMefFilesToLoad().add("mef2-example-2md.zip");
+        importMetadata.invoke();
+
+        String metadataIdStr = importMetadata.getMetadataIds().get(0);
+        int metadataId = Integer.parseInt(metadataIdStr);
+
+        assertFalse("Import should have created MetadataFileUploads rows for the record's attachments",
+            metadataFileUploadRepository.findAll(MetadataFileUploadSpecs.hasMetadataId(metadataId)).isEmpty());
+
+        metadataManager.deleteMetadata(context, metadataIdStr, DirectDeletionSubmitter.INSTANCE);
+
+        assertTrue("MetadataFileUploads rows must be removed when their metadata record is deleted",
+            metadataFileUploadRepository.findAll(MetadataFileUploadSpecs.hasMetadataId(metadataId)).isEmpty());
     }
 
     @Test

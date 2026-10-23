@@ -24,10 +24,15 @@
 package org.fao.geonet.kernel.harvest.harvester.geonet;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.InvocationTargetException;
@@ -35,13 +40,19 @@ import java.lang.reflect.Method;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.Logger;
+import org.fao.geonet.api.records.attachments.Store;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.Metadata;
+import org.fao.geonet.domain.MetadataResource;
+import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.HarvestValidationEnum;
@@ -161,6 +172,86 @@ public class BaseGeoNetworkAlignerTest {
 
         assertNull("Schema already matches, setSchemaId() should not have been called",
             metadata.getDataInfo().getSchemaId());
+    }
+
+    /**
+     * Regression tests for workstream 9 (MEF 3.0 support): {@link BaseGeoNetworkAligner#existsFile}
+     * and {@link BaseGeoNetworkAligner#removeOldFile} used to receive a raw {@code <public>}/
+     * {@code <private>} {@link Element} straight from info.xml; since a MEF 3.0 archive has
+     * neither, harvesting one used to silently skip every attachment. They now receive the
+     * {@code List<Element>} produced by {@link MEFLib#getFilesElement}, which understands both
+     * the MEF 3.0 {@code <store>} format and the legacy format.
+     */
+    @Test
+    public void existsFileMatchesFileRegisteredUnderMef30StoreElement() {
+        Element info = new Element("info");
+        Element store = new Element("store");
+        store.addContent(new Element("file").setAttribute("name", "a.txt").setAttribute("access", "public"));
+        info.addContent(store);
+
+        List<Element> publicFiles = MEFLib.getFilesElement(info, "public");
+
+        assertTrue(aligner.existsFile("a.txt", publicFiles));
+        assertFalse(aligner.existsFile("missing.txt", publicFiles));
+    }
+
+    @Test
+    public void existsFileStillMatchesFileRegisteredUnderLegacyPublicElement() {
+        Element info = new Element("info");
+        Element legacyPublic = new Element("public");
+        legacyPublic.addContent(new Element("file").setAttribute("name", "b.txt"));
+        info.addContent(legacyPublic);
+
+        List<Element> publicFiles = MEFLib.getFilesElement(info, "public");
+
+        assertTrue(aligner.existsFile("b.txt", publicFiles));
+        assertFalse(aligner.existsFile("missing.txt", publicFiles));
+    }
+
+    /**
+     * Reproduces the pre-existing bug where {@code removeOldFile} compared a resource's composite
+     * {@code getId()} (e.g. {@code "uuid-1/attachments/keep.txt"}) against the bare filename in
+     * info.xml's {@code name} attribute, so the comparison could never match and every existing
+     * resource was deleted on every harvest sync - even ones still listed in the remote info.xml.
+     */
+    @Test
+    public void removeOldFileKeepsResourceStillListedInInfoFiles() throws Exception {
+        Store store = mock(Store.class);
+        MetadataResource keep = mock(MetadataResource.class);
+        when(keep.getFilename()).thenReturn("keep.txt");
+        when(keep.getId()).thenReturn("uuid-1/attachments/keep.txt");
+        when(store.getResources(context, "uuid-1", MetadataResourceVisibility.PUBLIC, null, true))
+            .thenReturn(Collections.singletonList(keep));
+
+        Element info = new Element("info");
+        Element storeEl = new Element("store");
+        storeEl.addContent(new Element("file").setAttribute("name", "keep.txt").setAttribute("access", "public"));
+        info.addContent(storeEl);
+        List<Element> publicFiles = MEFLib.getFilesElement(info, "public");
+
+        aligner.removeOldFile(context, mock(Logger.class), store, "uuid-1", publicFiles, MetadataResourceVisibility.PUBLIC);
+
+        verify(store, never()).delResource(any(), anyString(), any(MetadataResourceVisibility.class), anyString(), any());
+    }
+
+    @Test
+    public void removeOldFileDeletesResourceNoLongerListedInInfoFiles() throws Exception {
+        Store store = mock(Store.class);
+        MetadataResource stale = mock(MetadataResource.class);
+        when(stale.getFilename()).thenReturn("stale.txt");
+        when(stale.getId()).thenReturn("uuid-1/attachments/stale.txt");
+        when(store.getResources(context, "uuid-1", MetadataResourceVisibility.PUBLIC, null, true))
+            .thenReturn(Collections.singletonList(stale));
+
+        Element info = new Element("info");
+        Element storeEl = new Element("store");
+        storeEl.addContent(new Element("file").setAttribute("name", "keep.txt").setAttribute("access", "public"));
+        info.addContent(storeEl);
+        List<Element> publicFiles = MEFLib.getFilesElement(info, "public");
+
+        aligner.removeOldFile(context, mock(Logger.class), store, "uuid-1", publicFiles, MetadataResourceVisibility.PUBLIC);
+
+        verify(store, times(1)).delResource(context, "uuid-1", MetadataResourceVisibility.PUBLIC, "stale.txt", true);
     }
 
     private void invokeUpdateMetadata(RecordInfo ri, String id, Element md, Element info,

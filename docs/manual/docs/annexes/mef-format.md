@@ -17,6 +17,31 @@ In the paragraphs below, some terms should be intended as follows:
 2.  the term reader will be used to indicate any actor that can import metadata from a MEF file.
 3.  the term writer will be used to indicate any actor that can generate a MEF file.
 
+## Requesting a specific version via the API {#requesting-a-version}
+
+The catalog's REST API can export any of the three versions described below from the same two endpoints. Which version is returned is negotiated with the standard HTTP `Accept` header, using one of the following media types:
+
+| `Accept` header value       | Version returned |
+|------------------------------|-------------------|
+| `application/x-gn-mef-1-zip` | MEF v1            |
+| `application/x-gn-mef-2-zip` | MEF v2            |
+| `application/x-gn-mef-3-zip` | MEF v3            |
+
+If the `Accept` header is missing, or set to anything else (eg. a generic `application/zip`, or `*/*`), the export defaults to MEF v3 - the current, recommended version. The response's `Content-Type` header always reflects the version actually returned, so a client can confirm what it received without inspecting the file itself.
+
+Two endpoints support this negotiation:
+
+-   `GET /{portal}/api/records/{metadataUuid}/formatters/zip` - export a single record. Supports all three versions.
+-   `GET /{portal}/api/records/zip` - export a selection of records (via a `uuids` parameter, or the current search selection) as a single file. Only MEF v2 and v3 are supported here, since a v1 archive can only ever hold one record; requesting v1 on this endpoint returns an error.
+
+For example, to download a single record as a MEF v2 archive (the legacy public/private layout):
+
+``` text
+curl -H "Accept: application/x-gn-mef-2-zip" \
+     "https://my-catalog.example.org/geonetwork/srv/api/records/0619abc0-708b-eeda-8202-000d98959033/formatters/zip" \
+     -o record.zip
+```
+
 ## MEF v1 file format
 
 A MEF file is simply a ZIP file which contains the following files:
@@ -26,22 +51,37 @@ Root
  |
  +--- metadata.xml
  +--- info.xml
- +--- public
- |        +---- all public documents and thumbnails
- +--- private
-           +---- all private documents and thumbnails
+ +--- store
+          +---- all documents and thumbnails, public and private alike
 ```
 
 1.  *metadata.xml*: this file contains the metadata itself, in XML format. The text encoding of the metadata (eg. UTF-8) is specified in the XML declaration.
 2.  *info.xml*: this is a special XML file which contains information related to the metadata (metadata about the metadata). Examples of the information in the info.xml file are: creation date, modification date, privileges This information is needed by GeoNetwork.
-3.  *public*: this is a directory used to store the metadata thumbnails and other public files. There are no restrictions on the image format but it is strongly recommended to use the portable network graphics (PNG), JPEG or GIF format.
-4.  *private*: this is a directory used to store all data (maps, shape files etc.) uploaded with the metadata in the GeoNetwork editor. Files in this directory are *private* in the sense that authorisation is required to access them. There are no restrictions on the file types that can be stored into this directory.
+3.  *store* (version 3.0 and above): this is a single directory used to store the metadata thumbnails and every other file uploaded with the metadata in the GeoNetwork editor (maps, shape files etc.), public and private alike. There are no restrictions on the file format or type. Whether a file is public or private is not determined by its location in this directory: it is recorded per file, via the access attribute on the corresponding file element of info.xml's store element (see [The info.xml file](#the-info-xml-file) below), and it is the reader's responsibility to enforce any authorisation this implies.
+
+    Prior to version 3.0, public and private files were kept in two separate top-level directories instead of this single store directory:
+
+    ``` text
+    Root
+     |
+     +--- metadata.xml
+     +--- info.xml
+     +--- public
+     |        +---- all public documents and thumbnails
+     +--- private
+               +---- all private documents and thumbnails
+    ```
+
+    -   *public* (pre-3.0): a directory used to store the metadata thumbnails and other public files. There are no restrictions on the image format but it is strongly recommended to use the portable network graphics (PNG), JPEG or GIF format.
+    -   *private* (pre-3.0): a directory used to store all data (maps, shape files etc.) uploaded with the metadata in the GeoNetwork editor. Files in this directory are *private* in the sense that authorisation is required to access them. There are no restrictions on the file types that can be stored into this directory.
+
+    A reader capable of reading version 3.0 archives must continue to support archives written in this pre-3.0 layout, since the version policy in the introduction to this section only guarantees forward compatibility for readers, not that every writer has moved to the newer minor version. Writers should always produce the store-based layout.
 
 Any other file or directory present in the MEF file should be ignored by readers that don't recognise them. This allows actors to add custom extensions to the MEF file.
 
-A MEF file can have empty public and private folders depending upon the export format, which can be:
+A MEF file can have an empty store folder (or, for pre-3.0 archives, empty public and private folders) depending upon the export format, which can be:
 
--   *simple*: both public and private are omitted.
+-   *simple*: no files are provided.
 -   *partial*: only public files are provided.
 -   *full*: both public and private files are provided.
 
@@ -69,16 +109,24 @@ Root
      +--- info.xml
      +--- applschema
      |     +--- (optional) metadata.xml (ISO19110 Feature Catalog)
-     +--- public
-     |     +---- all public documents and thumbnails
-     +--- private
-           +---- all private documents and thumbnails
+     +--- store
+           +---- all documents and thumbnails, public and private alike
 ```
 
 !!! note
 
     metadata.iso19139.xml is generated by GeoNetwork actors on export if the metadata record in metadata.xml is an ISO19115/19139 profile. On import, this record may be selected for loading if the ISO19115/19139 profile is not present.
 
+Prior to version 3.0, the store directory shown above was instead two separate public and private directories, exactly as described for the [MEF v1 file format](#mef-v1-file-format) above; the same pre-3.0/3.0 compatibility rules apply here.
+
+### Nested folders {#nested-folders}
+
+Whether an attachment originally organised into a subfolder (eg. uploaded as `images/thumbnail.png`) actually appears as a real subfolder inside the archive depends on the container version:
+
+-   **MEF v3** (the unified store directory): a nested attachment keeps its real path, eg. `store/images/thumbnail.png`. A reader must recursively walk the store directory rather than assume a flat file listing. The file's name, as registered in info.xml (see below), is its path relative to the store directory, with `/` as the separator regardless of the writer's operating system.
+-   **MEF v1/v2** (the public/private directories): this layout predates subfolder support, and a reader old enough to only understand it can't be relied on to handle a real subdirectory there. A nested attachment is instead *flattened*: every `/` in its name is replaced with `__` (eg. `images/thumbnail.png` becomes `images__thumbnail.png`), and it's written directly inside public/private with no subfolder at all. The flattened name - not the original nested one - is what's registered in info.xml, and what any online resource link inside the record's own metadata.xml pointing at that attachment is rewritten to reference, so the archive stays internally consistent. In the rare case a flattened name collides with another file already using that exact name, a short numeric suffix is inserted before the file extension to tell them apart.
+
+A reader can always tell the two layouts apart structurally: a store directory means a nested path is possible; public/private directories mean every file name is already flat, `__` and all.
 
 ## The info.xml file
 
@@ -103,8 +151,12 @@ The root element must have the following children:
     -   *popularity*: Another optional value. If present, indicates the popularity of the metadata. The value must be positive and high values mean high popularity. The criteria used to set the popularity is left to the writer. Its main purpose is to provide a metadata ordering during a search.
 2.  *categories*: a container for categories associated to this metadata. A category is just a name, like 'audio-video' that classifies the metadata to allow an easy search. Each category is specified by a category element which must have a name attribute. This attribute is used to store the category's name. If there are no categories, the categories element will be empty.
 3.  *privileges*: a container for privileges associated to this metadata. Privileges are operations that a group (which represents a set of users) can do on a metadata and are specified by a set of group elements. Each one of these, has a mandatory name attribute to store the group's name and a set of operation elements used to store the operations allowed on the metadata. Each operation element must have a name attribute which value must belong to the following set: { *view*, *download*, *notify*, *dynamic*, *featured* }. If there are no groups or the actor does not have the concept of group, the privileges element will be empty. A group element without any operation element must be ignored by readers.
-4.  *public*: All metadata thumbnails (and any other public file) must be listed here. This container contains a file element for each file. Mandatory attributes of this element are name, which represents the file's name and changeDate, which contains the date of the latest change to the file. The public element is optional but, if present, must contain all the files present in the metadata's public directory and any reader that imports these files must set the latest change date on these using the provided ones. The purpose of this element is to provide more information in the case the MEF format is used for metadata harvesting.
-5.  *private*: This element has the same purpose and structure of the public element but is related to maps and all other private files.
+4.  *store* (version 3.0 and above): A single container listing every file in the store directory (thumbnails, maps, and any other uploaded document), public and private alike. This container contains a file element for each file. Mandatory attributes of this element are name, which represents the file's name (its path relative to the store directory, see [Nested folders](#nested-folders)), changeDate, which contains the date of the latest change to the file, and access, whose value must belong to the following set: { *public*, *private* } and indicates whether the file is public or private - a matter of this attribute alone, since (from version 3.0 on) the store directory itself has no public/private split. The mimetype attribute is optional; when present, it records the file's content type. The store element is optional but, if present, must list all the files present in the metadata's store directory, and any reader that imports these files must set the latest change date and, if provided, mimetype on these using the provided values. The purpose of this element is to provide more information in the case the MEF format is used for metadata harvesting.
+
+    Prior to version 3.0, this information was split across two separate elements, public and private, described below, matching the pre-3.0 physical layout's own public/private split (see [MEF v1 file format](#mef-v1-file-format)). A reader capable of reading version 3.0 must continue to support archives that use the pre-3.0 form, since the version policy in the introduction to this section only guarantees forward compatibility for readers, not that every writer has moved to the newer minor version.
+
+    -   *public* (pre-3.0): All metadata thumbnails (and any other public file) must be listed here, using the same file element and name/changeDate attributes described above (no access or mimetype attribute). The public element is optional but, if present, must contain all the files present in the metadata's public directory. A file originally in a subfolder is registered under its flattened name (see [Nested folders](#nested-folders)), matching the flat name it's actually stored under.
+    -   *private* (pre-3.0): This element has the same purpose and structure as the pre-3.0 public element but is related to maps and all other private files.
 
 Any other element or attribute should be ignored by readers that don't understand them. This allows actors to add custom attributes or subtrees to the XML.
 
@@ -112,7 +164,40 @@ Any other element or attribute should be ignored by readers that don't understan
 
 Unless otherwise specified, all dates in this file must be in the ISO 8601 format. The pattern must be ``YYYY-MM-DDTHH:mm:SS`` and the timezone should be the local one.
 
-Example of info file:
+Example of an info file (version 3.0, unified store element):
+
+``` xml
+<info version="3.0">
+    <general>
+        <uuid>0619abc0-708b-eeda-8202-000d98959033</uuid>
+        <createDate>2006-12-11T10:33:21</createDate>
+        <changeDate>2006-12-14T08:44:43</changeDate>
+        <siteId>0619cc50-708b-11da-8202-000d9335906e</siteId>
+        <siteName>FAO main site</siteName>
+        <schema>iso19139</schema>
+        <format>full</format>
+        <localId>204</localId>
+        <isTemplate>false</isTemplate>
+    </general>
+    <categories>
+        <category name="maps"/>
+        <category name="datasets"/>
+    </categories>
+    <privileges>
+        <group name="editors">
+            <operation name="view"/>
+            <operation name="download"/>
+        </group>
+    </privileges>
+    <store>
+        <file name="small.png" changeDate="2006-10-07T13:44:32" access="public" mimetype="image/png"/>
+        <file name="large.png" changeDate="2006-11-11T09:33:21" access="public" mimetype="image/png"/>
+        <file name="map.zip" changeDate="2006-11-12T13:23:01" access="private" mimetype="application/zip"/>
+    </store>
+</info>
+```
+
+Example of a pre-3.0 info file (separate public/private elements):
 
 ``` xml
 <info version="1.0">
