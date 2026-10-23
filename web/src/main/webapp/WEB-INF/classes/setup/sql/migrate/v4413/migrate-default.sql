@@ -78,3 +78,8 @@ UPDATE SelectionsDes SET label = 'Hoff gofnodion' WHERE iddes = 0 AND langid = '
 
 UPDATE Settings SET value='4.4.13' WHERE name='system/platform/version';
 UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
+
+-- The Relations table is no longer mapped or used by the application (see the
+-- MetadataRelation entity/repository removal in this version), but it is kept
+-- in the database, unmanaged, so its historical data remains available if ever
+-- needed for recovery.
