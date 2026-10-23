@@ -59,7 +59,7 @@ public class OpenDALStore extends AbstractStore {
 
     @Override
     public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String filter, Boolean approved, boolean includeAdditionalIndexedProperties) throws Exception {
-        final int metadataId = canEdit(context, metadataUuid, approved);
+        final int metadataId = canDownload(context, metadataUuid, visibility, approved);
         final String path = getMetadataDir(metadataId) + "/" + visibility.toString() + "/";
 
         List<MetadataResource> resourceList = new ArrayList<>();
