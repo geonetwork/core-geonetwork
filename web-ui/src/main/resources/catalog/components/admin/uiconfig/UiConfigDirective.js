@@ -209,6 +209,22 @@
             true
           );
 
+          // Map viewer tools displayed as sub-options of another tool
+          scope.toolSubOptions = {
+            addLayers: [
+              "addLayersWms",
+              "addLayersWmts",
+              "addLayersWfs",
+              "addLayersEsriRest",
+              "addLayersKml"
+            ]
+          };
+          scope.isToolSubOption = function (tool) {
+            return Object.values(scope.toolSubOptions).some(function (c) {
+              return c.indexOf(tool) !== -1;
+            });
+          };
+
           scope.sortOrderChoices = ["asc", "desc"];
           scope.searchResultContactChoices = [
             "Org",

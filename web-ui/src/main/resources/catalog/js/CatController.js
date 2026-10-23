@@ -876,6 +876,11 @@
             disabledTools: {
               processes: false,
               addLayers: false,
+              addLayersWms: false,
+              addLayersWmts: false,
+              addLayersWfs: false,
+              addLayersEsriRest: false,
+              addLayersKml: false,
               projectionSwitcher: false,
               layers: false,
               legend: false,
