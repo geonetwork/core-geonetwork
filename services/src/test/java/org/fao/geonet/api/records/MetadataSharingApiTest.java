@@ -846,10 +846,7 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     public void transferOwnershipAsEditorForNotOwnedRecordFails() throws Exception {
         // Grant editing permission to SAMPLE_GROUP_ID so that anotherEditorUser passes
         // canEdit(), but the ownership check in updateOwnership() still blocks the transfer.
-        OperationAllowed editOp = new OperationAllowed();
-        editOp.getId().setMetadataId(metadataId).setGroupId(SAMPLE_GROUP_ID)
-            .setOperationId(ReservedOperation.editing.getId());
-        operationAllowedRepository.save(editOp);
+        grantEditingToGroup(SAMPLE_GROUP_ID);
 
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAs(anotherEditorUser);
@@ -878,6 +875,44 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
+    public void transferOwnershipAsEditorToUserOutsideGroupFails() throws Exception {
+        User foreignUser = UserRepositoryTest.newUser(_inc);
+        foreignUser.setUsername("foreignuser");
+        foreignUser.setProfile(Profile.Editor);
+        _userRepo.save(foreignUser);
+        _userGroupRepo.save(new UserGroup().setGroup(foreignGroup).setProfile(Profile.Editor).setUser(foreignUser));
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(editorUser);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(SAMPLE_GROUP_ID))
+                .param("userIdentifier", String.valueOf(foreignUser.getId()))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(0));
+
+        entityManager.flush();
+        entityManager.clear();
+        Metadata metadata = metadataRepository.findById(metadataId).get();
+        assertEquals(editorUser.getId(), (int) metadata.getSourceInfo().getOwner());
+    }
+
+    @Test
+    public void transferOwnershipToUnknownUserFails() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(editorUser);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(SAMPLE_GROUP_ID))
+                .param("userIdentifier", "999999")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void transferOwnershipAsReviewerForGroupRecordSucceeds() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAs(reviewerUser);
@@ -889,6 +924,66 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.numberOfRecordsProcessed").value(1));
+    }
+
+    @Test
+    public void transferOwnershipAsReviewerForRecordOutsideReviewedGroupsFails() throws Exception {
+        // Reviewer (and Editor) in foreignGroup only. Granting editing permission to foreignGroup lets the
+        // reviewer pass canEdit(), but the record group owner (SAMPLE_GROUP_ID) is not a group they review.
+        User foreignReviewer = UserRepositoryTest.newUser(_inc);
+        foreignReviewer.setUsername("foreignreviewer");
+        foreignReviewer.setProfile(Profile.Reviewer);
+        _userRepo.save(foreignReviewer);
+        _userGroupRepo.save(new UserGroup().setGroup(foreignGroup).setProfile(Profile.Reviewer).setUser(foreignReviewer));
+        _userGroupRepo.save(new UserGroup().setGroup(foreignGroup).setProfile(Profile.Editor).setUser(foreignReviewer));
+        grantEditingToGroup(foreignGroup.getId());
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(foreignReviewer);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(foreignGroup.getId()))
+                .param("userIdentifier", String.valueOf(foreignReviewer.getId()))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(0))
+            .andExpect(jsonPath("$.numberOfRecordsNotEditable").value(1));
+    }
+
+    /**
+     * UserAdmin is not restricted by the Editor / Reviewer ownership transfer rules: it can transfer a record
+     * it can edit, also to a group it doesn't belong to.
+     */
+    @Test
+    public void transferOwnershipAsUserAdminSucceeds() throws Exception {
+        User userAdmin = createUserAdminWithGroupProfile("useradmin_transfer", Profile.Editor);
+        grantEditingToGroup(SAMPLE_GROUP_ID);
+
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAs(userAdmin);
+
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(foreignGroup.getId()))
+                .param("userIdentifier", String.valueOf(targetUser.getId()))
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(1))
+            .andExpect(jsonPath("$.numberOfRecordsNotEditable").value(0));
+
+        entityManager.flush();
+        entityManager.clear();
+        Metadata metadata = metadataRepository.findById(metadataId).get();
+        assertEquals(targetUser.getId(), (int) metadata.getSourceInfo().getOwner());
+        assertEquals(foreignGroup.getId(), (int) metadata.getSourceInfo().getGroupOwner());
+    }
+
+    private void grantEditingToGroup(int groupId) {
+        OperationAllowed editOp = new OperationAllowed();
+        editOp.getId().setMetadataId(metadataId).setGroupId(groupId)
+            .setOperationId(ReservedOperation.editing.getId());
+        operationAllowedRepository.save(editOp);
     }
 
     @Test
