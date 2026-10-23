@@ -1251,6 +1251,8 @@
     "searchMapPlacement-results": "Lower right to results",
     "searchMapPlacement-": "Not display",
     "ui-searchMapPlacement-help": "Define where to display the search results map highlighting records bounding box.",
+    "ui-searchMapShowLargeMapLink": "Show the button to open the map viewer on the search map",
+    "ui-searchMapShowLargeMapLink-help": "If enabled, the search map has a button (globe icon) that opens the map viewer. The search filters are not taken to the map viewer.",
     "ui-showStatusFooterFor": "Highlight status in the record footer",
     "ui-showStatusFooterFor-help": "List of codelist values (eg. completed,historicalArchive,obsolete,superseded) for which the footer has the status background color.",
     "ui-showBatchDropdown": "Show the selection dropdown in the search page",
