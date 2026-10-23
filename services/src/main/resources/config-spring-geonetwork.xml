@@ -145,4 +145,22 @@
   </bean>
 
   <bean id="userFeedbackService" class="org.fao.geonet.api.userfeedback.service.UserFeedbackDatabaseService"/>
+
+  <bean id="resourceUploadExecutor"
+        class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+    <property name="corePoolSize"
+              value="\${api.params.uploadTaskCorePoolSize}"/>
+    <property name="maxPoolSize"
+              value="\${api.params.uploadTaskMaxPoolSize}"/>
+    <property name="queueCapacity"
+              value="\${api.params.uploadTaskQueueCapacity}"/>
+    <property name="keepAliveSeconds"
+              value="\${api.params.uploadTaskKeepAliveSeconds}"/>
+    <property name="threadNamePrefix"
+              value="resource-upload-"/>
+    <property name="waitForTasksToCompleteOnShutdown"
+              value="false"/>
+    <property name="awaitTerminationSeconds"
+              value="10"/>
+  </bean>
 </beans>
