@@ -211,8 +211,7 @@ public class OpenDALStore extends AbstractStore {
     @Override
     public String delResources(ServiceContext context, int metadataId) throws Exception {
         String path = getMetadataDir(metadataId) + "/";
-        Operator op = openDALConfiguration.getOperator();
-        deleteRecursive(op, path);
+        openDALConfiguration.getOperator().removeAll(path);
         return "Resources deleted";
     }
 
