@@ -28,6 +28,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.opendal.Entry;
 import org.apache.opendal.Metadata;
+import org.apache.opendal.OpenDALException;
 import org.apache.opendal.Operator;
 import org.apache.opendal.ReadOptions;
 import org.apache.opendal.WriteOptions;
@@ -80,25 +81,22 @@ public class OpenDALStore extends AbstractStore {
         }
         PathMatcher matcher = FileSystems.getDefault().getPathMatcher("glob:" + filter);
 
+        // A missing folder lists as empty, so any exception here is a real storage error and is not swallowed
         Operator op = openDALConfiguration.getOperator();
-        try {
-            List<Entry> entries = op.list(path);
-            for (Entry entry : entries) {
-                String entryPath = entry.getPath();
-                if (entryPath.endsWith("/")) {
-                    continue;
-                }
-                String filename = getFilenameFromPath(entryPath);
-                Path fileNamePath = Paths.get(filename).getFileName();
-
-                if (matcher.matches(fileNamePath)) {
-                    Metadata metadata = op.stat(entryPath);
-                    resourceList.add(createResourceDescription(metadataUuid, visibility, filename, metadata.getContentLength(),
-                            new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved));
-                }
+        List<Entry> entries = op.list(path);
+        for (Entry entry : entries) {
+            String entryPath = entry.getPath();
+            if (entryPath.endsWith("/")) {
+                continue;
             }
-        } catch (Exception e) {
-            // If path doesn't exist, OpenDAL might throw exception depending on service
+            String filename = getFilenameFromPath(entryPath);
+            Path fileNamePath = Paths.get(filename).getFileName();
+
+            if (matcher.matches(fileNamePath)) {
+                Metadata metadata = op.stat(entryPath);
+                resourceList.add(createResourceDescription(metadataUuid, visibility, filename, metadata.getContentLength(),
+                        new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved));
+            }
         }
 
         resourceList.sort(MetadataResourceVisibility.sortByFileName);
@@ -136,13 +134,27 @@ public class OpenDALStore extends AbstractStore {
     private ResourceHolder openResource(String path, String metadataUuid, MetadataResourceVisibility visibility, String resourceId,
                                         int metadataId, Boolean approved, ReadOptions readOptions) throws Exception {
         Operator op = openDALConfiguration.getOperator();
+        // Stat first: reading a missing file fails with code Unexpected instead of NotFound
+        Metadata metadata = stat(path, metadataUuid, resourceId);
+        InputStream is = readOptions == null ? op.createInputStream(path) : op.createInputStream(path, readOptions);
+        return new OpenDALResourceHolder(is, createResourceDescription(metadataUuid, visibility, resourceId,
+                metadata.getContentLength(), new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved));
+    }
+
+    /**
+     * Stat the resource, turning only a missing file into a ResourceNotFoundException. Other storage errors are rethrown.
+     */
+    private Metadata stat(String path, String metadataUuid, String resourceId) throws ResourceNotFoundException {
         try {
-            Metadata metadata = op.stat(path);
-            InputStream is = readOptions == null ? op.createInputStream(path) : op.createInputStream(path, readOptions);
-            return new OpenDALResourceHolder(is, createResourceDescription(metadataUuid, visibility, resourceId,
-                    metadata.getContentLength(), new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved));
-        } catch (Exception e) {
-            throw new ResourceNotFoundException("Resource " + resourceId + " not found in OpenDAL store.");
+            return openDALConfiguration.getOperator().stat(path);
+        } catch (OpenDALException e) {
+            if (e.getCode() == OpenDALException.Code.NotFound) {
+                throw new ResourceNotFoundException(
+                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                    .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                    .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+            }
+            throw e;
         }
     }
 
@@ -151,14 +163,9 @@ public class OpenDALStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         String path = getPath(metadataUuid, metadataId, visibility, resourceId);
 
-        Operator op = openDALConfiguration.getOperator();
-        try {
-            Metadata metadata = op.stat(path);
-            return createResourceDescription(metadataUuid, visibility, resourceId,
-                    metadata.getContentLength(), new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved);
-        } catch (Exception e) {
-            throw new ResourceNotFoundException("Resource " + resourceId + " not found in OpenDAL store.");
-        }
+        Metadata metadata = stat(path, metadataUuid, resourceId);
+        return createResourceDescription(metadataUuid, visibility, resourceId,
+                metadata.getContentLength(), new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved);
     }
 
     @Override
@@ -223,25 +230,39 @@ public class OpenDALStore extends AbstractStore {
     @Override
     public String delResource(ServiceContext context, String metadataUuid, String resourceId, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
-        try {
-            delResource(context, metadataUuid, MetadataResourceVisibility.PUBLIC, resourceId, approved);
-        } catch (Exception e) {
-            // ignore
+        for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
+            if (tryDelResource(getPath(metadataUuid, metadataId, visibility, resourceId))) {
+                return String.format("Metadata resource '%s' removed.", resourceId);
+            }
         }
-        try {
-            delResource(context, metadataUuid, MetadataResourceVisibility.PRIVATE, resourceId, approved);
-        } catch (Exception e) {
-            // ignore
-        }
-        return "Resource deleted";
+        return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
     @Override
     public String delResource(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
-        String path = getPath(metadataUuid, metadataId, visibility, resourceId);
-        openDALConfiguration.getOperator().delete(path);
-        return "Resource deleted";
+        if (tryDelResource(getPath(metadataUuid, metadataId, visibility, resourceId))) {
+            return String.format("Metadata resource '%s' removed.", resourceId);
+        }
+        return String.format("Unable to remove resource '%s'.", resourceId);
+    }
+
+    /**
+     * Delete the file if it exists. OpenDAL's delete succeeds silently on a missing file, so check first
+     * to report it, like JCloudStore. Storage errors are rethrown.
+     */
+    private boolean tryDelResource(String path) {
+        Operator op = openDALConfiguration.getOperator();
+        try {
+            op.stat(path);
+        } catch (OpenDALException e) {
+            if (e.getCode() == OpenDALException.Code.NotFound) {
+                return false;
+            }
+            throw e;
+        }
+        op.delete(path);
+        return true;
     }
 
     @Override
@@ -257,8 +278,7 @@ public class OpenDALStore extends AbstractStore {
     public MetadataResource getResourceDescription(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String filename, Boolean approved) throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
         String path = getPath(metadataUuid, metadataId, visibility, filename);
-        Operator op = openDALConfiguration.getOperator();
-        Metadata metadata = op.stat(path);
+        Metadata metadata = stat(path, metadataUuid, filename);
         return createResourceDescription(metadataUuid, visibility, filename,
                 metadata.getContentLength(), new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved);
     }
