@@ -25,9 +25,12 @@
 package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
+import org.apache.commons.io.IOUtils;
 import org.apache.opendal.Entry;
 import org.apache.opendal.Metadata;
 import org.apache.opendal.Operator;
+import org.apache.opendal.ReadOptions;
+import org.apache.opendal.WriteOptions;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceContainer;
@@ -40,9 +43,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
@@ -52,6 +55,10 @@ import java.util.Date;
 import java.util.List;
 
 public class OpenDALStore extends AbstractStore {
+
+    // Object stores need multipart parts of at least 5 MiB (S3), so buffer uploads in 8 MiB chunks
+    // instead of relying on the 16 KB writes coming from OperatorOutputStream.
+    private static final WriteOptions UPLOAD_OPTIONS = WriteOptions.builder().chunk(8L * 1024 * 1024).build();
 
     @Autowired
     private OpenDALConfiguration openDALConfiguration;
@@ -120,11 +127,19 @@ public class OpenDALStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         String path = getPath(metadataUuid, metadataId, visibility, resourceId);
 
+        return openResource(path, metadataUuid, visibility, resourceId, metadataId, approved, null);
+    }
+
+    /**
+     * Open a stream on the resource, or on the given range of it, without loading it into memory.
+     */
+    private ResourceHolder openResource(String path, String metadataUuid, MetadataResourceVisibility visibility, String resourceId,
+                                        int metadataId, Boolean approved, ReadOptions readOptions) throws Exception {
         Operator op = openDALConfiguration.getOperator();
         try {
             Metadata metadata = op.stat(path);
-            byte[] data = op.read(path);
-            return new OpenDALResourceHolder(data, createResourceDescription(metadataUuid, visibility, resourceId,
+            InputStream is = readOptions == null ? op.createInputStream(path) : op.createInputStream(path, readOptions);
+            return new OpenDALResourceHolder(is, createResourceDescription(metadataUuid, visibility, resourceId,
                     metadata.getContentLength(), new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved));
         } catch (Exception e) {
             throw new ResourceNotFoundException("Resource " + resourceId + " not found in OpenDAL store.");
@@ -157,25 +172,9 @@ public class OpenDALStore extends AbstractStore {
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
         String path = getPath(metadataUuid, metadataId, visibility, resourceId);
 
-        Operator op = openDALConfiguration.getOperator();
-        try {
-            Metadata metadata = op.stat(path);
-            // OpenDAL read with range is possible, but the Java binding API might vary.
-            // Standard read(path) reads all. For range we might need to use op.read(path).range(start, end) if available.
-            // As of 0.46.4, op.read(path) returns byte[].
-            // In OpenDAL Java, range read might be done via Operator.reader(path) but let's check if it exists.
-            // For now, let's do a simple implementation reading all and subsetting if needed,
-            // or better, if the API supports it.
-            byte[] data = op.read(path); // Simplification
-            int length = (int) (end - start + 1);
-            byte[] rangeData = new byte[length];
-            System.arraycopy(data, (int) start, rangeData, 0, length);
-
-            return new OpenDALResourceHolder(rangeData, createResourceDescription(metadataUuid, visibility, resourceId,
-                    metadata.getContentLength(), new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved));
-        } catch (Exception e) {
-            throw new ResourceNotFoundException("Resource " + resourceId + " not found in OpenDAL store.");
-        }
+        // The metadata keeps the full object length, like S3Store, not the length of the range
+        return openResource(path, metadataUuid, visibility, resourceId, metadataId, approved,
+                ReadOptions.builder().offset(start).length(end - start + 1).build());
     }
 
     @Override
@@ -184,8 +183,9 @@ public class OpenDALStore extends AbstractStore {
         String path = getPath(metadataUuid, metadataId, visibility, filename);
 
         Operator op = openDALConfiguration.getOperator();
-        byte[] data = org.apache.commons.io.IOUtils.toByteArray(is);
-        op.write(path, data);
+        try (OutputStream os = op.createOutputStream(path, UPLOAD_OPTIONS)) {
+            IOUtils.copy(is, os);
+        }
 
         Metadata metadata = op.stat(path);
         return createResourceDescription(metadataUuid, visibility, filename,
@@ -201,9 +201,9 @@ public class OpenDALStore extends AbstractStore {
             String oldPath = getPath(metadataUuid, metadataId, resource.getVisibility(), resourceId);
             String newPath = getPath(metadataUuid, metadataId, visibility, resourceId);
 
+            // Server-side copy, the data doesn't go through the JVM
             Operator op = openDALConfiguration.getOperator();
-            byte[] data = op.read(oldPath);
-            op.write(newPath, data);
+            op.copy(oldPath, newPath);
             op.delete(oldPath);
 
             Metadata metadata = op.stat(newPath);
@@ -218,18 +218,6 @@ public class OpenDALStore extends AbstractStore {
         String path = getMetadataDir(metadataId) + "/";
         openDALConfiguration.getOperator().removeAll(path);
         return "Resources deleted";
-    }
-
-    private void deleteRecursive(Operator op, String path) throws Exception {
-        List<Entry> entries = op.list(path);
-        for (Entry entry : entries) {
-            if (entry.getPath().endsWith("/")) {
-                deleteRecursive(op, entry.getPath());
-            } else {
-                op.delete(entry.getPath());
-            }
-        }
-        op.delete(path);
     }
 
     @Override
@@ -262,16 +250,7 @@ public class OpenDALStore extends AbstractStore {
         checkResourceId(resourceId);
 
         String path = getPath(metadataUuid, metadataId, visibility, resourceId);
-
-        Operator op = openDALConfiguration.getOperator();
-        try {
-            Metadata metadata = op.stat(path);
-            byte[] data = op.read(path);
-            return new OpenDALResourceHolder(data, createResourceDescription(metadataUuid, visibility, resourceId,
-                    metadata.getContentLength(), new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved));
-        } catch (Exception e) {
-            throw new ResourceNotFoundException("Resource " + resourceId + " not found in OpenDAL store.");
-        }
+        return openResource(path, metadataUuid, visibility, resourceId, metadataId, approved, null);
     }
 
     @Override
@@ -312,17 +291,19 @@ public class OpenDALStore extends AbstractStore {
     }
 
     public static class OpenDALResourceHolder implements ResourceHolder {
-        private final byte[] data;
+        private final InputStream inputStream;
+        private final InputStreamResource resource;
         private final MetadataResource metadata;
 
-        public OpenDALResourceHolder(byte[] data, MetadataResource metadata) {
-            this.data = data;
+        public OpenDALResourceHolder(InputStream inputStream, MetadataResource metadata) {
+            this.inputStream = inputStream;
+            this.resource = new InputStreamResource(inputStream);
             this.metadata = metadata;
         }
 
         @Override
         public Resource getResource() {
-            return new InputStreamResource(new ByteArrayInputStream(data));
+            return resource;
         }
 
         @Override
@@ -332,7 +313,7 @@ public class OpenDALStore extends AbstractStore {
 
         @Override
         public void close() throws IOException {
-            // Nothing to do
+            inputStream.close();
         }
     }
 }
