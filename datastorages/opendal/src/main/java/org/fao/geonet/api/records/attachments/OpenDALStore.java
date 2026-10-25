@@ -32,7 +32,9 @@ import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.domain.MetadataResource;
 import org.fao.geonet.domain.MetadataResourceContainer;
 import org.fao.geonet.domain.MetadataResourceVisibility;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.lib.Lib;
 import org.fao.geonet.resources.OpenDALConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
@@ -56,6 +58,9 @@ public class OpenDALStore extends AbstractStore {
 
     @Autowired
     private SettingManager settingManager;
+
+    @Autowired
+    private GeonetworkDataDirectory dataDirectory;
 
     @Override
     public List<MetadataResource> getResources(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String filter, Boolean approved, boolean includeAdditionalIndexedProperties) throws Exception {
@@ -291,7 +296,19 @@ public class OpenDALStore extends AbstractStore {
     }
 
     protected String getMetadataDir(int metadataId) {
-        return "metadata/" + metadataId;
+        Path metadataFullDir = Lib.resource.getMetadataDir(dataDirectory, metadataId);
+        Path systemDir = dataDirectory.getSystemDataDir();
+        Path metadataDir;
+        // Same key layout as JCloudStore: relative to the system dir, else to the filesystem root.
+        if (metadataFullDir.startsWith(systemDir)) {
+            metadataDir = systemDir.relativize(metadataFullDir);
+        } else if (metadataFullDir.isAbsolute()) {
+            metadataDir = metadataFullDir.getRoot().relativize(metadataFullDir);
+        } else {
+            metadataDir = metadataFullDir;
+        }
+        // On Windows the separator is "\", object store keys need "/"
+        return metadataDir.toString().replace(metadataDir.getFileSystem().getSeparator(), "/");
     }
 
     public static class OpenDALResourceHolder implements ResourceHolder {
