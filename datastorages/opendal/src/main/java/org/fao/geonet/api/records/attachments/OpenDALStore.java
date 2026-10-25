@@ -180,7 +180,7 @@ public class OpenDALStore extends AbstractStore {
 
     @Override
     public MetadataResource putResource(ServiceContext context, String metadataUuid, String filename, InputStream is, Date changeDate, MetadataResourceVisibility visibility, Boolean approved) throws Exception {
-        int metadataId = canEdit(context, metadataUuid, visibility, approved);
+        int metadataId = canEdit(context, metadataUuid, approved);
         String path = getPath(metadataUuid, metadataId, visibility, filename);
 
         Operator op = openDALConfiguration.getOperator();
