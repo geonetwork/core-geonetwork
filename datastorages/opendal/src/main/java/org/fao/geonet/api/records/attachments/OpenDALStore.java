@@ -254,7 +254,20 @@ public class OpenDALStore extends AbstractStore {
 
     @Override
     public ResourceHolder getResourceInternal(String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
-        return getResource(null, metadataUuid, visibility, resourceId, approved);
+        int metadataId = getAndCheckMetadataId(metadataUuid, approved);
+        checkResourceId(resourceId);
+
+        String path = getPath(metadataUuid, metadataId, visibility, resourceId);
+
+        Operator op = openDALConfiguration.getOperator();
+        try {
+            Metadata metadata = op.stat(path);
+            byte[] data = op.read(path);
+            return new OpenDALResourceHolder(data, createResourceDescription(metadataUuid, visibility, resourceId,
+                    metadata.getContentLength(), new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved));
+        } catch (Exception e) {
+            throw new ResourceNotFoundException("Resource " + resourceId + " not found in OpenDAL store.");
+        }
     }
 
     @Override
