@@ -25,6 +25,9 @@
                 <entry key="region" value="${opendal.region}"/>
                 <entry key="username" value="${opendal.username}"/>
                 <entry key="password" value="${opendal.password}"/>
+                <entry key="container" value="${opendal.container}"/>
+                <entry key="account_name" value="${opendal.account_name}"/>
+                <entry key="account_key" value="${opendal.account_key}"/>
             </map>
         </property>
     </bean>
