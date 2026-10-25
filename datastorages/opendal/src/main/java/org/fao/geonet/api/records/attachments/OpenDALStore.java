@@ -274,6 +274,7 @@ public class OpenDALStore extends AbstractStore {
     }
 
     protected String getPath(String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
+        checkResourceId(resourceId);
         return getMetadataDir(metadataId) + "/" + visibility.toString() + "/" + getFilename(metadataUuid, resourceId);
     }
 
