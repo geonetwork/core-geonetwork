@@ -3077,10 +3077,23 @@
 <li><strong>Application URL</strong>: Define the URL for the home page. In the majority of cases this can be left as the default.</li>
 <li><strong>Show search box</strong>: Select this check box to determine whether the search box is visible on the home page.</li>
 <li><strong>Show social bar in footer</strong>: Select this check box to show the social media bar in the footer of the home page.</li>
-<li><strong>Show mosaic</strong>: Select this check box to determine whether the featured records mosaic is visible on the home page.</li>
-<li><strong>Show maps</strong>: Select this check box to determine whether the maps panel is visible on the home page.</li>
-<li><strong>Show welcome message in home page</strong>: Select this check box to display a welcome message at the top of the home page. The message is configured in <a href="../languages-and-translations/#home-welcome-message">Languages and translations</a> with the key <code>home-welcome-message</code> for the main portal, or <code>home-welcome-message-{portal}</code> for a sub-portal (for example <code>home-welcome-message-inspire</code>). Each sub-portal can enable or disable its own message. The message is not displayed in languages without a translation.</li>
-<li><strong>Fluid container for Home and Search</strong>: Select this check box to determine whether the search box is full width in the browser page or if it is fixed width and centred.</li>
+<li><strong>Show mosaic</strong>: Select this check box to determine whether the featured records mosaic is visible on the home page. Clicking an image opens the record page, unless a link is configured in <strong>Overview mosaic records</strong>. Images that fail to load (eg. a broken overview link) are not displayed; for random records, another record is displayed instead.</li>
+<li><strong>Overview mosaic search query</strong>: Search query used to pick random records for the mosaic (8 with the grid layout, 9 with the gallery layout) when no <strong>Overview mosaic records</strong> are configured. Only records with an overview are used, and each record contributes one image (its first overview); an image is never shown twice. Default (also used when the query is empty) is <code>-cl_status.key:obsolete</code>, to exclude obsolete records. For example, use <code>resourceType:dataset</code> to only show datasets.</li>
+<li>
+<p><strong>Overview mosaic records</strong>: List of records to always display in the mosaic, instead of random ones. For each entry, set:</p>
+<ul>
+<li><strong>UUID</strong>: the identifier of the record. The first overview of the record is used as image.</li>
+<li><strong>Link</strong> (optional): the page to open when clicking the image. If empty, the record page is opened. The link must start with <code>#/</code> and opens a page of the catalog in the user language, for example <code>#/search?any=land%20cover</code> for a pre-filtered search. Other links (eg. full URLs) are ignored and the record page is opened instead.</li>
+</ul>
+<p>Use the arrows to change the order of the images.</p>
+<p>Records that do not exist, have no overview, that the current user is not allowed to view, or that are outside the filter of the current portal (when the home page of a sub-portal is displayed) are not displayed. This means private records can be added to the list: they are only displayed to users who can view them. Note that the user interface configuration is public, so the UUIDs in this list can be read by anyone (but not the content of the records).
+-   <strong>Overview mosaic layout</strong>: Both layouts are displayed on a grey band.
+-   <strong>Gallery</strong> (default): the images are displayed with different sizes, using the full width of the page.
+-   <strong>Grid</strong>: the images are displayed with the same size in a centred area, with at most 4 images per row (eg. 6 images are displayed as 2 rows of 3, 7 images as a row of 4 and a row of 3).
+-   <strong>Show maps</strong>: Select this check box to determine whether the maps panel is visible on the home page.
+-   <strong>Show welcome message in home page</strong>: Select this check box to display a welcome message at the top of the home page. The message is configured in <a href="../languages-and-translations/#home-welcome-message">Languages and translations</a> with the key <code>home-welcome-message</code> for the main portal, or <code>home-welcome-message-{portal}</code> for a sub-portal (for example <code>home-welcome-message-inspire</code>). Each sub-portal can enable or disable its own message. The message is not displayed in languages without a translation.
+-   <strong>Fluid container for Home and Search</strong>: Select this check box to determine whether the search box is full width in the browser page or if it is fixed width and centred.</p>
+</li>
 </ul>
 <p><img alt="" src="../../../../administrator-guide/configuring-the-catalog/img/ui-settings-homepage.png" /></p>
 <h2 id="user-interface-config-searchpage">Search application</h2>
