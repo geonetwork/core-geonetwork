@@ -271,11 +271,12 @@
               });
           } else if (scope.query) {
             // random records
+            var max = parseInt(scope.size) || 10;
             var query = {
               _source: { includes: ["uuid", "overview", "resourceTitleObject"] },
               from: 0,
               // Fetch spare records to replace duplicated images and images that fail to load
-              size: (parseInt(scope.size) || 10) * 2,
+              size: max * 2,
               query: {
                 bool: {
                   must: [
@@ -311,7 +312,7 @@
                 r.data.hits.hits.map(function (h) {
                   return { uuid: h._source.uuid };
                 }),
-                parseInt(scope.size)
+                max
               );
             });
           }
