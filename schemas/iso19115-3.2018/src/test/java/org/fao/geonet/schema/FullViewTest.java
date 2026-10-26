@@ -106,6 +106,53 @@ public class FullViewTest {
         TestSupport.assertGeneratedDataByteMatchExpected("two-lineages-and-constraints-ISO19115-3-full-view.html", actual, GENERATE_EXPECTED_FILE);
     }
 
+    @Test
+    public void dcatViewWithIncompleteDate() throws Exception {
+        Path xslFile = getResourceInsideSchema("formatter/dcat/view.xsl");
+        Path xmlFile = getResource("UpperRhineCastles-iso19115-3.2018.xml");
+        Element md = Xml.loadFile(xmlFile);
+
+        Element extent = (Element) Xml.selectElement(md,
+            "mdb:identificationInfo/mri:MD_DataIdentification/mri:extent/gex:EX_Extent",
+            org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin.allNamespaces.asList());
+        org.junit.Assert.assertNotNull(extent);
+
+        String temporalXml = "<gex:temporalElement xmlns:gex=\"http://standards.iso.org/iso/19115/-3/gex/1.0\" xmlns:gml=\"http://www.opengis.net/gml/3.2\">\n" +
+            "  <gex:EX_TemporalExtent>\n" +
+            "    <gex:extent>\n" +
+            "      <gml:TimePeriod gml:id=\"T001\">\n" +
+            "        <gml:begin>\n" +
+            "          <gml:TimeInstant gml:id=\"T002\">\n" +
+            "            <gml:description>start</gml:description>\n" +
+            "            <gml:timePosition>2020-01-01</gml:timePosition>\n" +
+            "          </gml:TimeInstant>\n" +
+            "        </gml:begin>\n" +
+            "      </gml:TimePeriod>\n" +
+            "    </gex:extent>\n" +
+            "  </gex:EX_TemporalExtent>\n" +
+            "</gex:temporalElement>";
+        Element temporalElement = Xml.loadString(temporalXml, false);
+        extent.addContent(temporalElement);
+
+        String incompleteDateXml = "<mdb:dateInfo xmlns:mdb=\"http://standards.iso.org/iso/19115/-3/mdb/2.0\" " +
+            "xmlns:cit=\"http://standards.iso.org/iso/19115/-3/cit/2.0\" " +
+            "xmlns:gco=\"http://standards.iso.org/iso/19115/-3/gco/1.0\">\n" +
+            "  <cit:CI_Date>\n" +
+            "    <cit:date>\n" +
+            "      <gco:DateTime />\n" +
+            "    </cit:date>\n" +
+            "    <cit:dateType>\n" +
+            "      <cit:CI_DateTypeCode codeList=\"http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode\" codeListValue=\"creation\">creation</cit:CI_DateTypeCode>\n" +
+            "    </cit:dateType>\n" +
+            "  </cit:CI_Date>\n" +
+            "</mdb:dateInfo>";
+        Element dateInfo = Xml.loadString(incompleteDateXml, false);
+        md.addContent(dateInfo);
+
+        Element transformed = Xml.transform(md, xslFile);
+        org.junit.Assert.assertNotNull(transformed);
+    }
+
     private static Path addRequiredSchemasAndDisableConflictingOne() throws URISyntaxException {
         return getResource("config/schemaplugin-uri-catalog.xml");
     }
