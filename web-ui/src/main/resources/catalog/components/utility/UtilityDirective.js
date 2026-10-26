@@ -112,13 +112,20 @@
 
   module.directive("gnRecordMosaic", [
     "$http",
-    function ($http) {
+    "gnLangs",
+    function ($http, gnLangs) {
       return {
         restrict: "A",
         replace: true,
         scope: {
           query: "@gnRecordMosaic",
+          // Records already loaded (eg. related records in the record view):
+          // all their overviews are displayed, without links.
           records: "=",
+          // Curated list of {uuid, link}. When not empty, query is ignored.
+          items: "=?",
+          // Home page layout: "gallery" (default) or "grid"
+          layout: "@",
           sort: "@",
           size: "@",
           imageSize: "@"
@@ -128,32 +135,146 @@
           scope.images = [];
           scope.imageSize = parseInt(attrs.imagesize) || 300;
 
+          function getOverview(h) {
+            return (
+              h.overview ||
+              (h._source && h._source.overview) ||
+              (h.fields && h.fields.overview)
+            );
+          }
+
+          // All images of the records (record view), no image twice.
           function loadImages(hits) {
+            var seen = {};
             hits &&
               hits.map &&
               hits.map(function (h) {
-                var overview =
-                  h.overview ||
-                  (h._source && h._source.overview) ||
-                  (h.fields && h.fields.overview);
-                if (overview) {
-                  scope.images = scope.images.concat(overview);
-                }
+                [].concat(getOverview(h) || []).forEach(function (o) {
+                  var key = o && (o.url || o.data);
+                  if (key && !seen[key]) {
+                    seen[key] = true;
+                    scope.images.push(o);
+                  }
+                });
               });
             if (scope.size) {
               scope.images = scope.images.slice(0, scope.size);
             }
           }
 
+          // Home page tiles for the items ({uuid, link}, in display order) found in
+          // the search hits: one image per record (the first overview), no image
+          // twice, max tiles displayed.
+          function loadTiles(hits, items, max) {
+            var hitsByUuid = {},
+              seen = {},
+              tiles = [];
+            // Keeps the first hit if a UUID appears twice
+            hits.forEach(function (h) {
+              hitsByUuid[h._source.uuid] = hitsByUuid[h._source.uuid] || h;
+            });
+            items.forEach(function (item) {
+              var h = hitsByUuid[item.uuid],
+                overview = h && [].concat(getOverview(h) || [])[0],
+                key = overview && (overview.url || overview.data);
+              // Not found (eg. not visible to the user) or no overview: expected,
+              // so not logged.
+              if (!key || seen[key]) {
+                return;
+              }
+              seen[key] = true;
+              var title = h._source.resourceTitleObject || {};
+              // Only links inside the application (#/...), to prevent redirecting
+              // users to other sites.
+              var link = /^#\//.test(item.link) ? item.link : "#/metadata/" + item.uuid;
+              if (item.link && link !== item.link) {
+                console.warn(
+                  "Mosaic: only links starting with #/ are allowed, ignoring " + item.link
+                );
+              }
+              tiles.push({
+                id: tiles.length,
+                image: overview,
+                title: title["lang" + gnLangs.current] || title.default,
+                link: link
+              });
+            });
+            // Extra tiles (beyond max) replace the ones with a broken image.
+            scope.tiles = tiles;
+            scope.limit = max || tiles.length;
+            updateLayout();
+          }
+
+          function updateLayout() {
+            var count = Math.min(scope.limit, scope.tiles.length);
+            scope.visible = count;
+            // Balanced rows, 4 columns at most (eg. 6 > 3+3, 7 > 4+3), 3 at least
+            // so 1 or 2 records are not stretched to the full width (centred).
+            scope.columns = Math.max(3, Math.ceil(count / Math.ceil(count / 4)) || 0);
+          }
+
+          // Hide images failing to load (eg. 404). The error event does not bubble,
+          // so it is captured on the mosaic element.
+          element[0].addEventListener(
+            "error",
+            function (e) {
+              if (e.target.tagName !== "IMG") {
+                return;
+              }
+              var tile = e.target.closest("[data-tile-id]");
+              (tile || e.target.parentNode).style.display = "none";
+              if (tile && scope.tiles) {
+                // Remove the tile (instead of only hiding it) so the gallery
+                // nth-child sizes and the grid columns ignore it.
+                var id = parseInt(tile.getAttribute("data-tile-id"));
+                scope.$applyAsync(function () {
+                  scope.tiles = scope.tiles.filter(function (t) {
+                    return t.id !== id;
+                  });
+                  updateLayout();
+                });
+              }
+            },
+            true
+          );
+
           if (scope.records) {
             loadImages(scope.records);
           }
 
-          if (scope.query) {
+          var items = (angular.isArray(scope.items) ? scope.items : [])
+            .filter(function (i) {
+              return i && i.uuid && i.uuid.trim();
+            })
+            .map(function (i) {
+              return { uuid: i.uuid.trim(), link: i.link };
+            });
+
+          // configured records
+          if (items.length > 0) {
+            $http
+              .post("../api/search/records/_search", {
+                _source: { includes: ["uuid", "overview", "resourceTitleObject"] },
+                size: items.length,
+                query: {
+                  terms: {
+                    uuid: items.map(function (i) {
+                      return i.uuid;
+                    })
+                  }
+                }
+              })
+              .then(function (r) {
+                loadTiles(r.data.hits.hits, items);
+              });
+          } else if (scope.query) {
+            // random records
+            var max = parseInt(scope.size) || 10;
             var query = {
-              _source: { includes: ["overview"] },
+              _source: { includes: ["uuid", "overview", "resourceTitleObject"] },
               from: 0,
-              size: scope.size || 10,
+              // Fetch spare records to replace duplicated images and images that fail to load
+              size: max * 2,
               query: {
                 bool: {
                   must: [
@@ -184,7 +305,13 @@
             }
 
             $http.post("../api/search/records/_search", query).then(function (r) {
-              loadImages(r.data.hits.hits);
+              loadTiles(
+                r.data.hits.hits,
+                r.data.hits.hits.map(function (h) {
+                  return { uuid: h._source.uuid };
+                }),
+                max
+              );
             });
           }
         }

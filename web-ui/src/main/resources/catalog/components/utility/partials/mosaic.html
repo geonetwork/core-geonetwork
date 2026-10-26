@@ -1,5 +1,36 @@
-<div class="gallery gn-record-mosaic">
+<div
+  data-ng-class="visible > 0 && layout === 'grid' ? 'gn-home-mosaic' : 'gallery gn-record-mosaic' + (visible > 0 && layout !== 'grid' ? ' gn-home-mosaic-gallery' : '')"
+>
   <div data-ng-repeat="i in images">
     <img data-ng-src="{{i.data || (i.url | thumbnailUrlSize: imageSize)}}" />
+  </div>
+  <div
+    data-ng-repeat="t in tiles | limitTo: limit"
+    data-ng-if="layout !== 'grid'"
+    class="gn-mosaic-tile"
+    data-tile-id="{{t.id}}"
+  >
+    <a data-ng-href="{{t.link}}" title="{{t.title}}">
+      <img
+        data-ng-src="{{t.image.data || (t.image.url | thumbnailUrlSize: imageSize)}}"
+        alt="{{t.title}}"
+      />
+    </a>
+  </div>
+  <div data-ng-if="visible > 0 && layout === 'grid'" class="container">
+    <div class="gn-mosaic-grid" style="--gn-mosaic-columns: {{columns}}">
+      <a
+        data-ng-repeat="t in tiles | limitTo: limit"
+        data-ng-href="{{t.link}}"
+        title="{{t.title}}"
+        class="gn-mosaic-tile"
+        data-tile-id="{{t.id}}"
+      >
+        <img
+          data-ng-src="{{t.image.data || (t.image.url | thumbnailUrlSize: imageSize)}}"
+          alt="{{t.title}}"
+        />
+      </a>
+    </div>
   </div>
 </div>
