@@ -59,6 +59,7 @@ import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.ClientHttpResponse;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -181,30 +182,31 @@ class Harvester implements IHarvester<HarvestResult> {
                     }
 
                     for (int i = 0; i < listOfUrlForPages.size(); i++) {
-                        if (i != 0 || isCrawlerMode) {
-                            content = retrieveUrl(listOfUrlForPages.get(i));
-                            if (type == SimpleUrlResourceType.XML
-                                || type == SimpleUrlResourceType.RDFXML) {
-                                xmlObj = Xml.loadString(content, false);
-                            } else {
-                                jsonObj = objectMapper.readTree(content);
-                            }
-                        }
                         Map<String, Element> uuids = new HashMap<>();
                         try {
+                            if (i != 0 || isCrawlerMode) {
+                                content = retrieveUrl(listOfUrlForPages.get(i));
+                                if (type == SimpleUrlResourceType.XML
+                                    || type == SimpleUrlResourceType.RDFXML) {
+                                    xmlObj = Xml.loadString(content, false);
+                                } else {
+                                    jsonObj = objectMapper.readTree(content);
+                                }
+                            }
                             if (type == SimpleUrlResourceType.XML) {
                                 collectRecordsFromXml(xmlObj, uuids, aligner);
                             } else if (type == SimpleUrlResourceType.RDFXML) {
                                 collectRecordsFromRdf(xmlObj, uuids, aligner);
                             } else if (type == SimpleUrlResourceType.JSON) {
-                                collectRecordsFromJson(jsonObj, uuids, aligner);
+                                collectRecordsFromJson(jsonObj, listOfUrlForPages.get(i), uuids, aligner);
                             }
                             aligner.align(uuids, errors);
                             listOfUuids.addAll(uuids.keySet());
                         } catch (Exception e) {
+                            error = true;
                             errors.add(new HarvestError(this.context, e));
-                            log.error(String.format("Failed to collect record in response at path %s. Error is: %s",
-                                params.loopElement, e.getMessage()));
+                            log.error(String.format("Failed to collect records from %s at path %s. Error is: %s",
+                                listOfUrlForPages.get(i), params.loopElement, e.getMessage()));
                         }
                     }
                 } catch (Exception t) {
@@ -221,16 +223,18 @@ class Harvester implements IHarvester<HarvestResult> {
                 }
 
                 log.info("Total records processed in all searches :" + listOfUuids.size());
-                if (error) {
-                    log.warning("Due to previous errors the align process has not been called");
-                }
             }
-            aligner.cleanupRemovedRecords(listOfUuids);
+            if (error) {
+                log.warning("Due to previous errors, removal of records no longer present in the source has been skipped");
+            } else {
+                aligner.cleanupRemovedRecords(listOfUuids);
+            }
             return aligner.getResult();
         }
     }
 
     private void collectRecordsFromJson(JsonNode jsonObj,
+                                        String sourceUrl,
                                         Map<String, Element> uuids,
                                         Aligner aligner) {
         SimpleUrlPathMode mode = params.recordIdPathMode;
@@ -258,7 +262,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 log.error(String.format("Failed to collect record UUID at path %s. Error is: %s",
                         params.recordIdPath, e.getMessage()));
             }
-            String apiUrlPath = params.url.split("\\?")[0];
+            String apiUrlPath = sourceUrl.split("\\?")[0];
             try {
                 URL apiUrl = new URL(apiUrlPath);
                 String nodeUrl = apiUrl.getProtocol() + "://" + apiUrl.getAuthority();
@@ -468,7 +472,8 @@ class Harvester implements IHarvester<HarvestResult> {
         return urlList;
     }
 
-    private List<String> findAllUrlsInJson(String urlCrawlerPath, JsonNode jsonObj) {
+    @VisibleForTesting
+    List<String> findAllUrlsInJson(String urlCrawlerPath, JsonNode jsonObj) {
         List <String> urlList;
         List<JsonNode> nodes = selectJsonRecords(jsonObj, determineJsonPathMode(urlCrawlerPath), urlCrawlerPath);
         log.debug(String.format("%d URL found in JSON response.", nodes.size()));
@@ -585,6 +590,9 @@ class Harvester implements IHarvester<HarvestResult> {
             httpResponse = requestFactory.execute(httpMethod);
             int status = httpResponse.getRawStatusCode();
             Log.debug(LOGGER_NAME, "Request status code: " + status);
+            if (status < 200 || status >= 300) {
+                throw new IOException(String.format("Request to %s failed with status code %d", url, status));
+            }
             return CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
         } finally {
             if (httpMethod != null) {

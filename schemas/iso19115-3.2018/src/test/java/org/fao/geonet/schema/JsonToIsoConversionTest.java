@@ -40,6 +40,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
 
 import static org.junit.Assert.assertFalse;
 
@@ -82,7 +83,8 @@ public class JsonToIsoConversionTest extends XslProcessTest {
         Element inputElement = Xml.loadFile(xmlFile);
         String expectedXml = Xml.getString(inputElement);
 
-        Element resultElement = Xml.transform(xmlFromJSON, xslFile);
+        // Conversions defaulting to the current date use this date param to get a stable output.
+        Element resultElement = Xml.transform(xmlFromJSON, xslFile, Map.<String, Object>of("date", "2026-10-08"));
         String resultOfConversion = Xml.getString(resultElement);
 
         Diff diff = DiffBuilder

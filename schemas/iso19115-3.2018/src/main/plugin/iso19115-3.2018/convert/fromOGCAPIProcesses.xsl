@@ -13,7 +13,6 @@
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
-                xmlns:util="java:org.fao.geonet.util.XslUtil"
                 exclude-result-prefixes="#all">
   <!--
   Convert OGC API Processes metadata to ISO 19115-3.2018 XML format.
@@ -25,6 +24,10 @@
 
   <xsl:strip-space elements="*"/>
 
+  <!-- Date used for metadata and resource dates. Default to the conversion date. -->
+  <xsl:param name="date"
+             select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
+
   <xsl:template match="/record">
     <mdb:MD_Metadata>
       <xsl:call-template name="add-iso19115-3.2018-namespaces"/>
@@ -32,7 +35,9 @@
         <mcc:MD_Identifier>
           <mcc:code>
             <gco:CharacterString>
-              <xsl:value-of select="util:md5Hex(apiUrl)"/>
+              <!-- uuid is the record identifier set by the harvester (see recordIdPath),
+               fallback to the process id. -->
+              <xsl:value-of select="(uuid[. != ''], id)[1]"/>
             </gco:CharacterString>
           </mcc:code>
         </mcc:MD_Identifier>
@@ -83,7 +88,7 @@
 
       <xsl:call-template name="build-date">
         <xsl:with-param name="tag" select="'mdb:dateInfo'"/>
-        <xsl:with-param name="value" select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
+        <xsl:with-param name="value" select="$date"/>
       </xsl:call-template>
 
       <mdb:metadataStandard>
@@ -106,7 +111,7 @@
 
               <xsl:call-template name="build-date">
                 <xsl:with-param name="tag" select="'cit:date'"/>
-                <xsl:with-param name="value" select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
+                <xsl:with-param name="value" select="$date"/>
               </xsl:call-template>
 
               <cit:edition>

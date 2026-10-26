@@ -27,14 +27,14 @@ Provide the following information:
       If both Basic Auth and API Key are configured, both will be sent in the request as headers. This supports servers that require or accept multiple authentication schemes.
     - *Element to loop on*: Property/element containing a list of the record entries. (Indicated as an absolute path from the document root.) eg. `/datasets`
     - *Element for the UUID of each record* : Property containing the record id. eg. `/datasetid`
-    - *JSON path or XPath pointing to element containing URL pointing to the documents to harvest* : Collect all URLs in a given property.
-    - *Pagination parameters*: (optional)
+    - *JSON path or XPath pointing to element containing URL pointing to the documents to harvest* : (optional) Crawler mode. The harvester collects every URL found at this path in the response, then harvests each of those documents instead of the response itself. eg. `$.processes[*].links[?(@.rel=='self')].href` for an OGC API Processes list. The mode of this path is always auto-detected; the *Path mode* setting does not apply to it.
+    - *Pagination parameters*: (optional) Not used in crawler mode.
         - *Element for the number of records to collect*: Property indicating the total count of record entries. (Indicated as an absolute path from the document root.) eg. `/nhits`
         - *From URL parameter*: Property indicating the first record item on the current "page" eg. `start`
         - *Size URL parameter*: Property indicating the number of records contained in the current "page" eg. `rows`
     - *Path mode* : Auto will detect the path mode (JSONPath, JSONPointer or XPath) based on the path provided. You can also force a specific mode if needed.
 
-![Path mode](img/harvesting-simpleurl-pathmode.png)
+      ![Path mode](img/harvesting-simpleurl-pathmode.png)
 
 - **Configure response processing for Simple URL**
     - *XSL transformation to apply*: Name of the conversion schema to use, which must be available as XSL on the GeoNetwork instance.
