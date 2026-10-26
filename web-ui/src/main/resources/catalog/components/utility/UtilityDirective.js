@@ -177,11 +177,9 @@
               var h = hitsByUuid[item.uuid],
                 overview = h && [].concat(getOverview(h) || [])[0],
                 key = overview && (overview.url || overview.data);
-              if (!key) {
-                console.warn("Mosaic: no overview for record " + item.uuid);
-                return;
-              }
-              if (seen[key]) {
+              // Not found (eg. not visible to the user) or no overview: expected,
+              // so not logged.
+              if (!key || seen[key]) {
                 return;
               }
               seen[key] = true;
