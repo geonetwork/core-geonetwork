@@ -1206,7 +1206,7 @@
     "ui-mosaicQuery": "Overview mosaic search query",
     "ui-mosaicQuery-help": "Search query used to pick random records for the overview mosaic when no records are configured below. For example: <code>resourceType:dataset</code>. If empty, the default query <code>-cl_status.key:obsolete</code> is used, to exclude obsolete records.",
     "ui-mosaicRecords": "Overview mosaic records",
-    "ui-mosaicRecords-help": "Records to display in the overview mosaic, in this order, using the first overview of each record. Records without an overview or that the user is not allowed to view are not displayed. The link is optional and defaults to the record page. The link must start with <code>#/</code> (eg. <code>#/search?any=land%20cover</code>) to open a page of the catalog in the user language. Other links are ignored. When empty, random records matching the search query are displayed.",
+    "ui-mosaicRecords-help": "Records to display in the overview mosaic, in this order, using the first overview of each record. Records without an overview, that the user is not allowed to view, or that are outside the filter of the current portal (sub-portal home page) are not displayed. The link is optional and defaults to the record page. The link must start with <code>#/</code> (eg. <code>#/search?any=land%20cover</code>) to open a page of the catalog in the user language. Other links are ignored. When empty, random records matching the search query are displayed.",
     "ui-mosaicRecords-link": "Link (optional)",
     "ui-mosaicLayout": "Overview mosaic layout",
     "ui-mosaicLayout-help": "Layout of the overview mosaic in the home page.",
