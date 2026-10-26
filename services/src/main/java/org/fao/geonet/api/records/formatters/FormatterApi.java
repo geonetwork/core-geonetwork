@@ -280,8 +280,14 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         if (changeDate != null) {
             final long changeDateAsTime = changeDate.toDate().getTime();
             long roundedChangeDate = changeDateAsTime / 1000 * 1000;
-            if (request.checkNotModified(eTag(context, language), roundedChangeDate) &&
-                context.getBean(CacheConfig.class).allowCaching(key)) {
+            // The validator changes with the viewer, the record, the format of the output and the
+            // build, so an upgrade that changes the formatters does not reuse the old output.
+            final String etag = eTag(context, language) + "-" + formatType.name() + "-" + changeDateAsTime
+                + "-" + Integer.toHexString(String.valueOf(context.getBean(SystemInfo.class).getBuildDate()).hashCode());
+            // The output depends on the user: the validators are only sent to anonymous visitors.
+            if (!context.getUserSession().isAuthenticated() &&
+                context.getBean(CacheConfig.class).allowCaching(key) &&
+                request.checkNotModified(etag, roundedChangeDate)) {
                 if (!skipPopularityBool && approved) {
                     context.getBean(DataManager.class).increasePopularity(context, String.valueOf(metadata.getId()));
                 }
@@ -483,13 +489,13 @@ public class FormatterApi extends AbstractFormatService implements ApplicationLi
         String filename = "metadata-" + metadataUuid + "." + formatType;
         response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
         response.setStatus(HttpServletResponse.SC_OK);
+        response.setHeader("Cache-Control", "no-cache");
         if (formatType == FormatType.pdf) {
             writerAsPDF(context, response, formattedMetadata, lang);
         } else {
             response.setCharacterEncoding(Constants.ENCODING);
             response.setContentType(formatType.contentType);
             response.setContentLength(formattedMetadata.length);
-            response.setHeader("Cache-Control", "no-cache");
             response.getOutputStream().write(formattedMetadata);
         }
     }
