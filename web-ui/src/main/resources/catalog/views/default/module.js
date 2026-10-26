@@ -252,23 +252,43 @@
       updateMinimapSplit();
       $scope.$on("$locationChangeSuccess", updateMinimapSplit);
 
-      // The results scroll on their own above a maximized map, which cuts off a
-      // menu at the top of the map: fit an open menu in the space left above it
+      // The results scroll on their own above a maximized map, which clips a menu
+      // at the top of the map: pin an open menu to the window so it shows over the
+      // map, and move it along when the results scroll. Not in a card: its hover
+      // transform would become the reference for the fixed position.
       $(document).on("shown.bs.dropdown", function (e) {
         var menu = $(e.target).find(".dropdown-menu").first();
-        if (!$(document.documentElement).hasClass("gn-minimap-split") || !menu.length) {
+        if (
+          !$(document.documentElement).hasClass("gn-minimap-split") ||
+          !menu.length ||
+          menu.closest(".gn-card").length
+        ) {
           return;
         }
-        var space =
-          document.body.getBoundingClientRect().bottom -
-          menu[0].getBoundingClientRect().top -
-          5;
-        if (menu.outerHeight() > space && space > 50) {
-          menu.css({ maxHeight: space, overflowY: "auto" });
-        }
+        var rect = menu[0].getBoundingClientRect();
+        var scrollTop = document.body.scrollTop;
+        menu.css({
+          position: "fixed",
+          top: rect.top,
+          left: rect.left,
+          right: "auto",
+          bottom: "auto",
+          width: rect.width
+        });
+        $(document.body).on("scroll.gnDropdown", function () {
+          menu.css("top", rect.top + scrollTop - document.body.scrollTop);
+        });
       });
       $(document).on("hidden.bs.dropdown", function (e) {
-        $(e.target).find(".dropdown-menu").first().css({ maxHeight: "", overflowY: "" });
+        $(document.body).off("scroll.gnDropdown");
+        $(e.target).find(".dropdown-menu").first().css({
+          position: "",
+          top: "",
+          left: "",
+          right: "",
+          bottom: "",
+          width: ""
+        });
       });
 
       $scope.setMinimapState = function (state) {
