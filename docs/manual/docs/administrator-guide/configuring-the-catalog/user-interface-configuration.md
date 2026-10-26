@@ -71,7 +71,7 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 
     Use the arrows to change the order of the images.
 
-    Records that do not exist, have no overview, or that the current user is not allowed to view are not displayed. This means private records can be added to the list: they are only displayed to users who can view them. Note that the user interface configuration is public, so the UUIDs in this list can be read by anyone (but not the content of the records).
+    Records that do not exist, have no overview, that the current user is not allowed to view, or that are outside the filter of the current portal (when the home page of a sub-portal is displayed) are not displayed. This means private records can be added to the list: they are only displayed to users who can view them. Note that the user interface configuration is public, so the UUIDs in this list can be read by anyone (but not the content of the records).
 -   **Overview mosaic layout**: Both layouts are displayed on a grey band.
     -   **Gallery** (default): the images are displayed with different sizes, using the full width of the page.
     -   **Grid**: the images are displayed with the same size in a centred area, with at most 4 images per row (eg. 6 images are displayed as 2 rows of 3, 7 images as a row of 4 and a row of 3).
