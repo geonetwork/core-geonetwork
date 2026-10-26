@@ -164,7 +164,20 @@ Any other element or attribute should be ignored by readers that don't understan
 
 Unless otherwise specified, all dates in this file must be in the ISO 8601 format. The pattern must be ``YYYY-MM-DDTHH:mm:SS`` and the timezone should be the local one.
 
-Example of an info file (version 3.0, unified store element):
+Example of an info file (version 3.0, unified store element), for a record whose store directory contains nested folders:
+
+``` text
+store
+ +--- legend.pdf
+ +--- thumbnails
+ |     +--- small.png
+ |     +--- large.png
+ +--- data
+       +--- roads
+             +--- map.zip
+```
+
+Each file is registered by its path relative to the store directory, using `/` as the separator:
 
 ``` xml
 <info version="3.0">
@@ -190,14 +203,15 @@ Example of an info file (version 3.0, unified store element):
         </group>
     </privileges>
     <store>
-        <file name="small.png" changeDate="2006-10-07T13:44:32" access="public" mimetype="image/png"/>
-        <file name="large.png" changeDate="2006-11-11T09:33:21" access="public" mimetype="image/png"/>
-        <file name="map.zip" changeDate="2006-11-12T13:23:01" access="private" mimetype="application/zip"/>
+        <file name="legend.pdf" changeDate="2006-10-07T13:40:12" access="public" mimetype="application/pdf"/>
+        <file name="thumbnails/small.png" changeDate="2006-10-07T13:44:32" access="public" mimetype="image/png"/>
+        <file name="thumbnails/large.png" changeDate="2006-11-11T09:33:21" access="public" mimetype="image/png"/>
+        <file name="data/roads/map.zip" changeDate="2006-11-12T13:23:01" access="private" mimetype="application/zip"/>
     </store>
 </info>
 ```
 
-Example of a pre-3.0 info file (separate public/private elements):
+Example of a pre-3.0 info file (separate public/private elements) for the same record. The public and private directories are flat, so the nested files are registered under their flattened names (see [Nested folders](#nested-folders)):
 
 ``` xml
 <info version="1.0">
@@ -223,11 +237,12 @@ Example of a pre-3.0 info file (separate public/private elements):
         </group>
     </privileges>
     <public>
-        <file name="small.png" changeDate="2006-10-07T13:44:32"/>
-        <file name="large.png" changeDate="2006-11-11T09:33:21"/>
+        <file name="legend.pdf" changeDate="2006-10-07T13:40:12"/>
+        <file name="thumbnails__small.png" changeDate="2006-10-07T13:44:32"/>
+        <file name="thumbnails__large.png" changeDate="2006-11-11T09:33:21"/>
     </public>
     <private>
-        <file name="map.zip" changeDate="2006-11-12T13:23:01"/>
+        <file name="data__roads__map.zip" changeDate="2006-11-12T13:23:01"/>
     </private>
 </info>
 ```
