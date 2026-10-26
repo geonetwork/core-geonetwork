@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -35,10 +35,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -3187,14 +3187,55 @@
 <p><img alt="" src="../../../../administrator-guide/configuring-the-catalog/img/ui-settings-mapprojection3.png" /></p>
 <div class="admonition info">
 <p class="admonition-title">Important</p>
-</div>
 <p>If the configuration of a projection is incomplete or invalid, the map may fail to load.</p>
 <p>If a projection is defined which is not supported by the source of the map layer, the map application will reproject map images at the client side. This may cause unexpected behaviour, such as rotated or distorted labels.</p>
+</div>
 </li>
 <li>
 <p><strong>Optional Map Viewer Tools</strong> The checkboxes in this section define the tools available to the user in the right toolbar of the main map. Elements that are not checked are not visible.</p>
+<p>Below <strong>Add layers</strong>, the sub-options <strong>WMS service</strong>, <strong>WMTS service</strong>, <strong>WFS service</strong>, <strong>ArcGIS REST service</strong> and <strong>Files (KML, KMZ, GPX, GeoJSON, TopoJSON)</strong> define the sources available in the <strong>Add layers</strong> panel. They can only be changed when <strong>Add layers</strong> is checked. When all the services are unchecked, the <strong>Services</strong> tab is hidden. When <strong>Files</strong> is unchecked, the <strong>Files</strong> tab is hidden and files can no longer be dropped on the map.</p>
+<p><img alt="" src="../../../../administrator-guide/configuring-the-catalog/img/ui-settings-maptools-addlayers.png" /></p>
+<p>These options only control the <strong>Add layers</strong> panel.</p>
+<p><img alt="" src="../../../../administrator-guide/configuring-the-catalog/img/ui-settings-maptools-addlayers-panel.png" /></p>
+<p>For WMS and WMTS links in records, they apply as follows:</p>
+<ul>
+<li>
+<p>A link to a service without a layer name opens the service in the <strong>Add layers</strong> panel, so the user can pick a layer. If that service type is disabled, the map shows a warning, for example "Adding WMS services is disabled in this catalog", and the panel does not open. In ISO19139, this is an online resource with a service protocol and no name:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="nt">&lt;gmd:onLine&gt;</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">  </span><span class="nt">&lt;gmd:CI_OnlineResource&gt;</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&lt;gmd:linkage&gt;</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">      </span><span class="nt">&lt;gmd:URL&gt;</span>https://example.org/geoserver/wms<span class="nt">&lt;/gmd:URL&gt;</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">&lt;/gmd:linkage&gt;</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">&lt;gmd:protocol&gt;</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="w">      </span><span class="nt">&lt;gco:CharacterString&gt;</span>OGC:WMS<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="w">    </span><span class="nt">&lt;/gmd:protocol&gt;</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="w">  </span><span class="nt">&lt;/gmd:CI_OnlineResource&gt;</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="nt">&lt;/gmd:onLine&gt;</span>
+</span></code></pre></div>
 </li>
-<li><strong>OGC Service to use as a graticule</strong>: This is optional and allows the use of an external service to display the graticule on the map.</li>
+<li>
+<p>A link that names a layer adds that layer straight to the map, even when its service type is disabled. In ISO19139, the layer name goes in <code>gmd:name</code>:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&lt;gmd:onLine&gt;</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&lt;gmd:CI_OnlineResource&gt;</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">    </span><span class="nt">&lt;gmd:linkage&gt;</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w">      </span><span class="nt">&lt;gmd:URL&gt;</span>https://example.org/geoserver/wms<span class="nt">&lt;/gmd:URL&gt;</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w">    </span><span class="nt">&lt;/gmd:linkage&gt;</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="nt">&lt;gmd:protocol&gt;</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">      </span><span class="nt">&lt;gco:CharacterString&gt;</span>OGC:WMS<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">    </span><span class="nt">&lt;/gmd:protocol&gt;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">    </span><span class="nt">&lt;gmd:name&gt;</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">      </span><span class="nt">&lt;gco:CharacterString&gt;</span>topp:states<span class="nt">&lt;/gco:CharacterString&gt;</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">    </span><span class="nt">&lt;/gmd:name&gt;</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">  </span><span class="nt">&lt;/gmd:CI_OnlineResource&gt;</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="nt">&lt;/gmd:onLine&gt;</span>
+</span></code></pre></div>
+</li>
+</ul>
+<p>WFS and ArcGIS REST links in records are not affected by these options.</p>
+</li>
+<li>
+<p><strong>OGC Service to use as a graticule</strong>: This is optional and allows the use of an external service to display the graticule on the map.</p>
+</li>
 </ul>
 <h3 id="user-interface-config-viewermap">Viewer Map Configuration</h3>
 <p>This section is for configuring the map shown when viewing a record.</p>
@@ -3221,9 +3262,9 @@
 </ul>
 <p>Examples of layers:</p>
 <p>This WMS layer will be shown but only when the map is on <code>EPSG:4326</code>:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="p">{</span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"wms"</span><span class="p">,</span><span class="nt">"title"</span><span class="p">:</span><span class="s2">"OI.OrthoimageCoverage"</span><span class="p">,</span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"OI.OrthoimageCoverage"</span><span class="p">,</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="nt">"url"</span><span class="p">:</span><span class="s2">"http://www.ign.es/wms-inspire/pnoa-ma?request=GetCapabilities&amp;service=WMS"</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="nt">"projectionList"</span><span class="p">:[</span><span class="s2">"EPSG:4326"</span><span class="p">]}</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="p">{</span><span class="nt">"type"</span><span class="p">:</span><span class="s2">"wms"</span><span class="p">,</span><span class="nt">"title"</span><span class="p">:</span><span class="s2">"OI.OrthoimageCoverage"</span><span class="p">,</span><span class="nt">"name"</span><span class="p">:</span><span class="s2">"OI.OrthoimageCoverage"</span><span class="p">,</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="nt">"url"</span><span class="p">:</span><span class="s2">"http://www.ign.es/wms-inspire/pnoa-ma?request=GetCapabilities&amp;service=WMS"</span><span class="p">,</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="nt">"projectionList"</span><span class="p">:[</span><span class="s2">"EPSG:4326"</span><span class="p">]}</span>
 </span></code></pre></div>
 <h3 id="search-map-configuration">Search Map Configuration</h3>
 <p>This section defines the configuration for the mini map shown on the search page. It uses the same options as in <a href="./#user-interface-config-viewermap">Viewer Map Configuration</a>.</p>
@@ -3251,12 +3292,12 @@
 <li><strong>Related records facets config</strong>: Define the configuration for facets of related records.</li>
 <li>
 <p><strong>Record View custom menu items</strong>: Use this setting to control the order of the default record view actions and any static pages configured for the record view toolbar. By default, the record view toolbar uses the following menu keys:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="p">[</span><span class="s2">"gn-recordview-favorite-menu"</span><span class="p">,</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w"> </span><span class="s2">"gn-recordview-edit-menu"</span><span class="p">,</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w"> </span><span class="s2">"gn-recordview-delete-menu"</span><span class="p">,</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="w"> </span><span class="s2">"gn-recordview-manage-menu"</span><span class="p">,</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="w"> </span><span class="s2">"gn-recordview-download-menu"</span><span class="p">,</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w"> </span><span class="s2">"gn-recordview-display-menu"</span><span class="p">]</span>
+<div class="language-json highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="p">[</span><span class="s2">"gn-recordview-favorite-menu"</span><span class="p">,</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w"> </span><span class="s2">"gn-recordview-edit-menu"</span><span class="p">,</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w"> </span><span class="s2">"gn-recordview-delete-menu"</span><span class="p">,</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w"> </span><span class="s2">"gn-recordview-manage-menu"</span><span class="p">,</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w"> </span><span class="s2">"gn-recordview-download-menu"</span><span class="p">,</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w"> </span><span class="s2">"gn-recordview-display-menu"</span><span class="p">]</span>
 </span></code></pre></div>
 <p>If this list is empty, only those default entries are shown and static pages are not added automatically.</p>
 <p>Custom static pages can be inserted between these default entries. Static pages used there must be created for the <code>RECORD_VIEW_MENU</code> section and referenced by page identifier (for example <code>documentation</code>). The <code>gn-</code> prefix is reserved for built-in entries and should not be used for custom page identifiers. See <a href="../static-pages/">Static pages</a>.</p>
@@ -3483,10 +3524,10 @@
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>
