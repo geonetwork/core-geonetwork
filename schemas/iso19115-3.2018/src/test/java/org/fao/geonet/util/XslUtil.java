@@ -124,6 +124,10 @@ public class XslUtil {
         return false;
     }
 
+    public static boolean isUserProfileCreateEnabled() {
+        return true;
+    }
+
     public static boolean isUserProfileUpdateEnabled() {
         return true;
     }
