@@ -25,6 +25,7 @@ package org.fao.geonet.proxy;
 import jeeves.server.UserSession;
 import jeeves.server.sources.http.ServletPathFinder;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.Header;
 import org.apache.http.HttpEntityEnclosingRequest;
 import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
@@ -34,6 +35,7 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.entity.BufferedHttpEntity;
@@ -108,6 +110,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
     private static final String TARGET_URI_NAME = "targetUri";
     private static final String P_EXCLUDE_HOSTS = "excludeHosts";
     private static final String P_ALLOW_PORTS = "allowPorts";
+    private static final String P_FOLLOW_REDIRECTS = "followRedirects";
     // An IPv4 address can be written as a single number, at most the ten digits of 4294967295.
     private static final Pattern DECIMAL_ADDRESS_PATTERN = Pattern.compile("\\d{1,10}");
     private static final long MAX_IPV4_ADDRESS = 4294967295L;
@@ -147,6 +150,8 @@ public class URITemplateProxyServlet extends ProxyServlet {
     private Pattern excludeHostsPattern;
     // Allowed ports allowed to access through the proxy
     private Set<Integer> allowPorts = new HashSet<>(Arrays.asList(80, 443));
+    // Follow every redirect, rather than only an upgrade of the same URL from http to https
+    boolean followAllRedirects = true;
 
     @Override
     protected void copyRequestHeader(HttpServletRequest servletRequest, HttpRequest proxyRequest,
@@ -246,6 +251,18 @@ public class URITemplateProxyServlet extends ProxyServlet {
             Set<Integer> validPorts = Arrays.stream(additionalAllowPorts.split("\\|"))
                 .filter(StringUtils::isNumeric).map(Integer::valueOf).collect(Collectors.toSet());
             this.allowPorts.addAll(validPorts);
+        }
+
+        // When set, the client always handles redirects and the redirect strategy decides which ones
+        // to follow: all of them, or only an upgrade of the same URL from http to https.
+        String followRedirects = getConfigValue(P_FOLLOW_REDIRECTS);
+        if (isBlank(followRedirects)) {
+            followRedirects = getConfigParam(P_FOLLOW_REDIRECTS);
+        }
+
+        if (StringUtils.isNotBlank(followRedirects)) {
+            this.doHandleRedirects = true;
+            this.followAllRedirects = Boolean.parseBoolean(followRedirects.trim());
         }
     }
 
@@ -539,6 +556,31 @@ public class URITemplateProxyServlet extends ProxyServlet {
     }
 
     /**
+     * Check whether a redirect only moves the same URL from http to https.
+     *
+     * <p>Many services answer http with a redirect to the same address over https. Passing that
+     * redirect back to the browser would make it fetch the service directly, which the proxy exists
+     * to avoid, so it is followed even when other redirects are not.</p>
+     *
+     * @param from URL that was requested
+     * @param to   destination of the redirect
+     * @return {@code true} if only the scheme changes, from http to https, on the default ports
+     */
+    static boolean isHttpsUpgrade(URI from, URI to) {
+        return "http".equalsIgnoreCase(from.getScheme())
+            && "https".equalsIgnoreCase(to.getScheme())
+            && from.getHost() != null && from.getHost().equalsIgnoreCase(to.getHost())
+            && (from.getPort() == -1 || from.getPort() == 80)
+            && (to.getPort() == -1 || to.getPort() == 443)
+            && pathOf(from).equals(pathOf(to))
+            && Objects.equals(from.getRawQuery(), to.getRawQuery());
+    }
+
+    private static String pathOf(URI uri) {
+        return isBlank(uri.getRawPath()) ? "/" : uri.getRawPath();
+    }
+
+    /**
      * Build the redirect strategy the proxy client follows redirects with.
      *
      * @return a strategy that checks the destination of every hop
@@ -557,6 +599,32 @@ public class URITemplateProxyServlet extends ProxyServlet {
      * and port would have been accepted had the caller named them.</p>
      */
     private class ExcludedHostAwareRedirectStrategy extends DefaultRedirectStrategy {
+        @Override
+        public boolean isRedirected(HttpRequest request, HttpResponse response, HttpContext context)
+            throws ProtocolException {
+            if (!super.isRedirected(request, response, context)) {
+                return false;
+            }
+            if (followAllRedirects) {
+                return true;
+            }
+
+            // Not getLocationURI: it records the location, and a second call would report a loop.
+            Header locationHeader = response.getFirstHeader("location");
+            if (locationHeader == null) {
+                return false;
+            }
+            try {
+                URI from = new URI(request.getRequestLine().getUri());
+                if (!from.isAbsolute()) {
+                    from = URIUtils.rewriteURI(from, HttpClientContext.adapt(context).getTargetHost());
+                }
+                return isHttpsUpgrade(from, URIUtils.resolve(from, createLocationURI(locationHeader.getValue())));
+            } catch (URISyntaxException e) {
+                return false;
+            }
+        }
+
         @Override
         public URI getLocationURI(HttpRequest request, HttpResponse response, HttpContext context)
             throws ProtocolException {

@@ -105,8 +105,6 @@ Independently of the security mode, the proxy refuses a request whose host match
 -   the IPv6 unique local, link-local and site-local ranges, ``fc00::/7``, ``fe80::/10`` and ``fec0::/10``
 -   the IPv6 ranges that carry an IPv4 address, ``::/96`` and the NAT64 prefix ``64:ff9b::/96``
 
-The destination of a redirect is put through the same check before it is followed, so a service that answers with one cannot send the request on to a host the list keeps out of reach.
-
 An address can be written in more than one way, so the host is compared in several forms: as it appears in the URL, without the brackets that surround an IPv6 literal, and in the canonical form of the address it denotes. An entry therefore applies whichever way a caller spells an address, and a single entry covers every spelling of it.
 
 #### Adding an IPv6 address
@@ -128,14 +126,32 @@ Three details are worth keeping in mind:
 -   Keep the colon that closes a prefix. ``2001:db8:2:.*`` stops at the addresses under ``2001:db8:2``, whereas ``2001:db8:2.*`` would also take in ``2001:db8:20`` and ``2001:db8:2a``, which are different networks.
 -   A prefix is straightforward to write when its length is a multiple of 16, since it ends on a group boundary. For a length such as /56, which cuts a group in two, exclude the enclosing /48 rather than trying to express the exact boundary in a regular expression.
 
+#### Redirects {#proxy-redirects}
+
+A service may answer a request with a redirect to another URL. By default the proxy follows one kind of redirect only: one that moves the same URL from ``http`` to ``https``, keeping the host, the path and the query, on the default ports. Many services answer that way when they only accept ``https``, and following the redirect keeps them working through the proxy.
+
+Any other redirect is passed back to the caller as it was received. The browser then requests the new location itself, without the proxy, so a service that does not enable CORS cannot be read from there. In the map viewer, for example, the layers of such a service fail to load.
+
+To have the proxy follow every redirect, set ``followRedirects`` to ``true``:
+
+``` xml
+<init-param>
+  <param-name>followRedirects</param-name>
+  <param-value>true</param-value>
+</init-param>
+```
+
+The destination of each redirect is then put through the same host and port checks as the requested URL before it is followed, so a redirect cannot send the request on to a host that ``excludeHosts`` keeps out of reach, or to a port that ``allowPorts`` does not open. Those are the only checks applied to it: in ``DB_LINK_CHECK`` mode a redirect can lead anonymous users to a host that no record links to. Enable it only when the services the catalogue relies on need it.
+
 #### Setting them without editing web.xml {#proxy-settings-outside-web-xml}
 
-Both settings can be given outside ``WEB-INF/web.xml``, which is what you want when the file sits inside a container image. Each is looked up in turn as an environment variable, a Java system property, and an entry of ``WEB-INF/config.properties``, and the value in ``web.xml`` is used only when none of the three is set.
+These settings can be given outside ``WEB-INF/web.xml``, which is what you want when the file sits inside a container image. Each is looked up in turn as an environment variable, a Java system property, and an entry of ``WEB-INF/config.properties``, and the value in ``web.xml`` is used only when none of the three is set.
 
 The name of the property is the name of the servlet, ``HttpProxy``, between the ``geonetwork`` prefix and the name of the setting:
 
 -   ``geonetwork.HttpProxy.excludeHosts``
 -   ``geonetwork.HttpProxy.allowPorts``
+-   ``geonetwork.HttpProxy.followRedirects``
 
 As an environment variable the same name is written in upper case with underscores in place of the dots:
 
@@ -143,6 +159,7 @@ As an environment variable the same name is written in upper case with underscor
 docker run --name geonetwork \
   -e 'GEONETWORK_HTTPPROXY_EXCLUDEHOSTS=^(localhost|...|internal\.example\.org)$' \
   -e 'GEONETWORK_HTTPPROXY_ALLOWPORTS=8080|8443' \
+  -e 'GEONETWORK_HTTPPROXY_FOLLOWREDIRECTS=true' \
   geonetwork
 ```
 

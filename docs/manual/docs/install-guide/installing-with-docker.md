@@ -26,4 +26,4 @@ docker run --name some-geonetwork -d \
 
 The value replaces the shipped list, abbreviated here as ``...``, so start from the value in ``WEB-INF/web.xml`` and add to it. Dropping an entry from it puts that host back within reach of the proxy.
 
-Both settings, the form of their names, and what the default list covers are described in [Hosts and ports the proxy can reach](../maintainer-guide/production-use/index.md#proxy-hosts-and-ports).
+These settings, ``excludeHosts``, ``allowPorts`` and ``followRedirects``, the form of their names, and what the default list covers are described in [Hosts and ports the proxy can reach](../maintainer-guide/production-use/index.md#proxy-hosts-and-ports).

@@ -357,6 +357,37 @@ public class URITemplateProxyServletTest {
         assertEquals(new URI("https://example.org:443/x"), followRedirectTo("https://example.org:443/x"));
     }
 
+    /**
+     * Ask the redirect strategy whether it follows a 302 from the given URL to the given location.
+     */
+    private boolean isRedirectFollowed(String from, String location) throws Exception {
+        HttpResponse response = new BasicHttpResponse(HttpVersion.HTTP_1_1, 302, "Found");
+        response.addHeader("Location", location);
+        return servlet.createRedirectStrategy().isRedirected(
+            new BasicHttpRequest("GET", from), response, HttpClientContext.create());
+    }
+
+    @Test
+    public void withoutFollowRedirectsOnlyAnHttpsUpgradeIsFollowed() throws Exception {
+        servlet.followAllRedirects = false;
+
+        assertTrue(isRedirectFollowed("http://example.org/wms?a=1", "https://example.org/wms?a=1"));
+        assertTrue(isRedirectFollowed("http://example.org", "https://EXAMPLE.org/"));
+        assertTrue(isRedirectFollowed("http://example.org:80/x", "https://example.org:443/x"));
+
+        assertFalse(isRedirectFollowed("http://example.org/wms", "https://example.com/wms"));
+        assertFalse(isRedirectFollowed("http://example.org/wms", "https://example.org/other"));
+        assertFalse(isRedirectFollowed("http://example.org/wms?a=1", "https://example.org/wms?a=2"));
+        assertFalse(isRedirectFollowed("http://example.org/wms", "https://example.org:8443/wms"));
+        assertFalse(isRedirectFollowed("http://example.org/wms", "http://example.org/wms/"));
+        assertFalse(isRedirectFollowed("https://example.org/wms", "http://example.org/wms"));
+    }
+
+    @Test
+    public void withFollowRedirectsAnyRedirectIsFollowed() throws Exception {
+        assertTrue(isRedirectFollowed("http://example.org/wms", "https://example.com/elsewhere"));
+    }
+
     @Test
     public void publicHostsAreNotExcluded() throws Exception {
         assertNotExcluded("http://example.com/");
