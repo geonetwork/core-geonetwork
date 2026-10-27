@@ -23,7 +23,9 @@
 package org.fao.geonet.auditable;
 
 import java.util.Optional;
+import org.apache.commons.lang.StringUtils;
 import org.keycloak.KeycloakPrincipal;
+import org.keycloak.representations.AccessToken;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -59,7 +61,10 @@ public class UsernameAuditorAware implements AuditorAware<String> {
             return ((UserDetails) principal).getUsername();
         } else if (principal instanceof KeycloakPrincipal
             && ((KeycloakPrincipal<?>) principal).getKeycloakSecurityContext().getToken() != null) {
-            return ((KeycloakPrincipal<?>) principal).getKeycloakSecurityContext().getToken().getPreferredUsername();
+            // Same claims as KeycloakUserUtils uses to create the user
+            AccessToken token = ((KeycloakPrincipal<?>) principal).getKeycloakSecurityContext().getToken();
+            String username = token.getPreferredUsername() != null ? token.getPreferredUsername() : token.getName();
+            return StringUtils.left(username, 256);
         } else if (principal instanceof OidcUser) {
             return ((OidcUser) principal).getPreferredUsername();
         } else if (principal instanceof OAuth2User) {

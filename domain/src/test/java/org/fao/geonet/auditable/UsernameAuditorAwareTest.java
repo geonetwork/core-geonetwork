@@ -24,12 +24,26 @@ package org.fao.geonet.auditable;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+
 import org.fao.geonet.domain.User;
 import org.junit.Test;
 import org.keycloak.KeycloakPrincipal;
 import org.keycloak.KeycloakSecurityContext;
 import org.keycloak.representations.AccessToken;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.OidcIdToken;
+import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
+import org.springframework.security.oauth2.core.user.DefaultOAuth2User;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 
 public class UsernameAuditorAwareTest {
 
@@ -51,5 +65,49 @@ public class UsernameAuditorAwareTest {
     @Test
     public void stringPrincipal() {
         assertEquals("anonymousUser", UsernameAuditorAware.getUsername(new TestingAuthenticationToken("anonymousUser", null)));
+    }
+    @Test
+    public void keycloakPrincipalWithoutPreferredUsername() {
+        AccessToken token = new AccessToken();
+        token.setName("Keycloak User");
+        KeycloakPrincipal<KeycloakSecurityContext> principal =
+            new KeycloakPrincipal<>("a-uuid", new KeycloakSecurityContext(null, token, null, null));
+        assertEquals("Keycloak User", UsernameAuditorAware.getUsername(new TestingAuthenticationToken(principal, null)));
+    }
+
+    @Test
+    public void oidcPrincipal() {
+        OidcIdToken idToken = OidcIdToken.withTokenValue("token")
+            .subject("a-uuid")
+            .claim(StandardClaimNames.PREFERRED_USERNAME, "oidcuser")
+            .build();
+        DefaultOidcUser principal = new DefaultOidcUser(Collections.emptyList(), idToken);
+        assertEquals("oidcuser", UsernameAuditorAware.getUsername(new TestingAuthenticationToken(principal, null)));
+    }
+
+    @Test
+    public void oAuth2Principal() {
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put(StandardClaimNames.SUB, "a-uuid");
+        attributes.put(StandardClaimNames.PREFERRED_USERNAME, "oauth2user");
+        DefaultOAuth2User principal = new DefaultOAuth2User(Collections.emptyList(), attributes, StandardClaimNames.SUB);
+        assertEquals("oauth2user", UsernameAuditorAware.getUsername(new TestingAuthenticationToken(principal, null)));
+    }
+
+    @Test
+    public void jwtAuthentication() {
+        Jwt jwt = Jwt.withTokenValue("token").header("alg", "none").subject("jwtuser").build();
+        assertEquals("jwtuser", UsernameAuditorAware.getUsername(new JwtAuthenticationToken(jwt)));
+    }
+
+    @Test
+    public void anonymousAuditor() {
+        SecurityContextHolder.getContext().setAuthentication(new AnonymousAuthenticationToken(
+            "key", "anonymousUser", Collections.singletonList(new SimpleGrantedAuthority("ROLE_ANONYMOUS"))));
+        try {
+            assertEquals(Optional.of("anonymousUser"), new UsernameAuditorAware().getCurrentAuditor());
+        } finally {
+            SecurityContextHolder.clearContext();
+        }
     }
 }
