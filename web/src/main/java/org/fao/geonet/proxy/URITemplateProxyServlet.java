@@ -33,6 +33,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolException;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.protocol.HttpClientContext;
@@ -112,11 +113,15 @@ public class URITemplateProxyServlet extends ProxyServlet {
     private static final String TARGET_URI_NAME = "targetUri";
     private static final String P_EXCLUDE_HOSTS = "excludeHosts";
     private static final String P_ALLOW_PORTS = "allowPorts";
+    private static final String P_ALLOW_HOSTS = "allowHosts";
+    // Answer to any request refused for its host or port, so that the response says nothing more
+    private static final String URL_NOT_ALLOWED_MESSAGE = "The proxy does not allow to access to the provided URL.";
     private static final String P_FOLLOW_REDIRECTS = "followRedirects";
     // An IPv4 address can be written as a single number, at most the ten digits of 4294967295.
     private static final Pattern DECIMAL_ADDRESS_PATTERN = Pattern.compile("\\d{1,10}");
     private static final long MAX_IPV4_ADDRESS = 4294967295L;
-    private static final String URL_NOT_ALLOWED_MESSAGE = "The proxy does not allow to access to the provided URL.";
+    // The NAT64 well-known prefix 64:ff9b::/96, the first 12 bytes of an address under it
+    private static final byte[] NAT64_PREFIX = {0, 0x64, (byte) 0xff, (byte) 0x9b, 0, 0, 0, 0, 0, 0, 0, 0};
     private static final String ATTR_QUERY_STRING =
         URITemplateProxyServlet.class.getSimpleName() + ".queryString";
 
@@ -151,10 +156,12 @@ public class URITemplateProxyServlet extends ProxyServlet {
     private String password;
     // Regular expression pattern with the hosts to prevent access through the proxy
     private Pattern excludeHostsPattern;
+    // Regular expression pattern with the hosts the proxy can reach even if excludeHostsPattern matches them
+    private Pattern allowHostsPattern;
     // Allowed ports allowed to access through the proxy
     private Set<Integer> allowPorts = new HashSet<>(Arrays.asList(80, 443));
     // Follow every redirect, rather than only an upgrade of the same URL from http to https
-    boolean followAllRedirects = true;
+    boolean followAllRedirects = false;
 
     @Override
     protected void copyRequestHeader(HttpServletRequest servletRequest, HttpRequest proxyRequest,
@@ -242,6 +249,19 @@ public class URITemplateProxyServlet extends ProxyServlet {
                 setExcludeHosts(excludeHosts);
             } catch (PatternSyntaxException ex) {
                 throw new ServletException(P_EXCLUDE_HOSTS + " doesn't contain a valid regular expression");
+            }
+        }
+
+        String allowHosts = getConfigValue(P_ALLOW_HOSTS);
+        if (isBlank(allowHosts)) {
+            allowHosts = getConfigParam(P_ALLOW_HOSTS);
+        }
+
+        if (StringUtils.isNotBlank(allowHosts)) {
+            try {
+                setAllowHosts(allowHosts);
+            } catch (PatternSyntaxException ex) {
+                throw new ServletException(P_ALLOW_HOSTS + " doesn't contain a valid regular expression");
             }
         }
 
@@ -481,15 +501,14 @@ public class URITemplateProxyServlet extends ProxyServlet {
                 // Check if the link requested is in database link list
                 if (!proxyCallAllowed) {
                     try {
-                        // The url as the target uses it, so the host looked up is the host requested.
-                        URI uri = new URI(getRequestedUrl(servletRequest.getQueryString()));
-                        String host = uri.getHost();
+                        // Check the same value the target is built from, see getRequestedUrl.
+                        String url = getRequestedUrl(servletRequest.getQueryString());
+                        String host = isBlank(url) ? null : new URI(url).getHost();
                         LinkRepository linkRepository =
                             ApplicationContextHolder.get().getBean(LinkRepository.class);
-                        long linksFound = linkRepository.count(
-                            LinkSpecs.filter(host, null, null,
-                                null, null, null, false,null));
-                        if (linksFound == 0) {
+                        boolean linkFound = !isBlank(host)
+                            && linkRepository.count(LinkSpecs.urlHasHost(host)) > 0;
+                        if (!linkFound) {
                             String message = "The proxy does not allow to access the requested URI " +
                                 "because the URL host was not registered in any metadata records.";
                             if (linkRepository.count() == 0) {
@@ -501,7 +520,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
                             servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, message);
                             return;
                         }
-                        proxyCallAllowed = linksFound > 0;
+                        proxyCallAllowed = true;
                     } catch (URISyntaxException e) {
                         throw new IllegalArgumentException(String.format(
                             "The provided URL is invalid. Error is: '%s'",
@@ -552,7 +571,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
             return false;
         }
 
-        if (isExcludedHost(host)) {
+        if (!isAllowedHost(host) && isExcludedHost(host)) {
             return false;
         }
 
@@ -605,7 +624,9 @@ public class URITemplateProxyServlet extends ProxyServlet {
     DnsResolver createDnsResolver(DnsResolver delegate) {
         return host -> {
             InetAddress[] addresses = delegate.resolve(host);
-            if (isOutboundProxyHost(host)) {
+            // An allowed name is reachable whatever it resolves to. Addresses are not matched against
+            // allowHosts: that would let any name pointing at an allowed address through too.
+            if (isOutboundProxyHost(host) || isAllowedHost(host)) {
                 return addresses;
             }
             for (InetAddress address : addresses) {
@@ -615,6 +636,17 @@ public class URITemplateProxyServlet extends ProxyServlet {
             }
             return addresses;
         };
+    }
+
+    /**
+     * Check whether the host as written is one the proxy can reach even if it is excluded.
+     *
+     * @param host host of the requested URL, as returned by {@link URI#getHost()}
+     * @return {@code true} if any form of the host matches the allowHosts pattern
+     */
+    boolean isAllowedHost(String host) {
+        return this.allowHostsPattern != null
+            && getHostVariants(host).stream().anyMatch(v -> this.allowHostsPattern.matcher(v).matches());
     }
 
     private static boolean isOutboundProxyHost(String host) {
@@ -631,6 +663,18 @@ public class URITemplateProxyServlet extends ProxyServlet {
     static class ExcludedAddressException extends UnknownHostException {
         ExcludedAddressException(String host) {
             super("The proxy does not allow to access to the address of " + host);
+        }
+    }
+
+    /**
+     * Raised when a redirect leads to a host or port the proxy does not allow.
+     *
+     * <p>The client reports it wrapped in a {@link ClientProtocolException}, which
+     * {@link #internalService} unwraps to answer with a 403.</p>
+     */
+    static class ExcludedRedirectException extends ProtocolException {
+        ExcludedRedirectException() {
+            super("The proxy does not allow to access to the redirect destination.");
         }
     }
 
@@ -685,8 +729,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
             URI location = super.getLocationURI(request, response, context);
 
             if (!isUriAllowed(location)) {
-                throw new ProtocolException(
-                    "The proxy does not allow to access to the redirect destination.");
+                throw new ExcludedRedirectException();
             }
 
             return location;
@@ -706,6 +749,16 @@ public class URITemplateProxyServlet extends ProxyServlet {
      */
     void setExcludeHosts(String excludeHosts) {
         this.excludeHostsPattern = Pattern.compile(excludeHosts, Pattern.CASE_INSENSITIVE);
+    }
+
+    /**
+     * Compile the list of hosts the proxy can reach even if excludeHosts matches them.
+     *
+     * @param allowHosts regular expression matched against the host of a requested URL as written
+     * @throws PatternSyntaxException if the expression cannot be compiled
+     */
+    void setAllowHosts(String allowHosts) {
+        this.allowHostsPattern = Pattern.compile(allowHosts, Pattern.CASE_INSENSITIVE);
     }
 
     /**
@@ -780,7 +833,8 @@ public class URITemplateProxyServlet extends ProxyServlet {
      *
      * @param host host part of the requested URL, as returned by {@link URI#getHost()}
      * @return the host as provided, plus the unbracketed and canonical forms of an IPv6 literal,
-     *         and a name without the dot that marks it as fully qualified
+     *         the IPv4 address carried by a NAT64 address, and a name without the dot that marks
+     *         it as fully qualified
      */
     Set<String> getHostVariants(String host) {
         Set<String> variants = new LinkedHashSet<>();
@@ -791,12 +845,22 @@ public class URITemplateProxyServlet extends ProxyServlet {
             variants.add(host.substring(0, host.length() - 1));
         }
 
-        if (host.startsWith("[") && host.endsWith("]")) {
-            variants.add(host.substring(1, host.length() - 1));
+        // An IPv6 literal, bracketed as URI#getHost returns it, or bare as a resolved address.
+        String literal = host.startsWith("[") && host.endsWith("]") ? host.substring(1, host.length() - 1) : host;
+        if (literal.indexOf(':') >= 0) {
+            variants.add(literal);
 
             try {
                 // A literal is not resolved, so this does not query the name service.
-                variants.add(InetAddress.getByName(host).getHostAddress());
+                InetAddress address = InetAddress.getByName(literal);
+                variants.add(address.getHostAddress());
+
+                // On a DNS64 network every IPv4-only server resolves into 64:ff9b::/96, so such an
+                // address is judged by the IPv4 address in its last 32 bits, not by the prefix.
+                byte[] bytes = address.getAddress();
+                if (bytes.length == 16 && Arrays.equals(Arrays.copyOf(bytes, 12), NAT64_PREFIX)) {
+                    variants.add(InetAddress.getByAddress(Arrays.copyOfRange(bytes, 12, 16)).getHostAddress());
+                }
             } catch (UnknownHostException e) {
                 LOGGER.debug("Could not read '" + host + "' as an IP address: " + e.getMessage());
             }
@@ -902,7 +966,8 @@ public class URITemplateProxyServlet extends ProxyServlet {
                 throw new ServletException("Missing HTTP parameter " + arg + " to fill the template");
             }
             String replacement = String.join(",", replacementValues);
-            matcher.appendReplacement(urlBuf, replacement);
+            // Quoted so that $ and \ in the value are copied as written, like the URL that was checked.
+            matcher.appendReplacement(urlBuf, Matcher.quoteReplacement(replacement));
         }
         matcher.appendTail(urlBuf);
         String newTargetUri = urlBuf.toString();
@@ -934,6 +999,12 @@ public class URITemplateProxyServlet extends ProxyServlet {
         } catch (ExcludedAddressException e) {
             // The host is named in the log only, the caller gets the same answer as for a refused URL.
             LOGGER.warning(e.getMessage());
+            servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, URL_NOT_ALLOWED_MESSAGE);
+        } catch (ClientProtocolException e) {
+            if (!(e.getCause() instanceof ExcludedRedirectException)) {
+                throw e;
+            }
+            LOGGER.warning(e.getCause().getMessage());
             servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, URL_NOT_ALLOWED_MESSAGE);
         }
     }

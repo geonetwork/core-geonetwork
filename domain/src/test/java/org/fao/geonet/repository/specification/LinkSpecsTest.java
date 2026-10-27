@@ -321,4 +321,56 @@ public class LinkSpecsTest extends AbstractSpringDataTest {
         List<Link> linkList2 = linkRepository.findAll(LinkSpecs.filter(null, null, null, null, groupOwnerIds, httpStatusValueFilter, false, null));
         Assert.assertEquals(2, linkList2.size());
     }
+
+    /**
+     * Register a link to the given URL in a record of its own.
+     */
+    private void saveRecordLink(String url) {
+        Metadata metadata = MetadataRepositoryTest.newMetadata(inc);
+        metadataRepository.save(metadata);
+
+        Link link = new Link();
+        link.setLinkType(LinkType.HTTP);
+        link.setUrl(url);
+
+        MetadataLink metadataLink = new MetadataLink();
+        metadataLink.setMetadataId(metadata.getId());
+        metadataLink.setMetadataUuid(metadata.getUuid());
+        metadataLink.setLink(link);
+        link.setRecords(new HashSet<>(Collections.singletonList(metadataLink)));
+        linkRepository.save(link);
+        metadataLinkRepository.save(metadataLink);
+    }
+
+    @Test
+    public void testLinkSpecsUrlHasHost() {
+        // Both links are https://test.com/..., matched in any case.
+        Assert.assertEquals(2, linkRepository.count(LinkSpecs.urlHasHost("test.com")));
+        Assert.assertEquals(2, linkRepository.count(LinkSpecs.urlHasHost("TEST.COM")));
+
+        // The whole host is compared, not a part or a prefix of it.
+        Assert.assertEquals(0, linkRepository.count(LinkSpecs.urlHasHost("test.co")));
+        Assert.assertEquals(0, linkRepository.count(LinkSpecs.urlHasHost("est.com")));
+        Assert.assertEquals(0, linkRepository.count(LinkSpecs.urlHasHost("link")));
+        Assert.assertEquals(0, linkRepository.count(LinkSpecs.urlHasHost("test2.com")));
+
+        // A longer host that starts with a registered one counts only for itself.
+        saveRecordLink("http://test.com.evil.org/wms");
+        Assert.assertEquals(2, linkRepository.count(LinkSpecs.urlHasHost("test.com")));
+        Assert.assertEquals(1, linkRepository.count(LinkSpecs.urlHasHost("test.com.evil.org")));
+
+        // The host may end the URL, or be followed by a port, a query or a fragment.
+        saveRecordLink("http://bare.example");
+        saveRecordLink("https://port.example:8443/wms");
+        saveRecordLink("http://query.example?SERVICE=WMS");
+        saveRecordLink("http://fragment.example#top");
+        Assert.assertEquals(1, linkRepository.count(LinkSpecs.urlHasHost("bare.example")));
+        Assert.assertEquals(1, linkRepository.count(LinkSpecs.urlHasHost("port.example")));
+        Assert.assertEquals(1, linkRepository.count(LinkSpecs.urlHasHost("query.example")));
+        Assert.assertEquals(1, linkRepository.count(LinkSpecs.urlHasHost("fragment.example")));
+
+        // A link written with user info does not count for its host.
+        saveRecordLink("http://user@userinfo.example/wms");
+        Assert.assertEquals(0, linkRepository.count(LinkSpecs.urlHasHost("userinfo.example")));
+    }
 }

@@ -24,7 +24,8 @@ package org.fao.geonet.proxy;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
-import org.apache.http.ProtocolException;
+import com.sun.net.httpserver.HttpServer;
+import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
@@ -36,6 +37,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.URI;
 import java.util.Arrays;
 
@@ -53,7 +55,7 @@ public class URITemplateProxyServletTest {
      * The default of the proxy.excludeHosts property, kept in sync with the value in the root pom.xml.
      */
     private static final String DEFAULT_EXCLUDE_HOSTS =
-        "^(localhost|127\\..*|0\\..*|10\\..*|172\\.(1[6-9]|2[0-9]|3[01])\\..*|192\\.168\\..*|169\\.254\\..*|100\\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\\..*|198\\.1[89]\\..*|2(2[4-9]|3[0-9])\\..*|255\\.255\\.255\\.255|.*\\.local|.*\\.localhost|0:0:0:0:0:0:.*|::1|::|64:ff9b:.*|2002:.*|0:0:0:0:ffff:0:.*|f[cd][0-9a-f]{2}:.*|fe[89ab][0-9a-f]:.*|fe[c-f][0-9a-f]:.*)$";
+        "^(localhost|127\\..*|0\\..*|10\\..*|172\\.(1[6-9]|2[0-9]|3[01])\\..*|192\\.168\\..*|169\\.254\\..*|100\\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\\..*|198\\.1[89]\\..*|2(2[4-9]|3[0-9])\\..*|255\\.255\\.255\\.255|.*\\.local|.*\\.localhost|0:0:0:0:0:0:.*|::1|::|2002:.*|0:0:0:0:ffff:0:.*|f[cd][0-9a-f]{2}:.*|fe[89ab][0-9a-f]:.*|fe[c-f][0-9a-f]:.*)$";
 
     private URITemplateProxyServlet servlet;
 
@@ -233,6 +235,16 @@ public class URITemplateProxyServletTest {
     }
 
     @Test
+    public void anExcludedHostIsRecognisedWithATrailingDot() throws Exception {
+        // URI.getHost() keeps the dot of a fully qualified name, which still resolves to the same host.
+        assertEquals("localhost.", hostOf("http://localhost./"));
+        assertExcluded("http://localhost./");
+        assertExcluded("http://x.localhost./");
+        assertExcluded("http://myhost.local./");
+        assertNotExcluded("http://example.com./");
+    }
+
+    @Test
     public void anEntryWrittenInUpperCaseAlsoMatches() {
         servlet.setExcludeHosts("^(INTERNAL\\.EXAMPLE\\.ORG)$");
         assertTrue(servlet.isExcludedHost("internal.example.org"));
@@ -243,12 +255,6 @@ public class URITemplateProxyServletTest {
         // ::/96 carries an IPv4 address in its low bits, deprecated but still spellable.
         assertExcluded("http://[::7f00:1]/");
         assertExcluded("http://[::a00:1]/");
-    }
-
-    @Test
-    public void nat64PrefixIsExcluded() throws Exception {
-        assertExcluded("http://[64:ff9b::7f00:1]/");
-        assertNotExcluded("http://[64:ff9c::1]/");
     }
 
     @Test
@@ -339,7 +345,7 @@ public class URITemplateProxyServletTest {
         try {
             URI followed = followRedirectTo(location);
             fail("a redirect to " + location + " should be refused, it returned " + followed);
-        } catch (ProtocolException expected) {
+        } catch (URITemplateProxyServlet.ExcludedRedirectException expected) {
             // The destination is not one the caller could have named directly.
         }
     }
@@ -383,8 +389,7 @@ public class URITemplateProxyServletTest {
 
     @Test
     public void withoutFollowRedirectsOnlyAnHttpsUpgradeIsFollowed() throws Exception {
-        servlet.followAllRedirects = false;
-
+        // followRedirects is false by default.
         assertTrue(isRedirectFollowed("http://example.org/wms?a=1", "https://example.org/wms?a=1"));
         assertTrue(isRedirectFollowed("http://example.org", "https://EXAMPLE.org/"));
         assertTrue(isRedirectFollowed("http://example.org:80/x", "https://example.org:443/x"));
@@ -399,6 +404,7 @@ public class URITemplateProxyServletTest {
 
     @Test
     public void withFollowRedirectsAnyRedirectIsFollowed() throws Exception {
+        servlet.followAllRedirects = true;
         assertTrue(isRedirectFollowed("http://example.org/wms", "https://example.com/elsewhere"));
     }
 
@@ -443,6 +449,29 @@ public class URITemplateProxyServletTest {
         assertEquals(2, resolveAs("example.com", "93.184.215.14", "2606:2800:21f:cb07:6820:80da:af6b:8b2c").length);
     }
 
+    @Test
+    public void theClientReportsARefusedRedirectWrappedInAClientProtocolException() throws Exception {
+        // internalService unwraps exactly this to answer with a 403.
+        servlet.followAllRedirects = true;
+        HttpServer server = HttpServer.create(new InetSocketAddress(InetAddress.getLoopbackAddress(), 0), 0);
+        server.createContext("/", exchange -> {
+            exchange.getResponseHeaders().add("Location", "http://10.0.0.1/");
+            exchange.sendResponseHeaders(302, -1);
+            exchange.close();
+        });
+        server.start();
+        try (CloseableHttpClient client = HttpClientBuilder.create()
+            .setRedirectStrategy(servlet.createRedirectStrategy())
+            .build()) {
+            client.execute(new HttpGet("http://127.0.0.1:" + server.getAddress().getPort() + "/"));
+            fail("the redirect to an excluded host should be refused");
+        } catch (ClientProtocolException e) {
+            assertTrue(e.getCause() instanceof URITemplateProxyServlet.ExcludedRedirectException);
+        } finally {
+            server.stop(0);
+        }
+    }
+
     @Test(expected = URITemplateProxyServlet.ExcludedAddressException.class)
     public void theClientRefusesToConnectToAnExcludedAddress() throws Exception {
         InetAddress loopback = InetAddress.getByName("127.0.0.1");
@@ -451,6 +480,37 @@ public class URITemplateProxyServletTest {
             .build()) {
             client.execute(new HttpGet("http://public-looking.example.com/"));
         }
+    }
+
+    @Test
+    public void allowHostsLetsTheNamedHostsThroughOnly() throws Exception {
+        // Nothing is allowed until allowHosts is set.
+        assertFalse(servlet.isUriAllowed(new URI("http://10.0.0.5/")));
+        assertResolutionRefused("geoserver", "10.0.0.5");
+
+        servlet.setAllowHosts("^(geoserver|10\\.0\\.0\\.5)$");
+
+        assertTrue(servlet.isUriAllowed(new URI("http://GeoServer/wms")));
+        assertEquals(1, resolveAs("geoserver", "10.0.0.5").length);
+        assertTrue(servlet.isUriAllowed(new URI("http://10.0.0.5/")));
+        assertEquals(1, resolveAs("10.0.0.5", "10.0.0.5").length);
+
+        // An allowed address does not vouch for other names that point to it.
+        assertResolutionRefused("evil.example.com", "10.0.0.5");
+        assertFalse(servlet.isUriAllowed(new URI("http://10.0.0.6/")));
+        // The port check still applies.
+        assertFalse(servlet.isUriAllowed(new URI("http://geoserver:8080/")));
+    }
+
+    @Test
+    public void aNat64AddressIsJudgedByTheIpv4AddressItCarries() throws Exception {
+        assertExcluded("http://[64:ff9b::7f00:1]/");
+        assertExcluded("http://[64:ff9b::10.0.0.1]/");
+        assertNotExcluded("http://[64:ff9b::5db8:d70e]/");
+
+        // What a DNS64 resolver returns for a public IPv4-only server, and for a private one.
+        assertEquals(1, resolveAs("ipv4-only.example.com", "64:ff9b::5db8:d70e").length);
+        assertResolutionRefused("internal.example.com", "64:ff9b::a00:1");
     }
 
     @Test
