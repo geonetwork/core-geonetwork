@@ -43,12 +43,7 @@ public class UserAuditableService extends BaseAuditableService<UserAuditable> {
         return ENTITY_TYPE;
     }
 
-    /**
-     * Saves the audit entry of a user.
-     *
-     * The entry is built from scratch each time, without the creation user and date. Saving it over an
-     * existing entry would replace them with null, so they are copied from the stored entry first.
-     */
+    // The entry is rebuilt on every save without the creation fields, a merge would null them.
     @Override
     public void auditSave(UserAuditable userAuditable) {
         if (!isAuditableEnabled()) return;

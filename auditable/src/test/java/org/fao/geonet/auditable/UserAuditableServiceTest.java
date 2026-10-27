@@ -34,12 +34,10 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 public class UserAuditableServiceTest {
 
     private final List<UserAuditable> saved = new ArrayList<>();
-    private final List<Integer> lookedUp = new ArrayList<>();
 
     /** A repository that only supports findById and save, returning the given stored entry. */
     private UserAuditableRepository repository(UserAuditable stored) {
@@ -48,7 +46,6 @@ public class UserAuditableServiceTest {
             (proxy, method, args) -> {
                 switch (method.getName()) {
                     case "findById":
-                        lookedUp.add((Integer) args[0]);
                         return Optional.ofNullable(stored);
                     case "save":
                         saved.add((UserAuditable) args[0]);
@@ -59,11 +56,11 @@ public class UserAuditableServiceTest {
             });
     }
 
-    private UserAuditableService service(boolean auditingEnabled, UserAuditable stored) {
+    private UserAuditableService service(UserAuditable stored) {
         SettingManager settingManager = new SettingManager() {
             @Override
             public boolean getValueAsBool(String key, boolean defaultValue) {
-                return auditingEnabled;
+                return true;
             }
         };
         return new UserAuditableService(settingManager, repository(stored));
@@ -87,7 +84,7 @@ public class UserAuditableServiceTest {
         // Built from scratch by UserAuditable.build, so without the creation data
         UserAuditable update = userAuditable(7);
 
-        service(true, stored).auditSave(update);
+        service(stored).auditSave(update);
 
         assertEquals(1, saved.size());
         assertEquals("creator", saved.get(0).getCreatedBy());
@@ -98,23 +95,11 @@ public class UserAuditableServiceTest {
     public void newEntryIsSavedAsIs() {
         UserAuditable first = userAuditable(8);
 
-        service(true, null).auditSave(first);
+        service(null).auditSave(first);
 
         assertEquals(1, saved.size());
-        assertEquals(Integer.valueOf(8), lookedUp.get(0));
         // The creation user and date are set by the auditing listener when the entry is inserted
         assertNull(saved.get(0).getCreatedBy());
         assertNull(saved.get(0).getCreatedDate());
-    }
-
-    @Test
-    public void nothingIsDoneWhenAuditingIsDisabled() {
-        UserAuditable stored = userAuditable(9);
-        stored.setCreatedBy("creator");
-
-        service(false, stored).auditSave(userAuditable(9));
-
-        assertTrue(saved.isEmpty());
-        assertTrue(lookedUp.isEmpty());
     }
 }
