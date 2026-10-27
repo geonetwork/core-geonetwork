@@ -132,12 +132,15 @@
               }
             } else if (angular.isDefined(layer)) {
               // replace with complete CRS list if available
-              if (layer.CRS && layer.CRS.length > inheritedCrs.length) {
-                inheritedCrs = layer.CRS;
+              // WMS 1.1.x uses SRS instead of CRS
+              var layerCrs = layer.CRS || layer.SRS;
+              if (layerCrs && layerCrs.length > inheritedCrs.length) {
+                inheritedCrs = layerCrs;
               }
 
               // add to flat layer array if we're on a leave (layer w/o child)
               layer.url = url;
+              layer.version = result.version;
               layer.CRS = inheritedCrs;
               layers.push(layer);
 
@@ -447,6 +450,10 @@
                 bboxProp = layer[prop];
               }
             });
+            // WMS 1.1.x
+            if (!bboxProp && layer.LatLonBoundingBox) {
+              bboxProp = layer.LatLonBoundingBox.extent;
+            }
 
             if (bboxProp) {
               extent =
@@ -459,9 +466,10 @@
                 var bbox = layer.BoundingBox[i];
                 // Use the bbox with the code matching the map projection
                 // or the first one.
-                if (bbox.crs === proj.getCode() || layer.BoundingBox.length === 1) {
+                var bboxCrs = bbox.crs || bbox.srs;
+                if (bboxCrs === proj.getCode() || layer.BoundingBox.length === 1) {
                   extent = ol.extent.containsExtent(proj.getWorldExtent(), bbox.extent)
-                    ? ol.proj.transformExtent(bbox.extent, bbox.crs || "EPSG:4326", proj)
+                    ? ol.proj.transformExtent(bbox.extent, bboxCrs || "EPSG:4326", proj)
                     : proj.getExtent();
                   break;
                 }
