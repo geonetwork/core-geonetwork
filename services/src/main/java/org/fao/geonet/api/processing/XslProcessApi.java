@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -61,6 +61,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import jeeves.transaction.BatchTransactionalProcessor;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -102,12 +104,10 @@ public class XslProcessApi {
 
     @Autowired
     SchemaManager schemaMan;
-
-    @Autowired
-    private IMetadataManager metadataManager;
-
     @Autowired
     SettingManager settingManager;
+    @Autowired
+    private IMetadataManager metadataManager;
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Preview process result applied to one or more records",
@@ -135,50 +135,44 @@ public class XslProcessApi {
             description = ApiParams.API_PARAM_PROCESS_ID
         )
         @PathVariable
-            String process,
+        String process,
         @Parameter(
-            description = "Return differences with diff, diffhtml or patch",
-            required = false
+            description = "Return differences with diff, diffhtml or patch"
         )
         @RequestParam(
             required = false
         )
-            DiffType diffType,
-        @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
-            required = false,
-            example = "")
+        DiffType diffType,
+        @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION)
         @RequestParam(required = false)
-            String[] uuids,
+        String[] uuids,
         @Parameter(
-            description = ApiParams.API_PARAM_BUCKET_NAME,
-            required = false)
+            description = ApiParams.API_PARAM_BUCKET_NAME)
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(description = "Append documents before processing",
-            required = false,
             example = "false")
         @RequestParam(required = false, defaultValue = "false")
-            boolean appendFirst,
+        boolean appendFirst,
         @Parameter(description = "Apply update fixed info",
-            required = false,
             example = "false")
         @RequestParam(required = false, defaultValue = "true")
         boolean applyUpdateFixedInfo,
         @Parameter(hidden = true)
-            HttpSession httpSession,
+        HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletRequest request,
+        HttpServletRequest request,
         @Parameter(hidden = true)
-            HttpServletResponse response) throws IllegalArgumentException {
+        HttpServletResponse response) throws IllegalArgumentException {
         UserSession session = ApiUtils.getUserSession(httpSession);
 
         XsltMetadataProcessingReport xslProcessingReport =
             new XsltMetadataProcessingReport(process);
 
         Element preview = new Element("preview");
-        StringBuffer output = new StringBuffer();
+        StringBuilder output = new StringBuilder();
 
         boolean isText = process.endsWith(".csv");
 
@@ -224,7 +218,7 @@ public class XslProcessApi {
                         if (record != null) {
                             if (applyUpdateFixedInfo) {
                                 record = metadataManager.updateFixedInfo(dataMan.getMetadataSchema(id),
-                                    Optional.<Integer>absent(), uuid, record, null, UpdateDatestamp.NO, serviceContext);
+                                    Optional.absent(), uuid, record, null, UpdateDatestamp.NO, serviceContext);
                             }
                             if (diffType != null) {
                                 IMetadataUtils metadataUtils = serviceContext.getBean(IMetadataUtils.class);
@@ -256,7 +250,7 @@ public class XslProcessApi {
         }
 
         // In case of errors during processing return report.
-        if (xslProcessingReport.getErrors().size() > 0) {
+        if (!xslProcessingReport.getErrors().isEmpty()) {
             response.setHeader(CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
             ObjectMapper mapper = new ObjectMapper();
             try {
@@ -291,37 +285,33 @@ public class XslProcessApi {
             description = ApiParams.API_PARAM_PROCESS_ID
         )
         @PathVariable
-            String process,
-        @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION,
-            required = false,
-            example = "")
+        String process,
+        @Parameter(description = API_PARAM_RECORD_UUIDS_OR_SELECTION)
         @RequestParam(required = false)
-            String[] uuids,
+        String[] uuids,
         @Parameter(
-            description = ApiParams.API_PARAM_BUCKET_NAME,
-            required = false)
+            description = ApiParams.API_PARAM_BUCKET_NAME
+        )
         @RequestParam(
             required = false
         )
-            String bucket,
+        String bucket,
         @Parameter(
-            description = ApiParams.API_PARAM_UPDATE_DATESTAMP,
-            required = false
+            description = ApiParams.API_PARAM_UPDATE_DATESTAMP
         )
         @RequestParam(
             required = false,
             defaultValue = "true"
         )
-            boolean updateDateStamp,
+        boolean updateDateStamp,
         @Parameter(description = "Index after processing",
-            required = false,
             example = "false")
         @RequestParam(required = false, defaultValue = "true")
-            boolean index,
+        boolean index,
         @Parameter(hidden = true)
-            HttpSession httpSession,
+        HttpSession httpSession,
         @Parameter(hidden = true)
-            HttpServletRequest request) throws Exception {
+        HttpServletRequest request) throws Exception {
         UserSession session = ApiUtils.getUserSession(httpSession);
 
         XsltMetadataProcessingReport xslProcessingReport =
@@ -387,11 +377,13 @@ public class XslProcessApi {
 
         @Override
         public void process(String catalogueId) throws Exception {
-            DataManager dataMan = context.getBean(DataManager.class);
             IMetadataUtils metadataUtils = context.getBean(IMetadataUtils.class);
 
             ApplicationContext appContext = ApplicationContextHolder.get();
-            for (String uuid : this.records) {
+
+            BatchTransactionalProcessor<String> processor =
+                new BatchTransactionalProcessor<>("BatchXslProcess", appContext);
+            processor.process(this.records, uuid -> {
                 List<Integer> idList = metadataUtils.findAllIdsBy(MetadataSpecs.hasMetadataUuid(uuid));
 
                 // Increase the total records counter when processing a metadata with approved and working copies
@@ -401,23 +393,35 @@ public class XslProcessApi {
                 }
 
                 for (Integer id : idList) {
-                    Log.info("org.fao.geonet.services.metadata",
-                        "Processing metadata with id:" + id);
+                    try {
+                        Log.info("org.fao.geonet.services.metadata",
+                            "Processing metadata with id:" + id);
 
-                    Element beforeMetadata = dataMan.getMetadata(context, String.valueOf(id), false, false, false);
+                        Element beforeMetadata = dm.getMetadata(context, String.valueOf(id), false, false, false);
 
-                    XslProcessUtils.process(context, String.valueOf(id), process,
-                        true, index, updateDateStamp, xslProcessingReport,
-                        siteURL, request.getParameterMap());
+                        XslProcessUtils.process(context, String.valueOf(id), process,
+                            true, index, updateDateStamp, xslProcessingReport,
+                            siteURL, request.getParameterMap());
 
-                    Element afterMetadata = dataMan.getMetadata(context, String.valueOf(id), false, false, false);
+                        Element afterMetadata = dm.getMetadata(context, String.valueOf(id), false, false, false);
 
-                    XMLOutputter outp = new XMLOutputter();
-                    String xmlAfter = outp.outputString(afterMetadata);
-                    String xmlBefore = outp.outputString(beforeMetadata);
-                    new RecordProcessingChangeEvent(id, this.userId, xmlBefore, xmlAfter, process).publish(appContext);
+                        XMLOutputter outp = new XMLOutputter();
+                        String xmlAfter = outp.outputString(afterMetadata);
+                        String xmlBefore = outp.outputString(beforeMetadata);
+                        new RecordProcessingChangeEvent(id, userId, xmlBefore, xmlAfter, process).publish(appContext);
+                    } catch (Exception e) {
+                        // Isolate the failure to this record so the rest of the batch (and
+                        // subsequent batches) still get processed instead of being rolled back
+                        // or skipped, see BatchTransactionalProcessor.
+                        AbstractMetadata metadata = metadataUtils.findOne(id);
+                        if (metadata != null) {
+                            xslProcessingReport.addMetadataError(metadata, e);
+                        } else {
+                            xslProcessingReport.addMetadataError(id, uuid, false, false, e);
+                        }
+                    }
                 }
-            }
+            });
         }
     }
 }
