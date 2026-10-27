@@ -42,4 +42,22 @@ public class UserAuditableService extends BaseAuditableService<UserAuditable> {
     public String getEntityType() {
         return ENTITY_TYPE;
     }
+
+    /**
+     * Saves the audit entry of a user.
+     *
+     * The entry is built from scratch each time, without the creation user and date. Saving it over an
+     * existing entry would replace them with null, so they are copied from the stored entry first.
+     */
+    @Override
+    public void auditSave(UserAuditable userAuditable) {
+        if (!isAuditableEnabled()) return;
+
+        repository.findById(userAuditable.getId()).ifPresent(existing -> {
+            userAuditable.setCreatedBy(existing.getCreatedBy());
+            userAuditable.setCreatedDate(existing.getCreatedDate());
+        });
+
+        super.auditSave(userAuditable);
+    }
 }
