@@ -779,6 +779,39 @@ ul.container-list {
   }
 }
 
+// Home page mosaic, "gallery" layout. Below 550px the gallery rules above do not
+// apply and the images keep their natural size, so show one full width image
+// per row instead.
+@media only screen and (max-width: 549px) {
+  .gallery.gn-record-mosaic {
+    .gn-mosaic-tile + .gn-mosaic-tile {
+      margin-top: 8px;
+    }
+    img {
+      display: block;
+      width: 100%;
+      aspect-ratio: ~"3 / 2";
+      object-fit: cover;
+    }
+  }
+}
+
+// The image is painted over the link outline, so draw the focus frame on top of it
+.gallery.gn-record-mosaic .gn-mosaic-tile > a {
+  position: relative;
+  &:focus-visible {
+    outline: none;
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border: 3px solid @brand-primary;
+      box-shadow: inset 0 0 0 2px #fff;
+      pointer-events: none;
+    }
+  }
+}
+
 .gn-wfs-formats-menu {
   max-height: 300px;
   overflow-y: auto;
