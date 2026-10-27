@@ -30,9 +30,6 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.oidc.StandardClaimNames;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 
 /**
  * Extracts the current user used, to store the information in the auditable entities.
@@ -65,12 +62,9 @@ public class UsernameAuditorAware implements AuditorAware<String> {
             AccessToken token = ((KeycloakPrincipal<?>) principal).getKeycloakSecurityContext().getToken();
             String username = token.getPreferredUsername() != null ? token.getPreferredUsername() : token.getName();
             return StringUtils.left(username, 256);
-        } else if (principal instanceof OidcUser) {
-            return ((OidcUser) principal).getPreferredUsername();
-        } else if (principal instanceof OAuth2User) {
-            return ((OAuth2User) principal).getAttribute(StandardClaimNames.PREFERRED_USERNAME);
         }
-        // Covers JwtAuthenticationToken (returns the principal claim, "sub" by default)
+        // Covers OIDC and OAuth2 logins (the principal name is the configured userNameAttribute, "email" by default,
+        // the same value used to create the user), JwtAuthenticationToken (the name set by the bearer token provider)
         // and plain principals such as "anonymousUser" (returns principal.toString()).
         return authentication.getName();
     }

@@ -77,12 +77,14 @@ public class UsernameAuditorAwareTest {
 
     @Test
     public void oidcPrincipal() {
+        // The name attribute is the configured userNameAttribute (email by default), not the preferred username
         OidcIdToken idToken = OidcIdToken.withTokenValue("token")
             .subject("a-uuid")
             .claim(StandardClaimNames.PREFERRED_USERNAME, "oidcuser")
+            .claim(StandardClaimNames.EMAIL, "oidcuser@example.com")
             .build();
-        DefaultOidcUser principal = new DefaultOidcUser(Collections.emptyList(), idToken);
-        assertEquals("oidcuser", UsernameAuditorAware.getUsername(new TestingAuthenticationToken(principal, null)));
+        DefaultOidcUser principal = new DefaultOidcUser(Collections.emptyList(), idToken, StandardClaimNames.EMAIL);
+        assertEquals("oidcuser@example.com", UsernameAuditorAware.getUsername(new TestingAuthenticationToken(principal, null)));
     }
 
     @Test
@@ -90,8 +92,9 @@ public class UsernameAuditorAwareTest {
         Map<String, Object> attributes = new HashMap<>();
         attributes.put(StandardClaimNames.SUB, "a-uuid");
         attributes.put(StandardClaimNames.PREFERRED_USERNAME, "oauth2user");
-        DefaultOAuth2User principal = new DefaultOAuth2User(Collections.emptyList(), attributes, StandardClaimNames.SUB);
-        assertEquals("oauth2user", UsernameAuditorAware.getUsername(new TestingAuthenticationToken(principal, null)));
+        attributes.put(StandardClaimNames.EMAIL, "oauth2user@example.com");
+        DefaultOAuth2User principal = new DefaultOAuth2User(Collections.emptyList(), attributes, StandardClaimNames.EMAIL);
+        assertEquals("oauth2user@example.com", UsernameAuditorAware.getUsername(new TestingAuthenticationToken(principal, null)));
     }
 
     @Test
