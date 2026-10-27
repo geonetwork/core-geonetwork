@@ -107,6 +107,10 @@ Independently of the security mode, the proxy refuses a request whose host match
 
 An address can be written in more than one way, so the host is compared in several forms: as it appears in the URL, without the brackets that surround an IPv6 literal, and in the canonical form of the address it denotes. An entry therefore applies whichever way a caller spells an address, and a single entry covers every spelling of it.
 
+The address a host name leads to is checked as well. When the proxy connects, every address the name resolves to is matched against ``excludeHosts``, and the request is refused if any of them is excluded, so a public name that points to an internal address is refused like the address itself. The name is still matched as written too, which is what entries such as ``.*\.local`` rely on.
+
+When the catalogue reaches other servers through an outbound proxy, set with the ``http.proxyHost`` or ``https.proxyHost`` system property, the outbound proxy resolves the requested host instead, and the catalogue cannot check the address. Block the internal addresses on the outbound proxy itself in that case.
+
 #### Adding an IPv6 address
 
 The same address can be written in several ways, so an entry is best written in the canonical form: lower case, all eight groups spelled out, no ``::`` and no leading zeros. That form is the one the proxy derives from whatever the caller sent, so a single entry covers every spelling. To exclude the host ``2001:db8:1::10``, write its canonical form ``2001:db8:1:0:0:0:0:10``. To exclude a whole prefix, keep the groups the prefix fixes and finish with ``.*``: ``2001:db8:2::/48`` becomes ``2001:db8:2:.*``.
@@ -167,7 +171,7 @@ A value given this way replaces the default list rather than adding to it. Copy 
 
 If the catalogue is deployed under a context path other than ``/geonetwork``, that path is also accepted in place of the ``geonetwork`` prefix, so a catalogue served from ``/catalogue`` reads ``catalogue.HttpProxy.excludeHosts`` first and falls back to the ``geonetwork`` name.
 
-Keep those defaults and add your own entries for any other host the catalogue should not be asked to fetch. Entries are matched against the host as it appears in the request. Where the catalogue is published in front of a private network, restricting the outbound traffic of the server at the network level is worthwhile too, and use ``allowPorts`` sparingly, since every port added there is opened towards every host the proxy accepts.
+Keep those defaults and add your own entries for any other host the catalogue should not be asked to fetch. Where the catalogue is published in front of a private network, restricting the outbound traffic of the server at the network level is worthwhile too, and use ``allowPorts`` sparingly, since every port added there is opened towards every host the proxy accepts.
 
 ## WEB
 

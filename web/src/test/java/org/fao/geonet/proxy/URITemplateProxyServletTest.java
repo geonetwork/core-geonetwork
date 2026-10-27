@@ -25,14 +25,19 @@ package org.fao.geonet.proxy;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.ProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.message.BasicHttpRequest;
 import org.apache.http.message.BasicHttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.net.InetAddress;
 import java.net.URI;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -386,6 +391,73 @@ public class URITemplateProxyServletTest {
     @Test
     public void withFollowRedirectsAnyRedirectIsFollowed() throws Exception {
         assertTrue(isRedirectFollowed("http://example.org/wms", "https://example.com/elsewhere"));
+    }
+
+    /**
+     * Resolve a name through the servlet's resolver, with the lookup answered by the given addresses
+     * instead of the name service.
+     */
+    private InetAddress[] resolveAs(String host, String... addresses) throws Exception {
+        InetAddress[] answer = new InetAddress[addresses.length];
+        for (int i = 0; i < addresses.length; i++) {
+            answer[i] = InetAddress.getByName(addresses[i]);
+        }
+        return servlet.createDnsResolver(name -> answer).resolve(host);
+    }
+
+    private void assertResolutionRefused(String host, String... addresses) throws Exception {
+        try {
+            resolveAs(host, addresses);
+            fail(host + " resolving to " + Arrays.toString(addresses) + " should be refused");
+        } catch (URITemplateProxyServlet.ExcludedAddressException expected) {
+            // The name leads to an address the exclusion list keeps out of reach.
+        }
+    }
+
+    @Test
+    public void aNameResolvingToAnExcludedAddressIsRefused() throws Exception {
+        assertResolutionRefused("localtest.me", "127.0.0.1");
+        assertResolutionRefused("internal.example.com", "10.0.0.5");
+        assertResolutionRefused("metadata.example.com", "169.254.169.254");
+        assertResolutionRefused("v6.example.com", "::1");
+        assertResolutionRefused("ula.example.com", "fd00::1");
+        assertResolutionRefused("mapped.example.com", "::ffff:192.168.1.1");
+    }
+
+    @Test
+    public void aNameWithAnyExcludedAddressIsRefused() throws Exception {
+        assertResolutionRefused("mixed.example.com", "93.184.215.14", "127.0.0.1");
+    }
+
+    @Test
+    public void aNameResolvingToPublicAddressesIsResolved() throws Exception {
+        assertEquals(2, resolveAs("example.com", "93.184.215.14", "2606:2800:21f:cb07:6820:80da:af6b:8b2c").length);
+    }
+
+    @Test(expected = URITemplateProxyServlet.ExcludedAddressException.class)
+    public void theClientRefusesToConnectToAnExcludedAddress() throws Exception {
+        InetAddress loopback = InetAddress.getByName("127.0.0.1");
+        try (CloseableHttpClient client = HttpClientBuilder.create()
+            .setDnsResolver(servlet.createDnsResolver(name -> new InetAddress[]{loopback}))
+            .build()) {
+            client.execute(new HttpGet("http://public-looking.example.com/"));
+        }
+    }
+
+    @Test
+    public void theOutboundProxyIsNotChecked() throws Exception {
+        String previous = System.getProperty("http.proxyHost");
+        System.setProperty("http.proxyHost", "outbound-proxy.example.com");
+        try {
+            assertEquals(1, resolveAs("OUTBOUND-PROXY.example.com", "10.0.0.1").length);
+            assertResolutionRefused("other.example.com", "10.0.0.1");
+        } finally {
+            if (previous == null) {
+                System.clearProperty("http.proxyHost");
+            } else {
+                System.setProperty("http.proxyHost", previous);
+            }
+        }
     }
 
     @Test

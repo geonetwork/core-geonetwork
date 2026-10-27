@@ -38,11 +38,13 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.conn.DnsResolver;
 import org.apache.http.entity.BufferedHttpEntity;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.SystemDefaultDnsResolver;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicHttpEntityEnclosingRequest;
 import org.apache.http.protocol.HttpContext;
@@ -347,6 +349,10 @@ public class URITemplateProxyServlet extends ProxyServlet {
 
         clientBuilder.setRedirectStrategy(createRedirectStrategy());
 
+        if (this.excludeHostsPattern != null) {
+            clientBuilder.setDnsResolver(createDnsResolver(SystemDefaultDnsResolver.INSTANCE));
+        }
+
         clientBuilder = clientBuilder.useSystemProperties();
         return buildHttpClient(clientBuilder);
     }
@@ -578,6 +584,53 @@ public class URITemplateProxyServlet extends ProxyServlet {
 
     private static String pathOf(URI uri) {
         return isBlank(uri.getRawPath()) ? "/" : uri.getRawPath();
+    }
+
+    /**
+     * Build the resolver the proxy client looks up host names with.
+     *
+     * <p>A name is checked against the exclusion pattern as written, but it can still resolve to an
+     * address the pattern excludes, and what it resolves to can change between two lookups. The
+     * client connects to the addresses this resolver returns, for the requested URL and for every
+     * redirect, so checking them here checks the addresses that are actually connected to.</p>
+     *
+     * <p>The outbound proxy named by {@code http.proxyHost} or {@code https.proxyHost} is not
+     * checked: when one is configured the client only resolves that proxy, which commonly sits on a
+     * private network, and the proxy resolves the requested host itself.</p>
+     *
+     * @param delegate resolver that does the lookup
+     * @return a resolver that refuses a host if any of its addresses is excluded
+     */
+    DnsResolver createDnsResolver(DnsResolver delegate) {
+        return host -> {
+            InetAddress[] addresses = delegate.resolve(host);
+            if (isOutboundProxyHost(host)) {
+                return addresses;
+            }
+            for (InetAddress address : addresses) {
+                if (isExcludedHost(address.getHostAddress())) {
+                    throw new ExcludedAddressException(host);
+                }
+            }
+            return addresses;
+        };
+    }
+
+    private static boolean isOutboundProxyHost(String host) {
+        return host.equalsIgnoreCase(System.getProperty("http.proxyHost"))
+            || host.equalsIgnoreCase(System.getProperty("https.proxyHost"));
+    }
+
+    /**
+     * Raised when a host resolves to an address the exclusion pattern keeps out of reach.
+     *
+     * <p>It is an {@link UnknownHostException} so that the client gives up on the host the same way
+     * it does when a name does not resolve, and {@link ProxyServlet} passes it on unchanged.</p>
+     */
+    static class ExcludedAddressException extends UnknownHostException {
+        ExcludedAddressException(String host) {
+            super("The proxy does not allow to access to the address of " + host);
+        }
     }
 
     /**
@@ -869,7 +922,11 @@ public class URITemplateProxyServlet extends ProxyServlet {
         }
         servletRequest.setAttribute(ATTR_QUERY_STRING, newQueryBuf.toString());
 
-        super.service(servletRequest, servletResponse);
+        try {
+            super.service(servletRequest, servletResponse);
+        } catch (ExcludedAddressException e) {
+            servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+        }
     }
 
     @Override
