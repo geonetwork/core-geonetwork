@@ -63,9 +63,7 @@ public class UsernameAuditorAware implements AuditorAware<String> {
             String username = token.getPreferredUsername() != null ? token.getPreferredUsername() : token.getName();
             return StringUtils.left(username, 256);
         }
-        // Covers OIDC and OAuth2 logins (the principal name is the configured userNameAttribute, "email" by default,
-        // the same value used to create the user), JwtAuthenticationToken (the name set by the bearer token provider)
-        // and plain principals such as "anonymousUser" (returns principal.toString()).
+        // OIDC/OAuth2: the configured userNameAttribute. Bearer: set by the provider. Anonymous: the principal string.
         return authentication.getName();
     }
 }
