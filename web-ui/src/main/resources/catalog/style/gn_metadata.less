@@ -781,10 +781,11 @@ ul.container-list {
 
 // Home page mosaic, "gallery" layout. Below 550px the gallery rules above do not
 // apply and the images keep their natural size, so show one full width image
-// per row instead.
+// per row instead. Only the home page tiles: the record view uses the same
+// directive (related records) without tiles.
 @media only screen and (max-width: 549px) {
-  .gallery.gn-record-mosaic {
-    .gn-mosaic-tile + .gn-mosaic-tile {
+  .gallery.gn-record-mosaic .gn-mosaic-tile {
+    & + .gn-mosaic-tile {
       margin-top: 8px;
     }
     img {
