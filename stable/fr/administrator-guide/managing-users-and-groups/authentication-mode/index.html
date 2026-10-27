@@ -4156,6 +4156,10 @@ If special scope is required for the service account then the following environm
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>When Access Token validation is enabled (<code>JWTHEADERS_ValidateToken=true</code>), the roles are taken from the claims of the validated user name token. A separate <code>JWTHEADERS_RolesHeaderName</code> that is not the validated token is ignored, so roles cannot be supplied in a header that was never validated. To read roles from a different header, point <code>JWTHEADERS_RolesHeaderName</code> at the same header as the user name, or disable token validation for deployments that trust the headers set by an authenticating proxy.</p>
+</div>
 <p>Using the example <code>OIDC_id_token_payload</code> (JSON) or <code>OIDC_access_token</code> (JWT) shown above, the claims are:</p>
 <div class="language-text highlight"><pre><span></span><code><span id="__span-37-1"><a id="__codelineno-37-1" name="__codelineno-37-1" href="#__codelineno-37-1"></a>   {
 </span><span id="__span-37-2"><a id="__codelineno-37-2" name="__codelineno-37-2" href="#__codelineno-37-2"></a>       "exp": 1708555947,
