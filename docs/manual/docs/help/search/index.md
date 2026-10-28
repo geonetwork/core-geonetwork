@@ -168,7 +168,7 @@ To further explore listed records:
 
     -   Restore :fontawesome-regular-window-minimize: resets the map back to its original size in the lower right corner.
 
-    -   Close :fontawesome-solid-xmark: hides the map. Use the **Map** button in the lower right corner to make it reappear.
+    -   Close :fontawesome-solid-xmark: hides the map. Use the **Map** button in the lower right corner, shown while the map is closed, to make it reappear.
 
     The browser remembers the map display settings, so that it will show the same way on your next visit.
 
