@@ -182,8 +182,6 @@
       $scope.isFilterTagsDisplayedInSearch =
         gnGlobalSettings.gnCfg.mods.search.isFilterTagsDisplayedInSearch;
       $scope.searchMapPlacement = gnGlobalSettings.gnCfg.mods.search.searchMapPlacement;
-      $scope.searchMapShowLargeMapLink =
-        gnGlobalSettings.gnCfg.mods.search.searchMapShowLargeMapLink;
       $scope.showStatusFooterFor = gnGlobalSettings.gnCfg.mods.search.showStatusFooterFor;
       $scope.showBatchDropdown = gnGlobalSettings.gnCfg.mods.search.showBatchDropdown;
       $scope.exactMatchToggle = gnGlobalSettings.gnCfg.mods.search.exactMatchToggle;

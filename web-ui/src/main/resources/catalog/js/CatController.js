@@ -816,7 +816,6 @@
             },
             isFilterTagsDisplayedInSearch: true,
             searchMapPlacement: "results", // results, facets or none
-            searchMapShowLargeMapLink: true,
             showStatusFooterFor: "historicalArchive,obsolete,superseded",
             showBatchDropdown: true,
             usersearches: {

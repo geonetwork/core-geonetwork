@@ -115,7 +115,6 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 
 -   **Display filter tags in the search results**: When checked, the filter tags are visible above the search results. The default is to not show them.
 -   **Search result map placement**: Define where the search map is displayed: in a window in the lower right corner (default), above the search filters, or not at all.
--   **Show the button to open the map viewer on the search map**: When checked, the search map has a button (globe icon) that opens the map viewer. The search filters are not taken to the map viewer. The default is to show it.
 
 ### User custom searches {#user-interface-customsearches}
 
