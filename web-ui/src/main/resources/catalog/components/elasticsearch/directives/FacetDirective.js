@@ -281,7 +281,8 @@
         } else {
           translation = $translate.instant(translationId);
         }
-        if (translation !== translationId) {
+        // angular-translate trims the key when no translation is found
+        if (translation !== translationId.trim()) {
           return translation;
         } else {
           // A common translations ?
