@@ -364,17 +364,49 @@
               </div>
             </div>
 
-            <div id="gn-import-validate-row" class="form-group gn-no">
-              <div class="col-sm-offset-4 col-sm-8">
-                <div class="checkbox">
+            <div id="gn-import-validate-row" class="form-group">
+              <label
+                id="gn-import-validate-label"
+                for="gn-import-validate-list"
+                class="col-sm-4 control-label"
+                data-translate=""
+                >validate</label
+              >
+              <div id="gn-import-validate-list" class="col-sm-8">
+                <div id="gn-import-validate-list-none-row" class="radio">
                   <label>
                     <input
-                      id="gn-import-validate-checkbox"
-                      type="checkbox"
-                      name="rejectIfInvalid"
-                      data-ng-model="params.rejectIfInvalid"
+                      id="gn-import-validate-list-none-radio"
+                      type="radio"
+                      name="validationMode"
+                      data-ng-model="params.validationMode"
+                      value="NO_VALIDATION"
                     />
-                    <span id="gn-import-validate-label" data-translate="">validate</span>
+                    <span data-translate="">none</span>
+                  </label>
+                </div>
+                <div id="gn-import-validate-list-xsd-row" class="radio">
+                  <label>
+                    <input
+                      id="gn-import-validate-list-xsd-radio"
+                      type="radio"
+                      name="validationMode"
+                      data-ng-model="params.validationMode"
+                      value="VALIDATE_ONLY_XSD"
+                    />
+                    <span data-translate="">XSDVALIDATION</span>
+                  </label>
+                </div>
+                <div id="gn-import-validate-list-schematron-row" class="radio">
+                  <label>
+                    <input
+                      id="gn-import-validate-list-schematron-radio"
+                      type="radio"
+                      name="validationMode"
+                      data-ng-model="params.validationMode"
+                      value="VALIDATE_XSD_AND_SCHEMATRON"
+                    />
+                    <span data-translate="">SCHEMATRONVALIDATION</span>
                   </label>
                 </div>
               </div>

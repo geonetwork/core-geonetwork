@@ -57,6 +57,7 @@ import org.fao.geonet.exceptions.MetadataNotFoundEx;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
+import org.fao.geonet.kernel.datamanager.IMetadataValidator;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.search.EsSearchManager;
 import org.fao.geonet.kernel.setting.SettingManager;
@@ -100,11 +101,11 @@ public class MEFLib {
                                         final MetadataType isTemplate,
                                         final String[] category,
                                         final String groupId,
-                                        final boolean validate,
+                                        final ValidationMode validationMode,
                                         final boolean assign,
                                         final ServiceContext context,
                                         final Path mefFile) throws Exception {
-        return Importer.doImport(fileType, uuidAction, style, source, isTemplate, category, groupId, validate, assign, context, mefFile);
+        return Importer.doImport(fileType, uuidAction, style, source, isTemplate, category, groupId, validationMode, assign, context, mefFile);
     }
 
     public static List<String> doImport(Element params, ServiceContext context, Path mefFile, Path stylePath) throws Exception {
@@ -812,5 +813,35 @@ public class MEFLib {
         }
 
         return maxSizeLimitInMb * 1024 * 1024;
+    }
+
+    public static enum ValidationMode {
+        NO_VALIDATION,
+        VALIDATE_ONLY_XSD,
+        VALIDATE_XSD_AND_SCHEMATRON;
+
+        public static ValidationMode parse(String value) {
+            if ("VALIDATE_ONLY_XSD".equalsIgnoreCase(value)) return VALIDATE_ONLY_XSD;
+            if ("VALIDATE_XSD_AND_SCHEMATRON".equalsIgnoreCase(value)) return VALIDATE_XSD_AND_SCHEMATRON;
+            return NO_VALIDATION;
+        }
+    }
+
+    public static void validate(IMetadataValidator metadataValidator, ValidationMode validationMode, String schema, Element metadata,
+                                ServiceContext context, String fileName, String groupId) throws Exception {
+        // Method for de-duplicating logic. However, this logic is still duplicated in HarvestValidationEnum.
+        switch (validationMode) {
+            case VALIDATE_ONLY_XSD:
+                metadataValidator.setNamespacePrefix(metadata);
+                metadataValidator.validate(schema, metadata);
+                break;
+            case VALIDATE_XSD_AND_SCHEMATRON:
+                Integer groupIdVal = null;
+                if (org.apache.commons.lang.StringUtils.isNotEmpty(groupId)) {
+                    groupIdVal = Integer.parseInt(groupId);
+                }
+                metadataValidator.validateExternalMetadata(schema, metadata, context, fileName, groupIdVal);
+                break;
+        }
     }
 }
