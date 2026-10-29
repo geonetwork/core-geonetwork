@@ -16,11 +16,11 @@
     type="button"
     data-toggle="dropdown"
     aria-expanded="true"
-    data-ng-show="isInspireValidationEnabled"
+    data-ng-if="isInspireValidationEnabled"
   >
     <span class="caret"></span>
   </button>
-  <ul class="dropdown-menu" role="menu" data-ng-show="isInspireValidationEnabled">
+  <ul class="dropdown-menu" role="menu" data-ng-if="isInspireValidationEnabled">
     <li class="dropdown-header">
       <span class="visible-lg" data-translate="">validate-inspire</span>
     </li>
