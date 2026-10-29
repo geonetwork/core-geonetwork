@@ -59,9 +59,31 @@
 
             // Change the projection of an existing layer
             scope.changeLayerProjection = function (layer, oldProj, newProj) {
+              // The clip extent and the "Zoom to layer extent" one (cextent) are
+              // in the map projection: transform them, or drop them when they
+              // can't be expressed in the new projection.
+              var transformExtent = function (extent) {
+                var oldWorld = oldProj.getExtent();
+                var newWorld = newProj.getExtent();
+                // Transforming the corners of a world-wide extent can give a
+                // sliver (eg. EPSG:3857 to EPSG:3035): keep it world-wide.
+                if (oldWorld && ol.extent.containsExtent(extent, oldWorld)) {
+                  return newWorld || undefined;
+                }
+                // Points along the edges, not only the corners
+                var e = ol.proj.transformExtent(extent, oldProj, newProj, 8);
+                return e.every(isFinite) ? e : undefined;
+              };
+              if (layer.getExtent()) {
+                layer.setExtent(transformExtent(layer.getExtent()));
+              }
+              if (layer.get("cextent")) {
+                layer.set("cextent", transformExtent(layer.get("cextent")));
+              }
+
               if (layer instanceof ol.layer.Group) {
                 layer.getLayers().forEach(function (subLayer) {
-                  this.changeLayerProjection(subLayer, oldProj, newProj);
+                  scope.changeLayerProjection(subLayer, oldProj, newProj);
                 });
               } else if (layer instanceof ol.layer.Tile) {
                 var tileLoadFunc = layer.getSource().getTileLoadFunction();

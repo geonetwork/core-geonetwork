@@ -216,7 +216,8 @@
               "addLayersWmts",
               "addLayersWfs",
               "addLayersEsriRest",
-              "addLayersKml"
+              "addLayersKml",
+              "addLayersCog"
             ]
           };
           scope.isToolSubOption = function (tool) {

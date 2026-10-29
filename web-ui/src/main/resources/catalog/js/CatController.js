@@ -888,6 +888,7 @@
               addLayersWfs: false,
               addLayersEsriRest: false,
               addLayersKml: false,
+              addLayersCog: false,
               projectionSwitcher: false,
               layers: false,
               legend: false,
