@@ -132,14 +132,25 @@
               }
             } else if (angular.isDefined(layer)) {
               // replace with complete CRS list if available
-              // WMS 1.1.x uses SRS instead of CRS
-              var layerCrs = layer.CRS || layer.SRS;
+              // WMS 1.1.x uses SRS instead of CRS. WMS 1.1.0 allows several
+              // space-separated codes in one SRS element.
+              var layerCrs =
+                layer.CRS ||
+                (layer.SRS &&
+                  [].concat.apply(
+                    [],
+                    layer.SRS.map(function (srs) {
+                      return srs.trim().split(/\s+/);
+                    })
+                  ));
               if (layerCrs && layerCrs.length > inheritedCrs.length) {
                 inheritedCrs = layerCrs;
               }
 
               // add to flat layer array if we're on a leave (layer w/o child)
               layer.url = url;
+              // Layers added from the capabilities tree don't go through
+              // getLayerInfoFromCap, which also sets the version
               layer.version = result.version;
               layer.CRS = inheritedCrs;
               layers.push(layer);
@@ -468,9 +479,17 @@
                 // or the first one.
                 var bboxCrs = bbox.crs || bbox.srs;
                 if (bboxCrs === proj.getCode() || layer.BoundingBox.length === 1) {
-                  extent = ol.extent.containsExtent(proj.getWorldExtent(), bbox.extent)
-                    ? ol.proj.transformExtent(bbox.extent, bboxCrs || "EPSG:4326", proj)
-                    : proj.getExtent();
+                  // Unknown projection (not registered in proj4): no extent
+                  var bboxProj = ol.proj.get(bboxCrs || "EPSG:4326");
+                  if (bboxProj) {
+                    // The world extent is in degrees, so only compare
+                    // geographic bboxes with it
+                    extent =
+                      bboxProj.getUnits() !== "degrees" ||
+                      ol.extent.containsExtent(proj.getWorldExtent(), bbox.extent)
+                        ? ol.proj.transformExtent(bbox.extent, bboxProj, proj)
+                        : proj.getExtent();
+                  }
                   break;
                 }
               }
