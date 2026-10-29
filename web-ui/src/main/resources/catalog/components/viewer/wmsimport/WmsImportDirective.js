@@ -317,10 +317,10 @@
    */
 
   module.directive("gnKmlImport", [
-    "olDecorateLayer",
     "gnAlertService",
     "$translate",
-    function (olDecorateLayer, gnAlertService, $translate) {
+    "gnAddImportedLayer",
+    function (gnAlertService, $translate, gnAddImportedLayer) {
       return {
         restrict: "A",
         replace: true,
@@ -333,7 +333,8 @@
         controller: [
           "$scope",
           "$http",
-          function ($scope, $http) {
+          "gnGlobalSettings",
+          function ($scope, $http, gnGlobalSettings) {
             /**
              * Create new vector Kml file from url and add it to
              * the Map.
@@ -342,52 +343,53 @@
              * @param {ol.map} map
              */
             this.addKml = function (url, map) {
-              if (url == "") {
-                $scope.validUrl = true;
-                return;
-              }
-
-              $http.get(gnGlobalSettings.proxyUrl + encodeURIComponent(url)).then(
-                function (response) {
-                  var kmlSource = new ol.source.Vector();
-                  kmlSource.addFeatures(
-                    new ol.format.KML().readFeatures(response.data, {
-                      featureProjection: $scope.map.getView().getProjection(),
-                      dataProjection: "EPSG:4326"
-                    })
-                  );
+              $scope.kmlLoading = true;
+              $scope.kmlError = null;
+              $http
+                .get(gnGlobalSettings.proxyUrl + encodeURIComponent(url))
+                .then(function (response) {
+                  var features = new ol.format.KML().readFeatures(response.data, {
+                    featureProjection: $scope.map.getView().getProjection(),
+                    dataProjection: "EPSG:4326"
+                  });
+                  // Not a KML (eg. an HTML error page), or a KML without
+                  // features OpenLayers can show (eg. only network links)
+                  if (features.length === 0) {
+                    var isKml =
+                      typeof response.data === "string" &&
+                      /<kml[\s>]/i.test(response.data);
+                    $scope.kmlError = $translate.instant(
+                      isKml ? "kmlNoFeatures" : "kmlNotKml"
+                    );
+                    return;
+                  }
                   var vector = new ol.layer.Vector({
-                    source: kmlSource,
+                    source: new ol.source.Vector({ features: features }),
                     getinfo: true,
-                    label: $translate.instant("kmlFile", { layer: url.split("/").pop() })
+                    label: $translate.instant("kmlFile", {
+                      layer: url.split("?")[0].split("/").pop()
+                    })
                   });
                   $scope.addToMap(vector, map);
                   $scope.url = "";
-                  $scope.validUrl = true;
-                },
-                function () {
-                  $scope.validUrl = false;
-                }
-              );
+                })
+                .catch(function (error) {
+                  // $http rejects with the proxy response and its HTTP status
+                  $scope.kmlError = $translate.instant(
+                    { 403: "fileAccessRefused", 404: "kmlNotFound" }[
+                      error && error.status
+                    ] || "kmlLoadError"
+                  );
+                })
+                .finally(function () {
+                  $scope.kmlLoading = false;
+                });
             };
 
-            $scope.addToMap = function (layer, map) {
-              olDecorateLayer(layer);
-              layer.displayInLayerManager = true;
-              map.getLayers().push(layer);
-              map.getView().fit(layer.getSource().getExtent(), map.getSize());
-
-              gnAlertService.addAlert({
-                msg: $translate.instant("layerAdded", { layer: layer.get("label") }),
-                type: "success"
-              });
-            };
+            $scope.addToMap = gnAddImportedLayer;
           }
         ],
         link: function (scope, element, attrs) {
-          /** Used for ngClass of the input */
-          scope.validUrl = true;
-
           /** File drag & drop support */
           var dragAndDropInteraction = new ol.interaction.DragAndDrop({
             formatConstructors: [

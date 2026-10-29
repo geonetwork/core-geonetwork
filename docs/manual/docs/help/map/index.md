@@ -108,7 +108,16 @@ Use web mapping service:
 
 ### Add files
 
-Use **`KML`** files on the map.
+Use **`KML`** files on the map:
+
+1. From the **Map** viewer, press **Add layer** control, and change to **Files** tab.
+
+2. Type the URL of a KML file and press **:fontawesome-solid-plus: Add to map**.
+
+    If the file can't be added, a message below the URL says why.
+
+    You can also press **Upload a KMZ file** and pick a file from the list,
+    or drop a KML, GPX or GeoJSON file onto the map.
 
 Use **Cloud Optimized GeoTIFF (COG)** raster files on the map:
 
