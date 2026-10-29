@@ -149,14 +149,23 @@
           /**
            * Apply runtime visibility rules for a page.
            *
-           * In `record_view_menu`, visibility depends on workflow state and
-           * metadata approval status from the current record context.
+           * In `record_view_menu` and `record_editor_menu`, visibility depends
+           * on workflow state from the current record context. In
+           * `record_view_menu`, the metadata approval status is also taken
+           * into account. In `record_editor_menu`, approval status is ignored
+           * since an approved copy cannot be edited (the editor always works
+           * on the working copy).
            */
           function shouldShowPage(page) {
             if (!page) return false;
-            if ($scope.section === "record_view_menu" && $scope.context) {
+            if (
+              ($scope.section === "record_view_menu" ||
+                $scope.section === "record_editor_menu") &&
+              $scope.context
+            ) {
               if (!$scope.context.isWorkflowEnabled)
                 return page.showWhenWorkflowDisabled === true;
+              if ($scope.section === "record_editor_menu") return true;
               if ($scope.context.mdStatus == 2) return page.showOnApproved === true;
               return page.showOnNonApproved === true;
             }
