@@ -486,7 +486,8 @@
                     // geographic bboxes with it
                     extent =
                       bboxProj.getUnits() !== "degrees" ||
-                      ol.extent.containsExtent(proj.getWorldExtent(), bbox.extent)
+                      (proj.getWorldExtent() &&
+                        ol.extent.containsExtent(proj.getWorldExtent(), bbox.extent))
                         ? ol.proj.transformExtent(bbox.extent, bboxProj, proj)
                         : proj.getExtent();
                   }
