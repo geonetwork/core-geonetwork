@@ -1234,6 +1234,11 @@
               if (angular.isArray(getCapLayer.Dimension)) {
                 for (var i = 0; i < getCapLayer.Dimension.length; i++) {
                   var dimension = getCapLayer.Dimension[i];
+                  // WMS 1.1.x has the dimension values in Extent, which the
+                  // OpenLayers parser doesn't read
+                  if (!dimension.values) {
+                    continue;
+                  }
                   if (dimension.name == "elevation") {
                     layer.set("elevation", {
                       units: dimension.units,
