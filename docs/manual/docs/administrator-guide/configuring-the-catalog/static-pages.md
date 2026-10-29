@@ -27,15 +27,15 @@ To add new static pages go to **Admin Console** -->  **Settings** -->  **Static 
 
 - **Page content**: For formats other than **Web link** or **Email link**, allows editing the HTML / text content to display.
 
-- **Page section**: Section of the page to display the link. Currently implemented sections are `TOP` (top menu of the main page), `FOOTER` (footer of the main page), and `RECORD_VIEW_MENU` (toolbar shown on the record view page).
+- **Page section**: Section of the page to display the link. Currently implemented sections are `TOP` (top menu of the main page), `FOOTER` (footer of the main page), `RECORD_VIEW_MENU` (toolbar shown on the record view page), and `RECORD_EDITOR_MENU` (toolbar shown in the metadata editor).
 
-- **Workflow visibility (`RECORD_VIEW_MENU` only)**: Controls whether a page is shown for each workflow state.
+- **Workflow visibility (`RECORD_VIEW_MENU` and `RECORD_EDITOR_MENU` only)**: Controls whether a page is shown for each workflow state.
 
-  - `showWhenWorkflowDisabled`
-  - `showOnApproved`
-  - `showOnNonApproved`
+  - `showWhenWorkflowDisabled` (`RECORD_VIEW_MENU` and `RECORD_EDITOR_MENU`)
+  - `showOnApproved` (`RECORD_VIEW_MENU` only)
+  - `showOnNonApproved` (`RECORD_VIEW_MENU` only)
 
-  These options default to `true` (backward compatible).
+  These options default to `true` (backward compatible). In the metadata editor, approval status is not taken into account because an approved copy cannot be edited.
 
 - **Status**: Defines which users can see the link.
 
@@ -131,6 +131,45 @@ As with the top toolbar, insert a page as a simple menu using the page identifie
  "gn-recordview-download-menu",
  "gn-recordview-display-menu"]
 ```
+
+## Change the menu order in the metadata editor toolbar
+
+The metadata editor toolbar works the same way as the record view toolbar. Static pages can be inserted between the default editor actions. This can be configured in **Admin Console** --> **Settings** --> **User interface**, in the **Record Editor custom menu items** section.
+
+To add a static page to this area, create it first with the **Page section** set to `RECORD_EDITOR_MENU`. The **Workflow visibility** options also apply to this section.
+
+By default, the editor toolbar uses the following menu order:
+
+``` json
+["gn-editor-categories-menu",
+ "gn-editor-group-menu",
+ "gn-editor-tools-menu",
+ "gn-editor-validate-menu",
+ "gn-editor-cancel-menu",
+ "gn-editor-close-menu",
+ "gn-editor-save-menu",
+ "gn-editor-view-menu"]
+```
+
+If the **Record Editor custom menu items** list is empty, only this default menu order is used and static pages are not automatically added. Built-in entries can be reordered, or removed by omitting them from the list.
+
+Use the static page identifier directly (for example `validator`) when inserting custom pages, or a submenu object as for the record view. For example, to add an external validator link before the cancel button, create a **Web link** page `validator` in the `RECORD_EDITOR_MENU` section with the link `https://validator.example.org/?uuid={uuid}` and use:
+
+``` json
+["gn-editor-categories-menu",
+ "gn-editor-group-menu",
+ "gn-editor-tools-menu",
+ "gn-editor-validate-menu",
+ "validator",
+ "gn-editor-cancel-menu",
+ "gn-editor-close-menu",
+ "gn-editor-save-menu",
+ "gn-editor-view-menu"]
+```
+
+!!! note
+
+    External applications only have access to the saved version of the record. Save the record before opening a link if it has unsaved changes.
 
 ## Change the static pages order in the footer
 
