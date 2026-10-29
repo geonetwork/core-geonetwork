@@ -982,7 +982,7 @@
             // layers not accessible with CORS headers
             // This is optional if the WMS provides CORS
             if (gnViewerSettings.cesiumProxy) {
-              source.set("olcs.proxy", function (url) {
+              source.set("olcs_proxy", function (url) {
                 return gnGlobalSettings.proxyUrl + encodeURIComponent(url);
               });
             }
