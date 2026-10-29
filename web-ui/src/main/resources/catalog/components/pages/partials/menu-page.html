@@ -2,7 +2,7 @@
   <!-- Submenu dropdown toggle -->
   <a
     data-ng-if="isSubmenu"
-    data-ng-class="{'btn btn-default': renderAsButton}"
+    data-ng-class="{'btn btn-default': renderAsButton, 'navbar-btn': renderAsButton && section === 'record_editor_menu'}"
     class="dropdown-toggle gn-menuheader-xs"
     role="button"
     data-toggle="dropdown"
@@ -55,7 +55,7 @@
   <!--   Single page external link -->
   <a
     data-ng-if="!isSubmenu && page && isExternalLink"
-    data-ng-class="{'btn btn-default': renderAsButton}"
+    data-ng-class="{'btn btn-default': renderAsButton, 'navbar-btn': renderAsButton && section === 'record_editor_menu'}"
     title="{{page.label}}"
     href="{{page.link | replaceLinkPlaceholders:context}}"
     target="_blank"
@@ -70,7 +70,7 @@
   <!-- Single page internal link -->
   <a
     data-ng-if="!isSubmenu && page && !isExternalLink"
-    data-ng-class="{'btn btn-default': renderAsButton}"
+    data-ng-class="{'btn btn-default': renderAsButton, 'navbar-btn': renderAsButton && section === 'record_editor_menu'}"
     data-gn-active-tb-item="{{gnCfg.mods.page.appUrl + '/' + page.pageId}}?page={{page.pageId}}"
     title="{{page.pageId}}"
     data-ng-click="changePage($event)"
