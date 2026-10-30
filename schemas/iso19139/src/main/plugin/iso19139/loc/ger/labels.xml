@@ -2569,6 +2569,7 @@
     <condition/>
     <description>Zu verwendendes Verbindungsprotokoll</description>
     <helper>
+      <option value="ESRI:REST">ArcGIS REST Services</option>
       <option value="WWW:LINK-1.0-http--link">Webaddresse (URL)</option>
       <option value="WWW:LINK-1.0-http--samples">Beispielprodukt (URL)</option>
       <option value="WWW:LINK-1.0-http--related">Verwandter Link (URL)</option>
@@ -2592,6 +2593,13 @@
       <option value="OGC:WMC">OGC-WMC Web Map Context</option>
       <option value="OGC:WMS-http-get-capabilities">OGC-WMS Capabilities Service</option>
       <option value="OGC:WMTS">OGC-WMTS Web Map Tiled Service</option>
+      <option value="OGC:WMTS-1.0.0-http-get-capabilities">OGC-WMTS Capabilities Service (ver 1.0.0)</option>
+      <option value="INSPIRE Atom">INSPIRE Atom</option>
+      <option value="OGC:WNS">OGC-WNS Web Notification Service</option>
+      <option value="OGC:WPS">OGC-WPS Web Processing Service</option>
+      <option value="OGC:OWS-C">OGC OWS Context</option>
+      <option value="TMS">Tiled Map Service</option>
+      <option value="DOI">Digital Object Identifier (DOI)</option>
       <option value="CHTOPO:specialised-geoportal">Spezialisiertes Geoportal</option>
       <option value="GLG:KML-2.0-http-get-map">Google Earth KML Service (2.0)</option>
       <option value="ESRI:AIMS--http--configuration">ArcIMS Map Service Konfigurationsdatei(*.AXL)</option>
