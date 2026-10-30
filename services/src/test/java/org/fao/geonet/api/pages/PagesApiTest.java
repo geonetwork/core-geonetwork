@@ -286,6 +286,68 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
             .andExpect(content().string(containsString("\"pageId\":\"" + pageId + "\"")));
     }
 
+    @Test
+    public void recordEditorMenuSectionIsAvailable() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockMvc.perform(get("/srv/api/pages/config/sections")
+                .session(loginAsAnonymous())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("\"RECORD_EDITOR_MENU\"")));
+    }
+
+    @Test
+    public void recordEditorMenuPagesAreListedBySection() throws Exception {
+        final String language = "eng";
+        final String editorPageId = "editor-menu-" + UUID.randomUUID().toString().substring(0, 8);
+        final String viewPageId = "view-menu-" + UUID.randomUUID().toString().substring(0, 8);
+
+        Page editorPage = createPublicLinkPage(language, editorPageId, Page.PageSection.RECORD_EDITOR_MENU);
+        editorPage.setShowOnApproved(false);
+        pageRepository.saveAndFlush(editorPage);
+        pageRepository.saveAndFlush(createPublicLinkPage(language, viewPageId, Page.PageSection.RECORD_VIEW_MENU));
+
+        Optional<Page> saved = pageRepository.findById(new PageIdentity(language, editorPageId));
+        Assert.assertTrue(saved.isPresent());
+        Assert.assertEquals(1, saved.get().getSections().size());
+        Assert.assertTrue(saved.get().getSections().contains(Page.PageSection.RECORD_EDITOR_MENU));
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockMvc.perform(get("/srv/api/pages")
+                .param("language", language)
+                .param("section", "RECORD_EDITOR_MENU")
+                .session(loginAsAdmin())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("\"pageId\":\"" + editorPageId + "\"")))
+            .andExpect(content().string(containsString("\"showOnApproved\":false")))
+            .andExpect(content().string(not(containsString("\"pageId\":\"" + viewPageId + "\""))));
+
+        this.mockMvc.perform(get("/srv/api/pages")
+                .param("language", language)
+                .param("section", "RECORD_VIEW_MENU")
+                .session(loginAsAdmin())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("\"pageId\":\"" + viewPageId + "\"")))
+            .andExpect(content().string(not(containsString("\"pageId\":\"" + editorPageId + "\""))));
+    }
+
+    private Page createPublicLinkPage(String language, String pageId, Page.PageSection section) {
+        return new Page(
+            new PageIdentity(language, pageId),
+            null,
+            "https://validator.example.org/" + pageId + "?uuid={uuid}",
+            Page.PageFormat.LINK,
+            new ArrayList<>(Collections.singletonList(section)),
+            Page.PageStatus.PUBLIC,
+            pageId,
+            null,
+            new LinkedHashSet<>());
+    }
+
     private Page createPage(String language, String pageId, Page.PageStatus status, Group group) {
         return new Page(
             new PageIdentity(language, pageId),

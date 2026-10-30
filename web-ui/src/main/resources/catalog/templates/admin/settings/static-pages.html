@@ -311,14 +311,17 @@
 
           <div
             class="form-group"
-            data-ng-show="staticPageSelected.sections.indexOf('RECORD_VIEW_MENU') > -1"
+            data-ng-show="staticPageSelected.sections.indexOf('RECORD_VIEW_MENU') > -1 || staticPageSelected.sections.indexOf('RECORD_EDITOR_MENU') > -1"
           >
             <label class="control-label col-sm-3" data-translate=""
               >pageVisibilityConditions</label
             >
 
             <div class="col-sm-9">
-              <div class="checkbox">
+              <div
+                class="checkbox"
+                data-ng-show="staticPageSelected.sections.indexOf('RECORD_VIEW_MENU') > -1"
+              >
                 <label>
                   <input
                     type="checkbox"
@@ -327,7 +330,10 @@
                   {{'pageVisibility-showOnNonApproved' | translate}}
                 </label>
               </div>
-              <div class="checkbox">
+              <div
+                class="checkbox"
+                data-ng-show="staticPageSelected.sections.indexOf('RECORD_VIEW_MENU') > -1"
+              >
                 <label>
                   <input
                     type="checkbox"

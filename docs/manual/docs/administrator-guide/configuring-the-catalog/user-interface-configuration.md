@@ -346,6 +346,24 @@ This section defines the configuration for the map shown when editing a record. 
 -   **Editor page indent type**: Choose from the options for the indent style when editing a record. The default is for minimal indents, select `Colored indents` to use the style shown below:
 -   **Workflow search record types**: Define which record types to include in the workflow search (e.g., 'n' for metadata, 'e' for entries).
 -   **Facets configuration**: Define the configuration for facets in the editor board. See [Configuring faceted search](../../customizing-application/configuring-faceted-search.md). The configurations are defined using JSON following the [Elasticsearch Aggregations API](https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket.html).
+-   **Record Editor custom menu items**: Use this setting to control the order of the default metadata editor toolbar actions and any static pages configured for the editor toolbar. It works the same way as the **Record View custom menu items** setting. By default, the editor toolbar uses the following menu keys:
+
+    ``` json
+    ["gn-editor-categories-menu",
+     "gn-editor-group-menu",
+     "gn-editor-tools-menu",
+     "gn-editor-validate-menu",
+     "gn-editor-cancel-menu",
+     "gn-editor-close-menu",
+     "gn-editor-save-menu",
+     "gn-editor-view-menu"]
+    ```
+
+    If this list is empty, only those default entries are shown and static pages are not added automatically. Removing a key from the list hides the corresponding action.
+
+    Custom static pages can be inserted between these default entries. Static pages used there must be created for the `RECORD_EDITOR_MENU` section and referenced by page identifier (for example `documentation`), or grouped in a submenu using an object (eg. `{"externalTools": {"icon": "fa-wrench", "items": ["validator", "portal"]}}`). Links can use `{uuid}` and `{id}` to refer to the record being edited. The `gn-` prefix is reserved for built-in entries and should not be used for custom page identifiers. See [Adding static pages](../../customizing-application/adding-static-pages.md).
+
+    The `gn-editor-tools-menu` entry is only shown when versioning is enabled. The `gn-editor-view-menu` entry contains the editor views of the current schema.
 
 ## Workflow assist
 
