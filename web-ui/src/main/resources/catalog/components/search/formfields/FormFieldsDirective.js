@@ -265,20 +265,15 @@
           },
 
           link: function (scope, element, attrs) {
-            var url = "info?_content_type=json&type=users";
+            $http.get("../api/users", { cache: true }).then(function (response) {
+              scope.users = response.data;
 
-            $http.get(url, { cache: true }).then(function (response) {
-              var data = response.data;
-
-              scope.users = data !== "null" ? data.users : null;
-
-              // Select by default the first group.
+              // Select by default the first user.
               if (
                 (angular.isUndefined(scope.ownerUser) || scope.ownerUser === "") &&
-                data.users &&
-                data.users.length > 0
+                scope.users.length > 0
               ) {
-                scope.ownerUser = data.users[0]["@id"];
+                scope.ownerUser = scope.users[0].id;
               }
             });
           }

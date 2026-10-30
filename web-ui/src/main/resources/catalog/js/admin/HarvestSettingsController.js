@@ -1136,9 +1136,22 @@
       // WFS GetFeature harvester
       $scope.harvesterTemplates = null;
       var loadHarvesterTemplates = function () {
-        $http.get("info?_content_type=json&type=templates").then(function (response) {
-          $scope.harvesterTemplates = response.data.templates;
-        });
+        $http
+          .post("../api/search/records/_search", {
+            query: { terms: { isTemplate: ["y"] } },
+            _source: ["id", "documentStandard", "resourceTitleObject"],
+            from: 0,
+            size: 1000
+          })
+          .then(function (response) {
+            $scope.harvesterTemplates = response.data.hits.hits.map(function (h) {
+              return {
+                id: h._source.id,
+                schema: h._source.documentStandard,
+                title: (h._source.resourceTitleObject || {}).default
+              };
+            });
+          });
       };
 
       $scope.harvesterGetFeatureXSLT = null;

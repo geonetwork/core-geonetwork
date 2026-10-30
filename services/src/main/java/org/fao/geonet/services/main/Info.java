@@ -59,6 +59,11 @@ import static com.google.common.xml.XmlEscapers.xmlContentEscaper;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_HARVESTER_ENABLE_EDITING;
 import static org.fao.geonet.kernel.setting.Settings.SYSTEM_HARVESTER_ENABLE_PRIVILEGES_MANAGEMENT;
 
+/**
+ * @deprecated No longer used by the UI, use the REST API instead (eg. /api/groups, /api/users,
+ * /api/sources). Kept because other catalogues may still call info?type=sources when harvesting
+ * this one.
+ */
 @Deprecated
 public class Info implements Service {
     public static final String SYSTEMINFO = "systeminfo";
