@@ -155,42 +155,9 @@
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/catalog.edit!?.*"
                            access="hasAuthority('Editor')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematrontype!?.*"
-                           access="hasAuthority('Administrator')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematron.list!?.*"
-                           access="hasAuthority('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematron.exists!?.*"
-                           access="hasAuthority('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematron.update!?.*"
-                           access="hasAuthority('Administrator')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematroncriteria.list!?.*"
-                           access="hasAuthority('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematroncriteria.exists!?.*"
-                           access="hasAuthority('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematroncriteria.add!?.*"
-                           access="hasAuthority('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematroncriteria.update!?.*"
-                           access="hasAuthority('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematroncriteria.delete!?.*"
-                           access="hasAuthority('Administrator')"/>
 
-        <sec:intercept-url
-          pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematroncriteriagroup.list!?.*"
-          access="hasAuthority('Administrator')"/>
-        <sec:intercept-url
-          pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematroncriteriagroup.exists!?.*"
-          access="hasAuthority('Administrator')"/>
-        <sec:intercept-url
-          pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematroncriteriagroup.add!?.*"
-          access="hasAuthority('Administrator')"/>
-        <sec:intercept-url
-          pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematroncriteriagroup.update!?.*"
-          access="hasAuthority('Administrator')"/>
-        <sec:intercept-url
-          pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematroncriteriagroup.delete!?.*"
-          access="hasAuthority('Administrator')"/>
 
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/systeminfo/.+"
                            access="hasAuthority('Administrator')"/>
