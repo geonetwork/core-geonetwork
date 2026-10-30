@@ -94,12 +94,18 @@
           </tab>
           <tab
             heading="{{'addLayerFromFiles' | translate}}"
-            data-ng-if="!disabledTools.addLayersKml"
+            data-ng-if="!(disabledTools.addLayersKml && disabledTools.addLayersCog)"
             active="addLayerTabs.kml"
             role="tab"
           >
-            <label>{{'LayerKML' | translate}}</label>
-            <div gn-kml-import="" gn-kml-import-map="map"></div>
+            <div data-ng-if="!disabledTools.addLayersKml">
+              <label>{{'LayerKML' | translate}}</label>
+              <div gn-kml-import="" gn-kml-import-map="map"></div>
+            </div>
+            <div data-ng-if="!disabledTools.addLayersCog">
+              <label for="gn-cog-url">{{'LayerCOG' | translate}}</label>
+              <div gn-cog-import="" gn-cog-import-map="map"></div>
+            </div>
           </tab>
         </tabset>
       </div>

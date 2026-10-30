@@ -491,6 +491,7 @@
     "addLayersWfsTool": "WFS service",
     "addLayersEsriRestTool": "ArcGIS REST service",
     "addLayersKmlTool": "Files (KML, KMZ, GPX, GeoJSON, TopoJSON)",
+    "addLayersCogTool": "Cloud Optimized GeoTIFF (COG)",
     "addLayersTypeDisabled": "Adding {{type}} services is disabled in this catalog",
     "layersTool": "Manager layers",
     "filterTool": "Search & filter features",
