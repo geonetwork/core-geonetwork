@@ -26,6 +26,7 @@ package org.fao.geonet.api;
 import com.google.common.collect.Sets;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jeeves.config.springutil.ReadOnlyMvcInterceptor;
 import org.fao.geonet.api.exception.*;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
@@ -109,6 +110,18 @@ public class GlobalExceptionController {
         storeApiErrorCause(exception);
 
         return new ApiError("unauthorized", exception);
+    }
+
+    @ResponseBody
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ApiResponse(content = {@Content(mediaType = APPLICATION_JSON_VALUE)})
+    @ExceptionHandler({
+        ReadOnlyMvcInterceptor.InReadOnlyModeException.class
+    })
+    public Object readOnlyModeHandler(final Exception exception) {
+        storeApiErrorCause(exception);
+
+        return new ApiError("service_unavailable", exception);
     }
 
     @ResponseBody

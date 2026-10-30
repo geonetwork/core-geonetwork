@@ -623,7 +623,7 @@ public class SiteApi implements ApplicationEventPublisherAware {
     @ResponseBody
     public boolean isReadOnly(
     ) throws Exception {
-        return ApplicationContextHolder.get().getBean(NodeInfo.class).isReadOnly();
+        return NodeInfo.isReadOnly();
     }
 
 
