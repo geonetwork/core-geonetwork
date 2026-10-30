@@ -43,8 +43,7 @@ import java.util.List;
 
 /**
  * For editing : removes a concept from a thesaurus. Use parameter "namespace" and "code" to remove
- * a specific concept, if not set, the current selection is removed ({@link
- * org.fao.geonet.services.thesaurus.SelectKeywords}).
+ * a specific concept, if not set, the keywords selected in the current keyword search are removed.
  * <p>
  * Access is restricted
  */

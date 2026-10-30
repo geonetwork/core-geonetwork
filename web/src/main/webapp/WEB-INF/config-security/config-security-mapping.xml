@@ -49,8 +49,6 @@
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/metadata/.*" access="permitAll"/>
         <sec:intercept-url pattern="/static/wroAPI/.*" access="hasAuthority('Administrator')"/>
         <sec:intercept-url pattern="/static/.*" access="permitAll"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/xml.thesaurus.getList!?.*"
-                           access="permitAll"/>
         <sec:intercept-url pattern="/monitor/.*" access="hasAuthority('Monitor')"/>
         <sec:intercept-url pattern="/monitor" access="hasAuthority('Monitor')"/>
         <sec:intercept-url pattern="/\w*healthcheck"
@@ -60,18 +58,6 @@
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/.+\?casLogin.*"
                            access="hasAuthority('RegisteredUser')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/debug.openconnection.accessors!?.*"
-                           access="hasAuthority('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/debug.filehandles!?.*"
-                           access="hasAuthority('Administrator')"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/pdf.search!?.*"
-                           access="permitAll"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/rss.latest!?.*"
-                           access="permitAll"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/rss.search!?.*"
-                           access="permitAll"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/rss.present!?.*"
-                           access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/robots.txt"
                            access="permitAll"/>
         <sec:intercept-url pattern="/robots.txt" access="permitAll"/>
@@ -153,14 +139,11 @@
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw-.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/csw!?.*" access="permitAll"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/lang!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/catalog.search!?.*"
                            access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/catalog.signin!?.*"
                            access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/contact.us!?.*" access="permitAll"/>
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/contact.send!?.*"
-                           access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/new.account!?.*"
                            access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/new.password!?.*"
@@ -171,9 +154,6 @@
                            access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/catalog.edit!?.*"
                            access="hasAuthority('Editor')"/>
-
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/system.properties.set!?.*"
-                           access="hasAuthority('Administrator')"/>
 
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematrontype!?.*"
                            access="hasAuthority('Administrator')"/>
@@ -212,9 +192,6 @@
           pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.schematroncriteriagroup.delete!?.*"
           access="hasAuthority('Administrator')"/>
 
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/admin.logfile.list!?.*"
-                           access="hasAuthority('Administrator')"/>
-
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/systeminfo/.+"
                            access="hasAuthority('Administrator')"/>
 
@@ -235,13 +212,6 @@
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/atom/describe/dataset!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/atom/download/dataset!?.*" access="permitAll"/>
 
-        <!-- Metadata identifier templates -->
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/metadataIdentifierTemplates!?.*"
-                           access="hasAuthority('Editor')"/>
-
-        <!-- Retrieve public metadata as RDF  -->
-        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/rdf.metadata.public.get!?.*"
-                           access="permitAll"/>
 
         <sec:intercept-url pattern="/error" access="permitAll"/>
         <sec:intercept-url pattern="/home\?.*" access="permitAll"/>

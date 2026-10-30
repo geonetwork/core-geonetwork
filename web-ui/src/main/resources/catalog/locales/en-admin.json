@@ -632,7 +632,6 @@
     "requirementDISABLED": "Ignore this group, the schematron will not run even if criteria match",
     "requirementREPORT_ONLY": "Only Report errors, does not affect validity of metadata",
     "requirementREQUIRED": "Required to be valid",
-    "rss.search": "RSS",
     "runCSWRequest": "Send CSW request",
     "runHarvester": "Harvest",
     "runProcess": "Run",

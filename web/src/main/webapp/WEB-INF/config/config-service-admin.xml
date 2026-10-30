@@ -30,17 +30,6 @@
       <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
 
-    <service name="system.properties.set">
-      <documentation><![CDATA[
-      Configure geonetwork's thread pool to not add tasks to thread pool but instead execute them in calling thread.
-
-      Used by integration test.
-
-      ]]></documentation>
-      <!-- SetSystemProperties is no longer present in 4.x  -->
-      <!--class name=".services.config.SetSystemProperties"/-->
-    </service>
-
     <service name="versioning.logdata">
       <documentation><![CDATA[
       Return versioning history.

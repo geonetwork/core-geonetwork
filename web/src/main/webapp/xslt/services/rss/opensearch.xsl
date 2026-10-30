@@ -42,12 +42,6 @@
       <Contact>
         <xsl:value-of select="//feedback/email"/>
       </Contact>
-      <Url type="application/rss+xml">
-        <xsl:attribute name="template">
-          <xsl:value-of select="concat($fullURLForService, '/rss.search?')"/>
-          <xsl:text>any={searchTerms}&amp;hitsPerPage={count?}&amp;bbox={geo:box?}&amp;geometry={geo:geometry?}&amp;name={geo:locationString?}</xsl:text>
-        </xsl:attribute>
-      </Url>
       <Url type="application/rdf+xml">
         <xsl:attribute name="template">
           <xsl:value-of

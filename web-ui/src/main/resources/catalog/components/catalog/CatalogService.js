@@ -372,7 +372,6 @@
     search: "q",
     internalSearch: "qi",
     subtemplate: "subtemplate",
-    lang: "lang?_content_type=json&",
     removeThumbnail: "md.thumbnail.remove?_content_type=json&",
     removeOnlinesrc: "resource.del.and.detach", // TODO: CHANGE
     selectionLayers: "selection.layers",
