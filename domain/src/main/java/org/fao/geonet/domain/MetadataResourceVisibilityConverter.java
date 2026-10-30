@@ -51,6 +51,9 @@ public class MetadataResourceVisibilityConverter
 
     @Override
     public String convertToDatabaseColumn(MetadataResourceVisibility visibility) {
+        if (visibility == null) {
+            return null;
+        }
         switch (visibility) {
             case PRIVATE:
                 return "P";
@@ -66,6 +69,9 @@ public class MetadataResourceVisibilityConverter
 
     @Override
     public MetadataResourceVisibility convertToEntityAttribute(String s) {
+        if (s == null) {
+            return null;
+        }
         switch (s) {
             case "P":
                 return MetadataResourceVisibility.PRIVATE;
