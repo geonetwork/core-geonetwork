@@ -120,7 +120,6 @@
 
   <include>config/config-service-rss.xml</include>
   <include>config/config-service-admin.xml</include>
-  <include>config/config-service-admin-harvesting.xml</include>
   <include>config/config-service-csw.xml</include>
   <include>config/config-ui-search.xml</include>
   <include>config/config-ui-metadata.xml</include>

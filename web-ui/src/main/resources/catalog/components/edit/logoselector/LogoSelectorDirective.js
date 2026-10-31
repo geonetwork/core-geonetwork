@@ -50,11 +50,9 @@
             $(element).find("input").get(0).value = scope.path + i;
           };
 
-          $http
-            .get("admin.harvester.info@json?type=icons", { cache: true })
-            .then(function (response) {
-              scope.logos = response.data[0];
-            });
+          $http.get("../api/harvesters/icons", { cache: true }).then(function (response) {
+            scope.logos = response.data;
+          });
         }
       };
     }
