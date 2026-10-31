@@ -27,34 +27,12 @@
   var module = angular.module("gn_vcs_service", []);
 
   module.factory("gnVcsService", [
-    "$q",
-    "$rootScope",
     "$http",
-    "gnHttp",
-    function ($q, $rootScope, $http, gnHttp) {
-      var format = function (data) {
-        angular.forEach(data.entry, function (log) {
-          log.date = log.date.replace(" ", "T");
-          // Add user info
+    function ($http) {
+      var getLog = function () {
+        return $http.get("../api/records/versions/log").then(function (response) {
+          return response.data;
         });
-        return data;
-      };
-
-      var getLog = function (metadataId) {
-        var url = "versioning.logdata@json";
-        if (metadataId) {
-          url += "?id=" + metadataId;
-        }
-        var defer = $q.defer();
-        $http.get(url).then(
-          function (response) {
-            defer.resolve(format(response.data));
-          },
-          function (response) {
-            defer.reject(response.data);
-          }
-        );
-        return defer.promise;
       };
 
       return {

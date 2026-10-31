@@ -29,15 +29,5 @@
       <class name=".services.main.Info"/>
       <error sheet="../xslt/error/error-json.xsl" contentType="application/json" />
     </service>
-
-    <service name="versioning.logdata">
-      <documentation><![CDATA[
-      Return versioning history.
-
-      Parameters:
-      * id: (optional) metadata id.
-      ]]></documentation>
-      <class name=".guiservices.versioning.Get"/>
-    </service>
   </services>
 </geonet>

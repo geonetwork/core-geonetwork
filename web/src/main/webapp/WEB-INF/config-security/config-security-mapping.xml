@@ -65,6 +65,9 @@
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/q!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/qi!?.*" access="permitAll"/>
         <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/info!?.*" access="permitAll"/>
+        <!-- Former download links stored in records, redirected to the attachment API which checks privileges -->
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/file.disclaimer!?.*" access="permitAll"/>
+        <sec:intercept-url pattern="/[a-zA-Z0-9_\-]+/[a-z]{2,3}/resources.get.archive!?.*" access="permitAll"/>
 
 
         <sec:intercept-url

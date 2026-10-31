@@ -33,6 +33,11 @@ import org.fao.geonet.api.processing.report.MetadataProcessingReport;
 import org.fao.geonet.api.processing.report.SimpleMetadataProcessingReport;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.domain.AbstractMetadata;
+import org.fao.geonet.guiservices.versioning.MetadataAction;
+import org.fao.geonet.guiservices.versioning.MetadataActionListSingleton;
+import org.fao.geonet.guiservices.versioning.MyLogEntryHandler;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SvnManager;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
@@ -43,10 +48,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.tmatesoft.svn.core.SVNURL;
+import org.tmatesoft.svn.core.io.SVNRepository;
+import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.api.ApiParams.*;
 
@@ -67,6 +82,22 @@ public class MetadataVersionningApi {
     AccessManager accessMan;
     @Autowired
     IMetadataUtils metadataRepository;
+    @Autowired
+    GeonetworkDataDirectory dataDirectory;
+    @Autowired
+    SvnManager svnManager;
+
+    private static final Map<String, Comparator<MetadataAction>> LOG_SORT = new HashMap<>();
+
+    static {
+        LOG_SORT.put("date", MetadataAction.DATE_COMPARATOR_ASC);
+        LOG_SORT.put("user", MetadataAction.USERNAME_COMPARATOR_ASC);
+        LOG_SORT.put("ip", MetadataAction.IP_COMPARATOR_ASC);
+        LOG_SORT.put("action", MetadataAction.ACTION_COMPARATOR_ASC);
+        LOG_SORT.put("subject", MetadataAction.SUBJECT_COMPARATOR_ASC);
+        LOG_SORT.put("id", MetadataAction.ID_COMPARATOR_ASC);
+        LOG_SORT.put("title", MetadataAction.TITLE_COMPARATOR_ASC);
+    }
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "(Experimental) Enable version control",
@@ -151,5 +182,101 @@ public class MetadataVersionningApi {
         }
 
         return report;
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "(Experimental) Get the version control log",
+        description = "Changes recorded in the version control repository (records added, modified or deleted, " +
+            "and changes to their owner, privileges, categories or status). Empty when version control is disabled.")
+    @GetMapping(value = "/versions/log", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseBody
+    public VersionLog getVersionLog(
+        @Parameter(description = "Sort by date, user, ip, action, subject, id or title")
+        @RequestParam(defaultValue = "date") String sort,
+        @Parameter(description = "ASC or DESC")
+        @RequestParam(defaultValue = "DESC") String dir,
+        @RequestParam(defaultValue = "0") int start,
+        @RequestParam(defaultValue = "30") int limit) throws Exception {
+        Comparator<MetadataAction> comparator = LOG_SORT.get(sort);
+        if (comparator == null) {
+            throw new IllegalArgumentException(String.format("Unknown sort '%s'. Use one of %s.", sort, LOG_SORT.keySet()));
+        }
+        if ("DESC".equalsIgnoreCase(dir)) {
+            comparator = comparator.reversed();
+        }
+
+        List<MetadataAction> actions = refreshVersionLog();
+        actions.sort(comparator);
+        List<VersionLogEntry> entries = actions.stream()
+            .skip(Math.max(start, 0))
+            .limit(Math.max(limit, 0))
+            .map(VersionLogEntry::new)
+            .collect(Collectors.toList());
+        return new VersionLog(actions.size(), entries);
+    }
+
+    /**
+     * Reads the changes committed to the repository since the last call. Reading titles is slow, so
+     * the changes are kept in memory. Returns a copy that the caller can sort.
+     */
+    private synchronized List<MetadataAction> refreshVersionLog() throws Exception {
+        if (!svnManager.isEnabled()) {
+            return new ArrayList<>();
+        }
+        MetadataActionListSingleton singleton = MetadataActionListSingleton.getInstance();
+        List<MetadataAction> actions = singleton.getMetadataActions();
+
+        SVNRepository repository = SVNRepositoryFactory.create(SVNURL.fromFile(dataDirectory.getMetadataRevisionDir().toFile()));
+        try {
+            long startRevision = actions == null || actions.isEmpty() ? 0L : actions.get(actions.size() - 1).getRevision() + 1;
+            if (startRevision <= repository.getLatestRevision()) {
+                MyLogEntryHandler logEntryHandler = new MyLogEntryHandler();
+                repository.log(new String[]{""}, startRevision, -1, true, true, logEntryHandler);
+                List<MetadataAction> newActions = logEntryHandler.getMetadataActionList();
+                for (MetadataAction action : newActions) {
+                    action.loadTitle(repository);
+                }
+                if (actions == null) {
+                    actions = newActions;
+                } else {
+                    actions.addAll(newActions);
+                }
+                singleton.setMetadataActions(actions);
+            }
+        } finally {
+            repository.closeSession();
+        }
+        return actions == null ? new ArrayList<>() : new ArrayList<>(actions);
+    }
+
+    public static class VersionLog {
+        public final int totalCount;
+        public final List<VersionLogEntry> entries;
+
+        VersionLog(int totalCount, List<VersionLogEntry> entries) {
+            this.totalCount = totalCount;
+            this.entries = entries;
+        }
+    }
+
+    public static class VersionLogEntry {
+        public final String date;
+        public final String user;
+        public final String ip;
+        public final String action;
+        public final String subject;
+        public final int id;
+        public final String title;
+
+        VersionLogEntry(MetadataAction action) {
+            this.date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").format(action.getDate());
+            this.user = action.getUsername();
+            this.ip = action.getIp();
+            this.action = action.translatedAction();
+            this.subject = action.translatedSubject();
+            this.id = action.getId();
+            this.title = action.getTitle();
+        }
     }
 }

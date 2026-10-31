@@ -225,6 +225,13 @@ public class SvnManager implements AfterCommitTransactionListener, BeforeRollbac
     }
 
     /**
+     * @return true when metadata version control is enabled (and its repository exists).
+     */
+    public boolean isEnabled() {
+        return _enabled;
+    }
+
+    /**
      * Spring Aspect Oriented programming for intercepting transaction commits.
      */
     public void afterCommit(TransactionStatus status) {
