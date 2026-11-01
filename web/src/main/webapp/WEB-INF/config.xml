@@ -45,16 +45,6 @@
     <localized>true</localized>
     <contentType>text/html; charset=UTF-8</contentType>
 
-    <gui>
-      <xml name="strings" file="xml/strings.xml"/>
-
-      <call name="isolanguages" class="org.fao.geonet.guiservices.isolanguages.Get"/>
-
-      <call name="session" class="jeeves.guiservices.session.Get"/>
-      <call name="env" class="org.fao.geonet.guiservices.util.Env"/>
-      <call name="svnmanager" class="org.fao.geonet.guiservices.util.GetSvnDetails"/>
-      <call name="schemas" class="org.fao.geonet.guiservices.schemas.GetSchemaInfo"/>
-    </gui>
 
     <!-- no privileges to access the service -->
 
@@ -118,10 +108,5 @@
 
   <!-- ====================================================================== -->
 
-  <include>config/config-service-rss.xml</include>
-  <include>config/config-service-admin.xml</include>
-  <include>config/config-ui-search.xml</include>
-  <include>config/config-ui-metadata.xml</include>
-  <include>config/config-ui-admin.xml</include>
   <include>config/config-service-monitoring.xml</include>
 </geonet>

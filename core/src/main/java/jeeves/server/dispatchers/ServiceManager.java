@@ -142,6 +142,14 @@ public class ServiceManager {
     public boolean isStartupError() {
         return startupError;
     }
+
+    public Map<String, String> getStartupErrors() {
+        return startupErrors;
+    }
+
+    public String getBaseUrl() {
+        return baseUrl;
+    }
     //---------------------------------------------------------------------------
 
     public void setBaseUrl(String name) {

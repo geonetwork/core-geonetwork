@@ -25,15 +25,17 @@ package org.fao.geonet.services.main;
 
 import com.google.common.collect.Maps;
 import jeeves.component.ProfileManager;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
+import jeeves.constants.Jeeves;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
+import jeeves.server.dispatchers.ServiceManager;
 import org.fao.geonet.GeonetContext;
 import org.fao.geonet.SystemInfo;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.JeevesException;
+import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.region.RegionsDAO;
 import org.fao.geonet.kernel.search.index.BatchOpsMetadataReindexer;
@@ -45,12 +47,22 @@ import org.fao.geonet.repository.specification.GroupSpecs;
 import org.fao.geonet.repository.specification.SettingSpec;
 import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
+import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.*;
@@ -65,7 +77,8 @@ import static org.fao.geonet.kernel.setting.Settings.SYSTEM_HARVESTER_ENABLE_PRI
  * this one.
  */
 @Deprecated
-public class Info implements Service {
+@Controller
+public class Info {
     public static final String SYSTEMINFO = "systeminfo";
     public static final String STATUS = "status";
     public static final String AUTH = "auth";
@@ -91,52 +104,67 @@ public class Info implements Service {
     private static final String SCHEMAS = "schemas";
     private static final String STAGING_PROFILE = "stagingProfile";
 
-    private Path xslPath;
-    private Path otherSheets;
-    private ServiceConfig _config;
+    @Autowired
+    private ServiceManager serviceManager;
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
+    @Autowired
+    private GeonetworkDataDirectory dataDirectory;
 
     /**
-     * @param appPath
-     * @param config
-     * @throws Exception
+     * Returns the requested information (one or more type parameters) as XML, or as JSON
+     * with _content_type=json.
      */
-    public void init(Path appPath, ServiceConfig config) throws Exception {
-        xslPath = appPath.resolve(Geonet.Path.STYLESHEETS).resolve("xml");
-        otherSheets = appPath.resolve(Geonet.Path.STYLESHEETS);
-        _config = config;
+    @RequestMapping(value = "/{portal}/{lang:[a-z]{3}}/info", method = {RequestMethod.GET, RequestMethod.POST})
+    public void info(@PathVariable String lang, HttpServletRequest request, HttpServletResponse response)
+        throws Exception {
+        Element params = new Element(Jeeves.Elem.REQUEST);
+        for (Enumeration<String> names = request.getParameterNames(); names.hasMoreElements(); ) {
+            String name = names.nextElement();
+            for (String value : request.getParameterValues(name)) {
+                params.addContent(new Element(name).setText(value));
+            }
+        }
+        ServiceContext context = serviceManager.createServiceContext("info", lang, request);
+        context.setAsThreadLocal();
+
+        response.addHeader("Pragma", "no-cache");
+        response.addHeader("Cache-Control", "no-cache");
+        response.addHeader("Expires", "-1");
+        Element result;
+        try {
+            // JeevesDispatcherServlet already runs every request in a transaction.
+            result = exec(params, context);
+        } catch (Exception e) {
+            Element error = JeevesException.toElement(e).addContent(new Element(Jeeves.Elem.REQUEST)
+                .addContent(new Element("language").setText(lang))
+                .addContent(new Element("service").setText("info")));
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            response.setContentType("application/json");
+            try {
+                ByteArrayOutputStream json = new ByteArrayOutputStream();
+                Xml.transform(new Element(Jeeves.Elem.ROOT).addContent(error),
+                    dataDirectory.getWebappDir().resolve("xslt/error/error-json.xsl"), json);
+                json.writeTo(response.getOutputStream());
+            } catch (Exception transformError) {
+                Log.error(Geonet.GEONETWORK, "Failed to render info error: " + transformError.getMessage(), transformError);
+            }
+            return;
+        }
+
+        if (org.apache.commons.lang.StringUtils.contains(request.getQueryString(), "_content_type=json")) {
+            response.setContentType("application/json; charset=UTF-8");
+            response.getOutputStream().write(Xml.getJSON(result).getBytes(StandardCharsets.UTF_8));
+        } else {
+            response.setContentType("application/xml; charset=UTF-8");
+            Xml.writeResponse(new org.jdom.Document(result), response.getOutputStream());
+        }
     }
 
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
-
-    /**
-     * @param inParams
-     * @param context
-     * @return
-     * @throws Exception
-     */
-    public Element exec(Element inParams, ServiceContext context) throws Exception {
+    private Element exec(Element inParams, ServiceContext context) throws Exception {
         GeonetContext gc = (GeonetContext) context.getHandlerContext(Geonet.CONTEXT_NAME);
         SettingManager sm = gc.getBean(SettingManager.class);
 
         Element params = (Element) inParams.clone();
-
-        // --- if we have a parameter specified in the config then use it instead
-        // --- of the usual params
-        String ptype = _config.getValue("type");
-        if (ptype != null) {
-            params.removeContent();
-            params.addContent(new Element("type").setText(ptype));
-        }
 
         Element result = new Element("root");
 
@@ -248,7 +276,8 @@ public class Info implements Service {
         }
 
         result.addContent(getEnv(context));
-        Element response = Xml.transform(result, xslPath.resolve("info.xsl"));
+        Element response = Xml.transform(result,
+            dataDirectory.getWebappDir().resolve(Geonet.Path.STYLESHEETS).resolve("xml/info.xsl"));
 
         return response;
     }
