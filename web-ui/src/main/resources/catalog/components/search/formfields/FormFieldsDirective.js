@@ -458,65 +458,6 @@
 
     /**
      * @ngdoc directive
-     * @name gn_formfields.directive:gnSearchSuggest
-     * @restrict A
-     *
-     * @description
-     * Add a multiselect typeahead based input for suggestion.
-     * It binds a tagsinput to the input for multi select.
-     * It uses typeahead to retrieve and display suggestions from the geonetwork
-     * open suggestion service `suggest`, in remote mode.
-     * The index fields for the suggestion is given by the `gnSearchSuggest`
-     * attribute.
-     * By default, the list is not shown on click even if the input value is
-     * empty.
-     */
-    .directive("gnSearchSuggest", [
-      "suggestService",
-      function (suggestService) {
-        return {
-          restrict: "A",
-          scope: {
-            field: "@gnSearchSuggest",
-            startswith: "@gnSearchSuggestStartswith",
-            multi: "@"
-          },
-          link: function (scope, element, attrs) {
-            var remote = {
-              url: suggestService.getUrl(
-                "QUERY",
-                scope.field,
-                scope.startswith ? "STARTSWITHFIRST" : "ALPHA"
-              ),
-              filter: suggestService.filterResponse,
-              wildcard: "QUERY"
-            };
-            if (angular.isUndefined(scope.multi)) {
-              element.typeahead({
-                remote: remote
-              });
-            } else {
-              element.tagsinput({});
-              element
-                .tagsinput("input")
-                .typeahead({
-                  remote: remote
-                })
-                .bind(
-                  "typeahead:selected",
-                  $.proxy(function (obj, datum) {
-                    this.tagsinput("add", datum.value);
-                    this.tagsinput("input").typeahead("setQuery", "");
-                  }, element)
-                );
-            }
-          }
-        };
-      }
-    ])
-
-    /**
-     * @ngdoc directive
      * @name gn_formfields.directive:gnRegionMultiselect
      * @restrict A
      *

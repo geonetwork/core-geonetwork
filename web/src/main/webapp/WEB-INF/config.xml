@@ -29,41 +29,12 @@
 		<!-- Size must be in megabyte (integer), 100MB by default -->
 		<maxUploadSize>100</maxUploadSize>
 		<uploadDir>./data/tmp</uploadDir>
-		<debug>false</debug>
 	</general>
 
   <!-- ====================================================================== -->
 
   <default>
-    <service>home</service>
-    <!-- the following service is called if there is an exception raised
-            during the initialization of resources or
-            the appHandler org.fao.geonet.Geonetwork
-        -->
-    <startupErrorService>error</startupErrorService>
     <language>eng</language>
-    <localized>true</localized>
-    <contentType>text/html; charset=UTF-8</contentType>
-
-
-    <!-- no privileges to access the service -->
-
-    <error id="service-not-allowed" sheet="../xslt/common/error.xsl" statusCode="403">
-      <xml name="error" file="xml/privileges-error.xml"/>
-    </error>
-
-    <!-- data in upload too big -->
-
-    <error id="file-upload-too-big" sheet="../xslt/common/error.xsl">
-      <xml name="error" file="xml/file-too-big-error.xml"/>
-    </error>
-
-    <!-- general error -->
-
-    <error sheet="../xslt/common/error.xsl">
-      <xml name="error" file="xml/error.xml"/>
-    </error>
-
   </default>
 
   <!-- ====================================================================== -->
