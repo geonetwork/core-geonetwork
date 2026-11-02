@@ -17,7 +17,7 @@ Editor users can use the catalog API to update a set of records with an XSLT tra
 
 Batch process are defined on a per schema basis. To check the list of available process for a standard check the `<datadirectory>/config/schemaPlugins/<schemaId>/process` folder.
 
-The `process` folder contains a set of XSLT. The name of the XSLT file without extension is used to trigger the process. For example, if using `md.processing.batch?process=my-custom-process`, the process XSLT MUST be named `my-custom-process.xsl`.
+The `process` folder contains a set of XSLT. The name of the XSLT file without extension is used to trigger the process. For example, to run a process with `POST /srv/api/processes/my-custom-process` (or preview it with `GET`), the process XSLT MUST be named `my-custom-process.xsl`.
 
 ### Processing the XML of the record
 
@@ -49,7 +49,7 @@ The XSLT process will be applied to each metadata record in the selection. Each 
 
 ### Adding parameters
 
-The XSLT process can retrieve parameters which may be provided in the URL using `xsl:param`. For example, if using `md.processing.batch?process=my-custom-process&myParameter=test`.
+The XSLT process can retrieve parameters which may be provided in the URL using `xsl:param`. For example, if using `POST /srv/api/processes/my-custom-process?bucket=e101&myParameter=test`.
 
 ``` xml
 <?xml version="1.0" encoding="UTF-8"?>
