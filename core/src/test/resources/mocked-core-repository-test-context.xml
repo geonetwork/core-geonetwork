@@ -34,4 +34,6 @@
   <bean id="spyFactory" class="org.fao.geonet.kernel.LocalXLinksUpdateDeleteTest.SpyFactory" autowire = "byType"/>
 
   <bean id="baseMetadataIndexerSpy" factory-bean="spyFactory" factory-method="build" primary="true" />
+
+  <bean id="semanticUtils" class="org.fao.geonet.util.SemanticUtils"/>
 </beans>
