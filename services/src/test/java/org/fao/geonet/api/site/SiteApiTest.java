@@ -6,6 +6,7 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
@@ -229,6 +230,24 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$", hasSize(greaterThan(0))));
     }
 
+
+    @Test
+    public void getLogo() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(get("/srv/api/site/logo"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void getLogoNotModified() throws Exception {
+        // A browser revalidating its cached logo must get a 304, not an empty 200.
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(get("/srv/api/site/logo")
+                .header(HttpHeaders.IF_MODIFIED_SINCE, "Thu, 01 Jan 2099 00:00:00 GMT"))
+            .andExpect(status().isNotModified())
+            .andExpect(content().bytes(new byte[0]));
+    }
 
     @Test
     public void setLogo() throws Exception {

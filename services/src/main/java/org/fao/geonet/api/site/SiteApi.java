@@ -901,7 +901,6 @@ public class SiteApi implements ApplicationEventPublisherAware {
         description = LogoUtils.API_GET_LOGO_NOTE)
     @GetMapping(
         path = "/logo")
-    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void getLogo(
         @Parameter(hidden = true) WebRequest webRequest,

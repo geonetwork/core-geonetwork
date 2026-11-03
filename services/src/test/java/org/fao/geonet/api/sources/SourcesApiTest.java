@@ -35,6 +35,7 @@ import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
@@ -100,6 +101,19 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
         this.mockMvc.perform(get("/srv/api/sources/" + source.getUuid() + "/logo"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void getSourceLogoNotModified() throws Exception {
+        Source source = sourceRepo.findOneByName("source-test");
+        assertNotNull(source);
+
+        // A browser revalidating its cached logo must get a 304, not an empty 200.
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(get("/srv/api/sources/" + source.getUuid() + "/logo")
+                .header(HttpHeaders.IF_MODIFIED_SINCE, "Thu, 01 Jan 2099 00:00:00 GMT"))
+            .andExpect(status().isNotModified())
+            .andExpect(content().bytes(new byte[0]));
     }
 
     @Test
