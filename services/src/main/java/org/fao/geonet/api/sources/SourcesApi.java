@@ -202,6 +202,7 @@ public class SourcesApi {
         value = "/{sourceIdentifier}/logo")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Logo returned."),
+        @ApiResponse(responseCode = "304", description = "Logo not modified."),
         @ApiResponse(responseCode = "404", description = "Source not found.",
             content = @Content(schema = @Schema(implementation = ApiError.class)))
     })

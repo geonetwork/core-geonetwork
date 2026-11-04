@@ -2,6 +2,8 @@ package org.fao.geonet.api.site;
 
 import junit.framework.Assert;
 import org.fao.geonet.SystemInfo;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.junit.Test;
@@ -13,6 +15,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -31,6 +37,12 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     StandardPBEStringEncryptor encryptor;
+
+    @Autowired
+    private SettingManager settingManager;
+
+    @Autowired
+    private Resources resources;
 
     private MockMvc mockMvc;
 
@@ -241,12 +253,28 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
 
     @Test
     public void getLogoNotModified() throws Exception {
-        // A browser revalidating its cached logo must get a 304, not an empty 200.
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
-        this.mockMvc.perform(get("/srv/api/site/logo")
-                .header(HttpHeaders.IF_MODIFIED_SINCE, "Thu, 01 Jan 2099 00:00:00 GMT"))
-            .andExpect(status().isNotModified())
-            .andExpect(content().bytes(new byte[0]));
+        // Without a logo reference, the site logo is the file named after the site id.
+        byte[] logo = "site-logo".getBytes(StandardCharsets.UTF_8);
+        Path logoFile = resources.locateLogosDir(createServiceContext())
+            .resolve(settingManager.getSiteId() + ".png");
+        Files.createDirectories(logoFile.getParent());
+        Files.write(logoFile, logo);
+
+        try {
+            this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+            String lastModified = this.mockMvc.perform(get("/srv/api/site/logo"))
+                .andExpect(status().isOk())
+                .andExpect(content().bytes(logo))
+                .andReturn().getResponse().getHeader(HttpHeaders.LAST_MODIFIED);
+            Assert.assertNotNull(lastModified);
+
+            // A browser revalidating its cached logo must get a 304, not an empty 200.
+            this.mockMvc.perform(get("/srv/api/site/logo").header(HttpHeaders.IF_MODIFIED_SINCE, lastModified))
+                .andExpect(status().isNotModified())
+                .andExpect(content().bytes(new byte[0]));
+        } finally {
+            Files.deleteIfExists(logoFile);
+        }
     }
 
     @Test
