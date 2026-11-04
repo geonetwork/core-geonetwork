@@ -72,7 +72,7 @@ public class OpenDALConfiguration {
         // Presign is only available in the async API, the blocking operator shares the same service
         this.asyncOperator = AsyncOperator.of(scheme, options);
         this.operator = asyncOperator.blocking();
-        if (presignExpirySeconds > 0 && !asyncOperator.info.fullCapability.presignRead) {
+        if (presignExpirySeconds > 0 && !asyncOperator.info.capability.presignRead) {
             log.warn("OpenDAL scheme {} does not support presigned URLs, attachments will be served by GeoNetwork.", scheme);
         }
     }
@@ -91,7 +91,7 @@ public class OpenDALConfiguration {
      * @return a presigned URL to read the object at path, or null if presigned URLs are disabled or not supported.
      */
     public String presignRead(String path) {
-        if (presignExpirySeconds <= 0 || !asyncOperator.info.fullCapability.presignRead) {
+        if (presignExpirySeconds <= 0 || !asyncOperator.info.capability.presignRead) {
             return null;
         }
         return asyncOperator.presignRead(path, Duration.ofSeconds(presignExpirySeconds)).join().getUri();
