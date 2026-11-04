@@ -21,7 +21,7 @@
   <!-- Readonly elements -->
   <xsl:template mode="mode-iso19115-3.2018"
                 match="mdb:metadataIdentifier/mcc:MD_Identifier/mcc:code|
-                             mdb:metadataLinkage/*[cit:function/*/@codeListValue = 'completeMetadata']/cit:linkage[not(lan:PT_FreeText)]|
+                             mdb:metadataLinkage/*[cit:function/*/@codeListValue = 'completeMetadata']/cit:linkage|
                              mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:date|
                              mdb:dateInfo/cit:CI_Date[cit:dateType/cit:CI_DateTypeCode = 'revision']/cit:dateType"
                 priority="2000">
