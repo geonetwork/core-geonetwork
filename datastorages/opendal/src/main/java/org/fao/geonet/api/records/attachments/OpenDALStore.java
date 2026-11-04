@@ -26,6 +26,7 @@ package org.fao.geonet.api.records.attachments;
 
 import jeeves.server.context.ServiceContext;
 import org.apache.commons.io.IOUtils;
+import org.apache.opendal.Capability;
 import org.apache.opendal.Entry;
 import org.apache.opendal.Metadata;
 import org.apache.opendal.OpenDALException;
@@ -53,13 +54,19 @@ import java.nio.file.PathMatcher;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 public class OpenDALStore extends AbstractStore {
 
     // Object stores need multipart parts of at least 5 MiB (S3), so buffer uploads in 8 MiB chunks
     // instead of relying on the 16 KB writes coming from OperatorOutputStream.
-    private static final WriteOptions UPLOAD_OPTIONS = WriteOptions.builder().chunk(8L * 1024 * 1024).build();
+    private static final long UPLOAD_CHUNK_SIZE = 8L * 1024 * 1024;
+
+    // User metadata keys (stored by S3 as x-amz-meta-<key>), so an object can be traced back to its
+    // record from the bucket alone (console, inventory, lifecycle tooling, ...).
+    static final String USER_METADATA_UUID = "metadata-uuid";
+    static final String USER_METADATA_ID = "metadata-id";
 
     @Autowired
     private OpenDALConfiguration openDALConfiguration;
@@ -190,13 +197,44 @@ public class OpenDALStore extends AbstractStore {
         String path = getPath(metadataUuid, metadataId, visibility, filename);
 
         Operator op = openDALConfiguration.getOperator();
-        try (OutputStream os = op.createOutputStream(path, UPLOAD_OPTIONS)) {
+        try (OutputStream os = op.createOutputStream(key, buildUploadOptions(op, metadataUuid, metadataId, filename))) {
             IOUtils.copy(is, os);
         }
 
         Metadata metadata = op.stat(path);
         return createResourceDescription(metadataUuid, visibility, filename,
                 metadata.getContentLength(), new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved);
+    }
+
+    /**
+     * Upload options: chunk size for multipart uploads, plus content type and record identifiers
+     * as object metadata, each only when the backend advertises the capability (eg. S3 supports
+     * both, the local filesystem does not support content type).
+     */
+    private WriteOptions buildUploadOptions(Operator op, String metadataUuid, int metadataId, String filename) {
+        WriteOptions.WriteOptionsBuilder options = WriteOptions.builder().chunk(UPLOAD_CHUNK_SIZE);
+        Capability capability = op.info.capability;
+        if (capability.writeWithContentType) {
+            options.contentType(MimeTypeDetector.detect(filename));
+        }
+        if (capability.writeWithUserMetadata) {
+            Map<String, String> userMetadata = new LinkedHashMap<>();
+            // S3 user metadata values travel as HTTP headers and must be US-ASCII.
+            if (isAsciiHeaderValue(metadataUuid)) {
+                userMetadata.put(USER_METADATA_UUID, metadataUuid);
+            } else {
+                Log.debug(Geonet.RESOURCES, String.format(
+                    "Metadata UUID '%s' is not a valid header value, not stored as object metadata of '%s'.",
+                    metadataUuid, filename));
+            }
+            userMetadata.put(USER_METADATA_ID, String.valueOf(metadataId));
+            options.userMetadata(userMetadata);
+        }
+        return options.build();
+    }
+
+    static boolean isAsciiHeaderValue(String value) {
+        return value != null && !value.isEmpty() && value.chars().allMatch(c -> c >= 0x20 && c < 0x7f);
     }
 
     @Override
