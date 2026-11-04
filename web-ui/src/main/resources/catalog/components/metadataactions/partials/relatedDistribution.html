@@ -153,7 +153,8 @@
     data-ng-init="mainType = config.getType(r, 'onlines');
                      badge = config.getBadgeLabel(mainType, r);
                      icon = config.getClassIcon(mainType);
-                     linkForEdit = convertLinkToEdit(r);"
+                     linkForEdit = convertLinkToEdit(r);
+                     checkDoiManagementForResource(md, r)"
     class="row list-group-item gn-related-item gn-related-onlines gn-relation-type-{{mainType}}"
     data-ng-repeat="r in distributions | orderBy:getOrderBy"
     data-ng-if="editable"
@@ -204,9 +205,9 @@
     </p>
 
     <div
-      data-ng-if="canPublishDoiForResource(md, linkForEdit, doiServers)"
+      data-ng-if="r.canManageDoi"
       data-gn-doi-wizard="md.uuid"
-      data-gn-doi-url="r.locUrl"
+      data-doi-url="r.locUrl"
       data-xs-mode="true"
     ></div>
 

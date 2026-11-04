@@ -9,11 +9,10 @@
       class="form-control"
       data-ng-change="updateDoiServer()"
       data-ng-show="doiServers.length > 1"
+      data-ng-disabled="isUpdate"
       data-ng-model="selectedDoiServer"
       data-ng-options="s.id as s.name for s in doiServers"
-    >
-      >
-    </select>
+    ></select>
 
     <button
       class="btn btn-default"
