@@ -119,9 +119,12 @@
         });
       }
 
-      getRecordsWithIndexingErrorsNoWarnings().then(function (r) {
-        $scope.hasIndexingError = r.data.hits.total.value > 0;
-      });
+      function checkIndexingErrors() {
+        getRecordsWithIndexingErrorsNoWarnings().then(function (r) {
+          $scope.hasIndexingError = r.data.hits.total.value > 0;
+        });
+      }
+      checkIndexingErrors();
 
       /**
        * Get the metadata that have indexing warnings.
@@ -144,8 +147,18 @@
         });
       }
 
-      getRecordsWithIndexingWarnings().then(function (r) {
-        $scope.hasIndexingWarning = r.data.hits.total.value > 0;
+      function checkIndexingWarnings() {
+        getRecordsWithIndexingWarnings().then(function (r) {
+          $scope.hasIndexingWarning = r.data.hits.total.value > 0;
+        });
+      }
+      checkIndexingWarnings();
+
+      // The index content changes while a task runs, so check again once it ends.
+      $scope.$on("indexingTaskFinished", function () {
+        getIndexStatus();
+        checkIndexingErrors();
+        checkIndexingWarnings();
       });
 
       $scope.setThreadSortField = function (field) {
