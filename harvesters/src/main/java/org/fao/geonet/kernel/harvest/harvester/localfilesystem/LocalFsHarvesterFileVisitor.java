@@ -67,6 +67,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.fao.geonet.kernel.HarvestValidationEnum.NOVALIDATION;
+import static org.fao.geonet.kernel.mef.MEFLib.ValidationMode.NO_VALIDATION;
+import static org.fao.geonet.kernel.mef.MEFLib.ValidationMode.VALIDATE_XSD_AND_SCHEMATRON;
 
 
 /**
@@ -437,7 +439,7 @@ class LocalFsHarvesterFileVisitor extends SimpleFileVisitor<Path> implements Aut
                 isTemplate,
                 Iterables.toArray(params.getCategories(), String.class),
                 params.getOwnerIdGroup(),
-                params.getValidate() != NOVALIDATION,
+                params.getValidate() != NOVALIDATION ? VALIDATE_XSD_AND_SCHEMATRON : NO_VALIDATION,
                 false, context, file);
             for (String id : ids) {
                 harvester.getLogger().debug(String.format("Metadata imported from MEF: %s", id));
