@@ -22,19 +22,18 @@
  */
 package org.fao.geonet.kernel.security.openidconnect;
 
-import org.fao.geonet.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter;
+import org.springframework.security.web.savedrequest.RequestCache;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.net.URLEncoder;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.web.context.ServletContextAware;
@@ -57,6 +56,8 @@ public class GeonetworkOidcPreAuthActionsLoginFilter  implements Filter, Servlet
     @Autowired
     private  ClientRegistrationRepository clientRegistrationRepository;
 
+    @Autowired
+    private RequestCache requestCache;
 
     /**
      * The servlet context parameter name that contains the excluded URL paths.
@@ -127,11 +128,12 @@ public class GeonetworkOidcPreAuthActionsLoginFilter  implements Filter, Servlet
             .anyMatch(matcher -> matcher.matches(servletRequest));
 
         if (!isAuthenticated && !isLoginRequest && !isPublicEndpoint && !isBearerTokenAccess) {
-            String returningUrl = requestUri +
-                (servletRequest.getQueryString() == null ? "" : "?" + servletRequest.getQueryString());
+            // Save the original request so it can be retrieved after successful authentication
+            if (requestCache != null) {
+                requestCache.saveRequest(servletRequest, servletResponse);
+            }
 
-            String redirectUrl = loginPath + "?redirectUrl=" + URLEncoder.encode(returningUrl, Constants.ENCODING);
-            servletResponse.sendRedirect(redirectUrl);
+            servletResponse.sendRedirect(loginPath);
             return;
         }
 
