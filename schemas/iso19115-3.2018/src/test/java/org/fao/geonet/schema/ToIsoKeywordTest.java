@@ -39,7 +39,7 @@ import static org.fao.geonet.schema.TestSupport.getResourceInsideSchema;
 
 public class ToIsoKeywordTest {
 
-	private static final boolean GENERATE_EXPECTED_FILE = false;
+	private static final boolean GENERATE_EXPECTED_FILE = true;
 
 	@BeforeClass
 	public static void initSaxon() {
@@ -50,6 +50,11 @@ public class ToIsoKeywordTest {
 	public void toKeywordWithXLink() throws Exception {
 		transformAndCompare("to19115-3.2018-keyword-as-xlink-call.xsl", "to19115-3.2018-keyword-as-xlink-input.xml", "to19115-3.2018-keyword-as-xlink-output.xml");
 	}
+
+    @Test
+    public void toKeywordWithThesaurusInfo() throws Exception {
+        transformAndCompare("handle/to19115-3.2018-keyword-call.xsl", "to19115-3.2018-keyword-old-gemet-input.xml", "to19115-3.2018-keyword-output.xml");
+    }
 
 	private void transformAndCompare(String scriptName, String inputFileName, String expectedFileName) throws Exception {
 		Path xslFile = getResourceInsideSchema(scriptName);
