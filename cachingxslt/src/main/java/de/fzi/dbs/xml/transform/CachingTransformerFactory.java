@@ -34,6 +34,10 @@ public class CachingTransformerFactory extends TransformerFactoryImpl implements
      * Map to hold templates cache.
      */
     private static final Map<String, TemplatesCacheEntry> templatesCache = new ConcurrentHashMap<>();
+    /**
+     * One lock per stylesheet path, so the same stylesheet is not compiled by several threads at once.
+     */
+    private static final Map<String, Object> compileLocks = new ConcurrentHashMap<>();
 
     /**
      * Clear the stylesheet cache. This is not part of the JAXP TransformerFactoryImpl so users
@@ -85,37 +89,29 @@ public class CachingTransformerFactory extends TransformerFactoryImpl implements
      */
     protected Transformer newTransformer(final File file)
         throws TransformerConfigurationException {
-        // Search the cache for the templates entry
-        TemplatesCacheEntry templatesCacheEntry = read(file.getAbsolutePath());
-
-        // If entry found
-        if (templatesCacheEntry != null) {
-            // Check timestamp of modification
-            if (templatesCacheEntry.lastModified
-                < templatesCacheEntry.templatesFile.lastModified())
-                templatesCacheEntry = null;
-        }
-        // If no templatesEntry is found or this entry was obsolete
-        if (templatesCacheEntry == null) {
-            //System.out.println("Loading transformation [" + file.getAbsolutePath() + "].");
-            // If this file does not exists, throw the exception
-            if (!file.exists()) {
-                throw new TransformerConfigurationException(
-                    "Requested transformation ["
-                        + file.getAbsolutePath()
-                        + "] does not exist.");
+        final String absolutePath = file.getAbsolutePath();
+        TemplatesCacheEntry templatesCacheEntry = read(absolutePath);
+        if (!isFresh(templatesCacheEntry)) {
+            // Compile each stylesheet once: concurrent callers for the same path wait here,
+            // callers for other paths are not blocked.
+            synchronized (compileLocks.computeIfAbsent(absolutePath, k -> new Object())) {
+                templatesCacheEntry = read(absolutePath);
+                if (!isFresh(templatesCacheEntry)) {
+                    if (!file.exists()) {
+                        throw new TransformerConfigurationException(
+                            "Requested transformation [" + absolutePath + "] does not exist.");
+                    }
+                    templatesCacheEntry =
+                        new TemplatesCacheEntry(newTemplates(new StreamSource(file)), file);
+                    write(absolutePath, templatesCacheEntry);
+                }
             }
-
-            // Create new cache entry
-            templatesCacheEntry =
-                new TemplatesCacheEntry(newTemplates(new StreamSource(file)), file);
-
-            // Save this entry to the cache
-            write(file.getAbsolutePath(), templatesCacheEntry);
-        } else {
-            //System.out.println("Using cached transformation [" + file.getAbsolutePath() + "].");
         }
         return templatesCacheEntry.templates.newTransformer();
+    }
+
+    private static boolean isFresh(TemplatesCacheEntry entry) {
+        return entry != null && entry.lastModified >= entry.templatesFile.lastModified();
     }
 
     /**
