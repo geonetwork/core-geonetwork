@@ -200,9 +200,9 @@ public class SourcesApi {
         description = LogoUtils.API_GET_LOGO_NOTE)
     @GetMapping(
         value = "/{sourceIdentifier}/logo")
-    @ResponseStatus(HttpStatus.OK)
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Logo returned."),
+        @ApiResponse(responseCode = "304", description = "Logo not modified."),
         @ApiResponse(responseCode = "404", description = "Source not found.",
             content = @Content(schema = @Schema(implementation = ApiError.class)))
     })
