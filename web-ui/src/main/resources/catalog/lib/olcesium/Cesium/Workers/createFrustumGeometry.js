@@ -1,7 +1,9 @@
 /**
- * Cesium - https://github.com/AnalyticalGraphicsInc/cesium
+ * @license
+ * Cesium - https://github.com/CesiumGS/cesium
+ * Version 1.146.0
  *
- * Copyright 2011-2017 Cesium Contributors
+ * Copyright 2011-2022 Cesium Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +20,7 @@
  * Columbus View (Pat. Pend.)
  *
  * Portions licensed separately.
- * See https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md for full licensing details.
+ * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
-define(["./defined-2a4f2d00","./Check-e5651467","./freezeObject-a51e076f","./defaultValue-29c9b1af","./Math-7782f09e","./Cartesian2-ba70b51f","./defineProperties-c817531e","./Transforms-5119c07b","./RuntimeError-51c34ab4","./WebGLConstants-90dbfe2f","./ComponentDatatype-418b1c61","./GeometryAttribute-8bc1900e","./when-1faa3867","./GeometryAttributes-f8548d3f","./Plane-475170f0","./VertexFormat-e2e35139","./FrustumGeometry-1b28344c"],function(r,e,t,a,f,n,u,o,c,b,m,i,s,d,y,G,p){"use strict";return function(e,t){return r.defined(t)&&(e=p.FrustumGeometry.unpack(e,t)),p.FrustumGeometry.createGeometry(e)}});
+
+import{a as r}from"./chunk-VF77DAIX.js";import{g as o}from"./chunk-GWE2HRAQ.js";function i(e,t){return o(t)&&(e=r.unpack(e,t)),r.createGeometry(e)}var a=i;export{a as default};
