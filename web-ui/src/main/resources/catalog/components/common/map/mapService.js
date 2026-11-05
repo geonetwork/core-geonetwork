@@ -1096,30 +1096,6 @@
               metadata,
               errors = [];
             if (getCapLayer) {
-              var isLayerAvailableInMapProjection = false;
-              // OL3 only parse CRS from WMS 1.3 (and not SRS in WMS 1.1.x)
-              // so a WMS 1.1.x will always failed on this
-              // https://github.com/openlayers/ol3/blob/master/src/
-              // ol/format/wmscapabilitiesformat.js
-              /*
-              if (layer.CRS) {
-                var mapProjection = map.getView().getProjection().getCode();
-                for (var i = 0; i < layer.CRS.length; i++) {
-                  if (layer.CRS[i] === mapProjection) {
-                    isLayerAvailableInMapProjection = true;
-                    break;
-                  }
-                }
-              } else {
-                errors.push($translate.instant('layerCRSNotFound'));
-                console.warn($translate.instant('layerCRSNotFound'));
-              }
-              if (!isLayerAvailableInMapProjection) {
-                errors.push($translate.instant('layerNotAvailableInMapProj'));
-                console.warn($translate.instant('layerNotAvailableInMapProj'));
-              }
-              */
-
               // TODO: parse better legend & attribution
               var requestedStyle = null;
               var legendUrl;
@@ -1244,6 +1220,11 @@
               if (angular.isArray(getCapLayer.Dimension)) {
                 for (var i = 0; i < getCapLayer.Dimension.length; i++) {
                   var dimension = getCapLayer.Dimension[i];
+                  // WMS 1.1.x has the dimension values in Extent, which the
+                  // OpenLayers parser doesn't read
+                  if (!dimension.values) {
+                    continue;
+                  }
                   if (dimension.name == "elevation") {
                     layer.set("elevation", {
                       units: dimension.units,
