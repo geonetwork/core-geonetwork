@@ -540,6 +540,10 @@
       // every page. The page layout sets gnGlobalSettings.geotiffUrl: the
       // "geotiff" wro4j bundle, or the file itself in debug mode.
       var geoTiffLoaded = null;
+      // geotiff.js 3.0.4-3.0.5 only reads in 64 KB blocks when blockSize is
+      // set, otherwise each header value is a request of its own (fixed in
+      // geotiff.js 3.1, geotiffjs/geotiff.js#530).
+      var geoTiffOptions = { blockSize: 65536 };
       var loadGeoTiff = function () {
         if (window.GeoTIFF) {
           return $q.resolve();
@@ -623,7 +627,7 @@
                 }
               };
               return $q
-                .when(GeoTIFF.fromCustomClient(client))
+                .when(GeoTIFF.fromCustomClient(client, geoTiffOptions))
                 .then(function (t) {
                   tiff = t;
                   return tiff.getImage(0);
@@ -762,6 +766,7 @@
               var createSource = function (minMax) {
                 return new ol.source.GeoTIFF({
                   sources: [angular.extend({ url: url, loader: loader }, minMax)],
+                  sourceOptions: geoTiffOptions,
                   convertToRGB: "auto"
                 });
               };
