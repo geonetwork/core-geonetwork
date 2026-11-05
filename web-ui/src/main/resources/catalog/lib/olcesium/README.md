@@ -6,7 +6,7 @@ This folder holds the libraries used by the map viewer 3D mode (`?with3d=true`):
 * `Cesium/`: [Cesium](https://cesium.com/platform/cesiumjs/), copied from the npm package's prebuilt files.
 * `olcs.css`: ol-cesium's stylesheet (`node_modules/olcs/css/olcs.css`).
 
-Current versions: ol-cesium `2.23.1`, Cesium `1.146.0`, working with OpenLayers `10.9.0`.
+Current versions: ol-cesium `2.23.1`, Cesium `1.146.0`, working with OpenLayers `10.11.0`.
 
 ol-cesium must match the OpenLayers version in `../openlayers/ol.js`. Upgrade it whenever OpenLayers gets a major upgrade.
 
@@ -151,7 +151,7 @@ Search GeoNetwork's code for `olcs.` and `olcs_` property names, and update any 
 
 ## Example: upgrade to ol-cesium 2.23.1 and Cesium 1.146.0
 
-**1. Check versions.** GeoNetwork uses OpenLayers `10.9.0`.
+**1. Check versions.** GeoNetwork uses OpenLayers `10.11.0`.
 
 ```bash
 npm view olcs version
@@ -207,7 +207,7 @@ Output (`ls` shows `olcesium.js` at 67420 bytes and `olcesium.js.map` at 283979 
 =ol.style.Icon =ol.style.Stroke =ol.style.Style =ol.tilegrid =ol.tileurlfunction
 ```
 
-All of these exist in GeoNetwork's `ol.js` 10.9.0. `olcs.css` didn't change.
+All of these exist in GeoNetwork's `ol.js` 10.11.0. `olcs.css` didn't change.
 
 ```bash
 cp out/olcesium.js out/olcesium.js.map <repo>/web-ui/src/main/resources/catalog/lib/olcesium/
