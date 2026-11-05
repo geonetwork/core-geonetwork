@@ -9,6 +9,12 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
@@ -42,15 +48,45 @@ public class CachingTransformerFactoryTest {
             assertTransformation(firstFactory, "first");
             assertTransformation(firstFactory, "second");
             assertTransformation(secondFactory, "third");
-            assertEquals(1, firstFactory.compilations);
-            assertEquals(0, secondFactory.compilations);
+            assertEquals(1, firstFactory.compilations.get());
+            assertEquals(0, secondFactory.compilations.get());
 
             secondFactory.clearCache();
 
             assertTransformation(firstFactory, "after clearing");
-            assertEquals(2, firstFactory.compilations);
+            assertEquals(2, firstFactory.compilations.get());
         } finally {
             firstFactory.clearCache();
+        }
+    }
+
+    @Test(timeout = 30000)
+    public void compilesStylesheetOnceUnderConcurrentAccess() throws Exception {
+        stylesheet = folder.newFile("concurrent.xsl");
+        Files.write(stylesheet.toPath(), ("<xsl:stylesheet version=\"1.0\" "
+            + "xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">"
+            + "<xsl:output method=\"text\"/>"
+            + "<xsl:template match=\"/\"><xsl:value-of select=\"/value\"/></xsl:template>"
+            + "</xsl:stylesheet>").getBytes(StandardCharsets.UTF_8));
+        CountingTransformerFactory factory = new CountingTransformerFactory();
+        factory.clearCache();
+        ExecutorService pool = Executors.newFixedThreadPool(8);
+        try {
+            List<Future<?>> results = new ArrayList<>();
+            for (int i = 0; i < 32; i++) {
+                String value = "v" + i;
+                results.add(pool.submit(() -> {
+                    assertTransformation(factory, value);
+                    return null;
+                }));
+            }
+            for (Future<?> result : results) {
+                result.get();
+            }
+            assertEquals(1, factory.compilations.get());
+        } finally {
+            pool.shutdownNow();
+            factory.clearCache();
         }
     }
 
@@ -64,11 +100,11 @@ public class CachingTransformerFactoryTest {
     }
 
     private static class CountingTransformerFactory extends CachingTransformerFactory {
-        private int compilations;
+        private final AtomicInteger compilations = new AtomicInteger();
 
         @Override
         public Templates newTemplates(Source source) throws TransformerConfigurationException {
-            compilations++;
+            compilations.incrementAndGet();
             return super.newTemplates(source);
         }
     }
