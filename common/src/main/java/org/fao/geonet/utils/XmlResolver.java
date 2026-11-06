@@ -114,12 +114,12 @@ public class XmlResolver extends XMLCatalogResolver {
         URL externalRef = null;
         try {
 
-            if (publicId != null && publicId.startsWith("http://")) {
+            if (isHttpUrl(publicId)) {
                 externalRef = new URL(publicId);
-            } else if (systemId != null && systemId.startsWith("http://")) {
+            } else if (isHttpUrl(systemId)) {
                 externalRef = new URL(systemId);
             } else if (systemId != null && baseURI != null) {
-                if (baseURI.startsWith("http://")) {
+                if (isHttpUrl(baseURI)) {
                     URL ref = new URL(baseURI);
                     String thePath = new File(ref.getPath()).getParent().replace('\\', '/');
                     externalRef = new URI(ref.getProtocol(), null, ref.getHost(), ref.getPort(), thePath + "/" + systemId, null,
@@ -176,6 +176,10 @@ public class XmlResolver extends XMLCatalogResolver {
             }
         }
         return result;
+    }
+
+    private static boolean isHttpUrl(String id) {
+        return id != null && (id.startsWith("http://") || id.startsWith("https://"));
     }
 
     private LSInput tryToResolveOnFs(String publicId, String systemId, String baseURI) {

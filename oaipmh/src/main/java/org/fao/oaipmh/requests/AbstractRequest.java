@@ -111,9 +111,14 @@ public abstract class AbstractRequest {
             throw new Exception("Response is not in OAI-PMH format");
         }
 
-        //--- validate the result
+        //--- validate the result. A local schema ignores the schemaLocation hints of the
+        //--- embedded records, avoiding downloading their XSDs for each request.
         try {
-            Xml.validate(response);
+            if (schemaPath != null) {
+                Xml.validate(schemaPath, response);
+            } else {
+                Xml.validate(response);
+            }
         } catch (XSDValidationErrorEx e) {
             response.addContent(new Element("error").setText(e.getMessage()));
         }
