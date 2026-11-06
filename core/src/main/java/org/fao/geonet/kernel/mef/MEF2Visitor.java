@@ -40,11 +40,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.fao.geonet.kernel.mef.MEFConstants.FILE_INFO;
 
 /**
- * MEF version 2 visitor
+ * MEF version 2 visitor. Reads a MEF version 2 (multi-record) archive whose attachments use the
+ * legacy, pre-3.0 {@code public/}/{@code private/} folder split. Kept for backward compatibility
+ * with archives written before the flat MEF 3.0 {@code store/} layout existed - archives using
+ * that layout are {@link MEFLib.Version#V3} and read by {@link MEF3Visitor} instead (see
+ * {@link MEFLib#getMEFVersion}).
+ * <p>
+ * The record traversal in {@link #handleXml} is identical between the two formats; only
+ * {@link #handleBin} - which folder(s) to read a record's attachments from - differs, so
+ * {@link MEF3Visitor} extends this class and overrides just that method.
  */
 public class MEF2Visitor implements IVisitor {
 
@@ -126,26 +135,23 @@ public class MEF2Visitor implements IVisitor {
     public void handleBin(Path file, IMEFVisitor v, Element info, int index)
         throws Exception {
 
-        List<Element> pubFiles = null;
-        List<Element> prvFiles = null;
-
-        if (info.getChildren().size() != 0) {
-            @SuppressWarnings("unchecked")
-            List<Element> tmpPub = info.getChild("public").getChildren();
-            pubFiles = tmpPub;
-            @SuppressWarnings("unchecked")
-            List<Element> tmpPrv = info.getChild("private").getChildren();
-            prvFiles = tmpPrv;
-        }
+        // Reads either the MEF 3.0 unified <store> element (filtered by each file's own
+        // "access" attribute) or the pre-3.0 <public>/<private> elements; never null (unlike
+        // the previous info.getChild("public").getChildren() call, which NPE'd whenever
+        // info.xml had other children - eg. <general> - but no <public> element).
+        List<Element> pubFiles = MEFLib.getFilesElement(info, "public");
+        List<Element> prvFiles = MEFLib.getFilesElement(info, "private");
 
         Path publicFile = file.resolve(MEFConstants.DIR_PUBLIC);
         Path privateFile = file.resolve(MEFConstants.DIR_PRIVATE);
 
-        // Handle public binaries files
-        if (Files.exists(publicFile) && pubFiles != null && pubFiles.size() != 0) {
-            try (DirectoryStream<Path> paths = Files.newDirectoryStream(publicFile)) {
-                for (Path path : paths) {
-                    String fileName = path.getFileName().toString();
+        // Handle public binaries files. Resources may live in subfolders (nested paths): walk
+        // the whole tree, using the path relative to publicFile - not just the file's own name -
+        // as the resource name, so it matches the "/"-separated names registered in info.xml.
+        if (Files.exists(publicFile) && !pubFiles.isEmpty()) {
+            try (Stream<Path> paths = Files.walk(publicFile)) {
+                for (Path path : (Iterable<Path>) paths.filter(Files::isRegularFile)::iterator) {
+                    String fileName = IO.toUnixStylePath(publicFile.relativize(path));
                     try (InputStream in = IO.newInputStream(path)) {
                         v.handlePublicFile(fileName,
                             MEFLib.getChangeDate(pubFiles, fileName),
@@ -156,10 +162,10 @@ public class MEF2Visitor implements IVisitor {
         }
 
         // Handle private binaries files
-        if (Files.exists(privateFile) && prvFiles != null && prvFiles.size() != 0) {
-            try (DirectoryStream<Path> paths = Files.newDirectoryStream(privateFile)) {
-                for (Path path : paths) {
-                    String fileName = path.getFileName().toString();
+        if (Files.exists(privateFile) && !prvFiles.isEmpty()) {
+            try (Stream<Path> paths = Files.walk(privateFile)) {
+                for (Path path : (Iterable<Path>) paths.filter(Files::isRegularFile)::iterator) {
+                    String fileName = IO.toUnixStylePath(privateFile.relativize(path));
                     try (InputStream in = IO.newInputStream(path)) {
                         v.handlePrivateFile(fileName,
                             MEFLib.getChangeDate(prvFiles, fileName),

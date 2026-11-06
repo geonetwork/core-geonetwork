@@ -47,6 +47,10 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'ukr','Scheduled
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'vie','Scheduled publication');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'wel','Scheduled publication');
 
+ALTER TABLE MetadataFileUploads ADD COLUMN IF NOT EXISTS resourceaccess VARCHAR(1);
+ALTER TABLE MetadataFileUploads ADD COLUMN IF NOT EXISTS mimetype VARCHAR(255);
+ALTER TABLE MetadataFileUploads ALTER COLUMN fileName TYPE VARCHAR(1024);
+
 INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct 'system/metadata/recordCreationDateFromXml', 'false', 2, 9190, 'n' from settings WHERE NOT EXISTS (SELECT name FROM Settings WHERE name = 'system/metadata/recordCreationDateFromXml');
 
 -- Rename the default saved selection to favorite records
