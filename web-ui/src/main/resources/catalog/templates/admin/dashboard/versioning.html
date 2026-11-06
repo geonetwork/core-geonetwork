@@ -19,7 +19,7 @@
               noCommitAvailable
             </div>
             <ul class="gn-history">
-              <li data-ng-repeat="log in logs.entry">
+              <li data-ng-repeat="log in logs">
                 {{log.title}} was <strong>{{log.action}}</strong> by
                 <strong>{{log.user}}</strong> {{log.date | gnFromNow}}
               </li>

@@ -78,8 +78,8 @@ import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
  * to the service are forwaded to XSL process.
  * <p>
  * In each xml/schemas/schemaId directory, a process could be added in a directory called process.
- * Then the process could be called using the following URL : http://localhost:8080/geonetwork/srv/eng/md.processing.batch
- * ?process=keywords-comma-exploder&url=http://xyz
+ * Then the process could be called using the following URL : http://localhost:8080/geonetwork/srv/api/processes/keywords-comma-exploder
+ * ?bucket=e101&url=http://xyz
  * <p>
  * In that example the process has to be named keywords-comma-exploder.xsl.
  * <p>

@@ -45,9 +45,6 @@
     <counter class=".AbstractHarvesterErrorCounter"/>
   </monitors>
   <monitors package="jeeves.monitor.timer">
-    <timer class=".ServiceManagerGuiServicesTimer"/>
-    <timer class=".ServiceManagerServicesTimer"/>
-    <timer class=".ServiceManagerXslOutputTransformTimer"/>
     <timer class=".IndexingRecordTimer"/>
     <meter class=".IndexingRecordMeter"/>
   </monitors>

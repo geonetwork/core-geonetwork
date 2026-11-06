@@ -42,17 +42,11 @@
       <Contact>
         <xsl:value-of select="//feedback/email"/>
       </Contact>
-      <Url type="application/rss+xml">
-        <xsl:attribute name="template">
-          <xsl:value-of select="concat($fullURLForService, '/rss.search?')"/>
-          <xsl:text>any={searchTerms}&amp;hitsPerPage={count?}&amp;bbox={geo:box?}&amp;geometry={geo:geometry?}&amp;name={geo:locationString?}</xsl:text>
-        </xsl:attribute>
-      </Url>
       <Url type="application/rdf+xml">
         <xsl:attribute name="template">
           <xsl:value-of
-            select="concat($fullURLForService,'/rdf.search?')"/>
-          <xsl:text>any={searchTerms}&amp;hitsPerPage={count?}&amp;bbox={geo:box?}&amp;geometry={geo:geometry?}&amp;name={geo:locationString?}</xsl:text>
+            select="concat($fullURLForService,'/csw?')"/>
+          <xsl:text>service=CSW&amp;version=2.0.2&amp;request=GetRecords&amp;typeNames=csw:Record&amp;resultType=results&amp;elementSetName=full&amp;outputSchema=http://www.w3.org/ns/dcat%23&amp;constraintLanguage=CQL_TEXT&amp;constraint_language_version=1.1.0&amp;constraint=AnyText%20like%20%27%25{searchTerms}%25%27</xsl:text>
         </xsl:attribute>
       </Url>
       <Url type="text/html">

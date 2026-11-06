@@ -411,7 +411,7 @@ After setting up schema-ident.xml, our new GeoNetwork plugin schema for MCP cont
 
 #### Creating the schema-conversions.xml file {#schema_conversions}
 
-This file describes the converters that can be applied to metadata records that belong to the schema. Each converter must be manually defined as a GeoNetwork (Jeeves) service that can be called to transform a particular metadata record to a different schema. The schema-conversions.xml file for the MCP is as follows:
+This file describes the converters that can be applied to metadata records that belong to the schema. Each converter declares an XSLT that transforms a metadata record to a different schema. The converters of each schema are listed by the `info?type=schemas` service. The schema-conversions.xml file for the MCP is as follows:
 
 ``` xml
 <conversions>
@@ -436,7 +436,7 @@ This file describes the converters that can be applied to metadata records that 
 
 Each converter has the following attributes:
 
--   **name** - the name of the converter. This is the service name of the GeoNetwork (Jeeves) service and should be unique (prefixing the service name with ``xml_<schema_name>`` is a good way to make this name unique).
+-   **name** - the name of the converter. It should be unique (prefixing the name with ``xml_<schema_name>`` is a good way to make it unique).
 -   **nsUri** - the primary namespace of the schema produced by the converter. e.g. xml_iso19139.mcpTorifcs transforms metadata records from iso19139.mcp to the RIFCS schema. Metadata records in the RIFCS metadata schema have primary namespace URI of `http://ands.org.au/standards/rif-cs/registryObjects`.
 -   **schemaLocation** - the location (URL) of the XML schema definition (XSD) corresponding to the nsURI.
 -   **xslt** - the name of the XSLT that actually carries out the transformation. This XSLT should be located in the convert subdirectory of the schema plugin.

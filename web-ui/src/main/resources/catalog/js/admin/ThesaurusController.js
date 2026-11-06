@@ -580,16 +580,13 @@
         $.each(relationTypes, function (index, value) {
           $http
             .get(
-              "thesaurus.keyword.links?_content_type=json&" +
-                "request=" +
-                value +
-                "&thesaurus=" +
-                $scope.thesaurusSelected.key +
-                "&id=" +
-                encodeURIComponent(k.uri)
+              "../api/registries/vocabularies/" +
+                encodeURIComponent($scope.thesaurusSelected.key) +
+                "/keyword/related",
+              { params: { type: value, id: k.uri } }
             )
             .then(function (response) {
-              $scope.keywordSelectedRelation[value] = response.data.descKeys;
+              $scope.keywordSelectedRelation[value] = response.data;
             });
         });
       };
@@ -654,72 +651,27 @@
       };
 
       /**
-       * Build keyword POST body message
+       * Build the keyword sent to the API
        */
-      var buildKeywordXML = function (keywordObject) {
-        var geoxml = $scope.isPlaceType()
-          ? "<west>" +
-            keywordObject.geo.west +
-            "</west>" +
-            "<south>" +
-            keywordObject.geo.south +
-            "</south>" +
-            "<east>" +
-            keywordObject.geo.east +
-            "</east>" +
-            "<north>" +
-            keywordObject.geo.north +
-            "</north>"
-          : "";
+      var buildKeyword = function (keywordObject) {
+        var keyword = {
+          uri: keywordObject.uri,
+          oldUri: keywordObject.oldId || keywordObject.uri,
+          labels: keywordObject.values,
+          definitions: keywordObject.definitions
+        };
+        if ($scope.isPlaceType()) {
+          angular.extend(keyword, keywordObject.geo);
+        }
+        return keyword;
+      };
 
-        // build localized values xml
-        var localizedValues = "";
-        Object.keys(keywordObject.values).forEach(function (lang3) {
-          localizedValues +=
-            "<loc_" +
-            lang3 +
-            "_label>" +
-            keywordObject.values[lang3] +
-            "</loc_" +
-            lang3 +
-            "_label>";
-        });
-
-        // build localized definitions xml
-        var localizedDefinitions = "";
-        Object.keys(keywordObject.definitions).forEach(function (lang3) {
-          localizedDefinitions +=
-            "<loc_" +
-            lang3 +
-            "_definition>" +
-            keywordObject.definitions[lang3] +
-            "</loc_" +
-            lang3 +
-            "_definition>";
-        });
-
-        var xml =
-          "<request><newid>" +
-          keywordObject.uri +
-          "</newid>" +
-          "<refType>" +
-          $scope.thesaurusSelected.dname +
-          "</refType>" +
-          "<namespace>" +
-          $scope.thesaurusSelected.defaultNamespace +
-          "</namespace>" +
-          "<ref>" +
-          $scope.thesaurusSelected.key +
-          "</ref>" +
-          "<oldid>" +
-          (keywordObject.oldId || keywordObject.uri) +
-          "</oldid>" +
-          localizedValues +
-          localizedDefinitions +
-          geoxml +
-          "</request>";
-
-        return xml;
+      var keywordApiUrl = function (thesaurusKey) {
+        return (
+          "../api/registries/vocabularies/" +
+          encodeURIComponent(thesaurusKey) +
+          "/keyword"
+        );
       };
 
       /**
@@ -728,27 +680,15 @@
       $scope.createKeyword = function () {
         $http
           .post(
-            "thesaurus.keyword.add?_content_type=json",
-            buildKeywordXML($scope.keywordSelected),
-            { headers: { "Content-type": "application/xml" } }
+            keywordApiUrl($scope.thesaurusSelected.key),
+            buildKeyword($scope.keywordSelected)
           )
           .then(
-            function (response) {
-              var response = response.data[0];
-              if (response && response["@message"]) {
-                var statusConfig = {
-                  title: $translate.instant("keywordCreationError"),
-                  msg: response["@message"],
-                  timeout: 0,
-                  type: "danger"
-                };
-                $rootScope.$broadcast("StatusUpdated", statusConfig);
-              } else {
-                $scope.keywordSelected = null;
-                $("#keywordModal").modal("hide");
-                searchThesaurusKeyword();
-                creatingKeyword = false;
-              }
+            function () {
+              $scope.keywordSelected = null;
+              $("#keywordModal").modal("hide");
+              searchThesaurusKeyword();
+              creatingKeyword = false;
             },
             function (response) {
               $rootScope.$broadcast("StatusUpdated", {
@@ -766,9 +706,10 @@
        */
       $scope.updateKeyword = function () {
         $http
-          .post("thesaurus.keyword.update", buildKeywordXML($scope.keywordSelected), {
-            headers: { "Content-type": "application/xml" }
-          })
+          .put(
+            keywordApiUrl($scope.thesaurusSelected.key),
+            buildKeyword($scope.keywordSelected)
+          )
           .then(
             function (response) {
               $scope.keywordSelected = null;
@@ -797,12 +738,7 @@
       $scope.confirmDeleteKeyword = function () {
         var k = $scope.keywordToDelete;
         $http
-          .get(
-            "thesaurus.keyword.remove?pThesaurus=" +
-              k.thesaurusKey +
-              "&id=" +
-              encodeURIComponent(k.uri)
-          )
+          .delete(keywordApiUrl(k.thesaurusKey), { params: { id: k.uri } })
           .then(
             function (response) {
               searchThesaurusKeyword();
@@ -888,23 +824,16 @@
        * Load the list of thesaurus from the server
        */
       function loadThesaurus() {
-        $http.get("thesaurus?_content_type=json").then(
+        $http.get("../api/registries/vocabularies").then(
           function (response) {
-            $scope.thesaurus = response.data[0];
+            $scope.thesaurus = response.data;
 
             // {"iso2lang": "iso3lang", ...
             var invertedAvailableLangs = _.invert($scope.availableLangs);
 
             for (var i = 0; i < $scope.thesaurus.length; i++) {
-              // JSON output is returning empty values as empty array
-              $scope.thesaurus[i].title = Array.isArray($scope.thesaurus[i].title)
-                ? ""
-                : $scope.thesaurus[i].title;
-              $scope.thesaurus[i].description = Array.isArray(
-                $scope.thesaurus[i].description
-              )
-                ? ""
-                : $scope.thesaurus[i].description;
+              $scope.thesaurus[i].title = $scope.thesaurus[i].title || "";
+              $scope.thesaurus[i].description = $scope.thesaurus[i].description || "";
 
               // Convert the multilingual titles object from {"lang": "iso2lang", "title": "value", ...
               // to the format required by the multilingual field directive: {"iso3lang": "value", ...

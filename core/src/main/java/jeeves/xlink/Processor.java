@@ -25,7 +25,6 @@ package jeeves.xlink;
 
 import com.google.common.collect.Sets;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.local.LocalServiceRequest;
 import org.apache.commons.lang.StringUtils;
 import org.apache.jcs.access.exception.CacheException;
 import org.fao.geonet.ApplicationContextHolder;

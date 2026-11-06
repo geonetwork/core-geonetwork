@@ -231,9 +231,4 @@
     <Class name="org.fao.geonet.api.regions.ListRegionsResponse$RegionResponse"/>
     <Bug pattern="URF_UNREAD_FIELD"/>
   </Match>
-  <Match>
-    <Class name="org.fao.geonet.services.thesaurus.GetKeywords"/>
-    <Bug pattern="WMI_WRONG_MAP_ITERATOR"/>
-    <Method name="parseBuilder"/>
-  </Match>
 </FindBugsFilter>

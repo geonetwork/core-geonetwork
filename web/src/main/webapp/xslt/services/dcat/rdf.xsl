@@ -100,7 +100,7 @@
 
       <!-- FIXME : void:Dataset -->
       <void:openSearchDescription><xsl:value-of select="/root/gui/nodeUrl"/>eng/portal.opensearch</void:openSearchDescription>
-      <void:uriLookupEndpoint><xsl:value-of select="/root/gui/nodeUrl"/>eng/rdf.search?any=</void:uriLookupEndpoint>
+      <void:uriLookupEndpoint><xsl:value-of select="/root/gui/nodeUrl"/>eng/csw?service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputSchema=http://www.w3.org/ns/dcat%23&amp;elementSetName=full&amp;id=</void:uriLookupEndpoint>
 
 
       <!-- The entity responsible for making the catalog online. -->

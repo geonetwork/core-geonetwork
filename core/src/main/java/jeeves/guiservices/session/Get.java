@@ -24,71 +24,20 @@
 package jeeves.guiservices.session;
 
 import jeeves.constants.Jeeves;
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
 import jeeves.server.UserSession;
-import jeeves.server.context.ServiceContext;
 
 import org.fao.geonet.domain.Profile;
 import org.jdom.Element;
 
-import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 
 //=============================================================================
 
 /**
- * Service used to return information about the user
+ * Information about the user as XML, used by the user interface pages.
  */
 
-public class Get implements Service {
-    String groupName;
-    HashSet<String> outFields;
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Init
-    //---
-    //--------------------------------------------------------------------------
-
-    public void init(Path appPath, ServiceConfig params) throws Exception {
-        groupName = params.getValue(Jeeves.Config.GROUP);
-        List<Element> l = params.getChildren(Jeeves.Config.OUT_FIELDS,
-            Jeeves.Config.FIELD);
-        if (l != null) {
-            outFields = new HashSet<String>();
-            for (Element field : l) {
-                outFields.add(field.getName());
-            }
-        }
-    }
-
-    //--------------------------------------------------------------------------
-    //---
-    //--- Service
-    //---
-    //--------------------------------------------------------------------------
-
-    @SuppressWarnings("unchecked")
-    public Element exec(Element params, ServiceContext context) throws Exception {
-        UserSession session = context.getUserSession();
-        Element sEl = getSessionAsXML(session);
-        if (session != null) {
-            if (groupName != null) {
-                Map<?, Element> group = (Map<?, Element>) session.getProperty(groupName);
-                if (group != null) {
-                    Element gEl = new Element(groupName);
-                    for (Element child : group.values()) {
-                        if (outFields == null || outFields.contains(child.getName()))
-                            gEl.addContent((Element) child.clone());
-                    }
-                    sEl.addContent(gEl);
-                }
-            }
-        }
-        return sEl;
+public final class Get {
+    private Get() {
     }
 
     public static Element getSessionAsXML(UserSession session) {

@@ -145,15 +145,6 @@
         }
       };
 
-      $scope.orgNameOptions = {
-        mode: "remote",
-        remote: {
-          url: suggestService.getUrl("QUERY", "orgName", "STARTSWITHFIRST"),
-          filter: suggestService.bhFilter,
-          wildcard: "QUERY"
-        }
-      };
-
       $scope.categoriesOptions = {
         mode: "prefetch",
         promise: (function () {

@@ -25,8 +25,6 @@ package org.fao.geonet.monitor.health;
 
 import jeeves.monitor.HealthCheckFactory;
 import jeeves.server.context.ServiceContext;
-import jeeves.server.local.LocalServiceRequest;
-import jeeves.server.sources.ServiceRequest.InputMethod;
 
 import org.fao.geonet.utils.Xml;
 
@@ -46,11 +44,9 @@ public class CswGetRecordsHealthCheck implements HealthCheckFactory {
             @Override
             protected Result check() throws Exception {
                 try {
-                    LocalServiceRequest request = LocalServiceRequest.create("local://csw?request=GetRecords&service=CSW&MaxRecords=1&constraintlanguage=FILTER&version=2.0.2&resulttype=results&typeNames=csw:Record");
-                    request.setDebug(false);
-                    request.setLanguage("eng");
-                    request.setInputMethod(InputMethod.GET);
-                    Element result = context.execute(request);
+                    Element result = CswGetCapabilitiesHealthCheck.dispatch(context,
+                        "request", "GetRecords", "service", "CSW", "MaxRecords", "1",
+                        "constraintlanguage", "FILTER", "version", "2.0.2", "resulttype", "results", "typeNames", "csw:Record");
 
                     if (result.getChild("SearchResults", Csw.NAMESPACE_CSW) == null)
                         return Result.unhealthy("GetRecords request did not contain a SearchResults Element as Expected.  Xml = " + Xml.getString(result));
