@@ -31,6 +31,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
+import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018SchemaPlugin;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,6 +44,7 @@ import java.util.Map;
 import static org.fao.geonet.schema.TestSupport.getResource;
 import static org.fao.geonet.schema.TestSupport.getResourceInsideSchema;
 import static org.jdom.Namespace.getNamespace;
+import static org.junit.Assert.assertNotNull;
 
 public class FullViewTest {
 
@@ -104,6 +106,36 @@ public class FullViewTest {
         XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat().setLineSeparator("\n"));
         String actual = xmlOutputter.outputString(new Document(transformed));
         TestSupport.assertGeneratedDataByteMatchExpected("two-lineages-and-constraints-ISO19115-3-full-view.html", actual, GENERATE_EXPECTED_FILE);
+    }
+
+    @Test
+    public void dcatViewWithEmptyDistributionFormat() throws Exception {
+        Path xslFile = getResourceInsideSchema("formatter/dcat/view.xsl");
+        Path xmlFile = getResource("UpperRhineCastles-iso19115-3.2018.xml");
+        Element md = Xml.loadFile(xmlFile);
+
+        Element transferOptions = (Element) Xml.selectElement(md,
+            "mdb:distributionInfo/mrd:MD_Distribution/mrd:transferOptions/mrd:MD_DigitalTransferOptions",
+            ISO19115_3_2018SchemaPlugin.allNamespaces.asList());
+        assertNotNull(transferOptions);
+
+        Element distFormat = new Element("distributionFormat", getNamespace("mrd", "http://standards.iso.org/iso/19115/-3/mrd/1.0"));
+        Element mdFormat = new Element("MD_Format", getNamespace("mrd", "http://standards.iso.org/iso/19115/-3/mrd/1.0"));
+        Element formatCitation = new Element("formatSpecificationCitation", getNamespace("mrd", "http://standards.iso.org/iso/19115/-3/mrd/1.0"));
+        Element ciCitation = new Element("CI_Citation", getNamespace("cit", "http://standards.iso.org/iso/19115/-3/cit/2.0"));
+        Element citTitle = new Element("title", getNamespace("cit", "http://standards.iso.org/iso/19115/-3/cit/2.0"));
+        // Empty cit:title with empty gco:CharacterString
+        Element charString = new Element("CharacterString", getNamespace("gco", "http://standards.iso.org/iso/19115/-3/gco/1.0"));
+        citTitle.addContent(charString);
+
+        ciCitation.addContent(citTitle);
+        formatCitation.addContent(ciCitation);
+        mdFormat.addContent(formatCitation);
+        distFormat.addContent(mdFormat);
+        transferOptions.addContent(0, distFormat);
+
+        Element transformed = Xml.transform(md, xslFile);
+        assertNotNull(transformed);
     }
 
     private static Path addRequiredSchemasAndDisableConflictingOne() throws URISyntaxException {
