@@ -118,140 +118,12 @@
         };
       };
 
-      /**
-       * Link together records, filter and a pager.
-       * Return the search function to invoke.
-       *
-       * <code>
-       *        $scope.records = {};
-       *        $scope.filter = {};
-       *
-       *        // Pager config
-       *        $scope.pagination = {
-       *          pages: -1,
-       *          currentPage: 0,
-       *          hitsPerPage: 20
-       *        };
-       *
-       *        // Register the search results, filter and pager
-       *        // and get the search function back
-       *        searchFn = gnSearchManagerService.register({
-       *          records: 'records',
-       *          filter: 'filter',
-       *          pager: 'pagination'
-       *          //              error: function () {console.log('error');},
-       *          //              success: function () {console.log('succ');}
-       *        }, $scope);
-       *
-       *        // Update search filter and reset page
-       *        $scope.search = function(e) {
-       *          $filter = {any: (e ? e.target.value : '')};
-       *          $scope.pagination.currentPage = 0;
-       *          searchFn();
-       *        };
-       *
-       *        // When the current page change trigger the search
-       *        $scope.$watch('pagination.currentPage', function() {
-       *          $scope.search();
-       *        });
-       *        </code>
-       */
-      var register = function (config, scope) {
-        var searchFn = function () {
-          var pageOptions = scope[config.pager],
-            filter = "";
-
-          scope[config.filter] &&
-            $.each(scope[config.filter], function (key, value) {
-              filter += "&" + key + "=" + value;
-            });
-          search(
-            "q?bucket=" +
-              scope.searchResults.selectionBucket +
-              filter +
-              "&from=" +
-              (pageOptions.currentPage * pageOptions.hitsPerPage + 1) +
-              "&to=" +
-              (pageOptions.currentPage + 1) * pageOptions.hitsPerPage,
-            config.error
-          ).then(function (data) {
-            scope[config.records] = data;
-            pageOptions.count = parseInt(data.count);
-            pageOptions.pages = Math.round(data.count / pageOptions.hitsPerPage, 0);
-            config.success && config.success(data);
-          });
-        };
-        return searchFn;
-      };
-
-      /**
-       * Run a search.
-       */
-      var search = function (url, error) {
-        var defer = $q.defer();
-        $http.get(url).then(
-          function (response) {
-            defer.resolve(format(response.data));
-          },
-          function (response) {
-            defer.reject(response.data);
-          }
-        );
-        return defer.promise;
-      };
-
-      // TODO: remove search call to use params instead
-      // of url and use gnSearch only (then rename it to search)
       var gnSearch = function (params, error, internal) {
         var defer = $q.defer();
 
         gnHttp.callService(internal ? "internalSearch" : "search", params).then(
           function (response) {
             defer.resolve(format(response.data));
-          },
-          function (response) {
-            defer.reject(response.data);
-          }
-        );
-        return defer.promise;
-      };
-
-      var indexSetOfRecords = function (params) {
-        var defer = $q.defer();
-        var defaultParams = {
-          fast: "index",
-          summaryOnly: "true"
-        };
-        angular.extend(params, defaultParams);
-
-        gnSearch(params).then(
-          function (data) {
-            if (parseInt(data.count) > 0) {
-              selectAll().then(function () {
-                index(false, true).then(function (data) {
-                  defer.resolve(data);
-                });
-              });
-            } else {
-              defer.reject("No records to index");
-            }
-          },
-          function (reason) {
-            defer.reject("error: " + reason);
-          }
-        );
-        return defer.promise;
-      };
-      var index = function (reset, fromSelection) {
-        var defer = $q.defer();
-        var url = "admin.index.rebuildxlinks?reset=";
-        url += reset ? "yes" : "no";
-        url += "&fromSelection=";
-        url += fromSelection ? "yes" : "no";
-
-        $http.get(url).then(
-          function (response) {
-            defer.resolve(response.data);
           },
           function (response) {
             defer.reject(response.data);
@@ -290,16 +162,13 @@
       };
 
       return {
-        search: search,
         format: format,
         gnSearch: gnSearch,
-        register: register,
         selected: selected,
         select: select,
         unselect: unselect,
         selectAll: selectAll,
         selectNone: selectNone,
-        indexSetOfRecords: indexSetOfRecords,
         selectionStatistics: selectionStatistics
       };
     }
