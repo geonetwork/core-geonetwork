@@ -30,8 +30,8 @@
 
   <xsl:output method="xml" encoding="UTF-8" indent="yes"/>
 
-  <xsl:include href="process/process-utility.xsl"/>
-  <xsl:include href="convert/thesaurus-transformation.xsl"/>
+  <xsl:include href="../process/process-utility.xsl"/>
+  <xsl:include href="../convert/thesaurus-transformation.xsl"/>
   <xsl:variable name="serviceUrl" select="/root/nodeUrl"/>
   <xsl:variable name="node" select="/root/nodeId"/>
 
