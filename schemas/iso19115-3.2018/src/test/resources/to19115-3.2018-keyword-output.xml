@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mri:descriptiveKeywords xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0" xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0" xmlns:cit="http://standards.iso.org/iso/19115/-3/cit/2.0" xmlns:gco="http://standards.iso.org/iso/19115/-3/gco/1.0" xmlns:gcx="http://standards.iso.org/iso/19115/-3/gcx/1.0" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <mri:MD_Keywords>
+    <mri:keyword xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="lan:PT_FreeText_PropertyType">
+      <gco:CharacterString>Landwirtschaft</gco:CharacterString>
+      <lan:PT_FreeText xmlns:lan="http://standards.iso.org/iso/19115/-3/lan/1.0">
+        <lan:textGroup>
+          <lan:LocalisedCharacterString locale="#FR">agriculture</lan:LocalisedCharacterString>
+        </lan:textGroup>
+        <lan:textGroup>
+          <lan:LocalisedCharacterString locale="#IT">agricoltura</lan:LocalisedCharacterString>
+        </lan:textGroup>
+        <lan:textGroup>
+          <lan:LocalisedCharacterString locale="#EN">agriculture</lan:LocalisedCharacterString>
+        </lan:textGroup>
+        <lan:textGroup>
+          <lan:LocalisedCharacterString locale="#RM" />
+        </lan:textGroup>
+      </lan:PT_FreeText>
+    </mri:keyword>
+    <mri:type>
+      <mri:MD_KeywordTypeCode codeList="http://standards.iso.org/iso/19115/-3/resources/codeList.xml#MD_KeywordTypeCode" codeListValue="theme" />
+    </mri:type>
+    <mri:thesaurusName>
+      <cit:CI_Citation>
+        <cit:title>
+          <gcx:Anchor xlink:href="http://geonetwork-opensource.org/gemet-theme">GEMET themes</gcx:Anchor>
+        </cit:title>
+        <cit:date>
+          <cit:CI_Date>
+            <cit:date>
+              <gco:Date>2009-09-23 07:57:16</gco:Date>
+            </cit:date>
+            <cit:dateType>
+              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="publication" />
+            </cit:dateType>
+          </cit:CI_Date>
+        </cit:date>
+        <cit:identifier>
+          <mcc:MD_Identifier>
+            <mcc:code>
+              <gcx:Anchor xlink:href="http://localhost:8080/geonetwork/srv/api/registries/vocabularies/external.theme.gemet-theme">geonetwork.thesaurus.external.theme.gemet-theme</gcx:Anchor>
+            </mcc:code>
+          </mcc:MD_Identifier>
+        </cit:identifier>
+      </cit:CI_Citation>
+    </mri:thesaurusName>
+  </mri:MD_Keywords>
+</mri:descriptiveKeywords>
+
