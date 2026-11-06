@@ -36,26 +36,6 @@
             </cit:dateType>
           </cit:CI_Date>
         </cit:date>
-        <cit:date>
-          <cit:CI_Date>
-            <cit:date>
-              <gco:Date>2009-09-22 07:57:15</gco:Date>
-            </cit:date>
-            <cit:dateType>
-              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="publication" />
-            </cit:dateType>
-          </cit:CI_Date>
-        </cit:date>
-        <cit:date>
-          <cit:CI_Date>
-            <cit:date>
-              <gco:Date>2009-09-22</gco:Date>
-            </cit:date>
-            <cit:dateType>
-              <cit:CI_DateTypeCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode" codeListValue="publication" />
-            </cit:dateType>
-          </cit:CI_Date>
-        </cit:date>
         <cit:identifier>
           <mcc:MD_Identifier>
             <mcc:code>

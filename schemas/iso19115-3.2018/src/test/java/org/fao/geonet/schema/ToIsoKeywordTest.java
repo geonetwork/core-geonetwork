@@ -39,7 +39,7 @@ import static org.fao.geonet.schema.TestSupport.getResourceInsideSchema;
 
 public class ToIsoKeywordTest {
 
-	private static final boolean GENERATE_EXPECTED_FILE = true;
+	private static final boolean GENERATE_EXPECTED_FILE = false;
 
 	@BeforeClass
 	public static void initSaxon() {
