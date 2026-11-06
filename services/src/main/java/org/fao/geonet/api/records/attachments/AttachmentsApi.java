@@ -360,6 +360,13 @@ public class AttachmentsApi {
             return;
         }
 
+        // If the store supports it, let the client download the resource directly from the storage
+        String presignedUrl = store.getResourcePresignedUrl(context, metadataUuid, resourceMetadata.getVisibility(), resourceId, approved);
+        if (presignedUrl != null) {
+            response.sendRedirect(presignedUrl);
+            return;
+        }
+
         // Set headers for downloads
         response.setContentType(fileMediaType.toString());
         response.setHeader(HttpHeaders.CONTENT_DISPOSITION, ContentDisposition.attachment().filename(fileName).build().toString());

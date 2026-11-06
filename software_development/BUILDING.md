@@ -83,6 +83,7 @@ The `release` flag above asks the following modukes to produce `zip` bundles for
 * `datastorage-s3`
 * `datastorage-jcloud`
 * `datastorage-cmis`
+* `datastorage-opendal`
 * `plugin-datahub-integration`
 * `release`
 

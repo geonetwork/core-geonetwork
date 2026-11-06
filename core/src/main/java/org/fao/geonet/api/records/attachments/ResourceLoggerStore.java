@@ -107,6 +107,18 @@ public class ResourceLoggerStore extends AbstractStore {
     }
 
     @Override
+    public String getResourcePresignedUrl(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
+        if (decoratedStore != null) {
+            String url = decoratedStore.getResourcePresignedUrl(context, metadataUuid, visibility, resourceId, approved);
+            if (url != null) {
+                storeGetRequest(context, metadataUuid, resourceId, "", "", "", "", new ISODate().toString(), approved);
+            }
+            return url;
+        }
+        return null;
+    }
+
+    @Override
     public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved, long start, long end) throws Exception {
         if (decoratedStore != null) {
             ResourceHolder holder = decoratedStore.getResourceWithRange(context, metadataUuid, visibility, resourceId, approved, start, end);
