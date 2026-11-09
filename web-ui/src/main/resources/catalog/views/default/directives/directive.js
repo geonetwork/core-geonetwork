@@ -266,4 +266,97 @@
       };
     }
   ]);
+
+  /**
+   * Drag handle to resize the maximized search map. The height is stored in
+   * the --gn-minimap-split-height CSS variable and remembered in the browser.
+   */
+  module.directive("gnMinimapResize", [
+    "gnSearchSettings",
+    function (gnSearchSettings) {
+      var storageKey = "gnSearchMinimapHeight";
+      var minHeight = 150; // smallest map
+      var minResultsHeight = 200; // space kept above the map for the results
+
+      var setHeight = function (height) {
+        document.documentElement.style.setProperty(
+          "--gn-minimap-split-height",
+          height + "px"
+        );
+      };
+
+      return {
+        restrict: "A",
+        link: function (scope, element) {
+          var mapWindow = element.parent()[0];
+
+          try {
+            var stored = parseInt(window.localStorage.getItem(storageKey), 10);
+            if (stored >= minHeight) {
+              setHeight(stored);
+            }
+          } catch (e) {}
+
+          // Current, smallest and largest map height (px) for screen readers
+          var updateAria = function () {
+            var bottom = mapWindow.getBoundingClientRect().bottom;
+            element.attr({
+              "aria-valuemin": minHeight,
+              "aria-valuemax": Math.round(bottom - minResultsHeight),
+              "aria-valuenow": mapWindow.offsetHeight
+            });
+          };
+
+          var resize = function (height) {
+            var bottom = mapWindow.getBoundingClientRect().bottom;
+            height = Math.round(
+              Math.max(minHeight, Math.min(height, bottom - minResultsHeight))
+            );
+            setHeight(height);
+            gnSearchSettings.searchMap.updateSize();
+            updateAria();
+            return height;
+          };
+
+          var save = function (height) {
+            try {
+              window.localStorage.setItem(storageKey, height);
+            } catch (e) {}
+          };
+
+          // Once the maximized size applies, and again on focus after a window resize
+          setTimeout(updateAria, 0);
+          element.on("focus", updateAria);
+
+          element.on("pointerdown", function (e) {
+            e.preventDefault();
+            // preventDefault stops the focus, which the arrow keys need
+            element[0].focus();
+            element[0].setPointerCapture(e.pointerId);
+            var bottom = mapWindow.getBoundingClientRect().bottom;
+            var height;
+            var move = function (moveEvent) {
+              height = resize(bottom - moveEvent.clientY);
+            };
+            element.on("pointermove", move);
+            // Remember the height once, when the drag ends
+            element.one("pointerup pointercancel", function () {
+              element.off("pointermove", move);
+              if (height) {
+                save(height);
+              }
+            });
+          });
+
+          element.on("keydown", function (e) {
+            var step = { ArrowUp: 20, ArrowDown: -20 }[e.key];
+            if (step) {
+              e.preventDefault();
+              save(resize(mapWindow.offsetHeight + step));
+            }
+          });
+        }
+      };
+    }
+  ]);
 })();

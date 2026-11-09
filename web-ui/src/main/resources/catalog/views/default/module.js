@@ -229,10 +229,89 @@
       $scope.sortKeywordsAlphabetically =
         gnGlobalSettings.gnCfg.mods.recordview.sortKeywordsAlphabetically;
 
+      // Floating search map state (normal, max or closed), remembered in the browser
+      var minimapStateKey = "gnSearchMinimapState";
+      var minimapStates = ["normal", "max", "closed"];
+      $scope.minimapState = "normal";
+      try {
+        var storedMinimapState = window.localStorage.getItem(minimapStateKey);
+        if (minimapStates.indexOf(storedMinimapState) !== -1) {
+          $scope.minimapState = storedMinimapState;
+        }
+      } catch (e) {}
+      var lastOpenMinimapState =
+        $scope.minimapState === "closed" ? "normal" : $scope.minimapState;
+
+      // A maximized map splits the search page in two: results on top, map below
+      var updateMinimapSplit = function () {
+        $(document.documentElement).toggleClass(
+          "gn-minimap-split",
+          $scope.searchMapPlacement === "results" &&
+            $scope.minimapState === "max" &&
+            gnSearchLocation.isSearch()
+        );
+      };
+      // Also apply on load: a reload of a search URL may not fire a location change
+      updateMinimapSplit();
+      $scope.$on("$locationChangeSuccess", updateMinimapSplit);
+
+      // The results scroll on their own above a maximized map, which clips a menu
+      // at the top of the map: pin an open menu to the window so it shows over the
+      // map, and move it along when the results scroll. Not in a card: its hover
+      // transform would become the reference for the fixed position.
+      $(document).on("shown.bs.dropdown", function (e) {
+        var menu = $(e.target).find(".dropdown-menu").first();
+        if (
+          !$(document.documentElement).hasClass("gn-minimap-split") ||
+          !menu.length ||
+          menu.closest(".gn-card").length
+        ) {
+          return;
+        }
+        var rect = menu[0].getBoundingClientRect();
+        var scrollTop = document.body.scrollTop;
+        menu.css({
+          position: "fixed",
+          top: rect.top,
+          left: rect.left,
+          right: "auto",
+          bottom: "auto",
+          width: rect.width
+        });
+        $(document.body).on("scroll.gnDropdown", function () {
+          menu.css("top", rect.top + scrollTop - document.body.scrollTop);
+        });
+      });
+      $(document).on("hidden.bs.dropdown", function (e) {
+        $(document.body).off("scroll.gnDropdown");
+        $(e.target).find(".dropdown-menu").first().css({
+          position: "",
+          top: "",
+          left: "",
+          right: "",
+          bottom: "",
+          width: ""
+        });
+      });
+
+      $scope.setMinimapState = function (state) {
+        $scope.minimapState = state;
+        if (state !== "closed") {
+          lastOpenMinimapState = state;
+        }
+        try {
+          window.localStorage.setItem(minimapStateKey, state);
+        } catch (e) {}
+        updateMinimapSplit();
+        // Let the new size apply before OpenLayers measures the map
+        setTimeout(function () {
+          searchMap.updateSize();
+        }, 0);
+      };
+
       $scope.toggleMap = function () {
-        $(searchMap.getTargetElement()).toggle();
-        $("button.gn-minimap-toggle > i").toggleClass(
-          "fa-angle-double-left fa-angle-double-right"
+        $scope.setMinimapState(
+          $scope.minimapState === "closed" ? lastOpenMinimapState : "closed"
         );
       };
 

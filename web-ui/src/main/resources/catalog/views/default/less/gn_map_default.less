@@ -20,6 +20,108 @@
   position: relative;
 }
 
+// floating search map window (search map placement "results")
+.gn-minimap {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  z-index: 99;
+  margin: 5px;
+  width: 250px;
+  background: @body-bg;
+  border: 1px solid @panel-default-border;
+  border-radius: @border-radius-base;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  .gn-minimap-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 5px;
+    padding: 3px 3px 3px 8px;
+    color: @panel-default-text;
+    background: @panel-default-heading-bg;
+    border-bottom: 1px solid @panel-default-border;
+    .gn-minimap-title {
+      font-weight: bold;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  .gn-search-map {
+    position: relative; // anchor for the draw buttons
+  }
+  [ol-map] {
+    height: 250px;
+  }
+  &.gn-minimap-max {
+    // full width pane at the bottom of the page, above the footer
+    bottom: @gn-bottombar-height;
+    left: 0;
+    width: auto;
+    height: @gn-minimap-split-height;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    border-width: 1px 0 0 0;
+    border-radius: 0;
+    box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
+    .gn-search-map {
+      flex: 1;
+      min-height: 0;
+    }
+    [ol-map] {
+      height: 100%;
+    }
+  }
+  .gn-minimap-resize {
+    position: absolute;
+    top: -7px;
+    left: 0;
+    right: 0;
+    height: 14px;
+    z-index: 11;
+    cursor: ns-resize;
+    touch-action: none;
+    span {
+      display: block;
+      width: 40px;
+      height: 6px;
+      margin: 4px auto;
+      border-radius: 3px;
+      background: @gray-light;
+    }
+    &:hover span,
+    &:focus span {
+      background: @brand-primary;
+    }
+    &:focus {
+      outline: none;
+    }
+  }
+}
+.gn-hide-footer .gn-minimap.gn-minimap-max {
+  bottom: 0;
+  height: @gn-minimap-split-height-nofooter;
+}
+// maximized map: the page above the map scrolls on its own (split view).
+// The height can be changed with the drag handle (--gn-minimap-split-height),
+// keeping at least 200px for the results.
+@gn-minimap-split-height: ~"min(var(--gn-minimap-split-height, 33vh), 100vh - @{gn-bottombar-height} - 200px)";
+@gn-minimap-split-height-nofooter: ~"min(var(--gn-minimap-split-height, 33vh), 100vh - 200px)";
+@media screen and (min-width: @screen-sm-min) {
+  html.gn-minimap-split {
+    overflow: hidden;
+    body {
+      height: calc(~"100vh - @{gn-minimap-split-height} - @{gn-bottombar-height}");
+      overflow-y: auto;
+      &.gn-hide-footer {
+        height: calc(~"100vh - @{gn-minimap-split-height-nofooter}");
+      }
+    }
+  }
+}
+
 // map viewer
 [gn-main-viewer] {
   position: absolute;
