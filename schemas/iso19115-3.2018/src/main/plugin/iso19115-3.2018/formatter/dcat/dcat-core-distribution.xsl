@@ -451,48 +451,56 @@
 
   <xsl:template mode="iso19115-3-to-dcat-distribution"
                 match="mrd:distributionFormat/*/mrd:formatSpecificationCitation">
-    <xsl:call-template name="rdf-format-as-mediatype">
-      <xsl:with-param name="format" select="*/cit:title/*/text()"/>
-    </xsl:call-template>
+    <xsl:variable name="format" select="*/cit:title/*/text()"/>
+    <xsl:if test="normalize-space($format) != ''">
+      <xsl:call-template name="rdf-format-as-mediatype">
+        <xsl:with-param name="format" select="$format"/>
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template>
 
 
   <xsl:template mode="iso19115-3-to-dcat-distribution"
                 match="mrd:distributionFormat/*/mrd:fileDecompressionTechnique">
-    <xsl:call-template name="rdf-format-as-mediatype">
-      <xsl:with-param name="elementName" select="'dcat:compressFormat'"/>
-      <xsl:with-param name="format" select="*/text()"/>
-    </xsl:call-template>
+    <xsl:variable name="format" select="*/text()"/>
+    <xsl:if test="normalize-space($format) != ''">
+      <xsl:call-template name="rdf-format-as-mediatype">
+        <xsl:with-param name="elementName" select="'dcat:compressFormat'"/>
+        <xsl:with-param name="format" select="$format"/>
+      </xsl:call-template>
+    </xsl:if>
   </xsl:template>
 
 
   <xsl:template name="rdf-format-as-mediatype">
     <xsl:param name="elementName" as="xs:string" select="'dct:format'"/>
-    <xsl:param name="format" as="xs:string"/>
+    <xsl:param name="format" as="xs:string?" select="''"/>
 
-    <xsl:variable name="formatUri"
-                  as="xs:string?"
-                  select="($formatLabelToUri[lower-case($format) = lower-case(text())]/@key)[1]"/>
+    <xsl:if test="normalize-space($format) != ''">
+      <xsl:variable name="formatUri"
+                    as="xs:string?"
+                    select="($formatLabelToUri[lower-case($format) = lower-case(text())]/@key)[1]"/>
 
-    <xsl:variable name="rangeName"
-                  as="xs:string"
-                  select="if ($elementName = 'dct:format') then 'dct:MediaTypeOrExtent' else 'dct:MediaType'"/>
-    <xsl:element name="{$elementName}">
-      <xsl:choose>
-        <xsl:when test="$formatUri">
-          <xsl:element name="{$rangeName}">
-            <xsl:attribute name="rdf:about" select="$formatUri"/>
-          </xsl:element>
-        </xsl:when>
-        <xsl:otherwise>
-          <xsl:element name="{$rangeName}">
-            <rdfs:label>
-              <xsl:value-of select="$format"/>
-            </rdfs:label>
-          </xsl:element>
-        </xsl:otherwise>
-      </xsl:choose>
-    </xsl:element>
+      <xsl:variable name="rangeName"
+                    as="xs:string"
+                    select="if ($elementName = 'dct:format') then 'dct:MediaTypeOrExtent' else 'dct:MediaType'"/>
+      <xsl:element name="{$elementName}">
+        <xsl:choose>
+          <xsl:when test="$formatUri">
+            <xsl:element name="{$rangeName}">
+              <xsl:attribute name="rdf:about" select="$formatUri"/>
+            </xsl:element>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:element name="{$rangeName}">
+              <rdfs:label>
+                <xsl:value-of select="$format"/>
+              </rdfs:label>
+            </xsl:element>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:element>
+    </xsl:if>
   </xsl:template>
 
 </xsl:stylesheet>
