@@ -29,6 +29,7 @@ import com.google.common.jimfs.Jimfs;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Constants;
 import org.fao.geonet.SystemInfo;
+import org.fao.geonet.exceptions.XSDValidationErrorEx;
 import org.fao.geonet.utils.debug.OpenResourceTracker;
 import org.jdom.Attribute;
 import org.jdom.Element;
@@ -52,6 +53,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
+import static org.junit.Assert.fail;
 
 
 /**
@@ -243,6 +245,27 @@ public class XmlTest {
         assertEquals(true,
             Xml.isRDFLike("<?xml version='1.0' encoding='utf-8'?>\n<rdf:RDF\n" +
                 "    xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"/>"));
+    }
+
+    @Test
+    public void testValidateWithSchemaPathIgnoresSchemaLocationHints() throws Exception {
+        Path envelopeXsd = Paths.get(XmlTest.class.getResource("xmltest/envelope.xsd").toURI());
+        Path recordXsd = Paths.get(XmlTest.class.getResource("xmltest/record.xsd").toURI());
+        // The embedded record is invalid against its hinted schema (missing <required>)
+        Element xml = Xml.loadString(
+            "<envelope xmlns=\"urn:envelope\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"" +
+                " xsi:schemaLocation=\"urn:envelope " + envelopeXsd.toUri() + "\">" +
+                "<record xmlns=\"urn:record\" xsi:schemaLocation=\"urn:record " + recordXsd.toUri() + "\"/>" +
+                "</envelope>", false);
+
+        try {
+            Xml.validate(xml);
+            fail("Validating with the schemaLocation hints should load record.xsd and fail");
+        } catch (XSDValidationErrorEx expected) {
+        }
+
+        // With a local schema the record's hint is not loaded, so only the envelope is checked
+        Xml.validate(envelopeXsd, xml);
     }
 
 
