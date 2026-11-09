@@ -82,6 +82,7 @@ import static org.fao.geonet.api.ApiParams.*;
 
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V1_ACCEPT_TYPE;
 import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE;
+import static org.fao.geonet.kernel.mef.MEFLib.Version.Constants.MEF_V3_ACCEPT_TYPE;
 
 @RequestMapping(value = {
     "/{portal}/api/records"
@@ -480,7 +481,8 @@ public class MetadataApi {
         produces = {
             "application/zip",
             MEF_V1_ACCEPT_TYPE,
-            MEF_V2_ACCEPT_TYPE
+            MEF_V2_ACCEPT_TYPE,
+            MEF_V3_ACCEPT_TYPE,
         })
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Return the record."),
@@ -557,8 +559,16 @@ public class MetadataApi {
         Path stylePath = dataDirectory.getWebappDir().resolve(Geonet.Path.SCHEMAS);
         Path file = null;
         ServiceContext serviceContext = ApiUtils.createServiceContext(request);
-        String acceptHeader = StringUtils.isBlank(request.getHeader(HttpHeaders.ACCEPT)) ? "application/x-gn-mef-2-zip" : request.getHeader(HttpHeaders.ACCEPT);
+        String acceptHeader = request.getHeader(HttpHeaders.ACCEPT);
         MEFLib.Version version = MEFLib.Version.find(acceptHeader);
+        // MEFLib.Version.find() falls back to V2 for anything it doesn't recognize, including a
+        // blank/missing Accept header - but V3 (flat "store" folder, no public/private split) is
+        // this endpoint's actual default export format, so only trust that fallback as "V2" when
+        // the caller genuinely asked for it explicitly; treat every other unrecognized value as V3.
+        if (version == MEFLib.Version.V2
+            && !MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE.equalsIgnoreCase(acceptHeader)) {
+            version = MEFLib.Version.V3;
+        }
         try {
             if (version == MEFLib.Version.V1) {
                 // This parameter is deprecated in v2.
@@ -580,7 +590,7 @@ public class MetadataApi {
             } else {
                 Set<String> uuidsToExport = new HashSet<>();
                 uuidsToExport.add(metadataUuid);
-                // MEF version 2 support multiple metadata record by file.
+                // MEF versions 2 and 3 both support multiple metadata records in one file.
                 if (withRelated) {
                     // Adding children in MEF file
 
@@ -597,12 +607,18 @@ public class MetadataApi {
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getHasfeaturecats()));
                     uuidsToExport.addAll(getUuidsOfAssociatedRecords(related.getHassources()));
                 }
-                Log.info(Geonet.MEF, "Building MEF2 file with " + uuidsToExport.size()
-                    + " records.");
 
-                file = MEFLib.doMEF2Export(serviceContext, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved, includeAttachments);
-
-                response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
+                if (version == MEFLib.Version.V2) {
+                    Log.info(Geonet.MEF, "Building MEF2 file with " + uuidsToExport.size()
+                        + " records.");
+                    file = MEFLib.doMEF2Export(serviceContext, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved, includeAttachments);
+                    response.setContentType(MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE);
+                } else {
+                    Log.info(Geonet.MEF, "Building MEF3 file with " + uuidsToExport.size()
+                        + " records.");
+                    file = MEFLib.doMEF3Export(serviceContext, uuidsToExport, format.toString(), false, stylePath, withXLinksResolved, withXLinkAttribute, false, addSchemaLocation, approved, includeAttachments);
+                    response.setContentType(MEFLib.Version.Constants.MEF_V3_ACCEPT_TYPE);
+                }
             }
             String suffix = includeAttachments ? "" : "-" + messages.getMessage("api.metadata.export.filename.withoutAttachmentsSuffix", null, locale);
             String filename = metadata.getUuid() + suffix + ".zip";

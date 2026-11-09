@@ -43,6 +43,7 @@ public class MetadataFileUpload extends GeonetEntity {
     public static final String ID_COLUMN_NAME = "id";
     public static final String UPLOAD_DATE_COLUMN_NAME = "uploadDate";
     public static final String DELETED_DATE_COLUMN_NAME = "deletedDate";
+    public static final int FILENAME_MAX_LENGTH = 1024;
     static final String ID_SEQ_NAME = "metadata_fileupload_id_seq";
     private int _id;
     private int _metadataId;
@@ -51,6 +52,8 @@ public class MetadataFileUpload extends GeonetEntity {
     private Double _fileSize;
     private String _userName;
     private String _deletedDate;
+    private MetadataResourceVisibility _access;
+    private String _mimeType;
 
     /**
      * Get the id object for this MetadataFileUpload entity.
@@ -166,7 +169,7 @@ public class MetadataFileUpload extends GeonetEntity {
      *
      * @return the user name for this entity.
      */
-    @Column(nullable = false)
+    @Column(nullable = false, length = FILENAME_MAX_LENGTH)
     public String getFileName() {
         return _fileName;
     }
@@ -179,6 +182,49 @@ public class MetadataFileUpload extends GeonetEntity {
      */
     public MetadataFileUpload setFileName(String fileName) {
         this._fileName = fileName;
+        return this;
+    }
+
+    /**
+     * Get the visibility (public/private) the file was uploaded with.
+     *
+     * @return the access/visibility for this entity, or {@code null} for uploads recorded before this field existed.
+     */
+    @Convert(converter = MetadataResourceVisibilityConverter.class)
+    @Column(name = "resourceaccess", length = 1)
+    public MetadataResourceVisibility getAccess() {
+        return _access;
+    }
+
+    /**
+     * Set the visibility (public/private) the file was uploaded with.
+     *
+     * @param access the access/visibility for this entity.
+     * @return this entity object
+     */
+    public MetadataFileUpload setAccess(MetadataResourceVisibility access) {
+        this._access = access;
+        return this;
+    }
+
+    /**
+     * Get the detected mime type of the uploaded file.
+     *
+     * @return the mime type for this entity, or {@code null} for uploads recorded before this field existed.
+     */
+    @Column(name = "mimetype", length = 255)
+    public String getMimeType() {
+        return _mimeType;
+    }
+
+    /**
+     * Set the detected mime type of the uploaded file.
+     *
+     * @param mimeType the mime type for this entity.
+     * @return this entity object
+     */
+    public MetadataFileUpload setMimeType(String mimeType) {
+        this._mimeType = mimeType;
         return this;
     }
 
@@ -231,6 +277,9 @@ public class MetadataFileUpload extends GeonetEntity {
         if (!_uploadDate.equals(that._uploadDate)) return false;
         if (_userName != null ? !_userName.equals(that._userName) : that._userName != null)
             return false;
+        if (_access != that._access) return false;
+        if (_mimeType != null ? !_mimeType.equals(that._mimeType) : that._mimeType != null)
+            return false;
 
         return true;
     }
@@ -244,6 +293,8 @@ public class MetadataFileUpload extends GeonetEntity {
         result = 31 * result + _fileSize.hashCode();
         result = 31 * result + (_userName != null ? _userName.hashCode() : 0);
         result = 31 * result + (_deletedDate != null ? _deletedDate.hashCode() : 0);
+        result = 31 * result + (_access != null ? _access.hashCode() : 0);
+        result = 31 * result + (_mimeType != null ? _mimeType.hashCode() : 0);
         return result;
     }
 }

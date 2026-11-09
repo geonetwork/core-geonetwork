@@ -49,6 +49,7 @@ public class FilesystemStoreResource implements MetadataResource {
     private final String version;
     private final MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties;
     private final boolean approved;
+    private final String mimeType;
 
     public FilesystemStoreResource(String metadataUuid,
                                    int metadataId,
@@ -59,7 +60,8 @@ public class FilesystemStoreResource implements MetadataResource {
                                    Date lastModification,
                                    String version,
                                    MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties,
-                                   boolean approved) {
+                                   boolean approved,
+                                   String mimeType) {
         this.metadataUuid = metadataUuid;
         this.metadataId = metadataId;
         this.approved=approved;
@@ -70,6 +72,25 @@ public class FilesystemStoreResource implements MetadataResource {
         this.lastModification = lastModification;
         this.version=version;
         this.metadataResourceExternalManagementProperties = metadataResourceExternalManagementProperties;
+        this.mimeType = mimeType;
+    }
+
+    /**
+     * @deprecated use the constructor accepting a {@code mimeType} instead.
+     */
+    @Deprecated
+    public FilesystemStoreResource(String metadataUuid,
+                                   int metadataId,
+                                   String filename,
+                                   String baseUrl,
+                                   MetadataResourceVisibility metadataResourceVisibility,
+                                   long size,
+                                   Date lastModification,
+                                   String version,
+                                   MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties,
+                                   boolean approved) {
+        this(metadataUuid, metadataId, filename, baseUrl, metadataResourceVisibility, size, lastModification, version,
+            metadataResourceExternalManagementProperties, approved, MimeTypeDetector.detect(filename));
     }
 
     public FilesystemStoreResource(String metadataUuid,
@@ -80,7 +101,8 @@ public class FilesystemStoreResource implements MetadataResource {
                                    long size,
                                    Date lastModification,
                                    boolean approved) {
-        this(metadataUuid, metadataId, filename, baseUrl, metadataResourceVisibility, size, lastModification, null, null, approved);
+        this(metadataUuid, metadataId, filename, baseUrl, metadataResourceVisibility, size, lastModification, null, null, approved,
+            MimeTypeDetector.detect(filename));
     }
 
     @Override
@@ -112,6 +134,11 @@ public class FilesystemStoreResource implements MetadataResource {
 
     @Override public String getFilename() {
         return filename;
+    }
+
+    @Override
+    public String getMimeType() {
+        return mimeType;
     }
 
     @Override
@@ -149,6 +176,7 @@ public class FilesystemStoreResource implements MetadataResource {
         sb.append("URL: ").append(url).append("\n");
         sb.append("Type: ").append(metadataResourceVisibility).append("\n");
         sb.append("Size: ").append(size).append("\n");
+        sb.append("Mime type: ").append(mimeType).append("\n");
         sb.append("Last modification: ").append(lastModification).append("\n");
         sb.append("Approved: ").append(approved).append("\n");
         sb.append("Version: ").append(version).append("\n");
