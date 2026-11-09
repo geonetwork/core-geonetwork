@@ -1,17 +1,37 @@
 <div>
-  <form class="ng-pristine ng-valid" role="form">
+  <form
+    class="ng-pristine ng-valid"
+    role="form"
+    data-ng-submit="kmlCtrl.addKml(url, map)"
+  >
     <input type="hidden" name="_csrf" value="{{csrf}}" />
-    <div class="form-group" data-ng-class="{'has-error' : !validUrl}">
+    <div class="form-group" data-ng-class="{'has-error' : kmlError}">
       <!--File URL-->
-      <input
-        class="form-control input-sm ng-pristine ng-valid"
-        aria-label="{{'KMLfileURL'|translate}}"
-        placeholder="{{'KMLfileURL'|translate}}"
-        type="text"
-        data-ng-model="url"
-        data-ng-model-options="{debounce: 500}"
-        data-ng-change="kmlCtrl.addKml(url, map)"
-      />
+      <div class="input-group input-group-sm">
+        <input
+          class="form-control"
+          aria-label="{{'KMLfileURL'|translate}}"
+          placeholder="{{'KMLfileURL'|translate}}"
+          type="url"
+          data-ng-model="url"
+          data-ng-change="kmlError = null"
+        />
+        <span class="input-group-btn">
+          <button
+            type="submit"
+            class="btn btn-default"
+            data-ng-disabled="!url || kmlLoading"
+          >
+            <span
+              class="fa"
+              data-ng-class="kmlLoading ? 'fa-spinner fa-spin' : 'fa-plus'"
+              aria-hidden="true"
+            ></span>
+            {{'addToMap'|translate}}
+          </button>
+        </span>
+      </div>
+      <p class="help-block" role="alert" data-ng-if="kmlError">{{kmlError}}</p>
 
       <p>{{'or'|translate}}</p>
 

@@ -214,4 +214,8 @@
     <jsSource webappPath="/catalog/lib/geohash.js"/>
     <jsSource webappPath="/catalog/lib/xml2json/xml2json.min.js" minimize="false"/>
   </declarative>
+  <!-- Loaded on demand by the map viewer's COG panel (gnCogImport) -->
+  <declarative name="geotiff" pathOnDisk="web-ui/src/main/resources">
+    <jsSource webappPath="/catalog/lib/geotiff/geotiff.js" minimize="false"/>
+  </declarative>
 </sources>
