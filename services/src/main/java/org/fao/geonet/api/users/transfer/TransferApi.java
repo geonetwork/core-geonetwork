@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -28,7 +28,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jeeves.server.UserSession;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.api.API;
 import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.tools.i18n.LanguageUtils;
@@ -46,6 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ResourceBundleMessageSource;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -150,14 +150,14 @@ public class TransferApi {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
 
-        List<UserGroupsResponse> list = new ArrayList<>();
+        List<UserGroupsResponse> userGroupsResponses = new ArrayList<>();
         if (myProfile == Profile.Administrator || myProfile == Profile.UserAdmin) {
             // add all admins first
             List<User> allAdmin = userRepository.findAllByProfile(Profile.Administrator);
             Group adminGroup = new Group();
             adminGroup.setName("allAdmins");
             for (User u : allAdmin) {
-                list.add(
+                userGroupsResponses.add(
                     new UserGroupsResponse(u, adminGroup, Profile.Administrator.name())
                 );
             }
@@ -173,19 +173,19 @@ public class TransferApi {
                 userGroups = userGroupRepository.findAll(UserGroupSpecs.hasGroupIds(myGroups));
             }
 
-            // Apply group type filtering if groupTypes parameter is provided
-            if (groupTypes != null){
-                userGroups = userGroups.stream()
-                    .filter(ug -> groupTypes.contains(ug.getGroup().getType()))
-                    .collect(Collectors.toList());
-            }
+            userGroupsResponses.addAll(getUserGroupsResponse(userGroups, groupTypes));
 
-            for (UserGroup ug : userGroups) {
-                list.add(
-                    new UserGroupsResponse(ug.getUser(), ug.getGroup(), ug.getProfile().name())
-                );
-            }
-            return list;
+            return userGroupsResponses;
+        } else if (myProfile == Profile.Reviewer || myProfile == Profile.Editor) {
+            // Only the groups where the user is at least Editor, and their members with at least Editor profile,
+            // as these are the valid targets for an ownership transfer.
+            Specification<UserGroup> isEditorOrMore = UserGroupSpecs.hasProfileIn(Profile.Editor.getProfileAndAllParents());
+            List<Integer> myGroups = userGroupRepository.findGroupIds(
+                Specification.where(UserGroupSpecs.hasUserId(session.getUserIdAsInt())).and(isEditorOrMore));
+            List<UserGroup> userGroups = userGroupRepository.findAll(
+                Specification.where(UserGroupSpecs.hasGroupIds(myGroups)).and(isEditorOrMore));
+
+            return getUserGroupsResponse(userGroups, groupTypes);
         } else {
             throw new SecurityException("You don't have rights to do get the groups for this user");
         }
@@ -326,5 +326,21 @@ public class TransferApi {
             result.add(opId + "|" + mdId);
         }
         return result;
+    }
+
+    private List<UserGroupsResponse> getUserGroupsResponse(List<UserGroup> userGroups, List<GroupType> groupTypes) {
+        List<UserGroupsResponse> list = new ArrayList<>();
+
+        if (groupTypes != null) {
+            userGroups = userGroups.stream()
+                .filter(ug -> groupTypes.contains(ug.getGroup().getType()))
+                .collect(Collectors.toList());
+        }
+
+        for (UserGroup ug : userGroups) {
+            list.add(new UserGroupsResponse(ug.getUser(), ug.getGroup(), ug.getProfile().name()));
+        }
+
+        return list;
     }
 }
