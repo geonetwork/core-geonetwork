@@ -23,6 +23,13 @@
 
 package org.fao.geonet.guiservices.versioning;
 
+import org.fao.geonet.utils.Xml;
+import org.jdom.Element;
+import org.jdom.xpath.XPath;
+import org.tmatesoft.svn.core.io.SVNRepository;
+
+import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.Date;
 
@@ -212,6 +219,19 @@ public class MetadataAction {
 
     public void setTitle(final String t) {
         this.title = t;
+    }
+
+    /**
+     * Sets the title from the record stored in the repository at this revision.
+     */
+    public void loadTitle(final SVNRepository repository) throws Exception {
+        // A deleted record has no content at its revision, use the previous one.
+        long revisionToFetch = action == 'D' ? revision - 1 : revision;
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        repository.getFile(id + "/metadata.xml", revisionToFetch, null, out);
+        Element record = Xml.loadString(out.toString(StandardCharsets.UTF_8.name()), false);
+        this.title = XPath.newInstance("gmd:identificationInfo/*/gmd:citation/gmd:CI_Citation/gmd:title/gco:CharacterString")
+            .valueOf(record);
     }
 
     public Long getRevision() {

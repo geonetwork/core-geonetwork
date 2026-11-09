@@ -265,20 +265,15 @@
           },
 
           link: function (scope, element, attrs) {
-            var url = "info?_content_type=json&type=users";
+            $http.get("../api/users", { cache: true }).then(function (response) {
+              scope.users = response.data;
 
-            $http.get(url, { cache: true }).then(function (response) {
-              var data = response.data;
-
-              scope.users = data !== "null" ? data.users : null;
-
-              // Select by default the first group.
+              // Select by default the first user.
               if (
                 (angular.isUndefined(scope.ownerUser) || scope.ownerUser === "") &&
-                data.users &&
-                data.users.length > 0
+                scope.users.length > 0
               ) {
-                scope.ownerUser = data.users[0]["@id"];
+                scope.ownerUser = scope.users[0].id;
               }
             });
           }
@@ -456,65 +451,6 @@
               searchFormCtrl.resetPagination();
               searchFormCtrl.triggerSearch();
             };
-          }
-        };
-      }
-    ])
-
-    /**
-     * @ngdoc directive
-     * @name gn_formfields.directive:gnSearchSuggest
-     * @restrict A
-     *
-     * @description
-     * Add a multiselect typeahead based input for suggestion.
-     * It binds a tagsinput to the input for multi select.
-     * It uses typeahead to retrieve and display suggestions from the geonetwork
-     * open suggestion service `suggest`, in remote mode.
-     * The index fields for the suggestion is given by the `gnSearchSuggest`
-     * attribute.
-     * By default, the list is not shown on click even if the input value is
-     * empty.
-     */
-    .directive("gnSearchSuggest", [
-      "suggestService",
-      function (suggestService) {
-        return {
-          restrict: "A",
-          scope: {
-            field: "@gnSearchSuggest",
-            startswith: "@gnSearchSuggestStartswith",
-            multi: "@"
-          },
-          link: function (scope, element, attrs) {
-            var remote = {
-              url: suggestService.getUrl(
-                "QUERY",
-                scope.field,
-                scope.startswith ? "STARTSWITHFIRST" : "ALPHA"
-              ),
-              filter: suggestService.filterResponse,
-              wildcard: "QUERY"
-            };
-            if (angular.isUndefined(scope.multi)) {
-              element.typeahead({
-                remote: remote
-              });
-            } else {
-              element.tagsinput({});
-              element
-                .tagsinput("input")
-                .typeahead({
-                  remote: remote
-                })
-                .bind(
-                  "typeahead:selected",
-                  $.proxy(function (obj, datum) {
-                    this.tagsinput("add", datum.value);
-                    this.tagsinput("input").typeahead("setQuery", "");
-                  }, element)
-                );
-            }
           }
         };
       }

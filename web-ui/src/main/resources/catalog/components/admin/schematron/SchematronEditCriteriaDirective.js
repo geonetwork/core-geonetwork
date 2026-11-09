@@ -58,11 +58,15 @@
           findValueInput = function () {
             return element.find("input.form-control");
           };
-          if (scope.original.value instanceof Array) {
+          // Criteria created automatically (eg. *Generated* groups) have no UI type or value.
+          if (scope.original.value === null) {
             scope.original.value = "";
           }
-          if (scope.original.uivalue instanceof Array) {
-            scope.original.uivalue = "";
+          if (scope.original.uiValue === null) {
+            scope.original.uiValue = "";
+          }
+          if (!scope.original.uiType) {
+            scope.original.uiType = scope.original.type;
           }
           scope.criteria = angular.copy(scope.original);
 
@@ -70,7 +74,7 @@
           // so when a type is changed the value field can be updated with a
           // value that makes sense for the type.
           criteriaTypeToValueMap = {
-            currentType__: scope.criteria.uitype
+            currentType__: scope.criteria.uiType
           };
           scope.criteriaTypes = {};
           if (scope.criteria.type === "NEW") {
@@ -81,15 +85,15 @@
             };
             criteriaTypeToValueMap.NEW = "";
           }
-          for (i = 0; i < scope.schema.criteriaTypes.type.length; i++) {
-            type = scope.schema.criteriaTypes.type[i];
+          for (i = 0; i < scope.schema.criteriaTypes.length; i++) {
+            type = scope.schema.criteriaTypes[i];
             scope.criteriaTypes[type.name] = type;
             criteriaTypeToValueMap[type.name] = "";
           }
           scope.isDirty = function () {
             return (
-              scope.criteria.uitype !== scope.original.uitype ||
-              scope.criteria.uivalue !== scope.original.uivalue
+              scope.criteria.uiType !== scope.original.uiType ||
+              scope.criteria.uiValue !== scope.original.uiValue
             );
           };
           scope.calculateClassOnDirty = function (whenDirty, whenClean) {
@@ -117,34 +121,34 @@
             });
           };
           scope.updateType = function () {
-            scope.criteria.type = scope.criteriaTypes[scope.criteria.uitype].type;
+            scope.criteria.type = scope.criteriaTypes[scope.criteria.uiType].type;
           };
           scope.updateValueField = function () {
             var oldType, newType, oldValue, newValue;
             oldType = criteriaTypeToValueMap.currentType__;
-            newType = scope.criteria.uitype;
-            oldValue = scope.criteria.uivalue;
+            newType = scope.criteria.uiType;
+            oldValue = scope.criteria.uiValue;
             newValue = criteriaTypeToValueMap[newType];
 
             criteriaTypeToValueMap.currentType__ = newType;
             criteriaTypeToValueMap[oldType] = oldValue;
-            scope.criteria.uivalue = newValue;
+            scope.criteria.uiValue = newValue;
           };
           scope.describeCriteria = function () {
-            switch (scope.original.uitype.toUpperCase()) {
+            switch (scope.original.uiType.toUpperCase()) {
               case "ALWAYS_ACCEPT":
                 return $translate.instant("schematronDescriptionAlwaysAccept");
               case "NEW":
                 return $translate.instant("NEW");
               case "XPATH":
                 return $translate.instant("schematronDescriptionXpath", {
-                  value: scope.original.uivalue
+                  value: scope.original.uiValue
                 });
               default:
-                type = scope.criteriaTypes[scope.original.uitype].label;
+                type = scope.criteriaTypes[scope.original.uiType].label;
                 return $translate.instant("schematronDescriptionGeneric", {
                   type: type,
-                  value: scope.original.uivalue
+                  value: scope.original.uiValue
                 });
             }
           };
@@ -185,8 +189,8 @@
                 isTypeahead = isTypeahead || $(ele).data("ttTypeahead");
               });
               if (!isTypeahead) {
-                criteriaType = scope.criteriaTypes[scope.criteria.uitype];
-                rawValue = scope.criteria.uivalue;
+                criteriaType = scope.criteriaTypes[scope.criteria.uiType];
+                rawValue = scope.criteria.uiValue;
                 if (criteriaType.value) {
                   // Check because ALWAYS_ACCEPT has not value.
                   value = criteriaType.value.replace(/@@value@@/g, rawValue);
@@ -217,11 +221,11 @@
             input = findValueInput();
             input.typeahead("destroy");
 
-            criteriaType = scope.criteriaTypes[scope.criteria.uitype];
+            criteriaType = scope.criteriaTypes[scope.criteria.uiType];
 
             if (criteriaType && (criteriaType.remote || criteriaType.local)) {
               typeaheadOptions = {
-                name: scope.criteria.uitype
+                name: scope.criteria.uiType
               };
 
               parseResponseFunction = function (parsedResponse) {
@@ -323,7 +327,7 @@
               );
               input.on("typeahead:selected", function (event, data) {
                 scope.criteria.value = data.data;
-                scope.criteria.uivalue = data.value;
+                scope.criteria.uiValue = data.value;
                 input.focus();
               });
             }

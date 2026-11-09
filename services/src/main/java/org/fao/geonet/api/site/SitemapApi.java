@@ -105,8 +105,7 @@ public class SitemapApi {
         content.append("User-agent: *\n");
         content.append("Disallow: ").append(contextPath).append("/catalog/\n");
         content.append("Disallow: ").append(contextPath).append("/static/\n");
-        content.append("Sitemap: ").append(settingManager.getNodeURL()).append("api/sitemap\n");
-        content.append("Sitemap: ").append(settingManager.getNodeURL()).append("api/sitemap?format=rdf");
+        content.append("Sitemap: ").append(settingManager.getNodeURL()).append("api/sitemap");
         response.setHeader(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE);
         response.getWriter().append(content);
     }

@@ -358,24 +358,8 @@
    */
 
   module.value("gnHttpServices", {
-    mdGetXML19139: "xml_iso19139",
-
-    publish: "md.publish",
-    unpublish: "md.unpublish",
-
-    processAll: "md.processing.batch",
-    processReport: "md.processing.batch.report",
-    processXml: "xml.metadata.processing",
-
-    suggest: "suggest",
-
     search: "q",
     internalSearch: "qi",
-    subtemplate: "subtemplate",
-    lang: "lang?_content_type=json&",
-    removeThumbnail: "md.thumbnail.remove?_content_type=json&",
-    removeOnlinesrc: "resource.del.and.detach", // TODO: CHANGE
-    selectionLayers: "selection.layers",
 
     featureindexproxy: "../../index/features",
     indexproxy: "../../index/records"

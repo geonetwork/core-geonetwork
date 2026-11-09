@@ -91,11 +91,11 @@
       $scope.loadHarvesters = function () {
         $scope.isLoadingHarvester = true;
         $scope.harvesters = null;
-        return $http.get("admin.harvester.list?_content_type=json&id=-1").then(
+        return $http.get("../api/harvesters").then(
           function (response) {
             var data = response.data;
 
-            if (data != "null") {
+            if (data) {
               $scope.harvesters = data;
               gnUtilityService.parseBoolean($scope.harvesters);
 
@@ -122,7 +122,7 @@
         for (var i = 0; $scope.harvesters && i < $scope.harvesters.length; i++) {
           var h = $scope.harvesters[i];
           if (h.info.running) {
-            runningHarvesters.push(h["@id"]);
+            runningHarvesters.push(h.site.uuid);
           }
         }
 
@@ -140,19 +140,13 @@
         isPolling = true;
 
         $http
-          .get(
-            "admin.harvester.list?onlyInfo=true&_content_type=json&id=" +
-              runningHarvesters.join("&id=")
-          )
+          .get("../api/harvesters/status", { params: { uuid: runningHarvesters } })
           .then(
             function (response) {
               var data = response.data;
 
               isPolling = false;
-              if (data != "null") {
-                if (!angular.isArray(data)) {
-                  data = [data];
-                }
+              if (data) {
                 var harvesterIndex = {};
                 angular.forEach($scope.harvesters, function (oldH) {
                   harvesterIndex[oldH["@id"]] = oldH;

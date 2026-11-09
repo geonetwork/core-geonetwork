@@ -154,7 +154,7 @@
         id="gn-harvest-settings-wfs-advanced-template-list"
         class="form-control"
         data-ng-model="harvesterSelected.options.templateId"
-        data-ng-options="t['@id'] as (t.schema + ' > ' + t.title) for t in harvesterTemplates"
+        data-ng-options="t.id as (t.schema + ' > ' + t.title) for t in harvesterTemplates"
       ></select>
       <p class="help-block" data-translate="">wfsfeatures-templateIdHelp</p>
     </div>

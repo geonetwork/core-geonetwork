@@ -152,7 +152,7 @@
             <li data-ng-repeat="h in $parent.harvesters | orderBy:'site.name'">
               <a
                 href=""
-                data-ng-click="cloneHarvester(h['@id'])"
+                data-ng-click="cloneHarvester(h.site.uuid)"
                 title="{{'cloneHarvester' | translate}} {{h.site.name}}"
               >
                 {{h.site.name}} ({{('harvester-' + h['@type']) | translate}})
@@ -395,7 +395,7 @@
                     <a
                       data-ng-show="h.info[0].logfile"
                       class="btn btn-default pull-right"
-                      ng-href="admin.harvester.log?file={{ (h.info[0].logfile | asArray)[0] | encodeURIComponent }}"
+                      ng-href="../api/harvesters/logs?file={{ (h.info[0].logfile | asArray)[0] | encodeURIComponent }}"
                       target="_blank"
                     >
                       <i class="fa fa-fw fa-download"></i>

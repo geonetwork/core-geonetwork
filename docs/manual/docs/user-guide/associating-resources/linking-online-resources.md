@@ -116,7 +116,7 @@ To reference a GIS file or a database table, user can upload or link to a that r
 
 | Type of resource | Vector file uploaded (eg. zipped Shapefile)                                                                                                     |
 |------------------|-------------------------------------------------------------------------------------------------------------------------------------------------|
-| URL              | File URL created after upload on the catalog. eg. <http://localhost:8080/geonetwork/srv/eng/resources.get?id=1631&fname=CCM.zip&access=private> |
+| URL              | File URL created after upload on the catalog. eg. `http://localhost:8080/geonetwork/srv/api/records/{uuid}/attachments/CCM.zip`               |
 | Protocol         | WWW:DOWNLOAD                                                                                                                                    |
 | Name             | File name (readonly)                                                                                                                            |
 
