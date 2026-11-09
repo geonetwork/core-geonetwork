@@ -1,0 +1,198 @@
+{
+  "version":"0.1.0",
+  "id":"barplot-trend-results",
+  "use_case":"Daugava",
+  "title":"Visualisation of statistical analysis results",
+  "description":"This process visualizes statistical analysis results, where the test value (stat.value) is plotted on the Y-axis and id are plotted on the X-axis. Bar color is determined by groups and is displayed in the legend. Bar opacity is controlled by the p-value threshold, with translucent bars representing insignificant results based on the provided p_value_threshold (R function 'barplot_trend_results').",
+  "jobControlOptions":[
+    "sync-execute",
+    "async-execute"
+  ],
+  "keywords":[
+    "daugava use case",
+    "AquaINFRA",
+    "barplot_trend_results",
+    "R"
+  ],
+  "links":[
+    {
+      "type":"text/html",
+      "rel":"about",
+      "title":"GitHub repo",
+      "href":"https://github.com/AstraLabuce/aquainfra-usecase-Daugava/tree/containerize",
+      "hreflang":"en-US"
+    },
+    {
+      "type":"text/html",
+      "rel":"about",
+      "title":"Zenodo repo",
+      "href":"https://doi.org/10.5281/zenodo.15112709",
+      "hreflang":"en-US"
+    },
+    {
+      "type":"text/html",
+      "rel":"about",
+      "title":"information",
+      "href":"https://example.org/process",
+      "hreflang":"en-US"
+    },
+    {
+      "type":"application/json",
+      "rel":"self",
+      "href":"https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results?f=json",
+      "title":"Process description as JSON",
+      "hreflang":"en-US"
+    },
+    {
+      "type":"text/html",
+      "rel":"alternate",
+      "href":"https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results?f=html",
+      "title":"Process description as HTML",
+      "hreflang":"en-US"
+    },
+    {
+      "type":"text/html",
+      "rel":"http://www.opengis.net/def/rel/ogc/1.0/job-list",
+      "href":"https://aquainfra.ogc.igb-berlin.de/pygeoapi/jobs?f=html",
+      "title":"Jobs list as HTML",
+      "hreflang":"en-US"
+    },
+    {
+      "type":"application/json",
+      "rel":"http://www.opengis.net/def/rel/ogc/1.0/job-list",
+      "href":"https://aquainfra.ogc.igb-berlin.de/pygeoapi/jobs?f=json",
+      "title":"Jobs list as JSON",
+      "hreflang":"en-US"
+    },
+    {
+      "type":"application/json",
+      "rel":"http://www.opengis.net/def/rel/ogc/1.0/execute",
+      "href":"https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results/execution?f=json",
+      "title":"Execution for this process as JSON",
+      "hreflang":"en-US"
+    },
+    {
+      "type":"application/json",
+      "rel":"self",
+      "href":"https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results?f=json",
+      "title":"Process description as JSON",
+      "hreflang":"en-US"
+    },
+    {
+      "type":"text/html",
+      "rel":"alternate",
+      "href":"https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results?f=html",
+      "title":"Process description as HTML",
+      "hreflang":"en-US"
+    },
+    {
+      "type":"text/html",
+      "rel":"http://www.opengis.net/def/rel/ogc/1.0/job-list",
+      "href":"https://aquainfra.ogc.igb-berlin.de/pygeoapi/jobs?f=html",
+      "title":"Jobs list as HTML",
+      "hreflang":"en-US"
+    },
+    {
+      "type":"application/json",
+      "rel":"http://www.opengis.net/def/rel/ogc/1.0/job-list",
+      "href":"https://aquainfra.ogc.igb-berlin.de/pygeoapi/jobs?f=json",
+      "title":"Jobs list as JSON",
+      "hreflang":"en-US"
+    },
+    {
+      "type":"application/json",
+      "rel":"http://www.opengis.net/def/rel/ogc/1.0/execute",
+      "href":"https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results/execution?f=json",
+      "title":"Execution for this process as JSON",
+      "hreflang":"en-US"
+    }
+  ],
+  "inputs":{
+    "input_data":{
+      "title":"Input table",
+      "description":"URL to the input table containing statistical analysis results. The table must include columns for test values, p-values, and group identifiers.",
+      "schema":{
+        "type":"string"
+      },
+      "minOccurs":1,
+      "maxOccurs":1,
+      "keywords":[]
+    },
+    "colname_id":{
+      "title":"Column name for identifier",
+      "description":"The name of the column containing group or sample identifiers, e.g., polygon id. Example = \"polygon_id\"",
+      "schema":{
+        "type":"string"
+      },
+      "minOccurs":1,
+      "maxOccurs":1,
+      "keywords":[]
+    },
+    "colname_test_value":{
+      "title":"Column name for test value",
+      "description":"The name of the column containing the test values (e.g., statistical coefficients) to be plotted on the Y-axis, e.g., Tau for Mann-Kendall test.",
+      "schema":{
+        "type":"string"
+      },
+      "minOccurs":1,
+      "maxOccurs":1,
+      "keywords":[]
+    },
+    "colname_p_value":{
+      "title":"Column name for p value",
+      "description":"The name of the column containing p values, used to determine bar transparency. Example = \"p_value\"",
+      "schema":{
+        "type":"string"
+      },
+      "minOccurs":1,
+      "maxOccurs":1,
+      "keywords":[]
+    },
+    "p_value_threshold":{
+      "title":"p value threshold for significance",
+      "description":"The threshold for distinguishing significant from insignificant values. It adjusts the transparency of bars in the plot. Example = \"0.05\"",
+      "schema":{
+        "type":"number",
+        "minimum":0.01,
+        "maximum":0.1,
+        "default":0.05
+      },
+      "minOccurs":1,
+      "maxOccurs":1,
+      "keywords":[]
+    },
+    "colname_group":{
+      "title":"Column name for subgroups",
+      "description":"The name of the column that defines the subgroups or categories to be displayed on the X-axis, e.g., seasons for every polygon_id.",
+      "schema":{
+        "type":"string"
+      },
+      "minOccurs":1,
+      "maxOccurs":1,
+      "keywords":[]
+    }
+  },
+  "outputs":{
+    "barplot_image":{
+      "title":"Barplot image (DPI 300)",
+      "description":"A high-resolution bar plot image (DPI = 300) where the Y-axis shows the test value and the X-axis shows the id and its groups. Opacity of bars is determined by the significance of the p-values based on the p_value_threshold.",
+      "schema":{
+        "type":"object",
+        "contentMediaType":"application/html"
+      }
+    }
+  },
+  "example":{
+    "inputs":{
+      "input_data":"https://testserver.de/download/trend_analysis_results.csv",
+      "colname_id":"polygon_id",
+      "colname_test_value":"Tau_Value",
+      "colname_p_value":"P_Value",
+      "p_value_threshold":"0.05",
+      "colname_group":"season"
+    }
+  },
+  "outputTransmission":[
+    "value"
+  ]
+}
