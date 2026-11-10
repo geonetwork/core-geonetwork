@@ -9,11 +9,13 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.attribute.FileTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.xml.transform.Source;
@@ -24,6 +26,7 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CachingTransformerFactoryTest {
     @Rule
@@ -57,6 +60,49 @@ public class CachingTransformerFactoryTest {
             assertEquals(2, firstFactory.compilations.get());
         } finally {
             firstFactory.clearCache();
+        }
+    }
+
+    @Test
+    public void recompilesWhenStylesheetTimestampChangesDuringCompilation() throws Exception {
+        stylesheet = folder.newFile("modified-during-compilation.xsl");
+        Files.write(stylesheet.toPath(), ("<xsl:stylesheet version=\"1.0\" "
+            + "xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">"
+            + "<xsl:output method=\"text\"/>"
+            + "<xsl:template match=\"/\"><xsl:value-of select=\"/value\"/></xsl:template>"
+            + "</xsl:stylesheet>").getBytes(StandardCharsets.UTF_8));
+        long originalTimestamp = stylesheet.lastModified();
+        CountingTransformerFactory factory = new CountingTransformerFactory() {
+            private boolean timestampChanged;
+
+            @Override
+            public Templates newTemplates(Source source) throws TransformerConfigurationException {
+                Templates templates = super.newTemplates(source);
+                if (!timestampChanged) {
+                    try {
+                        Files.setLastModifiedTime(stylesheet.toPath(),
+                            FileTime.fromMillis(originalTimestamp + TimeUnit.SECONDS.toMillis(1)));
+                    } catch (java.io.IOException exception) {
+                        throw new TransformerConfigurationException(exception);
+                    }
+                    timestampChanged = true;
+                }
+                return templates;
+            }
+        };
+        factory.clearCache();
+        try {
+            assertTransformation(factory, "first");
+            assertEquals(1, factory.compilations.get());
+            assertTrue(stylesheet.lastModified() > originalTimestamp);
+
+            assertTransformation(factory, "after modification");
+            assertEquals(2, factory.compilations.get());
+
+            assertTransformation(factory, "cached");
+            assertEquals(2, factory.compilations.get());
+        } finally {
+            factory.clearCache();
         }
     }
 

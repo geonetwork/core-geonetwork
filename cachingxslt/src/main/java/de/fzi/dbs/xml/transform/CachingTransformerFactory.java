@@ -101,8 +101,11 @@ public class CachingTransformerFactory extends TransformerFactoryImpl implements
                         throw new TransformerConfigurationException(
                             "Requested transformation [" + absolutePath + "] does not exist.");
                     }
-                    templatesCacheEntry =
-                        new TemplatesCacheEntry(newTemplates(new StreamSource(file)), file);
+                    // Read the timestamp before compiling, so an edit made during compilation
+                    // makes the entry stale instead of being masked.
+                    final long lastModified = file.lastModified();
+                    final Templates templates = newTemplates(new StreamSource(file));
+                    templatesCacheEntry = new TemplatesCacheEntry(templates, file, lastModified);
                     write(absolutePath, templatesCacheEntry);
                 }
             }
@@ -141,28 +144,29 @@ public class CachingTransformerFactory extends TransformerFactoryImpl implements
         /**
          * When was the cached entry last modified.
          */
-        private long lastModified;
+        private final long lastModified;
 
         /**
          * Cached templates object.
          */
-        private Templates templates;
+        private final Templates templates;
 
         /**
          * Templates file object.
          */
-        private File templatesFile;
+        private final File templatesFile;
 
         /**
          * Constructs a new cache entry.
          *
          * @param templates     templates to cache.
          * @param templatesFile file, from which this transformer was loaded.
+         * @param lastModified  modification time of the file, read before compiling it.
          */
-        private TemplatesCacheEntry(final Templates templates, final File templatesFile) {
+        private TemplatesCacheEntry(final Templates templates, final File templatesFile, final long lastModified) {
             this.templates = templates;
             this.templatesFile = templatesFile;
-            this.lastModified = templatesFile.lastModified();
+            this.lastModified = lastModified;
         }
     }
 }
