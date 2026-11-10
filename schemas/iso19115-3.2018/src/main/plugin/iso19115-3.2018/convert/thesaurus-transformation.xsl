@@ -297,13 +297,12 @@
             <publication date="{normalize-space($thesaurus/modifiedDate)}"/>
           </xsl:variable>
 
-          <xsl:for-each-group select="$thesaurusDates[@date != '']" group-by="@date">
-            <xsl:sort select="@date" order="descending"/>
+          <xsl:for-each-group select="$thesaurusDates[@date != '']" group-by="name()">
             <cit:date>
               <cit:CI_Date>
                 <cit:date>
-                  <xsl:element name="{if (contains(current-grouping-key(), 'T')) then 'gco:DateTime' else 'gco:Date'}">
-                    <xsl:value-of select="current-grouping-key()" />
+                  <xsl:element name="{if (contains(max(for $d in current-group()/@date return xs:string($d)), 'T')) then 'gco:DateTime' else 'gco:Date'}">
+                    <xsl:value-of select="max(for $d in current-group()/@date return xs:string($d))" />
                   </xsl:element>
                 </cit:date>
                 <cit:dateType>
