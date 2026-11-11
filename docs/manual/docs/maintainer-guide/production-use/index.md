@@ -103,7 +103,7 @@ Independently of the security mode, the proxy refuses a request whose host match
 -   the link-local range ``169.254.0.0/16``, the shared address space ``100.64.0.0/10``, and the benchmarking range ``198.18.0.0/15``
 -   the multicast range ``224.0.0.0/4``
 -   the IPv6 unique local, link-local and site-local ranges, ``fc00::/7``, ``fe80::/10`` and ``fec0::/10``
--   the IPv6 ranges that carry an IPv4 address, ``::/96`` and the NAT64 prefix ``64:ff9b::/96``
+-   the IPv6 ranges that carry an IPv4 address, ``::/96``, ``::ffff:0:0:0/96``, the NAT64 prefix ``64:ff9b::/96`` and the 6to4 prefix ``2002::/16``
 
 An address can be written in more than one way, so the host is compared in several forms: as it appears in the URL, without the brackets that surround an IPv6 literal, and in the canonical form of the address it denotes. An entry therefore applies whichever way a caller spells an address, and a single entry covers every spelling of it.
 

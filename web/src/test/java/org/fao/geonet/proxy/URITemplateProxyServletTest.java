@@ -53,7 +53,7 @@ public class URITemplateProxyServletTest {
      * The default of the proxy.excludeHosts property, kept in sync with the value in the root pom.xml.
      */
     private static final String DEFAULT_EXCLUDE_HOSTS =
-        "^(localhost|127\\..*|0\\..*|10\\..*|172\\.(1[6-9]|2[0-9]|3[01])\\..*|192\\.168\\..*|169\\.254\\..*|100\\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\\..*|198\\.1[89]\\..*|2(2[4-9]|3[0-9])\\..*|255\\.255\\.255\\.255|.*\\.local|.*\\.localhost|0:0:0:0:0:0:.*|::1|::|64:ff9b:.*|f[cd][0-9a-f]{2}:.*|fe[89ab][0-9a-f]:.*|fe[c-f][0-9a-f]:.*)$";
+        "^(localhost|127\\..*|0\\..*|10\\..*|172\\.(1[6-9]|2[0-9]|3[01])\\..*|192\\.168\\..*|169\\.254\\..*|100\\.(6[4-9]|[7-9][0-9]|1[01][0-9]|12[0-7])\\..*|198\\.1[89]\\..*|2(2[4-9]|3[0-9])\\..*|255\\.255\\.255\\.255|.*\\.local|.*\\.localhost|0:0:0:0:0:0:.*|::1|::|64:ff9b:.*|2002:.*|0:0:0:0:ffff:0:.*|f[cd][0-9a-f]{2}:.*|fe[89ab][0-9a-f]:.*|fe[c-f][0-9a-f]:.*)$";
 
     private URITemplateProxyServlet servlet;
 
@@ -249,6 +249,15 @@ public class URITemplateProxyServletTest {
     public void nat64PrefixIsExcluded() throws Exception {
         assertExcluded("http://[64:ff9b::7f00:1]/");
         assertNotExcluded("http://[64:ff9c::1]/");
+    }
+
+    @Test
+    public void sixToFourAndIpv4TranslatedPrefixesAreExcluded() throws Exception {
+        assertExcluded("http://[2002:7f00:1::1]/");
+        assertExcluded("http://[::ffff:0:192.168.158.3]/");
+        assertExcluded("http://[::ffff:0:c0a8:9e03]/");
+        assertNotExcluded("http://[2001:4860:4860::8888]/");
+        assertNotExcluded("http://[2003::1]/");
     }
 
     @Test
