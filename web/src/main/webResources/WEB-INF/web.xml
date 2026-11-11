@@ -416,8 +416,8 @@
       <param-value>gn5.to.gn4.trusted.json.auth</param-value>
     </init-param>
     <init-param>
-      <param-name>http.protocol.handle-redirects</param-name>
-      <param-value>true</param-value>
+      <param-name>followRedirects</param-name>
+      <param-value>${proxy.followRedirects}</param-value>
     </init-param>
     <init-param>
       <param-name>securityMode</param-name>
