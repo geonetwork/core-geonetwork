@@ -116,6 +116,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
     // An IPv4 address can be written as a single number, at most the ten digits of 4294967295.
     private static final Pattern DECIMAL_ADDRESS_PATTERN = Pattern.compile("\\d{1,10}");
     private static final long MAX_IPV4_ADDRESS = 4294967295L;
+    private static final String URL_NOT_ALLOWED_MESSAGE = "The proxy does not allow to access to the provided URL.";
     private static final String ATTR_QUERY_STRING =
         URITemplateProxyServlet.class.getSimpleName() + ".queryString";
 
@@ -454,8 +455,7 @@ public class URITemplateProxyServlet extends ProxyServlet {
 
         // Check that the url host or port is not forbidden to access by the proxy
         if (!isUrlAllowed(servletRequest)) {
-            String message = "The proxy does not allow to access to the provided URL.";
-            servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, message);
+            servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, URL_NOT_ALLOWED_MESSAGE);
             return;
         }
 
@@ -932,7 +932,9 @@ public class URITemplateProxyServlet extends ProxyServlet {
         try {
             super.service(servletRequest, servletResponse);
         } catch (ExcludedAddressException e) {
-            servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, e.getMessage());
+            // The host is named in the log only, the caller gets the same answer as for a refused URL.
+            LOGGER.warning(e.getMessage());
+            servletResponse.sendError(HttpServletResponse.SC_FORBIDDEN, URL_NOT_ALLOWED_MESSAGE);
         }
     }
 
