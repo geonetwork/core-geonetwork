@@ -481,6 +481,14 @@ public class URITemplateProxyServletTest {
     }
 
     @Test
+    public void aNameWrittenWithATrailingDotIsExcluded() throws Exception {
+        assertExcluded("http://localhost./");
+        assertExcluded("http://LOCALHOST./");
+        assertExcluded("http://printer.local./");
+        assertNotExcluded("http://example.com./");
+    }
+
+    @Test
     public void hostVariantsLeaveAnIpv4LiteralAlone() {
         assertEquals(1, servlet.getHostVariants("127.0.0.1").size());
     }

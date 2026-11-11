@@ -481,7 +481,8 @@ public class URITemplateProxyServlet extends ProxyServlet {
                 // Check if the link requested is in database link list
                 if (!proxyCallAllowed) {
                     try {
-                        URI uri = new URI(servletRequest.getParameter("url"));
+                        // The url as the target uses it, so the host looked up is the host requested.
+                        URI uri = new URI(getRequestedUrl(servletRequest.getQueryString()));
                         String host = uri.getHost();
                         LinkRepository linkRepository =
                             ApplicationContextHolder.get().getBean(LinkRepository.class);
@@ -778,11 +779,17 @@ public class URITemplateProxyServlet extends ProxyServlet {
      * Build the forms of a host that the exclusion pattern is matched against.
      *
      * @param host host part of the requested URL, as returned by {@link URI#getHost()}
-     * @return the host as provided, plus the unbracketed and canonical forms of an IPv6 literal
+     * @return the host as provided, plus the unbracketed and canonical forms of an IPv6 literal,
+     *         and a name without the dot that marks it as fully qualified
      */
     Set<String> getHostVariants(String host) {
         Set<String> variants = new LinkedHashSet<>();
         variants.add(host);
+
+        // "localhost." is the same host as "localhost", so an entry written without the dot covers it.
+        if (host.length() > 1 && host.endsWith(".")) {
+            variants.add(host.substring(0, host.length() - 1));
+        }
 
         if (host.startsWith("[") && host.endsWith("]")) {
             variants.add(host.substring(1, host.length() - 1));
