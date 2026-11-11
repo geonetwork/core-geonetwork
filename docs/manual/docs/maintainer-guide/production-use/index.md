@@ -105,7 +105,7 @@ Independently of the security mode, the proxy refuses a request whose host match
 -   the IPv6 unique local, link-local and site-local ranges, ``fc00::/7``, ``fe80::/10`` and ``fec0::/10``
 -   the IPv6 ranges that carry an IPv4 address, ``::/96``, ``::ffff:0:0:0/96``, the NAT64 prefix ``64:ff9b::/96`` and the 6to4 prefix ``2002::/16``
 
-An address can be written in more than one way, so the host is compared in several forms: as it appears in the URL, without the brackets that surround an IPv6 literal, and in the canonical form of the address it denotes. An entry therefore applies whichever way a caller spells an address, and a single entry covers every spelling of it.
+An address can be written in more than one way, so the host is compared in several forms: as it appears in the URL, without the brackets that surround an IPv6 literal, in the canonical form of the address it denotes, and without the dot that can close a fully qualified name, so ``localhost.`` is matched like ``localhost``. An entry therefore applies whichever way a caller spells an address, and a single entry covers every spelling of it.
 
 The address a host name leads to is checked as well. When the proxy connects, every address the name resolves to is matched against ``excludeHosts``, and the request is refused if any of them is excluded, so a public name that points to an internal address is refused like the address itself. The name is still matched as written too, which is what entries such as ``.*\.local`` rely on.
 
