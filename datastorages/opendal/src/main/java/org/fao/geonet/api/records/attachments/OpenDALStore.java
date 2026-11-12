@@ -93,7 +93,7 @@ public class OpenDALStore extends AbstractStore {
             Path fileNamePath = Paths.get(filename).getFileName();
 
             if (matcher.matches(fileNamePath)) {
-                Metadata metadata = op.stat(entryPath);
+                Metadata metadata = listedMetadata(op, entry);
                 resourceList.add(createResourceDescription(metadataUuid, visibility, filename, metadata.getContentLength(),
                         new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved));
             }
@@ -101,6 +101,20 @@ public class OpenDALStore extends AbstractStore {
 
         resourceList.sort(MetadataResourceVisibility.sortByFileName);
         return resourceList;
+    }
+
+    /**
+     * Size and last modification of a listed file. Object store listings (S3 ListObjectsV2 and
+     * similar) already return them, so using the entry's metadata avoids a stat per file, which
+     * on S3 is one HEAD request per attachment every time a record's resources are listed or
+     * indexed. Services that list with partial metadata (no last modification) still get a stat.
+     */
+    static Metadata listedMetadata(Operator op, Entry entry) {
+        Metadata metadata = entry.getMetadata();
+        if (metadata == null || metadata.getLastModified() == null) {
+            return op.stat(entry.getPath());
+        }
+        return metadata;
     }
 
     private String getFilenameFromPath(String path) {
