@@ -84,6 +84,7 @@ public class OpenDALStore extends AbstractStore {
         // A missing folder lists as empty, so any exception here is a real storage error and is not swallowed
         Operator op = openDALConfiguration.getOperator();
         List<Entry> entries = op.list(path);
+        final String baseUrl = resourcesBaseUrl();
         for (Entry entry : entries) {
             String entryPath = entry.getPath();
             if (entryPath.endsWith("/")) {
@@ -94,7 +95,7 @@ public class OpenDALStore extends AbstractStore {
 
             if (matcher.matches(fileNamePath)) {
                 Metadata metadata = listedMetadata(op, entry);
-                resourceList.add(createResourceDescription(metadataUuid, visibility, filename, metadata.getContentLength(),
+                resourceList.add(createResourceDescription(baseUrl, metadataUuid, visibility, filename, metadata.getContentLength(),
                         new Date(metadata.getLastModified().toEpochMilli()), metadataId, approved));
             }
         }
@@ -130,8 +131,22 @@ public class OpenDALStore extends AbstractStore {
 
     private MetadataResource createResourceDescription(final String metadataUuid,
                                                        final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, int metadataId, boolean approved) {
+        return createResourceDescription(resourcesBaseUrl(), metadataUuid, visibility, resourceId, size, lastModification,
+                metadataId, approved);
+    }
+
+    private MetadataResource createResourceDescription(final String baseUrl, final String metadataUuid,
+                                                       final MetadataResourceVisibility visibility, final String resourceId, long size, Date lastModification, int metadataId, boolean approved) {
         return new FilesystemStoreResource(metadataUuid, metadataId, getFilename(metadataUuid, resourceId),
-                settingManager.getNodeURL() + "api/records/", visibility, size, lastModification, approved);
+                baseUrl, visibility, size, lastModification, approved);
+    }
+
+    /**
+     * Base URL of the resources. getNodeURL() reads several settings from the database, so code
+     * that describes many resources reads it once instead of once per file.
+     */
+    private String resourcesBaseUrl() {
+        return settingManager.getNodeURL() + "api/records/";
     }
 
     @Override
@@ -300,7 +315,7 @@ public class OpenDALStore extends AbstractStore {
     @Override
     public MetadataResourceContainer getResourceContainerDescription(ServiceContext context, String metadataUuid, Boolean approved) throws Exception {
         return new FilesystemStoreResourceContainer(metadataUuid, getAndCheckMetadataId(metadataUuid, approved),
-                "attachments", settingManager.getNodeURL() + "api/records/", approved);
+                "attachments", resourcesBaseUrl(), approved);
     }
 
     protected String getPath(String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
