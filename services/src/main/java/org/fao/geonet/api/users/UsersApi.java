@@ -44,9 +44,9 @@ import org.fao.geonet.constants.Params;
 import org.fao.geonet.domain.*;
 import org.fao.geonet.domain.auditable.UserAuditable;
 import org.fao.geonet.exceptions.UserNotFoundEx;
-import org.fao.geonet.kernel.DataManager;
+import org.fao.geonet.kernel.datamanager.IMetadataOperations;
+import org.fao.geonet.kernel.datamanager.IMetadataStatus;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
-import org.fao.geonet.kernel.datamanager.base.BaseMetadataStatus;
 import org.fao.geonet.kernel.security.SecurityProviderConfiguration;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.*;
@@ -55,6 +55,7 @@ import org.fao.geonet.repository.specification.UserGroupSpecs;
 import org.fao.geonet.repository.specification.UserSpecs;
 import org.fao.geonet.repository.userfeedback.UserFeedbackRepository;
 import org.fao.geonet.util.PasswordUtil;
+import org.fao.geonet.util.XslUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.support.ResourceBundleMessageSource;
@@ -130,13 +131,7 @@ public class UsersApi {
     UserGroupRepository userGroupRepository;
 
     @Autowired
-    BaseMetadataStatus baseMetadataStatus;
-
-    @Autowired
     UserSavedSelectionRepository userSavedSelectionRepository;
-
-    @Autowired
-    DataManager dataManager;
 
     @Autowired
     LanguageUtils languageUtils;
@@ -153,6 +148,12 @@ public class UsersApi {
 
     @Autowired
     UserAuditableService userAuditableService;
+
+    @Autowired
+    private IMetadataOperations metadataOperations;
+
+    @Autowired
+    private IMetadataStatus metadataStatus;
 
     @Autowired
     UserFeedbackRepository userFeedbackRepository;
@@ -176,16 +177,13 @@ public class UsersApi {
     public List<User> getUsers(
         @Parameter(hidden = true)
             HttpSession httpSession
-    ) throws Exception {
+    ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile profile = session.getProfile();
 
         if (Profile.Administrator.equals(profile)) {
             // Get all users
             return userRepository.findAll(SortUtils.createSort(User_.name));
-        } else if (!Profile.UserAdmin.equals(profile)) {
-            // Return only the current user
-            return userRepository.findAll(UserSpecs.hasUserId(session.getUserIdAsInt()));
         } else if (Profile.UserAdmin.equals(profile)) {
             // Return all the users belonging to a group where the current user is UserAdmin
             int userId = session.getUserIdAsInt();
@@ -203,9 +201,10 @@ public class UsersApi {
             //  alToRemove.add(elRec);
 
             return allUsers;
+        } else {
+            // Return only the current user
+            return userRepository.findAll(UserSpecs.hasUserId(session.getUserIdAsInt()));
         }
-
-        return null;
     }
 
 
@@ -227,7 +226,7 @@ public class UsersApi {
         @Parameter(hidden = true)
             HttpSession httpSession
 
-    ) throws Exception {
+    ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
@@ -336,7 +335,6 @@ public class UsersApi {
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
 
-
         if (myUserId == null || myUserId.equals(Integer.toString(userIdentifier))) {
             throw new IllegalArgumentException(
                 "You cannot delete yourself from the user database");
@@ -359,7 +357,7 @@ public class UsersApi {
         // Before processing DELETE check that the user is not referenced
         // elsewhere in the GeoNetwork database - an exception is thrown if
         // this is the case
-        if (dataManager.isUserMetadataOwner(userIdentifier)) {
+        if (metadataOperations.isUserMetadataOwner(userIdentifier)) {
             IMetadataUtils metadataRepository = ApplicationContextHolder.get().getBean(IMetadataUtils.class);
             final long numUserRecords = metadataRepository.count(MetadataSpecs.isOwnedByUser(userIdentifier));
             throw new IllegalArgumentException(
@@ -368,10 +366,10 @@ public class UsersApi {
                     numUserRecords));
         }
 
-        if (dataManager.isUserMetadataStatus(userIdentifier)) {
+        if (metadataStatus.isUserMetadataStatus(userIdentifier)) {
             Optional<User> nobody = userRepository.findById(0);
             if (nobody.isPresent()) {
-                baseMetadataStatus.transferMetadataStatusOwnership(userIdentifier,
+                metadataStatus.transferMetadataStatusOwnership(userIdentifier,
                     nobody.get().getId());
             } else {
               throw new IllegalArgumentException(
@@ -469,12 +467,18 @@ public class UsersApi {
             ServletRequest request,
         @Parameter(hidden = true)
             HttpSession httpSession
-    ) throws Exception {
+    ) {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
 
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
+
+        // Allow administrator to create a user to manually pre-create users via api in certain cases (i.e. migration)
+        if (!XslUtil.isUserProfileCreateEnabled() &&
+            !Profile.Administrator.equals(myProfile)) {
+            return new ResponseEntity<>(messages.getString("security_provider_unsupported_functionality"), HttpStatus.PRECONDITION_FAILED);
+        }
 
         // Allow administrator to modify the user profile as they may need to manually pre-create users via api in certain cases (i.e. migration)
         if (securityProviderConfiguration != null &&
@@ -577,7 +581,7 @@ public class UsersApi {
             ServletRequest request,
         @Parameter(hidden = true)
             HttpSession httpSession
-    ) throws Exception {
+    ) {
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
 
         Profile profile = Profile.findProfileIgnoreCase(userDto.getProfile());
@@ -723,7 +727,7 @@ public class UsersApi {
             ServletRequest request,
         @Parameter(hidden = true)
             HttpSession httpSession
-    ) throws Exception {
+    ) {
 
         Locale locale = languageUtils.parseAcceptLanguage(request.getLocales());
         ResourceBundle messages = ResourceBundle.getBundle("org.fao.geonet.api.Messages", locale);
@@ -757,7 +761,7 @@ public class UsersApi {
 
         PasswordEncoder encoder = PasswordUtil.encoder(ApplicationContextHolder.get());
 
-        if (isUserAllowedToResetWithoutOldPassword(myProfile) == false
+        if (!isUserAllowedToResetWithoutOldPassword(myProfile)
             && (passwordResetDto.getPasswordOld() == null
             || !encoder.matches(
             passwordResetDto.getPasswordOld(),
@@ -794,7 +798,7 @@ public class UsersApi {
             ServletRequest request,
         @Parameter(hidden = true)
             HttpSession httpSession
-    ) throws Exception {
+    ) {
         UserSession session = ApiUtils.getUserSession(httpSession);
         Profile myProfile = session.getProfile();
         String myUserId = session.getUserId();
@@ -816,7 +820,7 @@ public class UsersApi {
                 // Return all groups for administrator.
                 // TODO: Check if a better option returning instead of UserGroup a customised GroupDTO
                 // containing all group properties and user profile
-                userGroups = new ArrayList<UserGroup>();
+                userGroups = new ArrayList<>();
 
                 List<Group> groups = groupRepository.findAll();
 
@@ -865,8 +869,7 @@ public class UsersApi {
     }
 
 
-    private void setUserGroups(final User user, List<GroupElem> userGroups, Locale locale)
-        throws Exception {
+    private void setUserGroups(final User user, List<GroupElem> userGroups, Locale locale) {
 
         Collection<UserGroup> all = userGroupRepository.findAll(UserGroupSpecs
             .hasUserId(user.getId()));
