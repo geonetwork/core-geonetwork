@@ -70,7 +70,6 @@
     <for name="mri:response" use="textarea"/>
     <for name="mri:specificUsage" use="textarea"/>
     <for name="mrd:orderOptions" use="textarea"/>
-    <for name="mrc:rangeElement" use="textarea"/>
 
     <for name="gco:Distance" use="number"/>
     <for name="gco:Distance/@uom" use="data-gn-keyword-picker">
@@ -522,8 +521,9 @@
       <name>mac:averageAirTemperature</name>
       <name>mac:maxAltitude</name>
       <name>mac:maxRelativeHumidity</name>
-      <name>mac:meterologicalConditions</name>
       <name>mac:type</name>
+      <name>mac:solarAzimuth</name>
+      <name>mac:solarElevation</name>
       <name>mas:constraintLanguage</name>
       <name>mas:schemaLanguage</name>
       <name>mcc:code</name>
@@ -535,6 +535,7 @@
       <name>mex:condition</name>
       <name>mex:domainValue</name>
       <name>mex:maximumOccurence</name>
+      <name>mrc:rangeElement</name>
       <name>mrc:bitsPerValue</name>
       <name>mrc:cameraCalibrationInformationAvailability</name>
       <name>mrc:cloudCoverPercentage</name>
