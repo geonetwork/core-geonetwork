@@ -37,24 +37,30 @@
         class="form-control"
         data-ng-model="year"
         data-ng-show="mode === DATE_MODE.YEAR"
+        data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
       />
       <input
         type="month"
         class="form-control"
         data-ng-model="month"
         data-ng-show="mode === DATE_MODE.MONTH"
+        data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
       />
       <input
         type="date"
         class="form-control"
         data-ng-model="date"
         data-ng-show="mode === DATE_MODE.DATE || mode === DATE_MODE.DATETIME"
+        data-ng-class="hideTime == 'true' ? 'gn-notime' : ''"
+        data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
+        style="width: 100%"
       />
       <!-- Time input -->
       <input
         type="time"
-        class="form-control"
+        class="form-control gn-time"
         data-ng-model="time"
+        data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
         data-ng-show="mode === DATE_MODE.DATETIME && !hideTime"
       />
       <!-- Timezone selector (only if time is to be displayed) -->
@@ -63,6 +69,7 @@
         data-ng-model="timezoneObj"
         data-ng-show="mode === DATE_MODE.DATETIME && !hideTime"
         data-ng-options="t as (t.name + ' ' + t.offset) for t in timezoneNames"
+        data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
       ></select>
 
       <!-- Date mode selector -->
@@ -71,6 +78,7 @@
           type="button"
           class="btn btn-default dropdown-toggle"
           data-toggle="dropdown"
+          data-ng-disabled="withIndeterminatePosition && (indeterminatePosition === 'now' || indeterminatePosition === 'unknown')"
         >
           <i class="fa fa-cog"></i>&nbsp;<span class="caret"></span>
         </button>
