@@ -69,7 +69,7 @@
         url: "",
         serverFolder: "",
         recursiveSearch: false,
-        rejectIfInvalid: false,
+        validationMode: "NO_VALIDATION",
         publishToAll: false,
         assignToCatalog: true,
         transformWith: "_none_",
