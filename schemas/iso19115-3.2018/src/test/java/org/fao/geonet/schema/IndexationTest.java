@@ -50,6 +50,7 @@ import java.util.function.Function;
 import static org.fao.geonet.schema.TestSupport.getResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 public class IndexationTest {
 
@@ -115,6 +116,37 @@ public class IndexationTest {
 		index = Xml.transform(md, xslFile);
 
 		assertNull(Xml.selectElement(index, "createDate", NAMESPACES));
+	}
+
+	@Test
+	public void temporalExtentDateRange() throws Exception {
+		XslUtil.IS_INSPIRE_ENABLED = false;
+		// Single day: closed range, not open-ended.
+		Element doc = indexWithTimePeriod("2026-11-13", "2026-11-13");
+		assertEquals(1, doc.getChildren("resourceTemporalExtentDateRange").size());
+		assertTrue(doc.getChildText("resourceTemporalExtentDateRange").contains("\"lte\""));
+
+		// End before start: no range, but a warning.
+		doc = indexWithTimePeriod("2024-02-15", "2023-12-15");
+		assertEquals(0, doc.getChildren("resourceTemporalExtentDateRange").size());
+		assertEquals(0, doc.getChildren("resourceTemporalDateRange").stream()
+			.filter(e -> ((Element) e).getText().contains("2023-12-15")).count());
+		assertTrue(doc.getChildren("indexingErrorMsg").stream()
+			.anyMatch(e -> ((Element) e).getText().contains("temporalRangeLowerGreaterThanUpper")));
+
+		// Regular range: closed range.
+		doc = indexWithTimePeriod("2023-12-15", "2024-02-15");
+		assertEquals(1, doc.getChildren("resourceTemporalExtentDateRange").size());
+		assertTrue(doc.getChildText("resourceTemporalExtentDateRange").contains("\"lte\""));
+	}
+
+	private Element indexWithTimePeriod(String begin, String end) throws Exception {
+		Element md = Xml.loadFile(getResource("UpperRhineCastles-iso19115-3.2018.xml"));
+		Namespace gml = Namespace.getNamespace("gml", "http://www.opengis.net/gml/3.2");
+		Element timePeriod = (Element) Xml.selectNodes(md, ".//gml:TimePeriod", java.util.List.of(gml)).get(0);
+		timePeriod.getChild("beginPosition", gml).setText(begin);
+		timePeriod.getChild("endPosition", gml).setText(end);
+		return Xml.transform(md, getResource("gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018/index-fields/index.xsl"));
 	}
 
 	private void transformAndCompare(String scriptName, String inputFileName, String expectedFileName) throws Exception {

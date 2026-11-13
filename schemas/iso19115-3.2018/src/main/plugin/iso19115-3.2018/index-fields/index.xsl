@@ -893,17 +893,22 @@
                           select="date-util:convertToISOZuluDateTime($end)"/>
 
             <xsl:choose>
+              <!-- Start after end: not a usable period. Index no range rather than an open-ended one;
+                   the temporalRangeLowerGreaterThanUpper warning below flags the record. -->
+              <xsl:when test="$zuluStartDate != '' and $zuluEndDate != ''
+                              and $zuluStartDate &gt; $zuluEndDate
+                              and not($end/@indeterminatePosition = 'now')"/>
               <xsl:when test="$zuluStartDate != ''
                                 and ($zuluEndDate != '' or $end/@indeterminatePosition = 'now')">
                 <resourceTemporalDateRange type="object">{
                   "gte": "<xsl:value-of select="$zuluStartDate"/>"
-                  <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
+                  <xsl:if test="$zuluStartDate &lt;= $zuluEndDate and not($end/@indeterminatePosition = 'now')">
                     ,"lte": "<xsl:value-of select="$zuluEndDate"/>"
                   </xsl:if>
                   }</resourceTemporalDateRange>
                 <resourceTemporalExtentDateRange type="object">{
                   "gte": "<xsl:value-of select="$zuluStartDate"/>"
-                  <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
+                  <xsl:if test="$zuluStartDate &lt;= $zuluEndDate and not($end/@indeterminatePosition = 'now')">
                     ,"lte": "<xsl:value-of select="$zuluEndDate"/>"
                   </xsl:if>
                 }</resourceTemporalExtentDateRange>
@@ -921,7 +926,7 @@
 
             <xsl:if test="$zuluStartDate != ''
                           and $zuluEndDate != ''
-                          and $start &gt; $end">
+                          and $zuluStartDate &gt; $zuluEndDate">
               <indexingErrorMsg type="object">
                 {
                   "string": "indexingErrorMsg-temporalRangeLowerGreaterThanUpper",
