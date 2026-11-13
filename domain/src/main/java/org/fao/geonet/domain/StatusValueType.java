@@ -39,4 +39,8 @@ public enum StatusValueType {
      * Indicates the associated {@link StatusValue} entity is an event.
      */
     event;
+
+    public boolean isWorkflowStatusValue() {
+        return this == workflow;
+    }
 }
