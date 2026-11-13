@@ -144,6 +144,23 @@
                 $scope.harvesterSelected.content.batchEdits = "";
               }
             }
+            // Convert ISO date strings to Date for OAI-PMH date selector
+            if (
+              $scope.harvesterSelected["@type"] === "oaipmh" &&
+              $scope.harvesterSelected.searches &&
+              $scope.harvesterSelected.searches[0]
+            ) {
+              if ($scope.harvesterSelected.searches[0].from) {
+                $scope.harvesterSelected.searches[0].from = new Date(
+                  $scope.harvesterSelected.searches[0].from
+                );
+              }
+              if ($scope.harvesterSelected.searches[0].until) {
+                $scope.harvesterSelected.searches[0].until = new Date(
+                  $scope.harvesterSelected.searches[0].until
+                );
+              }
+            }
             if ($scope.harvesterSelected.bboxFilter) {
               var s = $scope.harvesterSelected.bboxFilter;
               if ($scope.harvesterSelected.bboxFilter["bbox-xmin"]) {
