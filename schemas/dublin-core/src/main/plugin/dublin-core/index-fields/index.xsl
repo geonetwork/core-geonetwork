@@ -108,6 +108,13 @@
         <xsl:copy-of select="gn-fn-index:add-object-field('resourceTitleObject', $resourceTitleObject)"/>
       </xsl:for-each>
 
+      <xsl:variable name="embedding" select="util:buildEmbedding(dc:title[1]/text())"/>
+      <xsl:if test="$embedding != ''">
+        <text_vector type="object">
+          <xsl:value-of select="$embedding"/>
+        </text_vector>
+      </xsl:if>
+
       <xsl:for-each select="dc:language[1]">
         <xsl:copy-of select="gn-fn-index:add-field('resourceLanguage', current())"/>
       </xsl:for-each>
