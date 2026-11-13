@@ -105,6 +105,15 @@
       <foaf:Document rdf:about="https://services.geodata-utrecht.nl/geoserver/v01_1_mobiliteit/wms?request=GetMap&amp;service=WMS&amp;SRS=EPSG:28992&amp;CRS=EPSG:28992&amp;bbox=112656.06,436541.64,173834.94,482076.36&amp;width=600&amp;height=446&amp;format=image/png&amp;styles=&amp;layers=Regionaal_Fietsnetwerk"/>
     </foaf:page>
     <dcat:distribution>
+        <dcat:Distribution>
+            <dct:format>
+                <dct:MediaTypeOrExtent>
+                    <rdfs:label>File Geodatabase Feature Class</rdfs:label>
+                </dct:MediaTypeOrExtent>
+            </dct:format>
+        </dcat:Distribution>
+    </dcat:distribution>
+    <dcat:distribution>
       <dcat:Distribution>
         <dct:modified rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-11-26</dct:modified>
         <dcat:accessURL rdf:resource="https://download.geodata-utrecht.nl/download/vector/d6b08cf9-fdf1-4fe9-b906-02d0feb39e4e"/>
