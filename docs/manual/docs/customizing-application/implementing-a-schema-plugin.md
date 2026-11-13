@@ -68,9 +68,9 @@ The following subdirectories can be present in `src/main/plugin/<schema_id>`:
 -   **index-fields**: (*Mandatory*) Directory of XSLT required to index metadata record.
 -   **loc**: (*Mandatory*) Directory of localized information: labels, codelists or schema specific strings. Eg. `loc/eng/codelists.xml`
 -   **convert**: (*Mandatory*) Directory of XSLTs to convert metadata from or to this schema. This could be to convert metadata to other schemas or to convert metadata from other schemas and formats to this schema. Eg. `convert/oai_dc.xsl`
--   **layout**: (*Mandatory for version 3.x*) contains configuration for presenting metadata in the editor.
--   **formatter**: (*Optional for version 3.x*) contains configuration for presenting metadata using Groovy or XSLT formatter.
--   **present**: (*Mandatory for version 2.x*) contains XSLTs for presenting metadata in the viewer/editor.
+-   **layout**: (*Mandatory for version 3.x and later*) contains configuration for presenting metadata in the editor (`config-editor.xml`).
+-   **formatter**: (*Optional for version 3.x and later*) contains configuration for presenting metadata using Groovy or XSLT formatter.
+-   **present**: (*Mandatory for version 2.x editor*) contains XSLTs for presenting metadata in the 2.x viewer/editor. Those editor XSLTs were replaced in 3.0 by `layout/`; `present/csw` is still required for CSW output.
 -   **present/csw**: (*Mandatory*) contains XSLTs for response to CSW requests for brief, summary and full records.
 -   **process**: (*Optional*) contains XSLTs for processing metadata elements by metadata suggestions mechanism (see **suggest.xsl** below).
 -   **sample-data**: (*Optional*) Sample metadata for this schema. The metadata samples are in MEF format so that samples can have thumbnails or browse graphics as well as online resources.
@@ -743,10 +743,11 @@ After adding the localized strings, our new GeoNetwork plugin schema for MCP con
 
     3.0
 
+From GeoNetwork 3.x onward (including 4.x), record HTML and PDF views are schema formatters (XSLT or Groovy) under the `formatter/` directory, not the 2.x `present/` editor XSLTs.
 
 !!! info "See Also"
 
-    See formatter section TODO for version 3.x
+    [Customizing metadata views](creating-custom-view.md)
 
 
 #### Customizing the editor
@@ -755,17 +756,20 @@ After adding the localized strings, our new GeoNetwork plugin schema for MCP con
 
     3.0
 
+From GeoNetwork 3.x onward (including 4.x), editor views and tabs are configured in `layout/config-editor.xml`. Use that for 4.2 and 4.4. The `present/` XSLT editor in the next section is the GeoNetwork 2.x design.
 
 !!! info "See Also"
 
-    See editor configuration section TODO for version 3.x
+    [Customizing editor](editor-ui/creating-custom-editor.md) and [Building a custom form step by step](editor-ui/tutorial.md)
 
 
 #### Creating the presentations XSLTs in the present directory
 
-!!! warning "Deprecated"
+!!! warning "Deprecated in 3.0.0"
 
-    3.0.0
+    This section describes the GeoNetwork 2.x editor, which used XSLTs in `present/` (for example `metadata-<schema>.xsl`). It does **not** apply to GeoNetwork 3.x or 4.x.
+
+    From 3.0 onward, configure views and the editor in `layout/config-editor.xml` — see [Customizing editor](editor-ui/creating-custom-editor.md). CSW output XSLTs still live under `present/csw/` (see [CSW Presentation XSLTs](#csw-presentation-xslts) below).
 
 
 Each metadata schema should contain XSLTs that display and possibly edit metadata records that belong to the schema. These XSLTs are held in the `present` directory.
