@@ -26,6 +26,7 @@ package org.fao.geonet.schema;
 import com.google.common.collect.Lists;
 import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018Namespaces;
 import org.fao.geonet.util.XslUtil;
+import org.fao.geonet.utils.DateUtil;
 import org.fao.geonet.utils.ResolverWrapper;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
@@ -121,8 +122,24 @@ public class IndexationTest {
 	@Test
 	public void temporalExtentDateRange() throws Exception {
 		XslUtil.IS_INSPIRE_ENABLED = false;
-		// Single day: closed range, not open-ended.
+		// Single day: closed range covering the whole day.
 		Element doc = indexWithTimePeriod("2026-11-13", "2026-11-13");
+		assertEquals(1, doc.getChildren("resourceTemporalExtentDateRange").size());
+		assertTrue(doc.getChildText("resourceTemporalExtentDateRange").contains(
+			"\"lte\": \"" + DateUtil.convertToISOZuluDateTime("2026-11-13T23:59:59.999") + "\""));
+
+		// Year-month end: up to the last day of the month (leap year).
+		doc = indexWithTimePeriod("2024-01", "2024-02");
+		assertTrue(doc.getChildText("resourceTemporalExtentDateRange").contains(
+			"\"lte\": \"" + DateUtil.convertToISOZuluDateTime("2024-02-29T23:59:59.999") + "\""));
+
+		// Year end: up to the last day of the year.
+		doc = indexWithTimePeriod("2023", "2024");
+		assertTrue(doc.getChildText("resourceTemporalExtentDateRange").contains(
+			"\"lte\": \"" + DateUtil.convertToISOZuluDateTime("2024-12-31T23:59:59.999") + "\""));
+
+		// Start with a time, date-only end on the same day: still a valid range.
+		doc = indexWithTimePeriod("2026-11-13T10:00:00", "2026-11-13");
 		assertEquals(1, doc.getChildren("resourceTemporalExtentDateRange").size());
 		assertTrue(doc.getChildText("resourceTemporalExtentDateRange").contains("\"lte\""));
 
@@ -132,7 +149,7 @@ public class IndexationTest {
 		assertEquals(0, doc.getChildren("resourceTemporalDateRange").stream()
 			.filter(e -> ((Element) e).getText().contains("2023-12-15")).count());
 		assertTrue(doc.getChildren("indexingErrorMsg").stream()
-			.anyMatch(e -> ((Element) e).getText().contains("temporalRangeLowerGreaterThanUpper")));
+			.anyMatch(e -> ((Element) e).getText().contains("temporalDateRangeLowerGreaterThanUpper")));
 
 		// Regular range: closed range.
 		doc = indexWithTimePeriod("2023-12-15", "2024-02-15");
