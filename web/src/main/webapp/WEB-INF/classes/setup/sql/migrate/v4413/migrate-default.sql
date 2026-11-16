@@ -20,6 +20,11 @@ UPDATE Settings SET name='metadata/publication/automaticUnpublishInvalidMd', pos
 
 INSERT INTO Settings (name, value, datatype, position, internal) VALUES ('metadata/publication/enableScheduledPublication', 'false', 2, 12023, 'n');
 
+INSERT INTO Settings (name, value, datatype, position, internal) SELECT distinct 'system/metadata/thesaurusUrlAllowlist', '', 0, 9162, 'n' from settings WHERE NOT EXISTS (SELECT name FROM Settings WHERE name = 'system/metadata/thesaurusUrlAllowlist');
+
+-- Move metadata/vcs/enable to a free position so it no longer shares position 9161 with system/metadata/thesaurusNamespace.
+UPDATE Settings SET position = '9164' WHERE name = 'metadata/vcs/enable' AND position = '9161';
+
 INSERT INTO StatusValues (id, name, reserved, displayorder, type, notificationLevel) VALUES  (101,'scheduledPublicationTask','n', 101, 'task', 'statusUserOwner');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'ara','Scheduled publication');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'arm','Scheduled publication');
