@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -35,10 +35,10 @@
       
     
     
-      <link rel="stylesheet" href="../../../../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -1802,6 +1802,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata_configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metadata configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#thesaurus-url-allowlist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thesaurus URL allowlist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#editing_harvested_records" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -2861,6 +2889,34 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#metadata_configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metadata configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#thesaurus-url-allowlist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thesaurus URL allowlist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#editing_harvested_records" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3171,6 +3227,38 @@ type="application/opensearchdescription+xml" title="Open Search document for IN
 <p>Note: this option is only available for databases that have been tested. Those databases are PostGIS and Oracle. You should also carefully consider how many connections to the database you allocate in the database configuration as each thread could tie up one database connection for the duration of a long indexing session (for example). See the advanced configuration for more details of how to configure the number of connections in the database connection pool.</p>
 <h2 id="metadata-privileges">Metadata Privileges</h2>
 <p><em>Only set privileges to user's groups</em>: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator). At the moment this option cannot be disabled and is likely to be deprecated in the next version of GeoNetwork.</p>
+<h2 id="metadata_configuration">Metadata configuration</h2>
+<h3 id="thesaurus-url-allowlist">Thesaurus URL allowlist</h3>
+<p>Restricts which URLs can be used when importing a thesaurus from a URL or from a registry (see
+<a href="../../managing-classification-systems/managing-thesaurus/">Managing thesaurus</a>), to prevent the
+catalogue from being used to fetch content from arbitrary, untrusted URLs.</p>
+<ul>
+<li>Enter <strong>one URL pattern per line</strong>.</li>
+<li>Patterns support the <strong><code>*</code> wildcard</strong>, matching any sequence of characters (including none).</li>
+<li>Lines starting with <strong><code>#</code></strong> are treated as comments and ignored.</li>
+<li>If left <strong>empty</strong> (the default), <strong>any URL is allowed</strong>.</li>
+</ul>
+<p>Matching is <strong>host-anchored</strong>: the pattern's scheme, host and path are matched separately, so a
+<code>*</code> in the host part cannot spill over into the path. For example, <code>https://*.example.org/*</code> does
+<strong>not</strong> match <code>https://evil.org/.example.org/vocab.rdf</code>. The host is taken from the parsed URL,
+so a userinfo prefix such as <code>https://trusted.example.org@evil.org/</code> is matched on its real host
+(<code>evil.org</code>) and rejected. Within the <strong>path</strong> part, <code>*</code> still matches across <code>/</code>, so
+<code>https://example.org/*</code> matches arbitrarily deep paths.</p>
+<ul>
+<li><strong>Always include the scheme</strong> (<code>https://…</code>) so the pattern is host-anchored. A pattern without
+  a scheme (for example a bare <code>*</code>, meaning "allow any URL") is matched against the whole URL and
+  is <strong>not</strong> host-anchored.</li>
+</ul>
+<p><strong>Examples:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a># Only allow this specific vocabulary registry
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>https://vocabs.example-registry.org/*
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a># Allow any subdomain of an organisation
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>https://*.example.org/thesaurus/*
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a># Allow both http and https on a given host
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>http*://vocabs.another-example.org/*
+</span></code></pre></div></p>
 <h2 id="editing_harvested_records">Metadata import</h2>
 <ul>
 <li><strong>Restrict import to schemas</strong> List of all allowed schemas for metadata to be imported. If the metadata schema is not allowed, then the import is not done. Use an empty value to allow all schemas.</li>
@@ -3384,10 +3472,10 @@ type="application/opensearchdescription+xml" title="Open Search document for IN
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["content.action.view", "content.action.edit", "content.code.copy", "content.tabs.link", "navigation.tabs", "navigation.tracking", "navigation.prune", "navigation.indexes", "toc.follow", "navigation.top", "navigation.footer", "announce.dismiss"], "search": "../../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copi\u00e9 dans le presse-papier", "clipboard.copy": "Copier dans le presse-papier", "search.result.more.one": "1 de plus sur cette page", "search.result.more.other": "# de plus sur cette page", "search.result.none": "Aucun document trouv\u00e9", "search.result.one": "1 document trouv\u00e9", "search.result.other": "# documents trouv\u00e9s", "search.result.placeholder": "Taper pour d\u00e9marrer la recherche", "search.result.term.missing": "Non trouv\u00e9", "select.version": "S\u00e9lectionner la version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>
