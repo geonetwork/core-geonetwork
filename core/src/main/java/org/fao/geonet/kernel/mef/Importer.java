@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -41,7 +41,10 @@ import org.fao.geonet.exceptions.NoSchemaMatchesException;
 import org.fao.geonet.exceptions.UnAuthorizedException;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
+import org.fao.geonet.kernel.SchemaManager;
 import org.fao.geonet.kernel.datamanager.*;
+import org.fao.geonet.kernel.schema.AssociatedResourcesSchemaPlugin;
+import org.fao.geonet.kernel.schema.SchemaPlugin;
 import org.fao.geonet.kernel.search.IndexingMode;
 import org.fao.geonet.kernel.search.submission.DirectDeletionSubmitter;
 import org.fao.geonet.kernel.search.submission.DirectIndexSubmitter;
@@ -56,7 +59,6 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.springframework.context.ApplicationContext;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
@@ -164,7 +166,7 @@ public class Importer {
 
                 Map<String, Pair<String, Element>> mdFiles = new HashMap<>();
                 for (Path file : metadataXmlFiles) {
-                    if (file != null && java.nio.file.Files.isRegularFile(file)) {
+                    if (file != null && Files.isRegularFile(file)) {
                         Element metadata = Xml.loadFile(file);
 
                         // Important folder name to identify metadata should be ../../
@@ -188,7 +190,7 @@ public class Importer {
                     }
                 }
 
-                if (mdFiles.size() == 0) {
+                if (mdFiles.isEmpty()) {
                     throw new BadFormatEx(uuid + " / No valid metadata file found" + ((lastUnknownMetadataFolderName == null) ?
                         "" :
                         (" in " + lastUnknownMetadataFolderName)) + ".");
@@ -360,12 +362,33 @@ public class Importer {
 
                 if (validate) {
                     Integer groupIdVal = null;
-                    if (org.apache.commons.lang.StringUtils.isNotEmpty(groupId)) {
+                    if (StringUtils.isNotEmpty(groupId)) {
                         groupIdVal = Integer.parseInt(groupId);
                     }
 
                     // Validate xsd and schematron
                     metadataValidator.validateExternalMetadata(schema, metadata, context, " ", groupIdVal);
+                }
+
+                // The metadata to feature catalogue association is only carried by the
+                // feature catalogue citation, so the feature catalogue UUID has to be
+                // known before the record is stored: the citation must point to the UUID
+                // the feature catalogue is actually imported with.
+                String fcUuid = null;
+                if (!fc.isEmpty() && fc.get(index) != null) {
+                    // UUID is set as @uuid in root element
+                    fcUuid = fc.get(index).getAttributeValue("uuid");
+                    if (StringUtils.isBlank(fcUuid)
+                        || uuidAction == MEFLib.UuidAction.GENERATEUUID
+                        || metadataUtils.existsMetadataUuid(fcUuid)) {
+                        fcUuid = UUID.randomUUID().toString();
+                    }
+                    fc.add(index, metadataUtils.setUUID("iso19110", fcUuid, fc.get(index)));
+
+                    // MEF files created before the Relations table removal record the
+                    // association in the archive layout only, add the citation when the
+                    // record does not reference the feature catalogue yet.
+                    md.add(index, addFeatureCatalogueCitation(context, schema, md.get(index), fcUuid));
                 }
 
                 try {
@@ -375,76 +398,77 @@ public class Importer {
                     throw new Exception("Failed to import metadata with uuid '" + uuid + "'. " + e.getLocalizedMessage(), e);
                 }
 
-                if (!fc.isEmpty() && fc.get(index) != null) {
-                    // UUID is set as @uuid in root element
-                    uuid = UUID.randomUUID().toString();
-
-                    fc.add(index, metadataUtils.setUUID("iso19110", uuid, fc.get(index)));
-
+                if (fcUuid != null) {
                     //
                     // insert metadata
                     //
                     int userid = context.getUserSession().getUserIdAsInt();
                     String group = null;
                     String docType = null;
-                    String title = null;
                     String category = null;
                     boolean ufo = false;
+                    // Indexed once the categories and privileges below are applied.
                     String fcId = metadataManager
-                        .insertMetadata(context, "iso19110", fc.get(index), uuid, userid, group, source, isTemplate[0].codeString, docType,
-                            category, createDate, changeDate, ufo, IndexingMode.full);
+                        .insertMetadata(context, "iso19110", fc.get(index), fcUuid, userid, group, source, isTemplate[0].codeString, docType,
+                            category, createDate, changeDate, ufo, IndexingMode.none);
 
                     if (Log.isDebugEnabled(Geonet.MEF))
-                        Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + uuid);
-
-                    // Create database relation between metadata and feature
-                    // catalog
-                    String mdId = metadataIdMap.get(index);
-
-                    final MetadataRelationRepository relationRepository = context.getBean(MetadataRelationRepository.class);
-                    final MetadataRelation relation = new MetadataRelation();
-                    relation.setId(new MetadataRelationId(Integer.valueOf(mdId), Integer.valueOf(fcId)));
-
-                    relationRepository.save(relation);
+                        Log.debug(Geonet.MEF, "Adding Feature catalog with uuid: " + fcUuid);
 
                     metadataIdMap.add(fcId);
-                    // TODO : privileges not handled for feature catalog ...
+
+                    final int featureCatalogMetadataId = Integer.parseInt(fcId);
+                    final Element finalFeatureCatalogCategs = categs;
+                    metadataManager.update(featureCatalogMetadataId, metadata1 -> {
+                        addCategoriesToMetadata(metadata1, finalFeatureCatalogCategs, context);
+
+                        if (StringUtils.isEmpty(groupId)) {
+                            Group ownerGroup = addPrivileges(context, accessManager, metadataOperations, featureCatalogMetadataId, privileges);
+                            if (ownerGroup != null) {
+                                metadata1.getSourceInfo().setGroupOwner(ownerGroup.getId());
+                            }
+                        } else {
+                            final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
+                            final Set<OperationAllowed> allowedSet = addOperations(context, accessManager, metadataOperations, privileges,
+                                featureCatalogMetadataId, Integer.parseInt(groupId));
+                            allowedRepository.saveAll(allowedSet);
+                            metadata1.getSourceInfo().setGroupOwner(Integer.parseInt(groupId));
+                        }
+                    });
+
+                    metadataIndexer.indexMetadata(fcId, DirectIndexSubmitter.INSTANCE, IndexingMode.full);
                 }
 
-                final int iMetadataId = Integer.valueOf(metadataIdMap.get(index));
+                final int iMetadataId = Integer.parseInt(metadataIdMap.get(index));
 
                 final String finalPopularity = popularity;
                 final String finalRating = rating;
                 final Element finalCategs = categs;
-                final String finalGroupId = groupId;
-                metadataManager.update(iMetadataId, new Updater<AbstractMetadata>() {
-                    @Override
-                    public void apply(@Nonnull final AbstractMetadata metadata) {
-                        final MetadataDataInfo dataInfo = metadata.getDataInfo();
-                        if (finalPopularity != null) {
-                            dataInfo.setPopularity(Integer.valueOf(finalPopularity));
+                metadataManager.update(iMetadataId, metadata2 -> {
+                    final MetadataDataInfo dataInfo = metadata2.getDataInfo();
+                    if (finalPopularity != null) {
+                        dataInfo.setPopularity(Integer.parseInt(finalPopularity));
+                    }
+                    if (finalRating != null) {
+                        dataInfo.setRating(Integer.parseInt(finalRating));
+                    }
+                    dataInfo.setType(isTemplate[0]);
+
+                    metadata2.getHarvestInfo().setHarvested(false);
+
+                    addCategoriesToMetadata(metadata2, finalCategs, context);
+
+
+                    if (StringUtils.isEmpty(groupId)) {
+                        Group ownerGroup = addPrivileges(context, accessManager, metadataOperations, iMetadataId, privileges);
+                        if (ownerGroup != null) {
+                            metadata2.getSourceInfo().setGroupOwner(ownerGroup.getId());
                         }
-                        if (finalRating != null) {
-                            dataInfo.setRating(Integer.valueOf(finalRating));
-                        }
-                        dataInfo.setType(isTemplate[0]);
-
-                        metadata.getHarvestInfo().setHarvested(false);
-
-                        addCategoriesToMetadata(metadata, finalCategs, context);
-
-
-                        if (finalGroupId == null || finalGroupId.equals("")) {
-                            Group ownerGroup = addPrivileges(context, accessManager, metadataOperations, iMetadataId, privileges);
-                            if (ownerGroup != null) {
-                                metadata.getSourceInfo().setGroupOwner(ownerGroup.getId());
-                            }
-                        } else {
-                            final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
-                            final Set<OperationAllowed> allowedSet = addOperations(context, accessManager, metadataOperations, privileges, iMetadataId,
-                                Integer.valueOf(finalGroupId));
-                            allowedRepository.saveAll(allowedSet);
-                        }
+                    } else {
+                        final OperationAllowedRepository allowedRepository = context.getBean(OperationAllowedRepository.class);
+                        final Set<OperationAllowed> allowedSet = addOperations(context, accessManager, metadataOperations, privileges, iMetadataId,
+                            Integer.parseInt(groupId));
+                        allowedRepository.saveAll(allowedSet);
                     }
                 });
 
@@ -486,6 +510,60 @@ public class Importer {
         return metadataIdMap;
     }
 
+    /**
+     * Reference a feature catalogue from a record through its feature catalogue citation,
+     * unless the record already cites it. The citation is the only carrier of the metadata
+     * to feature catalogue association, so a MEF that ships a feature catalogue in its
+     * {@code applschema} folder without citing it would otherwise lose the association on
+     * import.
+     *
+     * @param schema  the schema of the record.
+     * @param md      the record to reference the feature catalogue from.
+     * @param fcUuid  the UUID of the feature catalogue.
+     * @return the record with the citation added, or the record unchanged when the schema
+     * does not support feature catalogue citations or the citation could not be added.
+     */
+    private static Element addFeatureCatalogueCitation(ServiceContext context, String schema, Element md, String fcUuid) {
+        try {
+            SchemaPlugin schemaPlugin = SchemaManager.getSchemaPlugin(schema);
+            if (schemaPlugin instanceof AssociatedResourcesSchemaPlugin) {
+                Set<String> citedUuids =
+                    ((AssociatedResourcesSchemaPlugin) schemaPlugin).getAssociatedFeatureCatalogueUUIDs(md);
+                if (citedUuids != null && citedUuids.contains(fcUuid)) {
+                    return md;
+                }
+            }
+
+            Path process = context.getBean(SchemaManager.class).getSchemaDir(schema)
+                .resolve("process").resolve("fcats-add.xsl");
+            if (!Files.exists(process)) {
+                Log.warning(Geonet.MEF, String.format(
+                    "Schema '%s' has no fcats-add process, the association with feature catalogue '%s' is not recorded in the imported record.",
+                    schema, fcUuid));
+                return md;
+            }
+
+            SettingManager settingManager = context.getBean(SettingManager.class);
+            Map<String, Object> params = new HashMap<>();
+            params.put("uuidref", fcUuid);
+            // iso19139 names the parameter siteUrl, iso19115-3.2018 names it nodeUrl.
+            params.put("siteUrl", settingManager.getSiteURL(context));
+            params.put("nodeUrl", settingManager.getNodeURL());
+            return Xml.transform(md, process, params);
+        } catch (Exception e) {
+            Log.warning(Geonet.MEF, String.format(
+                "Failed to reference feature catalogue '%s' in the imported record. %s", fcUuid, e.getMessage()), e);
+            return md;
+        }
+    }
+
+    /**
+     * Add categories to metadata.
+     *
+     * @param metadata the metadata
+     * @param finalCategs the final categories.
+     * @param context the context
+     */
     public static void addCategoriesToMetadata(AbstractMetadata metadata, Element finalCategs, ServiceContext context) {
         if (finalCategs != null) {
             final MetadataCategoryRepository categoryRepository = context.getBean(MetadataCategoryRepository.class);
@@ -536,7 +614,7 @@ public class Importer {
             if (sourceName == null)
                 sourceName = "???";
 
-            if (source == null || source.trim().length() == 0)
+            if (source == null || source.trim().isEmpty())
                 throw new Exception("Missing siteId parameter from info.xml file");
 
             // --- only update sources table if source is not current site
@@ -554,7 +632,7 @@ public class Importer {
         SettingManager settingManager = gc.getBean(SettingManager.class);
         boolean isMdWorkflowEnable = settingManager.getValueAsBool(Settings.METADATA_WORKFLOW_ENABLE);
 
-        String metadataId = "";
+        String metadataId;
         if (metadataExist && uuidAction == MEFLib.UuidAction.NOTHING) {
             throw new UnAuthorizedException("Record already exists. Change the import mode to overwrite or generating a new UUID.", null);
         } else if (metadataExist && uuidAction == MEFLib.UuidAction.OVERWRITE) {
