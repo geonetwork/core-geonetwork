@@ -567,12 +567,23 @@
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>batik-ext</artifactId>
-        <version>1.10</version>
+        <version>${batik.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.xmlgraphics</groupId>
         <artifactId>batik-transcoder</artifactId>
-        <version>1.10</version>
+        <version>${batik.version}</version>
+      </dependency>
+      <!-- the other batik modules come at ${batik.version} through fop: keep the family on one version -->
+      <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>batik-svggen</artifactId>
+        <version>${batik.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.xmlgraphics</groupId>
+        <artifactId>batik-css</artifactId>
+        <version>${batik.version}</version>
       </dependency>
       <!-- logging -->
       <dependency>
@@ -878,7 +889,12 @@
       <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
-        <version>33.2.1-jre</version>
+        <version>33.7.2-jre</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>failureaccess</artifactId>
+        <version>1.0.3</version>
       </dependency>
       <dependency>
         <groupId>com.yammer.metrics</groupId>
@@ -1314,6 +1330,48 @@
           </exclusion>
         </exclusions>
       </dependency>
+      <!-- Transitive dependencies pinned to the patch release that fixes known CVEs
+           (same series as the version otherwise resolved, API compatible). -->
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk18on</artifactId>
+        <version>${bouncycastle.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcpkix-jdk18on</artifactId>
+        <version>${bouncycastle.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcutil-jdk18on</artifactId>
+        <version>${bouncycastle.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.nimbusds</groupId>
+        <artifactId>nimbus-jose-jwt</artifactId>
+        <version>9.37.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jdom</groupId>
+        <artifactId>jdom2</artifactId>
+        <version>2.0.6.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.protobuf</groupId>
+        <artifactId>protobuf-java</artifactId>
+        <version>3.19.6</version>
+      </dependency>
+      <dependency>
+        <groupId>tools.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${jackson3.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>tools.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson3.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -1664,7 +1722,7 @@
     of Postgres is used and update pg.version if needed. -->
     <geotools.version>33.6</geotools.version>
     <jts.version>1.20.0</jts.version>
-    <pg.version>42.7.11</pg.version>
+    <pg.version>42.7.12</pg.version>
 
     <spring.version>5.3.39</spring.version>
     <spring.security.version>5.8.16</spring.security.version>
@@ -1686,7 +1744,11 @@
          NoClassDefFoundError masked as "java.io.IOException: closed". -->
     <pdfbox.version>3.0.3</pdfbox.version>
     <xmlunit.version>2.10.0</xmlunit.version>
-    <jackson.version>2.22.0</jackson.version>
+    <jackson.version>2.22.3</jackson.version>
+    <!-- Jackson 3 (tools.jackson), used by elasticsearch-java -->
+    <jackson3.version>3.1.7</jackson3.version>
+    <batik.version>1.19</batik.version>
+    <bouncycastle.version>1.85</bouncycastle.version>
     <jsonpath.version>2.10.0</jsonpath.version>
     <flying-saucer>9.1.22</flying-saucer>
     <camel.version>2.25.1</camel.version>
