@@ -1,0 +1,47 @@
+================================================================================
+===
+=== GeoNetwork 4.2.18-SNAPSHOT: List of changes
+===
+================================================================================
+- Proxy / Extend and normalise the list of hosts excluded from the proxy (#9506) (#9626)
+- Keywords API improvements (#9377) (#9624)
+- [Backport 4.2.x] Static resources / Send Cache-Control: no-cache (#9623)
+- Statistics and status page / Refresh the errors panel when indexing ends (#9579)
+- [Backport 4.2.x] Map viewer / Fix 3D mode with OpenLayers 10 (#9601) (#9612)
+- Update OpenLayers to version 10.11.0 (#9605)
+- [Backport 4.2.x] Map viewer / Add support for WMS 1.1.x capabilities (#9599)
+- [Backport 4.2.x] Metrics / Use the status of the response in the webapp metrics filter (#9591)
+- [Backport 4.2.x] removed commercial font that has not been used (#9578)
+- Unify error messages in user password recovery API (#9507) (#9569)
+- Statistics and status page / Stop endless polling of indexing task status (#9527) (#9566)
+- [Backport 4.2.x] Harvester / Fix missing log file button in harvester history at TEST log level (#9565)
+- [Backport 4.2.x] Monitoring / Fix WebappMetricsFilter error when stopping GeoNetwork with Ctrl+C (or SIGTERM). (#9564)
+- Metadata editor / Online resources / Fix mimeTypeStrategy parameter when adding a new online resource (#9461) (#9464)
+- Update only the popularity column when a record is viewed (#9543) (#9549)
+- [Backport 4.2.x]Docs / Document administrator password reset without old password (#9546)
+- UI / Build typeahead suggestions as DOM text instead of HTML strings (#9540)
+- [Backport 4.2.x] Update property exclusions in User/UserSecurity XML format (#9525)
+- Add method to retrieve records for use in untrusted XSLT (#9505) (#9523)
+- Setup NoOpEntityResolver.INSTANCE singleton
+- Regions / CSW: configure an entity resolver on the GeoTools XML parsers
+- 4.2.x: Change alias from 'stable' to 'maintenance' for docs
+- API / Feedback improvements (#9516)
+- Normalize organisation name value for ISO19110 metadata. (#9517)
+- [Backport 4.2.x] Fix StackOverflowError adding gfc:FC_AssociationRole and similar feature catalogue elements (#9515)
+- [Backport 4.2.x] Jolokia / Scope readable MBeans to GeoNetwork task metrics (#9512)
+- [Backport 4.2.x] Release note updates and coordination - #9497 (#9500)
+- Associated records / Align related records API filtering with associated records (#9437) (#9498)
+- Update commons-beanutils to 1.11.0 (#9484)
+- Bump org.apache.logging.log4j:log4j-api from 2.25.4 to 2.25.5 in /wro4j (#9479)
+- Bump org.jsoup:jsoup from 1.15.3 to 1.23.1 in /translationproviders (#9480)
+- [Backport 4.2.x] EsHttpProxy / Unify process source node information for search endpoints (#9365) (#9466)
+- Upgrade MapFish to version 2.2.1
+- [Backport 4.2.x] docs: document the Languages and translations admin panel (#9459)
+- [Backport 4.2.x] Metadata selection export to PDF: Fix cover and intro pages (#9456) (#9457)
+- [Backport 4.2.x] Documentation / Search statistics / Mark setting as not functional (#9453)
+- Removed 3 orphaned SLD files (#9447)
+- Use constants when possible (#9445)
+- Map viewer / Fix export feature table with links. (#9434)
+- OAI-PMH / Check view privilege on GetRecord (#9364) (#9444)
+- Update the error messages that appear when linking a dataset to a service’s metadata if the user cannot edit either the dataset or the service. (#9424)
+- Fix language selector for multilingual metadata static page (#9421)
