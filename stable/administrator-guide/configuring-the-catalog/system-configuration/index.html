@@ -27,7 +27,7 @@
       
       
       <link rel="icon" href="../../../assets/images/geonetwork-logo.png">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.1">
     
     
       
@@ -1940,6 +1940,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#thesaurus-url-allowlist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thesaurus URL allowlist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#read-metadata-creation-date-from-xml" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -3530,6 +3541,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#thesaurus-url-allowlist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Thesaurus URL allowlist
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#read-metadata-creation-date-from-xml" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -4188,19 +4210,50 @@ type="application/opensearchdescription+xml" title="Open Search document for IN
 <p><strong>Examples:</strong>
 - <code>image/*|text/plain|application/xml|application/pdf</code> — allows images, text, XML, and PDF files.
 - <code>*/*</code> — allows all file types.</p>
+<h3 id="thesaurus-url-allowlist">Thesaurus URL allowlist</h3>
+<p>Restricts which URLs can be used when importing a thesaurus from a URL or from a registry (see
+<a href="../../managing-classification-systems/managing-thesaurus/">Managing thesaurus</a>), to prevent the
+catalogue from being used to fetch content from arbitrary, untrusted URLs.</p>
+<ul>
+<li>Enter <strong>one URL pattern per line</strong>.</li>
+<li>Patterns support the <strong><code>*</code> wildcard</strong>, matching any sequence of characters (including none).</li>
+<li>Lines starting with <strong><code>#</code></strong> are treated as comments and ignored.</li>
+<li>If left <strong>empty</strong> (the default), <strong>any URL is allowed</strong>.</li>
+</ul>
+<p>Matching is <strong>host-anchored</strong>: the pattern's scheme, host and path are matched separately, so a
+<code>*</code> in the host part cannot spill over into the path. For example, <code>https://*.example.org/*</code> does
+<strong>not</strong> match <code>https://evil.org/.example.org/vocab.rdf</code>. The host is taken from the parsed URL,
+so a userinfo prefix such as <code>https://trusted.example.org@evil.org/</code> is matched on its real host
+(<code>evil.org</code>) and rejected. Within the <strong>path</strong> part, <code>*</code> still matches across <code>/</code>, so
+<code>https://example.org/*</code> matches arbitrarily deep paths.</p>
+<ul>
+<li><strong>Always include the scheme</strong> (<code>https://…</code>) so the pattern is host-anchored. A pattern without
+  a scheme (for example a bare <code>*</code>, meaning "allow any URL") is matched against the whole URL and
+  is <strong>not</strong> host-anchored.</li>
+</ul>
+<p><strong>Examples:</strong>
+<div class="language-text highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a># Only allow this specific vocabulary registry
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>https://vocabs.example-registry.org/*
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a># Allow any subdomain of an organisation
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>https://*.example.org/thesaurus/*
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a># Allow both http and https on a given host
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>http*://vocabs.another-example.org/*
+</span></code></pre></div></p>
 <h3 id="read-metadata-creation-date-from-xml">Read metadata creation date from XML</h3>
 <p>This option allows GeoNetwork to attempt reading the metadata creation date from the XML document when possible. This is not possible for all standards, e.g. ISO 19139 does not offer an explicit field for metadata creation.</p>
 <p>In ISO19115-3, such a date can be specified like so:</p>
-<div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&lt;mdb:dateInfo&gt;</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w"> </span><span class="nt">&lt;cit:CI_Date&gt;</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">   </span><span class="nt">&lt;cit:date&gt;</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="w">     </span><span class="nt">&lt;gco:DateTime&gt;</span>2024-01-01T02:30:00Z<span class="nt">&lt;/gco:DateTime&gt;</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="w">   </span><span class="nt">&lt;/cit:date&gt;</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">   </span><span class="nt">&lt;cit:dateType&gt;</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">     </span><span class="nt">&lt;cit:CI_DateTypeCode</span><span class="w"> </span><span class="na">codeList=</span><span class="s">"https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"</span><span class="w"> </span><span class="na">codeListValue=</span><span class="s">"creation"</span><span class="nt">/&gt;</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="w">   </span><span class="nt">&lt;/cit:dateType&gt;</span>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a><span class="w"> </span><span class="nt">&lt;/cit:CI_Date&gt;</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a><span class="nt">&lt;/mdb:dateInfo&gt;</span>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&lt;mdb:dateInfo&gt;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w"> </span><span class="nt">&lt;cit:CI_Date&gt;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">   </span><span class="nt">&lt;cit:date&gt;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="w">     </span><span class="nt">&lt;gco:DateTime&gt;</span>2024-01-01T02:30:00Z<span class="nt">&lt;/gco:DateTime&gt;</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="w">   </span><span class="nt">&lt;/cit:date&gt;</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="w">   </span><span class="nt">&lt;cit:dateType&gt;</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">     </span><span class="nt">&lt;cit:CI_DateTypeCode</span><span class="w"> </span><span class="na">codeList=</span><span class="s">"https://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_DateTypeCode"</span><span class="w"> </span><span class="na">codeListValue=</span><span class="s">"creation"</span><span class="nt">/&gt;</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">   </span><span class="nt">&lt;/cit:dateType&gt;</span>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w"> </span><span class="nt">&lt;/cit:CI_Date&gt;</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="nt">&lt;/mdb:dateInfo&gt;</span>
 </span></code></pre></div>
 <p>When no creation date can be read from the XML document, the date of creation in the database (i.e. date when the metadata was first inserted) is used by GeoNetwork. This is also the standard behavior if this option is disabled.</p>
 <p>Disabled by default.</p>
@@ -4621,7 +4674,7 @@ type="application/opensearchdescription+xml" title="Open Search document for IN
       <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["toc.follow", "navigation.tracking", "navigation.top", "navigation.tabs", "navigation.prune", "navigation.indexes", "navigation.footer", "header.autohide", "content.tabs.link", "content.code.copy", "content.action.view", "content.action.edit", "announce.dismiss"], "search": "../../../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": {"alias": true, "default": "stable", "provider": "mike"}}</script>
     
     
-      <script src="../../../assets/javascripts/bundle.c21346df.min.js"></script>
+      <script src="../../../assets/javascripts/bundle.a5f9d56c.min.js"></script>
       
     
   </body>
