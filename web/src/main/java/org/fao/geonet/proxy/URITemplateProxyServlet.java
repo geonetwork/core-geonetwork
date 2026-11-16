@@ -833,8 +833,8 @@ public class URITemplateProxyServlet extends ProxyServlet {
      *
      * @param host host part of the requested URL, as returned by {@link URI#getHost()}
      * @return the host as provided, plus the unbracketed and canonical forms of an IPv6 literal,
-     *         the IPv4 address carried by a NAT64 address, and a name without the dot that marks
-     *         it as fully qualified
+     *         the IPv4 address carried by a NAT64 or 6to4 address, and a name without the dot that
+     *         marks it as fully qualified
      */
     Set<String> getHostVariants(String host) {
         Set<String> variants = new LinkedHashSet<>();
@@ -860,6 +860,11 @@ public class URITemplateProxyServlet extends ProxyServlet {
                 byte[] bytes = address.getAddress();
                 if (bytes.length == 16 && Arrays.equals(Arrays.copyOf(bytes, 12), NAT64_PREFIX)) {
                     variants.add(InetAddress.getByAddress(Arrays.copyOfRange(bytes, 12, 16)).getHostAddress());
+                }
+
+                // A 6to4 address, 2002::/16, is judged by the IPv4 address in its bits 16 to 47.
+                if (bytes.length == 16 && bytes[0] == 0x20 && bytes[1] == 0x02) {
+                    variants.add(InetAddress.getByAddress(Arrays.copyOfRange(bytes, 2, 6)).getHostAddress());
                 }
             } catch (UnknownHostException e) {
                 LOGGER.debug("Could not read '" + host + "' as an IP address: " + e.getMessage());

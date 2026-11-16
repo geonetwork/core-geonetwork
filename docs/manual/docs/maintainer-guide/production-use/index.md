@@ -103,11 +103,13 @@ Independently of the security mode, the proxy refuses a request whose host match
 -   the link-local range ``169.254.0.0/16``, the shared address space ``100.64.0.0/10``, and the benchmarking range ``198.18.0.0/15``
 -   the multicast range ``224.0.0.0/4``
 -   the IPv6 unique local, link-local and site-local ranges, ``fc00::/7``, ``fe80::/10`` and ``fec0::/10``
--   the IPv6 ranges that carry an IPv4 address, ``::/96``, ``::ffff:0:0:0/96`` and the 6to4 prefix ``2002::/16``
+-   the IPv6 ranges that carry an IPv4 address, ``::/96`` and ``::ffff:0:0:0/96``
 
 An address can be written in more than one way, so the host is compared in several forms: as it appears in the URL, without the brackets that surround an IPv6 literal, in the canonical form of the address it denotes, and without the dot that can close a fully qualified name, so ``localhost.`` is matched like ``localhost``. An entry therefore applies whichever way a caller spells an address, and a single entry covers every spelling of it.
 
 An address under the NAT64 prefix ``64:ff9b::/96`` is compared by the IPv4 address it carries in its last 32 bits, so ``64:ff9b::a00:1`` is excluded as ``10.0.0.1`` while an address that carries a public IPv4 address is not. On a network that uses DNS64, every server reachable only over IPv4 resolves to an address under that prefix, so excluding the prefix itself would keep the proxy away from most external services there. Only the well-known prefix is read this way. A network that uses a NAT64 prefix of its own is not protected by this check for the IPv4 addresses behind it, so restrict the outbound traffic of the server there.
+
+An address under the 6to4 prefix ``2002::/16`` is compared in the same way by the IPv4 address it carries in its bits 16 to 47, so ``2002:a00:1::1`` is excluded as ``10.0.0.1`` while ``2002:5db8:d70e::1`` is not.
 
 The address a host name leads to is checked as well. When the proxy connects, every address the name resolves to is matched against ``excludeHosts``, and the request is refused if any of them is excluded, so a public name that points to an internal address is refused like the address itself. The name is still matched as written too, which is what entries such as ``.*\.local`` rely on.
 
