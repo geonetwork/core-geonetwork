@@ -103,9 +103,13 @@ Independently of the security mode, the proxy refuses a request whose host match
 -   the link-local range ``169.254.0.0/16``, the shared address space ``100.64.0.0/10``, and the benchmarking range ``198.18.0.0/15``
 -   the multicast range ``224.0.0.0/4``
 -   the IPv6 unique local, link-local and site-local ranges, ``fc00::/7``, ``fe80::/10`` and ``fec0::/10``
--   the IPv6 ranges that carry an IPv4 address, ``::/96``, ``::ffff:0:0:0/96``, the NAT64 prefix ``64:ff9b::/96`` and the 6to4 prefix ``2002::/16``
+-   the IPv6 ranges that carry an IPv4 address, ``::/96`` and ``::ffff:0:0:0/96``
 
 An address can be written in more than one way, so the host is compared in several forms: as it appears in the URL, without the brackets that surround an IPv6 literal, in the canonical form of the address it denotes, and without the dot that can close a fully qualified name, so ``localhost.`` is matched like ``localhost``. An entry therefore applies whichever way a caller spells an address, and a single entry covers every spelling of it.
+
+An address under the NAT64 prefix ``64:ff9b::/96`` is compared by the IPv4 address it carries in its last 32 bits, so ``64:ff9b::a00:1`` is excluded as ``10.0.0.1`` while an address that carries a public IPv4 address is not. On a network that uses DNS64, every server reachable only over IPv4 resolves to an address under that prefix, so excluding the prefix itself would keep the proxy away from most external services there. Only the well-known prefix is read this way. A network that uses a NAT64 prefix of its own is not protected by this check for the IPv4 addresses behind it, so restrict the outbound traffic of the server there.
+
+An address under the 6to4 prefix ``2002::/16`` is compared in the same way by the IPv4 address it carries in its bits 16 to 47, so ``2002:a00:1::1`` is excluded as ``10.0.0.1`` while ``2002:5db8:d70e::1`` is not.
 
 The address a host name leads to is checked as well. When the proxy connects, every address the name resolves to is matched against ``excludeHosts``, and the request is refused if any of them is excluded, so a public name that points to an internal address is refused like the address itself. The name is still matched as written too, which is what entries such as ``.*\.local`` rely on.
 
@@ -129,6 +133,19 @@ Three details are worth keeping in mind:
 -   Write the entry without the square brackets of a URL. They are part of the URL syntax, not of the address. An entry that keeps them is still matched, but only against that one way of writing the address, so it misses the other spellings of the same host.
 -   Keep the colon that closes a prefix. ``2001:db8:2:.*`` stops at the addresses under ``2001:db8:2``, whereas ``2001:db8:2.*`` would also take in ``2001:db8:20`` and ``2001:db8:2a``, which are different networks.
 -   A prefix is straightforward to write when its length is a multiple of 16, since it ends on a group boundary. For a length such as /56, which cuts a group in two, exclude the enclosing /48 rather than trying to express the exact boundary in a regular expression.
+
+#### Allowing internal hosts {#proxy-allow-hosts}
+
+The default list keeps the proxy away from private networks, which also keeps it away from a map server the catalogue reaches on its own network, such as a GeoServer in the same Docker or Kubernetes deployment. A host named in ``allowHosts`` is reachable even if ``excludeHosts`` matches it, or matches the addresses it resolves to. It is empty by default.
+
+``` xml
+<init-param>
+  <param-name>allowHosts</param-name>
+  <param-value>^(geoserver|maps\.intranet)$</param-value>
+</init-param>
+```
+
+``allowHosts`` is a regular expression matched against the host as it is written in the URL, in the same forms as ``excludeHosts``. Prefer names to addresses: a name allowed this way is reachable whatever it resolves to, whereas an address such as ``10.0.0.5`` is reachable only when the URL names it directly, not through another name that points to it. ``allowPorts`` still applies, so a server listening on another port also needs that port listed there, which opens it towards every host the proxy accepts.
 
 #### Redirects {#proxy-redirects}
 
@@ -155,6 +172,7 @@ The name of the property is the name of the servlet, ``HttpProxy``, between the 
 
 -   ``geonetwork.HttpProxy.excludeHosts``
 -   ``geonetwork.HttpProxy.allowPorts``
+-   ``geonetwork.HttpProxy.allowHosts``
 -   ``geonetwork.HttpProxy.followRedirects``
 
 As an environment variable the same name is written in upper case with underscores in place of the dots:
