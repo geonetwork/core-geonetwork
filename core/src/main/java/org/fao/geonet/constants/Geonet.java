@@ -111,8 +111,6 @@ public final class Geonet {
         public static final String SCHEMA_PLUGINS_CATALOG = "schemaplugin-uri-catalog.xml";
         public static final String SORT_HARVESTERS = "sort-harvesters.xsl";
         public static final String INFLATE_METADATA = "inflate-metadata.xsl";
-        public static final String LICENSE_ANNEX = "license-annex.html";
-        public static final String LICENSE_ANNEX_XSL = "metadata-license-annex.xsl";
         public static final String METADATA_BRIEF = "metadata-brief.xsl";
         public static final String METADATA_BASEBLANK = "blanks/metadata-schema00";
         public static final String METADATA_BLANK = "blanks/metadata-schema";
@@ -206,7 +204,6 @@ public final class Geonet {
         public static final String METADATA_POSITION = "metadata.position";
         public static final String SEARCH_KEYWORDS_RESULT = "search.keywords.result";
         public static final String SELECTED_RESULT = "selected.result";
-        public static final String FILE_DISCLAIMER = "file.disclaimer";
         public static final String BATCH_PROCESSING_REPORT = "BATCH_PROCESSING_REPORT";
 
         /**

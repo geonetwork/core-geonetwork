@@ -45,7 +45,6 @@
   <bean id="ServiceManager" class="jeeves.server.dispatchers.ServiceManager" lazy-init="true"/>
   <bean id="XmlCacheManager" class="jeeves.server.dispatchers.guiservices.XmlCacheManager"
         lazy-init="true"/>
-  <bean id="ServiceInfo" class="jeeves.server.dispatchers.ServiceInfo" scope="prototype"/>
 
   <bean id="archiveAllMetadataJob" class="org.fao.geonet.kernel.backup.ArchiveAllMetadataJob" lazy-init="true"/>
 

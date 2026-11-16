@@ -548,6 +548,10 @@ public class SearchController {
                                        ResultType resultType, String id, String displayLanguage) throws InvalidParameterValueEx {
         Path schemaDir = schemaManager.getSchemaCSWPresentDir(schema);
         Path styleSheet = schemaDir.resolve(outputSchema + "-" + elementSetName + ".xsl");
+        if (!Files.exists(styleSheet)) {
+            // Same fallback as GetRecordById: a stylesheet for all element sets.
+            styleSheet = schemaDir.resolve(outputSchema + ".xsl");
+        }
 
         if (!Files.exists(styleSheet)) {
             context.warning(

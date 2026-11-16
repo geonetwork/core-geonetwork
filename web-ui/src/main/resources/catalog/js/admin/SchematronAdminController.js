@@ -170,9 +170,9 @@
       };
       updateGroupCount = function (group, amount) {
         var i, schematron;
-        for (i = 0; i < $scope.selection.schema.schematron.length; i++) {
-          schematron = $scope.selection.schema.schematron[i];
-          if (schematron.id === group.id.schematronid) {
+        for (i = 0; i < $scope.selection.schema.schematrons.length; i++) {
+          schematron = $scope.selection.schema.schematrons[i];
+          if (schematron.id === group.id.schematronId) {
             if (schematron.groupCount) {
               schematron.groupCount = parseInt(schematron.groupCount) + amount;
             } else {
@@ -222,22 +222,22 @@
         }
       };
       $scope.raiseSchematron = function (schema, schematron) {
-        var idx = schema.schematron.indexOf(schematron);
+        var idx = schema.schematrons.indexOf(schematron);
         if (idx !== 0) {
           gnSchematronAdminService.schematron.swapPriority(
             schema,
-            schema.schematron[idx - 1],
+            schema.schematrons[idx - 1],
             schematron
           );
         }
       };
       $scope.lowerSchematron = function (schema, schematron) {
-        var idx = schema.schematron.indexOf(schematron);
-        if (idx !== schema.schematron.length - 1) {
+        var idx = schema.schematrons.indexOf(schematron);
+        if (idx !== schema.schematrons.length - 1) {
           gnSchematronAdminService.schematron.swapPriority(
             schema,
             schematron,
-            schema.schematron[idx + 1]
+            schema.schematrons[idx + 1]
           );
         }
       };
@@ -246,7 +246,7 @@
           newGroup = {
             id: {
               name: $translate.instant("NEW"),
-              schematronid: $scope.selection.schematron.id
+              schematronId: $scope.selection.schematron.id
             },
             requirement: $scope.requirements[0]
           };
@@ -322,10 +322,10 @@
           findSchematron = function (schemaDef, schematronId) {
             var key, schematron;
             if (schematronId) {
-              for (key in schemaDef.schematron) {
-                if (schemaDef.schematron.hasOwnProperty(key)) {
-                  schematron = schemaDef.schematron[key];
-                  if (schematronId === schematron.id) {
+              for (key in schemaDef.schematrons) {
+                if (schemaDef.schematrons.hasOwnProperty(key)) {
+                  schematron = schemaDef.schematrons[key];
+                  if (parseInt(schematronId) === schematron.id) {
                     return schematron;
                   }
                 }
@@ -344,10 +344,10 @@
           schematron = findSchematron(schema, $routeParams.schematronId);
 
           if (!schematron) {
-            if (schema.schematron.length === 0) {
+            if (schema.schematrons.length === 0) {
               updateLocation();
             } else {
-              schematron = schema.schematron[0];
+              schematron = schema.schematrons[0];
             }
           }
 

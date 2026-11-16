@@ -58,13 +58,6 @@
       [<xsl:for-each select="/root/items/item"> "<xsl:value-of select="@freq"/>" <xsl:if test="position()!=last()">,</xsl:if>
       </xsl:for-each> ]
     -->
-    <!-- Query URLs (not required)
-      ,
-      [<xsl:for-each select="/root/items/item"> "<xsl:value-of
-      select="concat($siteURL, '/rss.search?any=', @term)"/>" <xsl:if test="position()!=last()"
-      >,</xsl:if>
-      </xsl:for-each> ]
-    -->
     ]
   </xsl:template>
 </xsl:stylesheet>

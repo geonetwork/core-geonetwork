@@ -24,39 +24,21 @@
 package jeeves.server.sources.http;
 
 import jeeves.config.springutil.JeevesApplicationContext;
-import jeeves.config.springutil.JeevesContextLoaderListener;
-import jeeves.config.springutil.JeevesDelegatingFilterProxy;
 import jeeves.constants.Jeeves;
 import jeeves.server.JeevesEngine;
-import jeeves.server.UserSession;
-import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.sources.ServiceRequest;
-import jeeves.server.sources.ServiceRequestFactory;
 
 import org.fao.geonet.ApplicationContextHolder;
-import org.fao.geonet.Util;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.exceptions.FileUploadTooBigEx;
-import org.fao.geonet.utils.Log;
-import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 //=============================================================================
 
 /**
- * This is the main class. It handles http connections and inits the system
+ * Initializes the system when the web application starts. It does not handle requests.
  */
 
 public class JeevesServlet extends HttpServlet {
@@ -87,130 +69,6 @@ public class JeevesServlet extends HttpServlet {
         }
     }
 
-    //---------------------------------------------------------------------------
-    //---
-    //--- HTTP Request / Response
-    //---
-    //---------------------------------------------------------------------------
-
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        execute(req, res);
-    }
-
-    //---------------------------------------------------------------------------
-
-    /**
-     * This is the core of the servlet. It receives http requests and invokes the proper service
-     */
-
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        execute(req, res);
-    }
-
-    //---------------------------------------------------------------------------
-    //---
-    //--- Private methods
-    //---
-    //---------------------------------------------------------------------------
-
-    private void execute(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        String ip = ServiceManager.getRequestIpAddress(req);
-
-        Log.info(Log.REQUEST, "==========================================================");
-        Log.info(Log.REQUEST, "HTML Request (from " + ip + ") : " + req.getRequestURI());
-        if (Log.isDebugEnabled(Log.REQUEST)) {
-            Log.debug(Log.REQUEST, "Method       : " + req.getMethod());
-            Log.debug(Log.REQUEST, "Content type : " + req.getContentType());
-            //		Log.debug(Log.REQUEST, "Context path : " + req.getContextPath());
-            //		Log.debug(Log.REQUEST, "Char encoding: " + req.getCharacterEncoding());
-            Log.debug(Log.REQUEST, "Accept       : " + req.getHeader("Accept"));
-            //		Log.debug(Log.REQUEST, "Server name  : " + req.getServerName());
-            //		Log.debug(Log.REQUEST, "Server port  : " + req.getServerPort());
-        }
-//		for (Enumeration e = req.getHeaderNames(); e.hasMoreElements();) {
-//			String theHeader = (String)e.nextElement();
-//        if(Log.isDebugEnabled(Log.REQUEST)) {
-//			Log.debug(Log.REQUEST, "Got header: "+theHeader);
-//			Log.debug(Log.REQUEST, "With value: "+req.getHeader(theHeader));
-//        }
-//		}
-        HttpSession httpSession = req.getSession();
-        if (Log.isDebugEnabled(Log.REQUEST)) {
-            Log.debug(Log.REQUEST, "Session id is " + httpSession.getId());
-        }
-        UserSession session = (UserSession) httpSession.getAttribute(USER_SESSION_ATTRIBUTE_KEY);
-
-        //------------------------------------------------------------------------
-        //--- create a new session if doesn't exist
-
-        if (session == null) {
-            //--- create session
-
-            session = new UserSession();
-
-            httpSession.setAttribute(USER_SESSION_ATTRIBUTE_KEY, session);
-            session.setsHttpSession(httpSession);
-
-            if (Log.isDebugEnabled(Log.REQUEST)) {
-                Log.debug(Log.REQUEST, "Session created for client : " + ip);
-            }
-        }
-
-        //------------------------------------------------------------------------
-        //--- build service request
-
-        ServiceRequest srvReq;
-
-        //--- create request
-
-        ConfigurableApplicationContext applicationContext = JeevesDelegatingFilterProxy.getApplicationContextFromServletContext
-            (getServletContext());
-        JeevesEngine jeeves = applicationContext.getBean(JeevesEngine.class);
-
-        try {
-            srvReq = ServiceRequestFactory.create(req, res,
-                null, null, null, jeeves.getUploadDir(), jeeves.getMaxUploadSize());
-        } catch (FileUploadTooBigEx e) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("File upload too big - exceeds ").append(jeeves.getMaxUploadSize()).append(" Mb\n")
-                .append("Error : ").append(e.getClass().getName()).append("\n");
-
-            res.sendError(SC_BAD_REQUEST, sb.toString());
-
-            // now stick the stack trace on the end and log the whole lot
-            sb.append("Stack :\n").append(Util.getStackTrace(e));
-
-            Log.error(Log.REQUEST, sb.toString());
-            return;
-        } catch (Exception e) {
-            StringBuilder sb = new StringBuilder();
-
-            sb.append("Cannot build ServiceRequest\n").append("Cause : ").append(e.getMessage()).append("\n")
-                .append("Error : ").append(e.getClass().getName()).append("\n");
-
-            res.sendError(SC_BAD_REQUEST, sb.toString());
-
-            // now stick the stack trace on the end and log the whole lot
-            sb.append("Stack :\n").append(Util.getStackTrace(e));
-            Log.error(Log.REQUEST, sb.toString());
-            return;
-        }
-
-        // Set the language of the request as the preferred language in a cookie
-        final Cookie langCookie = new Cookie(Jeeves.LANG_COOKIE, srvReq.getLanguage());
-        langCookie.setMaxAge((int) TimeUnit.DAYS.toSeconds(7));
-        langCookie.setComment("Keeps the last language chosen to be the preferred language");
-        langCookie.setVersion(1);
-        langCookie.setPath(req.getContextPath());
-        langCookie.setHttpOnly(req.getServletContext().getSessionCookieConfig().isHttpOnly());
-        langCookie.setSecure(req.getServletContext().getSessionCookieConfig().isSecure());
-
-        res.addCookie(langCookie);
-
-        //--- execute request
-
-        jeeves.dispatch(srvReq, session);
-    }
 
     public boolean isInitialized() {
         return initialized;

@@ -83,7 +83,7 @@
         removeElementFromCache(groupCacheId(schematronId));
       };
       sortByDisplayPriority = function (a, b) {
-        return a.displaypriority - b.displaypriority;
+        return a.displayPriority - b.displayPriority;
       };
       findIndex = function (array, object, comparator) {
         var i, arrayObj;
@@ -99,185 +99,166 @@
         return o1.id === o2.id;
       };
       groupComparator = function (o1, o2) {
-        return o1.id.schematronid === o2.id.schematronid && o1.id.name === o2.id.name;
+        return o1.id.schematronId === o2.id.schematronId && o1.id.name === o2.id.name;
       };
 
       this.criteria = {
         remove: function (criteria, group) {
-          $http({
-            method: "GET",
-            url: "admin.schematroncriteria.delete?_content_type=json",
-            params: {
-              id: criteria.id
-            }
-          }).then(
-            function (response) {
+          $http.delete("../api/schematron/criteria/" + criteria.id).then(
+            function () {
               var list, idx;
-              updateCacheOnCriteriaChange(group.id.schematronid, group.id.name);
+              updateCacheOnCriteriaChange(group.id.schematronId);
               list = group.criteria;
               idx = findIndex(list, criteria, criteriaComparator);
               if (idx !== -1) {
                 list.splice(idx, 1);
               }
             },
-            function (response) {
+            function () {
               alert("Error deleting criteria: " + criteria.id);
             }
           );
         },
         update: function (updated, original, group) {
-          $http({
-            method: "POST",
-            url: "admin.schematroncriteria.update?_content_type=",
-            params: {
-              id: original.id,
-              type: updated.type,
-              value: updated.value,
-              uitype: updated.uitype,
-              uivalue: updated.uivalue
-            }
-          }).then(
-            function (response) {
-              updateCacheOnCriteriaChange(group.id.schematronid, group.id.name);
+          $http
+            .put("../api/schematron/criteria/" + original.id, null, {
+              params: {
+                type: updated.type,
+                value: updated.value,
+                uiType: updated.uiType,
+                uiValue: updated.uiValue
+              }
+            })
+            .then(
+              function () {
+                updateCacheOnCriteriaChange(group.id.schematronId);
 
-              angular.copy(updated, original);
-            },
-            function (response) {
-              alert("Error updating criteria: " + original.id);
-            }
-          );
+                angular.copy(updated, original);
+              },
+              function () {
+                alert("Error updating criteria: " + original.id);
+              }
+            );
         },
         add: function (criteria, original, group) {
-          $http({
-            method: "POST",
-            url: "admin.schematroncriteria.add?_content_type=json",
-            params: {
-              type: criteria.type,
-              value: criteria.value,
-              uitype: criteria.uitype,
-              uivalue: criteria.uivalue,
-              groupName: group.id.name,
-              schematronId: group.id.schematronid
-            }
-          }).then(
-            function (response) {
-              updateCacheOnCriteriaChange(group.id.schematronid, group.id.name);
-              var added = angular.copy(criteria);
-              added.id = response.id;
-              if (!group.criteria) {
-                group.criteria = [];
+          $http
+            .post(
+              "../api/schematron/" + group.id.schematronId + "/groups/criteria",
+              null,
+              {
+                params: {
+                  groupName: group.id.name,
+                  type: criteria.type,
+                  value: criteria.value,
+                  uiType: criteria.uiType,
+                  uiValue: criteria.uiValue
+                }
               }
-              group.criteria.push(added);
-              angular.copy(original, criteria);
-            },
-            function (response) {
-              alert(
-                "Error adding criteria: {\n\ttype:" +
-                  criteria.type +
-                  ",\n\tvalue:" +
-                  criteria.value +
-                  ",\n\tgroupName:" +
-                  group.id.name +
-                  "schematronId: " +
-                  group.id.schematronid
-              );
-            }
-          );
+            )
+            .then(
+              function (response) {
+                updateCacheOnCriteriaChange(group.id.schematronId);
+                var added = angular.copy(criteria);
+                added.id = response.data.id;
+                if (!group.criteria) {
+                  group.criteria = [];
+                }
+                group.criteria.push(added);
+                angular.copy(original, criteria);
+              },
+              function () {
+                alert(
+                  "Error adding criteria: {\n\ttype:" +
+                    criteria.type +
+                    ",\n\tvalue:" +
+                    criteria.value +
+                    ",\n\tgroupName:" +
+                    group.id.name +
+                    "schematronId: " +
+                    group.id.schematronId
+                );
+              }
+            );
         }
       };
       this.group = {
         remove: function (group, groupList, successCallback) {
-          $http({
-            method: "GET",
-            url: "admin.schematroncriteriagroup.delete?_content_type=json",
-            params: {
-              groupName: group.id.name,
-              schematronId: group.id.schematronid
-            }
-          }).then(
-            function (response) {
-              updateCacheOnGroupChange(group.id.schematronid);
-              var idx = findIndex(groupList, group, groupComparator);
-              if (idx !== -1) {
-                groupList.splice(idx, 1);
+          $http
+            .delete("../api/schematron/" + group.id.schematronId + "/groups", {
+              params: { name: group.id.name }
+            })
+            .then(
+              function () {
+                updateCacheOnGroupChange(group.id.schematronId);
+                var idx = findIndex(groupList, group, groupComparator);
+                if (idx !== -1) {
+                  groupList.splice(idx, 1);
+                }
+                successCallback();
+              },
+              function () {
+                alert("Error deleting Schematron Criteria Group: " + group.id.name);
               }
-              successCallback();
-            },
-            function (response) {
-              alert("Error deleting Schematron Criteria Group: " + group.id);
-            }
-          );
+            );
         },
         update: function (updated, original) {
           var params = {
-            groupName: original.id.name,
-            schematronId: original.id.schematronid,
+            name: original.id.name,
             requirement: updated.requirement
           };
           if (updated.id.name !== original.id.name) {
-            params.newGroupName = updated.id.name;
+            params.newName = updated.id.name;
           }
-          if (updated.id.schematronid !== original.id.schematronid) {
-            params.newSchematronid = updated.id.schematronid;
+          if (updated.id.schematronId !== original.id.schematronId) {
+            params.newSchematronId = updated.id.schematronId;
           }
-          $http({
-            method: "GET",
-            url: "admin.schematroncriteriagroup.update?_content_type=json",
-            params: params
-          }).then(
-            function (response) {
-              original.id.name = updated.id.name;
-              original.id.schematronId = updated.id.schematronid;
-              original.requirement = updated.requirement;
-            },
-            function (response) {
-              alert("Error editing Schematron Criteria Group: " + original.id);
-            }
-          );
+          $http
+            .put("../api/schematron/" + original.id.schematronId + "/groups", null, {
+              params: params
+            })
+            .then(
+              function () {
+                updateCacheOnGroupChange(original.id.schematronId);
+                updateCacheOnGroupChange(updated.id.schematronId);
+                original.id.name = updated.id.name;
+                original.id.schematronId = updated.id.schematronId;
+                original.requirement = updated.requirement;
+              },
+              function () {
+                alert("Error editing Schematron Criteria Group: " + original.id.name);
+              }
+            );
         },
         add: function (group, groupList, successCallback) {
-          $http({
-            method: "GET",
-            url: "admin.schematroncriteriagroup.add?_content_type=json",
-            params: {
-              groupName: group.id.name,
-              schematronId: group.id.schematronid,
-              requirement: group.requirement
-            }
-          }).then(
-            function (response) {
-              updateCacheOnGroupChange(group.id.schematronid);
-              groupList.push(group);
-              successCallback(group);
-            },
-            function (response) {
-              alert("Error adding new Schematron Criteria Group: " + group.id);
-            }
-          );
+          $http
+            .post("../api/schematron/" + group.id.schematronId + "/groups", null, {
+              params: {
+                name: group.id.name,
+                requirement: group.requirement
+              }
+            })
+            .then(
+              function () {
+                updateCacheOnGroupChange(group.id.schematronId);
+                groupList.push(group);
+                successCallback(group);
+              },
+              function () {
+                alert("Error adding new Schematron Criteria Group: " + group.id.name);
+              }
+            );
         },
         list: function (schematronId, successFunction) {
           var data = getDataFromCache(groupCacheId(schematronId));
           if (data) {
             successFunction(data);
           } else {
-            $http({
-              method: "GET",
-              url: "admin.schematroncriteriagroup.list?_content_type=json",
-              params: {
-                includeCriteria: true,
-                schematronId: schematronId
-              }
-            }).then(
+            $http.get("../api/schematron/" + schematronId + "/groups").then(
               function (response) {
-                var data = response.data;
-
-                if (data === "null") {
-                  data = [];
-                }
-                putDataIntoCache(groupCacheId(schematronId), data);
-                successFunction(data);
+                putDataIntoCache(groupCacheId(schematronId), response.data);
+                successFunction(response.data);
               },
-              function (response) {
+              function () {
                 alert(
                   "Error occurred during loading schematron criteria " +
                     " groups for schematron: " +
@@ -291,29 +272,19 @@
       this.schematron = {
         swapPriority: function (schema, higherPriority, lowerPriority) {
           var newPriority, oldPriority, update1, update2;
-          newPriority = higherPriority.displaypriority;
-          oldPriority = lowerPriority.displaypriority;
-          update1 = $http({
-            method: "GET",
-            url: "admin.schematron.update?_content_type=json",
-            params: {
-              id: higherPriority.id,
-              displaypriority: oldPriority
-            }
+          newPriority = higherPriority.displayPriority;
+          oldPriority = lowerPriority.displayPriority;
+          update1 = $http.put("../api/schematron/" + higherPriority.id, null, {
+            params: { displayPriority: oldPriority }
           });
-          update2 = $http({
-            method: "GET",
-            url: "admin.schematron.update?_content_type=json",
-            params: {
-              id: lowerPriority.id,
-              displaypriority: newPriority
-            }
+          update2 = $http.put("../api/schematron/" + lowerPriority.id, null, {
+            params: { displayPriority: newPriority }
           });
 
           $q.all([update1, update2]).then(function () {
-            higherPriority.displaypriority = oldPriority;
-            lowerPriority.displaypriority = newPriority;
-            schema.schematron.sort(sortByDisplayPriority);
+            higherPriority.displayPriority = oldPriority;
+            lowerPriority.displayPriority = newPriority;
+            schema.schematrons.sort(sortByDisplayPriority);
           });
         }
       };
@@ -323,22 +294,17 @@
           if (cachedCriteriaTypes) {
             successCallback(cachedCriteriaTypes);
           } else {
-            $http.get("admin.schematrontype?_content_type=json").then(
+            $http.get("../api/schematron").then(
               function (response) {
                 var data = response.data;
                 putDataIntoCache("criteriaTypes", data);
                 angular.forEach(data.schemas, function (schema) {
-                  schema.schematron.sort(sortByDisplayPriority);
+                  schema.schematrons.sort(sortByDisplayPriority);
                 });
                 successCallback(data);
               },
-              function (data) {
-                alert(
-                  "An Error occurred with the " +
-                    "admin.schematrontype " +
-                    " request:" +
-                    data
-                );
+              function () {
+                alert("An error occurred while loading the schematron configuration.");
               }
             );
           }

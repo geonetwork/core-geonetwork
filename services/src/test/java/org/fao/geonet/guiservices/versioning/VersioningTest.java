@@ -25,7 +25,6 @@ package org.fao.geonet.guiservices.versioning;
 
 import org.apache.commons.io.FileUtils;
 import org.fao.geonet.AbstractCoreIntegrationTest;
-import org.jdom.JDOMException;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
@@ -104,7 +103,7 @@ public class VersioningTest {
     }
 
     @Test
-    public void testTitleAdding() throws SVNException, IOException, JDOMException {
+    public void testTitleAdding() throws Exception {
         SVNClientManager ourClientManager = SVNClientManager.newInstance();
         // checkout working copy
         SVNUpdateClient updateClient = ourClientManager.getUpdateClient();
@@ -121,32 +120,13 @@ public class VersioningTest {
 
         final List<MetadataAction> metadataActions = logEntryHandler.getMetadataActionList();
 
-        Get get = new Get();
-        get.addTitles(metadataActions, repository.getLocation().getPath());
+        for (MetadataAction metadataAction : metadataActions) {
+            metadataAction.loadTitle(repository);
+        }
         Assert.assertEquals("Template for Vector data in ISO19139 (preferred!)", metadataActions.get(0).getTitle().trim());
         Assert.assertEquals("Modified metadata name", metadataActions.get(1).getTitle());
         Assert.assertEquals("Modified metadata name", metadataActions.get(2).getTitle());
     }
-
-    /**
-     * Converts and prints out the svnlogs of the original geonetwork svn repoository.
-     * @throws org.tmatesoft.svn.core.SVNException
-     * @throws java.io.IOException
-     * @throws org.jdom.JDOMException
-     */
-/*      public void testAddedRealRepo() throws SVNException, IOException, JDOMException {
-        final String localRepoLocation = getRootPath() + FS + "src" + FS + "main" + FS + "webapp" + FS + "WEB-INF" + FS + "data" + FS + "data" + FS + "metadata_subversion";
-        final SVNURL svnurl = SVNURL.fromFile(new File(localRepoLocation));
-        final SVNRepository repository = SVNRepositoryFactory.create(svnurl);
-        MyLogEntryHandler logEntryHandler = new MyLogEntryHandler();
-        repository.log(new String[]{""}, 0, -1, true, true, logEntryHandler);
-        final List<MetadataAction> metadataActions = logEntryHandler.getMetadataActionList();
-        Get get = new Get();
-        get.addTitles(metadataActions, localRepoLocation);
-        for (MetadataAction metadataAction : metadataActions) {
-            System.out.println("Revision " + metadataAction.getRevision() + " id " + metadataAction.getId() + " title " + metadataAction.getTitle());
-        }
-    }*/
 
     /**
      * Creates metadata in a repository exactly as geonetwork would do it.

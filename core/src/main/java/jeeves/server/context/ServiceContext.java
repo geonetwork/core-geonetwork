@@ -25,21 +25,15 @@ package jeeves.server.context;
 
 import jeeves.component.ProfileManager;
 import jeeves.server.UserSession;
-import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.local.LocalServiceRequest;
 import jeeves.server.sources.ServiceRequest.InputMethod;
 import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.JeevesServlet;
-import jeeves.transaction.TransactionManager;
-import jeeves.transaction.TransactionTask;
 
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Logger;
 import org.fao.geonet.kernel.GeonetworkDataDirectory;
 import org.fao.geonet.utils.Log;
-import org.jdom.Element;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.transaction.TransactionStatus;
 
 import java.nio.file.Path;
 import java.util.HashMap;
@@ -97,8 +91,7 @@ public class ServiceContext extends BasicContext {
     }
 
     /**
-     * ServiceManager sets the service context thread local when dispatch is called.  this method
-     * will return null or the service context
+     * Returns the service context set as thread local by the code handling the request, or null.
      *
      * @return the service context set by service context or null if no in an inherited thread
      */
@@ -254,54 +247,6 @@ public class ServiceContext extends BasicContext {
 
     public void setServlet(final JeevesServlet serv) {
         _servlet = serv;
-    }
-
-    /**
-     * Execute a service but _don't_ parse the result.  This is used if in one of two cases.
-     *
-     * <ol> <li>If the service is side-effect only and the result doesn't matter</li> <li>If the
-     * response is not XML, for example if it is JSON or a string</li> </ol>
-     */
-    public void executeOnly(final LocalServiceRequest request) throws Exception {
-
-        TransactionManager.runInTransaction("ServiceContext#executeOnly: " + request.getAddress(), getApplicationContext(),
-            TransactionManager.TransactionRequirement.CREATE_NEW, TransactionManager.CommitBehavior.ALWAYS_COMMIT, false,
-            new TransactionTask<Void>() {
-                @Override
-                public Void doInTransaction(TransactionStatus transaction) throws Throwable {
-                    final ServiceContext context = new ServiceContext(request.getService(), getApplicationContext(), htContexts, getEntityManager());
-                    UserSession session = ServiceContext.this._userSession;
-                    if (session == null) {
-                        session = new UserSession();
-                    }
-                    try {
-                        final ServiceManager serviceManager = context.getBean(ServiceManager.class);
-                        serviceManager.dispatch(request, session, context);
-                    } catch (Exception e) {
-                        Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml" + request.getService());
-                        throw new ServiceExecutionFailedException(request.getService(), e);
-                    } finally {
-                        // set old context back as thread local
-                        setAsThreadLocal();
-                    }
-                    return null;
-                }
-            });
-    }
-
-    /**
-     * Call {@link #executeOnly(jeeves.server.local.LocalServiceRequest)} and return the response as
-     * XML.
-     */
-    public Element execute(LocalServiceRequest request) throws Exception {
-        executeOnly(request);
-        try {
-            return request.getResult();
-        } catch (Exception e) {
-            Log.error(Log.XLINK_PROCESSOR, "Failed to parse result xml from service:" + request.toString() + "\n"
-                + request.getResultString());
-            throw new ServiceExecutionFailedException(request.getService(), e);
-        }
     }
 
     public Map<String, String> getResponseHeaders() {

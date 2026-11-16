@@ -41,7 +41,7 @@
             <div class="list-group">
               <a
                 class="list-group-item"
-                data-ng-repeat="schematron in schema.schematron | filter:schematronSearch"
+                data-ng-repeat="schematron in schema.schematrons | filter:schematronSearch"
                 data-ng-click="selectSchematron(schema, schematron)"
                 data-ng-class="{active: selection.schematron === schematron}"
               >
@@ -164,7 +164,7 @@
                   data-ng-repeat="criteria in selection.group.criteria"
                 ></gn-criteria-editor>
                 <gn-criteria-editor
-                  criteria="{id: null, type: 'NEW', uitype:'NEW', value: '', uivalue: ''}"
+                  criteria="{id: null, type: 'NEW', uiType:'NEW', value: '', uiValue: ''}"
                   schema="selection.schema"
                   lang="lang"
                   confirmation-dialog="confirmationDialog"

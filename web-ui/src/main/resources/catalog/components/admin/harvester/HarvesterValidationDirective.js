@@ -44,11 +44,9 @@
           "../../catalog/components/admin/harvester/partials/" +
           "harvestervalidation.html",
         link: function (scope, element, attrs) {
-          $http
-            .get("admin.harvester.info?type=validation&_content_type=json")
-            .then(function (response) {
-              scope.validation = response.data[0];
-            });
+          $http.get("../api/harvesters/validation-options").then(function (response) {
+            scope.validation = response.data;
+          });
         }
       };
     }

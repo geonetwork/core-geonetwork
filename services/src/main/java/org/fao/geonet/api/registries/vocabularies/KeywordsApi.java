@@ -46,9 +46,11 @@ import org.fao.geonet.api.ApiUtils;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.api.exception.WebApplicationException;
 import org.fao.geonet.api.registries.model.ThesaurusInfo;
+import org.fao.geonet.api.tools.i18n.LanguageUtils;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.exceptions.TermNotFoundException;
 import org.fao.geonet.kernel.*;
 import org.fao.geonet.kernel.search.KeywordsSearcher;
 import org.fao.geonet.kernel.search.keyword.*;
@@ -66,6 +68,7 @@ import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.MissingServletRequestParameterException;
@@ -138,6 +141,9 @@ public class KeywordsApi {
 
     @Autowired
     FileMimetypeChecker fileMimetypeChecker;
+
+    @Autowired
+    LanguageUtils languageUtils;
 
     List<String> allowedExtensions = Arrays.asList("rdf", "owl", "xml", "sdmx");
 
@@ -1539,5 +1545,287 @@ public class KeywordsApi {
         }
 
         return parsedParams;
+    }
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get the list of thesauri",
+        description = "Title is in the language of the request, multilingual titles and descriptions are also returned.")
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<ThesaurusSummary> getThesauri(HttpServletRequest request) throws Exception {
+        String language = languageUtils.getIso3langCode(request.getLocales());
+        List<ThesaurusSummary> thesauri = new ArrayList<>();
+        for (Thesaurus thesaurus : thesaurusManager.getThesauriMap().values()) {
+            thesauri.add(new ThesaurusSummary(thesaurus, language));
+        }
+        return thesauri;
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get the top concepts of a thesaurus",
+        description = "Returns a JSKOS concept with the top concepts of the thesaurus as narrower concepts.")
+    @GetMapping(value = "/{thesaurus:.+}/concepts/top", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<String> getTopConcepts(
+        @Parameter(description = "Thesaurus identifier", example = "external.place.regions")
+        @PathVariable String thesaurus,
+        @Parameter(description = "Language (ISO 639-2). Default is the request language.")
+        @RequestParam(required = false) String lang,
+        HttpServletRequest request) throws Exception {
+        Thesaurus the = getThesaurusOrNotFound(thesaurus);
+        String language = lang == null ? languageUtils.getIso3langCode(request.getLocales()) : lang;
+        String thesaurusLanguage = the.getIsoLanguageMapper().iso639_2_to_iso639_1(language);
+
+        Element descKeys = new Element("descKeys");
+        KeywordsSearcher searcher = new KeywordsSearcher(languagesMapper, thesaurusManager);
+        try {
+            searcher.searchTopConcepts(thesaurus, thesaurusLanguage, "eng");
+
+            KeywordBean topConcept = new KeywordBean(the.getIsoLanguageMapper());
+            topConcept.setThesaurusInfo(the);
+            topConcept.setValue("topConcepts", "eng");
+            topConcept.setValue("topConcepts", thesaurusLanguage);
+            topConcept.setUriCode(thesaurus);
+            Element root = KeywordsSearcher.toRawElement(descKeys, topConcept);
+
+            Element narrower = new Element("narrower");
+            for (KeywordBean keyword : searcher.getResults()) {
+                narrower.addContent(keyword.toElement("eng", language));
+            }
+            root.addContent(narrower);
+        } catch (TermNotFoundException ignored) {
+            // No top concepts
+        }
+        return toJskos(thesaurus, descKeys);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Get a concept with its broader, narrower and related concepts",
+        description = "Returns a JSKOS concept.")
+    @GetMapping(value = "/{thesaurus:.+}/concept", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public ResponseEntity<String> getConcept(
+        @Parameter(description = "Thesaurus identifier", example = "external.place.regions")
+        @PathVariable String thesaurus,
+        @Parameter(description = "Concept identifier", example = "http://www.naturalearthdata.com/ne_admin#Continent")
+        @RequestParam String id,
+        @Parameter(description = "Language (ISO 639-2). Default is the request language.")
+        @RequestParam(required = false) String lang,
+        HttpServletRequest request) throws Exception {
+        Thesaurus the = getThesaurusOrNotFound(thesaurus);
+        String language = lang == null ? languageUtils.getIso3langCode(request.getLocales()) : lang;
+        String thesaurusLanguage = the.getIsoLanguageMapper().iso639_2_to_iso639_1(language);
+
+        Element descKeys = new Element("descKeys");
+        KeywordBean keyword = new KeywordsSearcher(languagesMapper, thesaurusManager)
+            .searchById(id, thesaurus, thesaurusLanguage, "eng");
+        if (keyword != null) {
+            Element root = KeywordsSearcher.toRawElement(descKeys, keyword);
+            for (String relation : new String[]{"narrower", "broader", "related"}) {
+                Element related = new Element(relation);
+                for (KeywordBean relatedKeyword : getRelatedKeywords(thesaurus, id, relation, language, "eng")) {
+                    related.addContent(relatedKeyword.toElement(language, "eng"));
+                }
+                root.addContent(related);
+            }
+        }
+        return toJskos(thesaurus, descKeys);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Get the broader, narrower or related keywords of a keyword")
+    @GetMapping(value = "/{thesaurus:.+}/keyword/related", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public List<KeywordBean> getRelated(
+        @Parameter(description = "Thesaurus identifier", example = "external.place.regions")
+        @PathVariable String thesaurus,
+        @Parameter(description = "Keyword identifier", example = "http://www.naturalearthdata.com/ne_admin#Continent")
+        @RequestParam String id,
+        @Parameter(description = "Relation type: narrower, broader or related")
+        @RequestParam String type,
+        HttpServletRequest request) throws Exception {
+        getThesaurusOrNotFound(thesaurus);
+        return getRelatedKeywords(thesaurus, id, type, languageUtils.getIso3langCode(request.getLocales()));
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Add a keyword to a thesaurus")
+    @PostMapping(value = "/{thesaurus:.+}/keyword", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addKeyword(
+        @Parameter(description = "Thesaurus identifier")
+        @PathVariable String thesaurus,
+        @RequestBody KeywordUpdate keyword) throws Exception {
+        Thesaurus the = getThesaurusOrNotFound(thesaurus);
+        String uri = StringUtils.isBlank(keyword.uri) ? UUID.randomUUID().toString() : keyword.uri;
+        if (!the.isFreeCode(null, uri)) {
+            throw new IllegalArgumentException(String.format("Keyword '%s' already exists in the thesaurus.", uri));
+        }
+        the.addElement(keyword.toKeywordBean(the, uri));
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(
+        summary = "Update a keyword",
+        description = "Set oldUri to change the identifier of the keyword.")
+    @PutMapping(value = "/{thesaurus:.+}/keyword", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void updateKeyword(
+        @Parameter(description = "Thesaurus identifier")
+        @PathVariable String thesaurus,
+        @RequestBody KeywordUpdate keyword) throws Exception {
+        Thesaurus the = getThesaurusOrNotFound(thesaurus);
+        if (StringUtils.isBlank(keyword.uri)) {
+            throw new IllegalArgumentException("Keyword uri is required.");
+        }
+        String oldUri = StringUtils.isBlank(keyword.oldUri) ? keyword.uri : keyword.oldUri;
+        if (the.isFreeCode(null, oldUri)) {
+            throw new ResourceNotFoundException(String.format("Keyword '%s' not found in the thesaurus.", oldUri));
+        }
+        if (!oldUri.equals(keyword.uri)) {
+            if (!the.isFreeCode(null, keyword.uri)) {
+                throw new IllegalArgumentException(String.format("Keyword '%s' already exists in the thesaurus.", keyword.uri));
+            }
+            the.updateCodeByURI(oldUri, keyword.uri);
+        }
+        the.updateElement(keyword.toKeywordBean(the, keyword.uri), false);
+    }
+
+    @io.swagger.v3.oas.annotations.Operation(summary = "Remove a keyword from a thesaurus")
+    @DeleteMapping(value = "/{thesaurus:.+}/keyword")
+    @PreAuthorize("hasAuthority('Administrator')")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteKeyword(
+        @Parameter(description = "Thesaurus identifier")
+        @PathVariable String thesaurus,
+        @Parameter(description = "Keyword identifier")
+        @RequestParam String id) throws Exception {
+        Thesaurus the = getThesaurusOrNotFound(thesaurus);
+        if (the.isFreeCode(null, id)) {
+            throw new ResourceNotFoundException(String.format("Keyword '%s' not found in the thesaurus.", id));
+        }
+        the.removeElement(id);
+    }
+
+    private Thesaurus getThesaurusOrNotFound(String thesaurus) throws ResourceNotFoundException {
+        Thesaurus the = thesaurusManager.getThesaurusByName(thesaurus);
+        if (the == null) {
+            throw new ResourceNotFoundException(String.format("Thesaurus '%s' not found.", thesaurus));
+        }
+        return the;
+    }
+
+    private List<KeywordBean> getRelatedKeywords(String thesaurus, String id, String type, String... languages) {
+        KeywordRelation relation;
+        // The relation is stored on the related keyword, so look for the opposite relation.
+        switch (type) {
+            case "broader":
+                relation = KeywordRelation.NARROWER;
+                break;
+            case "narrower":
+                relation = KeywordRelation.BROADER;
+                break;
+            case "related":
+                relation = KeywordRelation.RELATED;
+                break;
+            default:
+                throw new IllegalArgumentException(String.format("Unknown relation type '%s'. Use narrower, broader or related.", type));
+        }
+        KeywordsSearcher searcher = new KeywordsSearcher(languagesMapper, thesaurusManager);
+        searcher.searchForRelated(id, thesaurus, relation, KeywordSort.defaultLabelSorter(SortDirection.DESC), languages);
+        return searcher.getResults();
+    }
+
+    private ResponseEntity<String> toJskos(String thesaurus, Element descKeys) throws Exception {
+        Element root = new Element("root")
+            .addContent(new Element("request").addContent(new Element("thesaurus").setText(thesaurus)))
+            .addContent(descKeys);
+        Path xsl = dataDirectory.getWebappDir().resolve("xslt/services/thesaurus/to-jskos.xsl");
+        return ResponseEntity.ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(Xml.getJSON(Xml.transform(root, xsl)));
+    }
+
+    public static class ThesaurusSummary {
+        public final String key;
+        public final String dname;
+        public final String type;
+        public final String filename;
+        public final String title;
+        public final String description;
+        public final List<Map<String, String>> multilingualTitles = new ArrayList<>();
+        public final List<Map<String, String>> multilingualDescriptions = new ArrayList<>();
+        public final List<Map<String, String>> dublinCoreMultilinguals = new ArrayList<>();
+        public final String date;
+        public final String createdDate;
+        public final String issuedDate;
+        public final String modifiedDate;
+        public final String url;
+        public final String defaultNamespace;
+
+        ThesaurusSummary(Thesaurus thesaurus, String language) throws Exception {
+            key = thesaurus.getKey();
+            dname = thesaurus.getDname();
+            type = thesaurus.getType();
+            filename = thesaurus.getFname();
+            String localizedTitle = thesaurus.getTitles(ApplicationContextHolder.get()).get(language);
+            title = localizedTitle == null ? thesaurus.getTitle() : localizedTitle;
+            description = thesaurus.getDescription();
+            thesaurus.getMultilingualTitles().forEach((lang, value) -> {
+                if (StringUtils.isNotBlank(value)) {
+                    multilingualTitles.add(entry("lang", lang, "title", value));
+                }
+            });
+            thesaurus.getMultilingualDescriptions().forEach((lang, value) -> {
+                if (StringUtils.isNotBlank(value)) {
+                    multilingualDescriptions.add(entry("lang", lang, "description", value));
+                }
+            });
+            thesaurus.getDublinCoreMultilingual().forEach((lang, items) -> items.forEach((tag, value) -> {
+                if (StringUtils.isNotBlank(value)) {
+                    Map<String, String> item = entry("lang", lang, "tag", tag);
+                    item.put("value", value);
+                    dublinCoreMultilinguals.add(item);
+                }
+            }));
+            date = thesaurus.getDate();
+            createdDate = thesaurus.getCreatedDate();
+            issuedDate = thesaurus.getIssuedDate();
+            modifiedDate = thesaurus.getModifiedDate();
+            url = thesaurus.getDownloadUrl();
+            defaultNamespace = thesaurus.getDefaultNamespace();
+        }
+
+        private static Map<String, String> entry(String key1, String value1, String key2, String value2) {
+            Map<String, String> entry = new LinkedHashMap<>();
+            entry.put(key1, value1);
+            entry.put(key2, value2);
+            return entry;
+        }
+    }
+
+    /**
+     * A keyword to add or update. Labels and definitions are by language (ISO 639-2).
+     * Coordinates are only used for place thesauri.
+     */
+    public static class KeywordUpdate {
+        public String uri;
+        public String oldUri;
+        public Map<String, String> labels = new HashMap<>();
+        public Map<String, String> definitions = new HashMap<>();
+        public String east;
+        public String west;
+        public String south;
+        public String north;
+
+        KeywordBean toKeywordBean(Thesaurus thesaurus, String uri) {
+            KeywordBean keyword = new KeywordBean(thesaurus.getIsoLanguageMapper())
+                .setNamespaceCode(thesaurus.getDefaultNamespace())
+                .setUriCode(uri);
+            labels.forEach((lang, label) -> keyword.setValue(label, lang));
+            definitions.forEach((lang, definition) -> keyword.setDefinition(definition, lang));
+            if ("place".equals(thesaurus.getDname())) {
+                keyword.setCoordEast(east).setCoordWest(west).setCoordSouth(south).setCoordNorth(north);
+            }
+            return keyword;
+        }
     }
 }

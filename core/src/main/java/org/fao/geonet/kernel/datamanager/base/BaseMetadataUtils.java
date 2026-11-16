@@ -609,7 +609,7 @@ public class BaseMetadataUtils implements IMetadataUtils {
     @Override
     public void increasePopularity(ServiceContext srvContext, String id) throws Exception {
         // READONLYMODE
-        if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
+        if (!NodeInfo.isReadOnly()) {
             int iId = Integer.parseInt(id);
             // Update only the popularity column. Saving the whole entity writes back every column
             // as loaded, which can overwrite an update of the record committed in the meantime.

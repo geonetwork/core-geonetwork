@@ -34,7 +34,6 @@ import jeeves.interfaces.ApplicationHandler;
 import jeeves.monitor.MonitorManager;
 import jeeves.server.context.ServiceContext;
 import jeeves.server.dispatchers.ServiceManager;
-import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.http.JeevesServlet;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.PropertyConfigurator;
@@ -71,16 +70,13 @@ import java.util.Vector;
 import java.util.concurrent.TimeUnit;
 
 /**
- * This is the main class. It handles http connections and inits the system
+ * Starts the application: loads config.xml, the application handlers and the monitors.
  */
 public class JeevesEngine {
     private static final int DEFAULT_MAX_UPLOAD_SIZE_MD = 50;
     private static final int BYTES_PER_KB = 1024;
 
-    private String _defaultSrv;
-    private String _startupErrorSrv;
     private String _defaultLang;
-    private boolean _debugFlag;
 
     /* true if the 'general' part has been loaded */
     private boolean _generalLoaded;
@@ -89,7 +85,6 @@ public class JeevesEngine {
     private Logger _appHandLogger = Log.createLogger(Log.APPHAND);
     private List<Element> _appHandList = new ArrayList<Element>();
     private Vector<ApplicationHandler> _appHandlers = new Vector<ApplicationHandler>();
-    private List<Element> _dbServices = new ArrayList<Element>();
     private Path _appPath;
     private long _maxUploadSize;
 
@@ -270,7 +265,7 @@ public class JeevesEngine {
             _generalLoaded = true;
 
             initGeneral(elGeneral, serviceMan);
-            initDefault(elDefault, serviceMan);
+            initDefault(elDefault);
         } else {
             if (elGeneral != null) {
                 throw new IllegalArgumentException("Illegal 'general' element in secondary include");
@@ -285,13 +280,6 @@ public class JeevesEngine {
 
         _appHandList.addAll(configRoot.getChildren(ConfigFile.Child.APP_HANDLER));
 
-        //--- init services
-
-        List<Element> srvList = configRoot.getChildren(ConfigFile.Child.SERVICES);
-
-        for (Element aSrvList : srvList) {
-            initServices(aSrvList);
-        }
         //--- init monitoring
 
         List<Element> monitorList = configRoot.getChildren(ConfigFile.Child.MONITORS);
@@ -334,8 +322,6 @@ public class JeevesEngine {
             error("   Stack     : " + Util.getStackTrace(e));
         }
 
-        _debugFlag = "true".equals(general.getChildText(ConfigFile.General.Child.DEBUG));
-
         serviceMan.setMaxUploadSize(_maxUploadSize);
     }
 
@@ -349,41 +335,10 @@ public class JeevesEngine {
      * Setup parameters from config tag. (config.xml)
      */
 
-    @SuppressWarnings("unchecked")
-    private void initDefault(Element defaults, ServiceManager serviceMan) throws Exception {
+    private void initDefault(Element defaults) throws Exception {
         info("Initializing defaults...");
 
-        _defaultSrv = Util.getParam(defaults, ConfigFile.Default.Child.SERVICE);
-
-        // -- Don't break behaviour before gn 2.7 - if the startupErrorService
-        // -- doesn't exist then ignore this parameter
-        _startupErrorSrv = Util.getParam(defaults, ConfigFile.Default.Child.STARTUPERRORSERVICE, "");
         _defaultLang = Util.getParam(defaults, ConfigFile.Default.Child.LANGUAGE);
-        String defaultContType = Util.getParam(defaults, ConfigFile.Default.Child.CONTENT_TYPE);
-
-        boolean defaultLocal = "true".equals(defaults.getChildText(ConfigFile.Default.Child.LOCALIZED));
-
-        info("   Default local is :" + defaultLocal);
-
-        serviceMan.setDefaultLang(_defaultLang);
-        serviceMan.setDefaultLocal(defaultLocal);
-        serviceMan.setDefaultContType(defaultContType);
-
-        List<Element> errorPages = defaults.getChildren(ConfigFile.Default.Child.ERROR);
-
-        for (Element errorPage : errorPages) {
-            serviceMan.addErrorPage(errorPage);
-        }
-
-        Element gui = defaults.getChild(ConfigFile.Default.Child.GUI);
-
-        if (gui != null) {
-            List<Element> guiElems = gui.getChildren();
-
-            for (Element guiElem : guiElems) {
-                serviceMan.addDefaultGui(guiElem);
-            }
-        }
     }
 
     //---------------------------------------------------------------------------
@@ -456,46 +411,6 @@ public class JeevesEngine {
 
     //---------------------------------------------------------------------------
     //---
-    //--- 'services' element
-    //---
-    //---------------------------------------------------------------------------
-
-    /**
-     * Setup services found in the services tag (config.xml)
-     */
-
-    @SuppressWarnings("unchecked")
-    public void initServices(Element services) throws Exception {
-        info("Initializing services...");
-
-        //--- get services root package
-        String pack = services.getAttributeValue(ConfigFile.Services.Attr.PACKAGE);
-
-        ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
-
-        // --- scan services elements
-        for (Element service : (List<Element>) services
-            .getChildren(ConfigFile.Services.Child.SERVICE)) {
-            String name = service
-                .getAttributeValue(ConfigFile.Service.Attr.NAME);
-
-            info("   Adding service : " + name);
-
-            try {
-                serviceManager.addService(pack, service, this._appPath);
-            } catch (Exception e) {
-                warning("Raised exception while registering service. Skipped.");
-                warning("   Service   : " + name);
-                warning("   Package   : " + pack);
-                warning("   Exception : " + e);
-                warning("   Message   : " + e.getMessage());
-                warning("   Stack     : " + Util.getStackTrace(e));
-            }
-        }
-    }
-
-    //---------------------------------------------------------------------------
-    //---
     //--- Destroy
     //---
     //---------------------------------------------------------------------------
@@ -549,28 +464,6 @@ public class JeevesEngine {
     }
 
     //---------------------------------------------------------------------------
-
-    public void dispatch(ServiceRequest srvReq, UserSession session) {
-        ServiceManager serviceManager = ApplicationContextHolder.get().getBean(ServiceManager.class);
-
-        if (srvReq.getService() == null || srvReq.getService().length() == 0)
-            srvReq.setService(_defaultSrv);
-
-        if (srvReq.getLanguage() == null || srvReq.getLanguage().length() == 0)
-            srvReq.setLanguage(_defaultLang);
-
-        srvReq.setDebug(srvReq.hasDebug() && _debugFlag);
-
-        //--- if we have a startup error (ie. exception during startup) then
-        //--- override with the startupErrorSrv service (if defined)
-        if (serviceManager.isStartupError() && !_startupErrorSrv.equals("")
-            && !srvReq.getService().contains(_startupErrorSrv))
-            srvReq.setService(_startupErrorSrv);
-
-        //--- normal dispatch pipeline
-
-        serviceManager.dispatch(srvReq, session);
-    }
 
     //---------------------------------------------------------------------------
     //---

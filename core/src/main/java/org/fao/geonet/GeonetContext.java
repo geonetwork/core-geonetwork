@@ -52,10 +52,10 @@ public class GeonetContext {
     }
 
     public boolean isReadOnly() {
-        return false; //nodeInfo.isReadOnly();
+        return NodeInfo.isReadOnly();
     }
 
     public void setReadOnly(boolean readOnly) {
-        //nodeInfo.setReadOnly(readOnly);
+        NodeInfo.setReadOnly(readOnly);
     }
 }

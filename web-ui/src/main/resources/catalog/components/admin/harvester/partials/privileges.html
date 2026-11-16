@@ -48,10 +48,10 @@
     >
       <input
         type="checkbox"
-        id="int-group-{{g['@id']}}"
-        data-ng-model="selectedPrivileges[g['@id']]"
+        id="int-group-{{g.id}}"
+        data-ng-model="selectedPrivileges[g.id]"
       />
-      <label for="group-{{g['@id']}}">{{g.label[lang]|empty:g.name}}</label>
+      <label for="int-group-{{g.id}}">{{g.label[lang]|empty:g.name}}</label>
     </li>
     <li
       data-ng-repeat="g in groups | filter:groupSearch | orderBy:setSorter"
@@ -60,10 +60,10 @@
     >
       <input
         type="checkbox"
-        id="group-{{g['@id']}}"
-        data-ng-model="selectedPrivileges[g['@id']]"
+        id="group-{{g.id}}"
+        data-ng-model="selectedPrivileges[g.id]"
       />
-      <label for="group-{{g['@id']}}">{{g.label[lang]|empty:g.name}}</label>
+      <label for="group-{{g.id}}">{{g.label[lang]|empty:g.name}}</label>
     </li>
   </ul>
 </fieldset>

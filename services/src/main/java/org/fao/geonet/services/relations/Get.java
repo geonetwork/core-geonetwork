@@ -23,21 +23,16 @@
 
 package org.fao.geonet.services.relations;
 
-import jeeves.interfaces.Service;
-import jeeves.server.ServiceConfig;
 import jeeves.server.context.ServiceContext;
 import org.fao.geonet.GeonetContext;
-import org.fao.geonet.Util;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.MetadataRelation;
 import org.fao.geonet.kernel.DataManager;
 import org.fao.geonet.repository.MetadataRelationRepository;
 import org.fao.geonet.repository.specification.MetadataRelationSpecs;
-import org.fao.geonet.services.Utils;
 import org.jdom.Element;
 import org.springframework.data.jpa.domain.Specification;
 
-import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashSet;
@@ -45,7 +40,7 @@ import java.util.Set;
 
 //=============================================================================
 @Deprecated
-public class Get implements Service {
+public class Get {
     /**
      * TODO : should we move relation management in DataManager or in a specific relation management
      * class ?
@@ -70,12 +65,6 @@ public class Get implements Service {
 
         return response;
     }
-
-    // --------------------------------------------------------------------------
-    // ---
-    // --- Service
-    // ---
-    // --------------------------------------------------------------------------
 
     /**
      * Method to query Relation table and get a Set of identifiers of related metadata
@@ -116,17 +105,5 @@ public class Get implements Service {
             }
         }
         return results;
-    }
-
-    public void init(Path appPath, ServiceConfig params) throws Exception {
-    }
-
-    public Element exec(Element params, ServiceContext context)
-        throws Exception {
-        int id = Integer.parseInt(Utils.getIdentifierFromParameters(params,
-            context));
-        String relation = Util.getParam(params, "relation", "normal");
-
-        return getRelation(id, relation, context);
     }
 }

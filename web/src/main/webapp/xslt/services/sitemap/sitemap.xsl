@@ -41,14 +41,7 @@
       </xsl:when>
       <!-- Return results -->
       <xsl:otherwise>
-        <xsl:choose>
-          <xsl:when test="$format='rdf'">
-            <xsl:call-template name="rdf"/>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:call-template name="xml"/>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:call-template name="xml"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -136,31 +129,6 @@
 
         </url>
       </xsl:for-each>
-    </urlset>
-  </xsl:template>
-
-  <xsl:template name="rdf">
-    <urlset xmlns:sc="http://sw.deri.org/2007/07/sitemapextension/scschema.xsd"
-            xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-      <sc:dataset>
-        <sc:datasetLabel>
-          <xsl:value-of select="$env/system/site/name"/> content catalogue for Linked Data spiders
-          (RDF)
-        </sc:datasetLabel>
-        <xsl:for-each select="metadata/record">
-          <sc:dataDumpLocation><xsl:value-of select="concat($nodeUrl, 'eng/rdf.metadata.get?uuid=', uuid)"/>
-          </sc:dataDumpLocation>
-        </xsl:for-each>
-        <!--For 5 latests update:
-        <sc:sampleURI>http://<server_host>:<server_port>/<catalogue>/metadata/<uuid>.rdf</sc:sampleURI>
-
-
-        Link to a full dump using the search API
-        <sc:dataDumpLocation>http://<server_host>:<server_port>/<catalogue>/search/rdf/</sc:dataDumpLocation>
-        or provide for all catalogue record a link using
-        <sc:dataDumpLocation>http://<server_host>:<server_port>/<catalogue>/metadata/<uuid>.rdf</sc:dataDumpLocation>-->
-        <changefreq>daily</changefreq>
-      </sc:dataset>
     </urlset>
   </xsl:template>
 

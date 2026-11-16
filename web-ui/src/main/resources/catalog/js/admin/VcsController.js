@@ -39,9 +39,7 @@
     function ($scope, $routeParams, $http, gnVcsService) {
       $scope.logs = [];
       gnVcsService.getLog().then(function (data) {
-        if (data !== "null") {
-          $scope.logs = data;
-        }
+        $scope.logs = data.entries;
       });
     }
   ]);

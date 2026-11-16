@@ -88,7 +88,7 @@
       <!-- FIXME : void:Dataset -->
       <void:openSearchDescription><xsl:value-of select="$url"/>/srv/eng/portal.opensearch
       </void:openSearchDescription>
-      <void:uriLookupEndpoint><xsl:value-of select="$url"/>/srv/eng/rdf.search?any=
+      <void:uriLookupEndpoint><xsl:value-of select="$url"/>/srv/eng/csw?service=CSW&amp;version=2.0.2&amp;request=GetRecordById&amp;outputSchema=http://www.w3.org/ns/dcat%23&amp;elementSetName=full&amp;id=
       </void:uriLookupEndpoint>
 
 

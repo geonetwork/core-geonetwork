@@ -31,7 +31,6 @@
    * @kind function
    * @name gn_onlinesrc.service:gnOnlinesrc
    * @requires gnBatchProcessing
-   * @requires gnHttp
    * @requires gnEditor
    * @requires gnCurrentEdit
    * @requires $q
@@ -81,7 +80,6 @@
 
   module.factory("gnOnlinesrc", [
     "gnBatchProcessing",
-    "gnHttp",
     "gnEditor",
     "gnCurrentEdit",
     "$q",
@@ -96,7 +94,6 @@
     "gnOnlinesrcConfig",
     function (
       gnBatchProcessing,
-      gnHttp,
       gnEditor,
       gnCurrentEdit,
       $q,
@@ -240,33 +237,6 @@
             });
           }
         );
-      };
-
-      /**
-       * Run a service (not a batch) to add or remove
-       *
-       * an onlinesrc.
-       * Save the form, launch the service, then refresh
-       * the form and reload the onlinesrc list.
-       * The save is silent, in order not to reload the
-       * onlinesrc list on save and on batch success.
-       */
-      var runService = function (service, params, scope) {
-        return gnEditor.save(false, true).then(function () {
-          gnHttp.callService(service, params).then(
-            function (response) {
-              refreshForm(scope);
-            },
-            function (response) {
-              $rootScope.$broadcast("StatusUpdated", {
-                title: $translate.instant("runServiceError"),
-                error: response.data,
-                timeout: 0,
-                type: "danger"
-              });
-            }
-          );
-        });
       };
 
       /**
@@ -804,34 +774,15 @@
          * @param {Object} thumb the online resource to remove
          */
         removeThumbnail: function (thumb) {
-          var scope = this;
-
-          // It is a url thumbnail
-          if (thumb.id.indexOf("resources.get") < 0) {
-            return runProcess(
-              this,
-              setParams("thumbnail-remove", {
-                id: gnCurrentEdit.id,
-                thumbnail_url: thumb.id,
-                resourceIdx: thumb.idx,
-                resourceHash: thumb.hash
-              })
-            );
-          }
-          // It is an uploaded thumbnail
-          else {
-            return runService(
-              "removeThumbnail",
-              {
-                type: thumb.title === "thumbnail" ? "small" : "large",
-                id: gnCurrentEdit.id,
-                resourceIdx: thumb.idx,
-                resourceHash: thumb.hash,
-                version: gnCurrentEdit.version
-              },
-              this
-            );
-          }
+          return runProcess(
+            this,
+            setParams("thumbnail-remove", {
+              id: gnCurrentEdit.id,
+              thumbnail_url: thumb.id,
+              resourceIdx: thumb.idx,
+              resourceHash: thumb.hash
+            })
+          );
         },
 
         /**

@@ -47,28 +47,9 @@
         link: function (scope, element, attrs) {
           scope.lang = "eng"; // FIXME
           scope.hideIconPicker = true; // hide or show the icon picker
-          scope.openTranslationModal = function () {
-            var translations = scope.harvester.site.translations;
-            if (translations === undefined || angular.isArray(translations)) {
-              translations = {};
-              scope.harvester.site.translations = translations;
-            }
-
-            for (var i = 0; i < scope.languages.length; i++) {
-              if (translations[scope.languages[i].id] === undefined) {
-                translations[scope.languages[i].id] = scope.harvester.site.name;
-              }
-            }
-            $("#translationModal").modal("show");
-          };
           $http.get("../api/logos", { cache: true }).then(function (response) {
             scope.icons = response.data;
           });
-          $http
-            .get("info?_content_type=json&type=languages", { cache: true })
-            .then(function (response) {
-              scope.languages = response.data.language;
-            });
         }
       };
     }
@@ -258,27 +239,23 @@
           scope.sorter = null;
           scope.setSorter = function (g) {
             if (scope.sorter == "name") return g.label ? g.label[scope.lang] : g.name;
-            else if (scope.sorter == "checked") return scope.selectedPrivileges[g["@id"]];
+            else if (scope.sorter == "checked") return scope.selectedPrivileges[g.id];
             else return 0;
           };
 
           var internalGroups = gnShareConstants.internalGroups;
 
           scope.keepInternalGroups = function (g) {
-            if (internalGroups.includes(parseInt(g["@id"]))) return true;
-            else return false;
+            return internalGroups.includes(g.id);
           };
           scope.removeInternalGroups = function (g) {
-            if (internalGroups.includes(parseInt(g["@id"]))) return false;
-            else return true;
+            return !internalGroups.includes(g.id);
           };
           function loadGroups() {
             $http
-              .get("info?_content_type=json&" + "type=groupsIncludingSystemGroups", {
-                cache: true
-              })
+              .get("../api/groups?withReservedGroup=true", { cache: true })
               .then(function (response) {
-                scope.groups = response.data !== "null" ? response.data.group : null;
+                scope.groups = response.data;
               });
           }
 

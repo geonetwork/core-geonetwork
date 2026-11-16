@@ -718,26 +718,6 @@ public class MetadataEditingApi {
 
     private Element buildResourceDocument(ApplicationContext applicationContext, ServiceContext context,
                                           UserSession userSession) throws JDOMException, SQLException, IOException {
-        // <gui>
-        // Unused now
-        // <xml name="strings" file="xml/strings.xml"/>
-        // Unused now
-        // <call name="isolanguages"
-        // class="org.fao.geonet.guiservices.isolanguages.Get"/>
-        // <call name="session" class="jeeves.guiservices.session.Get"/>
-        // <call name="env" class="org.fao.geonet.guiservices.util.Env"/>
-        // <call name="systemConfig" class="org.fao.geonet.services.config.Get"/>
-        // <call name="results"
-        // class="org.fao.geonet.guiservices.search.GetResultsInfo"/>
-        // <call name="schemalist" class="org.fao.geonet.guiservices.schemas.Get"/>
-        // <call name="svnmanager"
-        // class="org.fao.geonet.guiservices.util.GetSvnDetails"/>
-        //
-        // <!-- this service adds labels and codelists from all schemas -->
-        // <call name="schemas"
-        // class="org.fao.geonet.guiservices.schemas.GetSchemaInfo"/>
-        // </gui>
-
         Element root = new Element("root");
         Element gui = new Element("gui");
         gui.addContent(applicationContext.getBean(SettingManager.class).getAllAsXML(true));
@@ -745,11 +725,6 @@ public class MetadataEditingApi {
 
         ThesaurusManager th = applicationContext.getBean(ThesaurusManager.class);
         gui.addContent(new Element("thesaurus").addContent(th.buildResultfromThTable(context)));
-        // TODO: Add request parameters
-        // <output sheet="../xslt/ui-metadata/edit/edit.xsl">
-        // <call name="thesaurus" class=".services.thesaurus.GetList"/>
-        // <call name="currTab" class=".guiservices.util.GetCurrentMDTab"/>
-        // <xml name="i18n" file="xml/i18n.xml"/>
         root.addContent(gui);
         return root;
     }

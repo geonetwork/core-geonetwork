@@ -76,10 +76,6 @@
         </xsl:if>
         <link rel="icon" sizes="16x16 32x32 48x48" type="image/png"
               href="{/root/gui/url}/images/logos/favicon.png"/>
-        <link href="{$nodeUrl}eng/rss.search?sortBy=changeDate"
-              rel="alternate"
-              type="application/rss+xml"
-              title="{$title}"/>
         <link href="{$nodeUrl}eng/portal.opensearch"
               rel="search"
               type="application/opensearchdescription+xml"

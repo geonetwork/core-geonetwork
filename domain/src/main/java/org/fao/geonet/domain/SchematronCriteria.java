@@ -23,6 +23,7 @@
 
 package org.fao.geonet.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jdom.Element;
 import org.jdom.Namespace;
 import org.springframework.context.ApplicationContext;
@@ -153,6 +154,7 @@ public class SchematronCriteria extends GeonetEntity {
         @PrimaryKeyJoinColumn(referencedColumnName = "name"),
         @PrimaryKeyJoinColumn(referencedColumnName = "schematronId")
     })
+    @JsonIgnore
     public SchematronCriteriaGroup getGroup() {
         return group;
     }

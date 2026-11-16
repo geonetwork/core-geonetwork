@@ -59,7 +59,11 @@ public class NodeInfo implements Serializable {
 
     private String id = "srv";
     private boolean defaultNode = true;
-    private boolean readOnly = false;
+    /**
+     * Read-only mode applies to the whole webapp (see DB heartbeat), not to a portal. NodeInfo is
+     * request scoped, so the flag is static to be shared by all requests and background threads.
+     */
+    private static volatile boolean readOnly = false;
 
     public String getId() {
         return id;
@@ -77,11 +81,11 @@ public class NodeInfo implements Serializable {
         this.defaultNode = defaultNode;
     }
 
-    public boolean isReadOnly() {
+    public static boolean isReadOnly() {
         return readOnly;
     }
 
-    public void setReadOnly(boolean readOnly) {
-        this.readOnly = readOnly;
+    public static void setReadOnly(boolean readOnly) {
+        NodeInfo.readOnly = readOnly;
     }
 }

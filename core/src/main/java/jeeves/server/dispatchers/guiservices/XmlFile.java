@@ -46,7 +46,7 @@ import java.nio.file.Path;
  * Loads and returns an xml file
  */
 
-public class XmlFile implements GuiService {
+public class XmlFile {
     private final String name;
     private final String file;
     private final Path base;
