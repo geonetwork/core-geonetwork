@@ -73,10 +73,10 @@ We use ``mike`` for publishing (from the `gh-pages` branch). Docs are published 
 
 If you wish to preview using your own `gh-pages` branch:
 
-1. To deploy documentation for a new stable release:
+1. To deploy documentation for the maintenance release:
    
    ```bash
-   mike deploy --push --alias-type=copy 4.2 stable
+   mike deploy --push --alias-type=copy 4.2 maintenance
    ```
    
 2. To show published versions:
