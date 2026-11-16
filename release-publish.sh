@@ -53,5 +53,5 @@ bye
 EOT
 
 # Deploy to osgeo repository (requires credentials in ~/.m2/settings.xml)
-mvn deploy -DskipTests -Drelease
+#mvn deploy -DskipTests -Drelease
 
