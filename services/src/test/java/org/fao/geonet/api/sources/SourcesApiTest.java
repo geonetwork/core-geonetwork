@@ -29,17 +29,23 @@ import org.fao.geonet.api.JsonFieldNamingStrategy;
 import org.fao.geonet.domain.ISODate;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.domain.SourceType;
+import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.repository.SourceRepository;
+import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -61,6 +67,12 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
     @Autowired
     private SourceRepository sourceRepo;
+
+    @Autowired
+    private SettingManager settingManager;
+
+    @Autowired
+    private Resources resources;
 
     private MockMvc mockMvc;
 
@@ -94,6 +106,54 @@ public class SourcesApiTest extends AbstractServiceIntegrationTest {
 
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         this.mockMvc.perform(get("/srv/api/sources/" + source.getUuid() + "/logo"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING));
+    }
+
+    @Test
+    public void getSourceLogoNotModified() throws Exception {
+        Source source = sourceRepo.findOneByName("source-test");
+        assertNotNull(source);
+        byte[] logo = "source-logo".getBytes(StandardCharsets.UTF_8);
+        Path logoFile = resources.locateLogosDir(createServiceContext()).resolve("source-test-logo.png");
+        Files.createDirectories(logoFile.getParent());
+        Files.write(logoFile, logo);
+        source.setLogo(logoFile.getFileName().toString());
+        sourceRepo.save(source);
+
+        try {
+            this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+            String url = "/srv/api/sources/" + source.getUuid() + "/logo";
+            String lastModified = this.mockMvc.perform(get(url))
+                .andExpect(status().isOk())
+                .andExpect(content().bytes(logo))
+                .andReturn().getResponse().getHeader(HttpHeaders.LAST_MODIFIED);
+            assertNotNull(lastModified);
+
+            // A browser revalidating its cached logo must get a 304, not an empty 200.
+            this.mockMvc.perform(get(url).header(HttpHeaders.IF_MODIFIED_SINCE, lastModified))
+                .andExpect(status().isNotModified())
+                .andExpect(content().bytes(new byte[0]));
+        } finally {
+            Files.deleteIfExists(logoFile);
+        }
+    }
+
+    @Test
+    public void getMainCatalogueLogoUsingNodeId() throws Exception {
+        // The main catalogue is 'srv' in URLs but its source is stored under the site id.
+        String siteId = settingManager.getSiteId();
+        if (!sourceRepo.existsById(siteId)) {
+            Source siteSource = new Source();
+            siteSource.setName("site-source-test");
+            siteSource.setUuid(siteId);
+            siteSource.setCreationDate(new ISODate());
+            siteSource.setType(SourceType.portal);
+            sourceRepo.save(siteSource);
+        }
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        this.mockMvc.perform(get("/srv/api/sources/srv/logo"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(API_PNG_EXPECTED_ENCODING));
     }

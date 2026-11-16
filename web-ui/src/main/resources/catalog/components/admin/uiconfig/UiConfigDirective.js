@@ -209,6 +209,22 @@
             true
           );
 
+          // Map viewer tools displayed as sub-options of another tool
+          scope.toolSubOptions = {
+            addLayers: [
+              "addLayersWms",
+              "addLayersWmts",
+              "addLayersWfs",
+              "addLayersEsriRest",
+              "addLayersKml"
+            ]
+          };
+          scope.isToolSubOption = function (tool) {
+            return Object.values(scope.toolSubOptions).some(function (c) {
+              return c.indexOf(tool) !== -1;
+            });
+          };
+
           scope.sortOrderChoices = ["asc", "desc"];
           scope.searchResultContactChoices = [
             "Org",
@@ -250,6 +266,11 @@
             } else if (angular.isObject(array)) {
               delete array[index];
             }
+          };
+
+          // Move array item from index to index + delta
+          scope.moveItem = function (array, index, delta) {
+            array.splice(index + delta, 0, array.splice(index, 1)[0]);
           };
 
           scope.epsgHelpers = gnProjService.helpers;

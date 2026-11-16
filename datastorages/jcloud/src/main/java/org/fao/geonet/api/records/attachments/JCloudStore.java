@@ -31,6 +31,7 @@ import jeeves.server.context.ServiceContext;
 import org.apache.commons.collections.MapUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.api.exception.InputStreamLimitExceededException;
+import org.fao.geonet.api.exception.ResourceAlreadyExistException;
 import org.fao.geonet.api.exception.ResourceNotFoundException;
 import org.fao.geonet.constants.Geonet;
 import org.fao.geonet.domain.*;
@@ -585,6 +586,106 @@ public class JCloudStore extends AbstractStore {
             throw new ResourceNotFoundException(
                 String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
         }
+    }
+
+    @Override
+    public MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId,
+                                           String newName, Boolean approved) throws Exception {
+        int metadataId = canEdit(context, metadataUuid, approved);
+        checkResourceId(newName);
+
+        for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
+            final String sourceKey = getKey(context, metadataUuid, metadataId, visibility, resourceId);
+            final String targetKey = getKey(context, metadataUuid, metadataId, visibility, newName);
+
+            // Lock both resources in a consistent order so concurrent opposite renames
+            // cannot deadlock while still sharing the same locks used by putResource.
+            final String firstKey = sourceKey.compareTo(targetKey) <= 0 ? sourceKey : targetKey;
+            final String secondKey = sourceKey.compareTo(targetKey) <= 0 ? targetKey : sourceKey;
+            final Object firstLock = locks.computeIfAbsent(firstKey, k -> new Object());
+            final Object secondLock = firstKey.equals(secondKey)
+                ? firstLock
+                : locks.computeIfAbsent(secondKey, k -> new Object());
+
+            synchronized (firstLock) {
+                synchronized (secondLock) {
+                    try {
+                        final BlobMetadata sourceMetadata;
+
+                        try {
+                            sourceMetadata = jCloudConfiguration.getClient().getBlobStore().blobMetadata(
+                                jCloudConfiguration.getContainerName(), sourceKey);
+                        } catch (ContainerNotFoundException ignored) {
+                            continue;
+                        }
+
+                        if (sourceMetadata == null) {
+                            continue;
+                        }
+
+                        if (sourceKey.equals(targetKey)) {
+                            return createResourceDescription(
+                                context, metadataUuid, visibility, newName,
+                                sourceMetadata, metadataId, approved, false);
+                        }
+
+                        if (jCloudConfiguration.getClient().getBlobStore().blobExists(
+                            jCloudConfiguration.getContainerName(), targetKey)) {
+                            throw new ResourceAlreadyExistException(
+                                String.format(
+                                    "A resource with name '%s' and status '%s' already exists for metadata '%d'.",
+                                    newName, visibility, metadataId));
+                        }
+
+                        // No metadata override is required for a rename; the blob copy
+                        // preserves the existing metadata and properties.
+                        jCloudConfiguration.getClient().getBlobStore().copyBlob(
+                            jCloudConfiguration.getContainerName(),
+                            sourceKey,
+                            jCloudConfiguration.getContainerName(),
+                            targetKey,
+                            CopyOptions.NONE);
+
+                        try {
+                            jCloudConfiguration.getClient().getBlobStore().removeBlob(
+                                jCloudConfiguration.getContainerName(), sourceKey);
+                        } catch (Exception deleteException) {
+                            // Roll back the new copy if the original cannot be removed.
+                            try {
+                                jCloudConfiguration.getClient().getBlobStore().removeBlob(
+                                    jCloudConfiguration.getContainerName(), targetKey);
+                            } catch (Exception rollbackException) {
+                                Log.error(Geonet.RESOURCES, String.format(
+                                    "Unable to roll back resource '%s' created while renaming '%s' "
+                                        + "for metadata %d (%s): %s",
+                                    newName, resourceId, metadataId, metadataUuid,
+                                    rollbackException.getMessage()), rollbackException);
+                            }
+                            throw deleteException;
+                        }
+
+                        BlobMetadata renamedMetadata =
+                            jCloudConfiguration.getClient().getBlobStore().blobMetadata(
+                                jCloudConfiguration.getContainerName(), targetKey);
+
+                        return createResourceDescription(
+                            context, metadataUuid, visibility, newName,
+                            renamedMetadata, metadataId, approved, false);
+                    } finally {
+                        if (!firstKey.equals(secondKey)) {
+                            locks.remove(secondKey, secondLock);
+                        }
+                        locks.remove(firstKey, firstLock);
+                    }
+                }
+            }
+        }
+
+        throw new ResourceNotFoundException(
+            String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+            .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+            .withDescriptionKey("exception.resourceNotFound.resource.description",
+                new String[]{resourceId, metadataUuid});
     }
 
     @Override

@@ -42,4 +42,17 @@ public class UserAuditableService extends BaseAuditableService<UserAuditable> {
     public String getEntityType() {
         return ENTITY_TYPE;
     }
+
+    // The entry is rebuilt on every save without the creation fields, a merge would null them.
+    @Override
+    public void auditSave(UserAuditable userAuditable) {
+        if (!isAuditableEnabled()) return;
+
+        repository.findById(userAuditable.getId()).ifPresent(existing -> {
+            userAuditable.setCreatedBy(existing.getCreatedBy());
+            userAuditable.setCreatedDate(existing.getCreatedDate());
+        });
+
+        super.auditSave(userAuditable);
+    }
 }

@@ -8,6 +8,10 @@ This module contains a web user interface for GeoNetwork opensource based on Ang
 
 Wro4j is is used to compile and manage JS dependencies.
 
+## Upgrade libraries
+
+* ol-cesium and Cesium (map viewer 3D mode): see [catalog/lib/olcesium/README.md](src/main/resources/catalog/lib/olcesium/README.md).
+
 
 ## Check & format file
 

@@ -31,5 +31,15 @@ package org.fao.geonet.api.records.formatters.cache;
  * @author Jesse on 3/6/2015.
  */
 public interface CacheConfig {
+    /**
+     * Check if the output of the formatter for the key can be reused.
+     * <p>
+     * It is used by {@link FormatterCache} to decide if the output is stored in the shared cache and
+     * by the formatter API to decide if a conditional request can be answered with 304 Not Modified.
+     * The shared cache only stores the output generated for anonymous requests.
+     *
+     * @param key the key of the output.
+     * @return true if the output can be reused.
+     */
     boolean allowCaching(Key key);
 }

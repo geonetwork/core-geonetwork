@@ -27,6 +27,7 @@ class PdfOrHtmlResponseWriter {
         String filename = "metadata-" + metadataUuid + "." + formatType;
         response.addHeader("Content-Disposition", "inline; filename=\"" + filename + "\"");
         response.setStatus(HttpServletResponse.SC_OK);
+        response.setHeader("Cache-Control", "no-cache");
         if (formatType == FormatType.pdf) {
             writerAsPDF(context, response, formattedMetadata, lang);
         } else {
@@ -49,7 +50,6 @@ class PdfOrHtmlResponseWriter {
             response.setCharacterEncoding(Constants.ENCODING);
             response.setContentType(formatType.contentType);
             response.setContentLength(formattedMetadata.length);
-            response.setHeader("Cache-Control", "no-cache");
             response.getOutputStream().write(formattedMetadata);
         }
     }

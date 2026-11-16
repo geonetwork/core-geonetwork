@@ -24,14 +24,6 @@
       <artifactId>gn-common</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <!--<dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
-    </dependency>-->
-    <!--Require Lucene 5 <dependency>
-      <groupId>org.elasticsearch.client</groupId>
-      <artifactId>transport</artifactId>
-    </dependency>-->
     <dependency>
       <groupId>co.elastic.clients</groupId>
       <artifactId>elasticsearch-java</artifactId>

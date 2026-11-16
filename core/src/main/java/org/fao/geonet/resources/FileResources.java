@@ -27,6 +27,9 @@ import javax.servlet.ServletContext;
 public class FileResources extends Resources {
     @Override
     protected @Nullable Path findImagePath(String imageName, Path logosDir) throws IOException {
+        if (!Files.isDirectory(logosDir)) {
+            return null;
+        }
         if (imageName.indexOf('.') > -1) {
             final Path imagePath = logosDir.resolve(imageName);
             if (Files.exists(imagePath)) {

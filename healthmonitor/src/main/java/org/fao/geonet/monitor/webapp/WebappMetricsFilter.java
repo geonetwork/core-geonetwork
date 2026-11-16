@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2016 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -28,7 +28,6 @@ import com.yammer.metrics.core.*;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 
 import java.io.IOException;
 import java.util.Map;
@@ -47,6 +46,7 @@ public abstract class WebappMetricsFilter implements Filter {
     private final String registryAttribute;
 
     // initialized after call of init method
+    private MetricsRegistry metricsRegistry;
     private ConcurrentMap<Integer, Meter> metersByStatusCode;
     private Meter otherMeter;
     private Counter activeRequests;
@@ -71,9 +71,9 @@ public abstract class WebappMetricsFilter implements Filter {
 
 
     public void init(FilterConfig filterConfig) throws ServletException {
-        final MetricsRegistry metricsRegistry = getMetricsFactory(filterConfig);
+        this.metricsRegistry = getMetricsFactory(filterConfig);
 
-        this.metersByStatusCode = new ConcurrentHashMap<Integer, Meter>(meterNamesByStatusCode
+        this.metersByStatusCode = new ConcurrentHashMap<>(meterNamesByStatusCode
             .size());
         for (Entry<Integer, String> entry : meterNamesByStatusCode.entrySet()) {
             metersByStatusCode.put(entry.getKey(),
@@ -107,22 +107,30 @@ public abstract class WebappMetricsFilter implements Filter {
     }
 
     public void destroy() {
-        Metrics.defaultRegistry().shutdown();
+        // Shutdown the registry this filter actually used. Do not touch Metrics.defaultRegistry()
+        // here: destroy() may run while the JVM is shutting down (Ctrl+C or SIGTERM), and the
+        // first load of the Metrics class registers a shutdown hook, which then fails with
+        // "Shutdown in progress".
+        if (metricsRegistry != null) {
+            metricsRegistry.shutdown();
+        }
     }
 
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
-        final StatusExposingServletResponse wrappedResponse =
-            new StatusExposingServletResponse((HttpServletResponse) response);
         activeRequests.inc();
         final TimerContext context = requestTimer.time();
+        // An exception that escapes the chain becomes a 500 later, when the container handles it.
+        boolean failed = true;
         try {
-            chain.doFilter(request, wrappedResponse);
+            chain.doFilter(request, response);
+            failed = false;
         } finally {
             context.stop();
             activeRequests.dec();
-            markMeterForStatusCode(wrappedResponse.getStatus());
+            markMeterForStatusCode(failed ? HttpServletResponse.SC_INTERNAL_SERVER_ERROR
+                : ((HttpServletResponse) response).getStatus());
         }
     }
 
@@ -132,36 +140,6 @@ public abstract class WebappMetricsFilter implements Filter {
             metric.mark();
         } else {
             otherMeter.mark();
-        }
-    }
-
-    private static class StatusExposingServletResponse extends HttpServletResponseWrapper {
-        private int httpStatus;
-
-        public StatusExposingServletResponse(HttpServletResponse response) {
-            super(response);
-        }
-
-        @Override
-        public void sendError(int sc) throws IOException {
-            httpStatus = sc;
-            super.sendError(sc);
-        }
-
-        @Override
-        public void sendError(int sc, String msg) throws IOException {
-            httpStatus = sc;
-            super.sendError(sc, msg);
-        }
-
-        public int getStatus() {
-            return httpStatus;
-        }
-
-        @Override
-        public void setStatus(int sc) {
-            httpStatus = sc;
-            super.setStatus(sc);
         }
     }
 }

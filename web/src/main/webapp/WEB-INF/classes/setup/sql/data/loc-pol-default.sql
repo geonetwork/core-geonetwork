@@ -535,7 +535,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'pol','DOI creat
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'pol','Scheduled publication');
 
 
-INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'pol','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'pol','Favorite records');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'pol','Watch list');
 
 

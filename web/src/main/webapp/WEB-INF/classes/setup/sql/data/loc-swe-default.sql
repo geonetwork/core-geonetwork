@@ -535,7 +535,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'swe','Begäran 
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'swe','Scheduled publication');
 
 
-INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'swe','Föredragna poster');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'swe','Favoritposter');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'swe','Bevakningslista');
 
 INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (-1,'swe', 'Medeltal');

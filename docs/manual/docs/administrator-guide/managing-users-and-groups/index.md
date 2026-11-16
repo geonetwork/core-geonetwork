@@ -106,7 +106,7 @@ The tables below show a comprehensive overview of Roles and Features. It explain
     | Metadata selection / Updates categories     |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Metadata selection / Delete                 |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Metadata selection / Index records          |                         |                         | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
-    | Preferred Records                           | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
+    | Favorite records                            | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Watch list                                  | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
     | Sorted by relevancy, modified, title...     | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: | :material-check-circle: |
 

@@ -271,7 +271,7 @@ public class SiteApi implements ApplicationEventPublisherAware {
 
     @io.swagger.v3.oas.annotations.Operation(
         summary = "Get settings",
-        description = "Return public settings for anonymous users, internals are allowed for authenticated.")
+        description = "Return public settings. Internal settings are only returned to administrators.")
     @RequestMapping(
         path = "/settings",
         produces = MediaType.APPLICATION_JSON_VALUE,
@@ -338,14 +338,10 @@ public class SiteApi implements ApplicationEventPublisherAware {
                 Collections.addAll(settingList, key);
             }
             List<Setting> settings = settingManager.getSettings(settingList.toArray(new String[0]));
-            ListIterator<Setting> iterator = settings.listIterator();
 
-            // Cleanup internal settings for not authenticated users.
-            while (iterator.hasNext()) {
-                Setting s = iterator.next();
-                if (s.isInternal() && profile == null) {
-                    settings.remove(s);
-                }
+            // Internal settings are only for administrators.
+            if (profile != Profile.Administrator) {
+                settings.removeIf(Setting::isInternal);
             }
 
             SettingsListResponse response = new SettingsListResponse();
@@ -387,9 +383,6 @@ public class SiteApi implements ApplicationEventPublisherAware {
         @Parameter(hidden = true)
         HttpSession httpSession
     ) throws Exception {
-        UserSession session = ApiUtils.getUserSession(httpSession);
-        Profile profile = session == null ? null : session.getProfile();
-
         List<String> settingList = new ArrayList<>();
         if (set == null && key == null) {
             return
@@ -407,15 +400,6 @@ public class SiteApi implements ApplicationEventPublisherAware {
                 Collections.addAll(settingList, key);
             }
             List<Setting> settings = settingManager.getSettings(settingList.toArray(new String[0]));
-            ListIterator<Setting> iterator = settings.listIterator();
-
-            // Cleanup internal settings for not authenticated users.
-            while (iterator.hasNext()) {
-                Setting s = iterator.next();
-                if (s.isInternal() && profile == null) {
-                    settings.remove(s);
-                }
-            }
             return settings;
         }
     }
@@ -901,7 +885,6 @@ public class SiteApi implements ApplicationEventPublisherAware {
         description = LogoUtils.API_GET_LOGO_NOTE)
     @GetMapping(
         path = "/logo")
-    @ResponseStatus(HttpStatus.OK)
     @ResponseBody
     public void getLogo(
         @Parameter(hidden = true) WebRequest webRequest,

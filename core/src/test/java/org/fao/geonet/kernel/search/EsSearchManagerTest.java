@@ -8,7 +8,10 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
@@ -242,4 +245,29 @@ public class EsSearchManagerTest {
     }
 
 
+    @Test
+    public void toFieldMapConvertsValuesDependingOnFieldType() {
+        Multimap<String, Object> fields = ArrayListMultimap.create();
+        // Single value of a scalar field stays a scalar.
+        fields.put("isPublishedToAll", true);
+        fields.put("groupPublishedId", 2);
+        // "op*" fields are always arrays, even with a single value.
+        fields.put("op0", 1);
+        fields.put("op1", 1);
+        fields.put("op1", 2);
+        // A field declared in arrayFields stays an array with a single value.
+        fields.put("cat", "datasets");
+        // Any field with more than one value becomes an array.
+        fields.put("groupPublished", "sample");
+        fields.put("groupPublished", "intranet");
+
+        Map<String, Object> fieldMap = instance.toFieldMap(fields);
+
+        assertEquals(Boolean.TRUE, fieldMap.get("isPublishedToAll"));
+        assertEquals(2, fieldMap.get("groupPublishedId"));
+        assertArrayEquals(new Object[]{1}, (Object[]) fieldMap.get("op0"));
+        assertArrayEquals(new Object[]{1, 2}, (Object[]) fieldMap.get("op1"));
+        assertArrayEquals(new Object[]{"datasets"}, (Object[]) fieldMap.get("cat"));
+        assertArrayEquals(new Object[]{"sample", "intranet"}, (Object[]) fieldMap.get("groupPublished"));
+    }
 }

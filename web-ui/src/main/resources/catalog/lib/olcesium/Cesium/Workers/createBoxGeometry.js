@@ -1,7 +1,9 @@
 /**
- * Cesium - https://github.com/AnalyticalGraphicsInc/cesium
+ * @license
+ * Cesium - https://github.com/CesiumGS/cesium
+ * Version 1.146.0
  *
- * Copyright 2011-2017 Cesium Contributors
+ * Copyright 2011-2022 Cesium Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +20,7 @@
  * Columbus View (Pat. Pend.)
  *
  * Portions licensed separately.
- * See https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md for full licensing details.
+ * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
-define(["./defined-2a4f2d00","./Check-e5651467","./freezeObject-a51e076f","./defaultValue-29c9b1af","./Math-7782f09e","./Cartesian2-ba70b51f","./defineProperties-c817531e","./Transforms-5119c07b","./RuntimeError-51c34ab4","./WebGLConstants-90dbfe2f","./ComponentDatatype-418b1c61","./GeometryAttribute-8bc1900e","./when-1faa3867","./GeometryAttributes-f8548d3f","./GeometryOffsetAttribute-fa4e7a11","./VertexFormat-e2e35139","./BoxGeometry-303fc346"],function(r,e,t,f,a,n,o,c,b,i,u,m,d,s,y,G,p){"use strict";return function(e,t){return r.defined(t)&&(e=p.BoxGeometry.unpack(e,t)),p.BoxGeometry.createGeometry(e)}});
+
+import{H as r,g as n}from"./chunk-GWE2HRAQ.js";function a(e,t){return n(t)&&(e=r.unpack(e,t)),r.createGeometry(e)}var i=a;export{i as default};

@@ -34,3 +34,39 @@ The final step in this process is a verification email sent to the email address
     The Greenhouse GeoNetwork Site team
 
 If you want to change the content of this email, you should modify `xslt/service/account/password-changed-email.xsl`.
+
+## Administrator reset without old password {#admin_reset_password}
+
+!!! warning
+    The setting below is not created by default, and it cannot be turned on
+    from the Admin Console or the settings API. It must be inserted directly
+    into the `Settings` database table before it can be used.
+
+An `Administrator` can reset another user's password without knowing that
+user's current password. This is controlled by the setting
+`system/security/password/allowAdminReset`, which does not exist in the
+`Settings` table until it is added manually:
+
+```sql
+INSERT INTO Settings (name, value, datatype, position, internal)
+VALUES ('system/security/password/allowAdminReset', 'true', 2, 12004, 'n');
+```
+
+**GeoNetwork must be restarted** after inserting the row.
+
+Once enabled, log in as a user with the `Administrator` profile (`UserAdmin`
+is not sufficient) and either:
+
+-   In the Admin Console, go to **Users**, select the target user, and click
+    **Reset password**. The current password field is no longer required.
+-   Call the API directly, omitting `passwordOld`:
+
+        POST /{portal}/api/users/{userIdentifier}/actions/forget-password
+        {
+          "password": "...",
+          "password2": "..."
+        }
+
+Only enable this setting when no mail server is configured for the
+[Forgot your password?](#user_forgot_password) flow described above, since it
+lets an administrator take over any account without email verification.

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2024 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -23,10 +23,13 @@
 package org.fao.geonet.auditable;
 
 import java.util.Optional;
-import org.fao.geonet.domain.User;
+import org.apache.commons.lang.StringUtils;
+import org.keycloak.KeycloakPrincipal;
+import org.keycloak.representations.AccessToken;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  * Extracts the current user used, to store the information in the auditable entities.
@@ -41,6 +44,26 @@ public class UsernameAuditorAware implements AuditorAware<String> {
             return Optional.empty();
         }
 
-        return Optional.of(((User) authentication.getPrincipal()).getUsername());
+        return Optional.ofNullable(getUsername(authentication));
+    }
+
+    /**
+     * Returns the username of the authenticated user.
+     * The principal type depends on the authentication provider (database/LDAP, Keycloak, OIDC, JWT...),
+     * so it can't be cast to {@link org.fao.geonet.domain.User}.
+     */
+    public static String getUsername(Authentication authentication) {
+        Object principal = authentication.getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails) principal).getUsername();
+        } else if (principal instanceof KeycloakPrincipal
+            && ((KeycloakPrincipal<?>) principal).getKeycloakSecurityContext().getToken() != null) {
+            // Same claims as KeycloakUserUtils uses to create the user
+            AccessToken token = ((KeycloakPrincipal<?>) principal).getKeycloakSecurityContext().getToken();
+            String username = token.getPreferredUsername() != null ? token.getPreferredUsername() : token.getName();
+            return StringUtils.left(username, 256);
+        }
+        // OIDC/OAuth2: the configured userNameAttribute. Bearer: set by the provider. Anonymous: the principal string.
+        return authentication.getName();
     }
 }

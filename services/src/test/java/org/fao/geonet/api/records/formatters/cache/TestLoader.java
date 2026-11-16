@@ -41,6 +41,6 @@ public class TestLoader implements Callable<StoreInfoAndDataLoadResult> {
 
     @Override
     public StoreInfoAndDataLoadResult call() throws Exception {
-        return new StoreInfoAndDataLoadResult(resultToStore, changeDate, published, null, null);
+        return new StoreInfoAndDataLoadResult(resultToStore, changeDate, published);
     }
 }

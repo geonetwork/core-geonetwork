@@ -534,7 +534,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (63,'wel','Cofnod wed
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'wel','Gofynnwyd am greu DOI.');
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'wel','Scheduled publication');
 
-INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'wel','Cofnodion a ffefrir');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'wel','Hoff gofnodion');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'wel','Rhestr wylio');
 
 

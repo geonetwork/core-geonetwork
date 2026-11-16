@@ -1,7 +1,9 @@
 /**
- * Cesium - https://github.com/AnalyticalGraphicsInc/cesium
+ * @license
+ * Cesium - https://github.com/CesiumGS/cesium
+ * Version 1.146.0
  *
- * Copyright 2011-2017 Cesium Contributors
+ * Copyright 2011-2022 Cesium Contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +20,7 @@
  * Columbus View (Pat. Pend.)
  *
  * Portions licensed separately.
- * See https://github.com/AnalyticalGraphicsInc/cesium/blob/master/LICENSE.md for full licensing details.
+ * See https://github.com/CesiumGS/cesium/blob/main/LICENSE.md for full licensing details.
  */
-define(["./defined-2a4f2d00","./Check-e5651467","./freezeObject-a51e076f","./defaultValue-29c9b1af","./Math-7782f09e","./Cartesian2-ba70b51f","./defineProperties-c817531e","./Transforms-5119c07b","./RuntimeError-51c34ab4","./WebGLConstants-90dbfe2f","./ComponentDatatype-418b1c61","./GeometryAttribute-8bc1900e","./when-1faa3867","./GeometryAttributes-f8548d3f","./AttributeCompression-5601f533","./GeometryPipeline-bb485d83","./EncodedCartesian3-4813be74","./IndexDatatype-2bcfc06b","./IntersectionTests-35b85442","./Plane-475170f0","./PrimitivePipeline-2295818f","./WebMercatorProjection-1ecca5ba","./createTaskProcessorWorker"],function(e,t,i,r,n,a,o,b,c,f,s,m,P,u,d,p,l,y,C,G,k,v,h){"use strict";return h(function(e,t){var i=k.PrimitivePipeline.unpackCombineGeometryParameters(e),r=k.PrimitivePipeline.combineGeometry(i);return k.PrimitivePipeline.packCombineGeometryResults(r,t)})});
+
+import{a as e}from"./chunk-IGOYCRIJ.js";import{a as r}from"./chunk-J6FR5PFB.js";import"./chunk-GWE2HRAQ.js";function n(o,t){let m=e.unpackCombineGeometryParameters(o),i=e.combineGeometry(m);return e.packCombineGeometryResults(i,t)}var c=r(n);export{c as default};

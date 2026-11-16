@@ -59,7 +59,7 @@
           <li class="dropdown-header" data-translate="">downloadAllIn</li>
           <li data-ng-repeat="f in formats | orderBy:f track by $index">
             <a
-              data-gn-click-and-spin="downloadFeatureType(type.type, type.label, f)"
+              data-gn-click-and-spin="downloadFeatureType(type.type, type.name || type.label, f)"
               title="{{f}}"
             >
               {{f | lowercase | translate}}
@@ -71,7 +71,7 @@
           </li>
           <li data-ng-if="map" data-ng-repeat="f in formats | orderBy:f track by $index">
             <a
-              data-gn-click-and-spin="downloadFeatureType(type.type, type.label, f, true)"
+              data-gn-click-and-spin="downloadFeatureType(type.type, type.name || type.label, f, true)"
               title="{{f}}"
             >
               {{f | lowercase | translate}}
@@ -95,7 +95,7 @@
           class="form-control"
           data-ng-model="ftSelected"
           aria-label="{{'wfsChooseFeatureTypeToDownload' | translate}}"
-          data-ng-options="featType as featType.name.localPart for featType in capabilities.featureTypeList.featureType | orderBy: 'name.localPart' track by featType.name.key"
+          data-ng-options="featType as getTitle(featType) for featType in capabilities.featureTypeList.featureType | orderBy: getTitle track by (featType.name.key || featType.name.localPart)"
         >
           <option value="">{{'wfsChooseFeatureTypeToDownload' | translate}}</option>
         </select>
@@ -111,14 +111,14 @@
           >
             <i class="fa fa-fw fa-download"></i>
             <span data-translate="">downloadFeature</span>
-            <span>{{ftSelected.name.localPart}}</span>
+            <span>{{getTitle(ftSelected)}}</span>
             <span class="caret"></span>
           </button>
           <ul class="dropdown-menu gn-wfs-formats-menu">
             <li data-ng-repeat="format in formats | orderBy:format">
               <a
                 data-gn-click-and-spin="downloadFeatureType(ftSelected,
-                        ftSelected.name.prefix + ':' + ftSelected.name.localPart,
+                        (ftSelected.name.prefix ? ftSelected.name.prefix + ':' : '') + ftSelected.name.localPart,
                        format)"
               >
                 {{format | lowercase | translate}}
@@ -128,10 +128,11 @@
             <li class="dropdown-header" data-ng-if="map" data-translate="">
               downloadInCurrentMapExtent
             </li>
-            <li data-ng-if="map" data-ng-repeat="format in formats | orderBy:f">
+            <li data-ng-if="map" data-ng-repeat="format in formats | orderBy:format">
               <a
                 data-gn-click-and-spin="downloadFeatureType(ftSelected,
-                 ftSelected.name.prefix + ':' + ftSelected.name.localPart,
+                 (ftSelected.name.prefix ? ftSelected.name.prefix + ':' : '') + ftSelected.name.localPart,
+                  format,
                   true)"
               >
                 {{format | lowercase | translate}}

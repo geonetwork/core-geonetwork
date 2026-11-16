@@ -56,11 +56,13 @@
 
           <tab
             heading="{{'addLayerFromServices' | translate}}"
+            data-ng-if="!(disabledTools.addLayersWms && disabledTools.addLayersWmts && disabledTools.addLayersWfs && disabledTools.addLayersEsriRest)"
             active="addLayerTabs.services"
             role="tab"
           >
             <br />
             <div
+              data-ng-if="!disabledTools.addLayersWms"
               gn-wms-import="wms"
               gn-wms-import-map="map"
               gn-wms-import-url="addLayerUrl.wms"
@@ -68,12 +70,14 @@
             ></div>
 
             <div
+              data-ng-if="!disabledTools.addLayersWmts"
               gn-wms-import="wmts"
               gn-wms-import-map="map"
               gn-wms-import-url="addLayerUrl.wmts"
             ></div>
 
             <div
+              data-ng-if="!disabledTools.addLayersWfs"
               gn-wms-import="wfs"
               gn-wms-import-map="map"
               gn-wms-import-url="addLayerUrl.wfs"
@@ -81,6 +85,7 @@
             ></div>
 
             <div
+              data-ng-if="!disabledTools.addLayersEsriRest"
               gn-wms-import="esrirest"
               gn-wms-import-map="map"
               gn-wms-import-url="addLayerUrl.esrirest"
@@ -89,6 +94,7 @@
           </tab>
           <tab
             heading="{{'addLayerFromFiles' | translate}}"
+            data-ng-if="!disabledTools.addLayersKml"
             active="addLayerTabs.kml"
             role="tab"
           >

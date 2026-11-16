@@ -392,7 +392,7 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
 
             fields.put(Geonet.IndexFieldNames.SCHEMA, schema);
             fields.put(Geonet.IndexFieldNames.RECORDLINKFLAG, "record");
-            fields.put(Geonet.IndexFieldNames.DATABASE_CREATE_DATE, createDate);
+            fields.put(Geonet.IndexFieldNames.MD_CREATION_DATE, createDate);
             fields.put(Geonet.IndexFieldNames.DATABASE_CHANGE_DATE, changeDate);
             fields.put(Geonet.IndexFieldNames.SOURCE, source);
             fields.put(Geonet.IndexFieldNames.IS_TEMPLATE, metadataType.codeString);
@@ -444,7 +444,8 @@ public class BaseMetadataIndexer implements IMetadataIndexer, ApplicationEventPu
                         User user = userOpt.get();
                         fields.put(Geonet.IndexFieldNames.USERINFO, user.getUsername() + "|" + user.getSurname() + "|" + user
                             .getName() + "|" + user.getProfile());
-                        fields.put(Geonet.IndexFieldNames.OWNERNAME, user.getName() + " " + user.getSurname());
+                        fields.put(Geonet.IndexFieldNames.OWNERNAME,
+                            StringUtils.trim(StringUtils.join(new String[]{user.getName(), user.getSurname()}, " ")));
                     }
                 }
 

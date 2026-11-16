@@ -8,7 +8,7 @@ While encoding a relation (ie. parent, source, feature catalogue, sibling, datas
 
 Remote record can be linked to record in this catalog by pointing to an URL of the remote record. If the remote record is in a GeoNetwork catalog, the landing page of the record is recommended (eg. <https://catalog/geonetwork/srv/api/records/%7Buuid%7D>) - which returns XML if the Accept header is set to application/xml. For GeoNode, the HTML page can work but the UUID will not be identified. The title will be the HTML title of the page. For others, XML document can be used (eg. API call or CSW GetRecordById request).
 
-For sibling, which allows to add multiple links in one call, the panel is modified to list links in a table mode.
+For sibling, source and feature catalogue, which allow to add multiple links in one call, the panel is modified to list links in a table mode.
 
 ![](img/link-remote-sibling.png)
 

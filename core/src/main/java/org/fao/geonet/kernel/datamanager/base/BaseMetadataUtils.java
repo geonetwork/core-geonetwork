@@ -1,5 +1,5 @@
 //=============================================================================
-//===	Copyright (C) 2001-2024 Food and Agriculture Organization of the
+//===	Copyright (C) 2001-2026 Food and Agriculture Organization of the
 //===	United Nations (FAO-UN), United Nations World Food Programme (WFP)
 //===	and United Nations Environment Programme (UNEP)
 //===
@@ -611,16 +611,16 @@ public class BaseMetadataUtils implements IMetadataUtils {
         // READONLYMODE
         if (!srvContext.getBean(NodeInfo.class).isReadOnly()) {
             int iId = Integer.parseInt(id);
-            metadataRepository.update(iId, entity -> entity.getDataInfo().setPopularity(
-                entity.getDataInfo().getPopularity() + 1
-            ));
-            final java.util.Optional<Metadata> metadata = metadataRepository.findById(iId);
+            // Update only the popularity column. Saving the whole entity writes back every column
+            // as loaded, which can overwrite an update of the record committed in the meantime.
+            metadataRepository.incrementPopularity(iId);
+            final MetadataRepository.UuidAndPopularity metadataInfo = metadataRepository.findUuidAndPopularityById(iId);
 
-            if (metadata.isPresent()) {
+            if (metadataInfo != null) {
                 searchManager.updateFieldAsynch(
-                    metadata.get().getUuid(),
+                    metadataInfo.getUuid(),
                     Geonet.IndexFieldNames.POPULARITY,
-                    metadata.get().getDataInfo().getPopularity());
+                    metadataInfo.getPopularity());
 
             }
         } else {

@@ -25,9 +25,6 @@ package org.fao.geonet.api.records.formatters.cache;
 
 import org.fao.geonet.Constants;
 
-import javax.annotation.Nullable;
-import java.util.concurrent.Callable;
-
 /**
  * Encapsulates the information when a formatter is executed.
  *
@@ -35,30 +32,11 @@ import java.util.concurrent.Callable;
  */
 public class StoreInfoAndDataLoadResult extends StoreInfoAndData {
 
-    private final Key key;
-    private final Callable<StoreInfoAndDataLoadResult> toCache;
-
-    public StoreInfoAndDataLoadResult(String data, long changeDate, boolean published, @Nullable Key key,
-                                      @Nullable Callable<StoreInfoAndDataLoadResult> toCache) {
-        this(data == null ? null : data.getBytes(Constants.CHARSET), changeDate, published, key, toCache);
+    public StoreInfoAndDataLoadResult(String data, long changeDate, boolean published) {
+        this(data == null ? null : data.getBytes(Constants.CHARSET), changeDate, published);
     }
 
-    public StoreInfoAndDataLoadResult(byte[] data, long changeDate, boolean published, @Nullable Key key,
-                                      @Nullable Callable<StoreInfoAndDataLoadResult> toCache) {
+    public StoreInfoAndDataLoadResult(byte[] data, long changeDate, boolean published) {
         super(data, changeDate, published);
-        this.toCache = toCache;
-        this.key = key;
-    }
-
-    public
-    @Nullable
-    Callable<StoreInfoAndDataLoadResult> getToCache() {
-        return toCache;
-    }
-
-    public
-    @Nullable
-    Key getKey() {
-        return key;
     }
 }

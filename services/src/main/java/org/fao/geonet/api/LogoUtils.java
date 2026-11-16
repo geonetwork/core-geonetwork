@@ -69,6 +69,23 @@ public final class LogoUtils {
         return image;
     }
 
+    /**
+     * Writes a logo image to the response.
+     * <p>
+     * Writes an empty {@code 304 Not Modified} response if the browser copy is
+     * still current, otherwise writes the image, or a transparent 1x1 px PNG if
+     * there is no image.
+     * <p>
+     * Do not annotate the calling endpoint with
+     * {@link org.springframework.web.bind.annotation.ResponseStatus}: it
+     * overrides the {@code 304} status set here, and the browser then caches an
+     * empty {@code 200} response as the logo.
+     *
+     * @param webRequest the request, used to check the {@code If-Modified-Since} header.
+     * @param response   the response to write the image to.
+     * @param image      the logo image, or {@code null} if there is no logo.
+     * @throws IOException if the image cannot be read or written.
+     */
     public static void writeImageOrTransparentLogo(WebRequest webRequest,
                                                    HttpServletResponse response,
                                                    Resources.ResourceHolder image) throws IOException {

@@ -40,6 +40,8 @@ import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.util.Map;
 
+import org.jdom.Namespace;
+
 import static org.fao.geonet.schema.TestSupport.getResource;
 
 public class BuildEditorFormTest {
@@ -81,7 +83,27 @@ public class BuildEditorFormTest {
 		XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat().setLineSeparator("\n"));
 		String actual = xmlOutputter.outputString(editorForm);
 
-		TestSupport.assertGeneratedDataByteMatchExpected("raw-UpperRhineCastles-editor-form.xml", actual, GENERATE_EXPECTED_FILE);
+		TestSupport.assertGeneratedDataByteMatchExpected("raw-UpperRhineCastles-editor-form.html", actual, GENERATE_EXPECTED_FILE);
+	}
+
+	@Test
+	public void rawUpperRhineCastlesEditWithValidationReportAndGuiLang() throws Exception {
+		Path xslFile = getResource("gn-site/xslt/ui-metadata/edit/edit.xsl");
+		Path xmlFile = getResource("raw-UpperRhineCastles-inflated-for-edition.xml");
+		Element inflatedMd = Xml.loadFile(xmlFile);
+		inflatedMd.getChild("request")
+			.addContent(new Element("showvalidationerrors").setText("true"));
+		inflatedMd.getChild("MD_Metadata", Namespace.getNamespace("mdb", "http://standards.iso.org/iso/19115/-3/mdb/2.0"))
+			.addContent(Xml.loadFile(getResource("raw-UpperRhineCastles-validation-report-with-error.xml")));
+		inflatedMd.getChild("gui")
+			.addContent(new Element("lang2chars").setText("en"));
+
+		Element editorForm = Xml.transform(inflatedMd, xslFile);
+
+		Element validationReport = (Element) Xml.selectNodes(editorForm, "*//div[@class='gn-validation-report']").get(0);
+		XMLOutputter xmlOutputter = new XMLOutputter(Format.getPrettyFormat().setLineSeparator("\n"));
+		String actual = xmlOutputter.outputString(validationReport);
+		TestSupport.assertGeneratedDataByteMatchExpected("raw-UpperRhineCastles-editor-form-validation-report-div.html", actual, GENERATE_EXPECTED_FILE);
 	}
 
 	private static Path addRequiredSchemasAndDisableConflictingOne() throws URISyntaxException {

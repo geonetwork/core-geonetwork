@@ -289,7 +289,7 @@
       } else if ($routeParams.from) {
         $scope.resourceTitle = "createCopyOf";
       } else {
-        $scope.resourceTitle = "createA";
+        $scope.resourceTitle = "createARecord";
       }
 
       $scope.cancelCreateMetadata = function () {

@@ -213,15 +213,41 @@
                 scope.ol3d.setEnabled((scope.is3dEnabled = !scope.ol3d.getEnabled()));
               };
 
+              // Warn and return true if adding layers from this WMS / WMTS
+              // service is disabled in the UI configuration.
+              function isAddLayersTypeDisabled(type) {
+                var key = {
+                  wms: "addLayersWms",
+                  wmts: "addLayersWmts"
+                }[type];
+                if (key && scope.disabledTools[key]) {
+                  gnAlertService.addAlert(
+                    {
+                      msg: $translate.instant("addLayersTypeDisabled", {
+                        type: type.toUpperCase()
+                      }),
+                      type: "warning"
+                    },
+                    10
+                  );
+                  return true;
+                }
+                return false;
+              }
+
               function addLayerFromLocation(config) {
                 if (angular.isUndefined(config.name) && config.type !== "esrirest") {
                   // This is a service without a layer name
                   // Display the add layer from service panel
+                  var type = config.type || "wms";
+                  if (isAddLayersTypeDisabled(type)) {
+                    return;
+                  }
 
                   gnViewerService.openTool("addLayers", "services");
                   scope.activeTools.addLayers = true;
                   scope.addLayerTabs.services = true;
-                  scope.addLayerUrl[config.type || "wms"] = config.url;
+                  scope.addLayerUrl[type] = config.url;
                 } else if (config.name || config.type === "esrirest") {
                   gnViewerService.openTool("layers");
 

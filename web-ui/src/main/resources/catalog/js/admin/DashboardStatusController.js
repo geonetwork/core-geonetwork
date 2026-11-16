@@ -69,6 +69,31 @@
       $scope.hasIndexingError = false;
       $scope.hasIndexingWarning = false;
 
+      /**
+       * A health check reporting DISABLED describes an optional component
+       * that is turned off by configuration (eg. Kibana when kb.url is
+       * empty). It is not a failure, so it must not be reported as one.
+       *
+       * @returns {boolean} true when nothing has to be reported for the check
+       */
+      $scope.isHealthy = function (info) {
+        return info.status === "OK" || info.status === "DISABLED";
+      };
+
+      /**
+       * Badge class for a health check status.
+       *
+       * @param info the health check result
+       * @param failureClass the class to use when the check failed
+       * @returns {string}
+       */
+      $scope.badgeClass = function (info, failureClass) {
+        if (info.status === "DISABLED") {
+          return "badge-info";
+        }
+        return info.status === "OK" ? "badge-success" : failureClass;
+      };
+
       $scope.indexStatus = null;
       function getIndexStatus() {
         $http.get("../api/site/index/synchronized").then(function (response) {
@@ -119,9 +144,12 @@
         });
       }
 
-      getRecordsWithIndexingErrorsNoWarnings().then(function (r) {
-        $scope.hasIndexingError = r.data.hits.total.value > 0;
-      });
+      function checkIndexingErrors() {
+        getRecordsWithIndexingErrorsNoWarnings().then(function (r) {
+          $scope.hasIndexingError = r.data.hits.total.value > 0;
+        });
+      }
+      checkIndexingErrors();
 
       /**
        * Get the metadata that have indexing warnings.
@@ -144,8 +172,18 @@
         });
       }
 
-      getRecordsWithIndexingWarnings().then(function (r) {
-        $scope.hasIndexingWarning = r.data.hits.total.value > 0;
+      function checkIndexingWarnings() {
+        getRecordsWithIndexingWarnings().then(function (r) {
+          $scope.hasIndexingWarning = r.data.hits.total.value > 0;
+        });
+      }
+      checkIndexingWarnings();
+
+      // The index content changes while a task runs, so check again once it ends.
+      $scope.$on("indexingTaskFinished", function () {
+        getIndexStatus();
+        checkIndexingErrors();
+        checkIndexingWarnings();
       });
 
       $scope.setThreadSortField = function (field) {

@@ -63,8 +63,20 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 -   **Application URL**: Define the URL for the home page. In the majority of cases this can be left as the default.
 -   **Show search box**: Select this check box to determine whether the search box is visible on the home page.
 -   **Show social bar in footer**: Select this check box to show the social media bar in the footer of the home page.
--   **Show mosaic**: Select this check box to determine whether the featured records mosaic is visible on the home page.
+-   **Show mosaic**: Select this check box to determine whether the featured records mosaic is visible on the home page. Clicking an image opens the record page, unless a link is configured in **Overview mosaic records**. Images that fail to load (eg. a broken overview link) are not displayed; for random records, another record is displayed instead.
+-   **Overview mosaic search query**: Search query used to pick random records for the mosaic (8 with the grid layout, 9 with the gallery layout) when no **Overview mosaic records** are configured. Only records with an overview are used, and each record contributes one image (its first overview); an image is never shown twice. Default (also used when the query is empty) is `-cl_status.key:obsolete`, to exclude obsolete records. For example, use `resourceType:dataset` to only show datasets.
+-   **Overview mosaic records**: List of records to always display in the mosaic, instead of random ones. For each entry, set:
+    -   **UUID**: the identifier of the record. The first overview of the record is used as image.
+    -   **Link** (optional): the page to open when clicking the image. If empty, the record page is opened. The link must start with `#/` and opens a page of the catalog in the user language, for example `#/search?any=land%20cover` for a pre-filtered search. Other links (eg. full URLs) are ignored and the record page is opened instead.
+
+    Use the arrows to change the order of the images.
+
+    Records that do not exist, have no overview, that the current user is not allowed to view, or that are outside the filter of the current portal (when the home page of a sub-portal is displayed) are not displayed. This means private records can be added to the list: they are only displayed to users who can view them. Note that the user interface configuration is public, so the UUIDs in this list can be read by anyone (but not the content of the records).
+-   **Overview mosaic layout**: Both layouts are displayed on a grey band.
+    -   **Gallery** (default): the images are displayed with different sizes, using the full width of the page.
+    -   **Grid**: the images are displayed with the same size in a centred area, with at most 4 images per row (eg. 6 images are displayed as 2 rows of 3, 7 images as a row of 4 and a row of 3).
 -   **Show maps**: Select this check box to determine whether the maps panel is visible on the home page.
+-   **Show welcome message in home page**: Select this check box to display a welcome message at the top of the home page. The message is configured in [Languages and translations](languages-and-translations.md#home-welcome-message) with the key `home-welcome-message` for the main portal, or `home-welcome-message-{portal}` for a sub-portal (for example `home-welcome-message-inspire`). Each sub-portal can enable or disable its own message. The message is not displayed in languages without a translation.
 -   **Fluid container for Home and Search**: Select this check box to determine whether the search box is full width in the browser page or if it is fixed width and centred.
 
 ![](img/ui-settings-homepage.png)
@@ -119,9 +131,19 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 -   **Enabled**: If checked the user will have the ability to create and save custom searches in the search tab. This functionality will be visible above the facets list on the left.
 -   **Display featured user searches panel in home page**: If this is also enabled, an additional tab will be shown on the home page alongside `Latest news` and `Most popular`.
 
-### Saved Selections
+### Favorites (saved selections)
 
--   **Enabled**: If checked the user will have the ability to save a selection of records in the search tab.
+Favorites allow users to mark records as favorites, so they can easily find them again in the **Favorites** panel on the search page. When enabled, an **Add to ...** button is shown on each record in the search results.
+
+The following lists are available:
+
+-   **Favorite records**: Records the user wants to find again. For anonymous users, this list is stored in the browser. For registered users, it is stored in the catalog and available from any browser.
+-   **Watch list**: Only for registered users. Users are notified by email when a record in their watch list is updated.
+-   **Map list**: Records with map layers (WMS or ESRI REST) that can be added to the map in one action. This list is not kept after the page is reloaded.
+
+Settings:
+
+-   **Enabled**: If checked the user will have the ability to add records to their favorites from the search results.
 
 ![](img/ui-settings-searchresults3.png)
 
@@ -179,12 +201,57 @@ You can configure each map with different layers and projections.
 
     !!! info "Important"
 
-    If the configuration of a projection is incomplete or invalid, the map may fail to load.
+        If the configuration of a projection is incomplete or invalid, the map may fail to load.
 
-
-    If a projection is defined which is not supported by the source of the map layer, the map application will reproject map images at the client side. This may cause unexpected behaviour, such as rotated or distorted labels.
+        If a projection is defined which is not supported by the source of the map layer, the map application will reproject map images at the client side. This may cause unexpected behaviour, such as rotated or distorted labels.
 
 -   **Optional Map Viewer Tools** The checkboxes in this section define the tools available to the user in the right toolbar of the main map. Elements that are not checked are not visible.
+
+    Below **Add layers**, the sub-options **WMS service**, **WMTS service**, **WFS service**, **ArcGIS REST service** and **Files (KML, KMZ, GPX, GeoJSON, TopoJSON)** define the sources available in the **Add layers** panel. They can only be changed when **Add layers** is checked. When all the services are unchecked, the **Services** tab is hidden. When **Files** is unchecked, the **Files** tab is hidden and files can no longer be dropped on the map.
+
+    ![](img/ui-settings-maptools-addlayers.png)
+
+    These options only control the **Add layers** panel.
+
+    ![](img/ui-settings-maptools-addlayers-panel.png)
+    
+    For WMS and WMTS links in records, they apply as follows:
+
+    -   A link to a service without a layer name opens the service in the **Add layers** panel, so the user can pick a layer. If that service type is disabled, the map shows a warning, for example "Adding WMS services is disabled in this catalog", and the panel does not open. In ISO19139, this is an online resource with a service protocol and no name:
+
+        ```xml
+        <gmd:onLine>
+          <gmd:CI_OnlineResource>
+            <gmd:linkage>
+              <gmd:URL>https://example.org/geoserver/wms</gmd:URL>
+            </gmd:linkage>
+            <gmd:protocol>
+              <gco:CharacterString>OGC:WMS</gco:CharacterString>
+            </gmd:protocol>
+          </gmd:CI_OnlineResource>
+        </gmd:onLine>
+        ```
+
+    -   A link that names a layer adds that layer straight to the map, even when its service type is disabled. In ISO19139, the layer name goes in `gmd:name`:
+
+        ```xml
+        <gmd:onLine>
+          <gmd:CI_OnlineResource>
+            <gmd:linkage>
+              <gmd:URL>https://example.org/geoserver/wms</gmd:URL>
+            </gmd:linkage>
+            <gmd:protocol>
+              <gco:CharacterString>OGC:WMS</gco:CharacterString>
+            </gmd:protocol>
+            <gmd:name>
+              <gco:CharacterString>topp:states</gco:CharacterString>
+            </gmd:name>
+          </gmd:CI_OnlineResource>
+        </gmd:onLine>
+        ```
+
+    WFS and ArcGIS REST links in records are not affected by these options.
+
 -   **OGC Service to use as a graticule**: This is optional and allows the use of an external service to display the graticule on the map.
 
 ### Viewer Map Configuration {#user-interface-config-viewermap}
@@ -253,7 +320,8 @@ This section defines the configuration for the map shown when editing a record. 
 -   **Record View custom menu items**: Use this setting to control the order of the default record view actions and any static pages configured for the record view toolbar. By default, the record view toolbar uses the following menu keys:
 
     ``` json
-    ["gn-recordview-edit-menu",
+    ["gn-recordview-favorite-menu",
+     "gn-recordview-edit-menu",
      "gn-recordview-delete-menu",
      "gn-recordview-manage-menu",
      "gn-recordview-download-menu",
@@ -262,9 +330,9 @@ This section defines the configuration for the map shown when editing a record. 
 
     If this list is empty, only those default entries are shown and static pages are not added automatically.
 
-    Custom static pages can be inserted between these default entries. Static pages used there must be created for the `RECORD_VIEW_MENU` section and referenced by page identifier (for example `documentation`). The `gn-` prefix is reserved for built-in entries and should not be used for custom page identifiers. See [Adding static pages](../../customizing-application/adding-static-pages.md).
+    Custom static pages can be inserted between these default entries. Static pages used there must be created for the `RECORD_VIEW_MENU` section and referenced by page identifier (for example `documentation`). The `gn-` prefix is reserved for built-in entries and should not be used for custom page identifiers. See [Static pages](static-pages.md).
 
-    The `gn-recordview-manage-menu` entry contains record management actions and is only shown to users with editor privileges or above. The `gn-recordview-download-menu` entry contains download and export actions and is available whenever a record is displayed.
+    The `gn-recordview-manage-menu` entry contains record management actions and is only shown to users with editor privileges or above. The `gn-recordview-download-menu` entry contains download and export actions and is available whenever a record is displayed. The `gn-recordview-favorite-menu` entry adds or removes the record from the user favorites and is only shown when [Saved Selections](#saved-selections) are enabled.
 
 ## Editor Application
 

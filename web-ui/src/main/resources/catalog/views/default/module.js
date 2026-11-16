@@ -179,6 +179,11 @@
       $scope.modelOptions = angular.copy(gnGlobalSettings.modelOptions);
       $scope.modelOptionsForm = angular.copy(gnGlobalSettings.modelOptions);
       $scope.showMosaic = gnGlobalSettings.gnCfg.mods.home.showMosaic;
+      // Empty query falls back to the default (exclude obsolete records)
+      $scope.mosaicQuery =
+        gnGlobalSettings.gnCfg.mods.home.mosaicQuery || "-cl_status.key:obsolete";
+      $scope.mosaicRecords = gnGlobalSettings.gnCfg.mods.home.mosaicRecords;
+      $scope.mosaicLayout = gnGlobalSettings.gnCfg.mods.home.mosaicLayout;
       $scope.isFilterTagsDisplayedInSearch =
         gnGlobalSettings.gnCfg.mods.search.isFilterTagsDisplayedInSearch;
       $scope.searchMapPlacement = gnGlobalSettings.gnCfg.mods.search.searchMapPlacement;
@@ -200,6 +205,18 @@
       $scope.location = gnSearchLocation;
       $scope.fluidLayout = gnGlobalSettings.gnCfg.mods.home.fluidLayout;
       $scope.showMaps = gnGlobalSettings.gnCfg.mods.home.showMaps;
+      $scope.welcomeMessageKey = gnGlobalSettings.isDefaultNode
+        ? "home-welcome-message"
+        : "home-welcome-message-" + gnGlobalSettings.nodeId;
+      $scope.showWelcomeMessage = false;
+      if (gnGlobalSettings.gnCfg.mods.home.showWelcomeMessage) {
+        // Only display the message if translated in the current language
+        $translate($scope.welcomeMessageKey).then(function (message) {
+          $scope.welcomeMessage = message;
+          $scope.showWelcomeMessage =
+            message.trim() !== "" && message !== $scope.welcomeMessageKey;
+        }, angular.noop);
+      }
       $scope.fluidEditorLayout = gnGlobalSettings.gnCfg.mods.editor.fluidEditorLayout;
       $scope.fluidHeaderLayout = gnGlobalSettings.gnCfg.mods.header.fluidHeaderLayout;
       $scope.showGNName = gnGlobalSettings.gnCfg.mods.header.showGNName;

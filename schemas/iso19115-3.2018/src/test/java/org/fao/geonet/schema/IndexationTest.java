@@ -23,12 +23,15 @@
 
 package org.fao.geonet.schema;
 
+import com.google.common.collect.Lists;
+import org.fao.geonet.schema.iso19115_3_2018.ISO19115_3_2018Namespaces;
 import org.fao.geonet.util.XslUtil;
 import org.fao.geonet.utils.ResolverWrapper;
 import org.fao.geonet.utils.TransformerFactoryFactory;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.Namespace;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.junit.AfterClass;
@@ -39,12 +42,19 @@ import org.junit.Test;
 import java.lang.reflect.Field;
 import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.TimeZone;
+import java.util.function.Function;
 
 import static org.fao.geonet.schema.TestSupport.getResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class IndexationTest {
+
+	private static final ArrayList<Namespace> NAMESPACES =
+			Lists.newArrayList(ISO19115_3_2018Namespaces.MDB, ISO19115_3_2018Namespaces.CIT, ISO19115_3_2018Namespaces.GCO);
 
 	private static Field resolverMapField;
 	private static final boolean GENERATE_EXPECTED_FILE = false;
@@ -85,9 +95,31 @@ public class IndexationTest {
 		transformAndCompare("gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018/index-fields/index.xsl",  "UpperRhineCastles-iso19115-3.2018.xml", "UpperRhineCastles-index.xml");
 	}
 
+	@Test
+	public void indexXmlCreationDateOrNot() throws Exception {
+		Path xslFile = getResource("gn-site/WEB-INF/data/config/schema_plugins/iso19115-3.2018/index-fields/index.xsl");
+		Path xmlFile = getResource("UpperRhineCastles-iso19115-3.2018.xml");
+		Element md = Xml.loadFile(xmlFile);
+		Element mdRevisionDate = Xml.selectElement(md, "mdb:dateInfo[cit:CI_Date/cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'revision']", NAMESPACES);
+		Element mdCreationDate = (Element)mdRevisionDate.clone();
+		Xml.selectElement(mdCreationDate, "cit:CI_Date/cit:date/gco:DateTime", NAMESPACES).setText("2024-01-01T02:30:00Z");
+		Xml.selectElement(mdCreationDate, "cit:CI_Date/cit:dateType/cit:CI_DateTypeCode", NAMESPACES).setAttribute("codeListValue", "creation").setText("creation");
+		md.addContent(md.indexOf(mdRevisionDate), mdCreationDate);
+
+		XslUtil.READ_CREATE_DATE_FROM_XML = true;
+		Element index = Xml.transform(md, xslFile);
+
+		assertEquals("2024-01-01T02:30:00.000Z", Xml.selectElement(index, "createDate", NAMESPACES).getText());
+
+		XslUtil.READ_CREATE_DATE_FROM_XML = false;
+		index = Xml.transform(md, xslFile);
+
+		assertNull(Xml.selectElement(index, "createDate", NAMESPACES));
+	}
+
 	private void transformAndCompare(String scriptName, String inputFileName, String expectedFileName) throws Exception {
 		Path xslFile = getResource(scriptName);
-		Path xmlFile = getResource( inputFileName);
+		Path xmlFile = getResource(inputFileName);
 		Element md = Xml.loadFile(xmlFile);
 
 		Element mdIso19115_3 = Xml.transform(md, xslFile);

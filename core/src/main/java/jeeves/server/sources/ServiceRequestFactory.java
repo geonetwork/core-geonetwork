@@ -30,22 +30,19 @@ import jeeves.server.sources.ServiceRequest.OutputMethod;
 import jeeves.server.sources.http.HttpServiceRequest;
 
 import org.fao.geonet.Constants;
-import org.fao.geonet.exceptions.FileUploadTooBigEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.utils.Log;
 import org.fao.geonet.utils.Xml;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
-import org.springframework.web.multipart.support.AbstractMultipartHttpServletRequest;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
-import java.nio.file.Path;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,8 +70,7 @@ public final class ServiceRequestFactory {
                                         HttpServletResponse res,
                                         String portal,
                                         String lang,
-                                        String service,
-                                        Path uploadDir, long maxUploadSize) throws Exception {
+                                        String service) throws Exception {
         String url = req.getPathInfo();
 
         // FIXME: if request character encoding is undefined set it to UTF-8
@@ -143,12 +139,12 @@ public final class ServiceRequestFactory {
 
         if ((input == InputMethod.XML) || (input == InputMethod.SOAP)) {
             if (req.getMethod().equals("GET"))
-                srvReq.setParams(extractParameters(req, uploadDir, maxUploadSize));
+                srvReq.setParams(extractParameters(req));
             else
                 srvReq.setParams(extractXmlParameters(req));
         } else {
             //--- GET or POST
-            srvReq.setParams(extractParameters(req, uploadDir, maxUploadSize));
+            srvReq.setParams(extractParameters(req));
         }
 
         srvReq.setHeaders(extractHeaders(req));
@@ -236,11 +232,10 @@ public final class ServiceRequestFactory {
     //---------------------------------------------------------------------------
 
     @SuppressWarnings("unchecked")
-    private static Element extractParameters(HttpServletRequest req, Path uploadDir, long maxUploadSize) throws Exception {
+    private static Element extractParameters(HttpServletRequest req) throws Exception {
         //--- set parameters from multipart request
         if (req instanceof MultipartRequest) {
-            AbstractMultipartHttpServletRequest request = (AbstractMultipartHttpServletRequest) req;
-            return getMultipartParams(request, uploadDir, maxUploadSize);
+            return getMultipartParams(req, (MultipartRequest) req);
         }
         Element params = new Element(Jeeves.Elem.REQUEST);
         convertParamToElem(req, params);
@@ -269,82 +264,19 @@ public final class ServiceRequestFactory {
 
     //---------------------------------------------------------------------------
 
-    private static Element getMultipartParams(AbstractMultipartHttpServletRequest req, Path uploadDir, long maxUploadSize) throws Exception {
+    private static Element getMultipartParams(HttpServletRequest req, MultipartRequest multipart) {
+        //--- file uploads are handled by the REST API, these services do not accept them.
+        //--- Empty parts (a file input left blank in a form) carry no file and are ignored.
+        boolean hasFile = multipart.getMultiFileMap().values().stream()
+            .flatMap(List::stream)
+            .anyMatch(file -> !file.isEmpty());
+        if (hasFile) {
+            throw new BadParameterEx("File uploads are not supported by this service.");
+        }
+
         Element params = new Element("params");
-
-        long maxSizeInBytes = maxUploadSize * 1024L * 1024L;
         convertParamToElem(req, params);
-        final Map<String, MultipartFile> fileMap = req.getFileMap();
-        for (Map.Entry<String, MultipartFile> fileEntry : fileMap.entrySet()) {
-            final MultipartFile multipartFile = fileEntry.getValue();
-            final long size = multipartFile.getSize();
-            if (size > maxSizeInBytes) {
-                throw new FileUploadTooBigEx();
-            }
-            String file = fileEntry.getValue().getOriginalFilename();
-            final String type = multipartFile.getContentType();
-            if (Log.isDebugEnabled(Log.REQUEST)) {
-                Log.debug(Log.REQUEST, "Uploading file " + file + " type: " + type + " size: " + size);
-            }
-
-            //--- remove path information from file (some browsers put it, like IE)
-            file = simplifyName(file);
-            if (Log.isDebugEnabled(Log.REQUEST)) {
-                Log.debug(Log.REQUEST, "File is called " + file + " after simplification");
-            }
-            multipartFile.transferTo(uploadDir.resolve(file).toFile());
-
-            Element elem = new Element(multipartFile.getName())
-                .setAttribute("type", "file")
-                .setAttribute("size", Long.toString(size))
-                .setText(file);
-
-            if (type != null)
-                elem.setAttribute("content-type", type);
-
-            if (Log.isDebugEnabled(Log.REQUEST))
-                Log.debug(Log.REQUEST, "Adding to parameters: " + Xml.getString(elem));
-            params.addContent(elem);
-        }
-
         return params;
-    }
-
-    //---------------------------------------------------------------------------
-
-    private static String simplifyName(String file) {
-        //--- get the file name without path
-
-        file = new File(file).getName();
-
-        //--- the previous getName method is not enough
-        //--- with IE and a server running on Linux we still have a path problem
-
-        int pos1 = file.lastIndexOf("\\");
-        int pos2 = file.lastIndexOf('/');
-
-        int pos = Math.max(pos1, pos2);
-
-        if (pos != -1)
-            file = file.substring(pos + 1).trim();
-
-        //--- we need to sanitize the filename here - make it UTF8, no ctrl
-        //--- characters and only containing [A-Z][a-z][0-9],_.-
-
-        //--- start by converting to UTF-8
-        try {
-            byte[] utf8Bytes = file.getBytes("UTF8");
-            file = new String(utf8Bytes, "UTF8");
-        } catch (UnsupportedEncodingException e) {
-            Log.error(Log.JEEVES, e.getMessage(), e);
-        }
-
-        //--- replace whitespace with underscore
-        file = file.replaceAll("\\s", "_");
-
-        //--- remove everything that isn't [0-9][a-z][A-Z],#_.-
-        file = file.replaceAll("[^\\w&&[^,_.-]]", "");
-        return file;
     }
 }
 

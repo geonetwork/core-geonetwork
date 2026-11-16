@@ -29,11 +29,10 @@ import jeeves.server.UserSession;
 import jeeves.server.dispatchers.ServiceManager;
 import jeeves.server.sources.ServiceRequest;
 import jeeves.server.sources.ServiceRequestFactory;
-import org.apache.commons.io.FileUtils;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.NodeInfo;
 import org.fao.geonet.Util;
-import org.fao.geonet.exceptions.FileUploadTooBigEx;
+import org.fao.geonet.exceptions.BadParameterEx;
 import org.fao.geonet.utils.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -41,15 +40,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.nio.file.Path;
-import java.util.Iterator;
-import java.util.Map;
 
 @Controller
 public class GenericController {
@@ -118,20 +112,13 @@ public class GenericController {
         ApplicationContext jeevesApplicationContext = ApplicationContextHolder.get();
         JeevesEngine jeeves = jeevesApplicationContext.getBean(JeevesEngine.class);
         try {
-            final Path uploadDir = jeeves.getUploadDir();
             srvReq = ServiceRequestFactory.create(request, response,
-                portal, lang, service, uploadDir, jeeves.getMaxUploadSize());
-        } catch (FileUploadTooBigEx e) {
-            StringBuffer sb = new StringBuffer();
-            sb.append("File upload too big - exceeds ").append(jeeves.getMaxUploadSize()).append(" Mb\n");
-            sb.append("Error : ").append(e.getClass().getName()).append("\n");
-            response.sendError(400, sb.toString());
-
-            // now stick the stack trace on the end and log the whole lot
-            sb.append("Stack :\n");
-            sb.append(Util.getStackTrace(e));
-            Log.error(Log.REQUEST, sb.toString());
-
+                portal, lang, service);
+        } catch (BadParameterEx e) {
+            // client error, no need for a stack trace in the log
+            Log.warning(Log.REQUEST, "Cannot build ServiceRequest: " + e.getMessage());
+            response.sendError(400, e.getMessage());
+            return;
         } catch (Exception e) {
             StringBuffer sb = new StringBuffer();
 
@@ -144,25 +131,10 @@ public class GenericController {
             sb.append("Stack :\n");
             sb.append(Util.getStackTrace(e));
             Log.error(Log.REQUEST, sb.toString());
+            return;
         }
 
         // --- execute request
-        try {
-            jeeves.dispatch(srvReq, session);
-        } finally {
-            // Cleanup uploaded resources
-            if (request instanceof MultipartRequest) {
-                Map<String, MultipartFile> files = ((MultipartRequest) request).getFileMap();
-                Iterator<Map.Entry<String, MultipartFile>> it =
-                    files.entrySet().iterator();
-                while (it.hasNext()) {
-                    Map.Entry<String, MultipartFile> file = it.next();
-
-                    Path uploadedFile = jeeves.getUploadDir().resolve(file.getValue().getOriginalFilename());
-                    FileUtils.deleteQuietly(uploadedFile.toFile());
-                }
-            }
-
-        }
+        jeeves.dispatch(srvReq, session);
     }
 }

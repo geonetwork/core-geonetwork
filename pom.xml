@@ -865,7 +865,7 @@
       <dependency>
         <groupId>org.mapfish.print</groupId>
         <artifactId>print-lib</artifactId>
-        <version>2.3.5</version>
+        <version>2.3.6</version>
         <exclusions>
           <exclusion>
             <groupId>log4j</groupId>
@@ -1229,11 +1229,6 @@
       <dependency>
         <groupId>co.elastic.clients</groupId>
         <artifactId>elasticsearch-java</artifactId>
-        <version>${es.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.elasticsearch</groupId>
-        <artifactId>elasticsearch</artifactId>
         <version>${es.version}</version>
       </dependency>
       <dependency>
@@ -1643,6 +1638,7 @@
     <kb.platform>linux-x86_64</kb.platform>
     <kb.installer.extension>tar.gz</kb.installer.extension>
     <kb.port>5601</kb.port>
+    <!-- Set empty to disable Kibana dashboard. -->
     <kb.url>http://localhost:${kb.port}</kb.url>
 
 

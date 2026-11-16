@@ -213,6 +213,15 @@
         <dateStamp><xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space(.))"/></dateStamp>
       </xsl:for-each>
 
+      <!-- Creation date: only read it if the setting SYSTEM_METADATA_RECORD_CREATION_DATE_FROM_XML is set to "true"; otherwise the record creation date is taken from the database -->
+      <xsl:if test="util:getSettingValue('system/metadata/recordCreationDateFromXml') = 'true'">
+        <xsl:for-each select="(mdb:dateInfo/
+                                cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'creation']/
+                                  cit:date/*[gn-fn-index:is-isoDate(.)])[1]">
+          <createDate><xsl:value-of select="date-util:convertToISOZuluDateTime(normalize-space(.))"/></createDate>
+        </xsl:for-each>
+      </xsl:if>
+
       <!-- Publication date -->
       <xsl:for-each select="(mdb:dateInfo/
                               cit:CI_Date[cit:dateType/cit:CI_DateTypeCode/@codeListValue = 'publication']/

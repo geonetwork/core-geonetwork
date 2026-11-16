@@ -118,32 +118,20 @@
               <span data-translate="">zarooResult</span>
             </div>
 
-            <div class="row gn-row-tools" data-ng-show="searchResults.records.length > 0">
-              <div
-                class="col-xs-12 col-sm-5 col-md-5 col-lg-4 relative gn-nopadding-left"
-              >
+            <div
+              class="gn-row-tools flex-wrap flex-align-center flex-gap-10"
+              data-ng-show="searchResults.records.length > 0"
+            >
+              <div class="relative">
                 <div data-gn-selection-widget="" data-results="searchResults"></div>
               </div>
-              <div
-                class="
-                  col-xs-12 col-sm-7 col-md-7 col-lg-4
-                  gn-nopadding-left gn-nopadding-right
-                  text-right
-                "
-              >
+              <div>
                 <div
-                  class="pull-right"
                   data-gn-pagination="paginationInfo"
                   data-hits-values="searchObj.hitsperpageValues"
                 ></div>
               </div>
-              <div
-                class="
-                  col-xs-12 col-sm-12 col-md-12 col-lg-4
-                  gn-nopadding-right
-                  text-right
-                "
-              >
+              <div class="text-right">
                 <div
                   class="pull-right"
                   data-sortby-combo=""

@@ -732,7 +732,9 @@ public class AjaxEditUtils extends EditUtils {
         editLib.contractElements(md);
         String parentUuid = null;
         md = dataManager.updateFixedInfo(schema, Optional.of(Integer.valueOf(id)), null, md, parentUuid, UpdateDatestamp.NO, context);
-        Processor.processXLink(md, this.context);
+        if (xmlSerializer.resolveXLinks()) {
+            Processor.processXLink(md, this.context);
+        }
 
         //--- do the validation on the metadata
         return metadataValidator.doValidate(session, schema, id, md, lang, false).one();

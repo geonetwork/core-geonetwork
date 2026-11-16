@@ -60,6 +60,54 @@
         }
       };
 
+      /**
+       * Extract a trimmed string from various OGC/Jsonix property forms
+       * (e.g. "str", ["str"], {value: "str"}, [{value: "str"}]).
+       *
+       * @param {*} val
+       * @return {string}
+       */
+      var extractString = function (val) {
+        if (angular.isArray(val)) {
+          val = val[0];
+        }
+        if (angular.isObject(val)) {
+          val = val.value;
+        }
+        return angular.isString(val) ? val.trim() : "";
+      };
+
+      /**
+       * Get the title of a feature type. If title is present and different
+       * from the layer name, append the layer name in parentheses.
+       * If title is absent, fallback to name.localPart.
+       *
+       * @param {Object} featureType
+       * @return {string}
+       */
+      this.getTitle = function (featureType) {
+        if (!featureType) {
+          return "";
+        }
+
+        var title = extractString(featureType.title);
+        var name = featureType.name;
+        var layerName = name.localPart;
+        var prefix = name.prefix;
+        var fullName = prefix ? prefix + ":" + layerName : layerName;
+
+        if (
+          title &&
+          layerName &&
+          title.toLowerCase() !== layerName.toLowerCase() &&
+          title.toLowerCase() !== fullName.toLowerCase()
+        ) {
+          return title + " (" + layerName + ")";
+        }
+
+        return title || layerName;
+      };
+
       this.getOutputFormat = function (capabilities, operation) {
         if (capabilities.operationsMetadata) {
           for (var i = 0; i < capabilities.operationsMetadata.operation.length; i++) {

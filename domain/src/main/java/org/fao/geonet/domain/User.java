@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2001-2020 Food and Agriculture Organization of the
+ * Copyright (C) 2001-2026 Food and Agriculture Organization of the
  * United Nations (FAO-UN), United Nations World Food Programme (WFP)
  * and United Nations Environment Programme (UNEP)
  *
@@ -528,5 +528,19 @@ public class User extends GeonetEntity implements UserDetails {
         result = 31 * result + _security.hashCode();
         result = 31 * result + (_lastLoginDate != null ? _lastLoginDate.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    protected Set<String> propertiesToExcludeFromXml() {
+        Set<String> properties = new HashSet<>(super.propertiesToExcludeFromXml());
+        properties.add("getPassword");
+        // getRandomPassword() is a static utility that returns a fresh random value on every
+        // call, not a user property. It is getter-shaped so it would otherwise be serialized.
+        properties.add("getRandomPassword");
+        properties.add("getAuthorities");
+        properties.add("isAccountNonExpired");
+        properties.add("isAccountNonLocked");
+        properties.add("isCredentialsNonExpired");
+        return properties;
     }
 }

@@ -138,7 +138,15 @@
             showSearch: true,
             showSocialBarInFooter: true,
             showMosaic: true,
+            // Random mosaic: records matching this query (used when mosaicRecords is empty)
+            mosaicQuery: "-cl_status.key:obsolete",
+            // Curated mosaic: list of {uuid, link}. An empty link opens the record page.
+            // Only links inside the application (starting with #/) are allowed.
+            mosaicRecords: [],
+            // Mosaic layout: "gallery" (full width, mixed sizes) or "grid" (same size tiles, max 4 per row)
+            mosaicLayout: "gallery",
             showMaps: true,
+            showWelcomeMessage: false,
             facetConfig: {
               "th_httpinspireeceuropaeutheme-theme_tree.key": {
                 terms: {
@@ -875,6 +883,11 @@
             disabledTools: {
               processes: false,
               addLayers: false,
+              addLayersWms: false,
+              addLayersWmts: false,
+              addLayersWfs: false,
+              addLayersEsriRest: false,
+              addLayersKml: false,
               projectionSwitcher: false,
               layers: false,
               legend: false,
@@ -1373,6 +1386,7 @@
           "switcherProjectionList",
           "cookieWarning",
           "facetConfig",
+          "mosaicRecords",
           "searchOptions",
           "graticuleOgcService",
           "geocoder",
@@ -2214,7 +2228,7 @@
       });
 
       $scope.allowPublishInvalidMd = function () {
-        return gnConfig["metadata.workflow.allowPublishInvalidMd"];
+        return gnConfig["metadata.publication.allowPublishInvalidMd"];
       };
 
       $scope.allowPublishNonApprovedMd = function () {

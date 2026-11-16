@@ -44,7 +44,7 @@
               <img
                 class="gn-source-logo"
                 onerror="this.style.display='none'"
-                data-ng-src="{{'../api/harvesters/' + h.site.uuid + '/logo'}}"
+                data-ng-src="../api/harvesters/{{h.site.uuid}}/logo"
               />
             </p>
             <div data-ng-if="h.info.lastRun.length > 0">

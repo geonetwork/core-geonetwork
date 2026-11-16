@@ -535,7 +535,7 @@ INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (100,'rum','DOI creat
 INSERT INTO StatusValuesDes  (iddes, langid, label) VALUES (101,'rum','Scheduled publication');
 
 
-INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'rum','Preferred records');
+INSERT INTO SelectionsDes (iddes, langid, label) VALUES (0,'rum','Favorite records');
 INSERT INTO SelectionsDes (iddes, langid, label) VALUES (1,'rum','Watch list');
 
 INSERT INTO GUF_RatingCriteriaDes (iddes, langid, label) VALUES (-1,'rum', 'Average');
