@@ -332,7 +332,7 @@ This section defines the configuration for the map shown when editing a record. 
 
     Custom static pages can be inserted between these default entries. Static pages used there must be created for the `RECORD_VIEW_MENU` section and referenced by page identifier (for example `documentation`). The `gn-` prefix is reserved for built-in entries and should not be used for custom page identifiers. See [Static pages](static-pages.md).
 
-    The `gn-recordview-manage-menu` entry contains record management actions and is only shown to users with editor privileges or above. The `gn-recordview-download-menu` entry contains download and export actions and is available whenever a record is displayed. The `gn-recordview-favorite-menu` entry adds or removes the record from the user favorites and is only shown when [Saved Selections](#saved-selections) are enabled.
+    The `gn-recordview-manage-menu` entry contains record management actions and is only shown to users with editor privileges or above. The `gn-recordview-download-menu` entry contains download and export actions and is available whenever a record is displayed. The `gn-recordview-favorite-menu` entry adds or removes the record from the user favorites and is only shown when [Saved Selections](#favorites-saved-selections) are enabled.
 
 ## Editor Application
 
