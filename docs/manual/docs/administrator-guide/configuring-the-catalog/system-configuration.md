@@ -276,6 +276,42 @@ Note: this option is only available for databases that have been tested. Those d
 
 *Only set privileges to user's groups*: If enabled then only the groups that the user belongs to will be displayed in the metadata privileges page (unless the user is an Administrator). At the moment this option cannot be disabled and is likely to be deprecated in the next version of GeoNetwork.
 
+## Metadata configuration {#metadata_configuration}
+
+### Thesaurus URL allowlist
+
+Restricts which URLs can be used when importing a thesaurus from a URL or from a registry (see
+[Managing thesaurus](../managing-classification-systems/managing-thesaurus.md)), to prevent the
+catalogue from being used to fetch content from arbitrary, untrusted URLs.
+
+- Enter **one URL pattern per line**.
+- Patterns support the **`*` wildcard**, matching any sequence of characters (including none).
+- Lines starting with **`#`** are treated as comments and ignored.
+- If left **empty** (the default), **any URL is allowed**.
+
+Matching is **host-anchored**: the pattern's scheme, host and path are matched separately, so a
+`*` in the host part cannot spill over into the path. For example, `https://*.example.org/*` does
+**not** match `https://evil.org/.example.org/vocab.rdf`. The host is taken from the parsed URL,
+so a userinfo prefix such as `https://trusted.example.org@evil.org/` is matched on its real host
+(`evil.org`) and rejected. Within the **path** part, `*` still matches across `/`, so
+`https://example.org/*` matches arbitrarily deep paths.
+
+- **Always include the scheme** (`https://…`) so the pattern is host-anchored. A pattern without
+  a scheme (for example a bare `*`, meaning "allow any URL") is matched against the whole URL and
+  is **not** host-anchored.
+
+**Examples:**
+```
+# Only allow this specific vocabulary registry
+https://vocabs.example-registry.org/*
+
+# Allow any subdomain of an organisation
+https://*.example.org/thesaurus/*
+
+# Allow both http and https on a given host
+http*://vocabs.another-example.org/*
+```
+
 ## Metadata import {#editing_harvested_records}
 
 -   **Restrict import to schemas** List of all allowed schemas for metadata to be imported. If the metadata schema is not allowed, then the import is not done. Use an empty value to allow all schemas.
