@@ -1056,6 +1056,24 @@
         
       
       
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installing with docker
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
       <a href="./" class="md-nav__link md-nav__link--active">
         
   
@@ -1072,6 +1090,36 @@
   
 
       </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
       
     </li>
   
@@ -1535,6 +1583,25 @@
     
   
   
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
 </nav>
                   </div>
                 </div>
@@ -1572,7 +1639,16 @@
 <p>Run with docker</p>
 <div class="language-shell highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>some-geonetwork<span class="w"> </span>-d<span class="w"> </span>geonetwork
 </span></code></pre></div>
-<p>See <a href="https://github.com/docker-library/docs/tree/master/geonetwork">https://github.com/docker-library/docs/tree/master/geonetwork</a> for more details.</p>
+<p>See <a href="https://github.com/docker-library/docs/tree/master/geonetwork">docker-library/docs</a> for more details.</p>
+<h2 id="configuration">Configuration</h2>
+<p>Settings that a source installation would change in <code>WEB-INF/web.xml</code> are reached in a container through an environment variable instead, so the image does not have to be rebuilt or its files edited.</p>
+<p>The web proxy is the usual case. It ships with a list of hosts it refuses to fetch, and a deployment that has hosts of its own to keep out of reach adds them to that list:</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>some-geonetwork<span class="w"> </span>-d<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span>-e<span class="w"> </span><span class="s1">'GEONETWORK_HTTPPROXY_EXCLUDEHOSTS=^(localhost|...|internal\.example\.org)$'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span>geonetwork
+</span></code></pre></div>
+<p>The value replaces the shipped list, abbreviated here as <code>...</code>, so start from the value in <code>WEB-INF/web.xml</code> and add to it. Dropping an entry from it puts that host back within reach of the proxy.</p>
+<p>These settings, <code>excludeHosts</code>, <code>allowPorts</code>, <code>allowHosts</code> and <code>followRedirects</code>, the form of their names, and what the default list covers are described in <a href="../../maintainer-guide/production-use/#proxy-hosts-and-ports">Hosts and ports the proxy can reach</a>.</p>
 
 
 

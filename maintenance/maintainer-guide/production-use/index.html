@@ -1022,6 +1022,73 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Web Proxy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxy-hosts-and-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hosts and ports the proxy can reach
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hosts and ports the proxy can reach">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-an-ipv6-address" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding an IPv6 address
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxy-allow-hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Allowing internal hosts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxy-redirects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redirects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxy-settings-outside-web-xml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting them without editing web.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1446,6 +1513,73 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="Web Proxy">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#proxy-hosts-and-ports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hosts and ports the proxy can reach
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Hosts and ports the proxy can reach">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adding-an-ipv6-address" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding an IPv6 address
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxy-allow-hosts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Allowing internal hosts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxy-redirects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Redirects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#proxy-settings-outside-web-xml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setting them without editing web.xml
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -1528,7 +1662,7 @@
 </ul>
 <p>A best practice is to allow a series of servers which are known to contain data services. However the best guidance here is to recommend to any data provider to enable <a href="https://en.wikipedia.org/wiki/Cross-origin_resource_sharing">CORS</a> on their services, and then disable the web proxy. CORS fixes the cross browser communication limitation in the proper way.</p>
 <p>If set up in an incorrect way, remote users may get access to resources that should not be accessible to them, or impersonate themselves as the geonetwork server while browsing the web.</p>
-<p>GeoNetwork has 2 modes to limit the access via the proxy. The configuration of this mode is defined in <code>WEB-INF/web.xml</code>.</p>
+<p>GeoNetwork has two modes to limit the access via the proxy. The configuration of this mode is defined in <code>WEB-INF/web.xml</code>.</p>
 <div class="language-xml highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="nt">&lt;init-param&gt;</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="w">  </span><span class="nt">&lt;param-name&gt;</span>securityMode<span class="nt">&lt;/param-name&gt;</span>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="w">  </span><span class="nt">&lt;param-value&gt;</span>NONE<span class="nt">&lt;/param-value&gt;</span>
@@ -1540,12 +1674,89 @@
 </ul>
 <p>It is recommended to use the DB_LINK_CHECK mode. The following rules apply:</p>
 <ul>
-<li>Authenticated users can use the proxy to all domains.</li>
+<li>Authenticated users can use the proxy to all domains, apart from the hosts kept out of reach by the exclusion list described below.</li>
 <li>For anonymous users, if the host of the URL requested is not used in any metadata record links, then a NotAllowedException is returned. If a WMS URL is registered, all GetCapabilities, GetFeatureInfo will be accepted. That's why only a host check is done.</li>
 <li>Also if a request is made directly to the proxy, a SecurityException is returned because no session exist. This limit its usage to user with a catalog session.</li>
 <li>Catalog reviewers have to use the metadata link analysis tool to register links allowed for the proxy. The tool is available at 'Record and link analysis' in the <code>Admin --&gt; Statistics &amp; status</code> menu. In the future we may trigger link analysis as a background task to have an up to date list of links. For now, if the table is empty, the exception highlights the fact that the link analysis tool should be used to populate the list.</li>
 </ul>
 <p>One issue that anonymous users can encounter is if using the map viewer and the user adds a WMS/WFS service URL which is not registered in any metadata records and which has no CORS enabled. The user will not be able to add any layers from those services.</p>
+<h3 id="proxy-hosts-and-ports">Hosts and ports the proxy can reach</h3>
+<p>Independently of the security mode, the proxy refuses a request whose host matches <code>excludeHosts</code>. It also refuses a request naming a port other than 80, 443, or one of the ports listed in <code>allowPorts</code>; a URL that names no port at all uses the default of its protocol and is accepted. Both settings are defined in <code>WEB-INF/web.xml</code> and both apply to every caller, authenticated or not.</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="nt">&lt;init-param&gt;</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="w">  </span><span class="nt">&lt;param-name&gt;</span>excludeHosts<span class="nt">&lt;/param-name&gt;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="w">  </span><span class="nt">&lt;param-value&gt;</span>^(localhost|127\..*|...)$<span class="nt">&lt;/param-value&gt;</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="nt">&lt;/init-param&gt;</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="nt">&lt;init-param&gt;</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="w">  </span><span class="nt">&lt;param-name&gt;</span>allowPorts<span class="nt">&lt;/param-name&gt;</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="w">  </span><span class="nt">&lt;param-value&gt;</span>8443|8080<span class="nt">&lt;/param-value&gt;</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="nt">&lt;/init-param&gt;</span>
+</span></code></pre></div>
+<p><code>excludeHosts</code> is a regular expression matched against the whole host. Matching ignores case, since a host name is not case sensitive. Its default value keeps the proxy away from the server itself and from the ranges reserved for private networks:</p>
+<ul>
+<li>the loopback addresses, <code>localhost</code>, <code>127.0.0.0/8</code> and <code>::1</code>, and the <code>.local</code> and <code>.localhost</code> domains</li>
+<li>the unspecified addresses, <code>0.0.0.0/8</code> and <code>::</code>, and the broadcast address <code>255.255.255.255</code></li>
+<li>the private ranges of RFC 1918, <code>10.0.0.0/8</code>, <code>172.16.0.0/12</code> and <code>192.168.0.0/16</code></li>
+<li>the link-local range <code>169.254.0.0/16</code>, the shared address space <code>100.64.0.0/10</code>, and the benchmarking range <code>198.18.0.0/15</code></li>
+<li>the multicast range <code>224.0.0.0/4</code></li>
+<li>the IPv6 unique local, link-local and site-local ranges, <code>fc00::/7</code>, <code>fe80::/10</code> and <code>fec0::/10</code></li>
+<li>the IPv6 ranges that carry an IPv4 address, <code>::/96</code> and <code>::ffff:0:0:0/96</code></li>
+</ul>
+<p>An address can be written in more than one way, so the host is compared in several forms: as it appears in the URL, without the brackets that surround an IPv6 literal, in the canonical form of the address it denotes, and without the dot that can close a fully qualified name, so <code>localhost.</code> is matched like <code>localhost</code>. An entry therefore applies whichever way a caller spells an address, and a single entry covers every spelling of it.</p>
+<p>An address under the NAT64 prefix <code>64:ff9b::/96</code> is compared by the IPv4 address it carries in its last 32 bits, so <code>64:ff9b::a00:1</code> is excluded as <code>10.0.0.1</code> while an address that carries a public IPv4 address is not. On a network that uses DNS64, every server reachable only over IPv4 resolves to an address under that prefix, so excluding the prefix itself would keep the proxy away from most external services there. Only the well-known prefix is read this way. A network that uses a NAT64 prefix of its own is not protected by this check for the IPv4 addresses behind it, so restrict the outbound traffic of the server there.</p>
+<p>An address under the 6to4 prefix <code>2002::/16</code> is compared in the same way by the IPv4 address it carries in its bits 16 to 47, so <code>2002:a00:1::1</code> is excluded as <code>10.0.0.1</code> while <code>2002:5db8:d70e::1</code> is not.</p>
+<p>The address a host name leads to is checked as well. When the proxy connects, every address the name resolves to is matched against <code>excludeHosts</code>, and the request is refused if any of them is excluded, so a public name that points to an internal address is refused like the address itself. The name is still matched as written too, which is what entries such as <code>.*\.local</code> rely on.</p>
+<p>When the catalogue reaches other servers through an outbound proxy, set with the <code>http.proxyHost</code> or <code>https.proxyHost</code> system property, the outbound proxy resolves the requested host instead, and the catalogue cannot check the address. Block the internal addresses on the outbound proxy itself in that case.</p>
+<h4 id="adding-an-ipv6-address">Adding an IPv6 address</h4>
+<p>The same address can be written in several ways, so an entry is best written in the canonical form: lower case, all eight groups spelled out, no <code>::</code> and no leading zeros. That form is the one the proxy derives from whatever the caller sent, so a single entry covers every spelling. To exclude the host <code>2001:db8:1::10</code>, write its canonical form <code>2001:db8:1:0:0:0:0:10</code>. To exclude a whole prefix, keep the groups the prefix fixes and finish with <code>.*</code>: <code>2001:db8:2::/48</code> becomes <code>2001:db8:2:.*</code>.</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="nt">&lt;init-param&gt;</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="w">  </span><span class="nt">&lt;param-name&gt;</span>excludeHosts<span class="nt">&lt;/param-name&gt;</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="w">  </span><span class="nt">&lt;param-value&gt;</span>^(localhost|127\..*|2001:db8:1:0:0:0:0:10|2001:db8:2:.*)$<span class="nt">&lt;/param-value&gt;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="nt">&lt;/init-param&gt;</span>
+</span></code></pre></div>
+<p>Those two entries exclude <code>[2001:db8:1::10]</code>, <code>[2001:db8:1:0:0:0:0:10]</code> and <code>[2001:0db8:0001::0010]</code>, which are the same address, along with every address under <code>2001:db8:2::/48</code>.</p>
+<p>Three details are worth keeping in mind:</p>
+<ul>
+<li>Write the entry without the square brackets of a URL. They are part of the URL syntax, not of the address. An entry that keeps them is still matched, but only against that one way of writing the address, so it misses the other spellings of the same host.</li>
+<li>Keep the colon that closes a prefix. <code>2001:db8:2:.*</code> stops at the addresses under <code>2001:db8:2</code>, whereas <code>2001:db8:2.*</code> would also take in <code>2001:db8:20</code> and <code>2001:db8:2a</code>, which are different networks.</li>
+<li>A prefix is straightforward to write when its length is a multiple of 16, since it ends on a group boundary. For a length such as /56, which cuts a group in two, exclude the enclosing /48 rather than trying to express the exact boundary in a regular expression.</li>
+</ul>
+<h4 id="proxy-allow-hosts">Allowing internal hosts</h4>
+<p>The default list keeps the proxy away from private networks, which also keeps it away from a map server the catalogue reaches on its own network, such as a GeoServer in the same Docker or Kubernetes deployment. A host named in <code>allowHosts</code> is reachable even if <code>excludeHosts</code> matches it, or matches the addresses it resolves to. It is empty by default.</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="nt">&lt;init-param&gt;</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="w">  </span><span class="nt">&lt;param-name&gt;</span>allowHosts<span class="nt">&lt;/param-name&gt;</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="w">  </span><span class="nt">&lt;param-value&gt;</span>^(geoserver|maps\.intranet)$<span class="nt">&lt;/param-value&gt;</span>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="nt">&lt;/init-param&gt;</span>
+</span></code></pre></div>
+<p><code>allowHosts</code> is a regular expression matched against the host as it is written in the URL, in the same forms as <code>excludeHosts</code>. Prefer names to addresses: a name allowed this way is reachable whatever it resolves to, whereas an address such as <code>10.0.0.5</code> is reachable only when the URL names it directly, not through another name that points to it. <code>allowPorts</code> still applies, so a server listening on another port also needs that port listed there, which opens it towards every host the proxy accepts.</p>
+<h4 id="proxy-redirects">Redirects</h4>
+<p>A service may answer a request with a redirect to another URL. By default the proxy follows one kind of redirect only: one that moves the same URL from <code>http</code> to <code>https</code>, keeping the host, the path and the query, on the default ports. Many services answer that way when they only accept <code>https</code>, and following the redirect keeps them working through the proxy.</p>
+<p>Any other redirect is passed back to the caller as it was received. The browser then requests the new location itself, without the proxy, so a service that does not enable CORS cannot be read from there. In the map viewer, for example, the layers of such a service fail to load.</p>
+<p>To have the proxy follow every redirect, set <code>followRedirects</code> to <code>true</code>:</p>
+<div class="language-xml highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="nt">&lt;init-param&gt;</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="w">  </span><span class="nt">&lt;param-name&gt;</span>followRedirects<span class="nt">&lt;/param-name&gt;</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="w">  </span><span class="nt">&lt;param-value&gt;</span>true<span class="nt">&lt;/param-value&gt;</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="nt">&lt;/init-param&gt;</span>
+</span></code></pre></div>
+<p>The destination of each redirect is then put through the same host and port checks as the requested URL before it is followed, so a redirect cannot send the request on to a host that <code>excludeHosts</code> keeps out of reach, or to a port that <code>allowPorts</code> does not open. Those are the only checks applied to it: in <code>DB_LINK_CHECK</code> mode a redirect can lead anonymous users to a host that no record links to. Enable it only when the services the catalogue relies on need it.</p>
+<h4 id="proxy-settings-outside-web-xml">Setting them without editing web.xml</h4>
+<p>These settings can be given outside <code>WEB-INF/web.xml</code>, which is what you want when the file sits inside a container image. Each is looked up in turn as an environment variable, a Java system property, and an entry of <code>WEB-INF/config.properties</code>, and the value in <code>web.xml</code> is used only when none of the three is set.</p>
+<p>The name of the property is the name of the servlet, <code>HttpProxy</code>, between the <code>geonetwork</code> prefix and the name of the setting:</p>
+<ul>
+<li><code>geonetwork.HttpProxy.excludeHosts</code></li>
+<li><code>geonetwork.HttpProxy.allowPorts</code></li>
+<li><code>geonetwork.HttpProxy.allowHosts</code></li>
+<li><code>geonetwork.HttpProxy.followRedirects</code></li>
+</ul>
+<p>As an environment variable the same name is written in upper case with underscores in place of the dots:</p>
+<div class="language-shell highlight"><pre><span></span><code><span id="__span-6-1"><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>docker<span class="w"> </span>run<span class="w"> </span>--name<span class="w"> </span>geonetwork<span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-2"><a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a><span class="w">  </span>-e<span class="w"> </span><span class="s1">'GEONETWORK_HTTPPROXY_EXCLUDEHOSTS=^(localhost|...|internal\.example\.org)$'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-3"><a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a><span class="w">  </span>-e<span class="w"> </span><span class="s1">'GEONETWORK_HTTPPROXY_ALLOWPORTS=8080|8443'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-4"><a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a><span class="w">  </span>-e<span class="w"> </span><span class="s1">'GEONETWORK_HTTPPROXY_FOLLOWREDIRECTS=true'</span><span class="w"> </span><span class="se">\</span>
+</span><span id="__span-6-5"><a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a><span class="w">  </span>geonetwork
+</span></code></pre></div>
+<p>A value given this way replaces the default list rather than adding to it. Copy the value shipped in <code>web.xml</code>, shown abbreviated above as <code>...</code>, and put your own entries inside the same parentheses; an entry left out is an entry the proxy is once again free to fetch.</p>
+<p>If the catalogue is deployed under a context path other than <code>/geonetwork</code>, that path is also accepted in place of the <code>geonetwork</code> prefix, so a catalogue served from <code>/catalogue</code> reads <code>catalogue.HttpProxy.excludeHosts</code> first and falls back to the <code>geonetwork</code> name.</p>
+<p>Keep those defaults and add your own entries for any other host the catalogue should not be asked to fetch. Where the catalogue is published in front of a private network, restricting the outbound traffic of the server at the network level is worthwhile too, and use <code>allowPorts</code> sparingly, since every port added there is opened towards every host the proxy accepts.</p>
 <h2 id="web">WEB</h2>
 <p>Since an important part of the catalogue behaves like a normal website. Adopting website best practices is recommended:</p>
 <ul>
