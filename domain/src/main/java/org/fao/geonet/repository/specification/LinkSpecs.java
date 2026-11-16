@@ -31,10 +31,37 @@ import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 public class LinkSpecs {
     private LinkSpecs() {
+    }
+
+    /**
+     * Links attached to a record whose URL has exactly the given host, over http or https, in any case.
+     *
+     * <p>The host has to be followed by the end of the URL or by a character that ends the host, so
+     * a link to http://example.com.evil.org/ does not count for example.com. The host is put in the
+     * patterns unescaped: {@link java.net.URI#getHost()} never returns the % or _ wildcards.</p>
+     *
+     * @param host host to look for, as returned by {@link java.net.URI#getHost()}
+     */
+    public static Specification<Link> urlHasHost(String host) {
+        return (root, query, cb) -> {
+            Expression<String> url = cb.lower(root.get(Link_.url));
+            String lowerHost = host.toLowerCase(Locale.ROOT);
+            List<Predicate> matches = new ArrayList<>();
+            for (String scheme : new String[]{"http://", "https://"}) {
+                matches.add(cb.equal(url, scheme + lowerHost));
+                for (String end : new String[]{"/", ":", "?", "#"}) {
+                    matches.add(cb.like(url, scheme + lowerHost + end + "%"));
+                }
+            }
+            return cb.and(
+                cb.isNotEmpty(root.get(Link_.records)),
+                cb.or(matches.toArray(new Predicate[0])));
+        };
     }
 
     public static Specification<Link> filter(String urlPartToContain,
