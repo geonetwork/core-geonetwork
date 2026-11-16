@@ -204,6 +204,7 @@
     "backTohome": "Tilbage til udgangsside(home)",
     "shareOn": "Del på sociale medier",
     "updatedOn": "Opdateret:",
+    "createdOn": "Oprettet:",
     "license": "Licens",
     "constraints": "Begrænsninger",
     "technicalInformation": "Teknisk information",
@@ -561,7 +562,7 @@
     "indexingErrorMsg-temporalRangeLowerGreaterThanUpper": "Advarsel / Field resourceTemporalDateRange / Nedre områdegrænse {{lowerBound}} kan ikke være større end øvre grænse {{upperBound}}.",
     "indexingErrorMsg-schemaNotRegistered": "instans {{ instans }} / Skema \"{{skema}}\" er ikke registreret i dette katalog. Installer den eller fjern poster . instans er indekseret indekseringsfejlflag.",
     "indexingErrorMsg-indexingStyleSheetError": "Indeksering stylesheet indeholder fejl: {{message}}\n Markering af metadata som _indexingError=1 i indeks.",
-    "createAnonymousAccess": "Vis forhåndsvisning af ikke-offentliggjort metadata",
+    "createAnonymousAccess": "Del visning af ikke-offentliggjort metadata",
     "deleteAnonymousAccess": "Tilbagekald forhåndsvisning af ikke-offentliggjort metadata",
     "anonymousAccessTo": "Anonym adgang til {{title}}"
 }
