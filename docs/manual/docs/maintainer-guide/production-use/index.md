@@ -55,7 +55,7 @@ GeoNetwork contains a web proxy to bypass cross browser communication limitation
 -   Admin / Harvesting / GetCapabilities for CSW to retrieve queryable fields
 -   Admin / Thesaurus / Add from INSPIRE registry
 
-A best practice is to whitelist a series of servers which are known to contain data services. However the best guidance here is to recommend to any data provider to enable [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) on their services, and then disable the web proxy. CORS fixes the cross browser communication limitation in the proper way.
+A best practice is to allow a series of servers which are known to contain data services. However the best guidance here is to recommend to any data provider to enable [CORS](https://en.wikipedia.org/wiki/Cross-origin_resource_sharing) on their services, and then disable the web proxy. CORS fixes the cross browser communication limitation in the proper way.
 
 If set up in an incorrect way, remote users may get access to resources that should not be accessible to them, or impersonate themselves as the geonetwork server while browsing the web.
 
