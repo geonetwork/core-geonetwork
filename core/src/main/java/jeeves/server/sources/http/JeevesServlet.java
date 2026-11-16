@@ -36,7 +36,6 @@ import jeeves.server.sources.ServiceRequestFactory;
 import org.fao.geonet.ApplicationContextHolder;
 import org.fao.geonet.Util;
 import org.fao.geonet.domain.User;
-import org.fao.geonet.exceptions.FileUploadTooBigEx;
 import org.fao.geonet.utils.Log;
 import org.springframework.context.ConfigurableApplicationContext;
 
@@ -169,19 +168,7 @@ public class JeevesServlet extends HttpServlet {
 
         try {
             srvReq = ServiceRequestFactory.create(req, res,
-                null, null, null, jeeves.getUploadDir(), jeeves.getMaxUploadSize());
-        } catch (FileUploadTooBigEx e) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("File upload too big - exceeds ").append(jeeves.getMaxUploadSize()).append(" Mb\n")
-                .append("Error : ").append(e.getClass().getName()).append("\n");
-
-            res.sendError(SC_BAD_REQUEST, sb.toString());
-
-            // now stick the stack trace on the end and log the whole lot
-            sb.append("Stack :\n").append(Util.getStackTrace(e));
-
-            Log.error(Log.REQUEST, sb.toString());
-            return;
+                null, null, null);
         } catch (Exception e) {
             StringBuilder sb = new StringBuilder();
 
