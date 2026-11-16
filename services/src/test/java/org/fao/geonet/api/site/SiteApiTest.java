@@ -2,6 +2,8 @@ package org.fao.geonet.api.site;
 
 import junit.framework.Assert;
 import org.fao.geonet.SystemInfo;
+import org.fao.geonet.domain.Profile;
+import org.fao.geonet.domain.User;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.resources.Resources;
 import org.fao.geonet.services.AbstractServiceIntegrationTest;
@@ -73,6 +75,33 @@ public class SiteApiTest extends AbstractServiceIntegrationTest {
             .andExpect(jsonPath("$['system/site/name']", is("My GeoNetwork catalogue")));
     }
 
+
+    @Test
+    public void getInternalSettingsOnlyForAdministrator() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        String key = "system/feedback/mailServer/password";
+
+        this.mockMvc.perform(get("/srv/api/site/settings").param("key", key)
+                .session(loginAsAdmin())
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", hasKey(key)));
+
+        User registeredUser = _userRepo.save(new User()
+            .setUsername("settings-registered-user")
+            .setProfile(Profile.RegisteredUser));
+        this.mockMvc.perform(get("/srv/api/site/settings").param("key", key)
+                .session(loginAs(registeredUser))
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", not(hasKey(key))));
+
+        this.mockMvc.perform(get("/srv/api/site/settings").param("key", key)
+                .session(loginAsAnonymous())
+                .accept(MediaType.parseMediaType("application/json")))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$", not(hasKey(key))));
+    }
 
     @Test
     public void updateSettingsFormUrlEncoded() throws Exception {
