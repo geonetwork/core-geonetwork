@@ -82,7 +82,7 @@ If you wish to preview using your own `gh-pages` branch:
 2. To deploy documentation for stable release:
    
    ```bash
-   mike deploy --push --alias-type=copy 4.2 stable
+   mike deploy --push --alias-type=copy 4.4 stable
    ```
    
 3. When starting a new branch you can make it the default:
