@@ -82,4 +82,4 @@ UPDATE SelectionsDes SET label = 'Favorite records' WHERE iddes = 0 AND langid =
 UPDATE SelectionsDes SET label = 'Hoff gofnodion' WHERE iddes = 0 AND langid = 'wel';
 
 UPDATE Settings SET value='4.4.13' WHERE name='system/platform/version';
-UPDATE Settings SET value='SNAPSHOT' WHERE name='system/platform/subVersion';
+UPDATE Settings SET value='0' WHERE name='system/platform/subVersion';
