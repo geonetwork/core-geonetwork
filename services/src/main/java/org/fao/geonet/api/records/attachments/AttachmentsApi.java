@@ -300,15 +300,38 @@ public class AttachmentsApi {
         long fileSize = resourceMetadata.getSize();
         MediaType fileMediaType = MediaType.parseMediaType(getFileContentType(fileName));
         String fileETag = "\"" + DigestUtils.md5Hex(fileName + fileSize + resourceMetadata.getVersion() + fileLastModifiedDate) + "\"";
+        boolean resizeImage = fileMediaType.getType().equals("image") && size != null;
+        if (resizeImage && (size < MIN_IMAGE_SIZE || size > MAX_IMAGE_SIZE)) {
+            throw new IllegalArgumentException(String.format(
+                "Image can only be resized from %d to %d. You requested %d.",
+                MIN_IMAGE_SIZE, MAX_IMAGE_SIZE, size));
+        }
+        // A resized image is a different representation of the file, so it gets its own ETag.
+        // It must be known before checking the conditional headers, otherwise a browser
+        // revalidating a resized image never matches, so the image is resized and sent
+        // again instead of a 304. The ETag is weak because the PNG is generated on each
+        // request and its bytes are not guaranteed to be identical.
+        String eTag = resizeImage ? "W/\"" + DigestUtils.md5Hex(fileETag + size) + "\"" : fileETag;
 
         // Set common headers
         response.setHeader(HttpHeaders.CACHE_CONTROL, CacheControl.noCache().getHeaderValue());
         response.setDateHeader(HttpHeaders.LAST_MODIFIED, fileLastModifiedDate);
-        response.setHeader(HttpHeaders.ETAG, fileETag);
-        response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
+        response.setHeader(HttpHeaders.ETAG, eTag);
+        if (!resizeImage) {
+            // Ranges apply to the stored file only, a resized image is always sent whole
+            response.setHeader(HttpHeaders.ACCEPT_RANGES, "bytes");
+        }
 
         // Check if the request is not modified based on ETag or Last-Modified
-        if (new ServletWebRequest(request, response).checkNotModified(fileETag, fileLastModifiedDate)) {
+        if (new ServletWebRequest(request, response).checkNotModified(eTag, fileLastModifiedDate)) {
+            return;
+        }
+
+        // If the resource is an image and a size is requested, resize the image and return it
+        if (resizeImage) {
+            try (Store.ResourceHolder resourceHolder = store.getResource(context, metadataUuid, resourceId, approved)) {
+                serveResizedImage(resourceHolder.getResource(), fileName, size, response);
+            }
             return;
         }
 
@@ -350,14 +373,6 @@ public class AttachmentsApi {
                     range = null; // invalid date -> full
                 }
             }
-        }
-
-        // If the resource is an image and a size is requested, resize the image and return it
-        if (fileMediaType.getType().equals("image") && size != null) {
-            try (Store.ResourceHolder resourceHolder = store.getResource(context, metadataUuid, resourceId, approved)) {
-                serveResizedImage(resourceHolder.getResource(), fileName, fileETag, size, response);
-            }
-            return;
         }
 
         // Set headers for downloads
@@ -453,26 +468,19 @@ public class AttachmentsApi {
     }
 
     /**
-     * Serves a resized image in PNG format.
+     * Serves a resized image in PNG format. The caller validates the size and
+     * sets the ETag and Last-Modified headers.
      *
      * @param resource Resource representing the original image
      * @param originalImageName Original filename of the image
-     * @param originalETag Original resource ETag used to generate resized image ETag
      * @param size Desired size for the resized image (in pixels)
      * @param response Current HTTP response
      * @throws IOException If an I/O error occurs while reading or writing the image
      */
     private void serveResizedImage(Resource resource,
                                    String originalImageName,
-                                   String originalETag,
                                    int size,
                                    HttpServletResponse response) throws IOException {
-        if (size < MIN_IMAGE_SIZE || size > MAX_IMAGE_SIZE) {
-            throw new IllegalArgumentException(String.format(
-                "Image can only be resized from %d to %d. You requested %d.",
-                MIN_IMAGE_SIZE, MAX_IMAGE_SIZE, size));
-        }
-
         try (InputStream inputStream = resource.getInputStream()) {
             // Resize the image
             BufferedImage resizedImage = ImageUtil.resize(ImageIO.read(inputStream), size);
@@ -489,10 +497,6 @@ public class AttachmentsApi {
             response.setHeader(HttpHeaders.CONTENT_DISPOSITION,
                 ContentDisposition.attachment().filename(pngFilename).build().toString());
             response.setContentLength(outputStream.size());
-            response.setDateHeader(HttpHeaders.LAST_MODIFIED, System.currentTimeMillis());
-
-            // Generate a new ETag based on the original ETag and the size
-            response.setHeader(HttpHeaders.ETAG, "\"" + DigestUtils.md5Hex(originalETag + size) + "\"");
 
             OutputStream servletOutput = response.getOutputStream();
             outputStream.writeTo(servletOutput);
