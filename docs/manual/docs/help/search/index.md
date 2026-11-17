@@ -140,7 +140,7 @@ To further explore listed records:
         (creation, publication, revision) dates included within the
         calendar date range.
 
-8.  A slide out map is provided at the bottom of the page, providing
+8.  A slide-out map is provided at the bottom of the page, providing
     visual feedback on the extent of each record.
 
     <div class="browser-mockup">
@@ -156,11 +156,25 @@ To further explore listed records:
     -   Bounding Box: Hold ++shift++ and click and drag to define an extent used to filter
         records.
         
-        The drop down controls if the extent is used to list
+        The dropdown controls if the extent is used to list
         only records that are within, or all records that intersect.
         
         ![](img/search_map_bbox.png)
         *Search bounding box intersects*
+
+    The map is shown in a **Spatial filter** window. Use the buttons in its title bar to change its size:
+
+    -   Maximize :fontawesome-regular-window-maximize: stacks the search results on top of a full-width sticky map at the bottom. The result view scrolls independently of the map, which makes it easier to draw an extent while browsing the results. Drag the handle at the top edge of the map to adjust its size.
+
+    -   Restore :fontawesome-regular-window-minimize: resets the map back to its original size in the lower right corner.
+
+    -   Close :fontawesome-solid-xmark: hides the map. Use the **Map** button in the lower right corner, shown while the map is closed, to make it reappear.
+
+    The browser remembers the map display settings, so that it will show the same way on your next visit.
+
+    !!! note
+
+        The **Spatial filter** window is used when the administrator sets **Search result map placement** to **Bottom right (below results)** (the default) in the user interface configuration. With **Above search filter**, the map is shown in a panel above the search filters instead.
 
 9.  Records are selected (using the checkbox located next to each one)
     to quickly download or generate a PDF of one or more records.

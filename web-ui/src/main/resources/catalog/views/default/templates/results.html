@@ -130,7 +130,7 @@
             <button
               data-ng-show="searchResults.records.length > 9"
               class="btn btn-link hidden-print"
-              onClick="window.scrollTo(0,0);"
+              onClick="$('html, body').scrollTop(0);"
               title="{{'scrollTop' | translate}}"
             >
               <i class="fa fa-fw fa-chevron-up"></i>
@@ -154,18 +154,73 @@
 
     <div ng-if="searchMapPlacement === 'results'" class="hidden-print">
       <div
-        data-gn-map-field="searchObj.searchMap"
-        data-gn-map-field-geom="searchObj.params.geometry"
-        data-gn-map-field-opt="searchObj.mapfieldOption"
-        class="gn-search-map gn-map-fixed hidden-xs"
-      ></div>
+        class="gn-minimap hidden-xs"
+        data-ng-class="'gn-minimap-' + minimapState"
+        data-ng-show="minimapState !== 'closed'"
+        role="region"
+        aria-label="{{'spatialFilterMap' | translate}}"
+      >
+        <div
+          class="gn-minimap-resize"
+          data-ng-if="minimapState === 'max'"
+          data-gn-minimap-resize=""
+          role="separator"
+          aria-orientation="horizontal"
+          tabindex="0"
+          title="{{'resizeMap' | translate}}"
+          aria-label="{{'resizeMap' | translate}}"
+        >
+          <span></span>
+        </div>
+        <div class="gn-minimap-header">
+          <span class="gn-minimap-title" data-translate="">spatialFilterMap</span>
+          <div class="btn-group btn-group-xs">
+            <button
+              type="button"
+              class="btn btn-default"
+              data-ng-if="minimapState === 'max'"
+              data-ng-click="setMinimapState('normal')"
+              title="{{'restoreMap' | translate}}"
+              aria-label="{{'restoreMap' | translate}}"
+            >
+              <i class="fa fa-fw fa-window-minimize"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-default"
+              data-ng-if="minimapState === 'normal'"
+              data-ng-click="setMinimapState('max')"
+              title="{{'maximizeMap' | translate}}"
+              aria-label="{{'maximizeMap' | translate}}"
+            >
+              <i class="fa fa-fw fa-window-maximize"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-default"
+              data-ng-click="setMinimapState('closed')"
+              title="{{'closeMap' | translate}}"
+              aria-label="{{'closeMap' | translate}}"
+            >
+              <i class="fa fa-fw fa-xmark"></i>
+            </button>
+          </div>
+        </div>
+        <div
+          data-gn-map-field="searchObj.searchMap"
+          data-gn-map-field-geom="searchObj.params.geometry"
+          data-gn-map-field-opt="searchObj.mapfieldOption"
+          class="gn-search-map"
+        ></div>
+      </div>
 
       <button
         data-ng-click="toggleMap()"
+        data-ng-show="minimapState === 'closed'"
         title="{{'toggleMiniMap' | translate}}"
         class="gn-toggle gn-minimap-toggle btn btn-primary gn-minimap-button hidden-xs"
       >
-        <i class="fa fa-angle-double-right"></i>
+        <i class="fa fa-angle-double-left"></i>
         <strong class="gn-minimap-toggle gn-minimap-text" data-translate="">map</strong>
       </button>
     </div>
