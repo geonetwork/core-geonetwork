@@ -2040,6 +2040,31 @@
       <description>Event related to general collection</description>
     </entry>
   </codelist>
+  <codelist name="mac:MI_GeometryTypeCode">
+    <entry>
+      <code>areal</code>
+      <label>Areal</label>
+      <description>Collection of a geographic area defined by a polygon
+        (coverage)
+      </description>
+    </entry>
+    <entry>
+      <code>strip</code>
+      <label>Strip</label>
+      <description>Series of linear collections grouped by way points
+      </description>
+    </entry>
+    <entry>
+      <code>linear</code>
+      <label>Linear</label>
+      <description></description>
+    </entry>
+    <entry>
+      <code>point</code>
+      <label>Point</label>
+      <description></description>
+    </entry>
+  </codelist>
   <codelist name="mac:MI_ObjectiveTypeCode">
     <entry>
       <code>instantaneousCollection</code>
