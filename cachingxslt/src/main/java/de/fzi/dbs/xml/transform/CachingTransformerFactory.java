@@ -9,8 +9,8 @@ import org.fao.geonet.utils.CachedTransformer;
 import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.Templates;
@@ -31,17 +31,13 @@ public class CachingTransformerFactory extends TransformerFactoryImpl implements
     protected static final Logger logger =
         LogManager.getLogger(CachingTransformerFactory.class);
     /**
-     * Active readers count.
-     */
-    static int activeReaders = 0;
-    /**
-     * Active writers count.
-     */
-    static int activeWriters = 0;
-    /**
      * Map to hold templates cache.
      */
-    private static Map<String, TemplatesCacheEntry> templatesCache = new HashMap<String, TemplatesCacheEntry>();
+    private static final Map<String, TemplatesCacheEntry> templatesCache = new ConcurrentHashMap<>();
+    /**
+     * One lock per stylesheet path, so the same stylesheet is not compiled by several threads at once.
+     */
+    private static final Map<String, Object> compileLocks = new ConcurrentHashMap<>();
 
     /**
      * Clear the stylesheet cache. This is not part of the JAXP TransformerFactoryImpl so users
@@ -49,9 +45,7 @@ public class CachingTransformerFactory extends TransformerFactoryImpl implements
      * broken.
      */
     public void clearCache() {
-        beforeWrite();
         templatesCache.clear();
-        afterWrite();
     }
 
     /**
@@ -95,37 +89,32 @@ public class CachingTransformerFactory extends TransformerFactoryImpl implements
      */
     protected Transformer newTransformer(final File file)
         throws TransformerConfigurationException {
-        // Search the cache for the templates entry
-        TemplatesCacheEntry templatesCacheEntry = read(file.getAbsolutePath());
-
-        // If entry found
-        if (templatesCacheEntry != null) {
-            // Check timestamp of modification
-            if (templatesCacheEntry.lastModified
-                < templatesCacheEntry.templatesFile.lastModified())
-                templatesCacheEntry = null;
-        }
-        // If no templatesEntry is found or this entry was obsolete
-        if (templatesCacheEntry == null) {
-            //System.out.println("Loading transformation [" + file.getAbsolutePath() + "].");
-            // If this file does not exists, throw the exception
-            if (!file.exists()) {
-                throw new TransformerConfigurationException(
-                    "Requested transformation ["
-                        + file.getAbsolutePath()
-                        + "] does not exist.");
+        final String absolutePath = file.getAbsolutePath();
+        TemplatesCacheEntry templatesCacheEntry = read(absolutePath);
+        if (!isFresh(templatesCacheEntry)) {
+            // Compile each stylesheet once: concurrent callers for the same path wait here,
+            // callers for other paths are not blocked.
+            synchronized (compileLocks.computeIfAbsent(absolutePath, k -> new Object())) {
+                templatesCacheEntry = read(absolutePath);
+                if (!isFresh(templatesCacheEntry)) {
+                    if (!file.exists()) {
+                        throw new TransformerConfigurationException(
+                            "Requested transformation [" + absolutePath + "] does not exist.");
+                    }
+                    // Read the timestamp before compiling, so an edit made during compilation
+                    // makes the entry stale instead of being masked.
+                    final long lastModified = file.lastModified();
+                    final Templates templates = newTemplates(new StreamSource(file));
+                    templatesCacheEntry = new TemplatesCacheEntry(templates, file, lastModified);
+                    write(absolutePath, templatesCacheEntry);
+                }
             }
-
-            // Create new cache entry
-            templatesCacheEntry =
-                new TemplatesCacheEntry(newTemplates(new StreamSource(file)), file);
-
-            // Save this entry to the cache
-            write(file.getAbsolutePath(), templatesCacheEntry);
-        } else {
-            //System.out.println("Using cached transformation [" + file.getAbsolutePath() + "].");
         }
         return templatesCacheEntry.templates.newTransformer();
+    }
+
+    private static boolean isFresh(TemplatesCacheEntry entry) {
+        return entry != null && entry.lastModified >= entry.templatesFile.lastModified();
     }
 
     /**
@@ -135,10 +124,7 @@ public class CachingTransformerFactory extends TransformerFactoryImpl implements
      * @return Templates cache entry for the specified path.
      */
     protected TemplatesCacheEntry read(String absolutePath) {
-        beforeRead();
-        final TemplatesCacheEntry templatesCacheEntry = templatesCache.get(absolutePath);
-        afterRead();
-        return templatesCacheEntry;
+        return templatesCache.get(absolutePath);
     }
 
     /**
@@ -148,49 +134,7 @@ public class CachingTransformerFactory extends TransformerFactoryImpl implements
      * @param templatesCacheEntry templates cache entry to save.
      */
     protected void write(String absolutePath, TemplatesCacheEntry templatesCacheEntry) {
-        beforeWrite();
         templatesCache.put(absolutePath, templatesCacheEntry);
-        afterWrite();
-    }
-
-    /**
-     * Invoked just before reading, waits until reading is allowed.
-     */
-    protected synchronized void beforeRead() {
-        while (activeWriters > 0)
-            try {
-                wait();
-            } catch (InterruptedException iex) {
-            }
-        ++activeReaders;
-    }
-
-    /**
-     * Invoked just after reading.
-     */
-    protected synchronized void afterRead() {
-        --activeReaders;
-        notifyAll();
-    }
-
-    /**
-     * Invoked just before writing, waits until writing is allowed.
-     */
-    protected synchronized void beforeWrite() {
-        while (activeReaders > 0 || activeWriters > 0)
-            try {
-                wait();
-            } catch (InterruptedException iex) {
-            }
-        ++activeWriters;
-    }
-
-    /**
-     * Invoked just after writing.
-     */
-    protected synchronized void afterWrite() {
-        --activeWriters;
-        notifyAll();
     }
 
     /**
@@ -200,28 +144,29 @@ public class CachingTransformerFactory extends TransformerFactoryImpl implements
         /**
          * When was the cached entry last modified.
          */
-        private long lastModified;
+        private final long lastModified;
 
         /**
          * Cached templates object.
          */
-        private Templates templates;
+        private final Templates templates;
 
         /**
          * Templates file object.
          */
-        private File templatesFile;
+        private final File templatesFile;
 
         /**
          * Constructs a new cache entry.
          *
          * @param templates     templates to cache.
          * @param templatesFile file, from which this transformer was loaded.
+         * @param lastModified  modification time of the file, read before compiling it.
          */
-        private TemplatesCacheEntry(final Templates templates, final File templatesFile) {
+        private TemplatesCacheEntry(final Templates templates, final File templatesFile, final long lastModified) {
             this.templates = templates;
             this.templatesFile = templatesFile;
-            this.lastModified = templatesFile.lastModified();
+            this.lastModified = lastModified;
         }
     }
 }
