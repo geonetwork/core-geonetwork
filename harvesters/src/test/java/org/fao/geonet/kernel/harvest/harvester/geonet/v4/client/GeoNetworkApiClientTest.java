@@ -37,14 +37,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import org.apache.http.HttpHeaders;
 import org.apache.http.client.methods.HttpUriRequest;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.client.ClientHttpResponse;
 
 import static org.junit.Assert.assertEquals;
@@ -52,9 +56,12 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -309,5 +316,65 @@ public class GeoNetworkApiClientTest {
 
         assertEquals(1, groups.size());
         assertEquals("test-group", groups.get(0).getName());
+    }
+
+    @Test
+    public void testRetrieveMEFUsesV3WhenSupported() throws URISyntaxException, IOException {
+        byte[] mefBytes = "mef-v3-content".getBytes(StandardCharsets.UTF_8);
+
+        GeoNetwork4ApiClient client = spy(new GeoNetwork4ApiClient());
+        ClientHttpResponse mockResponse = mock(ClientHttpResponse.class);
+        doReturn(HttpStatus.OK).when(mockResponse).getStatusCode();
+        doReturn(new ByteArrayInputStream(mefBytes)).when(mockResponse).getBody();
+        doReturn(mockResponse).when(client).doExecute(any(HttpUriRequest.class), anyString(), anyString());
+
+        Path mefFile = client.retrieveMEF("http://localhost:8080/geonetwork", "aaaa", "", "");
+
+        assertEquals(new String(mefBytes, StandardCharsets.UTF_8),
+            new String(Files.readAllBytes(mefFile), StandardCharsets.UTF_8));
+
+        ArgumentCaptor<HttpUriRequest> requestCaptor = ArgumentCaptor.forClass(HttpUriRequest.class);
+        verify(client, times(1)).doExecute(requestCaptor.capture(), anyString(), anyString());
+        assertEquals(MEFLib.Version.Constants.MEF_V3_ACCEPT_TYPE,
+            requestCaptor.getValue().getFirstHeader(HttpHeaders.ACCEPT).getValue());
+    }
+
+    @Test
+    public void testRetrieveMEFFallsBackToV2WhenV3NotSupported() throws URISyntaxException, IOException {
+        byte[] mefBytes = "mef-v2-content".getBytes(StandardCharsets.UTF_8);
+
+        GeoNetwork4ApiClient client = spy(new GeoNetwork4ApiClient());
+
+        ClientHttpResponse v3Response = mock(ClientHttpResponse.class);
+        doReturn(HttpStatus.BAD_REQUEST).when(v3Response).getStatusCode();
+
+        ClientHttpResponse v2Response = mock(ClientHttpResponse.class);
+        doReturn(HttpStatus.OK).when(v2Response).getStatusCode();
+        doReturn(new ByteArrayInputStream(mefBytes)).when(v2Response).getBody();
+
+        doAnswer(invocation -> {
+            HttpUriRequest request = invocation.getArgument(0);
+            String accept = request.getFirstHeader(HttpHeaders.ACCEPT).getValue();
+            return MEFLib.Version.Constants.MEF_V3_ACCEPT_TYPE.equals(accept) ? v3Response : v2Response;
+        }).when(client).doExecute(any(HttpUriRequest.class), anyString(), anyString());
+
+        Path mefFile = client.retrieveMEF("http://localhost:8080/geonetwork", "aaaa", "", "");
+
+        assertEquals(new String(mefBytes, StandardCharsets.UTF_8),
+            new String(Files.readAllBytes(mefFile), StandardCharsets.UTF_8));
+        verify(client, times(2)).doExecute(any(HttpUriRequest.class), anyString(), anyString());
+    }
+
+    @Test
+    public void testRetrieveMEFThrowsWhenBothVersionsRejected() throws URISyntaxException, IOException {
+        GeoNetwork4ApiClient client = spy(new GeoNetwork4ApiClient());
+        ClientHttpResponse mockResponse = mock(ClientHttpResponse.class);
+        doReturn(HttpStatus.BAD_REQUEST).when(mockResponse).getStatusCode();
+        doReturn(mockResponse).when(client).doExecute(any(HttpUriRequest.class), anyString(), anyString());
+
+        assertThrows(IOException.class, () ->
+            client.retrieveMEF("http://localhost:8080/geonetwork", "aaaa", "", ""));
+
+        verify(client, times(2)).doExecute(any(HttpUriRequest.class), anyString(), anyString());
     }
 }
