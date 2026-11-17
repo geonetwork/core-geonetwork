@@ -7,7 +7,7 @@
           <h1>
             <i class="fa fa-fw gn-icon-" />
             Copie du modèle Template for geographical data créée le 2026-01-28T16:55:38.522729039+01:00[Europe/Paris]
-            <span class="text-muted badge" data-ng-class="{ 'text-success': md.mdStatus == 2, 'text-warning': md.mdStatus == 4 }" data-ng-if="user.isEditorOrMore() &amp;&amp; md.mdStatus &lt; 50 &amp;&amp; isMdWorkflowEnable">{{('status-' + md.mdStatus) | translate}}</span>
+            <span class="text-muted badge" data-ng-class="{ 'text-success': mdView.current.record.mdStatus == 2, 'text-warning': mdView.current.record.mdStatus == 4 }" data-ng-if="user.isEditorOrMore() &amp;&amp; mdView.current.record.mdStatus &lt; 50 &amp;&amp; isMdWorkflowEnable">{{('status-' + mdView.current.record.mdStatus) | translate}}</span>
           </h1>
           <div class="gn-abstract" />
           <script type="application/ld+json">{
@@ -116,7 +116,7 @@
 
        
       }</script>
-          <div gn-related="md" data-user="user" data-layout="card" data-types="onlines" />
+          <div data-ng-if="mdView.current.record.link" data-gn-distribution-resources-container="mdView.current.record" data-mode="::viewConfig.distributionConfig.layout || ''" data-editable="false" data-related-config="::viewConfig.distributionConfig.sections" />
         </header>
         <div>
           <ul class="view-outline nav nav-tabs nav-tabs-advanced">
