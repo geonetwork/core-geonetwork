@@ -29,6 +29,7 @@ import javax.persistence.AttributeConverter;
 
 import java.beans.PropertyEditorSupport;
 import java.util.Arrays;
+import java.util.Locale;
 
 /**
  * Created by francois on 31/12/15.
@@ -38,7 +39,7 @@ public class MetadataResourceVisibilityConverter
     implements AttributeConverter<MetadataResourceVisibility, String> {
     @Override
     public void setAsText(final String visibility) throws IllegalArgumentException {
-        MetadataResourceVisibility value = MetadataResourceVisibility.parse(visibility.trim());
+        MetadataResourceVisibility value = MetadataResourceVisibility.parse(visibility.trim().toLowerCase(Locale.ROOT));
         if (value != null) {
             setValue(value);
         } else {

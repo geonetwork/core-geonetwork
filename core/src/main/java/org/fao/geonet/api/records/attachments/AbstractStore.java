@@ -38,6 +38,7 @@ import org.fao.geonet.domain.MetadataResourceVisibility;
 import org.fao.geonet.kernel.AccessManager;
 import org.fao.geonet.kernel.datamanager.IMetadataUtils;
 import org.fao.geonet.repository.MetadataRepository;
+import org.fao.geonet.util.KnownSizeInputStream;
 import org.fao.geonet.util.LimitedInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +70,10 @@ public abstract class AbstractStore implements Store {
 
     @Value("${api.params.maxUploadSize:104857600}")
     protected long maxUploadSize = 104857600L;
+    @Value("${api.params.uploadConnectTimeout:10000}")
+    protected int uploadConnectTimeout;
+    @Value("${api.params.uploadReadTimeout:10000}")
+    protected int uploadReadTimeout;
 
     @Override
     public final List<MetadataResource> getResources(final ServiceContext context, final String metadataUuid, final Sort sort,
@@ -160,6 +165,16 @@ public abstract class AbstractStore implements Store {
     }
 
     /**
+     * Returns the registry responsible for coordinating active resource uploads
+     * and checking distributed filename claims.
+     *
+     * @return the Spring-managed resource upload task registry
+     */
+    protected static ResourceUploadTaskRegistry getResourceUploadTaskRegistry() {
+        return ApplicationContextHolder.get().getBean(ResourceUploadTaskRegistry.class);
+    }
+
+    /**
      * Resolves the effective approved state for a read request. The result is {@code true} only
      * when the caller asked for the approved version <em>and</em> an approved copy of the record
      * actually exists. When {@code approved=true} is requested for a record that has never been
@@ -242,6 +257,33 @@ public abstract class AbstractStore implements Store {
         return fileName;
     }
 
+    /**
+     * Resolves the total/expected size of {@code is}, preferring a non-negative known size over
+     * {@link InputStream#available()}.
+     *
+     * <p>If the stream implements {@link KnownSizeInputStream} (directly or through decorators
+     * such as {@link ProgressReportingInputStream} wrapping a {@link LimitedInputStream}) and it
+     * reports a known size of zero or greater, this method returns that value.
+     *
+     * <p>If the stream reports an unknown size ({@code -1}), this method falls back to
+     * {@link InputStream#available()} as a best-effort value. For network or streamed sources,
+     * {@code available()} often only reflects the currently buffered bytes and not the total
+     * remaining size.
+     *
+     * @param is the stream to inspect
+     * @return the resolved size, or a best-effort available-byte count when total size is unknown
+     * @throws IOException if the stream cannot report the number of available bytes
+     */
+    public static long resolveExpectedSize(InputStream is) throws IOException {
+        if (is instanceof KnownSizeInputStream) {
+            long knownSize = ((KnownSizeInputStream) is).getKnownSize();
+            if (knownSize >= 0) {
+                return knownSize;
+            }
+        }
+        return is.available();
+    }
+
     @Override
     public final MetadataResource putResource(final ServiceContext context, final String metadataUuid, final MultipartFile file,
             final MetadataResourceVisibility visibility) throws Exception {
@@ -287,44 +329,71 @@ public abstract class AbstractStore implements Store {
     @Override
     public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
             MetadataResourceVisibility visibility, Boolean approved) throws Exception {
+        return putResource(context, metadataUuid, fileUrl, visibility, approved, ResourceUploadProgressListener.NO_OP);
+    }
+
+    @Override
+    public final MetadataResource putResource(ServiceContext context, String metadataUuid, URL fileUrl,
+            MetadataResourceVisibility visibility, Boolean approved, ResourceUploadProgressListener progressListener)
+            throws Exception {
 
         // Open a connection to the URL
         HttpURLConnection connection = (HttpURLConnection) fileUrl.openConnection();
-        connection.setInstanceFollowRedirects(true);
-        connection.setRequestMethod("GET");
 
-        // Check if the response code is OK
-        int responseCode = connection.getResponseCode();
-        if (responseCode != HttpURLConnection.HTTP_OK) {
-            throw new IOException("Unexpected response code: " + responseCode);
-        }
+        try {
+            connection.setConnectTimeout(uploadConnectTimeout);
+            connection.setReadTimeout(uploadReadTimeout);
+            connection.setInstanceFollowRedirects(true);
+            connection.setRequestMethod("GET");
 
-        // Extract filename from Content-Disposition header if present otherwise use the filename from the URL
-        String contentDisposition = connection.getHeaderField(HttpHeaders.CONTENT_DISPOSITION);
-        String filename = null;
-        if (contentDisposition != null) {
-            filename = ContentDisposition.parse(contentDisposition).getFilename();
-        }
-        // If follow redirect, get the filename from the redirected URL
-        if (StringUtils.isEmpty(filename) && connection.getInstanceFollowRedirects()) {
-            URL redirectUrl = connection.getURL();
-            if (redirectUrl != null) {
-                filename = getFilenameFromUrl(redirectUrl);
+            // Check if the response code is OK
+            int responseCode = connection.getResponseCode();
+            if (responseCode != HttpURLConnection.HTTP_OK) {
+                throw new IOException("Unexpected response code: " + responseCode);
             }
-        }
-        if (StringUtils.isEmpty(filename)) {
-            filename = getFilenameFromUrl(fileUrl);
-        }
 
-        // Check if the content length is within the allowed limit
-        long contentLength = connection.getContentLengthLong();
-        if (contentLength > maxUploadSize) {
-            throw new InputStreamLimitExceededException(maxUploadSize, contentLength);
-        }
+            // Extract filename from Content-Disposition header if present otherwise use the filename from the URL
+            String contentDisposition = connection.getHeaderField(HttpHeaders.CONTENT_DISPOSITION);
+            String filename = null;
+            if (contentDisposition != null) {
+                filename = ContentDisposition.parse(contentDisposition).getFilename();
+            }
+            // If the filename is still empty, try to get it from the redirected URL (if any).
+            if (StringUtils.isEmpty(filename)) {
+                URL redirectUrl = connection.getURL();
+                if (redirectUrl != null) {
+                    filename = getFilenameFromUrl(redirectUrl);
+                }
+            }
+            // If still empty, get the filename from the original URL
+            if (StringUtils.isEmpty(filename)) {
+                filename = getFilenameFromUrl(fileUrl);
+            }
 
-        // Upload the resource while ensuring the input stream does not exceed the maximum allowed size.
-        try (LimitedInputStream is = new LimitedInputStream(connection.getInputStream(), maxUploadSize, contentLength)) {
-            return putResource(context, metadataUuid, filename, is, null, visibility, approved);
+            if (StringUtils.isEmpty(filename)) {
+                throw new IOException("Unable to determine filename from URL or Content-Disposition header.");
+            }
+
+            getResourceUploadTaskRegistry().resolveFilenameAndCheck(metadataUuid, filename, progressListener);
+
+            // Check if the content length is within the allowed limit.
+            long contentLength = connection.getContentLengthLong();
+            if (contentLength > maxUploadSize) {
+                throw new InputStreamLimitExceededException(maxUploadSize, contentLength);
+            }
+
+            progressListener.onProgress(0, contentLength);
+
+            // Upload the resource while ensuring the input stream does not exceed the maximum allowed size.
+            try (LimitedInputStream is = new LimitedInputStream(connection.getInputStream(), maxUploadSize, contentLength);
+                 ProgressReportingInputStream progressIs = new ProgressReportingInputStream(is, contentLength, progressListener)) {
+
+                progressListener.onStreamOpened(progressIs);
+
+                return putResource(context, metadataUuid, filename, progressIs, null, visibility, approved);
+            }
+        } finally {
+            connection.disconnect();
         }
     }
 
