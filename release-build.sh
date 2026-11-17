@@ -74,14 +74,14 @@ mvn clean install -DskipTests -ntp -Drelease -pl plugins/datahub-integration
 
 # generate checksum for download artifacts
 
-if [ -f "release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip.sha256" ]; then
-  rm release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip.sha256
+if [ -f "release/target/GeoNetwork-$mainVersion/geonetwork-bundle-$newversion.zip.sha256" ]; then
+  rm release/target/GeoNetwork-$mainVersion/geonetwork-bundle-$newversion.zip.sha256
 fi
 
 if [[ ${OSTYPE:0:6} == 'darwin' ]]; then
   shasum -a 256 web/target/geonetwork.war > web/target/geonetwork.war.sha256
-  shasum -a 256 release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip > release/target/GeoNetwork-$version/geonetwork-bundle-$newversion.zip.sha256
+  shasum -a 256 release/target/GeoNetwork-$mainVersion/geonetwork-bundle-$newversion.zip > release/target/GeoNetwork-$mainVersion/geonetwork-bundle-$newversion.zip.sha256
 else
   (cd web/target && sha256sum geonetwork.war > geonetwork.war.sha256)
-  (cd release/target/GeoNetwork-$version && sha256sum geonetwork-bundle-$newversion.zip > geonetwork-bundle-$newversion.zip.sha256)
+  (cd release/target/GeoNetwork-$mainVersion && sha256sum geonetwork-bundle-$newversion.zip > geonetwork-bundle-$newversion.zip.sha256)
 fi
