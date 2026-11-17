@@ -889,21 +889,40 @@
 
             <xsl:variable name="zuluStartDate"
                           select="date-util:convertToISOZuluDateTime($start)"/>
+            <!-- An end without time covers the whole day, month or year: index up to its last millisecond. -->
+            <xsl:variable name="endValue" select="normalize-space($end)"/>
+            <xsl:variable name="endLastDay"
+                          select="if (matches($endValue, '^\d{4}-\d{2}-\d{2}Z?$'))
+                                  then substring($endValue, 1, 10)
+                                  else if (matches($endValue, '^\d{4}-\d{2}$')
+                                           and concat($endValue, '-01') castable as xs:date)
+                                  then string(xs:date(concat($endValue, '-01'))
+                                              + xs:yearMonthDuration('P1M') - xs:dayTimeDuration('P1D'))
+                                  else if (matches($endValue, '^\d{4}$'))
+                                  then concat($endValue, '-12-31')
+                                  else ''"/>
             <xsl:variable name="zuluEndDate"
-                          select="date-util:convertToISOZuluDateTime($end)"/>
+                          select="if ($endLastDay != '')
+                                  then date-util:convertToISOZuluDateTime(concat($endLastDay, 'T23:59:59.999'))
+                                  else date-util:convertToISOZuluDateTime($end)"/>
 
             <xsl:choose>
+              <!-- Start after end: not a usable period. Index no range rather than an open-ended one;
+                   the temporalDateRangeLowerGreaterThanUpper warning below flags the record. -->
+              <xsl:when test="$zuluStartDate != '' and $zuluEndDate != ''
+                              and $zuluStartDate &gt; $zuluEndDate
+                              and not($end/@indeterminatePosition = 'now')"/>
               <xsl:when test="$zuluStartDate != ''
                                 and ($zuluEndDate != '' or $end/@indeterminatePosition = 'now')">
                 <resourceTemporalDateRange type="object">{
                   "gte": "<xsl:value-of select="$zuluStartDate"/>"
-                  <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
+                  <xsl:if test="$zuluStartDate &lt;= $zuluEndDate and not($end/@indeterminatePosition = 'now')">
                     ,"lte": "<xsl:value-of select="$zuluEndDate"/>"
                   </xsl:if>
                   }</resourceTemporalDateRange>
                 <resourceTemporalExtentDateRange type="object">{
                   "gte": "<xsl:value-of select="$zuluStartDate"/>"
-                  <xsl:if test="$start &lt; $end and not($end/@indeterminatePosition = 'now')">
+                  <xsl:if test="$zuluStartDate &lt;= $zuluEndDate and not($end/@indeterminatePosition = 'now')">
                     ,"lte": "<xsl:value-of select="$zuluEndDate"/>"
                   </xsl:if>
                 }</resourceTemporalExtentDateRange>
@@ -921,10 +940,10 @@
 
             <xsl:if test="$zuluStartDate != ''
                           and $zuluEndDate != ''
-                          and $start &gt; $end">
+                          and $zuluStartDate &gt; $zuluEndDate">
               <indexingErrorMsg type="object">
                 {
-                  "string": "indexingErrorMsg-temporalRangeLowerGreaterThanUpper",
+                  "string": "indexingErrorMsg-temporalDateRangeLowerGreaterThanUpper",
                   "type": "warning",
                   "values": {
                     "lowerBound": "<xsl:value-of select="util:escapeForJson($start)"/>",
