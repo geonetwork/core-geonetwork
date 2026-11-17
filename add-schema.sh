@@ -43,16 +43,19 @@ fi
 
 
 # Add schema module in schemas/pom.xml
-line=$(grep -n ${schema} schemas/pom.xml | cut -d: -f1)
+line=$(grep -nF "<module>${schema}</module>" schemas/pom.xml | cut -d: -f1 | head -1)
 
-if [ ! -n "$line" ]
+if [ -z "$line" ]
 then
-  line=$(grep -n '</profiles>' schemas/pom.xml | cut -d: -f1)
-  insertLine=$(($line - 1))
-
   echo "Adding schema ${schema} to schemas/pom.xml"
 
-  sed $sedopt -f /dev/stdin schemas/pom.xml << SED_SCRIPT
+  line=$(grep -n '</profiles>' schemas/pom.xml | cut -d: -f1 | tail -1)
+
+  if [ -n "$line" ]
+  then
+    # Existing <profiles> section: add the profile at its end
+    insertLine=$(($line - 1))
+    sed $sedopt -f /dev/stdin schemas/pom.xml << SED_SCRIPT
   ${insertLine} a\\
 \    <profile>\\
 \      <id>schema-${schema}</id>\\
@@ -64,11 +67,42 @@ then
 \      </modules>\\
 \    </profile>
 SED_SCRIPT
+  else
+    # No <profiles> section (e.g. GeoNetwork 4.4.x): create it before </project>
+    line=$(grep -n '</project>' schemas/pom.xml | cut -d: -f1 | tail -1)
+    if [ -z "$line" ]
+    then
+      echo "ERROR: cannot find </project> in schemas/pom.xml" >&2
+      exit 1
+    fi
+    insertLine=$(($line - 1))
+    sed $sedopt -f /dev/stdin schemas/pom.xml << SED_SCRIPT
+  ${insertLine} a\\
+\\
+\  <profiles>\\
+\    <profile>\\
+\      <id>schema-${schema}</id>\\
+\      <activation>\\
+\        <file><exists>${schema}</exists></file>\\
+\      </activation>\\
+\      <modules>\\
+\        <module>${schema}</module>\\
+\      </modules>\\
+\    </profile>\\
+\  </profiles>
+SED_SCRIPT
+  fi
+
+  if ! grep -qF "<module>${schema}</module>" schemas/pom.xml
+  then
+    echo "ERROR: failed to add schema ${schema} to schemas/pom.xml" >&2
+    exit 1
+  fi
 fi
 
 
 # Add schema dependency in web/pom.xml
-line=$(grep -n "schema-${schema}" web/pom.xml | cut -d: -f1)
+line=$(grep -nF "<id>schema-${schema}</id>" web/pom.xml | cut -d: -f1 | head -1)
 
 if [ ! -n "$line" ]
 then
@@ -90,7 +124,7 @@ SED_SCRIPT
 
   echo "Adding schema ${schema} dependency to web/pom.xml for schemaUnpack"
 
-  line=$(grep -n '</profiles>' web/pom.xml | cut -d: -f1)
+  line=$(grep -n '</profiles>' web/pom.xml | cut -d: -f1 | tail -1)
   insertLine=$(($line - 1))
   sed $sedopt -f /dev/stdin web/pom.xml << SED_SCRIPT
   ${insertLine} a\\
@@ -138,11 +172,12 @@ SED_SCRIPT
 fi
 
 # Add schema resources in service/pom.xml with test scope for unit tests
-line=$(grep -n "<artifactId>gn-schema-${schema}</artifactId>" services/pom.xml | cut -d: -f1)
+line=$(grep -nF "<artifactId>gn-schema-${schema}</artifactId>" services/pom.xml | cut -d: -f1 | head -1)
 
-if [ ! $line ]
+if [ -z "$line" ]
 then
-  line=$(grep -n '</dependencies>' services/pom.xml | cut -d: -f1)
+  # first </dependencies> is the project one (profiles come after it)
+  line=$(grep -n '^  </dependencies>' services/pom.xml | cut -d: -f1 | head -1)
   finalLine=$(($line - 1))
 
   projectGroupId='org.geonetwork-opensource.schemas'
