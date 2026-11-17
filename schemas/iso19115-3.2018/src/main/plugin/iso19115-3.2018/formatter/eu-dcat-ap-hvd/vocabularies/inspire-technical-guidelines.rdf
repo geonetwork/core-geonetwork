@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <skos:ConceptScheme rdf:about="http://inspire.ec.europa.eu/technical-guidelines">
+    <dc:title>INSPIRE technical guidelines</dc:title>
+    <dc:description />
+    <dc:creator>
+      <foaf:Organization>
+        <foaf:name>INSPIRE</foaf:name>
+      </foaf:Organization>
+    </dc:creator>
+    <dc:uri>https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892</dc:uri>
+    <dc:rights>https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892</dc:rights>
+    <dcterms:modified>2019-04-22</dcterms:modified>
+    <skos:hasTopConcept rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+    <skos:hasTopConcept rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:ConceptScheme>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892">
+    <skos:prefLabel xml:lang="en">INSPIRE &gt; Legislation</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE &gt; Législation</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/technical-guidelines" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/documents/commission-regulation-eu-no-10892010-23-november-2010-implementing-directive-20072ec" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892">
+    <skos:prefLabel xml:lang="en">INSPIRE &gt; Data Specification</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE &gt; Spécification sur les données</skos:prefLabel>
+    <skos:inScheme rdf:resource="http://inspire.ec.europa.eu/technical-guidelines" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/ad" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/au" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/cp" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/rs" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/gg" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/gn" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/hy" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/ps" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/tn" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/el" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/ge" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/lc" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/oi" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/af" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/am" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/ac" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/br" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/bu" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/er" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/ef" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/hb" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/hh" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/lu" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/mr" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/nz" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/of" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/pd" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/pf" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/sr" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/so" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/sd" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/su" />
+    <skos:narrower rdf:resource="https://inspire.ec.europa.eu/id/document/tg/us" />
+  </skos:Concept>
+  <!-- Legislation Dataset -->
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/documents/commission-regulation-eu-no-10892010-23-november-2010-implementing-directive-20072ec">
+    <skos:prefLabel xml:lang="en">COMMISSION REGULATION (EU) No 1089/2010 of 23 November 2010 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards interoperability of spatial data sets and services</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">RÈGLEMENT (UE) N o 1089/2010 DE LA COMMISSION du 23 novembre 2010 portant modalités d'application de la directive 2007/2/CE du Parlement européen et du Conseil en ce qui concerne l'interopérabilité des séries et des services de données géographiques</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Legislation/Data-Specifications/2892" />
+  </skos:Concept>
+  <!-- Legislation Network Services -->
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/documents/commission-regulation-ec-no-9762009-19-october-2009-implementing-directive-20072ec">
+    <skos:prefLabel xml:lang="en">Commission Regulation (EC) No 976/2009 of 19 October 2009 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards the Network Services</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">Règlement (CE) n o 976/2009 de la Commission du 19 octobre 2009 portant modalités d’application de la directive 2007/2/CE du Parlement européen et du Conseil en ce qui concerne les services en réseau</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Legislation/Data-Specifications/2892" />
+  </skos:Concept>
+  <!-- Legislation Metadata -->
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/documents/inspire-metadata-regulation">
+    <skos:prefLabel xml:lang="en">COMMISSION REGULATION (EC) No 1205/2008 of 3 December 2008 implementing Directive 2007/2/EC of the European Parliament and of the Council as regards metadata</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">RÈGLEMENT (UE) N o 1205/2008 DE LA COMMISSION du 3 décembre 2008 portant modalités d'application de la directive 2007/2/CE du Parlement européen et du Conseil en ce qui concerne les métadonnées</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Legislation/Data-Specifications/2892" />
+  </skos:Concept>
+  <!-- Annex I -->
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/ad">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Addresses – Technical Guidelines, version 3.1</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Addresses – Technical Guidelines, version 3.1</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/au">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Administrative Units – Technical Guidelines, version 3.1</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Administrative Units – Technical Guidelines, version 3.1</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/cp">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Cadastral Parcels – Technical Guidelines, version 3.1</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Cadastral Parcels – Technical Guidelines, version 3.1</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/rs">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Coordinate Reference Systems – Technical Guidelines, version 3.2</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Coordinate Reference Systems – Technical Guidelines, version 3.2</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/gg">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Geographical Grid Systems – Technical Guidelines, version 3.1</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Geographical Grid Systems – Technical Guidelines, version 3.1</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/gn">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Geographical Names – Technical Guidelines, version 3.1</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Geographical Names – Technical Guidelines, version 3.1</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/hy">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Hydrography – Technical Guidelines, version 3.1</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Hydrography – Technical Guidelines, version 3.1</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/ps">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Protected Sites – Technical Guidelines, version 3.2</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Protected Sites – Technical Guidelines, version 3.2</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/tn">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version 3.2</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Transport Networks – Technical Guidelines, version 3.2</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <!-- Annex II -->
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/el">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Elevation – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Elevation – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/ge">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Geology – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Geology – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/lc">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Land Cover – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Land Cover – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/oi">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Orthoimagery – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Orthoimagery – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <!-- Annex III -->
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/af">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Agricultural and Aquaculture Facilities – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Agricultural and Aquaculture Facilities – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/am">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Area Management/Restriction/Regulation Zones and Reporting Units – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Area Management/Restriction/Regulation Zones and Reporting Units – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/ac">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Atmospheric Conditions and Meteorological Geographical Features – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Atmospheric Conditions and Meteorological Geographical Features – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/br">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Bio-geographical Regions – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Bio-geographical Regions – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/bu">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Buildings – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Buildings – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/er">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Energy Resources – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Energy Resources – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/ef">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Environmental Monitoring Facilities – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Environmental Monitoring Facilities – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/hb">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Habitats and Biotopes – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Habitats and Biotopes – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/hh">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Human Health and Safety – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Human Health and Safety – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/lu">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Land Use – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Land Use – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/mr">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Mineral Resources – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Mineral Resources – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/nz">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Natural Risk Zones – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Natural Risk Zones – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/of">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Oceanographic geographical features – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Oceanographic geographical features – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/pd">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Population Distribution – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Population Distribution – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/pf">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Production and Industrial Facilities – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Production and Industrial Facilities – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/sr">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Sea Regions – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Sea Regions – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/so">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Soil – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Soil – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/sd">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Species Distribution – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Species Distribution – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/su">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Statistical Units – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Statistical Units – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+  <skos:Concept rdf:about="https://inspire.ec.europa.eu/id/document/tg/us">
+    <skos:prefLabel xml:lang="en">INSPIRE Data Specification on Utility and Government Services – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:prefLabel xml:lang="fr">INSPIRE Data Specification on Utility and Government Services – Technical Guidelines, version 3.0</skos:prefLabel>
+    <skos:broader rdf:resource="https://inspire.ec.europa.eu/Technical-Guidelines/Data-Specifications/2892" />
+  </skos:Concept>
+</rdf:RDF>
+
