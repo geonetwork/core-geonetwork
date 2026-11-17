@@ -25,6 +25,12 @@ To add new static pages go to **Admin Console** -->  **Settings** -->  **Static 
 
 - **Page content file**: For formats other than **Web link** or **Email link**, allows uploading a file with the HTML content / text to be displayed.
 
+- **Window target** (`target`): Available for **Web link** and **HTML content displayed in a new browser tab**. Leave empty for the default link behavior (usually a new tab; relative links in submenus open in the current page). Use `_self` to open in the current page, or a name such as `validator` to reuse the same window. With popup dimensions set, an empty target opens a new popup each time, equivalent to `_blank`.
+
+- **Popup width / height** (`windowWidth`, `windowHeight`): Optional positive integers in pixels, available for the same formats. Setting either dimension requests a popup window instead of a tab. Use `_blank` or a named target for popups. For example, target `validator`, width `1000`, and height `700` opens a reusable validator popup. Leave both dimensions empty for normal links. Browsers may adjust dimensions or block popups; modified clicks retain normal browser behavior.
+
+  These settings apply to standalone links and submenu items in all static-page menu sections, including the metadata editor. Record placeholders such as `{uuid}` and `{id}` are resolved before opening the window.
+
 - **Page content**: For formats other than **Web link** or **Email link**, allows editing the HTML / text content to display.
 
 - **Page section**: Section of the page to display the link. Currently implemented sections are `TOP` (top menu of the main page), `FOOTER` (footer of the main page), `RECORD_VIEW_MENU` (toolbar shown on the record view page), and `RECORD_EDITOR_MENU` (toolbar shown in the metadata editor).
