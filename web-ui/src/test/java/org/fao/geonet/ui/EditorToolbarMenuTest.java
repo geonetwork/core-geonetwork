@@ -139,6 +139,94 @@ public class EditorToolbarMenuTest {
             "toolbar.link.pre(toolbarScope);\n");
     }
 
+    private void linkPopupMenu() throws ScriptException {
+        engine.eval(
+            "var openedWindows = [], notifications = [], blockPopup = false;\n" +
+            "var popupDirective = instantiate(registry.directives.gnStaticPageMenu, [\n" +
+            "  staticPagesService(pages), {gnCfg: {}},\n" +
+            "  {open: function (url, target, features) {\n" +
+            "    openedWindows.push([url, target, features]); return blockPopup ? null : {};\n" +
+            "  }}, {instant: function (key) { return key; }}]);\n" +
+            "var popupScope = {pageId: 'always', language: 'eng', section: 'record_editor_menu',\n" +
+            "  $watch: function () {}, $emit: function (name, data) { notifications.push(data); }};\n" +
+            "popupDirective.link(popupScope);\n" +
+            "var prevented = false;\n" +
+            "var click = {button: 0, currentTarget: {href: 'https://e.org/record-uuid'},\n" +
+            "  preventDefault: function () { prevented = true; }};\n");
+    }
+
+    @Test
+    public void staticPagePopupUsesNamedTargetAndDimensions() throws ScriptException {
+        linkPopupMenu();
+        engine.eval("popupScope.openPageWindow(click, " +
+            "{format: 'LINK', target: 'validator', windowWidth: 1000, windowHeight: 700});");
+        assertEquals("true", js("prevented"));
+        assertEquals("[[\"https://e.org/record-uuid\",\"validator\"," +
+                "\"popup=yes,resizable=yes,scrollbars=yes,width=1000,height=700\"]]",
+            js("openedWindows"));
+    }
+
+    @Test
+    public void staticPagePopupSupportsEitherDimensionAndDefaultsToNewWindow() throws ScriptException {
+        linkPopupMenu();
+        engine.eval("popupScope.openPageWindow(click, {format: 'HTMLPAGE', windowWidth: 800});");
+        engine.eval("popupScope.openPageWindow(click, {format: 'LINK', windowHeight: 600});");
+        assertEquals("[[\"https://e.org/record-uuid\",\"_blank\"," +
+                "\"popup=yes,resizable=yes,scrollbars=yes,width=800\"]," +
+                "[\"https://e.org/record-uuid\",\"_blank\"," +
+                "\"popup=yes,resizable=yes,scrollbars=yes,height=600\"]]",
+            js("openedWindows"));
+    }
+
+    @Test
+    public void staticPageLinksWithoutDimensionsKeepNativeNavigation() throws ScriptException {
+        linkPopupMenu();
+        engine.eval("popupScope.openPageWindow(click, {format: 'LINK'});");
+        engine.eval("popupScope.openPageWindow(click, {format: 'LINK', target: '_self'});");
+        engine.eval("popupScope.openPageWindow(click, {format: 'LINK', target: 'validator'});");
+        assertEquals("false", js("prevented"));
+        assertEquals("[]", js("openedWindows"));
+    }
+
+    @Test
+    public void staticPagePopupPreservesModifiedClicks() throws ScriptException {
+        for (String modifier : new String[]{"ctrlKey", "metaKey", "shiftKey", "altKey", "button"}) {
+            linkPopupMenu();
+            engine.eval("click." + modifier + " = 1;\n" +
+                "popupScope.openPageWindow(click, {format: 'LINK', windowWidth: 800});");
+            assertEquals(modifier, "false", js("prevented"));
+            assertEquals(modifier, "[]", js("openedWindows"));
+        }
+    }
+
+    @Test
+    public void staticPagePopupDoesNotInterceptEmailOrEmbeddedPages() throws ScriptException {
+        linkPopupMenu();
+        for (String format : new String[]{"EMAILLINK", "HTML", "TEXT"}) {
+            engine.eval("popupScope.openPageWindow(click, {format: '" + format + "', windowWidth: 800});");
+        }
+        assertEquals("false", js("prevented"));
+        assertEquals("[]", js("openedWindows"));
+    }
+
+    @Test
+    public void staticPagePopupDoesNotOpenSanitizedUnsafeUrls() throws ScriptException {
+        linkPopupMenu();
+        engine.eval("click.currentTarget.href = 'unsafe:javascript:alert(1)';\n" +
+            "popupScope.openPageWindow(click, {format: 'LINK', windowWidth: 800});");
+        assertEquals("true", js("prevented"));
+        assertEquals("[]", js("openedWindows"));
+    }
+
+    @Test
+    public void staticPagePopupReportsBlockedWindows() throws ScriptException {
+        linkPopupMenu();
+        engine.eval("blockPopup = true;\n" +
+            "popupScope.openPageWindow(click, {format: 'LINK', windowWidth: 800});");
+        assertEquals("[{\"msg\":\"pagePopupBlocked\",\"type\":\"warning\",\"timeout\":0}]",
+            js("notifications"));
+    }
+
     @Test
     public void defaultEditorMenuContainsAllBuiltInEntries() throws ScriptException {
         assertEquals(
@@ -254,6 +342,5 @@ public class EditorToolbarMenuTest {
                 "{mdStatus: 1, isWorkflowEnabled: false})"));
     }
 }
-
 
 
