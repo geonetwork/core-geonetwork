@@ -129,6 +129,8 @@
   <bean id="esClient"
         class="org.fao.geonet.index.es.EsRestClient"/>
 
+  <bean id="semanticUtils" class="org.fao.geonet.util.SemanticUtils"/>
+
   <bean id="forceInitRepositoriesForTestingBean"
         class="org.fao.geonet.kernel.ForceInitRepositoriesForTestingBean" lazy-init="false"/>
   <bean id="httpRequestFactory" class="org.fao.geonet.utils.GeonetHttpRequestFactory"/>
@@ -141,7 +143,7 @@
 
   <bean id="servletContext" class="org.fao.geonet.GeonetMockServletContext"/>
   <bean id="threadPool" class="org.fao.geonet.TestThreadPool"/>
-  
+
   <bean class="org.fao.geonet.analytics.WebAnalyticsConfiguration" name="webAnalyticsConfiguration">
     <property name="service" value="" />
     <property name="javascriptCode" value="" />
