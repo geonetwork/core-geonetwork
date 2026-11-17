@@ -87,6 +87,9 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         newPage.setLanguage(language);
         newPage.setLabel(pageId);
         newPage.setLink(link);
+        newPage.setTarget("validator");
+        newPage.setWindowWidth(1000);
+        newPage.setWindowHeight(700);
         ArrayList<Page.PageSection> sections = new ArrayList<>();
         sections.add(Page.PageSection.TOP);
         newPage.setSections(sections);
@@ -108,6 +111,13 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         Assert.assertTrue(page.isPresent());
         Assert.assertEquals(link, page.get().getLink());
         Assert.assertEquals(pageId, page.get().getLabel());
+        Assert.assertEquals("validator", page.get().getTarget());
+        Assert.assertEquals(Integer.valueOf(1000), page.get().getWindowWidth());
+        Assert.assertEquals(Integer.valueOf(700), page.get().getWindowHeight());
+        PageProperties returnedPage = new PageProperties(page.get());
+        Assert.assertEquals("validator", returnedPage.getTarget());
+        Assert.assertEquals(Integer.valueOf(1000), returnedPage.getWindowWidth());
+        Assert.assertEquals(Integer.valueOf(700), returnedPage.getWindowHeight());
         Assert.assertTrue(page.get().getSections().contains(Page.PageSection.TOP));
 
         this.mockMvc.perform(createPageBuilder)
@@ -122,6 +132,9 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         newPage.setLink(link + "updated");
         newPage.setLabel(pageId + "updated");
         newPage.setIcon("dummy-icon");
+        newPage.setTarget("renamedValidator");
+        newPage.setWindowWidth(900);
+        newPage.setWindowHeight(600);
         newPage.getSections().add(Page.PageSection.FOOTER);
         MockHttpServletRequestBuilder updatePageBuilder = put("/srv/api/pages/eng/license")
             .content(gson.toJson(newPage))
@@ -137,9 +150,42 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         Assert.assertEquals(link + "updated", page.get().getLink());
         Assert.assertEquals(pageId + "updated", page.get().getLabel());
         Assert.assertEquals("dummy-icon", page.get().getIcon());
+        Assert.assertEquals("renamedValidator", page.get().getTarget());
+        Assert.assertEquals(Integer.valueOf(900), page.get().getWindowWidth());
+        Assert.assertEquals(Integer.valueOf(600), page.get().getWindowHeight());
         Assert.assertTrue(page.get().getSections().contains(Page.PageSection.TOP));
         Assert.assertTrue(page.get().getSections().contains(Page.PageSection.FOOTER));
 
+
+        newPage.setTarget("");
+        newPage.setWindowWidth(null);
+        newPage.setWindowHeight(null);
+        this.mockMvc.perform(put("/srv/api/pages/" + language + "/" + pageId)
+                .content(gson.toJson(newPage))
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession))
+            .andExpect(status().isNoContent());
+        Page clearedPage = pageRepository.findById(new PageIdentity(language, pageId)).get();
+        Assert.assertNull(clearedPage.getTarget());
+        Assert.assertNull(clearedPage.getWindowWidth());
+        Assert.assertNull(clearedPage.getWindowHeight());
+
+        for (int invalidSize : new int[]{0, -1}) {
+            newPage.setWindowWidth(invalidSize);
+            this.mockMvc.perform(put("/srv/api/pages/" + language + "/" + pageId)
+                    .content(gson.toJson(newPage))
+                    .contentType(API_JSON_EXPECTED_ENCODING)
+                    .session(this.mockHttpSession))
+                .andExpect(status().isBadRequest());
+            newPage.setWindowWidth(null);
+            newPage.setWindowHeight(invalidSize);
+            this.mockMvc.perform(put("/srv/api/pages/" + language + "/" + pageId)
+                    .content(gson.toJson(newPage))
+                    .contentType(API_JSON_EXPECTED_ENCODING)
+                    .session(this.mockHttpSession))
+                .andExpect(status().isBadRequest());
+            newPage.setWindowHeight(null);
+        }
 
         MockHttpServletRequestBuilder deletePageBuilder =
             delete("/srv/api/pages/" + language + "/" + pageId)
