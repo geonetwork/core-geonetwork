@@ -294,6 +294,10 @@
       module.config(['gnGlobalSettings',
       function(gnGlobalSettings) {
       gnGlobalSettings.webAnalyticsService = '<xsl:value-of select="util:getWebAnalyticsService()"/>';
+      <!-- geotiff.js, loaded on demand by the map viewer's COG panel -->
+      gnGlobalSettings.geotiffUrl = '<xsl:value-of select="if ($isDebugMode)
+        then concat($uiResourcesPath, 'lib/geotiff/geotiff.js?v=', $buildNumber)
+        else concat(/root/gui/url, '/static/geotiff.js?v=', $buildNumber)"/>';
       }]);
     </script>
 
