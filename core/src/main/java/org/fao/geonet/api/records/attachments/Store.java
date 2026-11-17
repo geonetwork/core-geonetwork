@@ -485,6 +485,17 @@ public interface Store {
      */
     MetadataResource renameResource(ServiceContext context, String metadataUuid, String resourceId, String newName, Boolean approved) throws Exception;
 
+    /**
+     * Get a short-lived URL the client can use to download the resource directly from the storage
+     * (eg. an S3 presigned URL), so the content does not go through GeoNetwork.
+     *
+     * @return The URL or null if the store does not support it (the resource is then served by GeoNetwork).
+     */
+    default String getResourcePresignedUrl(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility,
+                                           String resourceId, Boolean approved) throws Exception {
+        return null;
+    }
+
     interface ResourceHolder extends Closeable {
         Resource getResource();
         MetadataResource getMetadata();
