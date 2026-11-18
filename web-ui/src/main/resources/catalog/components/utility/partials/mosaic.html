@@ -2,7 +2,10 @@
   data-ng-class="visible > 0 && layout === 'grid' ? 'gn-home-mosaic' : 'gallery gn-record-mosaic' + (visible > 0 && layout !== 'grid' ? ' gn-home-mosaic-gallery' : '')"
 >
   <div data-ng-repeat="i in images">
-    <img data-ng-src="{{i.data || (i.url | thumbnailUrlSize: imageSize)}}" />
+    <img
+      data-ng-src="{{i.url ? (i.url | thumbnailUrlSize: imageSize) : i.data}}"
+      data-fallback="{{i.url && i.data}}"
+    />
   </div>
   <div
     data-ng-repeat="t in tiles | limitTo: limit"
@@ -12,7 +15,8 @@
   >
     <a data-ng-href="{{t.link}}" title="{{t.title}}">
       <img
-        data-ng-src="{{t.image.data || (t.image.url | thumbnailUrlSize: imageSize)}}"
+        data-ng-src="{{t.image.url ? (t.image.url | thumbnailUrlSize: imageSize) : t.image.data}}"
+        data-fallback="{{t.image.url && t.image.data}}"
         alt="{{t.title}}"
       />
     </a>
@@ -27,7 +31,8 @@
         data-tile-id="{{t.id}}"
       >
         <img
-          data-ng-src="{{t.image.data || (t.image.url | thumbnailUrlSize: imageSize)}}"
+          data-ng-src="{{t.image.url ? (t.image.url | thumbnailUrlSize: imageSize) : t.image.data}}"
+          data-fallback="{{t.image.url && t.image.data}}"
           alt="{{t.title}}"
         />
       </a>

@@ -221,6 +221,13 @@
               if (e.target.tagName !== "IMG") {
                 return;
               }
+              // The image URL failed: use the small thumbnail stored in the index
+              // (overview.data) if any, before hiding the image.
+              var fallback = e.target.getAttribute("data-fallback");
+              if (fallback && e.target.getAttribute("src") !== fallback) {
+                e.target.setAttribute("src", fallback);
+                return;
+              }
               var tile = e.target.closest("[data-tile-id]");
               (tile || e.target.parentNode).style.display = "none";
               if (tile && scope.tiles) {
