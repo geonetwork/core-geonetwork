@@ -152,6 +152,9 @@ public class PagesAPI {
         @RequestParam(value = "sections", required = false) final List<Page.PageSection> sections,
         @RequestParam(value = "status", required = false) final Page.PageStatus status,
         @RequestParam(value = "data", required = true) final MultipartFile data,
+        @RequestParam(value = "target", required = false) final String target,
+        @RequestParam(value = "windowWidth", required = false) final Integer windowWidth,
+        @RequestParam(value = "windowHeight", required = false) final Integer windowHeight,
         @RequestParam(value = "format", required = false) Page.PageFormat format)
         throws ResourceAlreadyExistException {
 
@@ -161,6 +164,9 @@ public class PagesAPI {
         page.setFormat(format);
         page.setStatus(status);
         page.setSections(sections);
+        page.setTarget(target);
+        page.setWindowWidth(windowWidth);
+        page.setWindowHeight(windowHeight);
         return createPage(page, data);
     }
 
@@ -200,6 +206,7 @@ public class PagesAPI {
         checkMandatoryContent(data, link, content);
         checkUniqueContent(data, link, content);
         checkCorrectFormat(data, format);
+        checkWindowOptions(pageProperties);
 
         Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
@@ -227,6 +234,7 @@ public class PagesAPI {
             newPage.setShowOnNonApproved(pageProperties.isShowOnNonApproved());
             newPage.setShowOnApproved(pageProperties.isShowOnApproved());
             newPage.setShowWhenWorkflowDisabled(pageProperties.isShowWhenWorkflowDisabled());
+            setWindowOptions(newPage, pageProperties);
 
             pageRepository.save(newPage);
             return ResponseEntity.status(HttpStatus.CREATED).body("{}");
@@ -280,6 +288,7 @@ public class PagesAPI {
         checkMandatoryContent(null, link, content);
         checkUniqueContent(null, link, content);
         checkCorrectFormat(null, format);
+        checkWindowOptions(pageProperties);
 
         Optional<Page> page = pageRepository.findById(new PageIdentity(language, pageId));
 
@@ -314,6 +323,7 @@ public class PagesAPI {
             pageCopy.setShowOnNonApproved(pageProperties.isShowOnNonApproved());
             pageCopy.setShowOnApproved(pageProperties.isShowOnApproved());
             pageCopy.setShowWhenWorkflowDisabled(pageProperties.isShowWhenWorkflowDisabled());
+            setWindowOptions(pageCopy, pageProperties);
             pageRepository.save(pageCopy);
             pageRepository.delete(pageToUpdate);
         } else {
@@ -326,6 +336,7 @@ public class PagesAPI {
             pageToUpdate.setShowOnNonApproved(pageProperties.isShowOnNonApproved());
             pageToUpdate.setShowOnApproved(pageProperties.isShowOnApproved());
             pageToUpdate.setShowWhenWorkflowDisabled(pageProperties.isShowWhenWorkflowDisabled());
+            setWindowOptions(pageToUpdate, pageProperties);
 
             pageToUpdate.getGroups().clear();
             if (pageToUpdate.getStatus() == Page.PageStatus.GROUPS || pageToUpdate.getStatus() == Page.PageStatus.GROUPS_AND_ADMIN) {
@@ -522,6 +533,22 @@ public class PagesAPI {
     @ResponseBody
     public Page.PageStatus[] getPageStatus() {
         return Page.PageStatus.values();
+    }
+
+    private void checkWindowOptions(PageProperties properties) {
+        if ((properties.getWindowWidth() != null && properties.getWindowWidth() <= 0)
+            || (properties.getWindowHeight() != null && properties.getWindowHeight() <= 0)) {
+            throw new IllegalArgumentException("Window width and height must be positive integers.");
+        }
+        if (properties.getTarget() != null && properties.getTarget().length() > 255) {
+            throw new IllegalArgumentException("Window target must not exceed 255 characters.");
+        }
+    }
+
+    private void setWindowOptions(Page page, PageProperties properties) {
+        page.setTarget(StringUtils.trimToNull(properties.getTarget()));
+        page.setWindowWidth(properties.getWindowWidth());
+        page.setWindowHeight(properties.getWindowHeight());
     }
 
     private void checkCorrectFormat(final MultipartFile data, final Page.PageFormat format) {

@@ -87,6 +87,9 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         newPage.setLanguage(language);
         newPage.setLabel(pageId);
         newPage.setLink(link);
+        newPage.setTarget("validator");
+        newPage.setWindowWidth(1000);
+        newPage.setWindowHeight(700);
         ArrayList<Page.PageSection> sections = new ArrayList<>();
         sections.add(Page.PageSection.TOP);
         newPage.setSections(sections);
@@ -108,6 +111,13 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         Assert.assertTrue(page.isPresent());
         Assert.assertEquals(link, page.get().getLink());
         Assert.assertEquals(pageId, page.get().getLabel());
+        Assert.assertEquals("validator", page.get().getTarget());
+        Assert.assertEquals(Integer.valueOf(1000), page.get().getWindowWidth());
+        Assert.assertEquals(Integer.valueOf(700), page.get().getWindowHeight());
+        PageProperties returnedPage = new PageProperties(page.get());
+        Assert.assertEquals("validator", returnedPage.getTarget());
+        Assert.assertEquals(Integer.valueOf(1000), returnedPage.getWindowWidth());
+        Assert.assertEquals(Integer.valueOf(700), returnedPage.getWindowHeight());
         Assert.assertTrue(page.get().getSections().contains(Page.PageSection.TOP));
 
         this.mockMvc.perform(createPageBuilder)
@@ -122,6 +132,9 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         newPage.setLink(link + "updated");
         newPage.setLabel(pageId + "updated");
         newPage.setIcon("dummy-icon");
+        newPage.setTarget("renamedValidator");
+        newPage.setWindowWidth(900);
+        newPage.setWindowHeight(600);
         newPage.getSections().add(Page.PageSection.FOOTER);
         MockHttpServletRequestBuilder updatePageBuilder = put("/srv/api/pages/eng/license")
             .content(gson.toJson(newPage))
@@ -137,9 +150,42 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
         Assert.assertEquals(link + "updated", page.get().getLink());
         Assert.assertEquals(pageId + "updated", page.get().getLabel());
         Assert.assertEquals("dummy-icon", page.get().getIcon());
+        Assert.assertEquals("renamedValidator", page.get().getTarget());
+        Assert.assertEquals(Integer.valueOf(900), page.get().getWindowWidth());
+        Assert.assertEquals(Integer.valueOf(600), page.get().getWindowHeight());
         Assert.assertTrue(page.get().getSections().contains(Page.PageSection.TOP));
         Assert.assertTrue(page.get().getSections().contains(Page.PageSection.FOOTER));
 
+
+        newPage.setTarget("");
+        newPage.setWindowWidth(null);
+        newPage.setWindowHeight(null);
+        this.mockMvc.perform(put("/srv/api/pages/" + language + "/" + pageId)
+                .content(gson.toJson(newPage))
+                .contentType(API_JSON_EXPECTED_ENCODING)
+                .session(this.mockHttpSession))
+            .andExpect(status().isNoContent());
+        Page clearedPage = pageRepository.findById(new PageIdentity(language, pageId)).get();
+        Assert.assertNull(clearedPage.getTarget());
+        Assert.assertNull(clearedPage.getWindowWidth());
+        Assert.assertNull(clearedPage.getWindowHeight());
+
+        for (int invalidSize : new int[]{0, -1}) {
+            newPage.setWindowWidth(invalidSize);
+            this.mockMvc.perform(put("/srv/api/pages/" + language + "/" + pageId)
+                    .content(gson.toJson(newPage))
+                    .contentType(API_JSON_EXPECTED_ENCODING)
+                    .session(this.mockHttpSession))
+                .andExpect(status().isBadRequest());
+            newPage.setWindowWidth(null);
+            newPage.setWindowHeight(invalidSize);
+            this.mockMvc.perform(put("/srv/api/pages/" + language + "/" + pageId)
+                    .content(gson.toJson(newPage))
+                    .contentType(API_JSON_EXPECTED_ENCODING)
+                    .session(this.mockHttpSession))
+                .andExpect(status().isBadRequest());
+            newPage.setWindowHeight(null);
+        }
 
         MockHttpServletRequestBuilder deletePageBuilder =
             delete("/srv/api/pages/" + language + "/" + pageId)
@@ -284,6 +330,68 @@ public class PagesApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isOk())
             .andExpect(content().string(containsString("\"pageId\":\"" + pageId + "\"")));
+    }
+
+    @Test
+    public void recordEditorMenuSectionIsAvailable() throws Exception {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockMvc.perform(get("/srv/api/pages/config/sections")
+                .session(loginAsAnonymous())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("\"RECORD_EDITOR_MENU\"")));
+    }
+
+    @Test
+    public void recordEditorMenuPagesAreListedBySection() throws Exception {
+        final String language = "eng";
+        final String editorPageId = "editor-menu-" + UUID.randomUUID().toString().substring(0, 8);
+        final String viewPageId = "view-menu-" + UUID.randomUUID().toString().substring(0, 8);
+
+        Page editorPage = createPublicLinkPage(language, editorPageId, Page.PageSection.RECORD_EDITOR_MENU);
+        editorPage.setShowOnApproved(false);
+        pageRepository.saveAndFlush(editorPage);
+        pageRepository.saveAndFlush(createPublicLinkPage(language, viewPageId, Page.PageSection.RECORD_VIEW_MENU));
+
+        Optional<Page> saved = pageRepository.findById(new PageIdentity(language, editorPageId));
+        Assert.assertTrue(saved.isPresent());
+        Assert.assertEquals(1, saved.get().getSections().size());
+        Assert.assertTrue(saved.get().getSections().contains(Page.PageSection.RECORD_EDITOR_MENU));
+
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+
+        this.mockMvc.perform(get("/srv/api/pages")
+                .param("language", language)
+                .param("section", "RECORD_EDITOR_MENU")
+                .session(loginAsAdmin())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("\"pageId\":\"" + editorPageId + "\"")))
+            .andExpect(content().string(containsString("\"showOnApproved\":false")))
+            .andExpect(content().string(not(containsString("\"pageId\":\"" + viewPageId + "\""))));
+
+        this.mockMvc.perform(get("/srv/api/pages")
+                .param("language", language)
+                .param("section", "RECORD_VIEW_MENU")
+                .session(loginAsAdmin())
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isOk())
+            .andExpect(content().string(containsString("\"pageId\":\"" + viewPageId + "\"")))
+            .andExpect(content().string(not(containsString("\"pageId\":\"" + editorPageId + "\""))));
+    }
+
+    private Page createPublicLinkPage(String language, String pageId, Page.PageSection section) {
+        return new Page(
+            new PageIdentity(language, pageId),
+            null,
+            "https://validator.example.org/" + pageId + "?uuid={uuid}",
+            Page.PageFormat.LINK,
+            new ArrayList<>(Collections.singletonList(section)),
+            Page.PageStatus.PUBLIC,
+            pageId,
+            null,
+            new LinkedHashSet<>());
     }
 
     private Page createPage(String language, String pageId, Page.PageStatus status, Group group) {

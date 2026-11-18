@@ -45,6 +45,25 @@
     "gn-recordview-display-menu"
   ]);
 
+  module.constant("GN_DEFAULT_RECORD_EDITOR_MENU", [
+    "gn-editor-categories-menu",
+    "gn-editor-group-menu",
+    "gn-editor-tools-menu",
+    "gn-editor-validate-menu",
+    "gn-editor-cancel-menu",
+    "gn-editor-close-menu",
+    "gn-editor-save-menu",
+    "gn-editor-view-menu"
+  ]);
+
+  /**
+   * A menu entry is a static page (or a submenu of static pages)
+   * if it is an object or a string not using the reserved `gn-` prefix.
+   */
+  function isPage(page) {
+    return angular.isObject(page) || page.indexOf("gn-") === -1;
+  }
+
   function watchRecord(scope, mdExpression, onChange) {
     var initialized = false;
 
@@ -75,9 +94,44 @@
               ? gnGlobalSettings.gnCfg.mods.recordview.recordviewCustomMenu
               : GN_DEFAULT_RECORD_VIEW_MENU;
 
-          $scope.isPage = function (page) {
-            return angular.isObject(page) || page.indexOf("gn-") === -1;
-          };
+          $scope.isPage = isPage;
+        }
+      };
+    }
+  ]);
+
+  /**
+   * Resolve the metadata editor toolbar menu from
+   * `mods.editor.recordEditorCustomMenu`, defaulting to
+   * GN_DEFAULT_RECORD_EDITOR_MENU when not configured.
+   *
+   * Exposes `recordEditorMenu` and `isPage` on the current scope
+   * (no isolated scope) so that toolbar buttons keep access to
+   * the editor controller functions.
+   */
+  module.directive("gnRecordEditorToolbar", [
+    "GN_DEFAULT_RECORD_EDITOR_MENU",
+    "gnGlobalSettings",
+    function (GN_DEFAULT_RECORD_EDITOR_MENU, gnGlobalSettings) {
+      return {
+        restrict: "A",
+        link: {
+          pre: function (scope) {
+            scope.recordEditorMenu =
+              gnGlobalSettings.gnCfg.mods.editor &&
+              gnGlobalSettings.gnCfg.mods.editor.recordEditorCustomMenu &&
+              gnGlobalSettings.gnCfg.mods.editor.recordEditorCustomMenu.length > 0
+                ? gnGlobalSettings.gnCfg.mods.editor.recordEditorCustomMenu
+                : GN_DEFAULT_RECORD_EDITOR_MENU;
+            scope.isPage = isPage;
+
+            // Each menu entry is rendered in its own child scope (ng-repeat).
+            // Share mutable values through an object so sibling entries can
+            // read/write the same references without relying on scope prototyping.
+            scope.editorToolbarState = {
+              groupOwner: scope.groupOwner
+            };
+          }
         }
       };
     }
