@@ -136,6 +136,14 @@ public class GeonetworkWrojManagerFactory extends ConfigurableWroManagerFactory 
                                 if (Files.exists(customLessFiles)) {
                                     removeCSSFromCache(htmlCacheDir);
                                 }
+                                // Record the revision this cache was copied from. Without it the
+                                // file keeps whatever revision first created it, never matches
+                                // again, and the prebuilt cache is re-copied on every start --
+                                // discarding everything compiled since.
+                                try (OutputStream propertiesOutputStream = Files.newOutputStream(propFileInDataDir)) {
+                                    bundledProperties.store(propertiesOutputStream,
+                                        "Copied from GN git.properties on " + DateTimeFormatter.ISO_DATE_TIME.format(OffsetDateTime.now()));
+                                }
                             }
 
 
