@@ -3,8 +3,8 @@
 >
   <div data-ng-repeat="i in images">
     <img
-      data-ng-src="{{i.url ? (i.url | thumbnailUrlSize: imageSize) : i.data}}"
-      data-fallback="{{i.url && i.data}}"
+      data-ng-src="{{i.url && !useFallback['i' + $index] ? (i.url | thumbnailUrlSize: imageSize) : i.data}}"
+      data-fallback-key="{{i.url && i.data ? 'i' + $index : ''}}"
     />
   </div>
   <div
@@ -15,8 +15,8 @@
   >
     <a data-ng-href="{{t.link}}" title="{{t.title}}">
       <img
-        data-ng-src="{{t.image.url ? (t.image.url | thumbnailUrlSize: imageSize) : t.image.data}}"
-        data-fallback="{{t.image.url && t.image.data}}"
+        data-ng-src="{{t.image.url && !useFallback['t' + t.id] ? (t.image.url | thumbnailUrlSize: imageSize) : t.image.data}}"
+        data-fallback-key="{{t.image.url && t.image.data ? 't' + t.id : ''}}"
         alt="{{t.title}}"
       />
     </a>
@@ -31,8 +31,8 @@
         data-tile-id="{{t.id}}"
       >
         <img
-          data-ng-src="{{t.image.url ? (t.image.url | thumbnailUrlSize: imageSize) : t.image.data}}"
-          data-fallback="{{t.image.url && t.image.data}}"
+          data-ng-src="{{t.image.url && !useFallback['t' + t.id] ? (t.image.url | thumbnailUrlSize: imageSize) : t.image.data}}"
+          data-fallback-key="{{t.image.url && t.image.data ? 't' + t.id : ''}}"
           alt="{{t.title}}"
         />
       </a>
