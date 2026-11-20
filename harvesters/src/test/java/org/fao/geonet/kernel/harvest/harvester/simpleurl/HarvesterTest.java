@@ -67,6 +67,19 @@ public class HarvesterTest {
     }
 
     @Test
+    public void test_isSameOrigin() {
+        String source = "https://example.org/pygeoapi/processes?f=json";
+        assertTrue(Harvester.isSameOrigin(source, "https://example.org/pygeoapi/processes/p1?f=json"));
+        assertTrue(Harvester.isSameOrigin(source, "https://EXAMPLE.org:443/other"));
+        assertFalse(Harvester.isSameOrigin(source, "http://example.org/pygeoapi/processes/p1"));
+        assertFalse(Harvester.isSameOrigin(source, "https://example.org:8443/pygeoapi/processes/p1"));
+        assertFalse(Harvester.isSameOrigin(source, "https://example.org.evil.com/collect"));
+        assertFalse(Harvester.isSameOrigin(source, "https://evil.com/?u=https://example.org"));
+        assertFalse(Harvester.isSameOrigin(source, "http://169.254.169.254/latest/meta-data"));
+        assertFalse(Harvester.isSameOrigin(source, "not a url"));
+    }
+
+    @Test
     public void test_determineJsonPathMode() {
         final SimpleUrlParams params = new SimpleUrlParams(null);
         final Harvester harvester = new Harvester(null, Log.createLogger("TEST"), null, params, new ArrayList<>());

@@ -175,6 +175,22 @@ class Harvester implements IHarvester<HarvestResult> {
                         } else {
                             listOfUrlForPages = findAllUrlsInJson(params.urlCrawlerPath, jsonObj);
                         }
+                        // Crawled URLs come from the remote document. Only follow the ones
+                        // on the same origin as the configured URL to avoid requests
+                        // to other hosts (eg. internal addresses or API key leak).
+                        List<String> sameOriginUrls = new ArrayList<>();
+                        for (String crawledUrl : listOfUrlForPages) {
+                            if (isSameOrigin(url, crawledUrl)) {
+                                sameOriginUrls.add(crawledUrl);
+                            } else {
+                                log.warning(String.format(
+                                    "Crawled URL %s skipped. Only URLs on the same host as %s are harvested.",
+                                    crawledUrl, url));
+                                errors.add(new HarvestError(context, new BadParameterEx(
+                                    "Crawled URL is not on the same host as the harvester URL", crawledUrl)));
+                            }
+                        }
+                        listOfUrlForPages = sameOriginUrls;
                         if (listOfUrlForPages.isEmpty()) {
                             throw new IllegalStateException(String.format(
                                 "No URL found in %s using crawler path %s.", url, params.urlCrawlerPath));
@@ -582,7 +598,9 @@ class Harvester implements IHarvester<HarvestResult> {
 
         try {
             httpMethod = new HttpGet(createUrl(url));
-            if (params.getApiKey() != null && !params.getApiKey().trim().isEmpty()) {
+            // Only send the API key to the host(s) configured in the harvester URL.
+            if (params.getApiKey() != null && !params.getApiKey().trim().isEmpty()
+                && isConfiguredOrigin(url)) {
                 String headerName = (params.getApiKeyHeader() != null && !params.getApiKeyHeader().isBlank())
                     ? params.getApiKeyHeader()
                     : "Authorization";
@@ -602,6 +620,36 @@ class Harvester implements IHarvester<HarvestResult> {
             }
             IOUtils.closeQuietly(httpResponse);
         }
+    }
+
+    private boolean isConfiguredOrigin(String url) {
+        return Arrays.stream(params.url.split("\n"))
+            .anyMatch(configuredUrl -> isSameOrigin(configuredUrl.trim(), url));
+    }
+
+    /**
+     * Check that both URLs have the same scheme, host and port.
+     */
+    @VisibleForTesting
+    static boolean isSameOrigin(String referenceUrl, String url) {
+        try {
+            URI reference = new URI(referenceUrl.trim());
+            URI candidate = new URI(url.trim());
+            return reference.getScheme() != null
+                && reference.getHost() != null
+                && reference.getScheme().equalsIgnoreCase(candidate.getScheme())
+                && reference.getHost().equalsIgnoreCase(candidate.getHost())
+                && getPort(reference) == getPort(candidate);
+        } catch (URISyntaxException | NullPointerException e) {
+            return false;
+        }
+    }
+
+    private static int getPort(URI uri) {
+        if (uri.getPort() != -1) {
+            return uri.getPort();
+        }
+        return "https".equalsIgnoreCase(uri.getScheme()) ? 443 : 80;
     }
 
     private URI createUrl(String jsonUrl) throws URISyntaxException {
