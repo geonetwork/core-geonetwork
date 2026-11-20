@@ -12,6 +12,7 @@
                 xmlns:mcc="http://standards.iso.org/iso/19115/-3/mcc/1.0"
                 xmlns:mri="http://standards.iso.org/iso/19115/-3/mri/1.0"
                 xmlns:mrl="http://standards.iso.org/iso/19115/-3/mrl/2.0"
+                xmlns:srv="http://standards.iso.org/iso/19115/-3/srv/2.0"
                 xmlns:xlink="http://www.w3.org/1999/xlink"
                 exclude-result-prefixes="#all">
   <!--
@@ -24,9 +25,13 @@
 
   <xsl:strip-space elements="*"/>
 
-  <!-- Date used for metadata and resource dates. Default to the conversion date. -->
+  <!-- Date used for the metadata revision date. Default to the conversion date.
+  The process description does not provide any date, so no resource date is set. -->
   <xsl:param name="date"
              select="format-date(current-date(), '[Y0001]-[M01]-[D01]')"/>
+
+  <xsl:variable name="executeRel"
+                select="'http://www.opengis.net/def/rel/ogc/1.0/execute'"/>
 
   <xsl:template match="/record">
     <mdb:MD_Metadata>
@@ -89,6 +94,7 @@
       <xsl:call-template name="build-date">
         <xsl:with-param name="tag" select="'mdb:dateInfo'"/>
         <xsl:with-param name="value" select="$date"/>
+        <xsl:with-param name="type" select="'revision'"/>
       </xsl:call-template>
 
       <mdb:metadataStandard>
@@ -100,7 +106,7 @@
       </mdb:metadataStandard>
 
       <mdb:identificationInfo>
-        <mri:MD_DataIdentification>
+        <srv:SV_ServiceIdentification>
           <mri:citation>
             <cit:CI_Citation>
               <cit:title>
@@ -108,11 +114,6 @@
                   <xsl:value-of select="title"/>
                 </gco:CharacterString>
               </cit:title>
-
-              <xsl:call-template name="build-date">
-                <xsl:with-param name="tag" select="'cit:date'"/>
-                <xsl:with-param name="value" select="$date"/>
-              </xsl:call-template>
 
               <cit:edition>
                 <gco:CharacterString>
@@ -131,9 +132,16 @@
             </cit:CI_Citation>
           </mri:citation>
 
+          <!-- Execution modes and example are appended to the abstract
+          so that they are displayed in the default record view. -->
+          <xsl:variable name="usage">
+            <xsl:call-template name="build-usage-description"/>
+          </xsl:variable>
           <mri:abstract>
             <gco:CharacterString>
-              <xsl:value-of select="description"/>
+              <xsl:value-of select="string-join((normalize-space(description)[. != ''],
+                                                 replace($usage, '\s+$', '')[. != '']),
+                                                '&#10;&#10;')"/>
             </gco:CharacterString>
           </mri:abstract>
 
@@ -177,51 +185,61 @@
           </xsl:if>
 
 
-          <mri:defaultLocale>
-            <lan:PT_Locale>
-              <lan:language>
-                <lan:LanguageCode codeList="codeListLocation#LanguageCode"
-                                  codeListValue="eng"/>
-              </lan:language>
-              <lan:characterEncoding>
-                <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode"
-                                         codeListValue="utf8"/>
-              </lan:characterEncoding>
-            </lan:PT_Locale>
-          </mri:defaultLocale>
+          <srv:serviceType>
+            <gco:ScopedName>OGC API Processes</gco:ScopedName>
+          </srv:serviceType>
+          <srv:serviceStandard>
+            <cit:CI_Citation>
+              <cit:title>
+                <gco:CharacterString>OGC API - Processes - Part 1: Core</gco:CharacterString>
+              </cit:title>
+              <cit:identifier>
+                <mcc:MD_Identifier>
+                  <mcc:code>
+                    <gcx:Anchor xlink:href="http://www.opengis.net/doc/IS/ogcapi-processes-1/1.0">OGC 18-062r2</gcx:Anchor>
+                  </mcc:code>
+                </mcc:MD_Identifier>
+              </cit:identifier>
+            </cit:CI_Citation>
+          </srv:serviceStandard>
 
-          <xsl:if test="example or jobControlOptions">
-            <mri:supplementalInformation>
-              <gco:CharacterString>
-                <xsl:if test="example">
-                  # Example:
-                  <xsl:for-each select="example/*">
-                    ##
-                    <xsl:value-of select="name()"/>
-
-                    <xsl:for-each select="*">
-                      * <xsl:value-of select="name()"/>:
-                      <xsl:value-of select="."/>
-                    </xsl:for-each>
-                  </xsl:for-each>
-                </xsl:if>
-
-                <xsl:text>
-
-
-                </xsl:text>
-
-                <xsl:if test="jobControlOptions">
-                  # Execution modes:
-                  <xsl:for-each select="jobControlOptions">
-                    *
-                    <xsl:value-of select="."/>
-                  </xsl:for-each>
-                </xsl:if>
-              </gco:CharacterString>
-            </mri:supplementalInformation>
+          <!-- The execute endpoint of the process.
+          Default to the standard /execution path if no link is provided. -->
+          <xsl:variable name="executeUrl"
+                        select="(links[rel = $executeRel]/href[. != ''],
+                                 if (normalize-space(apiUrl) != '')
+                                 then concat(replace(normalize-space(apiUrl), '/$', ''), '/execution')
+                                 else ())[1]"/>
+          <xsl:if test="$executeUrl">
+            <srv:containsOperations>
+              <srv:SV_OperationMetadata>
+                <srv:operationName>
+                  <gco:CharacterString>execute</gco:CharacterString>
+                </srv:operationName>
+                <srv:distributedComputingPlatform>
+                  <srv:DCPList codeList="codeListLocation#DCPList" codeListValue="WebServices"/>
+                </srv:distributedComputingPlatform>
+                <srv:invocationName>
+                  <gco:CharacterString>
+                    <xsl:value-of select="id"/>
+                  </gco:CharacterString>
+                </srv:invocationName>
+                <srv:connectPoint>
+                  <cit:CI_OnlineResource>
+                    <cit:linkage>
+                      <gco:CharacterString>
+                        <xsl:value-of select="$executeUrl"/>
+                      </gco:CharacterString>
+                    </cit:linkage>
+                    <cit:protocol>
+                      <gco:CharacterString>OGC API Processes</gco:CharacterString>
+                    </cit:protocol>
+                  </cit:CI_OnlineResource>
+                </srv:connectPoint>
+              </srv:SV_OperationMetadata>
+            </srv:containsOperations>
           </xsl:if>
-        </mri:MD_DataIdentification>
+        </srv:SV_ServiceIdentification>
       </mdb:identificationInfo>
 
       <xsl:if test="inputs or outputs">
@@ -324,37 +342,59 @@
                   <title>Execution for this process as JSON</title>
                 </links>
               -->
-              <xsl:for-each select="links">
+              <!-- Links are often repeated in process descriptions, keep one per href and rel.
+              Job list is a server endpoint not specific to the process, skip it. -->
+              <xsl:for-each-group select="links[normalize-space(href) != ''
+                                                and not(ends-with(rel, '/job-list'))]"
+                                  group-by="concat(normalize-space(href), '|', rel)">
+                <xsl:variable name="isExecute"
+                              select="rel = $executeRel"/>
                 <mrd:onLine>
                   <cit:CI_OnlineResource>
                     <cit:linkage>
                       <gco:CharacterString>
-                        <xsl:value-of select="href"/>
+                        <xsl:value-of select="normalize-space(href)"/>
                       </gco:CharacterString>
                     </cit:linkage>
                     <cit:protocol>
                       <gco:CharacterString>
-                        <xsl:value-of select="type"/>
+                        <xsl:value-of select="if ($isExecute) then 'OGC API Processes' else 'WWW:LINK'"/>
                       </gco:CharacterString>
                     </cit:protocol>
-                    <cit:name>
-                      <gco:CharacterString>
-                        <xsl:value-of select="title"/>
-                      </gco:CharacterString>
-                    </cit:name>
-                    <cit:description>
-                      <gco:CharacterString>
-                        <xsl:value-of select="description"/>
-                      </gco:CharacterString>
-                    </cit:description>
-                    <cit:function>
-                      <cit:CI_OnLineFunctionCode
-                        codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
-                        codeListValue="information"/>
-                    </cit:function>
+                    <xsl:if test="title != '' or type != ''">
+                      <cit:name>
+                        <xsl:choose>
+                          <xsl:when test="type != ''">
+                            <gcx:MimeFileType type="{type}">
+                              <xsl:value-of select="title"/>
+                            </gcx:MimeFileType>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <gco:CharacterString>
+                              <xsl:value-of select="title"/>
+                            </gco:CharacterString>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </cit:name>
+                    </xsl:if>
+                    <xsl:if test="description != ''">
+                      <cit:description>
+                        <gco:CharacterString>
+                          <xsl:value-of select="description"/>
+                        </gco:CharacterString>
+                      </cit:description>
+                    </xsl:if>
+                    <!-- No ISO function code matches the execute endpoint, so leave it out. -->
+                    <xsl:if test="not($isExecute)">
+                      <cit:function>
+                        <cit:CI_OnLineFunctionCode
+                          codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode"
+                          codeListValue="{if (rel = 'self') then 'completeMetadata' else 'information'}"/>
+                      </cit:function>
+                    </xsl:if>
                   </cit:CI_OnlineResource>
                 </mrd:onLine>
-              </xsl:for-each>
+              </xsl:for-each-group>
             </mrd:MD_DigitalTransferOptions>
           </mrd:transferOptions>
         </mrd:MD_Distribution>
@@ -384,9 +424,7 @@
   <xsl:template name="build-date">
     <xsl:param name="tag"/>
     <xsl:param name="value"/>
-
-    <xsl:variable name="type"
-                  select="'publication'"/>
+    <xsl:param name="type" select="'revision'"/>
     <xsl:element name="{$tag}">
       <cit:CI_Date>
         <cit:date>
@@ -399,5 +437,28 @@
         </cit:dateType>
       </cit:CI_Date>
     </xsl:element>
+  </xsl:template>
+
+  <!-- Plain text description of execution modes and example request.
+  The record view displays the abstract with line breaks but does not render Markdown.
+  Only use xsl:text so that the stylesheet indentation is not in the output. -->
+  <xsl:template name="build-usage-description">
+    <xsl:if test="jobControlOptions">
+      <xsl:text>Execution modes: </xsl:text>
+      <xsl:value-of select="string-join(jobControlOptions/normalize-space(.), ', ')"/>
+      <xsl:text>&#10;</xsl:text>
+    </xsl:if>
+    <xsl:for-each select="example/*">
+      <xsl:text>&#10;Example </xsl:text>
+      <xsl:value-of select="name()"/>
+      <xsl:text>:&#10;</xsl:text>
+      <xsl:for-each select="*">
+        <xsl:text>- </xsl:text>
+        <xsl:value-of select="name()"/>
+        <xsl:text>: </xsl:text>
+        <xsl:value-of select="normalize-space(.)"/>
+        <xsl:text>&#10;</xsl:text>
+      </xsl:for-each>
+    </xsl:for-each>
   </xsl:template>
 </xsl:stylesheet>

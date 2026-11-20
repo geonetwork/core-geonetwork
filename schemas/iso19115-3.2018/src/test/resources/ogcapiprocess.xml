@@ -46,7 +46,7 @@
         <gco:Date>2026-10-08</gco:Date>
       </cit:date>
       <cit:dateType>
-        <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication" />
+        <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="revision" />
       </cit:dateType>
     </cit:CI_Date>
   </mdb:dateInfo>
@@ -58,22 +58,12 @@
     </cit:CI_Citation>
   </mdb:metadataStandard>
   <mdb:identificationInfo>
-    <mri:MD_DataIdentification>
+    <srv:SV_ServiceIdentification>
       <mri:citation>
         <cit:CI_Citation>
           <cit:title>
             <gco:CharacterString>Visualisation of statistical analysis results</gco:CharacterString>
           </cit:title>
-          <cit:date>
-            <cit:CI_Date>
-              <cit:date>
-                <gco:Date>2026-10-08</gco:Date>
-              </cit:date>
-              <cit:dateType>
-                <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication" />
-              </cit:dateType>
-            </cit:CI_Date>
-          </cit:date>
           <cit:edition>
             <gco:CharacterString>0.1.0</gco:CharacterString>
           </cit:edition>
@@ -87,7 +77,17 @@
         </cit:CI_Citation>
       </mri:citation>
       <mri:abstract>
-        <gco:CharacterString>This process visualizes statistical analysis results, where the test value (stat.value) is plotted on the Y-axis and id are plotted on the X-axis. Bar color is determined by groups and is displayed in the legend. Bar opacity is controlled by the p-value threshold, with translucent bars representing insignificant results based on the provided p_value_threshold (R function 'barplot_trend_results').</gco:CharacterString>
+        <gco:CharacterString>This process visualizes statistical analysis results, where the test value (stat.value) is plotted on the Y-axis and id are plotted on the X-axis. Bar color is determined by groups and is displayed in the legend. Bar opacity is controlled by the p-value threshold, with translucent bars representing insignificant results based on the provided p_value_threshold (R function 'barplot_trend_results').
+
+Execution modes: sync-execute, async-execute
+
+Example inputs:
+- input_data: https://testserver.de/download/trend_analysis_results.csv
+- colname_p_value: P_Value
+- colname_group: season
+- colname_id: polygon_id
+- colname_test_value: Tau_Value
+- p_value_threshold: 0.05</gco:CharacterString>
       </mri:abstract>
       <mri:pointOfContact>
         <cit:CI_Responsibility>
@@ -125,44 +125,47 @@
           </mri:type>
         </mri:MD_Keywords>
       </mri:descriptiveKeywords>
-      <mri:defaultLocale>
-        <lan:PT_Locale>
-          <lan:language>
-            <lan:LanguageCode codeList="codeListLocation#LanguageCode" codeListValue="eng" />
-          </lan:language>
-          <lan:characterEncoding>
-            <lan:MD_CharacterSetCode codeList="codeListLocation#MD_CharacterSetCode" codeListValue="utf8" />
-          </lan:characterEncoding>
-        </lan:PT_Locale>
-      </mri:defaultLocale>
-      <mri:supplementalInformation>
-        <gco:CharacterString># Example:
-
-          ##
-          inputs
-          * input_data:
-          https://testserver.de/download/trend_analysis_results.csv
-          * colname_p_value:
-          P_Value
-          * colname_group:
-          season
-          * colname_id:
-          polygon_id
-          * colname_test_value:
-          Tau_Value
-          * p_value_threshold:
-          0.05
-
-
-
-          # Execution modes:
-
-          *
-          sync-execute
-          *
-          async-execute</gco:CharacterString>
-      </mri:supplementalInformation>
-    </mri:MD_DataIdentification>
+      <srv:serviceType>
+        <gco:ScopedName>OGC API Processes</gco:ScopedName>
+      </srv:serviceType>
+      <srv:serviceStandard>
+        <cit:CI_Citation>
+          <cit:title>
+            <gco:CharacterString>OGC API - Processes - Part 1: Core</gco:CharacterString>
+          </cit:title>
+          <cit:identifier>
+            <mcc:MD_Identifier>
+              <mcc:code>
+                <gcx:Anchor xlink:href="http://www.opengis.net/doc/IS/ogcapi-processes-1/1.0">OGC 18-062r2</gcx:Anchor>
+              </mcc:code>
+            </mcc:MD_Identifier>
+          </cit:identifier>
+        </cit:CI_Citation>
+      </srv:serviceStandard>
+      <srv:containsOperations>
+        <srv:SV_OperationMetadata>
+          <srv:operationName>
+            <gco:CharacterString>execute</gco:CharacterString>
+          </srv:operationName>
+          <srv:distributedComputingPlatform>
+            <srv:DCPList codeList="codeListLocation#DCPList" codeListValue="WebServices" />
+          </srv:distributedComputingPlatform>
+          <srv:invocationName>
+            <gco:CharacterString>barplot-trend-results</gco:CharacterString>
+          </srv:invocationName>
+          <srv:connectPoint>
+            <cit:CI_OnlineResource>
+              <cit:linkage>
+                <gco:CharacterString>https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results/execution?f=json</gco:CharacterString>
+              </cit:linkage>
+              <cit:protocol>
+                <gco:CharacterString>OGC API Processes</gco:CharacterString>
+              </cit:protocol>
+            </cit:CI_OnlineResource>
+          </srv:connectPoint>
+        </srv:SV_OperationMetadata>
+      </srv:containsOperations>
+    </srv:SV_ServiceIdentification>
   </mdb:identificationInfo>
   <mdb:contentInfo>
     <mrc:MD_FeatureCatalogue>
@@ -358,14 +361,11 @@
                 <gco:CharacterString>https://github.com/AstraLabuce/aquainfra-usecase-Daugava/tree/containerize</gco:CharacterString>
               </cit:linkage>
               <cit:protocol>
-                <gco:CharacterString>text/html</gco:CharacterString>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
               </cit:protocol>
               <cit:name>
-                <gco:CharacterString>GitHub repo</gco:CharacterString>
+                <gcx:MimeFileType type="text/html">GitHub repo</gcx:MimeFileType>
               </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
               <cit:function>
                 <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
               </cit:function>
@@ -377,14 +377,11 @@
                 <gco:CharacterString>https://doi.org/10.5281/zenodo.15112709</gco:CharacterString>
               </cit:linkage>
               <cit:protocol>
-                <gco:CharacterString>text/html</gco:CharacterString>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
               </cit:protocol>
               <cit:name>
-                <gco:CharacterString>Zenodo repo</gco:CharacterString>
+                <gcx:MimeFileType type="text/html">Zenodo repo</gcx:MimeFileType>
               </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
               <cit:function>
                 <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
               </cit:function>
@@ -396,14 +393,11 @@
                 <gco:CharacterString>https://example.org/process</gco:CharacterString>
               </cit:linkage>
               <cit:protocol>
-                <gco:CharacterString>text/html</gco:CharacterString>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
               </cit:protocol>
               <cit:name>
-                <gco:CharacterString>information</gco:CharacterString>
+                <gcx:MimeFileType type="text/html">information</gcx:MimeFileType>
               </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
               <cit:function>
                 <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
               </cit:function>
@@ -415,16 +409,13 @@
                 <gco:CharacterString>https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results?f=json</gco:CharacterString>
               </cit:linkage>
               <cit:protocol>
-                <gco:CharacterString>application/json</gco:CharacterString>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
               </cit:protocol>
               <cit:name>
-                <gco:CharacterString>Process description as JSON</gco:CharacterString>
+                <gcx:MimeFileType type="application/json">Process description as JSON</gcx:MimeFileType>
               </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
               <cit:function>
-                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
+                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="completeMetadata" />
               </cit:function>
             </cit:CI_OnlineResource>
           </mrd:onLine>
@@ -434,52 +425,11 @@
                 <gco:CharacterString>https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results?f=html</gco:CharacterString>
               </cit:linkage>
               <cit:protocol>
-                <gco:CharacterString>text/html</gco:CharacterString>
+                <gco:CharacterString>WWW:LINK</gco:CharacterString>
               </cit:protocol>
               <cit:name>
-                <gco:CharacterString>Process description as HTML</gco:CharacterString>
+                <gcx:MimeFileType type="text/html">Process description as HTML</gcx:MimeFileType>
               </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
-              <cit:function>
-                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
-              </cit:function>
-            </cit:CI_OnlineResource>
-          </mrd:onLine>
-          <mrd:onLine>
-            <cit:CI_OnlineResource>
-              <cit:linkage>
-                <gco:CharacterString>https://aquainfra.ogc.igb-berlin.de/pygeoapi/jobs?f=html</gco:CharacterString>
-              </cit:linkage>
-              <cit:protocol>
-                <gco:CharacterString>text/html</gco:CharacterString>
-              </cit:protocol>
-              <cit:name>
-                <gco:CharacterString>Jobs list as HTML</gco:CharacterString>
-              </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
-              <cit:function>
-                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
-              </cit:function>
-            </cit:CI_OnlineResource>
-          </mrd:onLine>
-          <mrd:onLine>
-            <cit:CI_OnlineResource>
-              <cit:linkage>
-                <gco:CharacterString>https://aquainfra.ogc.igb-berlin.de/pygeoapi/jobs?f=json</gco:CharacterString>
-              </cit:linkage>
-              <cit:protocol>
-                <gco:CharacterString>application/json</gco:CharacterString>
-              </cit:protocol>
-              <cit:name>
-                <gco:CharacterString>Jobs list as JSON</gco:CharacterString>
-              </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
               <cit:function>
                 <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
               </cit:function>
@@ -491,112 +441,11 @@
                 <gco:CharacterString>https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results/execution?f=json</gco:CharacterString>
               </cit:linkage>
               <cit:protocol>
-                <gco:CharacterString>application/json</gco:CharacterString>
+                <gco:CharacterString>OGC API Processes</gco:CharacterString>
               </cit:protocol>
               <cit:name>
-                <gco:CharacterString>Execution for this process as JSON</gco:CharacterString>
+                <gcx:MimeFileType type="application/json">Execution for this process as JSON</gcx:MimeFileType>
               </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
-              <cit:function>
-                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
-              </cit:function>
-            </cit:CI_OnlineResource>
-          </mrd:onLine>
-          <mrd:onLine>
-            <cit:CI_OnlineResource>
-              <cit:linkage>
-                <gco:CharacterString>https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results?f=json</gco:CharacterString>
-              </cit:linkage>
-              <cit:protocol>
-                <gco:CharacterString>application/json</gco:CharacterString>
-              </cit:protocol>
-              <cit:name>
-                <gco:CharacterString>Process description as JSON</gco:CharacterString>
-              </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
-              <cit:function>
-                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
-              </cit:function>
-            </cit:CI_OnlineResource>
-          </mrd:onLine>
-          <mrd:onLine>
-            <cit:CI_OnlineResource>
-              <cit:linkage>
-                <gco:CharacterString>https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results?f=html</gco:CharacterString>
-              </cit:linkage>
-              <cit:protocol>
-                <gco:CharacterString>text/html</gco:CharacterString>
-              </cit:protocol>
-              <cit:name>
-                <gco:CharacterString>Process description as HTML</gco:CharacterString>
-              </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
-              <cit:function>
-                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
-              </cit:function>
-            </cit:CI_OnlineResource>
-          </mrd:onLine>
-          <mrd:onLine>
-            <cit:CI_OnlineResource>
-              <cit:linkage>
-                <gco:CharacterString>https://aquainfra.ogc.igb-berlin.de/pygeoapi/jobs?f=html</gco:CharacterString>
-              </cit:linkage>
-              <cit:protocol>
-                <gco:CharacterString>text/html</gco:CharacterString>
-              </cit:protocol>
-              <cit:name>
-                <gco:CharacterString>Jobs list as HTML</gco:CharacterString>
-              </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
-              <cit:function>
-                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
-              </cit:function>
-            </cit:CI_OnlineResource>
-          </mrd:onLine>
-          <mrd:onLine>
-            <cit:CI_OnlineResource>
-              <cit:linkage>
-                <gco:CharacterString>https://aquainfra.ogc.igb-berlin.de/pygeoapi/jobs?f=json</gco:CharacterString>
-              </cit:linkage>
-              <cit:protocol>
-                <gco:CharacterString>application/json</gco:CharacterString>
-              </cit:protocol>
-              <cit:name>
-                <gco:CharacterString>Jobs list as JSON</gco:CharacterString>
-              </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
-              <cit:function>
-                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
-              </cit:function>
-            </cit:CI_OnlineResource>
-          </mrd:onLine>
-          <mrd:onLine>
-            <cit:CI_OnlineResource>
-              <cit:linkage>
-                <gco:CharacterString>https://aquainfra.ogc.igb-berlin.de/pygeoapi/processes/barplot-trend-results/execution?f=json</gco:CharacterString>
-              </cit:linkage>
-              <cit:protocol>
-                <gco:CharacterString>application/json</gco:CharacterString>
-              </cit:protocol>
-              <cit:name>
-                <gco:CharacterString>Execution for this process as JSON</gco:CharacterString>
-              </cit:name>
-              <cit:description>
-                <gco:CharacterString />
-              </cit:description>
-              <cit:function>
-                <cit:CI_OnLineFunctionCode codeList="http://standards.iso.org/iso/19115/resources/Codelists/cat/codelists.xml#CI_OnLineFunctionCode" codeListValue="information" />
-              </cit:function>
             </cit:CI_OnlineResource>
           </mrd:onLine>
         </mrd:MD_DigitalTransferOptions>
