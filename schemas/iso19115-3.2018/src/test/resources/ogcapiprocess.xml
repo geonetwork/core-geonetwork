@@ -43,7 +43,7 @@
   <mdb:dateInfo>
     <cit:CI_Date>
       <cit:date>
-        <gco:DateTime>2026-10-08</gco:DateTime>
+        <gco:Date>2026-10-08</gco:Date>
       </cit:date>
       <cit:dateType>
         <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication" />
@@ -67,7 +67,7 @@
           <cit:date>
             <cit:CI_Date>
               <cit:date>
-                <gco:DateTime>2026-10-08</gco:DateTime>
+                <gco:Date>2026-10-08</gco:Date>
               </cit:date>
               <cit:dateType>
                 <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="publication" />
@@ -79,7 +79,7 @@
           </cit:edition>
           <cit:identifier>
             <mcc:MD_Identifier>
-              <mcc:code gco:nilReason="missing">
+              <mcc:code>
                 <gcx:Anchor xlink:href="">barplot-trend-results</gcx:Anchor>
               </mcc:code>
             </mcc:MD_Identifier>
