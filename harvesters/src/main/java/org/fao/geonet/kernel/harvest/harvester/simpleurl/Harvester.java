@@ -168,7 +168,7 @@ class Harvester implements IHarvester<HarvestResult> {
 
                     boolean isCrawlerMode = StringUtils.isNotEmpty(params.urlCrawlerPath);
 
-                    if (StringUtils.isNotEmpty(params.urlCrawlerPath)) {
+                    if (isCrawlerMode) {
                         if (type == SimpleUrlResourceType.XML
                             || type == SimpleUrlResourceType.RDFXML) {
                             listOfUrlForPages = findAllUrlsInXml(params.urlCrawlerPath, xmlObj);
