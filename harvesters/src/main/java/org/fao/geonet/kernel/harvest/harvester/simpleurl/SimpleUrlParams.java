@@ -38,6 +38,7 @@ public class SimpleUrlParams extends AbstractParams {
     public String numberOfRecordPath;
     public String recordIdPath;
     public SimpleUrlPathMode recordIdPathMode;
+    public String urlCrawlerPath;
     public String pageSizeParam;
     public String pageFromParam;
     public String toISOConversion;
@@ -59,6 +60,7 @@ public class SimpleUrlParams extends AbstractParams {
         loopElement = Util.getParam(site, "loopElement", "");
         numberOfRecordPath = Util.getParam(site, "numberOfRecordPath", "");
         recordIdPath = Util.getParam(site, "recordIdPath", "");
+        urlCrawlerPath = Util.getParam(site, "urlCrawlerPath", "");
         var recordIdPathModeString = Util.getParam(site, "recordIdPathMode", SimpleUrlPathMode.AUTO.name());
         recordIdPathMode = SimpleUrlPathMode.valueOf(recordIdPathModeString.toUpperCase(Locale.ROOT));
         pageSizeParam = Util.getParam(site, "pageSizeParam", "");
@@ -75,16 +77,18 @@ public class SimpleUrlParams extends AbstractParams {
 
         Element site = node.getChild("site");
 
-        url = Util.getParam(site, "url", url);
+        url = Util.getParam(site, "url", "");
         loopElement = Util.getParam(site, "loopElement", "");
         numberOfRecordPath = Util.getParam(site, "numberOfRecordPath", "");
         recordIdPath = Util.getParam(site, "recordIdPath", "");
-        var recordIdPathModeString = Util.getParam(site, "recordIdPathMode", SimpleUrlPathMode.AUTO.name());
-        recordIdPathMode = SimpleUrlPathMode.valueOf(recordIdPathModeString.toUpperCase(Locale.ROOT));
+        urlCrawlerPath = Util.getParam(site, "urlCrawlerPath", "");
         pageSizeParam = Util.getParam(site, "pageSizeParam", "");
         pageFromParam = Util.getParam(site, "pageFromParam", "");
         toISOConversion = Util.getParam(site, "toISOConversion", "");
-        icon = Util.getParam(site, "icon", icon);
+        icon = Util.getParam(site, "icon", "");
+
+        var recordIdPathModeString = Util.getParam(site, "recordIdPathMode", SimpleUrlPathMode.AUTO.name());
+        recordIdPathMode = SimpleUrlPathMode.valueOf(recordIdPathModeString.toUpperCase(Locale.ROOT));
     }
 
     @Override
@@ -100,6 +104,7 @@ public class SimpleUrlParams extends AbstractParams {
         copy.icon = icon;
         copy.loopElement = loopElement;
         copy.numberOfRecordPath = numberOfRecordPath;
+        copy.urlCrawlerPath = urlCrawlerPath;
         copy.pageSizeParam = pageSizeParam;
         copy.pageFromParam = pageFromParam;
         copy.recordIdPath = recordIdPath;

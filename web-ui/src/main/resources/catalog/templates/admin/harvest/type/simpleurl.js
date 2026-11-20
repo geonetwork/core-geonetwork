@@ -22,6 +22,7 @@ var gnHarvestersimpleurl = {
         "apiKey" : "",
         "loopElement" : "",
         "numberOfRecordPath": "",
+        "urlCrawlerPath": "",
         "pageSizeParam": "",
         "pageFromParam": "",
         "recordIdPath": "",
@@ -92,9 +93,10 @@ var gnHarvestersimpleurl = {
       + '    </account>'
       + '    <apiKeyHeader>' + h.site.apiKeyHeader + '</apiKeyHeader>'
       + '    <apiKey>' + h.site.apiKey + '</apiKey>'
-      + '    <loopElement>' + h.site.loopElement + '</loopElement>'
-      + '    <numberOfRecordPath>' + h.site.numberOfRecordPath + '</numberOfRecordPath>'
-      + '    <recordIdPath>' + h.site.recordIdPath + '</recordIdPath>'
+      + '    <loopElement>' + _.escape(h.site.loopElement) + '</loopElement>'
+      + '    <numberOfRecordPath>' + _.escape(h.site.numberOfRecordPath) + '</numberOfRecordPath>'
+      + '    <recordIdPath>' + _.escape(h.site.recordIdPath) + '</recordIdPath>'
+      + '    <urlCrawlerPath>' + _.escape(h.site.urlCrawlerPath) + '</urlCrawlerPath>'
       + '    <recordIdPathMode>' + h.site.recordIdPathMode + '</recordIdPathMode>'
       + '    <pageFromParam>' + h.site.pageFromParam + '</pageFromParam>'
       + '    <pageSizeParam>' + h.site.pageSizeParam + '</pageSizeParam>'

@@ -35,6 +35,9 @@
         </xsl:otherwise>
       </xsl:choose>
     </recordIdPathMode>
+    <urlCrawlerPath>
+      <xsl:value-of select="urlCrawlerPath/value"/>
+    </urlCrawlerPath>
     <pageSizeParam>
       <xsl:value-of select="pageSizeParam/value"/>
     </pageSizeParam>
