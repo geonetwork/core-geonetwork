@@ -121,7 +121,7 @@
               </cit:edition>
               <cit:identifier>
                 <mcc:MD_Identifier>
-                  <mcc:code gco:nilReason="missing">
+                  <mcc:code>
                     <gcx:Anchor xlink:href="{apiUrl}">
                       <xsl:value-of select="id"/>
                     </gcx:Anchor>
