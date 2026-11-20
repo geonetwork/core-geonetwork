@@ -175,6 +175,10 @@ class Harvester implements IHarvester<HarvestResult> {
                         } else {
                             listOfUrlForPages = findAllUrlsInJson(params.urlCrawlerPath, jsonObj);
                         }
+                        if (listOfUrlForPages.isEmpty()) {
+                            throw new IllegalStateException(String.format(
+                                "No URL found in %s using crawler path %s.", url, params.urlCrawlerPath));
+                        }
                     } else if (StringUtils.isEmpty(params.pageSizeParam)) {
                         listOfUrlForPages.add(url);
                     } else {
@@ -459,19 +463,13 @@ class Harvester implements IHarvester<HarvestResult> {
         return uuid;
     }
 
-    private List<String> findAllUrlsInXml(String urlCrawlerPath, Element xmlObj) {
+    private List<String> findAllUrlsInXml(String urlCrawlerPath, Element xmlObj) throws JDOMException {
         List<String> urlList = new ArrayList<>();
-        try {
-            List list = Xml.selectNodes(xmlObj, urlCrawlerPath, xmlObj.getAdditionalNamespaces());
-            for (int i = 0; i < list.size(); i++) {
-                String url = getXmlElementTextValue(list.get(i));
-                if (url != null) {
-                    urlList.add(url);
-                }
+        for (Object node : Xml.selectNodes(xmlObj, urlCrawlerPath, xmlObj.getAdditionalNamespaces())) {
+            String url = getXmlElementTextValue(node);
+            if (url != null) {
+                urlList.add(url);
             }
-        } catch (JDOMException e) {
-            log.error(String.format("Failed to extract URL list from XML document. Error is %s.",
-                e.getMessage()));
         }
         return urlList;
     }
