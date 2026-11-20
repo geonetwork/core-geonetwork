@@ -134,8 +134,7 @@
       "schema":{
         "type":"string"
       },
-      "minOccurs":1,
-      "maxOccurs":1,
+      "maxOccurs":"unbounded",
       "keywords":[]
     },
     "colname_p_value":{
@@ -144,8 +143,7 @@
       "schema":{
         "type":"string"
       },
-      "minOccurs":1,
-      "maxOccurs":1,
+      "maxOccurs":5,
       "keywords":[]
     },
     "p_value_threshold":{
@@ -157,8 +155,7 @@
         "maximum":0.1,
         "default":0.05
       },
-      "minOccurs":1,
-      "maxOccurs":1,
+      "minOccurs":0,
       "keywords":[]
     },
     "colname_group":{
@@ -167,9 +164,7 @@
       "schema":{
         "type":"string"
       },
-      "minOccurs":1,
-      "maxOccurs":1,
-      "keywords":[]
+            "keywords":[]
     }
   },
   "outputs":{

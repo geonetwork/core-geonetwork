@@ -184,7 +184,7 @@
                     <gco:CharacterString>A high-resolution bar plot image (DPI = 300) where the Y-axis shows the test value and the X-axis shows the id and its groups. Opacity of bars is determined by the significance of the p-values based on the p_value_threshold.</gco:CharacterString>
                   </gfc:definition>
                   <gfc:cardinality>
-                    <gco:CharacterString />
+                    <gco:CharacterString>1..1</gco:CharacterString>
                   </gfc:cardinality>
                   <gfc:code>
                     <gco:CharacterString>barplot_image</gco:CharacterString>
@@ -232,7 +232,7 @@
                     <gco:CharacterString>The name of the column containing p values, used to determine bar transparency. Example = "p_value"</gco:CharacterString>
                   </gfc:definition>
                   <gfc:cardinality>
-                    <gco:CharacterString>1..1</gco:CharacterString>
+                    <gco:CharacterString>1..5</gco:CharacterString>
                   </gfc:cardinality>
                   <gfc:code>
                     <gco:CharacterString>colname_p_value</gco:CharacterString>
@@ -295,7 +295,7 @@
                     <gco:CharacterString>The name of the column containing the test values (e.g., statistical coefficients) to be plotted on the Y-axis, e.g., Tau for Mann-Kendall test.</gco:CharacterString>
                   </gfc:definition>
                   <gfc:cardinality>
-                    <gco:CharacterString>1..1</gco:CharacterString>
+                    <gco:CharacterString>1..*</gco:CharacterString>
                   </gfc:cardinality>
                   <gfc:code>
                     <gco:CharacterString>colname_test_value</gco:CharacterString>
@@ -316,7 +316,7 @@
                     <gco:CharacterString>The threshold for distinguishing significant from insignificant values. It adjusts the transparency of bars in the plot. Example = "0.05"</gco:CharacterString>
                   </gfc:definition>
                   <gfc:cardinality>
-                    <gco:CharacterString>1..1</gco:CharacterString>
+                    <gco:CharacterString>0..1</gco:CharacterString>
                   </gfc:cardinality>
                   <gfc:code>
                     <gco:CharacterString>p_value_threshold</gco:CharacterString>

@@ -257,9 +257,14 @@
                             </gfc:definition>
                             <gfc:cardinality>
                               <gco:CharacterString>
-                                <xsl:if test="minOccurs">
-                                  <xsl:value-of select="concat(minOccurs, '..', maxOccurs)"/>
-                                </xsl:if>
+                                <xsl:variable name="min"
+                                              select="if (normalize-space(minOccurs) != '')
+                                                      then normalize-space(minOccurs) else '1'"/>
+                                <xsl:variable name="max"
+                                              select="if (normalize-space(maxOccurs) = 'unbounded') then '*'
+                                                      else if (normalize-space(maxOccurs) != '')
+                                                      then normalize-space(maxOccurs) else '1'"/>
+                                <xsl:value-of select="concat($min, '..', $max)"/>
                               </gco:CharacterString>
                             </gfc:cardinality>
                             <gfc:code>
@@ -385,9 +390,9 @@
     <xsl:element name="{$tag}">
       <cit:CI_Date>
         <cit:date>
-          <gco:DateTime>
+          <gco:Date>
             <xsl:value-of select="$value"/>
-          </gco:DateTime>
+          </gco:Date>
         </cit:date>
         <cit:dateType>
           <cit:CI_DateTypeCode codeList="codeListLocation#CI_DateTypeCode" codeListValue="{$type}"/>
