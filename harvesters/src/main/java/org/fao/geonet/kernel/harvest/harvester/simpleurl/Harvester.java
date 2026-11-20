@@ -182,6 +182,10 @@ class Harvester implements IHarvester<HarvestResult> {
                     }
 
                     for (int i = 0; i < listOfUrlForPages.size(); i++) {
+                        if (cancelMonitor.get()) {
+                            return new HarvestResult();
+                        }
+                        
                         Map<String, Element> uuids = new HashMap<>();
                         try {
                             if (i != 0 || isCrawlerMode) {
