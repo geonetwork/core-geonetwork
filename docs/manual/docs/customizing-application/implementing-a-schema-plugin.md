@@ -69,7 +69,7 @@ The following subdirectories can be present in `src/main/plugin/<schema_id>`:
 -   **loc**: (*Mandatory*) Directory of localized information: labels, codelists or schema specific strings. Eg. `loc/eng/codelists.xml`
 -   **convert**: (*Mandatory*) Directory of XSLTs to convert metadata from or to this schema. This could be to convert metadata to other schemas or to convert metadata from other schemas and formats to this schema. Eg. `convert/oai_dc.xsl`
 -   **layout**: (*Mandatory for version 3.x and later*) contains configuration for presenting metadata in the editor (`config-editor.xml`).
--   **formatter**: (*Optional for version 3.x and later*) contains configuration for presenting metadata using Groovy or XSLT formatter.
+-   **formatter**: (*Optional for version 3.x and later*) contains configuration for presenting metadata using XSLT formatters. GeoNetwork versions before 4.4 also supported Groovy formatters.
 -   **present**: (*Mandatory for version 2.x editor*) contains XSLTs for presenting metadata in the 2.x viewer/editor. Those editor XSLTs were replaced in 3.0 by `layout/`; `present/csw` is still required for CSW output.
 -   **present/csw**: (*Mandatory*) contains XSLTs for response to CSW requests for brief, summary and full records.
 -   **process**: (*Optional*) contains XSLTs for processing metadata elements by metadata suggestions mechanism (see **suggest.xsl** below).
@@ -743,7 +743,7 @@ After adding the localized strings, our new GeoNetwork plugin schema for MCP con
 
     3.0
 
-From GeoNetwork 3.x onward (including 4.x), record HTML and PDF views are schema formatters (XSLT or Groovy) under the `formatter/` directory, not the 2.x `present/` editor XSLTs.
+From GeoNetwork 3.x onward, record HTML and PDF views use schema formatters under the `formatter/` directory, not the 2.x `present/` editor XSLTs. Use XSLT formatters in GeoNetwork 4.4 and later; Groovy formatter support was removed in 4.4.
 
 !!! info "See Also"
 
