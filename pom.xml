@@ -1242,6 +1242,16 @@
         <version>${pdfbox.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.pdfbox</groupId>
+        <artifactId>pdfbox-tools</artifactId>
+        <version>${pdfbox.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.pdfbox</groupId>
+        <artifactId>pdfbox-debugger</artifactId>
+        <version>${pdfbox.version}</version>
+      </dependency>
+      <dependency>
         <groupId>org.jasypt</groupId>
         <artifactId>jasypt</artifactId>
         <version>${jasypt.version}</version>
