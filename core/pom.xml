@@ -426,6 +426,12 @@
       <groupId>org.mapfish.print</groupId>
       <artifactId>print-lib</artifactId>
       <exclusions>
+        <!-- print-lib does not use PDFBox; the pdfbox-tools 3.0.8 it pulls in clashes with
+             pdfbox.version (3.0.3, set by fop-pdf-images). Re-check on print-lib upgrades. -->
+        <exclusion>
+          <groupId>org.apache.pdfbox</groupId>
+          <artifactId>pdfbox-tools</artifactId>
+        </exclusion>
         <exclusion>
           <!-- provided by openpdf -->
           <groupId>com.itextpdf</groupId>
