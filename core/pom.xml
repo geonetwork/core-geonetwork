@@ -404,6 +404,10 @@
       <artifactId>print-lib</artifactId>
       <exclusions>
         <exclusion>
+          <groupId>org.apache.pdfbox</groupId>
+          <artifactId>pdfbox-tools</artifactId>
+        </exclusion>
+        <exclusion>
           <!-- provided by openpdf -->
           <groupId>com.itextpdf</groupId>
           <artifactId>itextpdf</artifactId>
