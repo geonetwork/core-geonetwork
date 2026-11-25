@@ -290,6 +290,10 @@
       <artifactId>print-lib</artifactId>
       <exclusions>
         <exclusion>
+          <groupId>org.apache.pdfbox</groupId>
+          <artifactId>pdfbox-tools</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>com.lowagie</groupId>
           <artifactId>itext</artifactId>
         </exclusion>
