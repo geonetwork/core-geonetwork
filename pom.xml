@@ -349,6 +349,21 @@
   <!-- =========================================================== -->
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk18on</artifactId>
+        <version>${bouncycastle.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcpkix-jdk18on</artifactId>
+        <version>${bouncycastle.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcutil-jdk18on</artifactId>
+        <version>${bouncycastle.version}</version>
+      </dependency>
       <!-- rewrite url servletfilter -->
       <dependency>
         <groupId>org.tuckey</groupId>
@@ -1644,6 +1659,11 @@
          (see its POM), otherwise fox:external-document/PDF embedding fails at runtime with
          NoClassDefFoundError masked as "java.io.IOException: closed". -->
     <pdfbox.version>3.0.3</pdfbox.version>
+    <!-- Single jdk18on version for all BouncyCastle artifacts. It overrides the version PDFBox
+         brings in, so raise it when upgrading PDFBox if PDFBox needs a newer one.
+         The jdk15on artifacts (no longer maintained) are excluded from keycloak and
+         spring-security-cas in core/pom.xml. -->
+    <bouncycastle.version>1.87</bouncycastle.version>
     <node.version>v8.11.1</node.version>
     <npm.version>5.8.0</npm.version>
     <xmlunit.version>2.1.1</xmlunit.version>
