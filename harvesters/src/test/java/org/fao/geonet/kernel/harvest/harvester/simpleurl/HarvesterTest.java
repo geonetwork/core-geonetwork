@@ -2,8 +2,16 @@ package org.fao.geonet.kernel.harvest.harvester.simpleurl;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.fao.geonet.ApplicationContextHolder;
+import org.fao.geonet.kernel.setting.SettingManager;
+import org.fao.geonet.kernel.setting.Settings;
 import org.fao.geonet.utils.Log;
+import org.jdom.Element;
 import org.junit.Test;
+import org.springframework.context.ConfigurableApplicationContext;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,6 +67,19 @@ public class HarvesterTest {
     }
 
     @Test
+    public void test_isSameOrigin() {
+        String source = "https://example.org/pygeoapi/processes?f=json";
+        assertTrue(Harvester.isSameOrigin(source, "https://example.org/pygeoapi/processes/p1?f=json"));
+        assertTrue(Harvester.isSameOrigin(source, "https://EXAMPLE.org:443/other"));
+        assertFalse(Harvester.isSameOrigin(source, "http://example.org/pygeoapi/processes/p1"));
+        assertFalse(Harvester.isSameOrigin(source, "https://example.org:8443/pygeoapi/processes/p1"));
+        assertFalse(Harvester.isSameOrigin(source, "https://example.org.evil.com/collect"));
+        assertFalse(Harvester.isSameOrigin(source, "https://evil.com/?u=https://example.org"));
+        assertFalse(Harvester.isSameOrigin(source, "http://169.254.169.254/latest/meta-data"));
+        assertFalse(Harvester.isSameOrigin(source, "not a url"));
+    }
+
+    @Test
     public void test_determineJsonPathMode() {
         final SimpleUrlParams params = new SimpleUrlParams(null);
         final Harvester harvester = new Harvester(null, Log.createLogger("TEST"), null, params, new ArrayList<>());
@@ -80,5 +101,29 @@ public class HarvesterTest {
 
         List<JsonNode> pathNodes = harvester.selectJsonRecords(json, SimpleUrlPathMode.JSONPATH, "$.records[*]");
         assertEquals(2, pathNodes.size());
+    }
+
+    @Test
+    public void test_findAllUrlsInJson_collectsProcessSelfLinks() throws Exception {
+        final SimpleUrlParams params = new SimpleUrlParams(null);
+        final Harvester harvester = new Harvester(null, Log.createLogger("TEST"), null, params, new ArrayList<>());
+        final ObjectMapper objectMapper = new ObjectMapper();
+
+        // Shape of an OGC API Processes list (eg. pygeoapi /processes?f=json)
+        JsonNode json = objectMapper.readTree("{\"processes\":["
+            + "{\"id\":\"hello-world\",\"links\":["
+            + "{\"rel\":\"self\",\"href\":\"https://example.org/processes/hello-world?f=json\"},"
+            + "{\"rel\":\"alternate\",\"href\":\"https://example.org/processes/hello-world?f=html\"}]},"
+            + "{\"id\":\"check-names\",\"links\":["
+            + "{\"rel\":\"alternate\",\"href\":\"https://example.org/processes/check-names?f=html\"},"
+            + "{\"rel\":\"self\",\"href\":\"https://example.org/processes/check-names?f=json\"}]}"
+            + "]}");
+
+        List<String> urls = harvester.findAllUrlsInJson("$.processes[*].links[?(@.rel=='self')].href", json);
+        assertEquals(List.of(
+            "https://example.org/processes/hello-world?f=json",
+            "https://example.org/processes/check-names?f=json"), urls);
+
+        assertTrue(harvester.findAllUrlsInJson("$.processes[*].links[?(@.rel=='execute')].href", json).isEmpty());
     }
 }

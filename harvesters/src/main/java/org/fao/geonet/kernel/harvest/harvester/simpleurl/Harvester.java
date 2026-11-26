@@ -59,6 +59,7 @@ import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.client.ClientHttpResponse;
 
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -68,6 +69,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static org.fao.geonet.utils.Xml.isRDFLike;
 import static org.fao.geonet.utils.Xml.isXMLLike;
@@ -162,34 +164,73 @@ class Harvester implements IHarvester<HarvestResult> {
                     }
                 }
                 try {
-                    List<String> listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
-                    for (int i = 0; i < listOfUrlForPages.size(); i++) {
-                        if (i != 0) {
-                            content = retrieveUrl(listOfUrlForPages.get(i));
-                            if (type == SimpleUrlResourceType.XML) {
-                                xmlObj = Xml.loadString(content, false);
+                    List<String> listOfUrlForPages = new ArrayList<>();
+
+                    boolean isCrawlerMode = StringUtils.isNotEmpty(params.urlCrawlerPath);
+
+                    if (isCrawlerMode) {
+                        if (type == SimpleUrlResourceType.XML
+                            || type == SimpleUrlResourceType.RDFXML) {
+                            listOfUrlForPages = findAllUrlsInXml(params.urlCrawlerPath, xmlObj);
+                        } else {
+                            listOfUrlForPages = findAllUrlsInJson(params.urlCrawlerPath, jsonObj);
+                        }
+                        // Crawled URLs come from the remote document. Only follow the ones
+                        // on the same origin as the configured URL to avoid requests
+                        // to other hosts (eg. internal addresses or API key leak).
+                        List<String> sameOriginUrls = new ArrayList<>();
+                        for (String crawledUrl : listOfUrlForPages) {
+                            if (isSameOrigin(url, crawledUrl)) {
+                                sameOriginUrls.add(crawledUrl);
                             } else {
-                                jsonObj = objectMapper.readTree(content);
+                                log.warning(String.format(
+                                    "Crawled URL %s skipped. Only URLs on the same host as %s are harvested.",
+                                    crawledUrl, url));
+                                errors.add(new HarvestError(context, new BadParameterEx(
+                                    "Crawled URL is not on the same host as the harvester URL", crawledUrl)));
                             }
                         }
-                        if (StringUtils.isNotEmpty(params.loopElement)
-                            || type == SimpleUrlResourceType.RDFXML) {
-                            Map<String, Element> uuids = new HashMap<>();
-                            try {
-                                if (type == SimpleUrlResourceType.XML) {
-                                    collectRecordsFromXml(xmlObj, uuids, aligner);
-                                } else if (type == SimpleUrlResourceType.RDFXML) {
-                                    collectRecordsFromRdf(xmlObj, uuids, aligner);
-                                } else if (type == SimpleUrlResourceType.JSON) {
-                                    collectRecordsFromJson(jsonObj, uuids, aligner);
+                        listOfUrlForPages = sameOriginUrls;
+                        if (listOfUrlForPages.isEmpty()) {
+                            throw new IllegalStateException(String.format(
+                                "No URL found in %s using crawler path %s.", url, params.urlCrawlerPath));
+                        }
+                    } else if (StringUtils.isEmpty(params.pageSizeParam)) {
+                        listOfUrlForPages.add(url);
+                    } else {
+                        listOfUrlForPages = buildListOfUrl(params, numberOfRecordsToHarvest);
+                    }
+
+                    for (int i = 0; i < listOfUrlForPages.size(); i++) {
+                        if (cancelMonitor.get()) {
+                            return new HarvestResult();
+                        }
+                        
+                        Map<String, Element> uuids = new HashMap<>();
+                        try {
+                            if (i != 0 || isCrawlerMode) {
+                                content = retrieveUrl(listOfUrlForPages.get(i));
+                                if (type == SimpleUrlResourceType.XML
+                                    || type == SimpleUrlResourceType.RDFXML) {
+                                    xmlObj = Xml.loadString(content, false);
+                                } else {
+                                    jsonObj = objectMapper.readTree(content);
                                 }
-                                aligner.align(uuids, errors);
-                                listOfUuids.addAll(uuids.keySet());
-                            } catch (Exception e) {
-                                errors.add(new HarvestError(this.context, e));
-                                log.error(String.format("Failed to collect record in response at path %s. Error is: %s",
-                                    params.loopElement, e.getMessage()));
                             }
+                            if (type == SimpleUrlResourceType.XML) {
+                                collectRecordsFromXml(xmlObj, uuids, aligner);
+                            } else if (type == SimpleUrlResourceType.RDFXML) {
+                                collectRecordsFromRdf(xmlObj, uuids, aligner);
+                            } else if (type == SimpleUrlResourceType.JSON) {
+                                collectRecordsFromJson(jsonObj, listOfUrlForPages.get(i), uuids, aligner);
+                            }
+                            aligner.align(uuids, errors);
+                            listOfUuids.addAll(uuids.keySet());
+                        } catch (Exception e) {
+                            error = true;
+                            errors.add(new HarvestError(this.context, e));
+                            log.error(String.format("Failed to collect records from %s at path %s. Error is: %s",
+                                listOfUrlForPages.get(i), params.loopElement, e.getMessage()));
                         }
                     }
                 } catch (Exception t) {
@@ -206,19 +247,20 @@ class Harvester implements IHarvester<HarvestResult> {
                 }
 
                 log.info("Total records processed in all searches :" + listOfUuids.size());
-                if (error) {
-                    log.warning("Due to previous errors the align process has not been called");
-                }
             }
-            aligner.cleanupRemovedRecords(listOfUuids);
+            if (error) {
+                log.warning("Due to previous errors, removal of records no longer present in the source has been skipped");
+            } else {
+                aligner.cleanupRemovedRecords(listOfUuids);
+            }
             return aligner.getResult();
         }
     }
 
     private void collectRecordsFromJson(JsonNode jsonObj,
+                                        String sourceUrl,
                                         Map<String, Element> uuids,
                                         Aligner aligner) {
-
         SimpleUrlPathMode mode = params.recordIdPathMode;
         if (mode == null || mode == SimpleUrlPathMode.AUTO) {
             mode = determineJsonPathMode(params.recordIdPath);
@@ -244,7 +286,7 @@ class Harvester implements IHarvester<HarvestResult> {
                 log.error(String.format("Failed to collect record UUID at path %s. Error is: %s",
                         params.recordIdPath, e.getMessage()));
             }
-            String apiUrlPath = params.url.split("\\?")[0];
+            String apiUrlPath = sourceUrl.split("\\?")[0];
             try {
                 URL apiUrl = new URL(apiUrlPath);
                 String nodeUrl = apiUrl.getProtocol() + "://" + apiUrl.getAuthority();
@@ -437,13 +479,29 @@ class Harvester implements IHarvester<HarvestResult> {
         return uuid;
     }
 
+    private List<String> findAllUrlsInXml(String urlCrawlerPath, Element xmlObj) throws JDOMException {
+        List<String> urlList = new ArrayList<>();
+        for (Object node : Xml.selectNodes(xmlObj, urlCrawlerPath, xmlObj.getAdditionalNamespaces())) {
+            String url = getXmlElementTextValue(node);
+            if (url != null) {
+                urlList.add(url);
+            }
+        }
+        return urlList;
+    }
+
+    @VisibleForTesting
+    List<String> findAllUrlsInJson(String urlCrawlerPath, JsonNode jsonObj) {
+        List <String> urlList;
+        List<JsonNode> nodes = selectJsonRecords(jsonObj, determineJsonPathMode(urlCrawlerPath), urlCrawlerPath);
+        log.debug(String.format("%d URL found in JSON response.", nodes.size()));
+        urlList = nodes.stream().filter(JsonNode::isTextual).map(JsonNode::asText).collect(Collectors.toList());
+        return urlList;
+    }
+
     @VisibleForTesting
     protected List<String> buildListOfUrl(SimpleUrlParams params, int numberOfRecordsToHarvest) {
         List<String> urlList = new ArrayList<>();
-        if (StringUtils.isEmpty(params.pageSizeParam)) {
-            urlList.add(params.url);
-            return urlList;
-        }
 
         int numberOfRecordsPerPage = -1;
         final String pageSizeParamValue = params.url.replaceAll(".*[?&]" + params.pageSizeParam + "=([0-9]+).*", "$1");
@@ -540,7 +598,9 @@ class Harvester implements IHarvester<HarvestResult> {
 
         try {
             httpMethod = new HttpGet(createUrl(url));
-            if (params.getApiKey() != null && !params.getApiKey().trim().isEmpty()) {
+            // Only send the API key to the host(s) configured in the harvester URL.
+            if (params.getApiKey() != null && !params.getApiKey().trim().isEmpty()
+                && isConfiguredOrigin(url)) {
                 String headerName = (params.getApiKeyHeader() != null && !params.getApiKeyHeader().isBlank())
                     ? params.getApiKeyHeader()
                     : "Authorization";
@@ -550,6 +610,9 @@ class Harvester implements IHarvester<HarvestResult> {
             httpResponse = requestFactory.execute(httpMethod);
             int status = httpResponse.getRawStatusCode();
             Log.debug(LOGGER_NAME, "Request status code: " + status);
+            if (status < 200 || status >= 300) {
+                throw new IOException(String.format("Request to %s failed with status code %d", url, status));
+            }
             return CharStreams.toString(new InputStreamReader(httpResponse.getBody()));
         } finally {
             if (httpMethod != null) {
@@ -557,6 +620,36 @@ class Harvester implements IHarvester<HarvestResult> {
             }
             IOUtils.closeQuietly(httpResponse);
         }
+    }
+
+    private boolean isConfiguredOrigin(String url) {
+        return Arrays.stream(params.url.split("\n"))
+            .anyMatch(configuredUrl -> isSameOrigin(configuredUrl.trim(), url));
+    }
+
+    /**
+     * Check that both URLs have the same scheme, host and port.
+     */
+    @VisibleForTesting
+    static boolean isSameOrigin(String referenceUrl, String url) {
+        try {
+            URI reference = new URI(referenceUrl.trim());
+            URI candidate = new URI(url.trim());
+            return reference.getScheme() != null
+                && reference.getHost() != null
+                && reference.getScheme().equalsIgnoreCase(candidate.getScheme())
+                && reference.getHost().equalsIgnoreCase(candidate.getHost())
+                && getPort(reference) == getPort(candidate);
+        } catch (URISyntaxException | NullPointerException e) {
+            return false;
+        }
+    }
+
+    private static int getPort(URI uri) {
+        if (uri.getPort() != -1) {
+            return uri.getPort();
+        }
+        return "https".equalsIgnoreCase(uri.getScheme()) ? 443 : 80;
     }
 
     private URI createUrl(String jsonUrl) throws URISyntaxException {
