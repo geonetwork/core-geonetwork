@@ -55,10 +55,14 @@ Rights associated with the roles are illustrated in detail in the list below:
 
 2.  **User Administrator Profile**
 
-    The user administrator is the administrator of their own group(s) with the following privileges:
+    The user administrator manages the users of their own groups. Their own groups are the groups where they have the User Administrator role, which can be fewer than the groups they belong to.
 
-    -   Full rights on creating new users within their own groups.
-    -   Rights to change users profiles within their own groups.
+    Within their own groups they can:
+
+    -   Create a user, with any profile up to User Administrator.
+    -   Change a user's details, and enable or disable the account.
+    -   Add or remove a user's membership of their own groups.
+    -   Delete a user.
 
 3.  **Content Reviewer Profile**
 
