@@ -64,6 +64,13 @@ import javax.annotation.Nullable;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+/**
+ * Visibility (public/private) is tracked in the database ({@code MetadataFileUploads.resourceaccess},
+ * populated by {@link ResourceLoggerStore}), not by which CMIS folder a document is filed under -
+ * the {@code <visibility>} subfolder below is the legacy layout, kept only as a read/write
+ * fallback for documents that predate this and haven't been touched since (every put, rename, or
+ * visibility change migrates a document to the flat folder).
+ */
 public class CMISStore extends AbstractStore {
 
     private Path baseMetadataDir = null;
@@ -84,7 +91,8 @@ public class CMISStore extends AbstractStore {
                                                final MetadataResourceVisibility visibility, String filter, Boolean approved, boolean includeAdditionalIndexedProperties) throws Exception {
         final int metadataId = canDownload(context, metadataUuid, visibility, approved);
 
-        final String resourceTypeDir = getMetadataDir(context, metadataId) + cmisConfiguration.getFolderDelimiter() + visibility.toString();
+        final String metadataDir = getMetadataDir(context, metadataId);
+        final String delimiter = cmisConfiguration.getFolderDelimiter();
 
         List<MetadataResource> resourceList = new ArrayList<>();
         if (filter == null) {
@@ -95,7 +103,10 @@ public class CMISStore extends AbstractStore {
                 FileSystems.getDefault().getPathMatcher("glob:" + filter);
 
         try {
-            Folder parentFolder = cmisUtils.getFolderCache(resourceTypeDir);
+            // A single listing under the whole metadata folder returns both legacy
+            // (<visibility>/...) and flat documents together; classify each by which layout
+            // it's in rather than resolving a separate folder per layout.
+            Folder parentFolder = cmisUtils.getFolderCache(metadataDir);
 
             OperationContext oc = cmisUtils.createOperationContext();
             if (cmisConfiguration.existExternalResourceManagementValidationStatusSecondaryProperty()) {
@@ -104,17 +115,41 @@ public class CMISStore extends AbstractStore {
             }
 
             Map<String, Document> documentMap = cmisUtils.getCmisObjectMap(parentFolder, null, oc);
+            Map<String, MetadataResourceVisibility> trackedAccess = loadTrackedAccessByFilename(metadataId);
             for (Map.Entry<String, Document> entry : documentMap.entrySet()) {
                 Document object = entry.getValue();
                 String cmisFilePath = entry.getKey();
                 // Only add to the list if it is a document and it matches the filter.
-                if (object instanceof Document) {
-                    Path keyPath = new File(cmisFilePath).toPath().getFileName();
-                    if (matcher.matches(keyPath)) {
-                        final String filename = getFilename(cmisFilePath);
-                        MetadataResource resource = createResourceDescription(context, metadataUuid, visibility, filename, object, metadataId, approved);
-                        resourceList.add(resource);
-                    }
+                if (!(object instanceof Document)) {
+                    continue;
+                }
+                // cmisFilePath is relative to the metadata folder and always starts with the
+                // folder delimiter (eg. "/file.png", or "/sub/file.png" for a nested-path
+                // resource); keep the whole relative path - not just the last segment - so
+                // subfolder structure is preserved.
+                final String relativeKey = cmisFilePath.startsWith(delimiter)
+                    ? cmisFilePath.substring(delimiter.length()) : cmisFilePath;
+
+                final MetadataResourceVisibility legacyVisibility = legacyVisibilityOf(relativeKey, delimiter);
+                final String filename;
+                final MetadataResourceVisibility resourceVisibility;
+                if (legacyVisibility != null) {
+                    // Legacy layout: membership under the old <visibility>/ folder is the visibility.
+                    filename = relativeKey.substring(legacyVisibility.toString().length() + delimiter.length());
+                    resourceVisibility = legacyVisibility;
+                } else {
+                    // Flat layout: only a tracked-access match counts, since folder membership
+                    // alone no longer implies visibility.
+                    filename = relativeKey;
+                    resourceVisibility = trackedAccess.get(filename);
+                }
+                if (resourceVisibility != visibility) {
+                    continue;
+                }
+
+                Path keyPath = new File(filename).toPath().getFileName();
+                if (matcher.matches(keyPath)) {
+                    resourceList.add(createResourceDescription(context, metadataUuid, visibility, filename, object, metadataId, approved));
                 }
             }
         } catch (CmisObjectNotFoundException | ResourceNotFoundException e) {
@@ -125,6 +160,21 @@ public class CMISStore extends AbstractStore {
         resourceList.sort(MetadataResourceVisibility.sortByFileName);
 
         return resourceList;
+    }
+
+    /**
+     * Whether a metadata-folder-relative key falls under one of the legacy {@code public}/
+     * {@code private} folders, and if so which. A nested-path resource whose own first segment
+     * happens to be literally "public" or "private" is indistinguishable from this - a narrow,
+     * pre-existing ambiguity of keeping both layouts side by side.
+     */
+    private static MetadataResourceVisibility legacyVisibilityOf(String relativeKey, String delimiter) {
+        for (MetadataResourceVisibility v : MetadataResourceVisibility.values()) {
+            if (relativeKey.startsWith(v.toString() + delimiter)) {
+                return v;
+            }
+        }
+        return null;
     }
 
     protected MetadataResource createResourceDescription(final ServiceContext context, final String metadataUuid,
@@ -165,8 +215,13 @@ public class CMISStore extends AbstractStore {
         MetadataResourceExternalManagementProperties metadataResourceExternalManagementProperties =
             getMetadataResourceExternalManagementProperties(context, metadataId, metadataUuid, visibility, resourceId, filename, document.getVersionLabel(), document.getVersionSeriesId(), document.getType(), validationStatus);
 
+        String mimeType = document.getContentStreamMimeType();
+        if (mimeType == null || mimeType.isEmpty()) {
+            mimeType = MimeTypeDetector.detect(filename);
+        }
+
         return new FilesystemStoreResource(metadataUuid, metadataId, filename,
-            settingManager.getNodeURL() + "api/records/", visibility, document.getContentStreamLength(), document.getLastModificationDate().getTime(), versionValue, metadataResourceExternalManagementProperties, approved);
+            settingManager.getNodeURL() + "api/records/", visibility, document.getContentStreamLength(), document.getLastModificationDate().getTime(), versionValue, metadataResourceExternalManagementProperties, approved, mimeType);
     }
 
     protected static String getFilename(final String key) {
@@ -179,8 +234,15 @@ public class CMISStore extends AbstractStore {
                                       final String resourceId, Boolean approved) throws Exception {
         // Those characters should not be allowed by URL structure
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
+        String key = resolveExistingKey(context, metadataUuid, metadataId, visibility, getFilename(metadataUuid, resourceId), approved);
+        if (key == null) {
+            throw new ResourceNotFoundException(
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+        }
         try {
-            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(getKey(context, metadataUuid, metadataId, visibility, resourceId));
+            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
             return new CMISResourceHolder(object, createResourceDescription(context, metadataUuid, visibility, resourceId,
                 (Document) object, metadataId, approved));
         } catch (CmisObjectNotFoundException e) {
@@ -195,8 +257,15 @@ public class CMISStore extends AbstractStore {
     public MetadataResource getResourceMetadata(ServiceContext context, String metadataUuid, MetadataResourceVisibility visibility, String resourceId, Boolean approved) throws Exception {
         // Those characters should not be allowed by URL structure
         int metadataId = canDownload(context, metadataUuid, visibility, approved);
+        String key = resolveExistingKey(context, metadataUuid, metadataId, visibility, getFilename(metadataUuid, resourceId), approved);
+        if (key == null) {
+            throw new ResourceNotFoundException(
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+        }
         try {
-            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(getKey(context, metadataUuid, metadataId, visibility, resourceId));
+            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
             return createResourceDescription(context, metadataUuid, visibility, resourceId,
                 (Document) object, metadataId, approved);
         } catch (CmisObjectNotFoundException e) {
@@ -211,8 +280,15 @@ public class CMISStore extends AbstractStore {
     public ResourceHolder getResourceWithRange(ServiceContext context, String metadataUuid, MetadataResourceVisibility metadataResourceVisibility, String resourceId, Boolean approved, long start, long end) throws Exception {
         // Those characters should not be allowed by URL structure
         int metadataId = canDownload(context, metadataUuid, metadataResourceVisibility, approved);
+        String key = resolveExistingKey(context, metadataUuid, metadataId, metadataResourceVisibility, getFilename(metadataUuid, resourceId), approved);
+        if (key == null) {
+            throw new ResourceNotFoundException(
+                String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid))
+                .withMessageKey("exception.resourceNotFound.resource", new String[]{resourceId})
+                .withDescriptionKey("exception.resourceNotFound.resource.description", new String[]{resourceId, metadataUuid});
+        }
         try {
-            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(getKey(context, metadataUuid, metadataId, metadataResourceVisibility, resourceId));
+            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
             return new CMISResourceHolder(object, createResourceDescription(context, metadataUuid, metadataResourceVisibility, resourceId,
                 (Document) object, metadataId, approved), start, end);
         } catch (CmisObjectNotFoundException e) {
@@ -230,7 +306,12 @@ public class CMISStore extends AbstractStore {
 
         try {
             ServiceContext context = ServiceContext.get();
-            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(getKey(context, metadataUuid, metadataId, visibility, resourceId));
+            String key = resolveExistingKey(context, metadataUuid, metadataId, visibility, getFilename(metadataUuid, resourceId), approved);
+            if (key == null) {
+                throw new ResourceNotFoundException(
+                    String.format("Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
+            }
+            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
             return new CMISResourceHolder(object, createResourceDescription(context, metadataUuid, visibility, resourceId,
                 (Document) object, metadataId, approved));
         } catch (CmisObjectNotFoundException e) {
@@ -241,10 +322,50 @@ public class CMISStore extends AbstractStore {
         }
     }
 
-    protected String getKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
+    /** The legacy, pre-flattening key: {@code <metadataDir>/<visibility>/<filename>}. */
+    protected String getLegacyKey(final ServiceContext context, String metadataUuid, int metadataId, MetadataResourceVisibility visibility, String resourceId) {
         checkResourceId(resourceId);
         final String metadataDir = getMetadataDir(context, metadataId);
         return metadataDir + cmisConfiguration.getFolderDelimiter() + visibility.toString() + cmisConfiguration.getFolderDelimiter() + getFilename(metadataUuid, resourceId);
+    }
+
+    /** The flat, visibility-less key: {@code <metadataDir>/<filename>}. */
+    protected String getFlatKey(final ServiceContext context, String metadataUuid, int metadataId, String resourceId) {
+        checkResourceId(resourceId);
+        final String metadataDir = getMetadataDir(context, metadataId);
+        return metadataDir + cmisConfiguration.getFolderDelimiter() + getFilename(metadataUuid, resourceId);
+    }
+
+    /**
+     * Resolve the key of an existing resource. Prefers the flat, visibility-less key and falls
+     * back to the legacy {@code <visibility>/} folder for documents that predate it and haven't
+     * been touched since.
+     * <p>
+     * Once flat, a document's key no longer enforces which visibility it may be fetched as -
+     * that was the folder split's job. So a flat match is only honoured if its <em>tracked</em>
+     * access agrees with {@code visibility}; a mismatch (or an untracked flat document, which
+     * shouldn't happen since every write path logs a tracking row) is treated as not found at
+     * this visibility, exactly as an actually-private document can't be read today by asking for
+     * the public one.
+     *
+     * @return the resolved key, or {@code null} if not found at all, or not at this visibility.
+     */
+    private String resolveExistingKey(final ServiceContext context, String metadataUuid, int metadataId,
+                                      MetadataResourceVisibility visibility, String filename, Boolean approved) {
+        String flatKey = getFlatKey(context, metadataUuid, metadataId, filename);
+        try {
+            cmisConfiguration.getClient().getObjectByPath(flatKey);
+            return visibility == resolveVisibility(metadataUuid, approved, filename) ? flatKey : null;
+        } catch (CmisObjectNotFoundException ignored) {
+            // not flat yet - try the legacy folder instead.
+        }
+        String legacyKey = getLegacyKey(context, metadataUuid, metadataId, visibility, filename);
+        try {
+            cmisConfiguration.getClient().getObjectByPath(legacyKey);
+            return legacyKey;
+        } catch (CmisObjectNotFoundException ignored) {
+            return null;
+        }
     }
 
     @Override
@@ -258,7 +379,7 @@ public class CMISStore extends AbstractStore {
                                         final InputStream is, @Nullable final Date changeDate, final MetadataResourceVisibility visibility, Boolean approved, Map<String, Object> additionalProperties)
         throws Exception {
         final int metadataId = canEdit(context, metadataUuid, approved);
-        String key = getKey(context, metadataUuid, metadataId, visibility, filename);
+        String key = getFlatKey(context, metadataUuid, metadataId, filename);
 
         OperationContext oc = cmisUtils.createOperationContext();
         // Reset Filter from the default operationalContext to include all fields because we may need secondary properties.
@@ -372,45 +493,40 @@ public class CMISStore extends AbstractStore {
     public MetadataResource patchResourceStatus(final ServiceContext context, final String metadataUuid, final String resourceId,
                                                 final MetadataResourceVisibility visibility, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
+        String filename = getFilename(metadataUuid, resourceId);
+        String flatKey = getFlatKey(context, metadataUuid, metadataId, filename);
 
         // Don't use caching for this process.
         OperationContext oc = cmisUtils.createOperationContext();
         oc.setCacheEnabled(false);
 
-        String sourceKey = null;
-        CmisObject sourceObject =  null;
-        for (MetadataResourceVisibility sourceVisibility : MetadataResourceVisibility.values()) {
-            final String key = getKey(context, metadataUuid, metadataId, sourceVisibility, resourceId);
-            try {
-                final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key, oc);
-                if (sourceVisibility != visibility) {
-                    sourceKey = key;
-                    sourceObject = object;
-                    break;
-                } else {
-                    // already the good visibility
-                    return createResourceDescription(context, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
-                }
-            } catch (CmisObjectNotFoundException ignored) {
-                // ignored
-            }
+        try {
+            final CmisObject object = cmisConfiguration.getClient().getObjectByPath(flatKey, oc);
+            // Already flat: visibility is purely a database attribute there, updated by
+            // ResourceLoggerStore regardless of what happens here - no CMIS move needed.
+            return createResourceDescription(context, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
+        } catch (CmisObjectNotFoundException ignored) {
+            // Not flat yet - look for it under a legacy visibility folder instead.
         }
-        if (sourceKey != null) {
-            final String destKey = getKey(context, metadataUuid, metadataId, visibility, resourceId);
 
-            // Get the parent folder object id.
-            int lastFolderDelimiterSourceKeyIndex = sourceKey.lastIndexOf(cmisConfiguration.getFolderDelimiter());
-            String parentSourceKey = sourceKey.substring(0, lastFolderDelimiterSourceKeyIndex);
+        for (MetadataResourceVisibility sourceVisibility : visibilityCandidates(metadataUuid, approved, resourceId)) {
+            final String legacyKey = getLegacyKey(context, metadataUuid, metadataId, sourceVisibility, resourceId);
+            CmisObject sourceObject;
+            try {
+                sourceObject = cmisConfiguration.getClient().getObjectByPath(legacyKey, oc);
+            } catch (CmisObjectNotFoundException ignored) {
+                continue;
+            }
 
+            // Get the parent source folder.
+            int lastFolderDelimiterSourceKeyIndex = legacyKey.lastIndexOf(cmisConfiguration.getFolderDelimiter());
+            String parentSourceKey = legacyKey.substring(0, lastFolderDelimiterSourceKeyIndex);
             Folder parentSourceFolder = cmisUtils.getFolderCache(parentSourceKey);
 
-            // Get the parent destination folder id.
-            int lastFolderDelimiterDestKeyIndex = destKey.lastIndexOf(cmisConfiguration.getFolderDelimiter());
-            String parentDestFolderKey = destKey.substring(0, lastFolderDelimiterDestKeyIndex);
+            // The flat destination's parent is simply the metadata folder itself.
+            Folder parentDestFolder = cmisUtils.getFolderCache(getMetadataDir(context, metadataId), true, true);
 
-            Folder parentDestFolder = cmisUtils.getFolderCache(parentDestFolderKey, true, true);
-
-            // Move the object from source to destination
+            // Migrate to the flat layout as a side effect of this move, same as put/rename.
             CmisObject object;
             try {
                 object = ((Document) sourceObject).move(parentSourceFolder, parentDestFolder, oc);
@@ -424,11 +540,85 @@ public class CMISStore extends AbstractStore {
             }
 
             return createResourceDescription(context, metadataUuid, visibility, resourceId, (Document) object, metadataId, approved);
-        } else {
-            Log.warning(Geonet.RESOURCES,
-                    String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
-            throw new ResourceNotFoundException(
-                    String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
+        }
+
+        Log.warning(Geonet.RESOURCES,
+                String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
+        throw new ResourceNotFoundException(
+                String.format("Could not update permissions. Metadata resource '%s' not found for metadata '%s'", resourceId, metadataUuid));
+    }
+
+    @Override
+    public void migrateResourceToFlatLayout(ServiceContext context, MetadataResource resource) throws Exception {
+        int metadataId = resource.getMetadataId();
+        String metadataUuid = resource.getMetadataUuid();
+        String filename = resource.getFilename();
+
+        // Don't use caching for this process.
+        OperationContext oc = cmisUtils.createOperationContext();
+        oc.setCacheEnabled(false);
+
+        String flatKey = getFlatKey(context, metadataUuid, metadataId, filename);
+        try {
+            cmisConfiguration.getClient().getObjectByPath(flatKey, oc);
+            // A flat document already occupies this name (eg. re-uploaded after the legacy copy
+            // was orphaned, or the same filename also exists under the other legacy visibility
+            // folder). Leave the legacy copy in place rather than overwrite or lose data.
+            return;
+        } catch (CmisObjectNotFoundException ignored) {
+            // Nothing flat yet - proceed with the move.
+        }
+
+        String legacyKey = getLegacyKey(context, metadataUuid, metadataId, resource.getVisibility(), filename);
+        CmisObject sourceObject;
+        try {
+            sourceObject = cmisConfiguration.getClient().getObjectByPath(legacyKey, oc);
+        } catch (CmisObjectNotFoundException ignored) {
+            // Already flat, or this particular resource isn't a legacy one.
+            return;
+        }
+
+        int lastFolderDelimiterSourceKeyIndex = legacyKey.lastIndexOf(cmisConfiguration.getFolderDelimiter());
+        String parentSourceKey = legacyKey.substring(0, lastFolderDelimiterSourceKeyIndex);
+        Folder parentSourceFolder = cmisUtils.getFolderCache(parentSourceKey);
+        Folder parentDestFolder = cmisUtils.getFolderCache(getMetadataDir(context, metadataId), true, true);
+
+        try {
+            ((Document) sourceObject).move(parentSourceFolder, parentDestFolder, oc);
+            cmisUtils.invalidateFolderCache(parentSourceKey);
+        } catch (CmisPermissionDeniedException | CmisConstraintException e) {
+            Log.warning(Geonet.RESOURCES, String.format(
+                "Unable to migrate legacy resource '%s' for metadata %d (%s) to the flat layout: %s",
+                filename, metadataId, metadataUuid, e.getMessage()));
+        }
+    }
+
+    @Override
+    public void deleteLegacyVisibilityFolderIfEmpty(ServiceContext context, int metadataId, MetadataResourceVisibility visibility)
+            throws Exception {
+        String legacyFolderKey = getMetadataDir(context, metadataId) + cmisConfiguration.getFolderDelimiter() + visibility.toString();
+        Folder legacyFolder;
+        try {
+            legacyFolder = cmisUtils.getFolderCache(legacyFolderKey, true);
+        } catch (ResourceNotFoundException e) {
+            // No legacy folder for this visibility - nothing to do.
+            return;
+        }
+
+        OperationContext oc = cmisUtils.createOperationContext();
+        oc.setCacheEnabled(false);
+        if (legacyFolder.getChildren(oc).iterator().hasNext()) {
+            // Not empty - a resource wasn't migrated (eg. a same-named flat document already
+            // existed) or a nested subfolder is still there.
+            return;
+        }
+
+        try {
+            legacyFolder.delete();
+            cmisUtils.invalidateFolderCache(legacyFolderKey);
+        } catch (CmisPermissionDeniedException | CmisConstraintException e) {
+            Log.warning(Geonet.RESOURCES, String.format(
+                "Unable to remove empty legacy folder '%s' for metadata %d: %s", legacyFolderKey, metadataId, e.getMessage()));
         }
     }
 
@@ -470,8 +660,8 @@ public class CMISStore extends AbstractStore {
             throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
 
-        for (MetadataResourceVisibility visibility : MetadataResourceVisibility.values()) {
-            if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId)) {
+        for (MetadataResourceVisibility visibility : visibilityCandidates(metadataUuid, approved, resourceId)) {
+            if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId, approved)) {
                 return String.format("Metadata resource '%s' removed.", resourceId);
             }
         }
@@ -482,15 +672,20 @@ public class CMISStore extends AbstractStore {
     public String delResource(final ServiceContext context, final String metadataUuid, final MetadataResourceVisibility visibility,
                               final String resourceId, Boolean approved) throws Exception {
         int metadataId = canEdit(context, metadataUuid, approved);
-        if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId)) {
+        if (tryDelResource(context, metadataUuid, metadataId, visibility, resourceId, approved)) {
             return String.format("Metadata resource '%s' removed.", resourceId);
         }
         return String.format("Unable to remove resource '%s'.", resourceId);
     }
 
     protected boolean tryDelResource(final ServiceContext context, final String metadataUuid, final int metadataId, final MetadataResourceVisibility visibility,
-                                   final String resourceId) throws Exception {
-        final String key = getKey(context, metadataUuid, metadataId, visibility, resourceId);
+                                   final String resourceId, Boolean approved) throws Exception {
+        String key = resolveExistingKey(context, metadataUuid, metadataId, visibility, getFilename(metadataUuid, resourceId), approved);
+        if (key == null) {
+            Log.info(Geonet.RESOURCES,
+                String.format("Unable to remove resource '%s' for metadata %d (%s).", resourceId, metadataId, metadataUuid));
+            return false;
+        }
 
         // Don't use caching for this process.
         OperationContext oc = cmisUtils.createOperationContext();
@@ -519,7 +714,10 @@ public class CMISStore extends AbstractStore {
     public MetadataResource getResourceDescription(final ServiceContext context, final String metadataUuid,
                                                    final MetadataResourceVisibility visibility, final String filename, Boolean approved) throws Exception {
         int metadataId = getAndCheckMetadataId(metadataUuid, approved);
-        final String key = getKey(context, metadataUuid, metadataId, visibility, filename);
+        String key = resolveExistingKey(context, metadataUuid, metadataId, visibility, filename, approved);
+        if (key == null) {
+            return null;
+        }
 
         try {
             final CmisObject object = cmisConfiguration.getClient().getObjectByPath(key);
@@ -554,33 +752,53 @@ public class CMISStore extends AbstractStore {
     public void copyResources(ServiceContext context, String sourceUuid, String targetUuid, MetadataResourceVisibility metadataResourceVisibility, boolean sourceApproved, boolean targetApproved) throws Exception {
         final int sourceMetadataId = canEdit(context, sourceUuid, metadataResourceVisibility, sourceApproved);
         final int targetMetadataId = canEdit(context, sourceUuid, metadataResourceVisibility, targetApproved);
-        final String sourceResourceTypeDir = getMetadataDir(context, sourceMetadataId) + cmisConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
-        final String targetResourceTypeDir = getMetadataDir(context, targetMetadataId) + cmisConfiguration.getFolderDelimiter() + metadataResourceVisibility.toString();
+        final String sourceMetadataDir = getMetadataDir(context, sourceMetadataId);
+        final String delimiter = cmisConfiguration.getFolderDelimiter();
         try {
-            Folder sourceParentFolder = cmisUtils.getFolderCache(sourceResourceTypeDir, true);
+            // A single listing under the whole source metadata folder returns both legacy and
+            // flat documents together, same as getResources.
+            Folder sourceParentFolder = cmisUtils.getFolderCache(sourceMetadataDir, true);
 
             OperationContext oc = cmisUtils.createOperationContext();
             // Reset Filter from the default operationalContext to include all fields because we may need secondary properties.
             oc.setFilter(null);
 
             Map<String, Document> sourceDocumentMap = cmisUtils.getCmisObjectMap(sourceParentFolder, null, oc);
-
+            Map<String, MetadataResourceVisibility> trackedAccess = loadTrackedAccessByFilename(sourceMetadataId);
 
             for (Map.Entry<String, Document> sourceEntry : sourceDocumentMap.entrySet()) {
                 Document sourceDocument = sourceEntry.getValue();
+                // The map key is relative to sourceParentFolder and always starts with the
+                // folder delimiter; keep the whole relative path (not just sourceDocument's own
+                // bare name) so a nested-path resource's subfolder is preserved on copy.
+                String sourceKey = sourceEntry.getKey();
+                String relativeKey = sourceKey.startsWith(delimiter) ? sourceKey.substring(delimiter.length()) : sourceKey;
 
+                final MetadataResourceVisibility legacyVisibility = legacyVisibilityOf(relativeKey, delimiter);
+                final String relativeFilename;
+                final MetadataResourceVisibility resourceVisibility;
+                if (legacyVisibility != null) {
+                    relativeFilename = relativeKey.substring(legacyVisibility.toString().length() + delimiter.length());
+                    resourceVisibility = legacyVisibility;
+                } else {
+                    relativeFilename = relativeKey;
+                    resourceVisibility = trackedAccess.get(relativeFilename);
+                }
+                if (resourceVisibility != metadataResourceVisibility) {
+                    continue;
+                }
 
-                Log.info(Geonet.RESOURCES, String.format("Copying %s to %s" , sourceResourceTypeDir+cmisConfiguration.getFolderDelimiter()+sourceDocument.getName(), targetResourceTypeDir));
+                Log.info(Geonet.RESOURCES, String.format("Copying %s to %s" , sourceMetadataDir + delimiter + relativeKey, getMetadataDir(context, targetMetadataId)));
                 // Get cmis properties from the source document
                 Map<String, Object> sourceProperties = getProperties(sourceDocument);
 
                 setCmisMetadataUUIDPrimary(sourceProperties, targetUuid);
 
-                putResource(context, targetUuid, sourceDocument.getName(), sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
+                putResource(context, targetUuid, relativeFilename, sourceDocument.getContentStream().getStream(), null, metadataResourceVisibility, targetApproved, sourceProperties);
 
             }
         } catch (CmisObjectNotFoundException | ResourceNotFoundException e) {
-            Log.warning(Geonet.RESOURCES, "Cannot find folder object from CMIS ... Abort copping resources from " + sourceResourceTypeDir);
+            Log.warning(Geonet.RESOURCES, "Cannot find folder object from CMIS ... Abort copping resources from " + sourceMetadataDir);
         }
     }
 

@@ -63,6 +63,7 @@ import org.apache.http.message.BasicHeader;
 import org.fao.geonet.domain.Group;
 import org.fao.geonet.domain.Source;
 import org.fao.geonet.exceptions.BadParameterEx;
+import org.fao.geonet.kernel.mef.MEFLib;
 import org.fao.geonet.kernel.setting.SettingManager;
 import org.fao.geonet.lib.Lib;
 import org.fao.geonet.utils.GeonetHttpRequestFactory;
@@ -171,7 +172,8 @@ public class GeoNetwork4ApiClient {
      * @param password  the password for authentication with the GeoNetwork server
      * @return a {@code Path} representing the location of the downloaded MEF file
      * @throws URISyntaxException if the URL of the GeoNetwork server is malformed
-     * @throws IOException        if any network or file operation fails
+     * @throws IOException        if any network or file operation fails, or if the server accepts
+     *                            neither the MEF v3 nor the MEF v2 request
      */
     public Path retrieveMEF(String serverUrl, String uuid, String user, String password) throws URISyntaxException, IOException {
         if (!Lib.net.isUrlValid(serverUrl)) {
@@ -183,15 +185,36 @@ public class GeoNetwork4ApiClient {
         String url = addUrlSlash(serverUrl) +
             "/api/records/" + uuid + "/formatters/zip?withRelated=false";
 
-        HttpGet httpMethod = new HttpGet(createUrl(url));
-        final Header header = new BasicHeader(HttpHeaders.ACCEPT, "application/x-gn-mef-2-zip");
-        httpMethod.addHeader(header);
-
-        try (ClientHttpResponse httpResponse = doExecute(httpMethod, user, password)) {
-            Files.copy(httpResponse.getBody(), tempFile, StandardCopyOption.REPLACE_EXISTING);
+        // Prefer MEF v3; fall back to v2 if the remote server doesn't support it
+        // (eg. an older GeoNetwork instance), rather than failing the harvest outright.
+        if (!downloadMEF(url, MEFLib.Version.Constants.MEF_V3_ACCEPT_TYPE, tempFile, user, password)
+                && !downloadMEF(url, MEFLib.Version.Constants.MEF_V2_ACCEPT_TYPE, tempFile, user, password)) {
+            throw new IOException("Unable to retrieve MEF file for record '" + uuid + "' from " + serverUrl
+                + ": server did not accept either the MEF v3 or the MEF v2 request");
         }
 
         return tempFile;
+    }
+
+    /**
+     * Attempts to download the MEF file for the given URL using the given Accept header value.
+     *
+     * @return {@code true} if the server returned a successful response and the file was written
+     *         to {@code tempFile}; {@code false} if the server rejected the request (eg. because it
+     *         doesn't support the requested MEF version), in which case {@code tempFile} is left untouched
+     */
+    private boolean downloadMEF(String url, String acceptType, Path tempFile, String user, String password)
+            throws URISyntaxException, IOException {
+        HttpGet httpMethod = new HttpGet(createUrl(url));
+        httpMethod.addHeader(new BasicHeader(HttpHeaders.ACCEPT, acceptType));
+
+        try (ClientHttpResponse httpResponse = doExecute(httpMethod, user, password)) {
+            if (!httpResponse.getStatusCode().is2xxSuccessful()) {
+                return false;
+            }
+            Files.copy(httpResponse.getBody(), tempFile, StandardCopyOption.REPLACE_EXISTING);
+            return true;
+        }
     }
 
     private URI createUrl(String jsonUrl) throws URISyntaxException {
