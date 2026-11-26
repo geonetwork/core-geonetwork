@@ -1350,6 +1350,17 @@
     </profile>
 
     <profile>
+      <id>datastorage-opendal</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.geonetwork-opensource.datastorage</groupId>
+          <artifactId>gn-datastorage-opendal</artifactId>
+          <version>${project.version}</version>
+        </dependency>
+      </dependencies>
+    </profile>
+
+    <profile>
       <id>datastorage-jcloud</id>
       <dependencies>
         <dependency>
