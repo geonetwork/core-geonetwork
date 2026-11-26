@@ -83,7 +83,7 @@ then
   ${insertLine} a\\
 \        <dependency>\\
 \          <groupId>org.geonetwork-opensource.schemas</groupId>\\
-\          <artifactId>schema-${schema}</artifactId>\\
+\          <artifactId>gn-schema-${schema}</artifactId>\\
 \          <version>${gnSchemasVersion}</version>\\
 \        </dependency>
 SED_SCRIPT
@@ -103,7 +103,7 @@ SED_SCRIPT
 \      <dependencies>\\
 \        <dependency>\\
 \          <groupId>org.geonetwork-opensource.schemas</groupId>\\
-\          <artifactId>schema-${schema}</artifactId>\\
+\          <artifactId>gn-schema-${schema}</artifactId>\\
 \          <version>${gnSchemasVersion}</version>\\
 \        </dependency>\\
 \      </dependencies>\\
@@ -121,7 +121,7 @@ SED_SCRIPT
 \                  <artifactItems>\\
 \                    <artifactItem>\\
 \                      <groupId>org.geonetwork-opensource.schemas</groupId>\\
-\                      <artifactId>schema-${schema}</artifactId>\\
+\                      <artifactId>gn-schema-${schema}</artifactId>\\
 \                      <type>zip</type>\\
 \                      <overWrite>false</overWrite>\\
 \                      <outputDirectory>\$\{schema-plugins.dir\}</outputDirectory>\\
@@ -138,7 +138,7 @@ SED_SCRIPT
 fi
 
 # Add schema resources in service/pom.xml with test scope for unit tests
-line=$(grep -n "<artifactId>schema-${schema}</artifactId>" services/pom.xml | cut -d: -f1)
+line=$(grep -n "<artifactId>gn-schema-${schema}</artifactId>" services/pom.xml | cut -d: -f1)
 
 if [ ! $line ]
 then
@@ -154,7 +154,7 @@ then
   ${finalLine} a\\
 \    <dependency>\\
 \      <groupId>${projectGroupId}</groupId>\\
-\      <artifactId>schema-${schema}</artifactId>\\
+\      <artifactId>gn-schema-${schema}</artifactId>\\
 \      <version>${gnSchemasVersion}</version>\\
 \      <scope>test</scope>\\
 \    </dependency>
