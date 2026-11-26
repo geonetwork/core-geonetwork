@@ -464,7 +464,22 @@ public class SearchController {
             SettingManager sm = context.getBean(SettingManager.class);
             boolean ignoreMetadataNotSupported = sm.getValueAsBool(Settings.SYSTEM_CSW_GETRECORDS_IGNORE_METADATA_NOT_SUPPORTED, true);
 
-            SearchResponse result = searchManager.query(esJsonQuery, new HashSet<>(), startPos - 1, maxRecords, sort);
+            // Only a results request needs rows. numberOfRecordsMatched comes from the hit
+            // total, so fetching records for a hits request costs a database read and a
+            // presentation XSLT each and then discards every one -- on the very request a
+            // client sends to find out how big a harvest will be before starting it.
+            //
+            // Asking for no rows also keeps the response honest. The loop below is what
+            // increments the counter, and it counted records it had not added to the
+            // output, so a hits response carried numberOfRecordsReturned="10" with no
+            // records in it and nextRecord="11" for a result set nothing had read. With
+            // zero rows the counter stays 0 and nextRecord falls to the first unread
+            // record, which is what CSW-discovery.xsd asks for: "number of records
+            // returned to client", and "position of next record in the result set".
+            //
+            // VALIDATE returns no records either, so it takes the same path.
+            int rows = (resultType == ResultType.RESULTS) ? maxRecords : 0;
+            SearchResponse result = searchManager.query(esJsonQuery, new HashSet<>(), startPos - 1, rows, sort);
 
             List<Hit> hits = result.hits().hits();
 
