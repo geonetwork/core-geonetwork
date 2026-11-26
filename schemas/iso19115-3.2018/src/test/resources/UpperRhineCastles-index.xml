@@ -276,13 +276,13 @@
   <resourceTemporalDateRange type="object">{
                   "gte": "2023-12-15T00:00:00.000Z"
                   
-                    ,"lte": "2024-02-15T00:00:00.000Z"
+                    ,"lte": "2024-02-15T23:59:59.999Z"
                   
                   }</resourceTemporalDateRange>
   <resourceTemporalExtentDateRange type="object">{
                   "gte": "2023-12-15T00:00:00.000Z"
                   
-                    ,"lte": "2024-02-15T00:00:00.000Z"
+                    ,"lte": "2024-02-15T23:59:59.999Z"
                   
                 }</resourceTemporalExtentDateRange>
   <resourceTemporalExtentDetails type="object">{
