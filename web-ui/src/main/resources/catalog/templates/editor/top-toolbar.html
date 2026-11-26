@@ -42,7 +42,7 @@
       <div
         data-ng-if="menu == 'gn-editor-categories-menu'"
         data-gn-metadata-category-updater="mdCategories"
-        data-gn-group-owner="editorToolbarState.groupOwner"
+        data-gn-group-owner="gnCurrentEdit.metadata.groupOwner"
         data-metadata-uuid="gnCurrentEdit.uuid"
         title="{{'categories'|translate}}"
       ></div>
@@ -50,7 +50,7 @@
       <!-- group -->
       <div
         data-ng-if="menu == 'gn-editor-group-menu'"
-        data-gn-metadata-group-updater="editorToolbarState.groupOwner"
+        data-gn-metadata-group-updater="gnCurrentEdit.metadata.groupOwner"
         data-metadata-id="gnCurrentEdit.id"
         title="{{'group'|translate}}"
       ></div>

@@ -267,20 +267,8 @@ public class EditorToolbarMenuTest {
     }
 
     @Test
-    public void editorToolbarSharesStateBetweenEntries() throws ScriptException {
+    public void editorToolbarUsesGroupOwnerFromControllerScope() throws ScriptException {
         linkEditorToolbar("{}");
-        // Initially inherited from the editor controller scope
-        assertEquals("2", js("toolbarScope.editorToolbarState.groupOwner"));
-
-        // Entries are rendered in child scopes (ng-repeat / ng-if). The group
-        // updater assigns the new owner, which must be visible to the
-        // category updater rendered in another child scope.
-        engine.eval(
-            "var groupEntryScope = Object.create(toolbarScope);\n" +
-            "var categoryEntryScope = Object.create(toolbarScope);\n" +
-            "groupEntryScope.editorToolbarState.groupOwner = 5;\n");
-        assertEquals("5", js("categoryEntryScope.editorToolbarState.groupOwner"));
-        // Shared state is isolated from the toolbar/controller primitive.
         assertEquals("2", js("toolbarScope.groupOwner"));
         assertEquals("2", js("controllerScope.groupOwner"));
     }
@@ -342,5 +330,4 @@ public class EditorToolbarMenuTest {
                 "{mdStatus: 1, isWorkflowEnabled: false})"));
     }
 }
-
 

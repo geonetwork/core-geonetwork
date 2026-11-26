@@ -109,4 +109,13 @@
     </geonetwork.build.dir>
     <closure.compile.level/>
   </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.openjdk.nashorn</groupId>
+      <artifactId>nashorn-core</artifactId>
+      <version>15.7</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 </project>

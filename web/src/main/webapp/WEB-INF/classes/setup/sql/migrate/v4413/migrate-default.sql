@@ -5,9 +5,6 @@ UPDATE Settings SET position=9184 WHERE name='system/metadataprivs/publication/n
 ALTER TABLE spg_page ADD COLUMN IF NOT EXISTS showOnNonApproved boolean DEFAULT true NOT NULL;
 ALTER TABLE spg_page ADD COLUMN IF NOT EXISTS showOnApproved boolean DEFAULT true NOT NULL;
 ALTER TABLE spg_page ADD COLUMN IF NOT EXISTS showWhenWorkflowDisabled boolean DEFAULT true NOT NULL;
-ALTER TABLE spg_page ADD COLUMN IF NOT EXISTS target varchar(255);
-ALTER TABLE spg_page ADD COLUMN IF NOT EXISTS windowWidth integer;
-ALTER TABLE spg_page ADD COLUMN IF NOT EXISTS windowHeight integer;
 
 -- Move the force validation on save setting out of the workflow section so it
 -- can also be used when the metadata approval workflow is disabled.

@@ -187,10 +187,10 @@
       var setViewMenuInTopToolbar = function () {
         // Move view menu to the top toolbar
         var menu = $(".gn-view-menu-button");
-        if (menu) {
+        if (menu.length) {
           menu.empty();
           var button = $("#gn-view-menu-" + gnCurrentEdit.id);
-          if (button) {
+          if (button.length) {
             menu.append(button);
             $compile(button)($scope);
           }

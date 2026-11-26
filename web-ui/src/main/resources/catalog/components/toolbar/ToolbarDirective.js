@@ -124,13 +124,6 @@
                 ? gnGlobalSettings.gnCfg.mods.editor.recordEditorCustomMenu
                 : GN_DEFAULT_RECORD_EDITOR_MENU;
             scope.isPage = isPage;
-
-            // Each menu entry is rendered in its own child scope (ng-repeat).
-            // Share mutable values through an object so sibling entries can
-            // read/write the same references without relying on scope prototyping.
-            scope.editorToolbarState = {
-              groupOwner: scope.groupOwner
-            };
           }
         }
       };

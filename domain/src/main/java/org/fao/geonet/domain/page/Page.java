@@ -88,7 +88,7 @@ public class Page extends GeonetEntity implements Serializable {
         this.status = status;
         this.label = label;
         this.icon = icon;
-        this.groups = groups;
+        this.groups = groups == null ? new LinkedHashSet<>() : groups;
     }
 
     public enum PageStatus {
@@ -234,7 +234,7 @@ public class Page extends GeonetEntity implements Serializable {
      * @return this group object
      */
     public void setGroups(Set<Group> groups) {
-        this.groups = groups;
+        this.groups = groups == null ? new LinkedHashSet<>() : groups;
     }
 
     public void setPageIdentity(PageIdentity pageIdentity) {
