@@ -125,6 +125,7 @@ To add a new configuration, such as for a sub-portal (see [Portal configuration]
 ![](img/ui-settings-searchresults2.png)
 
 -   **Display filter tags in the search results**: When checked, the filter tags are visible above the search results. The default is to not show them.
+-   **Search result map placement**: Define where the search map is displayed: in a window in the lower right corner (default), above the search filters, or not at all.
 
 ### User custom searches {#user-interface-customsearches}
 
