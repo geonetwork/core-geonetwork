@@ -133,6 +133,9 @@
         templateUrl: "../../catalog/components/utility/" + "partials/mosaic.html",
         link: function (scope, element, attrs) {
           scope.images = [];
+          // Images (by data-fallback-key) showing the stored thumbnail after the
+          // URL failed to load.
+          scope.useFallback = {};
           scope.imageSize = parseInt(attrs.imagesize) || 300;
 
           function getOverview(h) {
@@ -219,6 +222,16 @@
             "error",
             function (e) {
               if (e.target.tagName !== "IMG") {
+                return;
+              }
+              // The image URL failed: switch to the small thumbnail stored in the
+              // index (overview.data) if any, before hiding the image. Done through
+              // the model so ng-src still sanitizes the value.
+              var key = e.target.getAttribute("data-fallback-key");
+              if (key && !scope.useFallback[key]) {
+                scope.$applyAsync(function () {
+                  scope.useFallback[key] = true;
+                });
                 return;
               }
               var tile = e.target.closest("[data-tile-id]");
