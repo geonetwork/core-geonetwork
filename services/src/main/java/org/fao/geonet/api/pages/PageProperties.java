@@ -23,6 +23,9 @@ public class PageProperties implements Serializable {
     private String content;
     private String label;
     private String icon;
+    private String target;
+    private Integer windowWidth;
+    private Integer windowHeight;
     private Page.PageFormat format;
     private List<String> groups;
     private boolean showOnNonApproved = true;
@@ -43,6 +46,9 @@ public class PageProperties implements Serializable {
         status = p.getStatus();
         label = p.getLabel();
         icon = p.getIcon();
+        target = p.getTarget();
+        windowWidth = p.getWindowWidth();
+        windowHeight = p.getWindowHeight();
         showOnNonApproved = p.isShowOnNonApproved();
         showOnApproved = p.isShowOnApproved();
         showWhenWorkflowDisabled = p.isShowWhenWorkflowDisabled();
@@ -133,6 +139,30 @@ public class PageProperties implements Serializable {
 
     public List<String> getGroups() {
         return groups;
+    }
+
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    public Integer getWindowWidth() {
+        return windowWidth;
+    }
+
+    public void setWindowWidth(Integer windowWidth) {
+        this.windowWidth = windowWidth;
+    }
+
+    public Integer getWindowHeight() {
+        return windowHeight;
+    }
+
+    public void setWindowHeight(Integer windowHeight) {
+        this.windowHeight = windowHeight;
     }
 
     public void setGroups(List<String> groups) {

@@ -67,6 +67,9 @@ public class Page extends GeonetEntity implements Serializable {
 
     private String label;
     private String icon;
+    private String target;
+    private Integer windowWidth;
+    private Integer windowHeight;
     private boolean showOnNonApproved = true;
     private boolean showOnApproved = true;
     private boolean showWhenWorkflowDisabled = true;
@@ -85,7 +88,7 @@ public class Page extends GeonetEntity implements Serializable {
         this.status = status;
         this.label = label;
         this.icon = icon;
-        this.groups = groups;
+        this.groups = groups == null ? new LinkedHashSet<>() : groups;
     }
 
     public enum PageStatus {
@@ -98,7 +101,7 @@ public class Page extends GeonetEntity implements Serializable {
 
     // These are the sections where is shown the link to the Page object
     public enum PageSection {
-        TOP, FOOTER, MENU, SUBMENU, RECORD_VIEW_MENU, CUSTOM_MENU1, CUSTOM_MENU2, CUSTOM_MENU3;
+        TOP, FOOTER, MENU, SUBMENU, RECORD_VIEW_MENU, RECORD_EDITOR_MENU, CUSTOM_MENU1, CUSTOM_MENU2, CUSTOM_MENU3;
     }
 
     public enum PageExtension {
@@ -158,6 +161,33 @@ public class Page extends GeonetEntity implements Serializable {
         return icon;
     }
 
+    @Column
+    public String getTarget() {
+        return target;
+    }
+
+    public void setTarget(String target) {
+        this.target = target;
+    }
+
+    @Column
+    public Integer getWindowWidth() {
+        return windowWidth;
+    }
+
+    public void setWindowWidth(Integer windowWidth) {
+        this.windowWidth = windowWidth;
+    }
+
+    @Column
+    public Integer getWindowHeight() {
+        return windowHeight;
+    }
+
+    public void setWindowHeight(Integer windowHeight) {
+        this.windowHeight = windowHeight;
+    }
+
     @Column(nullable = false, columnDefinition = "boolean default true")
     public boolean isShowOnNonApproved() {
         return showOnNonApproved;
@@ -204,7 +234,7 @@ public class Page extends GeonetEntity implements Serializable {
      * @return this group object
      */
     public void setGroups(Set<Group> groups) {
-        this.groups = groups;
+        this.groups = groups == null ? new LinkedHashSet<>() : groups;
     }
 
     public void setPageIdentity(PageIdentity pageIdentity) {

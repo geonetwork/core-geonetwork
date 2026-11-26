@@ -1029,6 +1029,7 @@
             editorIndentType: "",
             allowRemoteRecordLink: true,
             workflowSearchRecordTypes: ["n", "e"],
+            recordEditorCustomMenu: [],
             facetConfig: {
               resourceType: {
                 terms: {

@@ -122,7 +122,9 @@
   module.directive("gnStaticPageMenu", [
     "gnStaticPagesService",
     "gnGlobalSettings",
-    function (gnStaticPagesService, gnGlobalSettings) {
+    "$window",
+    "$translate",
+    function (gnStaticPagesService, gnGlobalSettings, $window, $translate) {
       return {
         restrict: "A",
         replace: true,
@@ -146,17 +148,66 @@
           // Set button style based on explicit parameter (defaults to false)
           $scope.renderAsButton = $scope.renderAsButton === "true";
 
+          $scope.openPageWindow = function ($event, page) {
+            if (
+              (page.format !== "LINK" && page.format !== "HTMLPAGE") ||
+              (!page.windowWidth && !page.windowHeight) ||
+              $event.ctrlKey ||
+              $event.metaKey ||
+              $event.shiftKey ||
+              $event.altKey ||
+              $event.button > 0
+            ) {
+              return;
+            }
+
+            $event.preventDefault();
+            var link = $event.currentTarget;
+            // Use the rendered href to retain placeholder replacement and URL sanitizing.
+            if (link.href.indexOf("unsafe:") === 0) {
+              return;
+            }
+            var features = ["popup=yes", "resizable=yes", "scrollbars=yes"];
+            if (page.windowWidth) {
+              features.push("width=" + page.windowWidth);
+            }
+            if (page.windowHeight) {
+              features.push("height=" + page.windowHeight);
+            }
+            var popup = $window.open(
+              link.href,
+              page.target || "_blank",
+              features.join(",")
+            );
+            if (!popup) {
+              $scope.$emit("StatusUpdated", {
+                msg: $translate.instant("pagePopupBlocked"),
+                type: "warning",
+                timeout: 0
+              });
+            }
+          };
+
           /**
            * Apply runtime visibility rules for a page.
            *
-           * In `record_view_menu`, visibility depends on workflow state and
-           * metadata approval status from the current record context.
+           * In `record_view_menu` and `record_editor_menu`, visibility depends
+           * on workflow state from the current record context. In
+           * `record_view_menu`, the metadata approval status is also taken
+           * into account. In `record_editor_menu`, approval status is ignored
+           * since an approved copy cannot be edited (the editor always works
+           * on the working copy).
            */
           function shouldShowPage(page) {
             if (!page) return false;
-            if ($scope.section === "record_view_menu" && $scope.context) {
+            if (
+              ($scope.section === "record_view_menu" ||
+                $scope.section === "record_editor_menu") &&
+              $scope.context
+            ) {
               if (!$scope.context.isWorkflowEnabled)
                 return page.showWhenWorkflowDisabled === true;
+              if ($scope.section === "record_editor_menu") return true;
               if ($scope.context.mdStatus == 2) return page.showOnApproved === true;
               return page.showOnNonApproved === true;
             }

@@ -204,6 +204,60 @@
             </div>
           </div>
 
+          <div
+            data-ng-show="staticPageSelected.format === 'LINK' || staticPageSelected.format === 'HTMLPAGE'"
+          >
+            <div class="form-group">
+              <label class="control-label col-sm-3" for="page-target" data-translate=""
+                >pageTarget</label
+              >
+              <div class="col-sm-9">
+                <input
+                  id="page-target"
+                  type="text"
+                  name="target"
+                  class="form-control"
+                  maxlength="255"
+                  data-ng-model="staticPageSelected.target"
+                />
+                <p class="help-block" data-translate="">pageTarget-help</p>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-sm-3" for="page-window-width" data-translate=""
+                >pageWindowWidth</label
+              >
+              <div class="col-sm-9">
+                <input
+                  id="page-window-width"
+                  type="number"
+                  name="windowWidth"
+                  class="form-control"
+                  min="1"
+                  step="1"
+                  data-ng-model="staticPageSelected.windowWidth"
+                />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label col-sm-3" for="page-window-height" data-translate=""
+                >pageWindowHeight</label
+              >
+              <div class="col-sm-9">
+                <input
+                  id="page-window-height"
+                  type="number"
+                  name="windowHeight"
+                  class="form-control"
+                  min="1"
+                  step="1"
+                  data-ng-model="staticPageSelected.windowHeight"
+                />
+                <p class="help-block" data-translate="">pageWindowSize-help</p>
+              </div>
+            </div>
+          </div>
+
           <!-- Upload panel -->
           <div
             data-ng-show="!isLinkFormat(staticPageSelected.format)"
@@ -311,14 +365,17 @@
 
           <div
             class="form-group"
-            data-ng-show="staticPageSelected.sections.indexOf('RECORD_VIEW_MENU') > -1"
+            data-ng-show="staticPageSelected.sections.indexOf('RECORD_VIEW_MENU') > -1 || staticPageSelected.sections.indexOf('RECORD_EDITOR_MENU') > -1"
           >
             <label class="control-label col-sm-3" data-translate=""
               >pageVisibilityConditions</label
             >
 
             <div class="col-sm-9">
-              <div class="checkbox">
+              <div
+                class="checkbox"
+                data-ng-show="staticPageSelected.sections.indexOf('RECORD_VIEW_MENU') > -1"
+              >
                 <label>
                   <input
                     type="checkbox"
@@ -327,7 +384,10 @@
                   {{'pageVisibility-showOnNonApproved' | translate}}
                 </label>
               </div>
-              <div class="checkbox">
+              <div
+                class="checkbox"
+                data-ng-show="staticPageSelected.sections.indexOf('RECORD_VIEW_MENU') > -1"
+              >
                 <label>
                   <input
                     type="checkbox"
