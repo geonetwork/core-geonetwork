@@ -547,16 +547,41 @@
       };
 
       $scope.reindexRecords = function () {
-        gnSearchManagerService
-          .indexSetOfRecords({
-            thesaurusIdentifier: $scope.thesaurusSelected.key
+        var bucket = "thesaurusReindex",
+          idTokens = $scope.thesaurusSelected.key.split(".");
+        // Search stored in session for the bucket, then select all and index the selection
+        $http
+          .post("../api/search/records/_search?bucket=" + bucket, {
+            query: {
+              exists: {
+                field: "th_" + idTokens[idTokens.length - 1]
+              }
+            },
+            from: 0,
+            size: 0
           })
-          .then(function (data) {
-            $rootScope.$broadcast("StatusUpdated", {
-              title: $translate.instant("indexingRecordsRelatedToTheThesaurus"),
-              timeout: 2
-            });
-          });
+          .then(function () {
+            return gnSearchManagerService.selectAll(bucket);
+          })
+          .then(function () {
+            return $http.put("../api/site/index?reset=false&bucket=" + bucket);
+          })
+          .then(
+            function () {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("indexingRecordsRelatedToTheThesaurus"),
+                timeout: 2
+              });
+            },
+            function (response) {
+              $rootScope.$broadcast("StatusUpdated", {
+                title: $translate.instant("error"),
+                error: response.data,
+                timeout: 0,
+                type: "danger"
+              });
+            }
+          );
       };
 
       /**
