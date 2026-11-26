@@ -108,7 +108,38 @@ Use web mapping service:
 
 ### Add files
 
-Use **`KML`** files on the map.
+Use **`KML`** files on the map:
+
+1. From the **Map** viewer, press **Add layer** control, and change to **Files** tab.
+
+2. Type the URL of a KML file and press **:fontawesome-solid-plus: Add to map**.
+
+    If the file can't be added, a message below the URL says why.
+
+    You can also press **Upload a KMZ file** and pick a file from the list,
+    or drop a KML, GPX or GeoJSON file onto the map.
+
+Use **Cloud Optimized GeoTIFF (COG)** raster files on the map:
+
+1. From the **Map** viewer, press **Add layer** control, and change to **Files** tab.
+
+2. Type the URL of the COG file.
+
+    **type a COG URL:**
+    :   ``https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/36/Q/WD/2020/7/S2A_36QWD_20200701_0_L2A/TCI.tif``
+
+3. Press **:fontawesome-solid-plus: Add to map**.
+
+    Only the parts of the file needed for the current view are downloaded.
+
+!!! note
+
+    -   The server hosting the file must support HTTP range requests.
+    -   If the server does not allow cross-origin (CORS) requests, the file is read through the catalog proxy.
+        Depending on the proxy configuration, you may need to sign in.
+    -   The projection of the file must be known by the catalog.
+        Administrators can add projections in **Settings** > **List of CRS**.
+    -   A COG layer is not included when printing the map, and is not saved in the map context.
 
 ## Manage layers
 

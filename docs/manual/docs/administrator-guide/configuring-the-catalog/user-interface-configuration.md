@@ -207,7 +207,7 @@ You can configure each map with different layers and projections.
 
 -   **Optional Map Viewer Tools** The checkboxes in this section define the tools available to the user in the right toolbar of the main map. Elements that are not checked are not visible.
 
-    Below **Add layers**, the sub-options **WMS service**, **WMTS service**, **WFS service**, **ArcGIS REST service** and **Files (KML, KMZ, GPX, GeoJSON, TopoJSON)** define the sources available in the **Add layers** panel. They can only be changed when **Add layers** is checked. When all the services are unchecked, the **Services** tab is hidden. When **Files** is unchecked, the **Files** tab is hidden and files can no longer be dropped on the map.
+    Below **Add layers**, the sub-options **WMS service**, **WMTS service**, **WFS service**, **ArcGIS REST service**, **Files (KML, KMZ, GPX, GeoJSON, TopoJSON)** and **Cloud Optimized GeoTIFF (COG)** define the sources available in the **Add layers** panel. They can only be changed when **Add layers** is checked. When all the services are unchecked, the **Services** tab is hidden. When **Files** is unchecked, files can no longer be loaded from a URL or dropped on the map. When **Cloud Optimized GeoTIFF (COG)** is unchecked, COG files can no longer be loaded from a URL. When both are unchecked, the **Files** tab is hidden.
 
     ![](img/ui-settings-maptools-addlayers.png)
 

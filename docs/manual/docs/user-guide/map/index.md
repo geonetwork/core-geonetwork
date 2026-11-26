@@ -18,7 +18,7 @@ Tools for using the Map are arranged in two groups in the right-hand side of the
 
 | **Tool**               | **Description**                                                                                                                                                                                           |
 |------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Add Layer              | You can search the catalog, add layers from web services, or kml. It is possible to add directly WMS, WFS or WMTS layers by entering the endpoint and selecting the layer from the capabilities response. |
+| Add Layer              | You can search the catalog, add layers from web services, or KML and COG files. It is possible to add directly WMS, WFS or WMTS layers by entering the endpoint and selecting the layer from the capabilities response. |
 | Manage Layer           | Manage layers or Change the background map.                                                                                                                                                               |
 | Projection switcher    | Allows you to set alternative projections.                                                                                                                                                                |
 | Filter layers          | Used to filter features shown on the map on various attributes. As an administrator make sure the filtering is correctly set up before adding this tool to the map..                                      |
