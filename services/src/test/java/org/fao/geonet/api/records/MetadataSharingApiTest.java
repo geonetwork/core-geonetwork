@@ -76,14 +76,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -898,9 +901,9 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.numberOfRecordsProcessed").value(0))
-            .andExpect(jsonPath("$.metadataInfos.*[*].message", hasItem(String.format(
-                "Transfer to group '%s' and user 'foreignuser' is not allowed for your profile.",
-                _groupRepo.findById(SAMPLE_GROUP_ID).get().getName()))));
+            .andExpect(jsonPath("$.metadataInfos.*[*].message", hasItem(
+                "Transfer to the selected group and user is not allowed for your profile.")))
+            .andExpect(content().string(not(containsString("foreignuser"))));
 
         entityManager.flush();
         entityManager.clear();
@@ -954,9 +957,26 @@ public class MetadataSharingApiTest extends AbstractServiceIntegrationTest {
     }
 
     @Test
-    public void transferOwnershipToUnknownUserFails() throws Exception {
+    public void transferOwnershipAsEditorToUnknownUserIsRefused() throws Exception {
         MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
         MockHttpSession mockHttpSession = loginAs(editorUser);
+
+        // Same answer as for an existing user outside the group
+        mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
+                .session(mockHttpSession)
+                .param("groupIdentifier", String.valueOf(SAMPLE_GROUP_ID))
+                .param("userIdentifier", "999999")
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.numberOfRecordsProcessed").value(0))
+            .andExpect(jsonPath("$.metadataInfos.*[*].message", hasItem(
+                "Transfer to the selected group and user is not allowed for your profile.")));
+    }
+
+    @Test
+    public void transferOwnershipAsAdminToUnknownUserFails() throws Exception {
+        MockMvc mockMvc = MockMvcBuilders.webAppContextSetup(this.wac).build();
+        MockHttpSession mockHttpSession = loginAsAdmin();
 
         mockMvc.perform(put("/srv/api/records/" + metadataUuid + "/ownership")
                 .session(mockHttpSession)

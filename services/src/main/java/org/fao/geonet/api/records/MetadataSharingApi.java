@@ -945,12 +945,10 @@ public class MetadataSharingApi {
             metadataPublicationService.checkGroupIsWorkspace(groupIdentifier, locale);
         }
 
-        if (!userRepository.existsById(userIdentifier)) {
-            throw new ResourceNotFoundException(String.format(
-                "User with identifier '%s' not found.", userIdentifier));
-        }
-
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
+
+        boolean destinationAllowed = isTransferDestinationAllowed(groupIdentifier, userIdentifier, ApiUtils.getUserSession(session));
+        checkTransferUserExists(userIdentifier, destinationAllowed);
 
         try {
             Set<String> records = ApiUtils.getUuidsParameterOrSelection(uuids, bucket, ApiUtils.getUserSession(session));
@@ -959,7 +957,6 @@ public class MetadataSharingApi {
             ServiceContext serviceContext = ApiUtils.createServiceContext(request);
 
             List<String> listOfUpdatedRecords = new ArrayList<>();
-            boolean destinationAllowed = isTransferDestinationAllowed(groupIdentifier, userIdentifier, ApiUtils.getUserSession(session));
             for (String uuid : records) {
                 updateOwnership(groupIdentifier, userIdentifier,
                     report, dataManager, accessManager,
@@ -1030,14 +1027,11 @@ public class MetadataSharingApi {
             metadataPublicationService.checkGroupIsWorkspace(groupIdentifier, locale);
         }
 
-        if (!userRepository.existsById(userIdentifier)) {
-            throw new ResourceNotFoundException(String.format(
-                "User with identifier '%s' not found.", userIdentifier));
-        }
-
         MetadataProcessingReport report = new SimpleMetadataProcessingReport();
 
         ApiUtils.canEditRecord(metadataUuid, request);
+        boolean destinationAllowed = isTransferDestinationAllowed(groupIdentifier, userIdentifier, ApiUtils.getUserSession(session));
+        checkTransferUserExists(userIdentifier, destinationAllowed);
         try {
             report.setTotalRecords(1);
 
@@ -1045,8 +1039,7 @@ public class MetadataSharingApi {
             List<String> listOfUpdatedRecords = new ArrayList<>();
             updateOwnership(groupIdentifier, userIdentifier,
                 report, dataManager, accessManager,
-                serviceContext, listOfUpdatedRecords, metadataUuid, session,
-                isTransferDestinationAllowed(groupIdentifier, userIdentifier, ApiUtils.getUserSession(session)));
+                serviceContext, listOfUpdatedRecords, metadataUuid, session, destinationAllowed);
             metadataManager.flush();
             metadataIndexer.indexMetadata(listOfUpdatedRecords);
 
@@ -1081,12 +1074,8 @@ public class MetadataSharingApi {
             }
 
             if (!destinationAllowed) {
-                String groupName = groupRepository.findById(groupIdentifier)
-                    .map(Group::getName).orElse(String.valueOf(groupIdentifier));
-                String userName = userRepository.findById(userIdentifier)
-                    .map(User::getUsername).orElse(String.valueOf(userIdentifier));
-                report.addMetadataInfos(metadata, String.format(
-                    "Transfer to group '%s' and user '%s' is not allowed for your profile.", groupName, userName));
+                report.addMetadataInfos(metadata,
+                    "Transfer to the selected group and user is not allowed for your profile.");
                 return;
             }
 
@@ -1238,5 +1227,13 @@ public class MetadataSharingApi {
             Specification.where(UserGroupSpecs.hasUserId(userIdentifier)).and(isEditorOrMore));
 
         return myGroups.contains(groupIdentifier) && newOwnerGroups.contains(groupIdentifier);
+    }
+
+    // Only when allowed, so a refused destination looks the same whether the user exists or not.
+    private void checkTransferUserExists(Integer userIdentifier, boolean destinationAllowed) throws ResourceNotFoundException {
+        if (destinationAllowed && !userRepository.existsById(userIdentifier)) {
+            throw new ResourceNotFoundException(String.format(
+                "User with identifier '%s' not found.", userIdentifier));
+        }
     }
 }
