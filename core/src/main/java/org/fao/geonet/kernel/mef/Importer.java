@@ -65,6 +65,9 @@ import java.nio.file.Path;
 import java.util.*;
 
 import static org.fao.geonet.domain.Localized.translationXmlToLangMap;
+import static org.fao.geonet.kernel.mef.MEFLib.ValidationMode;
+import static org.fao.geonet.kernel.mef.MEFLib.ValidationMode.NO_VALIDATION;
+import static org.fao.geonet.kernel.mef.MEFLib.ValidationMode.VALIDATE_XSD_AND_SCHEMATRON;
 
 public class Importer {
     /**
@@ -83,16 +86,16 @@ public class Importer {
         MetadataType isTemplate = Util.getParam(params, Params.TEMPLATE, null) == null ? null : MetadataType.lookup(Util.getParam(params, Params.TEMPLATE));
         String category = Util.getParam(params, Params.CATEGORY, "");
         String groupId = Util.getParam(params, Params.GROUP, "");
-        boolean validate = Util.getParam(params, Params.VALIDATE, "off").equals("on");
+        ValidationMode validationMode = Util.getParam(params, Params.VALIDATE, "off").equals("on") ? VALIDATE_XSD_AND_SCHEMATRON : NO_VALIDATION;
         boolean assign = Util.getParam(params, "assign", "off").equals("on");
 
         return doImport(fileType, MEFLib.UuidAction.parse(uuidAction), style, source, isTemplate, new String[]{category}, groupId,
-            validate, assign, context, mefFile);
+            validationMode, assign, context, mefFile);
     }
 
     public static List<String> doImport(String fileType, final MEFLib.UuidAction uuidAction, final String style, final String source,
-                                        final MetadataType isTemplateParam, final String[] category, final String groupId, final boolean validate, final boolean assign,
-                                        final ServiceContext context, final Path mefFile) throws Exception {
+                                        final MetadataType isTemplateParam, final String[] category, final String groupId, final ValidationMode validationMode,
+                                        final boolean assign, final ServiceContext context, final Path mefFile) throws Exception {
         ApplicationContext applicationContext = ApplicationContextHolder.get();
         final IMetadataSchemaUtils metadataSchemaUtils = applicationContext.getBean(IMetadataSchemaUtils.class);
         final IMetadataUtils metadataUtils = applicationContext.getBean(IMetadataUtils.class);
@@ -358,15 +361,7 @@ public class Importer {
                     }
                 }
 
-                if (validate) {
-                    Integer groupIdVal = null;
-                    if (org.apache.commons.lang.StringUtils.isNotEmpty(groupId)) {
-                        groupIdVal = Integer.parseInt(groupId);
-                    }
-
-                    // Validate xsd and schematron
-                    metadataValidator.validateExternalMetadata(schema, metadata, context, " ", groupIdVal);
-                }
+                MEFLib.validate(metadataValidator, validationMode, schema, metadata, context, " ", groupId);
 
                 try {
                     importRecord(uuid, uuidAction, md, schema, index, source, sourceName, sourceTranslations, context, metadataIdMap,
@@ -448,7 +443,7 @@ public class Importer {
                     }
                 });
 
-                if (validate) {
+                if (validationMode == VALIDATE_XSD_AND_SCHEMATRON) {
                     AbstractMetadata md = metadataUtils.findOne(iMetadataId);
 
                     if (md != null) {
