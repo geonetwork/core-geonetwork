@@ -30,6 +30,7 @@
                 xmlns:foaf="http://xmlns.com/foaf/0.1/"
                 xmlns:dcat="http://www.w3.org/ns/dcat#"
                 xmlns:dct="http://purl.org/dc/terms/"
+                xmlns:vcard="http://www.w3.org/2006/vcard/ns#"
                 xmlns:skos="http://www.w3.org/2004/02/skos/core#"
                 xmlns:gco="http://www.isotc211.org/2005/gco"
                 xmlns:gmd="http://www.isotc211.org/2005/gmd"
@@ -181,17 +182,25 @@
           <dcat:size></dcat:size>
         -->
 
-          <xsl:if test="(gmd:protocol/gmx:Anchor/@xlink:href)[1]!=''">
+        <xsl:if test="(gmd:protocol/gmx:Anchor/@xlink:href)[1]!=''">
           <dcat:mediaType>
             <xsl:attribute name="rdf:resource" select="(gmd:protocol/gmx:Anchor/@xlink:href)[1]"/>
             <xsl:value-of select="(gmd:protocol/gmx:Anchor)[1]"/>
           </dcat:mediaType>
-          </xsl:if>
-          <xsl:if test="(gmd:protocol/gco:CharacterString)[1]!=''">
+        </xsl:if>
+
+        <!-- fills the description field -->
+        <xsl:if test="(gmd:description/gco:CharacterString)[1]!=''">
+          <dct:description>
+            <xsl:value-of select="(gmd:description/gco:CharacterString)[1]"/>
+          </dct:description>
+        </xsl:if>
+
+        <xsl:if test="(gmd:protocol/gco:CharacterString)[1]!=''">
           <dct:format>
             <xsl:value-of select="(gmd:protocol/gco:CharacterString)[1]"/>
           </dct:format>
-          </xsl:if>
+        </xsl:if>
 
       </dcat:Distribution>
     </xsl:for-each-group>
@@ -273,7 +282,9 @@
   -->
   <xsl:template match="gmd:MD_DataIdentification|*[contains(@gco:isoType, 'MD_DataIdentification')]"
                 mode="to-dcat">
-    <dcat:Dataset rdf:about="{$resourcePrefix}/datasets/{iso19139:getResourceCode(../../.)}">
+    <xsl:param name="uuid"/>
+    <!-- <dcat:Dataset rdf:about="{$resourcePrefix}/datasets/{iso19139:getResourceCode(../../.)}"> -->
+    <dcat:Dataset rdf:about="{$url}/srv/api/records/{$uuid}">
       <xsl:call-template name="to-dcat"/>
     </dcat:Dataset>
   </xsl:template>
@@ -290,6 +301,10 @@
     </dct:identifier>
     <!-- xpath: gmd:identificationInfo/*/gmd:citation/*/gmd:identifier/*/gmd:code -->
 
+    <!-- provide an HTML record view for the 'Voir la source originale' link -->
+    <dcat:landingPage>
+      <xsl:value-of select="$resourcePrefix"/>/<xsl:value-of select="iso19139:getResourceCode(../../.)"/>
+    </dcat:landingPage>
 
     <dct:title>
       <xsl:value-of select="gmd:citation/*/gmd:title/gco:CharacterString"/>
@@ -299,6 +314,15 @@
 
     <dct:abstract>
       <xsl:value-of select="gmd:abstract/gco:CharacterString"/>
+
+      <!-- Layout will be visible only in source mode in the browser. If not in source mode, newlines won't be displayed and the keywords will be shown inline -->
+      <xsl:text>&#xa;</xsl:text> <!-- linebreak -->
+      <!-- Keywords -->
+      <xsl:for-each-group select="//gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword"
+                          group-by="gco:CharacterString|gmx:Anchor">
+        <xsl:text>&#xa;</xsl:text> <!-- linebreak -->
+        <xsl:value-of select="normalize-space(../gmd:thesaurusName/*/gmd:title)"/> : <xsl:value-of select="normalize-space(gco:CharacterString|gmx:Anchor)"/><xsl:text>.</xsl:text>
+      </xsl:for-each-group>
     </dct:abstract>
     <!-- xpath: gmd:identificationInfo/*/gmd:abstract/gco:CharacterString -->
 
@@ -324,9 +348,13 @@
     <!-- "The main category of the dataset. A dataset can have multiple themes."
     -->
     <xsl:for-each
-      select="gmd:descriptiveKeywords/gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword">
+      select="gmd:descriptiveKeywords/gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gco:CharacterString">
       <dcat:theme
-        rdf:resource="{iso19139:getKeywordURI(., iso19139:getThesaurusURI(../gmd:thesaurusName, $resourcePrefix))}"/>
+        rdf:resource="{iso19139:getKeywordURI(.., iso19139:getThesaurusURI(../../gmd:thesaurusName, $resourcePrefix))}"/>
+    </xsl:for-each>
+    <xsl:for-each
+      select="gmd:descriptiveKeywords/gmd:MD_Keywords[(gmd:thesaurusName)]/gmd:keyword/gmx:Anchor">
+      <dcat:theme rdf:resource="{@xlink:href}" />
     </xsl:for-each>
 
     <xsl:for-each select="gmd:topicCategory/gmd:MD_TopicCategoryCode[.!='']">
@@ -363,15 +391,13 @@
 
 
     <!-- "The temporal period that the dataset covers." -->
-    <!-- TODO could be improved-->
     <xsl:for-each
-      select="gmd:extent/*/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/(gml:TimePeriod|gml320:TimePeriod)">
+      select="gmd:extent/*/gmd:temporalElement/gmd:EX_TemporalExtent/gmd:extent/gml:TimePeriod">
       <dct:temporal>
-        <xsl:value-of select="gml:beginPosition|gml320:beginPosition"/>
-        <xsl:if test="gml:endPosition|gml320:endPosition">
-          /
-          <xsl:value-of select="gml:endPosition|gml320:endPosition"/>
-        </xsl:if>
+        <xsl:choose>
+          <xsl:when test="gml:endPosition != ''"><xsl:value-of select="gml:beginPosition"/>/<xsl:value-of select="gml:endPosition"/></xsl:when>
+          <xsl:otherwise><xsl:value-of select="gml:beginPosition"/></xsl:otherwise>
+        </xsl:choose>
       </dct:temporal>
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:extent/*/gmd:temporalElement -->
@@ -397,10 +423,46 @@
 
 
     <!-- "The frequency with which dataset is published." See placetime.com intervals. -->
+
+    <!--
+    RDF Property:	dcterms:accrualPeriodicity
+    Definition:	The frequency at which a dataset is published.
+    Range:	dcterms:Frequency (A rate at which something recurs)
+    Usage note:	The value of dcterms:accrualPeriodicity gives the rate at which the dataset-as-a-whole is updated. This may be complemented by dcat:temporalResolution to give the time between collected data points in a time series.
+    -->
+    <xsl:variable name="isoFrequencyToDublinCore"
+                  as="node()*">
+      <entry key="continual">CONT</entry>
+      <entry key="daily">DAILY</entry>
+      <entry key="weekly">WEEKLY</entry>
+      <entry key="fortnightly">BIWEEKLY</entry>
+      <entry key="monthly">MONTHLY</entry>
+      <entry key="quarterly">QUARTERLY</entry>
+      <entry key="biannually">ANNUAL_2</entry>
+      <entry key="annually">ANNUAL</entry>
+      <entry key="irregular">IRREG</entry>
+      <entry key="unknown">UNKNOWN</entry>
+      <entry key="notPlanned">PUNCTUAL</entry>
+      <entry key="asNeeded">PUNCTUAL</entry>
+      <!--
+      <entry key="asNeeded"></entry>
+      <entry key="notPlanned"></entry>
+      -->
+    </xsl:variable>
+
+    <!-- Try mapping the values to Dublin Core values if listed (see above). Deals with the fact that codelists are slightly diverging between DC and ISO -->
     <xsl:for-each
-      select="gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode">
+      select="gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency">
+      <xsl:variable name="dcFrequency"
+                    as="xs:string?"
+                    select="$isoFrequencyToDublinCore[@key = current()/*/@codeListValue]"/>
       <dct:accrualPeriodicity>
-        <xsl:value-of select="@codeListValue"/>
+        <!-- <xsl:value-of select="@codeListValue"/> -->
+        <!-- <xsl:value-of select="$dcFrequency"/> -->
+        <xsl:value-of select="if($dcFrequency)
+                                 then $dcFrequency
+                                 else */@codeListValue"/>
+        <!-- <dct:Frequency rdf:about="{$dcFrequency}"/> -->
       </dct:accrualPeriodicity>
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:resourceMaintenance/gmd:MD_MaintenanceInformation/gmd:maintenanceAndUpdateFrequency/gmd:MD_MaintenanceFrequencyCode/@codeListValue -->
@@ -427,23 +489,41 @@
     <!-- xpath: gmd:identificationInfo/*/gmd:language/gmd:LanguageCode/@codeListValue -->
 
 
+    <!-- dct:license content -->
     <!-- "The license under which the dataset is published and can be reused." -->
-    <xsl:for-each select="gmd:resourceConstraints/gmd:MD_LegalConstraints/*/gmd:MD_RestrictionCode[@codeListValue!='otherRestrictions']">
-      <dct:license>
-        <xsl:value-of select="@codeListValue"/>
-      </dct:license>
+    <xsl:for-each select="gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:useConstraints">
+      <xsl:choose>
+        <xsl:when test="gmd:MD_RestrictionCode[@codeListValue!='otherRestrictions']">
+          <dct:license>
+            <xsl:value-of select="@codeListValue"/>
+          </dct:license>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="legalOtherConstraints">
+            <xsl:with-param name="ocnode"><xsl:copy-of select="./following-sibling::gmd:otherConstraints[1]"/></xsl:with-param>
+            <xsl:with-param name="tagname">license</xsl:with-param>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:for-each>
-    <xsl:for-each
-      select="gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gco:CharacterString">
-      <dct:license>
-        <xsl:value-of select="."/>
-      </dct:license>
-    </xsl:for-each>
-    <xsl:for-each
-      select="gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:otherConstraints/gmx:Anchor">
-      <dct:license rdf:resource="{@xlink:href}">
-        <xsl:value-of select="."/>
-      </dct:license>
+
+    <!--  Access constraints should not be stored under license, but rather on accessRights category,
+          cf https://semiceu.github.io/GeoDCAT-AP/releases/2.0.0/#conditions-for-access-and-use-and-limitations-on-public-access-use-limitation-and-access-other-constraints
+    -->
+    <xsl:for-each select="gmd:resourceConstraints/gmd:MD_LegalConstraints/gmd:accessConstraints">
+      <xsl:choose>
+        <xsl:when test="gmd:MD_RestrictionCode[@codeListValue!='otherRestrictions']">
+          <dct:accessRights>
+            <xsl:value-of select="@codeListValue"/>
+          </dct:accessRights>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="legalOtherConstraints">
+            <xsl:with-param name="ocnode"><xsl:copy-of select="./following-sibling::gmd:otherConstraints[1]"/></xsl:with-param>
+            <xsl:with-param name="tagname">accessRights</xsl:with-param>
+          </xsl:call-template>
+        </xsl:otherwise>
+      </xsl:choose>
     </xsl:for-each>
     <!-- xpath: gmd:identificationInfo/*/gmd:resourceConstraints/??? -->
 
@@ -453,6 +533,29 @@
 
     <!-- xpath: gmd:distributionInfo/*/gmd:transferOptions/*/gmd:onLine/gmd:CI_OnlineResource -->
 
+
+
+    <!-- Add contactPoint vcard, for data.gouv harvesting. Use the metadata point of -->
+    <xsl:for-each-group
+      select="gmd:pointOfContact/gmd:CI_ResponsibleParty[gmd:organisationName/gco:CharacterString!='']"
+      group-by="gmd:organisationName/gco:CharacterString">
+      <!-- Organization description.
+        Organization could be linked to a catalogue, a catalogue record.
+
+        xpath: //gmd:organisationName
+      -->
+      <dcat:contactPoint>
+        <vcard:Kind rdf:about="{$resourcePrefix}/organizations/{encode-for-uri(current-grouping-key())}">
+          <vcard:fn><xsl:value-of select="current-grouping-key()"/></vcard:fn>
+          <xsl:for-each-group
+            select="//gmd:CI_ResponsibleParty[gmd:organisationName/gco:CharacterString=current-grouping-key()]"
+            group-by="gmd:contactInfo/gmd:CI_Contact/gmd:address/gmd:CI_Address/gmd:electronicMailAddress/gco:CharacterString">
+            <vcard:hasEmail
+              rdf:resource="mailto:{current-grouping-key()}"/>
+          </xsl:for-each-group>
+        </vcard:Kind>
+      </dcat:contactPoint>
+    </xsl:for-each-group>
 
     <!-- ISO19110 relation
       "This usually consisits of a table providing explanation of columns meaning, values interpretation and acronyms/codes used in the data."
@@ -519,6 +622,34 @@
 
     <!-- FIXME ?
       <void:dataDump></void:dataDump>-->
+  </xsl:template>
+
+
+  <!--
+    Process the otherContraints in LegalResources differently depending on the previous sibling. If gmd:useConstraints use dct:license, if gmd:accessConstraints use dct:accessRights
+  -->
+  <xsl:template name="legalOtherConstraints">
+    <xsl:param name="ocnode"/>
+    <xsl:param name="tagname"/>
+
+    <xsl:choose>
+      <xsl:when test="$ocnode/gmd:otherConstraints/gmx:Anchor">
+        <xsl:element name="dct:{$tagname}">
+          <xsl:attribute name="rdf:resource">
+            <xsl:value-of select="$ocnode/gmd:otherConstraints/gmx:Anchor/@xlink:href"/>
+          </xsl:attribute>
+          <xsl:value-of select="$ocnode/gmd:otherConstraints/gmx:Anchor"/>
+        </xsl:element>
+      </xsl:when>
+      <xsl:when test="$ocnode/gmd:otherConstraints/gco:CharacterString">
+        <xsl:element name="dct:{$tagname}">
+          <xsl:value-of select="$ocnode/gmd:otherConstraints/gco:CharacterString"/>
+        </xsl:element>
+      </xsl:when>
+      <!--      <xsl:otherwise>-->
+      <!--          <xsl:copy-of select="$ocnode"/>-->
+      <!--      </xsl:otherwise>-->
+    </xsl:choose>
   </xsl:template>
 
 
