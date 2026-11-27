@@ -166,13 +166,14 @@
             class="list-group-item"
             href=""
             data-ng-repeat="resource in relations.onlines | filter:sortLinksFilter | orderBy:sortLinks:sortLinksReverse"
-            data-ng-init="gnRelatedResources.getType(resource, 'onlines')"
+            data-ng-init="gnRelatedResources.getType(resource, 'onlines');
+                                  checkDoiManagementForResource(gnCurrentEdit.metadata, resource)"
           >
             <div class="row">
               <div class="col-md-11">
                 <span
                   data-gn-link-icon="resource"
-                  titel="{{resource.protocol || ''}}"
+                  title="{{resource.protocol || ''}}"
                   data-mode="gn-icon-inline"
                 ></span>
                 <strong>{{resource.locTitle}}</strong>
@@ -183,9 +184,9 @@
                 <br />
 
                 <div
-                  data-ng-if="canPublishDoiForResource(gnCurrentEdit.metadata, resource)"
+                  data-ng-if="resource.canManageDoi"
                   data-gn-doi-wizard="gnCurrentEdit.uuid"
-                  data-gn-doi-url="resource.lUrl"
+                  data-doi-url="resource.lUrl"
                   data-xs-mode="true"
                 ></div>
 
