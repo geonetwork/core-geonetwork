@@ -42,13 +42,12 @@
             data-cache="users"
           ></span>
         </div>
-
         <button
           type="button"
           class="btn btn-primary btn-block"
           id="gn-btn-user-add"
           data-ng-click="addUser()"
-          data-ng-show="user.isUserAdminOrMore() && isUserProfileUpdateEnabled"
+          data-ng-show="user.isUserAdminOrMore() && isUserProfileCreateEnabled"
         >
           <i class="fa fa-plus"></i>
           <span data-translate="">newUser</span>
