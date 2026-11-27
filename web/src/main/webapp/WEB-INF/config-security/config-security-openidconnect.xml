@@ -171,6 +171,11 @@
     <constructor-arg ref="geonetworkCsrfSecurityRequestMatcher" />
   </bean>
 
+  <bean id="grantViewMdAuthorityFilter" class="org.fao.geonet.security.GrantViewMdAuthorityFilter">
+    <constructor-arg ref="securityContextRepository"/>
+  </bean>
+
+
   <util:list id="openidConnectFilterChanFiltersExclusive">
 
     <ref bean="securityContextPersistenceFilter"/>
@@ -186,6 +191,7 @@
 
     <ref bean="requestCacheFilter"/>
     <ref bean="anonymousFilter"/>
+    <ref bean="grantViewMdAuthorityFilter"/>
     <ref bean="sessionMgmtFilter"/>
     <ref bean="exceptionTranslationFilter"/>
     <ref bean="filterSecurityInterceptor"/>
