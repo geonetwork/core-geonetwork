@@ -209,9 +209,16 @@
 
             <xsl:copy>
               <cit:CI_OnlineResource>
-                <cit:linkage>
-                  <gco:CharacterString><xsl:value-of select="if ($isPermalink) then $permalink else */cit:linkage/gco:CharacterString"/></gco:CharacterString>
-                </cit:linkage>
+                <xsl:choose>
+                  <xsl:when test="$isPermalink">
+                    <cit:linkage>
+                      <gco:CharacterString><xsl:value-of select="$permalink"/></gco:CharacterString>
+                    </cit:linkage>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:apply-templates select="*/cit:linkage"/>
+                  </xsl:otherwise>
+                </xsl:choose>
                 <xsl:apply-templates select="*/* except */cit:linkage"/>
               </cit:CI_OnlineResource>
             </xsl:copy>
